@@ -572,6 +572,70 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         {},
       );
     });
+    it('resolves a dependency nested inside a property before sanitizing its data (#5250)', () => {
+      // The root schema itself has no top-level `dependencies`, so its own retrieved form is identical whether
+      // `animal` is "Cat" or "Fish" -- only calling retrieveSchema() on the `m` property itself (as
+      // sanitizeDataForNewSchema now does) picks up the active `food` branch for the current `animal` value.
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          m: {
+            type: 'object',
+            properties: {
+              animal: { type: 'string', enum: ['Cat', 'Fish'] },
+            },
+            dependencies: {
+              animal: {
+                oneOf: [
+                  { properties: { animal: { enum: ['Cat'] }, food: { type: 'string', enum: ['meat'] } } },
+                  { properties: { animal: { enum: ['Fish'] }, food: { type: 'string', enum: ['worms'] } } },
+                ],
+              },
+            },
+          },
+        },
+      };
+      // The old and new schema for `m` are identical here, so its dependency is only resolved once (not once per
+      // side); that resolution checks both oneOf branches: the "Cat" branch matches, the "Fish" branch does not.
+      testValidator.setReturnValues({ isValid: [true, false] });
+      expect(
+        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, {
+          m: { animal: 'Cat', food: 'worms' },
+        }),
+      ).toEqual({ m: { animal: 'Cat', food: 'meat' } });
+    });
+    it('resolves a dependency nested inside array items, per item, before sanitizing its data (#5250)', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            animal: { type: 'string', enum: ['Cat', 'Fish'] },
+          },
+          dependencies: {
+            animal: {
+              oneOf: [
+                { properties: { animal: { enum: ['Cat'] }, food: { type: 'string', enum: ['meat'] } } },
+                { properties: { animal: { enum: ['Fish'] }, food: { type: 'string', enum: ['worms'] } } },
+              ],
+            },
+          },
+        },
+      };
+      // Each of the two array items resolves its own dependency independently: item 0 matches the "Cat" branch,
+      // item 1 matches the "Fish" branch. The old and new items schema is identical, so each item's dependency is
+      // only resolved once (not once per side).
+      testValidator.setReturnValues({ isValid: [true, false, false, true] });
+      expect(
+        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, [
+          { animal: 'Cat', food: 'worms' },
+          { animal: 'Fish', food: 'meat' },
+        ]),
+      ).toEqual([
+        { animal: 'Cat', food: 'meat' },
+        { animal: 'Fish', food: 'worms' },
+      ]);
+    });
     it('returns data when two arrays have same boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
