@@ -17,7 +17,6 @@ import {
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
@@ -520,10 +519,10 @@ export function stubExistingAdditionalProperties<
             ...schema.additionalProperties,
           };
         } else {
-          additionalProperties = { type: guessType(formData[key]) };
+          additionalProperties = { type: undefined };
         }
       } else {
-        additionalProperties = { type: guessType(formData[key]) };
+        additionalProperties = { type: undefined };
       }
 
       // The type of our new key should match the additionalProperties value;
