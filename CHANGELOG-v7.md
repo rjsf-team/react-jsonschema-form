@@ -38,6 +38,10 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Dropped the `experimental_` prefix from `FormProps`, now that these features are no longer experimental: `experimental_defaultFormStateBehavior` → `defaultFormStateBehavior`, `experimental_customMergeAllOf` → `customMergeAllOf`
 - **BREAKING CHANGE:** `getTestRegistry()` moved to `@rjsf/core/testing` as a named export; `@rjsf/validator-ajv8`, which it needs, is an optional peer dependency that only this entry point requires. Its positional arguments remain supported. Fixed three theme test helpers that previously passed an options object instead of positional arguments
 
+## @rjsf/daisyui
+
+- Fixed the `getTestRegistry()` test helper passing an options object where positional arguments were expected, which silently dropped its templates and widgets; it now imports from `@rjsf/core/testing` ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
+
 ## @rjsf/mantine
 
 - **BREAKING CHANGE** Dropped support for `mantine` version 8; upgraded to `mantine` version 9, which requires React 19.2+. The `react` peer dependency floor is `>=19.2`, matching what `@mantine/core`/`@mantine/hooks` 9.6.1 themselves require (their `useEffectEvent` usage needs it)
@@ -53,10 +57,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/react-bootstrap
 
 - Fixed `lib/index.js` being unloadable by Node: it imported `react-bootstrap/Col`-style directory subpaths and extensionless `@react-icons/all-files` paths, which only bundlers resolve. Components are now imported from `react-bootstrap` itself and icon files by their full `.js` name ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
+- Fixed the `getTestRegistry()` test helper passing an options object where positional arguments were expected, which silently dropped its templates and widgets; it now imports from `@rjsf/core/testing` ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
 
 ## @rjsf/shadcn
 
 - Converted the internal `forwardRef`-wrapped `Command` and `CommandInput` components to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
+- Fixed the `getTestRegistry()` test helper passing an options object where positional arguments were expected, which silently dropped its templates and widgets; it now imports from `@rjsf/core/testing` ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
 
 ## @rjsf/utils
 
