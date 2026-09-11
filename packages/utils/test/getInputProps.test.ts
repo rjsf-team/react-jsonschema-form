@@ -12,6 +12,13 @@ describe('getInputProps', () => {
       autoComplete: options.autocomplete,
     });
   });
+  it('returns autoCapitalize from options when provided', () => {
+    const options: UIOptionsType = { autocapitalize: 'words' };
+    expect(getInputProps({}, 'text', options)).toEqual({
+      type: 'text',
+      autoCapitalize: options.autocapitalize,
+    });
+  });
   it('returns type and accept from options when provided', () => {
     const options: UIOptionsType = { accept: '.pdf' };
     expect(getInputProps({}, 'file', options)).toEqual({

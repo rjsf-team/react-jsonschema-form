@@ -532,7 +532,7 @@ describe('LayoutMultiSchemaField', () => {
       const { schemaUtils } = getTestRegistry(schema);
       const option1 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][0]);
       const option2 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][1]);
-      const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY], schemaUtils, uiSchema);
+      const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY] as RJSFSchema[], schemaUtils, uiSchema);
       expect(enumOptions).toEqual([
         {
           schema: option1,

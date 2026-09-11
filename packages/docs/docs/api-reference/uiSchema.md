@@ -307,6 +307,20 @@ const uiSchema: UiSchema = {
 };
 ```
 
+### autocapitalize
+
+To control automatic capitalization on virtual keyboards for a text input, set the `ui:autocapitalize` uiSchema
+directive to a valid [HTML autocapitalize value](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/autocapitalize#value).
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = { type: 'string' };
+const uiSchema: UiSchema = {
+  'ui:autocapitalize': 'words',
+};
+```
+
 ### autofocus
 
 If you want to automatically focus on a text input or textarea input, set the `ui:autofocus` uiSchema directive to `true`.

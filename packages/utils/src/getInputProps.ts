@@ -68,6 +68,10 @@ export default function getInputProps<
     inputProps.autoComplete = options.autocomplete;
   }
 
+  if (options.autocapitalize) {
+    inputProps.autoCapitalize = options.autocapitalize;
+  }
+
   if (options.accept) {
     inputProps.accept = options.accept as string;
   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import deepEquals from './deepEquals.ts';
 import shallowEquals from './shallowEquals.ts';

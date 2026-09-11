@@ -2878,4 +2878,14 @@ describe('uiSchema', () => {
       });
     });
   });
+  it('string field with autocapitalize', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+    };
+    const uiSchema: UiSchema = {
+      'ui:autocapitalize': 'words',
+    };
+    const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+    expect(container.querySelector('input')?.getAttribute('autocapitalize')).toBe('words');
+  });
 });

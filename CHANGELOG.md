@@ -16,17 +16,49 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.9.1
+# 6.10.1
 
 ## @rjsf/core
 
-- Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
 - Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
 
 ## @rjsf/utils
 
-- Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
 - Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
+
+## Dev / docs / playground
+
+- Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now records the PR number in its artifact, and the comment workflow looks that PR up directly, accepts it only if its head sha matches the run's trusted `workflow_run` head sha, and fails loudly rather than skipping when the PR cannot be found
+- Extended the size-limit checks to cover every released package rather than just `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8`. The checks are derived from each package's own `package.json`, so a new package or a dependency change needs no config edit; only the packages that already had budgets enforce one, the rest are measured and reported
+- Moved `size-limit` and its preset out of the root `devDependencies` into their own pnpm project under `.github/size-limit`, so they are installed only by the size-limit workflow
+
+# 6.10.0
+
+## @rjsf/chakra-ui
+
+- Removed an `environment` prop the test wrapper passed to `EnvironmentProvider`, which has no such prop and silently ignored it
+
+## @rjsf/core
+
+- Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Added `ui:autocapitalize` support for inputs rendered by `BaseInputTemplate`, allowing mobile keyboards to apply the requested capitalization behavior ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mantine
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mui
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/utils
+
+- Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Added `autocapitalize` UI option handling to `getInputProps()` and its public input prop types ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## Dev / docs / playground
+
+- Documented `ui:autocapitalize`, added it to the simple playground sample, and added cross-theme regression coverage ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
 
 ## @rjsf/validator-ajv8
 
@@ -36,6 +68,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Relative TypeScript imports now name their real `.ts`/`.tsx` source file (and an explicit `index.ts` for directory imports), and TypeScript's `rewriteRelativeImportExtensions` emits the `.js` specifiers directly. This removes `tsc-alias` and its post-emit string rewriting entirely, along with the `tsc-alias-replacer/` directory, both `tsconfig.replacer.json` files, the `compileReplacer` scripts and `move-file-cli`. Naming the source file rather than the output is deliberate: Node's native type stripping requires exact `.ts` extensions and does no extension or directory-index searching, so this avoids a second repository-wide import migration later
 - Fixed `packages/daisyui/test/tsconfig.json`, which was configured to emit into `../dist` — the esbuild/rollup bundle output directory — instead of type-checking without emit like every other test project
+- Collapsed each package's `tsconfig.json` + `tsconfig.build.json` + `src/tsconfig.json` chain into one source config plus one test config extending a new shared root `tsconfig.test.json`. Building a package no longer pulls its dependencies' test projects into the graph
+- Fixed the root `tsconfig.json`, which referenced `snapshot-tests` twice and omitted `mantine`, `primereact`, `validator-ata` and `validator-cfworker`. It now lists every source and test project once, and a new root `typecheck` script runs in CI, so tests are typechecked for the first time. That surfaced stale tests in `@rjsf/chakra-ui` and `@rjsf/validator-ata` and two drifted playground samples, fixed here. `@rjsf/chakra-ui`'s `type-check` script previously ran against a solution config with `files: []` and checked nothing
+- Every package now emits `lib/` with the same settings: `esnext` target plus `.js.map` and `.d.ts.map`. Previously only `@rjsf/core` did; the rest emitted ES2018 with JS source maps only, depending on which root config their `src/tsconfig.json` extended
+- `tsconfig.tsbuildinfo` is no longer written into `lib/` and published with it. In 6.8.0 it was 446 kB of `@rjsf/antd`'s 959 kB unpacked tarball
+- Set `"types": []` in `tsconfig.base.json` so packages no longer see every hoisted `@types/*`, with Node-using packages opting in, and `"lib": ["ESNext"]` in the three validator packages so they cannot compile against browser globals
+- `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
+- Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
+- Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
 
 # 6.9.0
 

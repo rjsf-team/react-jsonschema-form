@@ -27,7 +27,7 @@ function UiField(props: FieldProps) {
   const latFieldPathId: FieldPathId = { [ID_KEY]: latKey, path: [latKey] };
   const lonFieldPathId: FieldPathId = { [ID_KEY]: lonKey, path: [lonKey] };
 
-  const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'id' | 'children'> = {
+  const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'id' | 'fieldPathId' | 'children'> = {
     registry,
     schema,
     uiSchema,
@@ -52,7 +52,12 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate {...fieldTemplateProps} id={cityFieldPathId[ID_KEY]} label={cityLabel}>
+          <FieldTemplate
+            {...fieldTemplateProps}
+            id={cityFieldPathId[ID_KEY]}
+            fieldPathId={cityFieldPathId}
+            label={cityLabel}
+          >
             <StringField
               schema={citySchema.field!}
               registry={registry}
@@ -73,7 +78,12 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate {...fieldTemplateProps} id={latFieldPathId[ID_KEY]} label={latLabel}>
+          <FieldTemplate
+            {...fieldTemplateProps}
+            id={latFieldPathId[ID_KEY]}
+            fieldPathId={latFieldPathId}
+            label={latLabel}
+          >
             <NumberField
               schema={latSchema.field!}
               registry={registry}
@@ -85,7 +95,12 @@ function UiField(props: FieldProps) {
               onChange={changeHandlerFactory(latKey)}
             />
           </FieldTemplate>
-          <FieldTemplate {...fieldTemplateProps} id={lonFieldPathId[ID_KEY]} label={lonLabel}>
+          <FieldTemplate
+            {...fieldTemplateProps}
+            id={lonFieldPathId[ID_KEY]}
+            fieldPathId={lonFieldPathId}
+            label={lonLabel}
+          >
             <NumberField
               schema={lonSchema.field!}
               registry={registry}
