@@ -1436,8 +1436,8 @@ describe('validateForm()', () => {
           value={(value as string) || ''}
           onChange={(event) => {
             const newValue = event.target.value;
-            const errorSchema: ErrorSchema | undefined =
-              newValue === 'bad' ? { __errors: ['custom widget error'] } : undefined;
+            const errorSchema =
+              newValue === 'bad' ? ({ __errors: ['custom widget error'] } as unknown as ErrorSchema) : undefined;
             onChange(newValue, errorSchema, id);
           }}
         />
