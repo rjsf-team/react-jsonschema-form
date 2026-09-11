@@ -29,7 +29,6 @@ body:
         - fluentui-rc
         - mantine
         - mui
-        - primereact
         - react-bootstrap
         - shadcn
         - utils

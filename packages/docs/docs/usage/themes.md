@@ -14,7 +14,6 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | mantine               | Published | `@rjsf/mantine`         |
 | material-ui           | Published | `@rjsf/mui`             |
-| PrimeReact            | Published | `@rjsf/primereact`      |
 | react-bootstrap       | Published | `@rjsf/react-bootstrap` |
 | shadcn                | Published | `@rjsf/shadcn`          |
 

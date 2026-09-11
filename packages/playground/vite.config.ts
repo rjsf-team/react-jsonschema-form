@@ -21,7 +21,6 @@ export default defineConfig({
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
       '@rjsf/mantine': path.resolve(__dirname, '../mantine/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
-      '@rjsf/primereact': path.resolve(__dirname, '../primereact/src'),
       '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),
       '@rjsf/shadcn': path.resolve(__dirname, '../shadcn/src'),
       // We want to pick up the browser version of the utils
