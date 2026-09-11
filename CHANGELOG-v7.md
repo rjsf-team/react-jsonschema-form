@@ -35,7 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Replaced the `extraErrorsBlockSubmit` prop with `extraErrorsAreWarnings`, inverting the default: `extraErrors` now block form submission unless `extraErrorsAreWarnings` is set to `true`, fixing [#4964](https://github.com/rjsf-team/react-jsonschema-form/issues/4964)
 - Fixed `validateFormWithFormData()` (used by form submission and the `validateForm()` instance method) silently dropping a `customError` raised by a field/widget's `onChange` on submit; it's now merged in and blocks submission the same way schema and (non-warning) `extraErrors` do
 - **BREAKING CHANGE:** Removed the private `_internalFormWrapper` prop from `FormProps` and `ThemeProps`; its only consumer was the removed `@rjsf/semantic-ui` theme. Use `tagName` to render a different element in place of `<form>`
-- **BREAKING CHANGE** Dropped the `experimental_` prefix from `FormProps`, now that these features are no longer experimental: `experimental_defaultFormStateBehavior` → `defaultFormStateBehavior`, `experimental_customMergeAllOf` → `customMergeAllOf`, `experimental_componentUpdateStrategy` → `componentUpdateStrategy`
+- **BREAKING CHANGE** Dropped the `experimental_` prefix from `FormProps`, now that these features are no longer experimental: `experimental_defaultFormStateBehavior` → `defaultFormStateBehavior`, `experimental_customMergeAllOf` → `customMergeAllOf`
 
 ## @rjsf/mantine
 

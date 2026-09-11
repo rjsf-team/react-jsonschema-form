@@ -56,7 +56,7 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
-## componentUpdateStrategy
+## experimental_componentUpdateStrategy
 
 Experimental feature to specify an alternative component update strategy that accepts one of the following value:
 React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.

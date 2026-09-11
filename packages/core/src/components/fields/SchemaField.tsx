@@ -351,17 +351,17 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 /** The `SchemaField` component wraps `SchemaFieldRender` with a custom memoization comparator that  determines whether it is necessary to rerender the component based on any props changes
- * using `componentUpdateStrategy`.
+ * using `experimental_componentUpdateStrategy`.
  *
  * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
  * since React.memo's return type erases generic parameters.
  */
 const SchemaField = memo(SchemaFieldRender, (prevProps, nextProps) => {
-  const { componentUpdateStrategy = 'customDeep' } = nextProps.registry.globalFormOptions;
-  if (componentUpdateStrategy === 'always') {
+  const { experimental_componentUpdateStrategy = 'customDeep' } = nextProps.registry.globalFormOptions;
+  if (experimental_componentUpdateStrategy === 'always') {
     return false; // always re-render — never consider props equal
   }
-  if (componentUpdateStrategy === 'shallow') {
+  if (experimental_componentUpdateStrategy === 'shallow') {
     return shallowEquals(prevProps, nextProps);
   }
   // default: 'customDeep'

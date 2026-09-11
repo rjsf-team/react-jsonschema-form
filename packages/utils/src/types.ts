@@ -483,7 +483,7 @@ export interface GlobalFormOptions {
    */
   readonly idSeparator: string;
   /** The component update strategy used by the Form and its fields for performance optimization */
-  readonly componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+  readonly experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
   /** Optional function to generate custom HTML name attributes for form elements. Receives the field path segments
    * and element type (object or array), and returns a custom name string. This allows backends like PHP/Rails
    * (`root[tasks][0][title]`) or Django (`root__tasks-0__title`) to receive form data in their expected format.

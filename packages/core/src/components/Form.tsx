@@ -236,7 +236,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * @default 'customDeep'
    */
-  componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
@@ -711,8 +711,8 @@ export default class Form<
    * @returns - True if the component should be updated, false otherwise
    */
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
-    const { componentUpdateStrategy = 'customDeep' } = this.props;
-    return shouldRender(this, nextProps, nextState, componentUpdateStrategy);
+    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props;
+    return shouldRender(this, nextProps, nextState, experimental_componentUpdateStrategy);
   }
 
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
@@ -1219,7 +1219,7 @@ export default class Form<
     F extends FormContextType = any,
   >(props: FormProps<T, S, F>): GlobalFormOptions {
     const {
-      componentUpdateStrategy,
+      experimental_componentUpdateStrategy,
       idSeparator = DEFAULT_ID_SEPARATOR,
       idPrefix = DEFAULT_ID_PREFIX,
       nameGenerator,
@@ -1230,7 +1230,7 @@ export default class Form<
       idPrefix,
       idSeparator,
       useFallbackUiForUnsupportedType,
-      ...(componentUpdateStrategy !== undefined && { componentUpdateStrategy }),
+      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
       ...(nameGenerator !== undefined && { nameGenerator }),
     };
   }
