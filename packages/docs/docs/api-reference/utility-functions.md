@@ -1105,6 +1105,22 @@ When a `params` array is provided, each value in the array is used to replace an
 
 - string: The updated string with any replacement specifiers replaced
 
+### resolveDefaultWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
+The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it, or `text` otherwise.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field
+- schemaUtils: SchemaUtilsType&lt;T, S, F> - The `SchemaUtilsType` used to detect whether `schema` has enumerable options
+- [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
+
+#### Returns
+
+- { defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
+
 ### resolveUiSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.

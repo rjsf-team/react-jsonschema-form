@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -616,6 +616,16 @@ describe('NumberField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2,3');
     });
 
+    it('should render a text input by default when the locale decimal separator is not "."', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+      });
+
+      expect(node.querySelector('.rjsf-field input')).toHaveAttribute('type', 'text');
+    });
+
     it('should handle a change event using comma decimal separator', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
@@ -625,6 +635,18 @@ describe('NumberField', () => {
           'ui:options': {
             inputType: 'text',
           },
+        },
+      });
+
+      await user.type(node.querySelector('input')!, '2,5');
+
+      expectToHaveBeenCalledWithFormData(onChange, 2.5, 'root');
+    });
+
+    it('should handle a change event using comma decimal separator with the default input', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
         },
       });
 
@@ -654,6 +676,65 @@ describe('NumberField', () => {
 
       await user.type($input, '0');
       expect($input).toHaveValue('2,00');
+    });
+
+    it('should preserve a typed "." as a pending decimal point instead of snapping to the locale separator', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+      });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '2.');
+      expect($input).toHaveValue('2.');
+
+      await user.type($input, '0');
+      expect($input).toHaveValue('2.0');
+
+      await user.type($input, '0');
+      expect($input).toHaveValue('2.00');
+    });
+
+    it('should commit the correct numeric value when "." is typed instead of the locale separator', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+      });
+
+      await user.type(node.querySelector('input')!, '2.1');
+
+      expectToHaveBeenCalledWithFormData(onChange, 2.1, 'root');
+    });
+
+    it('should not treat a stale cached input containing "." as a wildcard match for an unrelated value', async () => {
+      const schema: RJSFSchema = {
+        type: 'number',
+      };
+      const uiSchema: UiSchema = {
+        'ui:options': {
+          inputType: 'text',
+        },
+      };
+
+      const { rerender, node } = createFormComponent({
+        ref: createRef(),
+        schema,
+        uiSchema,
+      });
+
+      const $input = node.querySelector('input')!;
+      // Poison the component's cached "last typed value" with a string that isn't a number
+      // but shares every character with '2.5' except the position where '.' would be.
+      await user.type($input, '2x5');
+
+      // An unrelated, externally-provided value comes in (e.g. a programmatic reset).
+      rerender({ schema, formData: 2.5 });
+
+      // A regex built from '2.5' without escaping the '.' treats it as "any character" and
+      // wrongly matches the stale '2x5', redisplaying garbage instead of the locale-formatted number.
+      expect($input).toHaveValue('2,5');
     });
 
     it('should normalize values beginning with a comma', async () => {
@@ -718,6 +799,52 @@ describe('NumberField', () => {
 
       const input = node.querySelector<HTMLInputElement>('input[type="hidden"]')!;
       expect(input).toHaveAttribute('value', '2.3');
+    });
+
+    it('should pass a number, not a string, to a custom widget', () => {
+      let receivedValue: unknown;
+      const CustomWidget = (props: WidgetProps) => {
+        receivedValue = props.value;
+        return <div id='custom-widget' />;
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:widget': 'custom',
+        },
+        widgets: {
+          custom: CustomWidget,
+        },
+        formData: 2.3,
+      });
+
+      expect(node.querySelector('#custom-widget')).toBeInTheDocument();
+      expect(receivedValue).toBe(2.3);
+    });
+
+    it('should pass a number, not a string, to a format-registered widget', () => {
+      let receivedValue: unknown;
+      const CustomFormatWidget = (props: WidgetProps) => {
+        receivedValue = props.value;
+        return <div id='custom-format-widget' />;
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          format: 'custom-format',
+        },
+        widgets: {
+          'custom-format': CustomFormatWidget,
+        },
+        formData: 2.3,
+      });
+
+      expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
+      expect(receivedValue).toBe(2.3);
     });
   });
 });

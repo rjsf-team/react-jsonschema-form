@@ -71,6 +71,7 @@ import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
 import removeOptionalEmptyObjects from './removeOptionalEmptyObjects.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
+import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -186,6 +187,7 @@ export {
   // oxlint-disable-next-line typescript/no-deprecated
   removeOptionalEmptyObjects,
   replaceStringParameters,
+  resolveDefaultWidget,
   resolveUiSchema,
   schemaRequiresTrueValue,
   setByPath,
