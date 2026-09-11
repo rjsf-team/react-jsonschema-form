@@ -518,9 +518,6 @@ importers:
       '@rjsf/mui':
         specifier: workspace:^
         version: link:../mui
-      '@rjsf/primereact':
-        specifier: workspace:^
-        version: link:../primereact
       '@rjsf/react-bootstrap':
         specifier: workspace:^
         version: link:../react-bootstrap
@@ -557,9 +554,6 @@ importers:
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
-      primereact:
-        specifier: ^10.9.8
-        version: 10.9.8(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -597,28 +591,6 @@ importers:
       vite:
         specifier: 8.0.16
         version: 8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-
-  packages/primereact:
-    dependencies:
-      primeicons:
-        specifier: '>=6.0.0'
-        version: 7.0.0
-      react:
-        specifier: '>=19'
-        version: 19.3.0
-    devDependencies:
-      '@rjsf/core':
-        specifier: workspace:^
-        version: link:../core
-      '@rjsf/snapshot-tests':
-        specifier: workspace:^
-        version: link:../snapshot-tests
-      '@rjsf/utils':
-        specifier: workspace:^
-        version: link:../utils
-      primereact:
-        specifier: ^10.9.8
-        version: 10.9.8(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
   packages/react-bootstrap:
     dependencies:
@@ -9468,20 +9440,6 @@ packages:
   pretty-time@1.1.0:
     resolution: {integrity: sha512-28iF6xPQrP8Oa6uxE6a1biz+lWeTOAPKggvjB8HAs6nVMKZwf5bG++632Dx614hIWgUPkgivRfG+a8uAXGTIbA==}
     engines: {node: '>=4'}
-
-  primeicons@7.0.0:
-    resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
-
-  primereact@10.9.8:
-    resolution: {integrity: sha512-kX0hOce2WpG24CzRJWlHrRPsvbCsOyBDqsHCC/p4W8okxHIdkOxxIkQBUVO0gRuh0Lxl5o7lmEEtUMzrlicf8g==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   prism-react-renderer@2.4.1:
     resolution: {integrity: sha512-ey8Ls/+Di31eqzUxC46h8MksNuGx/n0AAC8uKpwFau4RPDYLuE3EXTp8N8G2vX2N7UC/+IXeNUnlWBGGcAG+Ig==}
@@ -22158,17 +22116,6 @@ snapshots:
       react-is: 17.0.2
 
   pretty-time@1.1.0: {}
-
-  primeicons@7.0.0: {}
-
-  primereact@10.9.8(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
-    dependencies:
-      '@types/react-transition-group': 4.4.12(@types/react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      react-transition-group: 4.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-    optionalDependencies:
-      '@types/react': 19.3.0
 
   prism-react-renderer@2.4.1(react@19.3.0):
     dependencies:

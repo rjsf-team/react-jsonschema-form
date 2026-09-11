@@ -11,7 +11,6 @@ import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { ConfigProvider } from 'antd';
-import { PrimeReactProvider } from 'primereact/api';
 import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
@@ -241,14 +240,6 @@ export default function DemoFrame(props: DemoFrameProps) {
           subtheme: { dataTheme: subtheme },
         })}
       </FrameContextConsumer>
-    ) : null;
-  } else if (theme === 'primereact') {
-    body = ready ? (
-      <>
-        <style>{`html { font-weight: 400; font-size: 14px; color: var(--text-color); }`}</style>
-        <link href='//cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.min.css' rel='stylesheet' />
-        <PrimeReactProvider value={{ styleContainer: container, appendTo: 'self' }}>{children}</PrimeReactProvider>
-      </>
     ) : null;
   } else if (theme === 'mantine') {
     body = ready ? (

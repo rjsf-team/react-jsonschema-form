@@ -16,7 +16,6 @@
     { "path": "../daisyui" },
     { "path": "../fluentui-rc" },
     { "path": "../mui" },
-    { "path": "../primereact" },
     { "path": "../react-bootstrap" },
     { "path": "../shadcn" },
     { "path": "../utils" },

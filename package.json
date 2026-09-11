@@ -71,7 +71,6 @@
     "packages/mantine",
     "packages/mui",
     "packages/playground",
-    "packages/primereact",
     "packages/react-bootstrap",
     "packages/utils",
     "packages/validator-ajv8",
