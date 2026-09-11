@@ -6,8 +6,8 @@ import getDefaultRegistry from './getDefaultRegistry.ts';
 
 /** Use for react testing library tests where we directly test the component rather than testing inside a Form
  */
-export default function getTestRegistry(
-  rootSchema: Registry['rootSchema'],
+export function getTestRegistry(
+  rootSchema: Registry['rootSchema'] = {},
   fields: Registry['fields'] = {},
   templates: Partial<Registry['templates']> = {},
   widgets: Registry['widgets'] = {},

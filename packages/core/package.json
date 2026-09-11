@@ -31,7 +31,11 @@
       "default": "./lib/index.js"
     },
     "./lib": "./lib/index.js",
-    "./lib/*.js": "./lib/*.js"
+    "./lib/*.js": "./lib/*.js",
+    "./testing": {
+      "@rjsf/source": "./src/testing.ts",
+      "default": "./lib/testing.js"
+    }
   },
   "files": [
     "lib",
@@ -43,7 +47,13 @@
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "@rjsf/validator-ajv8": {
+      "optional": true
+    }
   },
   "dependencies": {
     "markdown-to-jsx": "^9.8.2"

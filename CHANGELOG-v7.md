@@ -36,6 +36,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `validateFormWithFormData()` (used by form submission and the `validateForm()` instance method) silently dropping a `customError` raised by a field/widget's `onChange` on submit; it's now merged in and blocks submission the same way schema and (non-warning) `extraErrors` do
 - **BREAKING CHANGE:** Removed the private `_internalFormWrapper` prop from `FormProps` and `ThemeProps`; its only consumer was the removed `@rjsf/semantic-ui` theme. Use `tagName` to render a different element in place of `<form>`
 - **BREAKING CHANGE** Dropped the `experimental_` prefix from `FormProps`, now that these features are no longer experimental: `experimental_defaultFormStateBehavior` → `defaultFormStateBehavior`, `experimental_customMergeAllOf` → `customMergeAllOf`
+- **BREAKING CHANGE:** `getTestRegistry()` moved to `@rjsf/core/testing` as a named export; `@rjsf/validator-ajv8`, which it needs, is an optional peer dependency that only this entry point requires. Its positional arguments remain supported. Fixed three theme test helpers that previously passed an options object instead of positional arguments
 
 ## @rjsf/mantine
 

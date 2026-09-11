@@ -6,14 +6,13 @@ const ROOT = join(__dirname, '..', '..');
 // Budgets only where one already existed; elsewhere the PR comment's delta column
 // catches a regression without the bump commits a per-theme budget invites.
 // Canaries are single-export imports that fail if tree-shaking regresses.
+// Every export subpath is measured as its own entry, except the Node-only ones.
+const NODE_ONLY_SUBPATHS = ['./compileSchemaValidators']; // imports fs
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '92 kB',
+    installed: '47 kB',
     own: '24 kB',
-    // getTestRegistry pulls the AJV chain into core's lib/, but it is a
-    // devDependency there — a consumer installing @rjsf/core never gets it.
-    extraIgnore: ['@rjsf/validator-ajv8'],
-    canaries: [{ label: 'Form', import: 'Form', limit: '53 kB' }],
+    canaries: [{ label: 'Form', import: 'Form', limit: '47 kB' }],
   },
   '@rjsf/utils': {
     installed: '34 kB',
@@ -34,18 +33,33 @@ const released = readdirSync(join(ROOT, 'packages'))
 module.exports = released.flatMap(({ dir, pkg }) => {
   const path = join(ROOT, 'packages', dir, 'lib', 'index.js');
   const deps = Object.keys(pkg.dependencies ?? {});
-  // react-dom is never declared but is always the host's to provide.
-  const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'];
-  const { installed, own, extraIgnore = [], canaries = [] } = PACKAGES[pkg.name] ?? {};
+  // react-dom is never declared but is always the host's to provide; devDependencies (which @rjsf/core/testing
+  // reaches) are never installed by a consumer. An optional peer is measured: the consumer only installs it for the
+  // subpath that needs it, so its cost belongs to that subpath's row.
+  const optionalPeers = Object.keys(pkg.peerDependenciesMeta ?? {});
+  const peers = [
+    ...Object.keys(pkg.peerDependencies ?? {}),
+    ...Object.keys(pkg.devDependencies ?? {}),
+    'react-dom',
+  ].filter((dep) => !optionalPeers.includes(dep));
+  const { installed, own, canaries = [] } = PACKAGES[pkg.name] ?? {};
+  const subpaths = Object.entries(pkg.exports).filter(
+    ([key]) => key !== '.' && !key.startsWith('./lib') && !NODE_ONLY_SUBPATHS.includes(key),
+  );
 
   return [
     { name: pkg.name, path, ignore: peers, ...(installed && { limit: installed }) },
-    ...(deps.length || extraIgnore.length
+    ...subpaths.map(([key, target]) => ({
+      name: `${pkg.name}${key.slice(1)}`,
+      path: join(ROOT, 'packages', dir, typeof target === 'string' ? target : target.default),
+      ignore: peers,
+    })),
+    ...(deps.length
       ? [
           {
             name: `${pkg.name} (without dependencies)`,
             path,
-            ignore: [...peers, ...deps, ...extraIgnore],
+            ignore: [...peers, ...deps],
             ...(own && { limit: own }),
           },
         ]

@@ -7,7 +7,6 @@ import RichHelp from './components/RichHelp.tsx';
 import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
 import SchemaExamples from './components/SchemaExamples.tsx';
 import getDefaultRegistry from './getDefaultRegistry.ts';
-import getTestRegistry from './getTestRegistry.tsx';
 import type { ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 
@@ -21,5 +20,5 @@ export type {
   SchemaExamplesProps,
 };
 
-export { withTheme, getDefaultRegistry, getTestRegistry, RichDescription, RichHelp, SchemaExamples };
+export { withTheme, getDefaultRegistry, RichDescription, RichHelp, SchemaExamples };
 export default Form;

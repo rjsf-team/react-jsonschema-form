@@ -47,7 +47,7 @@ import LayoutGridField, {
   LAYOUT_GRID_OPTION,
   Operators,
 } from '../src/components/fields/LayoutGridField.tsx';
-import getTestRegistry from '../src/getTestRegistry.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
 
 const ColumnWidth3 = 'col-xs-3';
