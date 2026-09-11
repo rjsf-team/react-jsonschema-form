@@ -1346,16 +1346,16 @@ export default class Form<
    */
   validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsAreWarnings, focusOnFirstError, onError } = this.props;
-    const { errors: prevErrors } = this.state;
+    const { errors: prevErrors, customErrors } = this.state;
     const schemaValidation = this.validate(formData);
-    // Always merge extraErrors so they remain visible in state regardless of extraErrorsAreWarnings.
-    const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
-    // Merging appends extraErrors' own error list onto schemaValidation's, so any growth beyond the
-    // schema-only count means extraErrors contributed at least one real error.
-    const hasExtraErrors = errors.length > schemaValidation.errors.length;
-    // hasError gates submission: schema errors always block; extraErrors also block unless
-    // extraErrorsAreWarnings is set, in which case they are informational only.
-    const hasError = schemaValidation.errors.length > 0 || (hasExtraErrors && !extraErrorsAreWarnings);
+    // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings.
+    const { errors, errorSchema } = Form.mergeErrors<T>(schemaValidation, extraErrors, customErrors);
+    // extraErrors also block unless extraErrorsAreWarnings is set, in which case they are informational only.
+    const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
+    // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
+    // like schema errors, always block regardless of extraErrorsAreWarnings.
+    const hasCustomErrors = !!customErrors && toErrorList(customErrors.ErrorSchema).length > 0;
+    const hasError = schemaValidation.errors.length > 0 || hasBlockingExtraErrors || hasCustomErrors;
     if (hasError) {
       if (focusOnFirstError) {
         if (typeof focusOnFirstError === 'function') {

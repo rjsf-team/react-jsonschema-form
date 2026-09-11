@@ -1,5 +1,12 @@
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
-import type { ErrorSchema, Experimental_DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1409,6 +1416,52 @@ describe('validateForm()', () => {
     const errorMessages = formRef.current!.state.errors.map((e) => e.message);
     expect(errorMessages).toContain("must have required property 'foo'");
     expect(errorMessages).toContain('async error for foo');
+  });
+
+  it('Should block submission and keep a customError raised by a widget in state', async () => {
+    const formRef = createRef<Form>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    // See "Raising errors from within a custom widget or field" in the custom-widgets-fields docs
+    function RaisingWidget(props: WidgetProps) {
+      const { id, value, onChange } = props;
+      return (
+        <input
+          id={id}
+          value={(value as string) || ''}
+          onChange={(event) => {
+            const newValue = event.target.value;
+            const errorSchema: ErrorSchema | undefined =
+              newValue === 'bad' ? { __errors: ['custom widget error'] } : undefined;
+            onChange(newValue, errorSchema, id);
+          }}
+        />
+      );
+    }
+
+    const uiSchema: UiSchema = {
+      foo: { 'ui:widget': RaisingWidget },
+    };
+
+    const { node, onError } = createFormComponent({ ref: formRef, schema, uiSchema });
+
+    const input = node.querySelector<HTMLInputElement>('#root_foo')!;
+    await user.type(input, 'bad');
+
+    act(() => {
+      expect(formRef.current!.validateForm()).toBe(false);
+    });
+
+    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
+    expect(errorMessages).toContain('custom widget error');
+    expect(onError).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ message: 'custom widget error' })]),
+    );
   });
 
   it('Should clear extraErrors from state when extraErrors prop is removed and validateForm is called again', () => {
