@@ -240,23 +240,6 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
-  // Private
-  /**
-   * _internalFormWrapper lets a theme provide a custom wrapper around `<Form />` to support the proper rendering
-   * of that theme. To use this prop, one must pass a component that takes two
-   * props: `children` and `as`. That component, at minimum, should render the `children` inside of a <form /> tag
-   * unless `as` is provided, in which case, use the `as` prop in place of `<form />`.
-   * i.e.:
-   * ```
-   * export default function InternalForm({ children, as }) {
-   *   const FormTag = as || 'form';
-   *   return <FormTag>{children}</FormTag>;
-   * }
-   * ```
-   *
-   * Use at your own risk as this prop is private and may change at any time without notice.
-   */
-  _internalFormWrapper?: ElementType;
   /** Support receiving a React ref to the Form
    */
   ref?: Ref<Form<T, S, F>>;
@@ -358,8 +341,8 @@ export default class Form<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
-   * provide any possible type here
+  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` can provide any possible type
+   * here
    */
   formElement: RefObject<any>;
 
@@ -1414,8 +1397,8 @@ export default class Form<
     return this.validateFormWithFormData(newFormData);
   }
 
-  /** Renders the `Form` fields inside the <form> | `tagName` or `_internalFormWrapper`, rendering any errors if
-   * needed along with the submit button or any children of the form.
+  /** Renders the `Form` fields inside the <form> | `tagName`, rendering any errors if needed along with the submit
+   * button or any children of the form.
    */
   render() {
     const {
@@ -1434,16 +1417,12 @@ export default class Form<
       disabled,
       readonly,
       showErrorList = 'top',
-      _internalFormWrapper,
     } = this.props;
 
     const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
     const { SchemaField: SchemaFieldComponent } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
-    // A theme's `_internalFormWrapper` can take an `as` prop that is the PropTypes.elementType to use for the
-    // inner tag, so we'll need to pass `tagName` along if it is provided.
-    const as = _internalFormWrapper ? tagName : undefined;
-    const FormTag = _internalFormWrapper || tagName || 'form';
+    const FormTag = tagName || 'form';
 
     let { [SUBMIT_BTN_OPTIONS_KEY]: submitOptions = {} } = getUiOptions<T, S, F>(uiSchema);
     if (disabled) {
@@ -1464,7 +1443,6 @@ export default class Form<
         acceptCharset={acceptCharset}
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}
-        as={as}
         ref={this.formElement}
       >
         {showErrorList === 'top' && this.renderErrors(registry)}
