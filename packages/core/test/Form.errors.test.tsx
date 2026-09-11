@@ -468,7 +468,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           onError,
           focusOnFirstError,
           extraErrors,
-          extraErrorsBlockSubmit: true,
+          extraErrorsAreWarnings: false,
         });
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;

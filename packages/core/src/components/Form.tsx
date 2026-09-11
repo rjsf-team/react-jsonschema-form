@@ -164,12 +164,12 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Formerly the `validate` prop; Takes a function that specifies custom validation rules for the form */
   customValidate?: CustomValidator<T, S, F>;
   /** This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it
-   * can be used to implement asynchronous validation. By default, these are non-blocking errors, meaning that you can
-   * still submit the form when these are the only errors displayed to the user.
+   * can be used to implement asynchronous validation. By default, these errors block form submission just like
+   * JSON Schema errors do.
    */
   extraErrors?: ErrorSchema<T>;
-  /** If set to true, causes the `extraErrors` to become blocking when the form is submitted */
-  extraErrorsBlockSubmit?: boolean;
+  /** If set to true, treats `extraErrors` as warnings instead of blocking form submission */
+  extraErrorsAreWarnings?: boolean;
   /** If set to true, turns off HTML5 validation on the form; Set to `false` by default */
   noHtml5Validate?: boolean;
   /** If set to true, turns off all validation. Set to `false` by default
@@ -1345,14 +1345,17 @@ export default class Form<
    * @returns - True if the form is valid, false otherwise.
    */
   validateFormWithFormData = (formData?: T): boolean => {
-    const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
+    const { extraErrors, extraErrorsAreWarnings, focusOnFirstError, onError } = this.props;
     const { errors: prevErrors } = this.state;
     const schemaValidation = this.validate(formData);
-    // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
+    // Always merge extraErrors so they remain visible in state regardless of extraErrorsAreWarnings.
     const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
-    // hasError gates submission: schema errors always block; extraErrors only block when
-    // extraErrorsBlockSubmit is set (non-breaking default: extraErrors are informational only).
-    const hasError = schemaValidation.errors.length > 0 || (extraErrors && extraErrorsBlockSubmit);
+    // Merging appends extraErrors' own error list onto schemaValidation's, so any growth beyond the
+    // schema-only count means extraErrors contributed at least one real error.
+    const hasExtraErrors = errors.length > schemaValidation.errors.length;
+    // hasError gates submission: schema errors always block; extraErrors also block unless
+    // extraErrorsAreWarnings is set, in which case they are informational only.
+    const hasError = schemaValidation.errors.length > 0 || (hasExtraErrors && !extraErrorsAreWarnings);
     if (hasError) {
       if (focusOnFirstError) {
         if (typeof focusOnFirstError === 'function') {
