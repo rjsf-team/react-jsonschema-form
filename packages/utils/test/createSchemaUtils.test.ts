@@ -1,9 +1,4 @@
-import type {
-  Experimental_DefaultFormStateBehavior,
-  RJSFSchema,
-  SchemaUtilsType,
-  ValidatorType,
-} from '../src/index.ts';
+import type { DefaultFormStateBehavior, RJSFSchema, SchemaUtilsType, ValidatorType } from '../src/index.ts';
 import {
   createSchemaUtils,
   ID_KEY,
@@ -17,7 +12,7 @@ import getTestValidator from './testUtils/getTestValidator.ts';
 describe('createSchemaUtils()', () => {
   const testValidator: ValidatorType = getTestValidator({});
   const rootSchema: RJSFSchema = { type: 'object' };
-  const defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+  const defaultFormStateBehavior: DefaultFormStateBehavior = {
     arrayMinItems: { populate: 'requiredOnly' },
   };
   const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema, defaultFormStateBehavior);

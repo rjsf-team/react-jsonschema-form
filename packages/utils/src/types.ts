@@ -56,9 +56,9 @@ export type OptionValueFormat = 'indexed' | 'realValue';
 /** Function to generate HTML name attributes from path segments */
 export type NameGeneratorFunction = (path: FieldPathList, idPrefix: string, isMultiValue?: boolean) => string;
 
-/** Experimental feature that specifies the Array `minItems` default form state behavior
+/** Specifies the Array `minItems` default form state behavior
  */
-export interface Experimental_ArrayMinItems {
+export interface ArrayMinItems {
   /** Optional enumerated flag controlling how array minItems are populated, defaulting to `all`:
    * - `all`: Legacy behavior, populate minItems entries with default values initially and include an empty array when
    *        no values have been defined.
@@ -89,16 +89,16 @@ export interface Experimental_ArrayMinItems {
   mergeExtraDefaults?: boolean;
 }
 
-/** Experimental features to specify different default form state behaviors. Currently, this affects the
+/** Specifies different default form state behaviors. Currently, this affects the
  * handling of optional array fields where `minItems` is set and handling of setting defaults based on the
  * value of `emptyObjectFields`. It also affects how `allOf` fields are handled and how to handle merging defaults into
  * the formData in relation to explicit `undefined` values via `mergeDefaultsIntoFormData`.
  */
-export interface Experimental_DefaultFormStateBehavior {
+export interface DefaultFormStateBehavior {
   /** Optional object, that controls how the default form state for arrays with `minItems` is handled. When not provided
    * it defaults to `{ populate: 'all' }`.
    */
-  arrayMinItems?: Experimental_ArrayMinItems;
+  arrayMinItems?: ArrayMinItems;
   /** Optional enumerated flag controlling how empty object fields are populated, defaulting to `populateAllDefaults`:
    * - `populateAllDefaults`: Legacy behavior - set default when there is a primitive value, an non-empty object field,
    *        or the field itself is required  |
@@ -145,7 +145,7 @@ export interface Experimental_DefaultFormStateBehavior {
  * @param schema - Schema with `allOf` that needs to be merged
  * @returns The merged schema
  */
-export type Experimental_CustomMergeAllOf<S extends StrictRJSFSchema = RJSFSchema> = (schema: S) => S;
+export type CustomMergeAllOf<S extends StrictRJSFSchema = RJSFSchema> = (schema: S) => S;
 
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
@@ -483,7 +483,7 @@ export interface GlobalFormOptions {
    */
   readonly idSeparator: string;
   /** The component update strategy used by the Form and its fields for performance optimization */
-  readonly experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+  readonly componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
   /** Optional function to generate custom HTML name attributes for form elements. Receives the field path segments
    * and element type (object or array), and returns a custom name string. This allows backends like PHP/Rails
    * (`root[tasks][0][title]`) or Django (`root__tasks-0__title`) to receive form data in their expected format.
@@ -1329,15 +1329,15 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [experimental_defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
-   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+   * @param [defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+    defaultFormStateBehavior?: DefaultFormStateBehavior,
+    customMergeAllOf?: CustomMergeAllOf<S>,
   ): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf

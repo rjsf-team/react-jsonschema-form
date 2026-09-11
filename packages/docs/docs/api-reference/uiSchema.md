@@ -510,7 +510,7 @@ const uiSchema = {
     enableOptionalDataFieldForType: ['object', 'array'],
   },
 };
-const experimental_defaultFormStateBehavior = {
+const defaultFormStateBehavior = {
   // Set the emptyObjectFields to only populate required defaults to highlight the code working
   emptyObjectFields: 'populateRequiredDefaults',
 };
@@ -520,7 +520,7 @@ render(
     schema={schema}
     validator={validator}
     uiSchema={uiSchema}
-    experimental_defaultFormStateBehavior={experimental_defaultFormStateBehavior}
+    defaultFormStateBehavior={defaultFormStateBehavior}
     templates={{ OptionalDataControlsTemplate }}
   />,
   document.getElementById('app'),

@@ -1811,7 +1811,7 @@ describe('anyOf', () => {
         formData: {
           items: [{ type: 'typeA', showField: true }],
         },
-        experimental_defaultFormStateBehavior: {
+        defaultFormStateBehavior: {
           mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
         },
       });
@@ -1863,7 +1863,7 @@ describe('anyOf', () => {
         formData: {
           items: [{ type: 'typeA' }], // No showField defined
         },
-        experimental_defaultFormStateBehavior: {
+        defaultFormStateBehavior: {
           mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
         },
       });
@@ -1904,7 +1904,7 @@ describe('anyOf', () => {
       const { node, onChange } = createFormComponent({
         schema,
         formData: { type: 'optionA', enabled: false },
-        experimental_defaultFormStateBehavior: {
+        defaultFormStateBehavior: {
           mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
         },
       });

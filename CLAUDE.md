@@ -30,10 +30,6 @@ pnpm run knip
 pnpm run cs-check
 pnpm run cs-format
 
-# Format check / format every file in the repo, including configs and markdown
-pnpm run format-check
-pnpm run format
-
 # Run a single package's tests
 cd packages/core && pnpm test
 

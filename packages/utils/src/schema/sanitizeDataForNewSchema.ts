@@ -3,7 +3,7 @@ import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
-  Experimental_CustomMergeAllOf,
+  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -94,7 +94,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -108,7 +108,7 @@ export default function sanitizeDataForNewSchema<
   newSchema?: S,
   oldSchema?: S,
   data: any = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): T {
   // By default, we will clear the form data
   let newFormData;
@@ -135,22 +135,10 @@ export default function sanitizeDataForNewSchema<
       let newKeyedSchema = getPropertySchema<S>(newSchema, key);
       // Resolve the refs if they exist
       if (hasByPath(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          oldKeyedSchema,
-          rootSchema,
-          formValue,
-          experimental_customMergeAllOf,
-        );
+        oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue, customMergeAllOf);
       }
       if (hasByPath(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          newKeyedSchema,
-          rootSchema,
-          formValue,
-          experimental_customMergeAllOf,
-        );
+        newKeyedSchema = retrieveSchema<T, S, F>(validator, newKeyedSchema, rootSchema, formValue, customMergeAllOf);
       }
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = oldKeyedSchema.type;
@@ -170,7 +158,7 @@ export default function sanitizeDataForNewSchema<
             newKeyedSchema,
             isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
-            experimental_customMergeAllOf,
+            customMergeAllOf,
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -232,7 +220,7 @@ export default function sanitizeDataForNewSchema<
           oldSchemaItems as S,
           rootSchema,
           data as T,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         );
       }
       if (hasByPath(newSchemaItems, REF_KEY)) {
@@ -241,7 +229,7 @@ export default function sanitizeDataForNewSchema<
           newSchemaItems as S,
           rootSchema,
           data as T,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         );
       }
       // Now get types and see if they are the same
@@ -258,7 +246,7 @@ export default function sanitizeDataForNewSchema<
               newSchemaItems as S,
               oldSchemaItems as S,
               aValue,
-              experimental_customMergeAllOf,
+              customMergeAllOf,
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);

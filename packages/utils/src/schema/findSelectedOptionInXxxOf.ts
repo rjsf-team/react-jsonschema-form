@@ -2,13 +2,7 @@ import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import { getByPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import type { CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 /** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
@@ -22,7 +16,7 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
  * @param xxx - Either `anyOf` or `oneOf`, defines which value is being sought
  * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
  */
 export default function findSelectedOptionInXxxOf<
@@ -36,13 +30,13 @@ export default function findSelectedOptionInXxxOf<
   fallbackField: string,
   xxx: 'anyOf' | 'oneOf',
   formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S | undefined {
   if (Array.isArray(schema[xxx])) {
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const selectorField = discriminator || fallbackField;
     const xxxOfs = schema[xxx].map((xxxOf) =>
-      retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
+      retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, customMergeAllOf),
     );
     const data = getByPath(formData, selectorField);
     if (data !== undefined) {

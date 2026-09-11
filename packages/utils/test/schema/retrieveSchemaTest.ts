@@ -1072,7 +1072,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
       });
 
-      it('should use experimental_customMergeAllOf when provided', () => {
+      it('should use customMergeAllOf when provided', () => {
         const schema: RJSFSchema = {
           allOf: [
             {
@@ -2234,8 +2234,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
-    describe('resolveReference() with experimental_customMergeAllOf', () => {
-      it('should pass experimental_customMergeAllOf parameter to retrieveSchemaInternal', () => {
+    describe('resolveReference() with customMergeAllOf', () => {
+      it('should pass customMergeAllOf parameter to retrieveSchemaInternal', () => {
         const schema: RJSFSchema = {
           $ref: '#/definitions/testRef',
           allOf: [
@@ -2283,8 +2283,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
       });
     });
-    describe('resolveDependencies() with experimental_customMergeAllOf', () => {
-      it('should pass experimental_customMergeAllOf parameter through dependency resolution', () => {
+    describe('resolveDependencies() with customMergeAllOf', () => {
+      it('should pass customMergeAllOf parameter through dependency resolution', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -2330,8 +2330,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
       });
     });
-    describe('resolveSchema() integration with experimental_customMergeAllOf', () => {
-      it('should properly pass experimental_customMergeAllOf through all resolution paths', () => {
+    describe('resolveSchema() integration with customMergeAllOf', () => {
+      it('should properly pass customMergeAllOf through all resolution paths', () => {
         const schema: RJSFSchema = {
           $ref: '#/definitions/baseSchema',
           dependencies: {
@@ -2404,7 +2404,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           [RJSF_REF_KEY]: '#/definitions/baseSchema',
         });
       });
-      it('should handle experimental_customMergeAllOf with nested $ref resolution', () => {
+      it('should handle customMergeAllOf with nested $ref resolution', () => {
         const schema: RJSFSchema = {
           $ref: '#/definitions/nestedRef',
         };
@@ -2447,8 +2447,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
       });
     });
-    describe('Edge cases for experimental_customMergeAllOf fix', () => {
-      it('should handle undefined experimental_customMergeAllOf parameter gracefully', () => {
+    describe('Edge cases for customMergeAllOf fix', () => {
+      it('should handle undefined customMergeAllOf parameter gracefully', () => {
         const schema: RJSFSchema = {
           $ref: '#/definitions/testRef',
           dependencies: {
@@ -2475,7 +2475,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { trigger: 'value' };
-        // Test with undefined experimental_customMergeAllOf (should use default mergeAllOf)
+        // Test with undefined customMergeAllOf (should use default mergeAllOf)
         const result = retrieveSchema(testValidator, schema, rootSchema, formData, undefined);
         expect(result).toEqual({
           type: 'object',
@@ -2485,7 +2485,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           [RJSF_REF_KEY]: '#/definitions/testRef',
         });
       });
-      it('should handle experimental_customMergeAllOf that throws an error', () => {
+      it('should handle customMergeAllOf that throws an error', () => {
         const schema: RJSFSchema = {
           allOf: [
             {
@@ -2511,7 +2511,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(result).toEqual({});
         expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
       });
-      it('should pass experimental_customMergeAllOf through complex nested resolution chains', () => {
+      it('should pass customMergeAllOf through complex nested resolution chains', () => {
         const schema: RJSFSchema = {
           $ref: '#/definitions/level1',
         };

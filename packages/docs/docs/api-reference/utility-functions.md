@@ -1482,7 +1482,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 - schema: S - The node within the JSON schema in which to search
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1501,7 +1501,7 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 - fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
 - xxx: 'anyOf' | 'oneOf' - Either `anyOf` or `oneOf`, defines which value is being sought
 - [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1518,8 +1518,8 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
-- [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./form-props.md#experimental_defaultFormStateBehavior) prop
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [defaultFormStateBehavior]: DefaultFormStateBehavior - See `Form` documentation for the [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
 
 #### Returns
@@ -1557,7 +1557,7 @@ The closest match is determined using the number of matching properties, and mor
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
 - [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1574,7 +1574,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1592,7 +1592,7 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 - schema: S - The current node within the JSON schema recursion
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - defaultValue: T | S - The value to return if a value is not found for the `pathList` path
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1624,7 +1624,7 @@ Checks to see if the `schema` combination represents a multi-select
 - validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1639,7 +1639,7 @@ Checks to see if the `schema` combination represents a select
 - validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1674,7 +1674,7 @@ potentially recursive resolution.
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1757,7 +1757,7 @@ Also, any properties in the old schema that are non-existent in the new schema a
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 

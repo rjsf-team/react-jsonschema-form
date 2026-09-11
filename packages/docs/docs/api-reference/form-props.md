@@ -56,7 +56,7 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
-## experimental_componentUpdateStrategy
+## componentUpdateStrategy
 
 Experimental feature to specify an alternative component update strategy that accepts one of the following value:
 React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.
@@ -68,7 +68,7 @@ React's default `Component` rendering strategy is to re-render on every state ch
 | shallow    | shallow equality                                  |
 | always     | component always rerenders                        |
 
-## experimental_defaultFormStateBehavior
+## defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
 Currently, this only affects the handling of optional array fields where `minItems` is set and handling of setting defaults based on the value of `emptyObjectFields`.
@@ -145,7 +145,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       arrayMinItems: {
         computeSkipPopulate: computeSkipPopulateNumberArrays,
       },
@@ -188,7 +188,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
@@ -251,7 +251,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       allOf: 'populateDefaults',
     }}
   />,
@@ -318,7 +318,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       nestedDefaultsPrecedence: 'ancestorWins',
     }}
   />,
@@ -326,9 +326,9 @@ render(
 );
 ```
 
-## experimental_customMergeAllOf
+## customMergeAllOf
 
-The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
+The `customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
 
 By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
 
@@ -345,7 +345,7 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
 };
 
 render(
-  <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
+  <Form schema={schema} validator={validator} customMergeAllOf={customMergeAllOf} />,
   document.getElementById('app'),
 );
 ```

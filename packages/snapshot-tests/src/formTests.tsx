@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFSchema, ErrorSchema, UiSchema, Experimental_DefaultFormStateBehavior } from '@rjsf/utils';
+import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -755,7 +755,7 @@ export function formTests(Form: ComponentType<FormProps>) {
     describe('optional data controls', () => {
       let schema: RJSFSchema;
       let uiSchema: UiSchema;
-      let experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
+      let defaultFormStateBehavior: DefaultFormStateBehavior;
       let formData: any;
       beforeAll(() => {
         schema = {
@@ -914,7 +914,7 @@ export function formTests(Form: ComponentType<FormProps>) {
             },
           },
         };
-        experimental_defaultFormStateBehavior = {
+        defaultFormStateBehavior = {
           // Set the emptyObjectFields to only populate required defaults to highlight the code working
           emptyObjectFields: 'populateRequiredDefaults',
         };
@@ -930,7 +930,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema: {},
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
         };
         const { asFragment } = render(<Form {...formProps} />);
         expect(asFragment()).toMatchSnapshot();
@@ -940,7 +940,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
         };
         const { asFragment } = render(<Form {...formProps} />);
         expect(asFragment()).toMatchSnapshot();
@@ -950,7 +950,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           formData,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -961,7 +961,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema: {},
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           readonly: true,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -972,7 +972,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           disabled: true,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -983,7 +983,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           formData,
           readonly: true,
         };

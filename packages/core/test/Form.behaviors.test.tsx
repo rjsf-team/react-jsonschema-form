@@ -1,12 +1,5 @@
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
-import type {
-  ErrorSchema,
-  Experimental_DefaultFormStateBehavior,
-  FieldProps,
-  RJSFSchema,
-  UiSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1697,7 +1690,7 @@ describe('optionalDataControls', () => {
       enableOptionalDataFieldForType: ['object', 'array'],
     },
   };
-  const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+  const defaultFormStateBehavior: DefaultFormStateBehavior = {
     // Set the emptyObjectFields to only populate required defaults to highlight the code working
     emptyObjectFields: 'populateRequiredDefaults',
   };
@@ -1713,7 +1706,7 @@ describe('optionalDataControls', () => {
   it('does not render any optional data control messages when not turned on and readonly and disabled', () => {
     const props: NoValFormProps = {
       schema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       readonly: true,
       disabled: true,
     };
@@ -1740,7 +1733,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       readonly: true,
     };
     const { node } = createFormComponent(props);
@@ -1766,7 +1759,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       disabled: true,
     };
     const { node } = createFormComponent(props);
@@ -1791,7 +1784,7 @@ describe('optionalDataControls', () => {
   it('does not render any optional data controls when not turned on', () => {
     const props: NoValFormProps = {
       schema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     const addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1812,7 +1805,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: objectOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     const addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1853,7 +1846,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: arrayOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     let addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1894,7 +1887,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     let addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -2739,7 +2732,7 @@ describe('enum-based array values do not update when dependencies change (#1357 
     const { node, onChange } = createFormComponent({
       schema,
       formData: { select_item: 'item1' },
-      experimental_defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
+      defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
     });
 
     expectToHaveBeenCalledWithFormData(onChange, {

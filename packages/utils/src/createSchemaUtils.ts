@@ -17,8 +17,8 @@ import {
   sanitizeDataForNewSchema,
 } from './schema/index.ts';
 import type {
-  Experimental_CustomMergeAllOf,
-  Experimental_DefaultFormStateBehavior,
+  CustomMergeAllOf,
+  DefaultFormStateBehavior,
   FormContextType,
   FoundFieldType,
   GlobalUISchemaOptions,
@@ -31,8 +31,8 @@ import type {
 } from './types.ts';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or
- * `experimental_customMergeAllOf` to each method. Since these generally do not change across a `Form`, this allows for
+ * that one does not have to explicitly pass the `validator`, `rootSchema`, `defaultFormStateBehavior` or
+ * `customMergeAllOf` to each method. Since these generally do not change across a `Form`, this allows for
  * providing a simplified set of APIs to the `@rjsf/core` components and the various themes as well. This class
  * implements the `SchemaUtilsType` interface.
  */
@@ -43,21 +43,21 @@ class SchemaUtils<
 > implements SchemaUtilsType<T, S, F> {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
-  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
+  defaultFormStateBehavior: DefaultFormStateBehavior;
+  customMergeAllOf?: CustomMergeAllOf<S>;
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
-   * @param experimental_defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
-   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+   * @param defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
+   * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    */
   constructor(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+    defaultFormStateBehavior: DefaultFormStateBehavior,
+    customMergeAllOf?: CustomMergeAllOf<S>,
   ) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
@@ -65,8 +65,8 @@ class SchemaUtils<
       this.rootSchema = rootSchema;
     }
     this.validator = validator;
-    this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
-    this.experimental_customMergeAllOf = experimental_customMergeAllOf;
+    this.defaultFormStateBehavior = defaultFormStateBehavior;
+    this.customMergeAllOf = customMergeAllOf;
   }
 
   /** Returns the `rootSchema` in the `SchemaUtilsType`
@@ -91,15 +91,15 @@ class SchemaUtils<
    *
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
-   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+   * @param [defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior = {},
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+    defaultFormStateBehavior = {},
+    customMergeAllOf?: CustomMergeAllOf<S>,
   ): boolean {
     // If either validator or rootSchema are falsy, return false to prevent the creation
     // of a new SchemaUtilsType with incomplete properties.
@@ -110,8 +110,8 @@ class SchemaUtils<
     return (
       this.validator !== validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
-      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior) ||
-      this.experimental_customMergeAllOf !== experimental_customMergeAllOf
+      !deepEquals(this.defaultFormStateBehavior, defaultFormStateBehavior) ||
+      this.customMergeAllOf !== customMergeAllOf
     );
   }
 
@@ -126,14 +126,7 @@ class SchemaUtils<
    *            `{ field: undefined, isRequired: undefined }` is returned.
    */
   findFieldInSchema(schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S> {
-    return findFieldInSchema(
-      this.validator,
-      this.rootSchema,
-      schema,
-      path,
-      formData,
-      this.experimental_customMergeAllOf,
-    );
+    return findFieldInSchema(this.validator, this.rootSchema, schema, path, formData, this.customMergeAllOf);
   }
 
   /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
@@ -154,7 +147,7 @@ class SchemaUtils<
       fallbackField,
       xxx,
       formData,
-      this.experimental_customMergeAllOf,
+      this.customMergeAllOf,
     );
   }
 
@@ -181,8 +174,8 @@ class SchemaUtils<
       formData,
       this.rootSchema,
       includeUndefinedValues,
-      this.experimental_defaultFormStateBehavior,
-      this.experimental_customMergeAllOf,
+      this.defaultFormStateBehavior,
+      this.customMergeAllOf,
       initialDefaultsGenerated,
     );
   }
@@ -202,7 +195,7 @@ class SchemaUtils<
       uiSchema,
       this.rootSchema,
       globalOptions,
-      this.experimental_customMergeAllOf,
+      this.customMergeAllOf,
     );
   }
 
@@ -232,7 +225,7 @@ class SchemaUtils<
       options,
       selectedOption,
       discriminatorField,
-      this.experimental_customMergeAllOf,
+      this.customMergeAllOf,
     );
   }
 
@@ -267,7 +260,7 @@ class SchemaUtils<
       path,
       // @ts-expect-error TS2769: No overload matches this call
       defaultValue,
-      this.experimental_customMergeAllOf,
+      this.customMergeAllOf,
     );
   }
 
@@ -278,7 +271,7 @@ class SchemaUtils<
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, this.customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -287,7 +280,7 @@ class SchemaUtils<
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema, this.customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -296,7 +289,7 @@ class SchemaUtils<
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.customMergeAllOf);
   }
   /**
    * The function takes a `schema` and `formData` and returns a copy of the formData with any fields not defined in the schema removed.
@@ -326,7 +319,7 @@ class SchemaUtils<
       schema,
       this.rootSchema,
       rawFormData,
-      this.experimental_customMergeAllOf,
+      this.customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
     );
   }
@@ -343,14 +336,7 @@ class SchemaUtils<
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(
-      this.validator,
-      this.rootSchema,
-      newSchema,
-      oldSchema,
-      data,
-      this.experimental_customMergeAllOf,
-    );
+    return sanitizeDataForNewSchema(this.validator, this.rootSchema, newSchema, oldSchema, data, this.customMergeAllOf);
   }
 }
 
@@ -359,8 +345,8 @@ class SchemaUtils<
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
@@ -370,13 +356,8 @@ export default function createSchemaUtils<
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
-  experimental_defaultFormStateBehavior = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  defaultFormStateBehavior = {},
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(
-    validator,
-    rootSchema,
-    experimental_defaultFormStateBehavior,
-    experimental_customMergeAllOf,
-  );
+  return new SchemaUtils<T, S, F>(validator, rootSchema, defaultFormStateBehavior, customMergeAllOf);
 }
