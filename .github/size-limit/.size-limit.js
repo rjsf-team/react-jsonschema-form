@@ -26,9 +26,9 @@ const PACKAGES = {
 const released = readdirSync(join(ROOT, 'packages'))
   .filter((dir) => existsSync(join(ROOT, 'packages', dir, 'package.json')))
   .map((dir) => ({ dir, pkg: JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8')) }))
-  // build:ts emits the lib/ entry point being measured; a package without one
-  // (@rjsf/snapshot-tests) ships no bundle to measure.
-  .filter(({ pkg }) => !pkg.private && pkg.scripts?.['build:ts'])
+  // @rjsf/snapshot-tests is a test harness for the themes, not a bundle a
+  // consumer installs.
+  .filter(({ pkg }) => !pkg.private && pkg.name !== '@rjsf/snapshot-tests')
   .sort((a, b) => a.pkg.name.localeCompare(b.pkg.name));
 
 module.exports = released.flatMap(({ dir, pkg }) => {
