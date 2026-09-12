@@ -498,7 +498,7 @@ describe('SchemaField', () => {
       },
     };
 
-    function customValidate(_: any, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation) {
       errors.addError('container');
       errors.foo?.addError('test');
       return errors;

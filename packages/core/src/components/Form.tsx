@@ -124,15 +124,15 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
-  onBlur?: (id: string, data: any) => void;
+  onBlur?: (id: string, data: unknown) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass
    * an `onFocus` handler, which will receive the id of the input that is focused and the field value
    */
-  onFocus?: (id: string, data: any) => void;
+  onFocus?: (id: string, data: unknown) => void;
   /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
   acceptCharset?: string;
   /** The value of this prop will be passed to the `action` HTML attribute on the form
@@ -1107,7 +1107,7 @@ export default class Form<
    * @param id - The unique `id` of the field that was blurred
    * @param data - The data associated with the field that was blurred
    */
-  onBlur = (id: string, data: any) => {
+  onBlur = (id: string, data: unknown) => {
     const { onBlur, omitExtraData, liveOmit, liveValidate } = this.props;
     if (onBlur) {
       onBlur(id, data);
@@ -1156,7 +1156,7 @@ export default class Form<
    * @param id - The unique `id` of the field that was focused
    * @param data - The data associated with the field that was focused
    */
-  onFocus = (id: string, data: any) => {
+  onFocus = (id: string, data: unknown) => {
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus(id, data);
@@ -1171,7 +1171,7 @@ export default class Form<
    *
    * @param event - The submit HTML form event
    */
-  onSubmit = (event: SubmitEvent<any>) => {
+  onSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;

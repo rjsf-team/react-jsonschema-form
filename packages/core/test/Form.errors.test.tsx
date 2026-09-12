@@ -95,7 +95,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           // The form has to be controlled, since the errors are cleared by comparing the incoming
           // `formData` prop against the previous one.
           function Controlled() {
-            const [formData, setFormData] = useState<any>({ baz: [{}] });
+            const [formData, setFormData] = useState<Record<string, unknown>>({ baz: [{}] });
             return (
               <Form
                 schema={altSchema}
@@ -144,7 +144,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           const formRef = createRef<Form>();
 
           function Controlled() {
-            const [formData, setFormData] = useState<any>({});
+            const [formData, setFormData] = useState<Record<string, unknown>>({});
             return (
               <Form
                 ref={formRef}
@@ -193,7 +193,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           const formRef = createRef<Form>();
 
           function Controlled() {
-            const [formData, setFormData] = useState<any>({ 'has.dot': {} });
+            const [formData, setFormData] = useState<Record<string, unknown>>({ 'has.dot': {} });
             return (
               <Form
                 ref={formRef}
@@ -241,7 +241,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           };
 
           function Controlled() {
-            const [formData, setFormData] = useState<any>({ tags: ['a', 'a'] });
+            const [formData, setFormData] = useState<Record<string, unknown>>({ tags: ['a', 'a'] });
             return (
               <Form
                 schema={altSchema}
@@ -284,7 +284,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           };
 
           function Controlled() {
-            const [formData, setFormData] = useState<any>({ baz: [{}, { corge: 'z' }] });
+            const [formData, setFormData] = useState<Record<string, unknown>>({ baz: [{}, { corge: 'z' }] });
             return (
               <Form
                 schema={altSchema}
@@ -1162,8 +1162,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         };
 
         // customValidate method to raise an error when Start is larger than End field.
-        const customValidate = (formData: any, errors: FormValidation) => {
-          if (formData.Start > formData.End) {
+        interface StartEnd {
+          Start?: number;
+          End?: number;
+        }
+        const customValidate = (formData: StartEnd | undefined, errors: FormValidation) => {
+          const { Start, End } = formData ?? {};
+          if (Start !== undefined && End !== undefined && Start > End) {
             errors.Start?.addError('Validate error: Test should be LE than End');
           }
           return errors;

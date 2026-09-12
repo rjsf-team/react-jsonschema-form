@@ -1065,7 +1065,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
   };
 
   const Container = (containerProps: FormProps) => {
-    const [state, setState] = useState<{ formData?: any }>({});
+    const [state, setState] = useState<Pick<FormProps, 'formData'>>({});
     const onChange = useCallback(({ formData }: IChangeEvent) => {
       setState({ formData });
     }, []);
@@ -2197,10 +2197,13 @@ describe('initialFormData feature to prevent form reset', () => {
       name: { type: 'string', title: 'Name' },
     },
   };
-  const data = { name: 'initial_id' };
+  interface ResetData {
+    name?: string;
+  }
+  const data: ResetData = { name: 'initial_id' };
   /** This was adapted from the [example](https://playcode.io/2038613) provided in issue #391
    */
-  const FormWrapper = ({ formData, initialFormData }: { formData?: any; initialFormData?: any }) => {
+  const FormWrapper = ({ formData, initialFormData }: { formData?: ResetData; initialFormData?: ResetData }) => {
     const [isPending, setIsPending] = useState(false);
 
     const handleSubmit = () => {
@@ -2415,7 +2418,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
 
     // The name field's extraErrors should still contain exactly one error
     const { state } = formRef.current!;
-    const nameErrors = (state.errorSchema as any)?.name?.__errors ?? [];
+    const nameErrors = (state.errorSchema as ErrorSchema<{ name?: string }>).name?.__errors ?? [];
     expect(nameErrors).toHaveLength(1);
     expect(nameErrors[0]).toBe('Name is required');
   });
