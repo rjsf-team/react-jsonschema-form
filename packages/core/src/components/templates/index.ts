@@ -6,7 +6,7 @@ import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
 import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
 import BaseInputTemplate from './BaseInputTemplate.tsx';
-import generateButtonTemplates from './ButtonTemplates/index.ts';
+import { generateButtonTemplates } from './ButtonTemplates/index.ts';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
 import DescriptionFieldTemplate from './DescriptionField.tsx';
 import ErrorListTemplate from './ErrorList.tsx';
@@ -46,7 +46,6 @@ export {
   WrapIfAdditionalTemplate,
 };
 
-/** The core templates */
 export function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

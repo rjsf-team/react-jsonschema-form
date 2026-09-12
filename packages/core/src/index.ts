@@ -1,12 +1,12 @@
 import type { FormProps, FormState, IChangeEvent } from './components/Form.tsx';
-import Form, { buildRegistry } from './components/Form.tsx';
+import Form from './components/Form.tsx';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
 import type { RichHelpProps } from './components/RichHelp.tsx';
 import RichHelp from './components/RichHelp.tsx';
 import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
 import SchemaExamples from './components/SchemaExamples.tsx';
-import { generateTheme } from './Theme.ts';
+import { buildRegistry, generateTheme } from './Theme.ts';
 import type { ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 

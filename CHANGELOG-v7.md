@@ -47,6 +47,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed the `getTestRegistry()` test helper passing an options object where positional arguments were expected, which silently dropped its templates and widgets; it now imports from `@rjsf/core/testing` ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
 - **BREAKING CHANGE** `TimeWidget` pads missing seconds and appends the browser's local UTC offset to its value on change, matching `@rjsf/core`'s `TimeWidget` (`format: "iso-time"` still pads seconds but skips the offset, since that format's timezone is optional). `DateTimeWidget` similarly formats a `format: "iso-date-time"` value as a naive local date-time string instead of a UTC ISO string, stripping a stored offset before parsing so it displays as the naive wall-clock time it represents; an unparsable stored value resolves to no selected date rather than crashing the calendar on an `Invalid Date` ([#3930](https://github.com/rjsf-team/react-jsonschema-form/issues/3930))
+||||||| parent of c459bce95 (refactor(core,daisyui): put registry assembly in Theme.ts, drop daisyui's no-op fields)
+- `generateTheme()` no longer returns a `fields` entry holding the unmodified core fields, matching every other theme; the `Form` already merges the core fields underneath a theme's overrides, so this changes no rendering ([#5266](https://github.com/rjsf-team/react-jsonschema-form/pull/5266))
 
 ## @rjsf/mantine
 

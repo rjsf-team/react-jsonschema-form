@@ -44,7 +44,6 @@ export {
   URLWidget,
 };
 
-/** The core widgets */
 export function generateWidgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

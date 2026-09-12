@@ -6,7 +6,7 @@ import SubmitButton from './SubmitButton.tsx';
 
 export { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton };
 
-function buttonTemplates<
+export function generateButtonTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
@@ -21,5 +21,3 @@ function buttonTemplates<
     ClearButton,
   };
 }
-
-export default buttonTemplates;
