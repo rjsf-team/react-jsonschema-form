@@ -128,7 +128,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         formData: {
           albums: ['Until We Have Faces'],
         },
-        experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
+        defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
       await submitForm(node, user);
       expect(onError).toHaveBeenLastCalledWith([
@@ -147,7 +147,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({
         schema,
         formData: {},
-        experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
+        defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, {}, true);

@@ -804,7 +804,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
-      it('uses experimental_customMergeAllOf when provided', () => {
+      it('uses customMergeAllOf when provided', () => {
         const schema: RJSFSchema = {
           allOf: [
             { type: 'object', properties: { foo: { type: 'string' } } },

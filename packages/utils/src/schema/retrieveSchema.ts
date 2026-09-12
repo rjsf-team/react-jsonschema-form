@@ -22,7 +22,7 @@ import isObject from '../isObject.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
-  Experimental_CustomMergeAllOf,
+  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFMarkedSchema,
@@ -41,7 +41,7 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs = false] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
@@ -54,7 +54,7 @@ export default function retrieveSchema<
   schema: S,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs = false,
 ): S {
   return retrieveSchemaInternal<T, S, F>(
@@ -64,7 +64,7 @@ export default function retrieveSchema<
     rawFormData,
     undefined,
     undefined,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
   )[0];
 }
@@ -92,7 +92,7 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
  *          dependencies as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
 export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -102,7 +102,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
@@ -120,7 +120,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         ),
       );
     }
@@ -134,7 +134,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         ),
       );
     }
@@ -150,7 +150,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         ),
       );
     }
@@ -166,7 +166,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     ),
   );
 }
@@ -229,7 +229,7 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
@@ -240,7 +240,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
@@ -250,7 +250,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     expandAllBranches,
     recurseList,
     formData,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
@@ -266,7 +266,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       expandAllBranches,
       recurseList,
       formData,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     );
     return resolvedSchemas.flatMap((s) =>
       retrieveSchemaInternal<T, S, F>(
@@ -276,7 +276,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         formData,
         expandAllBranches,
         recurseList,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       ),
     );
   }
@@ -289,7 +289,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         formData,
         expandAllBranches,
         recurseList,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       ),
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
@@ -313,7 +313,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @returns - The list schemas retrieved after having all references resolved
  */
@@ -324,7 +324,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
 ): S[] {
   const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList, undefined, resolveAnyOfOrOneOfRefs);
@@ -337,7 +337,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
     );
   }
@@ -460,7 +460,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
  * @param theSchema - The schema for which the existing additional properties is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
@@ -472,7 +472,7 @@ export function stubExistingAdditionalProperties<
   theSchema: S,
   rootSchema?: S,
   aFormData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
@@ -495,7 +495,7 @@ export function stubExistingAdditionalProperties<
           { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
           rootSchema,
           formData[key],
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         );
         (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
         return;
@@ -510,7 +510,7 @@ export function stubExistingAdditionalProperties<
             { [REF_KEY]: (schema.additionalProperties as S)[REF_KEY] } as S,
             rootSchema,
             formData[key],
-            experimental_customMergeAllOf,
+            customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
           additionalProperties = { ...schema.additionalProperties };
@@ -562,7 +562,7 @@ function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
  * @param [recurseList=[]] - The optional, list of recursive references already processed
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @returns - The schema(s) resulting from having its conditions, additional properties, references and dependencies
  *          resolved. Multiple schemas may be returned if `expandAllBranches` is true.
@@ -578,7 +578,7 @@ export function retrieveSchemaInternal<
   rawFormData?: T,
   expandAllBranches = false,
   recurseList: string[] = [],
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
 ): S[] {
   if (!isObject(schema)) {
@@ -591,7 +591,7 @@ export function retrieveSchemaInternal<
     expandAllBranches,
     recurseList,
     rawFormData,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
   );
   return resolvedSchemas.flatMap((s: S) => {
@@ -604,7 +604,7 @@ export function retrieveSchemaInternal<
         expandAllBranches,
         recurseList,
         rawFormData as T,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
@@ -634,9 +634,7 @@ export function retrieveSchemaInternal<
         if (withContainsSchemas.length) {
           resolvedSchema = { ...resolvedSchema, allOf: withoutContainsSchemas };
         }
-        resolvedSchema = experimental_customMergeAllOf
-          ? experimental_customMergeAllOf(resolvedSchema)
-          : mergeAllOf(resolvedSchema);
+        resolvedSchema = customMergeAllOf ? customMergeAllOf(resolvedSchema) : mergeAllOf(resolvedSchema);
         // Re-apply collected Symbol properties that the merge dropped.
         for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
           (resolvedSchema as any)[sym] = allOfSymbols[sym];
@@ -661,7 +659,7 @@ export function retrieveSchemaInternal<
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               getByPath<T>(rawFormData, key),
-              experimental_customMergeAllOf,
+              customMergeAllOf,
             );
           }
           return acc;
@@ -681,7 +679,7 @@ export function retrieveSchemaInternal<
         resolvedSchema,
         rootSchema,
         rawFormData as T,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       );
     }
 
@@ -774,7 +772,7 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with their dependencies resolved
  */
 export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -784,7 +782,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
@@ -804,7 +802,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       expandAllBranches,
       recurseList,
       formData,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     ),
   );
 }
@@ -820,7 +818,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema with the `dependencies` resolved into it
  */
 export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -831,7 +829,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
@@ -856,7 +854,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           expandAllBranches,
           recurseList,
           formData,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         );
       }
       return schemas.flatMap((schema) =>
@@ -868,7 +866,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           expandAllBranches,
           recurseList,
           formData,
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         ),
       );
     }
@@ -907,7 +905,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData]- The current formData to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with the dependent schema resolved into them
  */
 export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -919,7 +917,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     validator,
@@ -928,7 +926,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     formData,
     expandAllBranches,
     recurseList,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -955,7 +953,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         recurseList,
         formData,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       ),
     );
   });
@@ -974,7 +972,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function withExactlyOneSubschema<
@@ -990,7 +988,7 @@ export function withExactlyOneSubschema<
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
     if (typeof subschema === 'boolean' || !subschema?.properties) {
@@ -1025,7 +1023,7 @@ export function withExactlyOneSubschema<
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });

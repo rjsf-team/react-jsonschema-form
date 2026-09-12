@@ -83,7 +83,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     liveOmit: 'off',
     liveValidate: 'off',
     experimental_componentUpdateStrategy: 'customDeep',
-    experimental_defaultFormStateBehavior: {
+    defaultFormStateBehavior: {
       arrayMinItems: 'populate',
       emptyObjectFields: 'populateAllDefaults',
     },

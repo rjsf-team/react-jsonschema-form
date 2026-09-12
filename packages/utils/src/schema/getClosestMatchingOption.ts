@@ -4,13 +4,7 @@ import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDisc
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import type { CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import retrieveSchema, { resolveAllReferences } from './retrieveSchema.ts';
 
@@ -45,7 +39,7 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * @param rootSchema - The root JSON schema of the entire form
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The score a schema against the formData
  */
 export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -53,7 +47,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   rootSchema: S,
   schema?: S,
   formData?: any,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): number {
   let totalScore = 0;
   if (schema) {
@@ -64,22 +58,9 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
           return score;
         }
         if (hasByPath(value, REF_KEY)) {
-          const newSchema = retrieveSchema<T, S, F>(
-            validator,
-            value as S,
-            rootSchema,
-            formValue,
-            experimental_customMergeAllOf,
-          );
+          const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
           return (
-            score +
-            calculateIndexScore<T, S, F>(
-              validator,
-              rootSchema,
-              newSchema,
-              formValue || {},
-              experimental_customMergeAllOf,
-            )
+            score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue || {}, customMergeAllOf)
           );
         }
         if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
@@ -94,7 +75,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
               getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
-              experimental_customMergeAllOf,
+              customMergeAllOf,
             )
           );
         }
@@ -104,7 +85,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
           return (
             score +
             structureBoost +
-            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
+            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, customMergeAllOf)
           );
         }
         if (value.type === guessType(formValue)) {
@@ -151,7 +132,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
  */
 export default function getClosestMatchingOption<
@@ -165,7 +146,7 @@ export default function getClosestMatchingOption<
   options: S[],
   selectedOption = -1,
   discriminatorField?: string,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
@@ -204,7 +185,7 @@ export default function getClosestMatchingOption<
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
       const option = resolvedOptions[index];
-      const score = calculateIndexScore(validator, rootSchema, option, formData, experimental_customMergeAllOf);
+      const score = calculateIndexScore(validator, rootSchema, option, formData, customMergeAllOf);
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

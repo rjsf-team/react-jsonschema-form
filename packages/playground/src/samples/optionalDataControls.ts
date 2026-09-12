@@ -158,7 +158,7 @@ const optionalDataControls: Sample = {
     },
   },
   liveSettings: {
-    experimental_defaultFormStateBehavior: {
+    defaultFormStateBehavior: {
       // Set the emptyObjectFields to only populate required defaults to highlight the code working
       emptyObjectFields: 'populateRequiredDefaults',
     },

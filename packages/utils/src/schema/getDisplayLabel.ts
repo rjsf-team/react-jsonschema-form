@@ -10,7 +10,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
   ValidatorType,
-  Experimental_CustomMergeAllOf,
+  CustomMergeAllOf,
 } from '../types.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
@@ -23,7 +23,7 @@ import isMultiSelect from './isMultiSelect.ts';
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<
@@ -36,7 +36,7 @@ export default function getDisplayLabel<
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,
   globalOptions?: GlobalUISchemaOptions,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
@@ -48,8 +48,8 @@ export default function getDisplayLabel<
     if (schemaType === 'array') {
       displayLabel =
         addedByAdditionalProperty ||
-        isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
-        isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, experimental_customMergeAllOf) ||
+        isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
+        isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, customMergeAllOf) ||
         isCustomWidget(uiSchema);
     }
 

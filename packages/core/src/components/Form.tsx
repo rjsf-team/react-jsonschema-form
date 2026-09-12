@@ -19,8 +19,8 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
-  Experimental_DefaultFormStateBehavior,
-  Experimental_CustomMergeAllOf,
+  DefaultFormStateBehavior,
+  CustomMergeAllOf,
   GlobalFormOptions,
   NameGeneratorFunction,
 } from '@rjsf/utils';
@@ -225,7 +225,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
    * `emptyObjectFields`
    */
-  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  defaultFormStateBehavior?: DefaultFormStateBehavior;
   /**
    * Controls the component update strategy used by the Form's `shouldComponentUpdate` lifecycle method.
    *
@@ -239,7 +239,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
   /** Optional function that allows for custom merging of `allOf` schemas
    */
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
+  customMergeAllOf?: CustomMergeAllOf<S>;
   /** Support receiving a React ref to the Form
    */
   ref?: Ref<Form<T, S, F>>;
@@ -538,30 +538,15 @@ export default class Form<
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const experimental_defaultFormStateBehavior =
-      'experimental_defaultFormStateBehavior' in props
-        ? props.experimental_defaultFormStateBehavior
-        : this.props.experimental_defaultFormStateBehavior;
-    const experimental_customMergeAllOf =
-      'experimental_customMergeAllOf' in props
-        ? props.experimental_customMergeAllOf
-        : this.props.experimental_customMergeAllOf;
+    const defaultFormStateBehavior =
+      'defaultFormStateBehavior' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior;
+    const customMergeAllOf = 'customMergeAllOf' in props ? props.customMergeAllOf : this.props.customMergeAllOf;
     let { schemaUtils } = state;
     if (
       !schemaUtils ||
-      schemaUtils.doesSchemaUtilsDiffer(
-        validator,
-        schema,
-        experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf,
-      )
+      schemaUtils.doesSchemaUtilsDiffer(validator, schema, defaultFormStateBehavior, customMergeAllOf)
     ) {
-      schemaUtils = createSchemaUtils<T, S, F>(
-        validator,
-        schema,
-        experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf,
-      );
+      schemaUtils = createSchemaUtils<T, S, F>(validator, schema, defaultFormStateBehavior, customMergeAllOf);
     }
 
     const rootSchema = schemaUtils.getRootSchema();

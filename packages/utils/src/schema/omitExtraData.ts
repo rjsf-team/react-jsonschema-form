@@ -3,7 +3,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getSchemaType from '../getSchemaType.ts';
 import isObject from '../isObject.ts';
 import type {
-  Experimental_CustomMergeAllOf,
+  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -34,18 +34,15 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
-/** Merges an `allOf` schema into a single flat schema, delegating to `experimental_customMergeAllOf`
+/** Merges an `allOf` schema into a single flat schema, delegating to `customMergeAllOf`
  * when provided or falling back to the module-level `shallowAllOfMerge` otherwise.
  *
  * @param schema - A schema containing an `allOf` array to be merged
- * @param [experimental_customMergeAllOf] - Optional custom merge function; see `Form` documentation
+ * @param [customMergeAllOf] - Optional custom merge function; see `Form` documentation
  * @returns - The merged schema with `allOf` resolved into a single schema object
  */
-function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): S {
-  return experimental_customMergeAllOf ? experimental_customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
+function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S, customMergeAllOf?: CustomMergeAllOf<S>): S {
+  return customMergeAllOf ? customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
 }
 
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
@@ -58,7 +55,7 @@ function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s
  * @param [formData] - The data for the `Form`
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
@@ -70,7 +67,7 @@ export default function omitExtraData<
   schema: S,
   rootSchema: S = {} as S,
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): T | undefined {
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
@@ -276,7 +273,7 @@ export default function omitExtraData<
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, experimental_customMergeAllOf)) {
+    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, customMergeAllOf)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
@@ -290,7 +287,7 @@ export default function omitExtraData<
       scoringOptions,
       0,
       getDiscriminatorFieldFromSchema<S>(childSchema),
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     );
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
@@ -385,7 +382,7 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
+      localSchema = doMergeAllOf<S>(localSchema, customMergeAllOf);
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

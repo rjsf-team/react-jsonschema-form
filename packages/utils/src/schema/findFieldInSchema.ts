@@ -1,7 +1,7 @@
 import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
-  Experimental_CustomMergeAllOf,
+  CustomMergeAllOf,
   FormContextType,
   FoundFieldType,
   RJSFSchema,
@@ -24,7 +24,7 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  * @param schema - The node within the JSON schema in which to search
  * @param path - The keys in the path to the desired field
  * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An object that contains the field and its required state. If no field can be found then
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
@@ -38,7 +38,7 @@ export default function findFieldInSchema<
   schema: S,
   path: SchemaFieldPath,
   formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): FoundFieldType<S> {
   const pathList = Array.isArray(path) ? [...path] : path.split('.');
   let parentField = schema;
@@ -56,7 +56,7 @@ export default function findFieldInSchema<
         parentField,
         [PROPERTIES_KEY, subPath],
         {} as S,
-        experimental_customMergeAllOf,
+        customMergeAllOf,
       );
       if (hasByPath(parentField, ONE_OF_KEY)) {
         // if this sub-path has a `oneOf` then use the formData to drill into the schema with the selected option
@@ -67,7 +67,7 @@ export default function findFieldInSchema<
           fieldNameKey,
           ONE_OF_KEY,
           getByPath<T>(formData, subPath),
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         )!;
       } else if (hasByPath(parentField, ANY_OF_KEY)) {
         // if this sub-path has a `anyOf` then use the formData to drill into the schema with the selected option
@@ -78,7 +78,7 @@ export default function findFieldInSchema<
           fieldNameKey,
           ANY_OF_KEY,
           getByPath<T>(formData, subPath),
-          experimental_customMergeAllOf,
+          customMergeAllOf,
         )!;
       }
     });
@@ -93,7 +93,7 @@ export default function findFieldInSchema<
       fieldNameKey,
       ONE_OF_KEY,
       formData,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     )!;
   } else if (hasByPath(parentField, ANY_OF_KEY)) {
     // When anyOf is in the root schema, use the formData to drill into the schema with the selected option
@@ -104,7 +104,7 @@ export default function findFieldInSchema<
       fieldNameKey,
       ANY_OF_KEY,
       formData,
-      experimental_customMergeAllOf,
+      customMergeAllOf,
     )!;
   }
 
@@ -115,7 +115,7 @@ export default function findFieldInSchema<
     parentField,
     [PROPERTIES_KEY, fieldName],
     NOT_FOUND_SCHEMA as S,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
   );
   if (field === NOT_FOUND_SCHEMA) {
     field = undefined;
@@ -127,7 +127,7 @@ export default function findFieldInSchema<
     parentField,
     REQUIRED_KEY,
     [] as T,
-    experimental_customMergeAllOf,
+    customMergeAllOf,
   );
   let isRequired: boolean | undefined;
   if (field && Array.isArray(requiredArray)) {

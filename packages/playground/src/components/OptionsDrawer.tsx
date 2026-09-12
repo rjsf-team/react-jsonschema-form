@@ -81,7 +81,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
-    experimental_defaultFormStateBehavior: {
+    defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
       properties: {
@@ -245,7 +245,7 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       inline: true,
     },
   },
-  experimental_defaultFormStateBehavior: {
+  defaultFormStateBehavior: {
     'ui:options': {
       label: false,
     },

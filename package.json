@@ -21,8 +21,6 @@
     "pre-commit:husky": "nx run-many --parallel=1 --target=precommit",
     "pre-commit:lockfile": "lint-staged",
     "prepare": "is-ci || husky",
-    "format": "oxfmt .",
-    "format-check": "oxfmt --check .",
     "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run lint && pnpm run build && pnpm run test",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.cjs) && git push -f origin $(node scripts/get-version-tag.cjs)",
