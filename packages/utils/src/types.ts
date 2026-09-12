@@ -1228,6 +1228,198 @@ export type UiSchema<
     'ui:definitions'?: UiSchemaDefinitions<T, S, F>;
   };
 
+/** A single `{ when, then }` rule: when a field's form-data type is assignable to `when`, the widget/field names and
+ * options listed in `then` become valid `ui:widget`/`ui:field`/`ui:options` values for that field in `UiOptions`.
+ * Build a union of these to extend the type-safe vocabulary `UiOptions` accepts - a theme package adds a union of
+ * its own widgets this way, and a consumer of a theme adds their own domain-specific options the same way. See
+ * `CoreUiOptionsChecks` for the rules describing `@rjsf/core`'s own built-in widgets/fields/options.
+ */
+export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
+  when: When;
+  then: Then;
+}
+
+/** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
+ * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Always
+ * included by `UiOptions`, in addition to whatever `Checks` union is passed to it.
+ *
+ * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not
+ * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
+ * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here).
+ */
+export type CoreUiOptionsChecks =
+  | UiOptionsCheck<
+      string,
+      {
+        widget?:
+          | 'TextWidget'
+          | 'TextareaWidget'
+          | 'PasswordWidget'
+          | 'EmailWidget'
+          | 'URLWidget'
+          | 'ColorWidget'
+          | 'DateWidget'
+          | 'DateTimeWidget'
+          | 'TimeWidget'
+          | 'AltDateWidget'
+          | 'AltDateTimeWidget'
+          | 'SelectWidget'
+          | 'RadioWidget'
+          | 'FileWidget'
+          | 'HiddenWidget';
+        field?: 'StringField';
+        placeholder?: string;
+        rows?: number;
+        inputType?: string;
+        autocomplete?: HTMLInputElement['autocomplete'];
+        autocapitalize?: HTMLInputElement['autocapitalize'];
+        emptyValue?: string;
+        filePreview?: boolean;
+        enumDisabled?: EnumValue[];
+        enumNames?: string[] | Record<string | number, string>;
+        enumOrder?: EnumValue[];
+      }
+    >
+  | UiOptionsCheck<
+      number,
+      {
+        widget?: 'TextWidget' | 'RangeWidget' | 'UpDownWidget' | 'SelectWidget' | 'RadioWidget' | 'HiddenWidget';
+        field?: 'NumberField';
+        enumDisabled?: EnumValue[];
+        enumNames?: string[] | Record<string | number, string>;
+        enumOrder?: EnumValue[];
+      }
+    >
+  | UiOptionsCheck<
+      boolean,
+      {
+        widget?: 'CheckboxWidget' | 'RadioWidget' | 'SelectWidget' | 'HiddenWidget';
+        field?: 'BooleanField';
+      }
+    >
+  | UiOptionsCheck<
+      null,
+      {
+        widget?: 'HiddenWidget';
+        field?: 'NullField';
+      }
+    >
+  | UiOptionsCheck<
+      unknown[],
+      {
+        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget';
+        field?: 'ArrayField';
+        addable?: boolean;
+        orderable?: boolean;
+        removable?: boolean;
+        copyable?: boolean;
+        inline?: boolean;
+      }
+    >
+  | UiOptionsCheck<
+      object & { length?: never },
+      {
+        field?: 'ObjectField';
+        optionsSchemaSelector?: string;
+      }
+    >;
+
+/** @internal Distributes over a `Checks` union, collapsing each member into an intersection of its `then` type
+ * (minus `widget`/`field`) for every member whose `when` the field type `T` is assignable to.
+ */
+type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never;
+
+/** @internal The union of `then.widget` names valid for form-data type `T`, drawn from `Checks`. */
+type WidgetsFor<T, Checks> =
+  Checks extends UiOptionsCheck<infer When, infer Then>
+    ? Then extends { widget?: infer W }
+      ? T extends When
+        ? W
+        : never
+      : never
+    : never;
+
+/** @internal The union of `then.field` names valid for form-data type `T`, drawn from `Checks`. */
+type FieldsFor<T, Checks> =
+  Checks extends UiOptionsCheck<infer When, infer Then>
+    ? Then extends { field?: infer Fl }
+      ? T extends When
+        ? Fl
+        : never
+      : never
+    : never;
+
+/** @internal The intersection of every `then` option (minus `widget`/`field`) valid for form-data type `T`. */
+type RawOptsFor<T, Checks> = UnionToIntersection<
+  Checks extends UiOptionsCheck<infer When, infer Then>
+    ? T extends When
+      ? Omit<Then, 'widget' | 'field'>
+      : never
+    : never
+>;
+
+/** @internal The `ui:widget`/`ui:field`/`ui:options` shape for a single field of form-data type `T`, narrowed by
+ * `Checks` and still allowing a one-off `Widget`/`Field` component instance instead of a registered name.
+ */
+interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> {
+  'ui:widget'?: WidgetsFor<T, Checks> | Widget<T, S, F>;
+  'ui:field'?: FieldsFor<T, Checks> | Field<T, S, F>;
+  'ui:options'?: {
+    widget?: WidgetsFor<T, Checks> | Widget<T, S, F>;
+    field?: FieldsFor<T, Checks> | Field<T, S, F>;
+  } & RawOptsFor<T, Checks>;
+}
+
+/** An experimental, opt-in alternative to `UiSchema` that narrows `ui:widget`/`ui:field`/`ui:options` (and their
+ * `ui:`-prefixed raw-option equivalents) to only the values that are valid for each field's form-data type, and
+ * recurses into nested objects/arrays typing each field the same way. Unlike `UiSchema`, `UiOptions` does not fall
+ * back to `Record<string, any>`: every key not covered below is a type error, so a typo like `ui:wigdet` or a widget
+ * name that isn't valid for the field's type is caught at compile time instead of only failing at runtime.
+ *
+ * Pass a `Checks` union (built from `UiOptionsCheck`) to extend the widget/field/option vocabulary beyond
+ * `CoreUiOptionsChecks` - a theme package extends it with its own widgets, and a consumer extends it further with
+ * their own domain-specific options:
+ *
+ * ```ts
+ * type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
+ * type MyUiOptions<T = any> = UiOptions<T, RJSFSchema, FormContextType, MyThemeChecks>;
+ * ```
+ *
+ * `T` defaults to `any` so `UiOptions` can be used without a type parameter for vanilla/untyped form data. This does
+ * *not* fall back to `UiSchema`-style unrestricted strings, though: `ui:widget`/`ui:field` are still limited to the
+ * names declared in `CoreUiOptionsChecks`/`Checks` even when `T` is `any` (any custom widget/field not declared
+ * there must be passed as an actual component instance instead of a string, or added to a `Checks` union).
+ *
+ * This is a new, additive export: it does not replace or change `UiSchema`, and existing code is unaffected.
+ * Known gaps versus `UiSchema`: it does not yet support `ui:globalOptions`, `ui:fieldReplacesAnyOrOneOf` or
+ * `ui:definitions`, and a field whose form-data shape includes an index signature (e.g. from `additionalProperties`
+ * or `patternProperties`) only gets type-checking for its explicitly-declared keys.
+ */
+export type UiOptions<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+  Checks = never,
+> = {
+  'ui:help'?: string;
+  'ui:title'?: string;
+  'ui:description'?: string;
+  'ui:classNames'?: string;
+  'ui:style'?: StyleHTMLAttributes<any>;
+  'ui:autofocus'?: boolean;
+  'ui:disabled'?: boolean;
+  'ui:readonly'?: boolean;
+  'ui:hideError'?: boolean;
+  'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
+} & UiOptionsComponentPart<T, S, F, CoreUiOptionsChecks | Checks> &
+  MakeUIType<RawOptsFor<T, CoreUiOptionsChecks | Checks>> &
+  (T extends (infer U)[] ? { items?: UiOptions<U, S, F, Checks> } : object) &
+  (T extends unknown[]
+    ? object
+    : T extends object
+      ? { 'ui:order'?: (Extract<keyof T, string> | '*')[] } & { [K in keyof T]?: UiOptions<T[K], S, F, Checks> }
+      : object);
+
 /** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`
  * object back, while potentially adding additional messages to the `errors`
  */
