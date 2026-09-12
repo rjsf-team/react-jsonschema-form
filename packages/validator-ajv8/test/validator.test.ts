@@ -6,7 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
+import { augmentSchemaWithUiRequired, ErrorSchemaBuilder, noop } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -478,6 +478,39 @@ describe('AJV8Validator', () => {
             expect(errorSchema.nested!.pass2!.__errors).toHaveLength(1);
             expect(errorSchema.nested!.pass2!.__errors![0]).toEqual("must have required property 'pass2'");
           });
+        });
+      });
+      describe('ui:required folded into the schema by augmentSchemaWithUiRequired()', () => {
+        it('enforces ui:required: true added for a non-required field', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { nickname: { type: 'string' } },
+          };
+          const uiSchema: UiSchema = { nickname: { 'ui:required': true } };
+          const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+
+          const result = validator.validateFormData({}, augmentedSchema);
+          expect(result.errors.some((error) => error.name === 'required')).toBe(true);
+
+          const passingResult = validator.validateFormData({ nickname: 'Chuck' }, augmentedSchema);
+          expect(passingResult.errors).toHaveLength(0);
+        });
+
+        it('does not let ui:required: false remove a schema-required field', () => {
+          // augmentSchemaWithUiRequired() only ever adds to `required`; it never removes an entry for
+          // ui:required: false, so this augmented schema is byte-for-byte the original one, and validation must
+          // still enforce it.
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['country'],
+            properties: { country: { type: 'string' } },
+          };
+          const uiSchema: UiSchema = { country: { 'ui:required': false } };
+          const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+          expect(augmentedSchema).toBe(schema);
+
+          const result = validator.validateFormData({}, augmentedSchema);
+          expect(result.errors.some((error) => error.name === 'required')).toBe(true);
         });
       });
       describe('No custom validate function, single additionalProperties value', () => {

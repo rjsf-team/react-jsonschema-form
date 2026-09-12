@@ -1,5 +1,13 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  augmentSchemaWithUiRequired,
+  ErrorSchemaBuilder,
+  JUNK_OPTION_ID,
+  RJSF_REF_KEY,
+  hashForSchema,
+  noop,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src/index.ts';
@@ -41,6 +49,20 @@ describe('AJV8PrecompiledValidator', () => {
           },
         };
         expect(() => validator.ensureSameRootSchema(schema)).toThrow(
+          new Error(
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+          ),
+        );
+      });
+      it('using rootSchema augmented with ui:required and the matching uiSchema returns true', () => {
+        const uiSchema: UiSchema = { foo: { 'ui:required': true } };
+        const augmentedSchema = augmentSchemaWithUiRequired(rootSchema, uiSchema);
+        expect(validator.ensureSameRootSchema(augmentedSchema, undefined, uiSchema)).toBe(true);
+      });
+      it('using rootSchema augmented with ui:required but no uiSchema throws', () => {
+        const uiSchema: UiSchema = { foo: { 'ui:required': true } };
+        const augmentedSchema = augmentSchemaWithUiRequired(rootSchema, uiSchema);
+        expect(() => validator.ensureSameRootSchema(augmentedSchema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),

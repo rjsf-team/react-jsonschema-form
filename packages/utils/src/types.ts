@@ -1127,6 +1127,15 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
     emptyValue?: any;
+    /** Pre-fills the field on initial render and after a form reset. Takes priority over `schema.default`, but never
+     * overrides form data the user (or caller) has already provided.
+     */
+    initialValue?: any;
+    /** Overrides the schema's `required` status for the field on the UI side only: `true` shows the required
+     * indicator and adds the field to the effective required set used for validation; `false` hides the indicator
+     * but does not suppress schema-level validation for a field the schema itself marks required.
+     */
+    required?: boolean;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: EnumValue[];
     /** Allows a user to provide a list of labels for enum values in the schema.
@@ -1370,6 +1379,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
    *          false when computing defaults for any nested object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+   * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -1377,6 +1387,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     formData?: T,
     includeUndefinedValues?: boolean | 'excludeObjectChildren',
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.

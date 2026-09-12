@@ -1,6 +1,6 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import type { RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import { augmentSchemaWithUiRequired, ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -25,6 +25,43 @@ describe('CFWorkerValidator', () => {
     const result = validator.validateFormData(formData, schema);
     expect(result.errors.some((error) => error.name === 'required')).toBe(true);
     expect(result.errorSchema.email?.__errors?.length).toBeGreaterThan(0);
+  });
+
+  it('enforces ui:required folded into the schema by augmentSchemaWithUiRequired()', () => {
+    // Unlike the precompiled AJV8/ATA validators, CFWorkerValidator builds/caches its engine instance by the
+    // schema's own content hash rather than a fixed rootSchema identity, so a schema Form.tsx augmented with
+    // ui:required just builds (and enforces) fresh -- no special accommodation is needed here.
+    const validator = customizeValidator<{ nickname?: string }>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { nickname: { type: 'string' } },
+    };
+    const uiSchema: UiSchema = { nickname: { 'ui:required': true } };
+    const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+
+    const result = validator.validateFormData({}, augmentedSchema);
+    expect(result.errors.some((error) => error.name === 'required')).toBe(true);
+    expect(result.errorSchema.nickname?.__errors?.length).toBeGreaterThan(0);
+
+    const passingResult = validator.validateFormData({ nickname: 'Chuck' }, augmentedSchema);
+    expect(passingResult.errors).toHaveLength(0);
+  });
+
+  it('does not let ui:required: false remove a schema-required field from the augmented schema', () => {
+    // augmentSchemaWithUiRequired() only ever adds to `required`; it never removes an entry for ui:required: false,
+    // so this augmented schema is byte-for-byte the original one, and validation must still enforce it.
+    const validator = customizeValidator<{ country?: string }>();
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['country'],
+      properties: { country: { type: 'string' } },
+    };
+    const uiSchema: UiSchema = { country: { 'ui:required': false } };
+    const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+    expect(augmentedSchema).toBe(schema);
+
+    const result = validator.validateFormData({}, augmentedSchema);
+    expect(result.errors.some((error) => error.name === 'required')).toBe(true);
   });
 
   it('validates supported values and returns raw errors for invalid values', () => {
