@@ -1,6 +1,6 @@
 import { Alert, Button, Group } from '@mantine/core';
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ID_KEY, TranslatableString } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 
 import { ExclamationCircle } from './icons.tsx';
 
@@ -13,9 +13,9 @@ export default function CyclicSchemaExpandTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: CyclicSchemaExpandProps<T, S, F>) {
-  const { name, fieldPathId, registry, onExpand } = props;
+  const { name, id, registry, onExpand } = props;
   const { translateString } = registry;
-  const buttonId = `${fieldPathId[ID_KEY]}-button`;
+  const buttonId = `${id}-button`;
   return (
     <Alert
       color='yellow'
@@ -25,7 +25,7 @@ export default function CyclicSchemaExpandTemplate<
       mt='md'
     >
       <Group>
-        <Button id={buttonId} size='xs' variant='outline' color='yellow' onClick={() => onExpand(fieldPathId[ID_KEY])}>
+        <Button id={buttonId} size='xs' variant='outline' color='yellow' onClick={() => onExpand(id)}>
           {translateString(TranslatableString.ExpandButton)}
         </Button>
       </Group>

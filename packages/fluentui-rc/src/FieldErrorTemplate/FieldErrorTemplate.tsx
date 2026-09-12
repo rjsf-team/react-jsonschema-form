@@ -21,13 +21,13 @@ export default function FieldErrorTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], fieldPathId } = props;
+  const { errors = [], id: fieldId } = props;
   const classes = useStyles();
 
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId(fieldPathId);
+  const id = errorId(fieldId);
 
   return (
     <ul className={classes.list}>

@@ -16,6 +16,14 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
+import {
+  ROOT_FIELD_PATH,
+  fieldPathEndsWithIndex,
+  fieldPathToId,
+  fieldPathToList,
+  fieldPathToName,
+  toFieldPath,
+} from './fieldPath.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -87,11 +95,9 @@ import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
 import toErrorSchema from './toErrorSchema.ts';
-import toFieldPathId from './toFieldPathId.ts';
 import unwrapErrorHandler from './unwrapErrorHandler.ts';
 import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidgetProps.tsx';
 import useAltDateWidgetProps, { DateElement } from './useAltDateWidgetProps.tsx';
-import useDeepCompareMemo from './useDeepCompareMemo.ts';
 import type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps.ts';
 import useFileWidgetProps from './useFileWidgetProps.ts';
 import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
@@ -209,12 +215,16 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
-  toFieldPathId,
+  ROOT_FIELD_PATH,
+  toFieldPath,
+  fieldPathToId,
+  fieldPathEndsWithIndex,
+  fieldPathToList,
+  fieldPathToName,
   toPath,
   unsetByPath,
   unwrapErrorHandler,
   useAltDateWidgetProps,
-  useDeepCompareMemo,
   useFileWidgetProps,
   useTimeWidgetProps,
   utcToLocal,
