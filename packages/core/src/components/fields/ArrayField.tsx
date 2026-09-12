@@ -1089,6 +1089,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       return (
         <UnsupportedFieldTemplate
           schema={schema}
+          uiSchema={uiSchema}
           fieldPathId={fieldPathId}
           reason={translateString(TranslatableString.MissingItems)}
           registry={registry}

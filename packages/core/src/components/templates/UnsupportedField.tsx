@@ -11,7 +11,7 @@ import RichDescription from '../RichDescription.tsx';
 function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: UnsupportedFieldProps<T, S, F>,
 ) {
-  const { schema, fieldPathId, reason, registry } = props;
+  const { schema, uiSchema, fieldPathId, reason, registry } = props;
   const { translateString } = registry;
   let translateEnum: TranslatableString = TranslatableString.UnsupportedField;
   const translateParams: string[] = [];
@@ -29,7 +29,11 @@ function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   return (
     <div className='unsupported-field'>
       <p>
-        <RichDescription description={translateString(translateEnum, translateParams)} registry={registry} />
+        <RichDescription
+          description={translateString(translateEnum, translateParams)}
+          registry={registry}
+          uiSchema={uiSchema}
+        />
       </p>
       {schema && <pre>{JSON.stringify(schema, null, 2)}</pre>}
     </div>

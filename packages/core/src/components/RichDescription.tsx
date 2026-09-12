@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+
+import RichText from './RichText.tsx';
 
 export interface RichDescriptionProps<
   T = any,
@@ -23,18 +24,13 @@ export default function RichDescription<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ description, registry, uiSchema = {} }: RichDescriptionProps<T, S, F>) {
-  if (typeof description !== 'string') {
-    return description;
-  }
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  if (!uiOptions.enableMarkdownInDescription) {
-    return description;
-  }
-  const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
+>({ description, registry, uiSchema }: RichDescriptionProps<T, S, F>) {
   return (
-    <MarkdownTemplate registry={registry} uiSchema={uiSchema}>
-      {description}
-    </MarkdownTemplate>
+    <RichText<T, S, F>
+      text={description}
+      enabledBy='enableMarkdownInDescription'
+      registry={registry}
+      uiSchema={uiSchema}
+    />
   );
 }

@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { RichDescription, RichHelp } from '../src/index.ts';
 import MarkdownRenderer from '../src/markdown.tsx';
 import { getTestRegistry } from '../src/testing.ts';
+import { createFormComponent } from './testUtils.tsx';
 
 describe('markdown options', () => {
   test.each([true, false])('controls help independently of descriptions (description: %s)', (descriptionEnabled) => {
@@ -43,5 +44,19 @@ describe('markdown options', () => {
     const { container } = render(<RichDescription description='**description**' registry={registry} />);
     expect(container).toHaveTextContent('**description**');
     expect(container.querySelector('strong')).toBeNull();
+  });
+
+  it.each([
+    ['an unsupported field type', { type: 'invalid' }],
+    ['an array without items', { type: 'array' }],
+  ])('honours a per-field flag for the message of %s', (_label, schema) => {
+    const { node } = createFormComponent({
+      schema: schema as never,
+      uiSchema: { 'ui:enableMarkdownInDescription': true },
+      templates: { MarkdownTemplate: MarkdownRenderer },
+      translateString: () => '**unsupported**',
+    });
+
+    expect(node.querySelector('.unsupported-field strong')).toHaveTextContent('unsupported');
   });
 });

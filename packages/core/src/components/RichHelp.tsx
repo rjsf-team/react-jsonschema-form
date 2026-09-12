@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+
+import RichText from './RichText.tsx';
 
 export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The help text for a field, potentially containing markdown */
@@ -15,19 +16,7 @@ export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
 export default function RichHelp<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   help,
   registry,
-  uiSchema = {},
+  uiSchema,
 }: RichHelpProps<T, S, F>) {
-  if (typeof help !== 'string') {
-    return help;
-  }
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  if (!uiOptions.enableMarkdownInHelp) {
-    return help;
-  }
-  const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
-  return (
-    <MarkdownTemplate registry={registry} uiSchema={uiSchema}>
-      {help}
-    </MarkdownTemplate>
-  );
+  return <RichText<T, S, F> text={help} enabledBy='enableMarkdownInHelp' registry={registry} uiSchema={uiSchema} />;
 }

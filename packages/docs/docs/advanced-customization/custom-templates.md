@@ -906,6 +906,21 @@ render(
 
 Like any template it can also be registered in a theme, or swapped per field with the `ui:MarkdownTemplate` uiSchema directive.
 
+Because the template is the renderer, any markdown behaviour is yours to choose: register your own component to use a different library, or to pass different options to `markdown-to-jsx`.
+Raw HTML, which the `@rjsf/core/markdown` renderer disables, is the common case:
+
+```tsx
+import { Markdown } from 'markdown-to-jsx/react';
+import { MarkdownTemplateProps } from '@rjsf/utils';
+
+/** Renders raw HTML embedded in markdown. Only register this when you control the markdown text — HTML from an
+ * untrusted source can inject scripts and styles into your page.
+ */
+function UnsafeHtmlMarkdownTemplate({ children }: MarkdownTemplateProps) {
+  return <Markdown>{children}</Markdown>;
+}
+```
+
 The following props are passed to the `MarkdownTemplate`:
 
 - `children`: The markdown text to render.
