@@ -374,7 +374,7 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   itemData: T[];
   itemUiSchema: UiSchema<T[], S, F> | undefined;
   parentFieldPathId: FieldPathId;
-  itemErrorSchema?: ErrorSchema<T[]>;
+  itemErrorSchema?: ErrorSchema<T>;
   autofocus?: boolean;
   onBlur: FieldProps<T[], S, F>['onBlur'];
   onFocus: FieldProps<T[], S, F>['onFocus'];
@@ -492,7 +492,8 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
         schema={itemSchema}
         uiSchema={itemUiSchema}
         formData={itemData}
-        errorSchema={itemErrorSchema}
+        // ItemSchemaField comes from a registry typed for the array, so it takes a single item's errors as T[] too
+        errorSchema={itemErrorSchema as ErrorSchema<T[]> | undefined}
         fieldPathId={fieldPathId}
         required={isItemRequired<S>(itemSchema)}
         onChange={onChange}
@@ -618,7 +619,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
       const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
@@ -757,7 +758,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         // Use the helper method for function or static object cases
         itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
       }
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       const itemProps = {
         index,
