@@ -189,7 +189,6 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
             errorSchema: {},
             errors: [],
             formData: 'foobar',
-            fieldPathId: { $id: 'root', path: [] },
             schema: formProps.schema,
             uiSchema: {},
             schemaUtils: expect.any(Object),

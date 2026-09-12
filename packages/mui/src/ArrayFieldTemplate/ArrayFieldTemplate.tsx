@@ -44,7 +44,7 @@ export default function ArrayFieldTemplate<
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -86,7 +86,7 @@ export default function ArrayFieldTemplate<
     <Paper elevation={2} {...arrayPaper}>
       <Box {...arrayBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayBox)}>
         <ArrayFieldTitleTemplate
-          fieldPathId={fieldPathId}
+          id={id}
           title={uiOptions.title || title}
           schema={schema}
           uiSchema={uiSchema}
@@ -95,7 +95,7 @@ export default function ArrayFieldTemplate<
           optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
         <ArrayFieldDescriptionTemplate
-          fieldPathId={fieldPathId}
+          id={id}
           description={uiOptions.description || schema.description}
           schema={schema}
           uiSchema={uiSchema}
@@ -112,7 +112,7 @@ export default function ArrayFieldTemplate<
             <Grid {...arrayAddButtonGridItem}>
               <Box {...arrayAddButtonBox} sx={computeSxProps<BoxProps>({ mt: 2 }, arrayAddButtonBox)}>
                 <AddButton
-                  id={buttonId(fieldPathId, 'add')}
+                  id={buttonId(id, 'add')}
                   className='rjsf-array-item-add'
                   onClick={onAddClick}
                   disabled={disabled || readonly}
