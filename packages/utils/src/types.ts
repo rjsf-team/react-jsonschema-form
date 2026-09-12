@@ -249,11 +249,44 @@ export interface FieldErrors {
   __errors?: FieldError[];
 }
 
-/** Type describing a recursive structure of `FieldErrors`s for an object with a non-empty set of keys */
-export type ErrorSchema<T = any> = FieldErrors & {
-  /** The set of errors for fields in the recursive object structure */
-  [key in keyof T]?: ErrorSchema<T[key]>;
+/** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
+type IsAny<V> = 0 extends 1 & V ? true : false;
+
+/** Values that are objects but hold no form fields of their own, so their error node has no children */
+type AtomicValue = Date | RegExp | File | Blob | ((...args: never[]) => unknown);
+
+/** The data whose keys become the children of an error node for a value of type `V`.
+ *
+ * Normalizing the data type here is what keeps an error node a plain keyed object. Mapping over `keyof V` directly
+ * would be a homomorphic mapped type, and those preserve arrays and primitives instead of describing a node, so
+ * `ErrorSchema<string>` would resolve to `string`. An array contributes a node per index, because
+ * `ErrorSchemaBuilder` writes numeric path segments as object keys and never as array indices.
+ */
+type ErrorTreeChildData<V> =
+  IsAny<V> extends true
+    ? Record<string, any>
+    : [NonNullable<V>] extends [readonly unknown[]]
+      ? Record<number, NonNullable<V>[number]>
+      : [NonNullable<V>] extends [AtomicValue]
+        ? Record<never, never>
+        : [NonNullable<V>] extends [object]
+          ? NonNullable<V>
+          : Record<never, never>;
+
+/** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node */
+type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : ErrorTree<V, Node>;
+
+/** The recursive error tree for data of type `V`, carrying `Node` at every level.
+ *
+ * Children are optional because the tree is sparse: `toErrorSchema()` and `createErrorHandler()` only create a node
+ * for data that is actually present.
+ */
+type ErrorTree<V, Node> = Node & {
+  [key in keyof ErrorTreeChildData<V>]?: ErrorTreeChild<ErrorTreeChildData<V>[key], Node>;
 };
+
+/** Type describing a recursive structure of `FieldErrors`s for the data of type `T` */
+export type ErrorSchema<T = any> = ErrorTree<T, FieldErrors>;
 
 /** Type that describes the list of errors for a field being actively validated by a custom validator */
 export type FieldValidation = FieldErrors & {
@@ -261,11 +294,8 @@ export type FieldValidation = FieldErrors & {
   addError: (message: string) => void;
 };
 
-/** Type describing a recursive structure of `FieldValidation`s for an object with a non-empty set of keys */
-export type FormValidation<T = any> = FieldValidation & {
-  /** The set of validation objects for fields in the recursive object structure */
-  [key in keyof T]?: FormValidation<T[key]>;
-};
+/** Type describing a recursive structure of `FieldValidation`s for the data of type `T` */
+export type FormValidation<T = any> = ErrorTree<T, FieldValidation>;
 
 /** The base properties passed to various RJSF components. */
 export interface RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
