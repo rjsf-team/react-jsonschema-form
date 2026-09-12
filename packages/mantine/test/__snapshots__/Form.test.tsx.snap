@@ -16566,7 +16566,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields > string field > field with markdown help text without enabling markdown 1`] = `
+exports[`single fields > string field > field with markdown help text without a MarkdownTemplate 1`] = `
 <DocumentFragment>
   <style
     data-mantine-styles="true"
@@ -17433,17 +17433,7 @@ exports[`single fields > unsupported field 1`] = `
         class="unsupported-field"
       >
         <p>
-          <span>
-            Unsupported field schema for field 
-            <code>
-              root
-            </code>
-            : 
-            <em>
-              Unknown field type undefined
-            </em>
-            .
-          </span>
+          Unsupported field schema for field root: Unknown field type undefined.
         </p>
         <pre>
           {}

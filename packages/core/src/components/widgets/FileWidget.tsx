@@ -6,10 +6,12 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
+  UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
+
+import RichDescription from '../RichDescription.tsx';
 
 function FileInfoPreview<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   fileInfo,
@@ -50,12 +52,14 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   preview,
   onRemove,
   options,
+  uiSchema,
 }: {
   filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
   preview?: boolean;
   onRemove: (index: number) => void;
   options: UIOptionsType<T, S, F>;
+  uiSchema?: UiSchema<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
     return null;
@@ -72,7 +76,11 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
         return (
           // oxlint-disable-next-line react/no-array-index-key
           <li key={key}>
-            <Markdown>{translateString(TranslatableString.FilesInfo, [name, type, String(size)])}</Markdown>
+            <RichDescription
+              description={translateString(TranslatableString.FilesInfo, [name, type, String(size)])}
+              registry={registry}
+              uiSchema={uiSchema}
+            />
             {preview && <FileInfoPreview<T, S, F> fileInfo={fileInfo} registry={registry} />}
             <RemoveButton onClick={handleRemove} registry={registry} />
           </li>
@@ -89,7 +97,7 @@ function FilesInfo<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
+  const { disabled, readonly, required, multiple, onChange, value, options, registry, uiSchema } = props;
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
 
@@ -118,6 +126,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         registry={registry}
         preview={options.filePreview}
         options={options}
+        uiSchema={uiSchema}
       />
     </div>
   );

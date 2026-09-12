@@ -10605,7 +10605,16 @@ exports[`single fields > string field > field with markdown help and description
             class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
             id="root__description"
           >
-            This is a *description* with **markdown**
+            <span>
+              This is a 
+              <em>
+                description
+              </em>
+               with 
+              <strong>
+                markdown
+              </strong>
+            </span>
           </span>
         </p>
         <span
@@ -10715,7 +10724,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields > string field > field with markdown help text without enabling markdown 1`] = `
+exports[`single fields > string field > field with markdown help text without a MarkdownTemplate 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -11320,17 +11329,7 @@ exports[`single fields > unsupported field 1`] = `
           class="unsupported-field"
         >
           <p>
-            <span>
-              Unsupported field schema for field 
-              <code>
-                root
-              </code>
-              : 
-              <em>
-                Unknown field type undefined
-              </em>
-              .
-            </span>
+            Unsupported field schema for field root: Unknown field type undefined.
           </p>
           <pre>
             {}

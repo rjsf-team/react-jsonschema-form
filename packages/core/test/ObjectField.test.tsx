@@ -15,6 +15,7 @@ import { userEvent } from '@testing-library/user-event';
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import type Form from '../src/index.ts';
+import MarkdownTemplate from '../src/markdown.tsx';
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
@@ -2015,19 +2016,18 @@ describe('ObjectField', () => {
 
     const uiSchema = {
       tasks: {
-        'ui:enableMarkdownInDescription': true,
         details: {
-          'ui:enableMarkdownInDescription': true,
           'ui:widget': 'textarea',
-        },
-        has_markdown: {
-          'ui:enableMarkdownInDescription': true,
         },
       },
     };
 
-    it('should render markdown in description when enableMarkdownInDescription is set to true', () => {
-      const { node } = createFormComponent({ schema, uiSchema });
+    it('should render markdown in description when a MarkdownTemplate is registered', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { ...uiSchema, 'ui:globalOptions': { enableMarkdownInDescription: true } },
+        templates: { MarkdownTemplate },
+      });
 
       const field = node.querySelector('form .form-group .form-group .field-description');
       expect(field).toContainHTML('New <em>description</em>, with some Markdown.');
@@ -2038,8 +2038,8 @@ describe('ObjectField', () => {
       const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
       expect(checkbox).toContainHTML('Checkbox with some <code>markdown</code>!');
     });
-    it('should not render markdown in description when enableMarkdownInDescription is not present in uiSchema', () => {
-      const { node } = createFormComponent({ schema });
+    it('should render descriptions as plain text without a MarkdownTemplate', () => {
+      const { node } = createFormComponent({ schema, uiSchema });
 
       const field = node.querySelector('form .form-group .form-group .field-description');
       expect(field).toContainHTML('New *description*, with some Markdown.');
