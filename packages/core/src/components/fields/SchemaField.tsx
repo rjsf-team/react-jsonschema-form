@@ -156,6 +156,23 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
+  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
+  // most ui:options, it has to be seen by augmentSchemaWithUiRequired() too, which only ever sees a field's own
+  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
+  const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
+  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  if (
+    fieldUiRequired === false &&
+    required &&
+    uiOptions.initialValue === undefined &&
+    uiOptions.emptyValue === undefined
+  ) {
+    // oxlint-disable-next-line no-console
+    console.warn(
+      `ui:required is false for schema-required field "${name}" but neither ui:initialValue nor ui:emptyValue is ` +
+        'set. The UI will show this field as optional, but schema validation will still fail if it is left empty.',
+    );
+  }
   const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
   const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
@@ -188,7 +205,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       );
     }
     // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
     const hasFormData = isFormDataAvailable<T>(formData);
     displayLabel = displayLabel && (!isOptionalRender || hasFormData);
     fieldPathIdProps = {
@@ -223,6 +240,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       {...fieldPathIdProps}
       schema={schema}
       uiSchema={fieldUiSchema}
+      {...(uiOptions.required !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}
@@ -309,7 +327,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
-    required,
+    required: effectiveRequired,
     disabled,
     readonly,
     hideError,
@@ -340,7 +358,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             onFocus={props.onFocus}
             options={XxxOfOptions}
             registry={registry}
-            required={required}
+            required={effectiveRequired}
             schema={schema}
             uiSchema={uiSchema}
           />

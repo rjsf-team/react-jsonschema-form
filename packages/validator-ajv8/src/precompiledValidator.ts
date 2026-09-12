@@ -8,7 +8,14 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
+import {
+  augmentSchemaWithUiRequired,
+  deepEquals,
+  hashForSchema,
+  ID_KEY,
+  JUNK_OPTION_ID,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -101,11 +108,15 @@ export default class AJV8PrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
+   * @param [uiSchema] - An optional uiSchema; when it sets `ui:required` on any field, the comparison is made
+   *        against the root schema augmented the same way `Form` augments `schema` before validating, since that's
+   *        the shape `Form` actually passes in
    */
-  ensureSameRootSchema(schema: S, formData?: T) {
-    if (!deepEquals(schema, this.rootSchema)) {
+  ensureSameRootSchema(schema: S, formData?: T, uiSchema?: UiSchema<T, S, F>) {
+    const comparisonRootSchema = augmentSchemaWithUiRequired<T, S, F>(this.rootSchema, uiSchema);
+    if (!deepEquals(schema, comparisonRootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
-      const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
+      const resolvedRootSchema = retrieveSchema(this, comparisonRootSchema, comparisonRootSchema, formData);
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
@@ -120,10 +131,13 @@ export default class AJV8PrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate, if any
+   * @param [uiSchema] - An optional uiSchema, used to tolerate a schema augmented with `ui:required`; see
+   *        `ensureSameRootSchema`. Note that, since this validator's functions are precompiled ahead of time, a
+   *        `ui:required` override is never actually enforced here, only tolerated so it doesn't throw
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    this.ensureSameRootSchema(schema, formData);
+  rawValidation<Result = any>(schema: S, formData?: T, uiSchema?: UiSchema<T, S, F>): RawValidationErrorsType<Result> {
+    this.ensureSameRootSchema(schema, formData, uiSchema);
     this.mainValidator(formData);
 
     if (typeof this.localizer === 'function') {
@@ -155,7 +169,7 @@ export default class AJV8PrecompiledValidator<
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData, uiSchema);
     return processRawValidationErrors(
       this,
       rawErrors,

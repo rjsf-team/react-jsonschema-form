@@ -158,7 +158,10 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   schemaReadonly?: boolean,
   forceReadonly?: boolean,
 ) {
-  const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
+  // `required` is deliberately excluded from the global options propagated here: unlike the rest of `GlobalUISchemaOptions`
+  // it also has to be seen by augmentSchemaWithUiRequired() for validation, which only ever sees a field's own
+  // uiSchema, so a form-wide default would make the required indicator and schema validation disagree
+  const { required: _globalRequired, ...globalUiOptions } = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
   const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
   const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
   const fieldUiSchema = { ...localUiSchema };
@@ -677,6 +680,15 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
     // when it is needed
     const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
+    // SchemaField resolves `ui:required` itself from the `uiSchema` prop we're already passing it below (and uses
+    // the raw schema-derived `isRequired` as its own fallback, plus to detect a misconfigured `ui:required: false`),
+    // so only `LayoutMultiSchemaField` -- which has no such override logic of its own -- needs the effective value
+    // computed here.
+    let requiredForField = isRequired;
+    if (optionsInfo?.hasDiscriminator) {
+      const { required: uiRequired } = getUiOptions<T, S, F>(fieldUiSchema);
+      requiredForField = uiRequired !== undefined ? Boolean(uiRequired) : isRequired;
+    }
     const namePath = toPath(name);
 
     return (
@@ -688,7 +700,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         }
         {...otherProps}
         name={name}
-        required={isRequired}
+        required={requiredForField}
         readonly={uiReadonly}
         schema={schema}
         uiSchema={fieldUiSchema}
