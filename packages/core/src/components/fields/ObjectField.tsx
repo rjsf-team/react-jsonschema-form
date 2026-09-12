@@ -11,6 +11,7 @@ import type {
   RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
 } from '@rjsf/utils';
 import {
   getByPath,
@@ -221,7 +222,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const {
     schema: rawSchema,
-    uiSchema = {},
+    uiSchema = {} as UiSchema<T, S, F>,
     formData,
     errorSchema,
     fieldPathId,
@@ -418,7 +419,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     description: uiOptions.label === false ? undefined : description,
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
-      const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
+      const fieldUiSchema = addedByAdditionalProperties
+        ? uiSchema.additionalProperties
+        : (uiSchema as Record<string, UiSchema<T, S, F>>)[propertyName];
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>

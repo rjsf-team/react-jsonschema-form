@@ -13,6 +13,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
+  UiSchema,
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -205,8 +206,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     'ui:classNames': consumedUiClassNames,
     classNames: consumedClassNames,
     'ui:style': consumedUiStyle,
-    ...fieldUiSchema
+    ...remainingUiSchema
   } = uiSchema;
+  const fieldUiSchema = remainingUiSchema as UiSchema<T, S, F>;
   if (UI_OPTIONS_KEY in fieldUiSchema) {
     const {
       classNames: consumedOptionClassNames,

@@ -217,7 +217,7 @@ describe('optionsList()', () => {
       expect(optionsList(anyOfSchema, anyOfUiSchema)).toEqual(
         anyOfSchema.anyOf!.map((schema, index) => ({
           schema,
-          label: anyOfUiSchema.anyOf[index]['ui:title'],
+          label: anyOfUiSchema.anyOf![index]['ui:title'],
           value: getByPath(schema, CONST_KEY),
         })),
       );
@@ -527,7 +527,7 @@ describe('optionsList()', () => {
       expect(optionsList(oneOfSchema, oneOfUiSchema)).toEqual(
         oneOfSchema.oneOf!.map((schema, index) => ({
           schema,
-          label: oneOfUiSchema.oneOf[index]['ui:title'],
+          label: oneOfUiSchema.oneOf![index]['ui:title'],
           value: getByPath(schema, CONST_KEY),
         })),
       );

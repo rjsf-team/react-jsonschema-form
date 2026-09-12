@@ -64,7 +64,7 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
     return options;
   }
   let altSchemas: S['anyOf'] | S['oneOf'] = undefined;
-  let altUiSchemas: UiSchema<T, S, F> | undefined = undefined;
+  let altUiSchemas: UiSchema<T, S, F>[] | undefined = undefined;
   if (schema.anyOf) {
     altSchemas = schema.anyOf;
     altUiSchemas = uiSchema?.anyOf;

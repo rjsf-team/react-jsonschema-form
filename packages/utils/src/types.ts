@@ -1190,15 +1190,38 @@ export type UiSchemaDefinitions<
   F extends FormContextType = any,
 > = Record<string, UiSchema<T, S, F>>;
 
+/** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
+type IsAnyType<V> = 0 extends 1 & V ? true : false;
+
+/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Unknown data keeps
+ * every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+ */
+type UiSchemaChildData<T> =
+  IsAnyType<T> extends true
+    ? GenericObjectType
+    : [NonNullable<T>] extends [readonly unknown[]]
+      ? Record<never, never>
+      : [NonNullable<T>] extends [object]
+        ? UnionMembersMerged<NonNullable<T>>
+        : Record<never, never>;
+
+/** Every key of every member of a union, each typed as the union of what the members that declare it hold. A
+ * `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
+ */
+type UnionMembersMerged<T> = {
+  [K in T extends unknown ? keyof T : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
+};
+
+/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
+type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
+  IsAnyType<V> extends true ? any : UiSchema<V, S, F>;
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
  */
-export type UiSchema<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = GenericObjectType &
-  MakeUIType<UIOptionsBaseType<T, S, F>> & {
+export type UiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
+} & MakeUIType<UIOptionsBaseType<T, S, F>> & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
      */
@@ -1220,6 +1243,18 @@ export type UiSchema<
     items?:
       | UiSchema<ArrayElement<T>, S, F>
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
+    /** The uiSchema applied to properties added through the schema's `additionalProperties` */
+    additionalProperties?: UiSchema<T, S, F>;
+    /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
+    additionalItems?: UiSchema<ArrayElement<T>, S, F>;
+    /** The uiSchema for each subschema of an `anyOf`, positionally */
+    anyOf?: UiSchema<T, S, F>[];
+    /** The uiSchema for each subschema of a `oneOf`, positionally */
+    oneOf?: UiSchema<T, S, F>[];
+    /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
+     * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
+     */
+    classNames?: string;
     /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
      * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
      * applied and merged with any local uiSchema overrides at that path.

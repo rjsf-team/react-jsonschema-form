@@ -1476,6 +1476,7 @@ describe('anyOf', () => {
         schema,
         uiSchema: {
           'ui:title': 'My Title',
+          // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
           anyOf: { 'ui:title': 'UiSchema title' },
         },
       });

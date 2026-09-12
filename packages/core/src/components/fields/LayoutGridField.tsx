@@ -161,7 +161,8 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
   const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
   const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
-  const fieldUiSchema = { ...localUiSchema };
+  // Spreading a uiSchema flattens its per-field half, which TS cannot re-check against an unresolved `T`
+  const fieldUiSchema = { ...localUiSchema } as UiSchema<T, S, F>;
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;
   }
