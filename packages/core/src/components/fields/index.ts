@@ -40,6 +40,8 @@ export function generateFields<
 >(): RegistryFieldsType<T, S, F> {
   return {
     AnyOfField: MultiSchemaField,
+    // `RegistryFieldsType` types every entry with the form's single `T`, but `ArrayField` renders `T[]`, so the
+    // registry cannot express its data type; `SchemaField` picks it by name at runtime.
     ArrayField: ArrayField as unknown as Field<T, S, F>,
     // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
     BooleanField,

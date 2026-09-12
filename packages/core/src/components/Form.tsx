@@ -336,10 +336,10 @@ export default class Form<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` can provide any possible type
-   * here
+  /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
+   * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
    */
-  formElement: RefObject<any>;
+  formElement: RefObject<HTMLElement | null>;
 
   /** The list of pending changes
    */
@@ -919,8 +919,7 @@ export default class Form<
             // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
             valueForPath = null as unknown as T;
           } else {
-            const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
-            const leaf = field as RJSFSchema | undefined;
+            const { field: leaf } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
             // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
             // re-apply a branch default when the user clears the widget.
@@ -1084,12 +1083,12 @@ export default class Form<
     const state = {
       formData: newFormData,
       errorSchema: {},
-      errors: [] as unknown,
-      schemaValidationErrors: [] as unknown,
+      errors: [],
+      schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
       initialDefaultsGenerated: false,
       customErrors: undefined,
-    } as FormState<T, S, F>;
+    } satisfies Partial<FormState<T, S, F>>;
 
     this.setState(state, () => onChange?.(toIChangeEvent({ ...this.state, ...state })));
   };
@@ -1204,13 +1203,16 @@ export default class Form<
 
   /** Provides a function that can be used to programmatically submit the `Form` */
   submit = () => {
-    if (this.formElement.current) {
+    const form = this.formElement.current;
+    if (form) {
       const submitCustomEvent = new CustomEvent('submit', {
         cancelable: true,
       });
       submitCustomEvent.preventDefault();
-      this.formElement.current.dispatchEvent(submitCustomEvent);
-      this.formElement.current.requestSubmit();
+      form.dispatchEvent(submitCustomEvent);
+      if (form instanceof HTMLFormElement) {
+        form.requestSubmit();
+      }
     }
   };
 
@@ -1228,18 +1230,16 @@ export default class Form<
     path.unshift(idPrefix);
 
     const elementId = path.join(idSeparator);
-    let field = this.formElement.current.elements[elementId];
-    if (!field) {
-      // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or checkboxes)
-      // some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-      field = this.formElement.current.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    const form = this.formElement.current;
+    if (!form) {
+      return;
     }
-    if (field?.length) {
-      // If we got a list with length > 0
-      // oxlint-disable-next-line prefer-destructuring
-      field = field[0];
-    }
-    if (field) {
+    const named = form instanceof HTMLFormElement ? form.elements.namedItem(elementId) : null;
+    // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
+    // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
+    const found = named ?? form.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    const field = found instanceof RadioNodeList ? found.item(0) : found;
+    if (field instanceof HTMLElement) {
       field.focus();
     }
   }

@@ -64,7 +64,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
-  const [formData, setFormData] = useState<any>(samples.Simple.formData);
+  const [formData, setFormData] = useState<unknown>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');

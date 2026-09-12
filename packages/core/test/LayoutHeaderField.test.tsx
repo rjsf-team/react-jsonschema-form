@@ -1,9 +1,9 @@
-import type { FieldProps, Registry, TitleFieldProps } from '@rjsf/utils';
+import type { FieldProps, TitleFieldProps } from '@rjsf/utils';
 import { ID_KEY, noop, titleId } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 
 import LayoutHeaderField from '../src/components/fields/LayoutHeaderField.tsx';
-import { generateTemplates } from '../src/components/templates/index.ts';
+import { getTestRegistry } from '../src/testing.ts';
 
 const TEST_ID = 'test-id';
 const REQUIRED_ID = 'required-id';
@@ -49,12 +49,7 @@ describe('LayoutHeaderField', () => {
       schema,
       uiSchema,
       name,
-      registry: {
-        templates: {
-          ...generateTemplates(),
-          TitleFieldTemplate: TestTitleField,
-        },
-      } as Registry,
+      registry: getTestRegistry(schema, {}, { TitleFieldTemplate: TestTitleField }),
     };
   }
 
