@@ -20,6 +20,8 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
+import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
+import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getInputProps from './getInputProps.ts';
@@ -54,6 +56,7 @@ import isObject from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
 import labelValue from './labelValue.ts';
+import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
@@ -62,9 +65,11 @@ import mergeObjects from './mergeObjects.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
+import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
 import optionsList from './optionsList.ts';
 import orderProperties from './orderProperties.ts';
 import pad from './pad.ts';
+import padTimeSeconds from './padTimeSeconds.ts';
 import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
@@ -89,6 +94,8 @@ import useAltDateWidgetProps, { DateElement } from './useAltDateWidgetProps.tsx'
 import useDeepCompareMemo from './useDeepCompareMemo.ts';
 import type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps.ts';
 import useFileWidgetProps from './useFileWidgetProps.ts';
+import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
+import useTimeWidgetProps from './useTimeWidgetProps.ts';
 import utcToLocal from './utcToLocal.ts';
 import validationDataMerge from './validationDataMerge.ts';
 import withIdRefPrefix from './withIdRefPrefix.ts';
@@ -105,11 +112,13 @@ export type {
   DateElementFormat,
   DateElementProp,
   DateElementProps,
+  DateTimeLocalValueResult,
   FileInfoType,
   ObjectPath,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
+  UseTimeWidgetPropsResult,
 };
 
 export {
@@ -140,6 +149,7 @@ export {
   findSchemaDefinition,
   getChangedFields,
   getDateElementProps,
+  getDateTimeLocalValue,
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
   getInputProps,
@@ -168,6 +178,7 @@ export {
   isPlainObject,
   isRootSchema,
   labelValue,
+  localTimeToOffsetTime,
   localToUTC,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,
@@ -175,11 +186,13 @@ export {
   mergeObjects,
   mergeSchemas,
   noop,
+  offsetTimeToLocalTime,
   optionalControlsId,
   optionId,
   optionsList,
   orderProperties,
   pad,
+  padTimeSeconds,
   parseDateString,
   rangeSpec,
   replaceStringParameters,
@@ -203,6 +216,7 @@ export {
   useAltDateWidgetProps,
   useDeepCompareMemo,
   useFileWidgetProps,
+  useTimeWidgetProps,
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,

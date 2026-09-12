@@ -515,6 +515,19 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - Array of props for DateElement
 
+### getDateTimeLocalValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. To be used by theme specific `DateTimeWidget` implementations.
+
+#### Parameters
+
+- schema: S - The schema for the date-time field
+- value: unknown - The current value of the field
+
+#### Returns
+
+- DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
+
 ### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
@@ -894,6 +907,18 @@ Some themes require may `false` and others may require an empty string.
 
 - string | boolean | undefined: `fallback` if `hideLabel` is true, otherwise `label`
 
+### localTimeToOffsetTime()
+
+Appends the browser's current local UTC offset to a bare `time` string (`HH:MM` or `HH:MM:SS`), producing a `time` compliant with the JSON Schema `time` format (RFC 3339 `full-time`), which requires a timezone. The wall-clock value itself is left untouched; only the offset annotation is added.
+
+#### Parameters
+
+- time: string - A time string without a timezone offset
+
+#### Returns
+
+- string: The `time` string suffixed with `Z` (UTC) or a `+HH:MM`/`-HH:MM` offset
+
 ### localToUTC()
 
 Converts a local Date string into a UTC date string
@@ -1007,6 +1032,18 @@ A function that does nothing and returns `undefined`, useful as a placeholder fo
 
 - void
 
+### offsetTimeToLocalTime()
+
+Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` string, returning the bare `HH:MM:SS` portion suitable for a native `<input type="time">`, which does not understand offsets.
+
+#### Parameters
+
+- time: string - A time string, optionally suffixed with a timezone offset
+
+#### Returns
+
+- string: The `time` string with any trailing offset removed
+
 ### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
@@ -1061,6 +1098,18 @@ Returns a string representation of the `num` that is padded with leading "0"s if
 #### Returns
 
 - string: The number converted to a string with leading zero padding if the number of digits is less than `width`
+
+### padTimeSeconds()
+
+Appends `:00` seconds to a bare time-of-day (`HH:MM`) or the time portion of a naive local date-time string (`...THH:MM`) that is missing them, since RFC 3339 requires seconds for both the `time` and `date-time` formats (independent of whether a timezone offset is present or required).
+
+#### Parameters
+
+- value: string - A time or date-time string, with or without seconds
+
+#### Returns
+
+- string: The value with `:00` appended if it was missing seconds, otherwise unchanged
 
 ### parseDateString()
 
@@ -1428,6 +1477,22 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 #### Returns
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+
+### useTimeWidgetProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()
+
+Hook which encapsulates the logic needed to compute the local (offset-free) display value of a `time` widget, and to
+transform a newly entered value into a value compliant with the JSON Schema `time` format (RFC 3339 `full-time`,
+which requires seconds and a timezone) or, when `schema.format` is `iso-time`, into one still padded with seconds but
+without a forced timezone, since that format's timezone is optional. To be used by theme specific `TimeWidget`
+implementations.
+
+#### Parameters
+
+- props: WidgetProps&lt;T, S, F> - The `WidgetProps` for the `TimeWidget`
+
+#### Returns
+
+- UseTimeWidgetPropsResult: The `UseTimeWidgetPropsResult` to be used within a `TimeWidget` implementation
 
 ### utcToLocal()
 

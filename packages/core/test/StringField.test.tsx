@@ -842,6 +842,75 @@ describe('StringField', () => {
 
       expect(node.querySelector('#custom')).toBeInTheDocument();
     });
+
+    describe('with format=iso-date-time', () => {
+      it('should render a datetime-local field', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        expect(node.querySelectorAll('.rjsf-field [type=datetime-local]')).toHaveLength(1);
+      });
+
+      it('should submit the value without a timezone offset', async () => {
+        const datetime = '2016-04-05T14:01:30';
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+          formData: datetime,
+        });
+        await submitForm(node, user);
+        expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
+      });
+
+      it('should reflect the change into the dom without conversion', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        const newDatetime = '2016-04-05T14:01';
+        const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
+        await user.click(dateNode);
+        await user.paste(newDatetime);
+
+        expect(dateNode).toHaveValue(newDatetime);
+      });
+
+      it('should strip a timezone offset from a stored value for display', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+          formData: '2016-04-05T14:01:30.000Z',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30.000');
+      });
+
+      it('should pad seconds without adding a timezone offset when changed', async () => {
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
+        fireEvent.change(dateNode, { target: { value: '2016-04-05T14:01' } });
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, '2016-04-05T14:01:00', true);
+      });
+    });
   });
 
   describe('DateWidget', () => {
@@ -979,7 +1048,7 @@ describe('StringField', () => {
     });
 
     it('should assign a default value', async () => {
-      const time = '01:10:00';
+      const time = '01:10:00Z';
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -1023,6 +1092,34 @@ describe('StringField', () => {
       expect(input).toHaveValue(newTime);
     });
 
+    it('should append the local timezone offset to formData when the value is changed', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+      });
+
+      const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      fireEvent.change(input, { target: { value: '11:10' } });
+      await submitForm(node, user);
+
+      const [[submission]] = onSubmit.mock.calls;
+      expect(submission.formData).toMatch(/^11:10:00(?:Z|[+-]\d{2}:\d{2})$/);
+    });
+
+    it('should strip the timezone offset from formData for display in the dom', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        formData: '13:10:30+02:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
+    });
+
     it('should render stored minute precision values without seconds', () => {
       const { node } = createFormComponent({
         schema: {
@@ -1061,7 +1158,7 @@ describe('StringField', () => {
     });
 
     it('should fill field with data', async () => {
-      const time = '13:10:00';
+      const time = '13:10:00Z';
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -1110,6 +1207,71 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('#custom')).toBeInTheDocument();
+    });
+
+    describe('with format=iso-time', () => {
+      it('should render a time field', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+        });
+
+        expect(node.querySelectorAll('.rjsf-field [type=time]')).toHaveLength(1);
+      });
+
+      it('should submit the value without a timezone offset', async () => {
+        const time = '13:10:00';
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          formData: time,
+        });
+        await submitForm(node, user);
+        expectToHaveBeenCalledWithFormData(onSubmit, time, true);
+      });
+
+      it('should display a stored value as-is', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          formData: '13:10:30',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
+      });
+
+      it('should still strip a timezone offset from a stored value for display', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          formData: '13:10:30+02:00',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
+      });
+
+      it('should append seconds without a timezone offset when changed', async () => {
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+        });
+
+        const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+        fireEvent.change(input, { target: { value: '11:10' } });
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, '11:10:00', true);
+      });
     });
   });
 

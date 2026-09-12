@@ -28,11 +28,27 @@ exports[`getWidget() > should not fail on memo component 1`] = `
 </DocumentFragment>
 `;
 
+exports[`getWidget() > should return \`DateTimeWidget\` for the \`iso-date-time\` format 1`] = `
+<DocumentFragment>
+  <div>
+    test
+  </div>
+</DocumentFragment>
+`;
+
 exports[`getWidget() > should return \`SelectWidget\` for boolean type 1`] = `
 <DocumentFragment>
   <div
     color="green"
   >
+    test
+  </div>
+</DocumentFragment>
+`;
+
+exports[`getWidget() > should return \`TimeWidget\` for the \`iso-time\` format 1`] = `
+<DocumentFragment>
+  <div>
     test
   </div>
 </DocumentFragment>

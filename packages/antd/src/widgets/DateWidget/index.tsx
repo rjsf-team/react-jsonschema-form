@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { ariaDescribedByIds, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 
@@ -12,7 +12,11 @@ type DateWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
 };
 
 /** The `DateWidget` component uses the `BaseInputTemplate` changing the type to `date` and transforms
- * the value to undefined when it is falsy during the `onChange` handling.
+ * the value to undefined when it is falsy during the `onChange` handling. When `schema.format` is
+ * `iso-date-time`, the picked value is formatted as a naive local date-time string instead of being
+ * converted to UTC, since that format's timezone is optional; a stored value that happens to carry an
+ * offset is stripped before being parsed, so it displays as the naive wall-clock time it represents
+ * instead of being converted to the browser's local zone.
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -27,12 +31,23 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   readonly,
   value,
   showTime = false,
+  schema,
 }: DateWidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
-  const handleChange = (nextValue: any) =>
-    onChange(nextValue && (showTime ? nextValue.toISOString() : nextValue.format('YYYY-MM-DD')));
+  const handleChange = (nextValue: any) => {
+    if (!nextValue) {
+      onChange(nextValue);
+    } else if (isIsoDateTime) {
+      onChange(nextValue.format('YYYY-MM-DDTHH:mm:ss'));
+    } else if (showTime) {
+      onChange(nextValue.toISOString());
+    } else {
+      onChange(nextValue.format('YYYY-MM-DD'));
+    }
+  };
 
   const handleBlur = () => onBlur(id, value);
 
@@ -52,7 +67,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       placeholder={placeholder}
       showTime={showTime}
       style={DATE_PICKER_STYLE}
-      value={value && dayjs(value)}
+      value={localValue ? dayjs(localValue) : undefined}
       aria-describedby={ariaDescribedByIds(id)}
     />
   );

@@ -3,6 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getDateTimeLocalValue } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
@@ -137,7 +138,7 @@ function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect,
             id={id}
             type='time'
             className='input input-bordered w-full'
-            value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
+            value={selectedDate && isValid(selectedDate) ? format(selectedDate, 'HH:mm') : ''}
             onChange={onTimeChange}
             onClick={handleClick}
           />
@@ -167,8 +168,31 @@ export default function DateTimeWidget<
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, onChange, onFocus, onBlur, schema } = props;
-  // Initialize the local date from the parent's value.
-  const initialDate = useMemo(() => (value ? new Date(value) : undefined), [value]);
+  const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
+  // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
+  // is optional), or a UTC ISO string otherwise.
+  const commitValue = useCallback(
+    (date: Date | undefined) => {
+      if (!date) {
+        return '';
+      }
+      return isIsoDateTime ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : date.toISOString();
+    },
+    [isIsoDateTime],
+  );
+  // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
+  // carry an offset is stripped first, so it's parsed as the naive wall-clock time it represents instead of
+  // being converted to the browser's local zone. An unparsable stored value (e.g. left over from a schema
+  // change) normalizes to `undefined` here, rather than becoming an `Invalid Date` that every downstream
+  // consumer (the calendar's month caption, the time input, `commitValue`) would otherwise have to guard
+  // against individually.
+  const initialDate = useMemo(() => {
+    if (!localValue) {
+      return undefined;
+    }
+    const date = new Date(localValue);
+    return isValid(date) ? date : undefined;
+  }, [localValue]);
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
 
   // When the parent's value changes externally, update local state.
@@ -184,7 +208,7 @@ export default function DateTimeWidget<
   useClickOutside(containerRef, () => {
     if (isOpen) {
       setIsOpen(false);
-      onChange(localDate ? localDate.toISOString() : '');
+      onChange(commitValue(localDate));
       // Manually invoke the blur handler to ensure blur event is triggered
       if (onBlur) {
         onBlur(id, value);
@@ -290,12 +314,12 @@ export default function DateTimeWidget<
    */
   const handleDoneClick = useCallback(() => {
     setIsOpen(false);
-    onChange(localDate ? localDate.toISOString() : '');
+    onChange(commitValue(localDate));
     if (onBlur) {
       onBlur(id, value);
     }
     inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value, setIsOpen]);
+  }, [localDate, onChange, onBlur, id, value, setIsOpen, commitValue]);
 
   return (
     <div className='form-control my-4 w-full relative'>
