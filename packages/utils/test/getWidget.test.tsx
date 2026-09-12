@@ -3,8 +3,8 @@ import type { ForwardedRef } from 'react';
 import { forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
-import type { FieldPathId, Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getWidget } from '../src/index.ts';
+import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
+import { getWidget, ROOT_FIELD_PATH } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -71,7 +71,7 @@ const widgetProps: WidgetProps = {
   onFocus: vi.fn(),
   readonly: false,
   required: false,
-  fieldPathId: {} as FieldPathId,
+  fieldPath: ROOT_FIELD_PATH,
   schema: {} as RJSFSchema,
   uiSchema: {},
   options: {},

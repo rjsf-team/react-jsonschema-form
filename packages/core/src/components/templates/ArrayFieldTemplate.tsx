@@ -14,7 +14,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -42,9 +42,9 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id}>
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         title={uiOptions.title || title}
         required={required}
         schema={schema}
@@ -53,7 +53,7 @@ export default function ArrayFieldTemplate<
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
@@ -63,7 +63,7 @@ export default function ArrayFieldTemplate<
       <div className='row array-item-list'>{items}</div>
       {canAdd && (
         <AddButton
-          id={buttonId(fieldPathId, 'add')}
+          id={buttonId(id, 'add')}
           className='rjsf-array-item-add'
           onClick={onAddClick}
           disabled={disabled || readonly}

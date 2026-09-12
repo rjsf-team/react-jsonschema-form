@@ -16,12 +16,12 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { help, uiSchema, registry, fieldPathId } = props;
+  const { help, uiSchema, registry, id } = props;
   if (!help) {
     return null;
   }
   return (
-    <div id={helpId(fieldPathId)} className='rjsf-field-help-template text-gray-500 text-sm'>
+    <div id={helpId(id)} className='rjsf-field-help-template text-gray-500 text-sm'>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );

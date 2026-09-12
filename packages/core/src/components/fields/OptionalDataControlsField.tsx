@@ -32,7 +32,8 @@ export default function OptionalDataControlsField<
     readonly = false,
     onChange,
     errorSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     registry,
   } = props;
 
@@ -49,16 +50,16 @@ export default function OptionalDataControlsField<
   let onAddClick: OptionalDataControlsTemplateProps['onAddClick'];
   let onRemoveClick: OptionalDataControlsTemplateProps['onRemoveClick'];
   if (disabled || readonly) {
-    id = optionalControlsId(fieldPathId, 'Msg');
+    id = optionalControlsId(fieldId, 'Msg');
     label = hasFormData ? undefined : translateString(TranslatableString.OptionalObjectEmptyMsg);
   } else {
     const labelEnum = hasFormData ? TranslatableString.OptionalObjectRemove : TranslatableString.OptionalObjectAdd;
     label = translateString(labelEnum);
     if (hasFormData) {
-      id = optionalControlsId(fieldPathId, 'Remove');
-      onRemoveClick = () => onChange(undefined as T, fieldPathId.path, errorSchema);
+      id = optionalControlsId(fieldId, 'Remove');
+      onRemoveClick = () => onChange(undefined as T, fieldPath, errorSchema);
     } else {
-      id = optionalControlsId(fieldPathId, 'Add');
+      id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
         // If it has form data, store an empty object, otherwise get the default form state and use it
         let newFormData: unknown = schemaUtils.getDefaultFormState(schema, formData, 'excludeObjectChildren');
@@ -66,7 +67,7 @@ export default function OptionalDataControlsField<
           // If new form data ended up being undefined, and we have pushed the add button we need to actually add data
           newFormData = getSchemaType<S>(schema) === 'array' ? [] : {};
         }
-        onChange(newFormData as T, fieldPathId.path, errorSchema);
+        onChange(newFormData as T, fieldPath, errorSchema);
       };
     }
   }

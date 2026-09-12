@@ -29,7 +29,8 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     disabled = false,
     errorSchema,
     formData,
-    fieldPathId,
+    fieldPath,
+    id,
     onBlur,
     onChange,
     onFocus,
@@ -66,7 +67,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
    */
   const skipNextOptionRecalculation = useRef(false);
   const prevFormDataRef = useRef<T | undefined>(formData);
-  const prevFieldIdRef = useRef(fieldPathId.$id);
+  const prevFieldIdRef = useRef(id);
 
   // Mirrors componentDidUpdate: re-match selectedOption when formData changes on the same field.
   // Runs after every render (no deps array) to compare against prev values stored in refs.
@@ -75,9 +76,9 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     const prevFormData = prevFormDataRef.current;
     const prevFieldId = prevFieldIdRef.current;
     prevFormDataRef.current = formData;
-    prevFieldIdRef.current = fieldPathId.$id;
+    prevFieldIdRef.current = id;
 
-    if (!deepEquals(formData, prevFormData) && fieldPathId.$id === prevFieldId) {
+    if (!deepEquals(formData, prevFormData) && id === prevFieldId) {
       if (skipNextOptionRecalculation.current) {
         skipNextOptionRecalculation.current = false;
         return;
@@ -95,7 +96,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     }
   });
 
-  const fieldId = `${fieldPathId.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
+  const fieldId = `${id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -124,10 +125,10 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
       setSelectedOption(intOption);
       skipNextOptionRecalculation.current = true;
-      onChange(newFormData, fieldPathId.path, undefined, fieldId);
+      onChange(newFormData, fieldPath, undefined, fieldId);
     },
     // setSelectedOption is stable (guaranteed by useState); skipNextOptionRecalculation is a ref
-    [selectedOption, retrievedOptions, disabled, readonly, schemaUtils, formData, fieldPathId, onChange, fieldId],
+    [selectedOption, retrievedOptions, disabled, readonly, schemaUtils, formData, fieldPath, onChange, fieldId],
   );
 
   const { widgets, fields, translateString, globalUiOptions } = registry;

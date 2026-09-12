@@ -13,7 +13,7 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help, uiSchema, registry, hasErrors } = props;
+  const { id, help, uiSchema, registry, hasErrors } = props;
   if (!help) {
     return null;
   }
@@ -21,7 +21,7 @@ export default function FieldHelpTemplate<
   return (
     <span
       className={cn('text-xs font-medium text-muted-foreground', { 'text-destructive': hasErrors })}
-      id={helpId(fieldPathId)}
+      id={helpId(id)}
     >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </span>

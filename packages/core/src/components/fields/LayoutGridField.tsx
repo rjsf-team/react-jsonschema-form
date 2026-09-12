@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import type {
   FieldProps,
-  FieldPathId,
+  FieldPath,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -20,18 +20,17 @@ import {
   getPropertySchema,
   getUiOptions,
   hashObject,
-  ID_KEY,
   isObject,
   isPlainObject,
   lookupFromFormContext,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   READONLY_KEY,
-  toFieldPathId,
+  toFieldPath,
+  fieldPathToId,
   UI_OPTIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   ITEMS_KEY,
-  useDeepCompareMemo,
 } from '@rjsf/utils';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -255,31 +254,29 @@ export function findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFS
   return { children: children as LayoutGridSchemaType[], gridProps };
 }
 
-/** Computes the `rawSchema` and `fieldPathId` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
- * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
- * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
- * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
- * either case, an `fieldPathId` is computed for the array index. If the `schema` does not represent an array or the
- * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `fieldPathId` is returned
- * as is.
+/** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
+ * array, has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is
+ * checked to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the
+ * `rawSchema`, otherwise the last value of the element is used. If it is not, then the element is used as the
+ * `rawSchema`. In either case, the numeric `index` is returned so the caller can record the path segment as a number,
+ * addressing an array element rather than an object key. If the `schema` does not represent an array or the
+ * `potentialIndex` is not a numeric value, then both are returned as undefined.
  *
- * @param schema - The schema to generate the fieldPathId for
- * @param fieldPathId - The FieldPathId for the schema
+ * @param schema - The schema to check for an array item schema
  * @param potentialIndex - A string containing a potential index
- * @returns - An object containing the `rawSchema` and `fieldPathId` of an array item, otherwise an undefined `rawSchema`
+ * @returns - An object containing the `rawSchema` and numeric `index` of an array item, otherwise both undefined
  */
 export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S | undefined,
-  fieldPathId: FieldPathId,
   potentialIndex: string,
 ): {
   rawSchema?: S;
-  fieldPathId: FieldPathId;
+  index?: number;
 } {
   let rawSchema: S | undefined;
-  let resultPathId = fieldPathId;
+  let index: number | undefined;
   if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && ITEMS_KEY in schema) {
-    const index = Number(potentialIndex);
+    index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
     if (Array.isArray(items)) {
       if (index > items.length) {
@@ -290,12 +287,8 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
     } else {
       rawSchema = items as S;
     }
-    resultPathId = {
-      [ID_KEY]: fieldPathId[ID_KEY],
-      path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
-    };
   }
-  return { rawSchema, fieldPathId: resultPathId };
+  return { rawSchema, index };
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
@@ -307,7 +300,7 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
  * @param dottedPath - The dotted-path to the field for which to get the schema
  * @param initialSchema - The initial schema to start the search from
  * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
- * @param initialFieldIdPath - The initial fieldPathId to start the search from
+ * @param initialFieldIdPath - The initial fieldPath to start the search from
  * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
  *            info if a oneOf/anyOf
  */
@@ -320,17 +313,17 @@ export function getSchemaDetailsForField<
   dottedPath: string,
   initialSchema: S,
   formData: FieldProps<T, S, F>['formData'],
-  initialFieldIdPath: FieldPathId,
+  initialFieldPath: FieldPath,
 ): {
   schema?: S;
   isRequired: boolean;
   isReadonly?: boolean;
   optionsInfo?: OneOfOptionsInfoType<S>;
-  fieldPathId: FieldPathId;
+  fieldPath: FieldPath;
 } {
-  const { schemaUtils, globalFormOptions } = registry;
+  const { schemaUtils } = registry;
   let rawSchema: S = initialSchema;
-  let fieldPathId = initialFieldIdPath;
+  let fieldPath = initialFieldPath;
   const parts: string[] = dottedPath.split('.');
   const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
   let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
@@ -340,7 +333,7 @@ export function getSchemaDetailsForField<
   // For all the remaining path parts
   parts.forEach((part) => {
     // dive into the properties of the current schema (when it exists) and get the schema for the next part
-    fieldPathId = toFieldPathId(part, globalFormOptions, fieldPathId);
+    let segment: string | number = part;
     const schemaProperties = schema?.[PROPERTIES_KEY];
     if (schemaProperties) {
       rawSchema = (schemaProperties[part] ?? {}) as S;
@@ -350,10 +343,11 @@ export function getSchemaDetailsForField<
       const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
       rawSchema = getPropertySchema<S>(selectedSchema, part);
     } else {
-      const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, part);
+      const result = computeArraySchemasIfPresent<S>(schema, part);
       rawSchema = result.rawSchema ?? ({} as S);
-      fieldPathId = result.fieldPathId;
+      segment = result.index ?? part;
     }
+    fieldPath = toFieldPath(segment, fieldPath);
     // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
     innerData = getByPath<T>(innerData, part, {} as T);
     // Resolve any `$ref`s for the current rawSchema
@@ -374,12 +368,11 @@ export function getSchemaDetailsForField<
       // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
       schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
     }
-    fieldPathId = toFieldPathId(leafPath, globalFormOptions, fieldPathId);
     isRequired = schema !== undefined && Array.isArray(schema.required) && schema.required.includes(leafPath);
-    const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, leafPath);
+    const result = computeArraySchemasIfPresent<S>(schema, leafPath);
+    fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {
       schema = result.rawSchema;
-      fieldPathId = result.fieldPathId;
     } else {
       // Now grab the schema from the leafPath of the current schema properties
       schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;
@@ -395,7 +388,7 @@ export function getSchemaDetailsForField<
     }
   }
 
-  return { schema, isRequired, isReadonly, optionsInfo, fieldPathId };
+  return { schema, isRequired, isReadonly, optionsInfo, fieldPath };
 }
 
 /** Gets the custom render component from the `render`, by either determining that it is either already a function or
@@ -624,7 +617,7 @@ type LayoutGridFieldComponentProps<
  * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
  * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
  * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
- * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
+ * `uiSchema`, `errorSchema`, `fieldPath` and `formData` drilled down to the dotted-path field, spreading any other
  * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
  * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
  * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
@@ -641,7 +634,8 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     schema: initialSchema,
     uiSchema,
     errorSchema,
-    fieldPathId,
+    fieldPath: parentFieldPath,
+    id,
     onBlur,
     onFocus,
     formData,
@@ -656,14 +650,13 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
 
   const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
   const { name, UIComponent, uiProps } = uiComponentProps;
-  const {
-    schema,
-    isRequired,
-    isReadonly,
-    optionsInfo,
-    fieldPathId: fieldIdSchema,
-  } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
-  const memoFieldPathId = useDeepCompareMemo<FieldPathId>(fieldIdSchema);
+  const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = getSchemaDetailsForField<T, S, F>(
+    registry,
+    name,
+    initialSchema,
+    formData,
+    parentFieldPath,
+  );
 
   if (uiComponentProps.rendered) {
     return uiComponentProps.rendered;
@@ -693,7 +686,8 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         schema={schema}
         uiSchema={fieldUiSchema}
         errorSchema={getByPath(errorSchema, namePath)}
-        fieldPathId={memoFieldPathId}
+        fieldPath={fieldPath}
+        id={fieldPathToId(fieldPath, registry.globalFormOptions)}
         formData={getByPath(formData, namePath)}
         onChange={onChange}
         onBlur={onBlur}
@@ -716,7 +710,8 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         errorSchema={errorSchema}
         uiSchema={uiSchema}
         schema={initialSchema}
-        fieldPathId={fieldPathId}
+        fieldPath={parentFieldPath}
+        id={id}
         onBlur={onBlur}
         onFocus={onFocus}
         registry={registry}

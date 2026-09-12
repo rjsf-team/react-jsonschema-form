@@ -17,7 +17,7 @@ export default function ObjectFieldTemplate<
   properties,
   required,
   uiSchema,
-  fieldPathId,
+  id,
   schema,
   formData,
   optionalDataControl,
@@ -42,7 +42,7 @@ export default function ObjectFieldTemplate<
     <>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -53,7 +53,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -70,7 +70,7 @@ export default function ObjectFieldTemplate<
         {canExpand(schema, uiSchema, formData) ? (
           <div className='mt-2 flex justify-end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               onClick={onAddProperty}
               disabled={disabled || readonly}
               className='rjsf-object-property-expand'

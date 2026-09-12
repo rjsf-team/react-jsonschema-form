@@ -1,57 +1,53 @@
-import { ID_KEY } from './constants.ts';
-import type { FieldPathId } from './types.ts';
-
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @param suffix - The suffix to append to the id
  */
-function idGenerator(id: FieldPathId | string, suffix: string) {
-  const theId = typeof id === 'string' ? id : id[ID_KEY];
-  return `${theId}__${suffix}`;
+function idGenerator(id: string, suffix: string) {
+  return `${id}__${suffix}`;
 }
 /** Return a consistent `id` for the field description element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @returns - The consistent id for the field description element from the given `id`
  */
-export function descriptionId(id: FieldPathId | string) {
+export function descriptionId(id: string) {
   return idGenerator(id, 'description');
 }
 
 /** Return a consistent `id` for the field error element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @returns - The consistent id for the field error element from the given `id`
  */
-export function errorId(id: FieldPathId | string) {
+export function errorId(id: string) {
   return idGenerator(id, 'error');
 }
 
 /** Return a consistent `id` for the field examples element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @returns - The consistent id for the field examples element from the given `id`
  */
-export function examplesId(id: FieldPathId | string) {
+export function examplesId(id: string) {
   return idGenerator(id, 'examples');
 }
 
 /** Return a consistent `id` for the field help element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @returns - The consistent id for the field help element from the given `id`
  */
-export function helpId(id: FieldPathId | string) {
+export function helpId(id: string) {
   return idGenerator(id, 'help');
 }
 
 /** Return a consistent `id` for the field title element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @returns - The consistent id for the field title element from the given `id`
  */
-export function titleId(id: FieldPathId | string) {
+export function titleId(id: string) {
   return idGenerator(id, 'title');
 }
 
@@ -59,11 +55,11 @@ export function titleId(id: FieldPathId | string) {
  * description of the field. This is correctly omitting `titleId` which would be "labeling" rather than "describing" the
  * element.
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the field
  * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds(id: FieldPathId | string, includeExamples = false) {
+export function ariaDescribedByIds(id: string, includeExamples = false) {
   const examples = includeExamples ? ` ${examplesId(id)}` : '';
   return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}${examples}`;
 }
@@ -84,7 +80,7 @@ export function optionId(id: string, optionIndex: number) {
  * @param btn - The button type for which to generate the id
  * @returns - The consistent id for the button from the given `id` and `btn` type
  */
-export function buttonId(id: FieldPathId | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
+export function buttonId(id: string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
   return idGenerator(id, btn);
 }
 
@@ -94,6 +90,6 @@ export function buttonId(id: FieldPathId | string, btn: 'add' | 'copy' | 'moveDo
  * @param element - The element type for which to generate the id
  * @returns - The consistent id for the optional data controls element from the given `id` and `element` type
  */
-export function optionalControlsId(id: FieldPathId | string, element: 'Add' | 'Msg' | 'Remove') {
+export function optionalControlsId(id: string, element: 'Add' | 'Msg' | 'Remove') {
   return idGenerator(id, `optional${element}`);
 }

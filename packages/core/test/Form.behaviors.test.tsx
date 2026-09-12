@@ -1,6 +1,6 @@
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
+import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -1049,7 +1049,10 @@ describe('Calling onChange right after updating a Form with props formData', () 
         return;
       }
       changed = true;
-      latestProps.current.onChange('test', [latestProps.current.formData.length]);
+      latestProps.current.onChange(
+        'test',
+        toFieldPath(latestProps.current.formData.length, latestProps.current.fieldPath),
+      );
     });
     return <ArrayField {...fieldProps} />;
   };
@@ -1516,7 +1519,8 @@ describe('setFieldValue()', () => {
       expect.objectContaining({
         formData: 'populated value',
       }),
-      'root_',
+      // An empty segment names no field, so the id is the root id rather than the trailing-separator `root_`
+      'root',
     );
 
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');

@@ -378,7 +378,8 @@ A field component will always be passed the following props:
 
 - `schema`: The JSON subschema object for this field;
 - `uiSchema`: The [uiSchema](../api-reference/uiSchema.md) for this field;
-- `idSchema`: The FieldPathId of the field in the hierarchy
+- `fieldPath`: The `FieldPath` string identifying where this field's data lives, such as `friends[0].firstName`; pass it to `onChange` when reporting a new value
+- `id`: The id of the field in the hierarchy
 - `formData`: The data for this field;
 - `errorSchema`: The tree of errors for this field and its children;
 - `registry`: A [registry](#the-registry-object) object (read next).

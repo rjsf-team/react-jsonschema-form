@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getWidget, getUiOptions, isObject, optionsList, TranslatableString } from '@rjsf/utils';
+import { TranslatableString, fieldPathToName, getUiOptions, getWidget, isObject, optionsList } from '@rjsf/utils';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -21,7 +21,8 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     schema,
     name,
     uiSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     formData,
     registry,
     required,
@@ -85,9 +86,8 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     }
   }
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
-      onChange(value, fieldPathId.path, errorSchema, id),
-    [onChange, fieldPathId],
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
+    [onChange, fieldPath],
   );
 
   return (
@@ -95,7 +95,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={fieldPathId.$id}
+      id={fieldId}
       name={name}
       onChange={onWidgetChange}
       onFocus={onFocus}
@@ -110,7 +110,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       registry={registry}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      htmlName={fieldPathId.name}
+      htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );
 }
