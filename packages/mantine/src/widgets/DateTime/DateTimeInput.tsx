@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
+import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
@@ -31,11 +32,12 @@ const offsetValueParser = (input: string | undefined) => {
   return d.isValid() ? d.toDate() : null;
 };
 
-const offsetValueFormatter = (date?: Date) => {
-  if (!date || !dayjs(date).isValid()) {
-    return '';
-  }
-  return date.toISOString();
+const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
+  // `DateInput`'s `onChange` passes a `DateStringValue` (a plain `YYYY-MM-DD` string) for the primary
+  // calendar-click and preset interactions, not a `Date`; only the typed-input path (via `dateParser` below)
+  // produces a real `Date`. Route both through dayjs rather than assuming `Date#toISOString()`.
+  const d = dayjs(value);
+  return value && d.isValid() ? d.toISOString() : '';
 };
 
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. When `schema.format` is

@@ -17,6 +17,10 @@ describe('offsetTimeToLocalTime()', () => {
     expect(offsetTimeToLocalTime('14:30:00-0400')).toEqual('14:30:00');
   });
 
+  it('should strip an hour-only offset suffix with no minutes', () => {
+    expect(offsetTimeToLocalTime('14:30:00+05')).toEqual('14:30:00');
+  });
+
   it('should leave a value with no offset untouched', () => {
     expect(offsetTimeToLocalTime('14:30:00')).toEqual('14:30:00');
   });

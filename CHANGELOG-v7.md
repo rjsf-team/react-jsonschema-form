@@ -81,7 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ajv8
 
 - Imports the `Ajv` class by name and reaches `ajv-formats` and `ajv/dist/standalone` through `.default`, which is where Node exposes those CommonJS modules' default export to ESM importers. No runtime change; the previous default-import spelling only typechecked under bundler resolution ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
-- **BREAKING CHANGE** Upgraded `ajv-formats` from 2.x to 3.x. The `time` and `date-time` formats now require a timezone offset (`Z` or `±HH:MM`) per RFC 3339 instead of treating it as optional, so previously-valid `formData` without an offset will fail validation. The new `iso-time`/`iso-date-time` formats keep accepting offset-less values and are mapped to `TimeWidget`/`DateTimeWidget` like `time`/`date-time` are, so a field using them keeps its native time/date-time picker ([#3930](https://github.com/rjsf-team/react-jsonschema-form/issues/3930))
+- **BREAKING CHANGE** Upgraded `ajv-formats` from 2.x to 3.x. The `time` format now requires a timezone offset (`Z` or `±HH:MM`) per RFC 3339 instead of treating it as optional, so previously-valid `formData` without an offset will fail validation (`date-time` already required an offset in 2.x, so it's unaffected). The new `iso-time`/`iso-date-time` formats keep accepting offset-less values and are mapped to `TimeWidget`/`DateTimeWidget` like `time`/`date-time` are, so a field using them keeps its native time/date-time picker ([#3930](https://github.com/rjsf-team/react-jsonschema-form/issues/3930))
 
 ## Dev / docs / playground
 
