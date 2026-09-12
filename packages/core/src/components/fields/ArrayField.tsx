@@ -374,7 +374,7 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   itemData: T[];
   itemUiSchema: UiSchema<T[], S, F> | undefined;
   parentFieldPathId: FieldPathId;
-  itemErrorSchema?: ErrorSchema<T[]>;
+  itemErrorSchema?: ErrorSchema<T>;
   autofocus?: boolean;
   onBlur: FieldProps<T[], S, F>['onBlur'];
   onFocus: FieldProps<T[], S, F>['onFocus'];
@@ -492,7 +492,8 @@ function ArrayFieldItemInner<T = any, S extends StrictRJSFSchema = RJSFSchema, F
         schema={itemSchema}
         uiSchema={itemUiSchema}
         formData={itemData}
-        errorSchema={itemErrorSchema}
+        // ItemSchemaField comes from a registry typed for the array, so it takes a single item's errors as T[] too
+        errorSchema={itemErrorSchema as ErrorSchema<T[]> | undefined}
         fieldPathId={fieldPathId}
         required={isItemRequired<S>(itemSchema)}
         onChange={onChange}
@@ -618,7 +619,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
       const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
@@ -757,7 +758,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         // Use the helper method for function or static object cases
         itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
       }
-      const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
+      const itemErrorSchema = errorSchema?.[index];
 
       const itemProps = {
         index,
@@ -895,7 +896,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -918,7 +919,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [registry, schema, onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -935,7 +936,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -958,7 +959,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -975,7 +976,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
       // refs #195: revalidate to ensure properly reindexing errors
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -988,7 +989,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         }
       }
       const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -1006,7 +1007,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
         event.currentTarget.blur();
       }
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -1028,7 +1029,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         return newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -1039,7 +1040,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
       const lastPathIsItemIndex = typeof path.at(-1) === 'number';
       onChange(
         // We need to treat undefined items as nulls to have validation.
@@ -1047,7 +1048,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         // Only set to null for array items, and not for object properties within array items
         lastPathIsItemIndex && value === undefined ? null : value,
         path,
-        newErrorSchema as ErrorSchema<T[]>,
+        newErrorSchema,
         id,
       );
     },

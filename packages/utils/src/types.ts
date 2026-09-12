@@ -249,11 +249,58 @@ export interface FieldErrors {
   __errors?: FieldError[];
 }
 
-/** Type describing a recursive structure of `FieldErrors`s for an object with a non-empty set of keys */
-export type ErrorSchema<T = any> = FieldErrors & {
-  /** The set of errors for fields in the recursive object structure */
-  [key in keyof T]?: ErrorSchema<T[key]>;
+/** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
+type IsAny<V> = 0 extends 1 & V ? true : false;
+
+/** Values that are objects but hold no form fields of their own, so their error node has no children */
+type AtomicValue = Date | RegExp | File | Blob | ((...args: never[]) => unknown);
+
+/** The data whose keys become the children of an error node for a value of type `V`.
+ *
+ * Normalizing the data type here is what keeps an error node a plain keyed object. Mapping over `keyof V` directly
+ * would be a homomorphic mapped type, and those preserve arrays and primitives instead of describing a node, so
+ * `ErrorSchema<string>` would resolve to `string`. An array contributes a node per index, because
+ * `ErrorSchemaBuilder` writes numeric path segments as object keys and never as array indices. The conditional
+ * distributes, so a union-typed value (a `oneOf`/`anyOf` property, say) contributes the children of every member it
+ * can hold.
+ */
+type ErrorTreeChildData<V> = IsAny<V> extends true ? Record<string, any> : ChildDataOf<NonNullable<V>>;
+
+/** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union.
+ *
+ * A fixed-length tuple keeps each position's own type, so index `0` of a `[string, { city: string }]` is a leaf while
+ * index `1` has children; a plain array has no per-position type to keep, so every index holds the element type.
+ */
+type ChildDataOf<V> = V extends readonly unknown[]
+  ? number extends V['length']
+    ? Record<number, V[number]>
+    : { [key in Extract<keyof V, `${number}`>]: V[key] }
+  : V extends AtomicValue
+    ? Record<never, never>
+    : V extends object
+      ? V
+      : Record<never, never>;
+
+/** The keys contributed by every member of a union of child data types */
+type ChildKeys<D> = D extends unknown ? keyof D : never;
+
+/** The child data every member of `D` holds at `key`, for the members that have one */
+type ChildAt<D, K extends PropertyKey> = D extends unknown ? (K extends keyof D ? D[K] : never) : never;
+
+/** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node */
+type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : ErrorTree<V, Node>;
+
+/** The recursive error tree for data of type `V`, carrying `Node` at every level.
+ *
+ * Children are optional because the tree is sparse: `toErrorSchema()` and `createErrorHandler()` only create a node
+ * for data that is actually present.
+ */
+type ErrorTree<V, Node> = Node & {
+  [key in ChildKeys<ErrorTreeChildData<V>>]?: ErrorTreeChild<ChildAt<ErrorTreeChildData<V>, key>, Node>;
 };
+
+/** Type describing a recursive structure of `FieldErrors`s for the data of type `T` */
+export type ErrorSchema<T = any> = ErrorTree<T, FieldErrors>;
 
 /** Type that describes the list of errors for a field being actively validated by a custom validator */
 export type FieldValidation = FieldErrors & {
@@ -261,11 +308,8 @@ export type FieldValidation = FieldErrors & {
   addError: (message: string) => void;
 };
 
-/** Type describing a recursive structure of `FieldValidation`s for an object with a non-empty set of keys */
-export type FormValidation<T = any> = FieldValidation & {
-  /** The set of validation objects for fields in the recursive object structure */
-  [key in keyof T]?: FormValidation<T[key]>;
-};
+/** Type describing a recursive structure of `FieldValidation`s for the data of type `T` */
+export type FormValidation<T = any> = ErrorTree<T, FieldValidation>;
 
 /** The base properties passed to various RJSF components. */
 export interface RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {

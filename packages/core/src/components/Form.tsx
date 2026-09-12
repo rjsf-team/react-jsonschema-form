@@ -803,7 +803,7 @@ export default class Form<
   private liveValidate(
     rootSchema: S,
     schemaUtils: SchemaUtilsType<T, S, F>,
-    originalErrorSchema: ErrorSchema<S>,
+    originalErrorSchema: ErrorSchema<T>,
     formData?: T,
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder<T>,
