@@ -21,7 +21,6 @@ import type {
   ValidatorType,
   DefaultFormStateBehavior,
   CustomMergeAllOf,
-  GlobalFormOptions,
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import {
@@ -42,19 +41,15 @@ import {
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
   toFieldPathId,
-  UI_DEFINITIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   validationDataMerge,
-  DEFAULT_ID_SEPARATOR,
-  DEFAULT_ID_PREFIX,
   ERRORS_KEY,
   ID_KEY,
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
 
-import getDefaultRegistry from '../getDefaultRegistry.ts';
+import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
 
 /** The properties that are passed to the `Form` */
@@ -123,15 +118,15 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<any>) => void;
+  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
-  onBlur?: (id: string, data: any) => void;
+  onBlur?: (id: string, data: unknown) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been focused, so you can pass
    * an `onFocus` handler, which will receive the id of the input that is focused and the field value
    */
-  onFocus?: (id: string, data: any) => void;
+  onFocus?: (id: string, data: unknown) => void;
   /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
   acceptCharset?: string;
   /** The value of this prop will be passed to the `action` HTML attribute on the form
@@ -341,10 +336,10 @@ export default class Form<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  /** The ref used to hold the `form` element, this needs to be `any` because `tagName` can provide any possible type
-   * here
+  /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
+   * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
    */
-  formElement: RefObject<any>;
+  formElement: RefObject<HTMLElement | null>;
 
   /** The list of pending changes
    */
@@ -678,7 +673,7 @@ export default class Form<
     }
 
     // Only store a new registry when the props cause a different one to be created
-    const newRegistry = Form.getRegistry(props, rootSchema, schemaUtils);
+    const newRegistry = buildRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
 
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
@@ -922,10 +917,9 @@ export default class Form<
           const lastSegment = path[path.length - 1];
           if (typeof lastSegment === 'number') {
             // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
-            valueForPath = null as unknown as T;
+            valueForPath = null;
           } else {
-            const { field } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
-            const leaf = field as RJSFSchema | undefined;
+            const { field: leaf } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
             // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
             // re-apply a branch default when the user clears the widget.
@@ -1089,12 +1083,12 @@ export default class Form<
     const state = {
       formData: newFormData,
       errorSchema: {},
-      errors: [] as unknown,
-      schemaValidationErrors: [] as unknown,
+      errors: [],
+      schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
       initialDefaultsGenerated: false,
       customErrors: undefined,
-    } as FormState<T, S, F>;
+    } satisfies Partial<FormState<T, S, F>>;
 
     this.setState(state, () => onChange?.(toIChangeEvent({ ...this.state, ...state })));
   };
@@ -1106,7 +1100,7 @@ export default class Form<
    * @param id - The unique `id` of the field that was blurred
    * @param data - The data associated with the field that was blurred
    */
-  onBlur = (id: string, data: any) => {
+  onBlur = (id: string, data: unknown) => {
     const { onBlur, omitExtraData, liveOmit, liveValidate } = this.props;
     if (onBlur) {
       onBlur(id, data);
@@ -1155,7 +1149,7 @@ export default class Form<
    * @param id - The unique `id` of the field that was focused
    * @param data - The data associated with the field that was focused
    */
-  onFocus = (id: string, data: any) => {
+  onFocus = (id: string, data: unknown) => {
     const { onFocus } = this.props;
     if (onFocus) {
       onFocus(id, data);
@@ -1170,7 +1164,7 @@ export default class Form<
    *
    * @param event - The submit HTML form event
    */
-  onSubmit = (event: SubmitEvent<any>) => {
+  onSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (event.target !== event.currentTarget) {
       return;
@@ -1207,72 +1201,18 @@ export default class Form<
     }
   };
 
-  /** Extracts the `GlobalFormOptions` from the given Form `props`
-   *
-   * @param props - The form props to extract the global form options from
-   * @returns - The `GlobalFormOptions` from the props
-   * @private
-   */
-  private static getGlobalFormOptions<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any,
-  >(props: FormProps<T, S, F>): GlobalFormOptions {
-    const {
-      experimental_componentUpdateStrategy,
-      idSeparator = DEFAULT_ID_SEPARATOR,
-      idPrefix = DEFAULT_ID_PREFIX,
-      nameGenerator,
-      useFallbackUiForUnsupportedType = false,
-    } = props;
-    // Omit any options that are undefined or null
-    return {
-      idPrefix,
-      idSeparator,
-      useFallbackUiForUnsupportedType,
-      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
-      ...(nameGenerator !== undefined && { nameGenerator }),
-    };
-  }
-
-  /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
-  static getRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: FormProps<T, S, F>,
-    schema: S,
-    schemaUtils: SchemaUtilsType<T, S, F>,
-  ): Registry<T, S, F> {
-    const { translateString: customTranslateString, uiSchema = {} } = props;
-    const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    return {
-      fields: { ...fields, ...props.fields },
-      templates: {
-        ...templates,
-        ...props.templates,
-        ButtonTemplates: {
-          ...templates.ButtonTemplates,
-          ...props.templates?.ButtonTemplates,
-        },
-      },
-      widgets: { ...widgets, ...props.widgets },
-      rootSchema: schema,
-      formContext: props.formContext || formContext,
-      schemaUtils,
-      translateString: customTranslateString || translateString,
-      globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: Form.getGlobalFormOptions(props),
-      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
-    };
-  }
-
   /** Provides a function that can be used to programmatically submit the `Form` */
   submit = () => {
-    if (this.formElement.current) {
+    const form = this.formElement.current;
+    if (form) {
       const submitCustomEvent = new CustomEvent('submit', {
         cancelable: true,
       });
       submitCustomEvent.preventDefault();
-      this.formElement.current.dispatchEvent(submitCustomEvent);
-      this.formElement.current.requestSubmit();
+      form.dispatchEvent(submitCustomEvent);
+      if (form instanceof HTMLFormElement) {
+        form.requestSubmit();
+      }
     }
   };
 
@@ -1290,18 +1230,16 @@ export default class Form<
     path.unshift(idPrefix);
 
     const elementId = path.join(idSeparator);
-    let field = this.formElement.current.elements[elementId];
-    if (!field) {
-      // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or checkboxes)
-      // some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-      field = this.formElement.current.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    const form = this.formElement.current;
+    if (!form) {
+      return;
     }
-    if (field?.length) {
-      // If we got a list with length > 0
-      // oxlint-disable-next-line prefer-destructuring
-      field = field[0];
-    }
-    if (field) {
+    const named = form instanceof HTMLFormElement ? form.elements.namedItem(elementId) : null;
+    // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
+    // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
+    const found = named ?? form.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    const field = found instanceof RadioNodeList ? found.item(0) : found;
+    if (field instanceof HTMLElement) {
       field.focus();
     }
   }

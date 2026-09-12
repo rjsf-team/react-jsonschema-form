@@ -15,13 +15,33 @@ import OptionalDataControlsField from './OptionalDataControlsField.tsx';
 import SchemaField from './SchemaField.tsx';
 import StringField from './StringField.tsx';
 
-function fields<
+export {
+  ArrayField,
+  BooleanField,
+  CyclicSchemaField,
+  FallbackField,
+  LayoutGridField,
+  LayoutHeaderField,
+  LayoutMultiSchemaField,
+  MultiSchemaField,
+  NullField,
+  NumberField,
+  ObjectField,
+  OptionalDataControlsField,
+  SchemaField,
+  StringField,
+};
+
+/** The core fields, keyed by the names the `SchemaField` looks them up by */
+export function generateFields<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(): RegistryFieldsType<T, S, F> {
   return {
     AnyOfField: MultiSchemaField,
+    // `RegistryFieldsType` types every entry with the form's single `T`, but `ArrayField` renders `T[]`, so the
+    // registry cannot express its data type; `SchemaField` picks it by name at runtime.
     ArrayField: ArrayField as unknown as Field<T, S, F>,
     // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
     BooleanField,
@@ -39,5 +59,3 @@ function fields<
     NullField,
   };
 }
-
-export default fields;

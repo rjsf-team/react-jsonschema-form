@@ -446,13 +446,7 @@ The way to do this varies based upon whether you are using `core` or some other 
 
 ```tsx
 import { BaseInputTemplateProps } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
-import { Templates } from '@rjsf/mui';
-
-const {
-  templates: { BaseInputTemplate },
-} = getDefaultRegistry(); // To get templates from core
-// const { BaseInputTemplate } = Templates; // To get templates from a theme do this
+import { BaseInputTemplate } from '@rjsf/core'; // or from a theme: `const { BaseInputTemplate } = Templates` with `import { Templates } from '@rjsf/mui'`
 
 function MyBaseInputTemplate(props: BaseInputTemplateProps) {
   const customProps = {};

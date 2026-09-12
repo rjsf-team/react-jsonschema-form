@@ -64,7 +64,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
-  const [formData, setFormData] = useState<any>(samples.Simple.formData);
+  const [formData, setFormData] = useState<unknown>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
@@ -277,8 +277,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 validator={validators[validator]}
                 onChange={onFormDataChange}
                 onSubmit={onFormDataSubmit}
-                onBlur={(id: string, value: string) => console.log(`Blurred ${id} with value ${value}`)}
-                onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
+                onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value ${value}`)}
+                onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value ${value}`)}
                 onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
                 ref={playGroundFormRef}
               />

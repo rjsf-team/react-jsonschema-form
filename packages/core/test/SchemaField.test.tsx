@@ -13,7 +13,7 @@ import validator from '@rjsf/validator-ajv8';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import { getDefaultRegistry } from '../src/index.ts';
+import { generateTheme } from '../src/index.ts';
 import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -42,7 +42,7 @@ describe('SchemaField', () => {
 
       // @ts-expect-error: TS2454, because we are setting it in the field component above
       const { registry } = receivedProps;
-      const defaultRegistry = getDefaultRegistry();
+      const defaultRegistry = generateTheme();
       expect(registry).toEqual({
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
@@ -83,7 +83,7 @@ describe('SchemaField', () => {
 
       // @ts-expect-error: TS2454, because we are setting it in the field component above
       const { registry } = receivedProps;
-      const defaultRegistry = getDefaultRegistry();
+      const defaultRegistry = generateTheme();
       expect(registry).toEqual({
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
@@ -235,7 +235,7 @@ describe('SchemaField', () => {
 
       // @ts-expect-error: TS2454, because we are setting it in the field component above
       const { registry } = receivedProps;
-      const defaultRegistry = getDefaultRegistry();
+      const defaultRegistry = generateTheme();
       expect(registry.widgets).toEqual(defaultRegistry.widgets);
       expect(registry.rootSchema).toEqual(schema);
       expect(registry.fields).toBeInstanceOf(Object);
@@ -498,7 +498,7 @@ describe('SchemaField', () => {
       },
     };
 
-    function customValidate(_: any, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation) {
       errors.addError('container');
       errors.foo?.addError('test');
       return errors;
