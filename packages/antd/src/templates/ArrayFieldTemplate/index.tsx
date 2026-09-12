@@ -23,7 +23,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -58,12 +58,12 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id}>
       <Row gutter={rowGutter}>
         {(uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
             <ArrayFieldTitleTemplate
-              fieldPathId={fieldPathId}
+              id={id}
               required={required}
               title={uiOptions.title || title}
               schema={schema}
@@ -82,7 +82,7 @@ export default function ArrayFieldTemplate<
             <Row gutter={rowGutter} justify='end'>
               <Col flex='120px'>
                 <AddButton
-                  id={buttonId(fieldPathId, 'add')}
+                  id={buttonId(id, 'add')}
                   className='rjsf-array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}

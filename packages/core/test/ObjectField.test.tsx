@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import type {
   RJSFSchema,
   FieldProps,
-  FieldPathList,
+  FieldPath,
   ErrorSchema,
   TitleFieldProps,
   DescriptionFieldProps,
@@ -21,7 +21,7 @@ import { TextWidgetTest } from './TextWidgetTest.tsx';
 const user = userEvent.setup();
 
 const ObjectFieldTest = (props: FieldProps) => {
-  const onChangeTest = (newFormData: any, path: FieldPathList, errorSchema?: ErrorSchema, id?: string) => {
+  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
     let newErrorSchema = errorSchema;
     if (newFormData !== 'test') {
       newErrorSchema = {
@@ -197,11 +197,11 @@ describe('ObjectField', () => {
       function CustomSchemaField(props: FieldProps) {
         const {
           registry: { formContext },
-          fieldPathId,
+          id,
         } = props;
         return (
           <>
-            <code id={formContext[fieldPathId.$id]}>Ha</code>
+            <code id={formContext[id]}>Ha</code>
             <SchemaField {...props} />
           </>
         );

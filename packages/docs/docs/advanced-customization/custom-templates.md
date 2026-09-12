@@ -108,7 +108,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
-- `fieldPathId`: An object containing the id for this object & ids for its properties.
+- `id`: The id of the field in the hierarchy.
 - `items`: An array of React nodes representing the items in the array.
 - `onAddClick: (event?) => void`: A function that adds a new item to the end of the array.
 - `readonly`: A boolean value stating if the array is read-only.
@@ -142,10 +142,9 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
-  const { description, fieldPathId } = props;
-  const id = descriptionId(fieldPathId);
+  const { description, id } = props;
   return (
-    <details id={id}>
+    <details id={descriptionId(id)}>
       <summary>Description</summary>
       {description}
     </details>
@@ -182,7 +181,7 @@ const uiSchema: UiSchema = {
 The following props are passed to each `ArrayFieldDescriptionTemplate`:
 
 - `description`: The description of the array field being rendered.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `registry`: The `registry` object.
@@ -252,7 +251,7 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType) {
-  const { disabled, readonly, hasCopy, fieldPathId, index, onCopyIndexClick, registry, uiSchema } = props;
+  const { disabled, readonly, hasCopy, id, index, onCopyIndexClick, registry, uiSchema } = props;
   const { CopyButton } = registry.templates.ButtonTemplates;
   const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
   if (!hasCopy) {
@@ -260,7 +259,7 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType)
   }
   return (
     <CopyButton
-      id={buttonId(fieldPathId, 'copy')}
+      id={buttonId(id, 'copy')}
       className='array-item-copy'
       disabled={disabled || readonly}
       onClick={onCopyClick}
@@ -285,7 +284,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
 - `hasRemove`: A boolean value stating whether the array item can be removed.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy.
+- `id`: The id of the field in the hierarchy.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
 - `onAddItem: event?) => void`: Callback function that adds a new item below this item.
@@ -317,9 +316,8 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
-  const { title, fieldPathId } = props;
-  const id = titleId(fieldPathId);
-  return <h1 id={id}>{title}</h1>;
+  const { title, id } = props;
+  return <h1 id={titleId(id)}>{title}</h1>;
 }
 
 render(
@@ -352,7 +350,7 @@ const uiSchema: UiSchema = {
 The following props are passed to each `ArrayFieldTitleTemplate`:
 
 - `title`: The title of the array field being rendered.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy.
+- `id`: The id of the field in the hierarchy.
 - `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `required`: A boolean value stating if the field is required
@@ -504,12 +502,12 @@ const schema: RJSFSchema = {
 };
 
 function CyclicSchemaExpandTemplate<T = any>(props: CyclicSchemaExpandProps<T>) {
-  const { name, fieldPathId, onExpand } = props;
-  const buttonId = `${fieldPathId.$id}-button`;
+  const { name, id, onExpand } = props;
+  const buttonId = `${id}-button`;
   return (
     <div className='cyclic-expand'>
       <span className='warning'>Circular reference detected for field &quot;{name}&quot;</span>
-      <button id={buttonId} type='button' onClick={() => onExpand(fieldPathId.$id)}>
+      <button id={buttonId} type='button' onClick={() => onExpand(id)}>
         Expand
       </button>
     </div>
@@ -546,7 +544,7 @@ const uiSchema: UiSchema = {
 The following props are passed to the `CyclicSchemaExpandTemplate` as defined by `CyclicSchemaExpandProps` in `@rjsf/utils`:
 
 - `name`: The unique name of the field at the cycle boundary, usually the property name within its parent object.
-- `fieldPathId`: The `FieldPathId` of the field in the hierarchy; use `fieldPathId.$id` to get the HTML id string.
+- `id`: The id of the field in the hierarchy.
 - `onExpand`: Callback to call when the user wants to render one additional level; receives the field's id string.
 - `schema`: The schema object for the field at the cycle boundary.
 - `uiSchema`: The uiSchema object for this field.
@@ -717,7 +715,7 @@ The following props are passed to the `FieldErrorTemplate`:
 
 - `schema`: The schema for the field
 - `uiSchema`: The uiSchema for the field
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `errors`: An array of all errors for this field
 - `errorSchema`: The `ErrorSchema` for this field
 - `registry`: The `Registry` object
@@ -738,9 +736,8 @@ const schema: RJSFSchema = {
 };
 
 function FieldHelpTemplate(props: FieldHelpProps) {
-  const { help, fieldPathId } = props;
-  const id = helpId(fieldPathId);
-  return <aside id={id}>{help}</aside>;
+  const { help, id } = props;
+  return <aside id={helpId(id)}>{help}</aside>;
 }
 
 render(
@@ -753,7 +750,7 @@ The following props are passed to the `FieldHelpTemplate`:
 
 - `schema`: The schema for the field
 - `uiSchema`: The uiSchema for the field
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `help`: The help information to be rendered
 - `registry`: The `Registry` object
 
@@ -818,6 +815,7 @@ If you want to handle the rendering of each element yourself, you can use the pr
 
 The following props are passed to a custom field template component:
 
+- `fieldPath`: The `FieldPath` string identifying where this field's data lives, such as `friends[0].firstName`.
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
@@ -1005,7 +1003,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
 - `formData`: The form data for the object.
 - `registry`: The `registry` object.
@@ -1170,7 +1168,7 @@ render(
 The following props are passed to each `UnsupportedFieldTemplate`:
 
 - `schema`: The schema object for this unsupported field.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `reason`: The reason why the schema field has an unsupported type.
 - `registry`: The `registry` object.
 

@@ -10,7 +10,7 @@ export default function ArrayFieldTemplate<
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -40,7 +40,7 @@ export default function ArrayFieldTemplate<
   return (
     <Box>
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -49,13 +49,13 @@ export default function ArrayFieldTemplate<
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <Grid key={`array-item-list-${fieldPathId.$id}`}>
+      <Grid key={`array-item-list-${id}`}>
         <GridItem>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
           {items}
@@ -64,7 +64,7 @@ export default function ArrayFieldTemplate<
           <GridItem justifySelf='flex-end'>
             <Box mt={2}>
               <AddButton
-                id={buttonId(fieldPathId, 'add')}
+                id={buttonId(id, 'add')}
                 className='rjsf-array-item-add'
                 onClick={onAddClick}
                 disabled={disabled || readonly}

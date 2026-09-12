@@ -13,7 +13,7 @@ export default function CyclicSchemaField<
   F extends FormContextType = any,
 >(props: FieldProps<T, S, F>) {
   const [expanded, setExpanded] = useState(false);
-  const { name, registry, schema, uiSchema, fieldPathId } = props;
+  const { name, registry, schema, uiSchema, id } = props;
   const { globalUiOptions } = registry;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
@@ -29,7 +29,7 @@ export default function CyclicSchemaField<
         schema={schema}
         uiSchema={uiSchema}
         name={name}
-        fieldPathId={fieldPathId}
+        id={id}
         onExpand={() => setExpanded(true)}
       />
     );

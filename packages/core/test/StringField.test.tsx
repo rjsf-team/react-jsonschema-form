@@ -1,4 +1,4 @@
-import type { ErrorSchema, FieldPathList, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -25,7 +25,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 function StringFieldTest(props: FieldProps) {
-  const onChangeTest = (newFormData: any, path: FieldPathList, errorSchema?: ErrorSchema, id?: string) => {
+  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
     const value = newFormData;
     let raiseError = errorSchema;
     if (value !== 'test') {

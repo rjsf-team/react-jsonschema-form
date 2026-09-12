@@ -23,7 +23,7 @@ export default function ObjectFieldTemplate<
     description,
     disabled,
     formData,
-    fieldPathId,
+    id,
     onAddProperty,
     optionalDataControl,
     properties,
@@ -56,10 +56,10 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id}>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -70,7 +70,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -81,7 +81,7 @@ export default function ObjectFieldTemplate<
       {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
-          id={buttonId(fieldPathId, 'add')}
+          id={buttonId(id, 'add')}
           className='rjsf-object-property-expand'
           onClick={onAddProperty}
           disabled={disabled || readonly}

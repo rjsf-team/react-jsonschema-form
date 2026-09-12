@@ -4,17 +4,17 @@ import type { FieldProps } from '@rjsf/utils';
 
 const COLORS = ['red', 'green', 'blue'];
 
-export default function SpecialInput({ id, fieldPathId, onChange, formData }: PropsWithChildren<FieldProps>) {
+export default function SpecialInput({ id, fieldPath, onChange, formData }: PropsWithChildren<FieldProps>) {
   const [text, setText] = useState<string>(formData || '');
 
   const inputBgColor = COLORS[text.length % COLORS.length];
 
   const handleOnChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(value, fieldPathId.path);
+      onChange(value, fieldPath);
       setText(value);
     },
-    [onChange, fieldPathId, setText],
+    [onChange, fieldPath, setText],
   );
 
   return (

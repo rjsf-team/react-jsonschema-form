@@ -15,7 +15,7 @@ export default function ArrayFieldItemButtonsTemplate<
     hasMoveDown,
     hasMoveUp,
     hasRemove,
-    fieldPathId,
+    id,
     onCopyItem,
     onRemoveItem,
     onMoveDownItem,
@@ -35,7 +35,7 @@ export default function ArrayFieldItemButtonsTemplate<
       {(hasMoveUp || hasMoveDown) && (
         <>
           <MoveUpButton
-            id={buttonId(fieldPathId, 'moveUp')}
+            id={buttonId(id, 'moveUp')}
             className={`rjsf-array-item-move-up ${btnClass}`}
             disabled={disabled || readonly || !hasMoveUp}
             onClick={onMoveUpItem}
@@ -43,7 +43,7 @@ export default function ArrayFieldItemButtonsTemplate<
             registry={registry}
           />
           <MoveDownButton
-            id={buttonId(fieldPathId, 'moveDown')}
+            id={buttonId(id, 'moveDown')}
             className={`rjsf-array-item-move-down ${btnClass}`}
             disabled={disabled || readonly || !hasMoveDown}
             onClick={onMoveDownItem}
@@ -54,7 +54,7 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasCopy && (
         <CopyButton
-          id={buttonId(fieldPathId, 'copy')}
+          id={buttonId(id, 'copy')}
           className={`rjsf-array-item-copy ${btnClass}`}
           disabled={disabled || readonly}
           onClick={onCopyItem}
@@ -64,7 +64,7 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasRemove && (
         <RemoveButton
-          id={buttonId(fieldPathId, 'remove')}
+          id={buttonId(id, 'remove')}
           className={`rjsf-array-item-remove ${removeBtnClass}`}
           disabled={disabled || readonly}
           onClick={onRemoveItem}

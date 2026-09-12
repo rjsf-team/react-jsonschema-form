@@ -21,7 +21,7 @@ export default function ArrayFieldTemplate<
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -52,7 +52,7 @@ export default function ArrayFieldTemplate<
   return (
     <>
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -61,19 +61,19 @@ export default function ArrayFieldTemplate<
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <Flex column key={`array-item-list-${fieldPathId.$id}`} className={classes.arrayItemList}>
+      <Flex column key={`array-item-list-${id}`} className={classes.arrayItemList}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (
           <Flex hAlign='end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-array-item-add'
               onClick={onAddClick}
               disabled={disabled || readonly}
