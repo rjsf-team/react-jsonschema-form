@@ -895,7 +895,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -918,7 +918,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [registry, schema, onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -935,7 +935,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -958,7 +958,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -975,7 +975,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
       // refs #195: revalidate to ensure properly reindexing errors
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -988,7 +988,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         }
       }
       const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );
@@ -1006,7 +1006,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
         event.currentTarget.blur();
       }
-      let newErrorSchema: ErrorSchema<T> | undefined;
+      let newErrorSchema: ErrorSchema<T[]> | undefined;
       if (errorSchemaRef.current) {
         newErrorSchema = {};
         for (const idx of Object.keys(errorSchemaRef.current)) {
@@ -1028,7 +1028,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         return newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema as ErrorSchema<T[]>);
+      onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
     [onChange, updateKeyedFormData, childFieldPathId],
   );

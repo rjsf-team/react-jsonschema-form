@@ -8,6 +8,9 @@ interface Data {
   tags: string[];
   items: { label: string }[];
   when: Date;
+  either: string | { city: string };
+  eitherShape: { city: string } | { zip: number };
+  eitherList: string | string[];
 }
 
 describe('ErrorSchema type', () => {
@@ -30,6 +33,21 @@ describe('ErrorSchema type', () => {
     expect(arrayOfLeaves.tags?.[0]?.__errors).toEqual(['bad tag']);
     expect(arrayOfObjects.items?.[1]?.label?.__errors).toEqual(['bad label']);
     expect(atomic.when?.__errors).toEqual(['bad date']);
+  });
+
+  it('describes the children of a union-typed field, as oneOf/anyOf produces', () => {
+    const objectMember: ErrorSchema<Data> = { either: { city: { __errors: ['bad city'] } } };
+    const scalarMember: ErrorSchema<Data> = { either: { __errors: ['bad value'] } };
+    const eachShape: ErrorSchema<Data> = {
+      eitherShape: { city: { __errors: ['bad city'] }, zip: { __errors: ['bad zip'] } },
+    };
+    const listMember: ErrorSchema<Data> = { eitherList: { 0: { __errors: ['bad item'] } } };
+
+    expect(objectMember.either?.city?.__errors).toEqual(['bad city']);
+    expect(scalarMember.either?.__errors).toEqual(['bad value']);
+    expect(eachShape.eitherShape?.city?.__errors).toEqual(['bad city']);
+    expect(eachShape.eitherShape?.zip?.__errors).toEqual(['bad zip']);
+    expect(listMember.eitherList?.[0]?.__errors).toEqual(['bad item']);
   });
 
   it('describes a form whose root is not an object', () => {

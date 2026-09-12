@@ -260,18 +260,26 @@ type AtomicValue = Date | RegExp | File | Blob | ((...args: never[]) => unknown)
  * Normalizing the data type here is what keeps an error node a plain keyed object. Mapping over `keyof V` directly
  * would be a homomorphic mapped type, and those preserve arrays and primitives instead of describing a node, so
  * `ErrorSchema<string>` would resolve to `string`. An array contributes a node per index, because
- * `ErrorSchemaBuilder` writes numeric path segments as object keys and never as array indices.
+ * `ErrorSchemaBuilder` writes numeric path segments as object keys and never as array indices. The conditional
+ * distributes, so a union-typed value (a `oneOf`/`anyOf` property, say) contributes the children of every member it
+ * can hold.
  */
-type ErrorTreeChildData<V> =
-  IsAny<V> extends true
-    ? Record<string, any>
-    : [NonNullable<V>] extends [readonly unknown[]]
-      ? Record<number, NonNullable<V>[number]>
-      : [NonNullable<V>] extends [AtomicValue]
-        ? Record<never, never>
-        : [NonNullable<V>] extends [object]
-          ? NonNullable<V>
-          : Record<never, never>;
+type ErrorTreeChildData<V> = IsAny<V> extends true ? Record<string, any> : ChildDataOf<NonNullable<V>>;
+
+/** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union */
+type ChildDataOf<V> = V extends readonly unknown[]
+  ? Record<number, V[number]>
+  : V extends AtomicValue
+    ? Record<never, never>
+    : V extends object
+      ? V
+      : Record<never, never>;
+
+/** The keys contributed by every member of a union of child data types */
+type ChildKeys<D> = D extends unknown ? keyof D : never;
+
+/** The child data every member of `D` holds at `key`, for the members that have one */
+type ChildAt<D, K extends PropertyKey> = D extends unknown ? (K extends keyof D ? D[K] : never) : never;
 
 /** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node */
 type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : ErrorTree<V, Node>;
@@ -282,7 +290,7 @@ type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : ErrorTree<V, Node>;
  * for data that is actually present.
  */
 type ErrorTree<V, Node> = Node & {
-  [key in keyof ErrorTreeChildData<V>]?: ErrorTreeChild<ErrorTreeChildData<V>[key], Node>;
+  [key in ChildKeys<ErrorTreeChildData<V>>]?: ErrorTreeChild<ChildAt<ErrorTreeChildData<V>, key>, Node>;
 };
 
 /** Type describing a recursive structure of `FieldErrors`s for the data of type `T` */
