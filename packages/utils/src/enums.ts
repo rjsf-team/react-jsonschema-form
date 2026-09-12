@@ -76,7 +76,6 @@ export const TranslatableString = {
   /** Cyclic schema message */
   CycleDetected:
     'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
-  // Strings with replaceable parameters
   /** Invalid object field configuration as provided by the ObjectField. */
   InvalidObjectField: 'Invalid "%1" object field configuration: %2.',
   /** Unsupported field schema, used by UnsupportedField */
