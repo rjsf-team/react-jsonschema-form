@@ -355,10 +355,14 @@ export type RegistryWidgetsType<
 > = Record<string, Widget<T, S, F>>;
 
 /** The properties that are passed to a `MarkdownTemplate` implementation */
-export interface MarkdownTemplateProps {
+export type MarkdownTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = Pick<RJSFBaseProps<T, S, F>, 'uiSchema' | 'registry'> & {
   /** The markdown text to render */
   children: string;
-}
+};
 
 /** The set of RJSF templates that can be overridden by themes or users */
 export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
@@ -394,7 +398,7 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * default renders it as plain text so no markdown library is bundled; `@rjsf/core/markdown` provides one built on
    * `markdown-to-jsx`.
    */
-  MarkdownTemplate: ComponentType<MarkdownTemplateProps>;
+  MarkdownTemplate: ComponentType<MarkdownTemplateProps<T, S, F>>;
   /** The template to use while rendering a multi-schema field (i.e. anyOf, oneOf) */
   MultiSchemaFieldTemplate: ComponentType<MultiSchemaFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */

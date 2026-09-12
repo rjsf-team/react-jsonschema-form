@@ -76,4 +76,14 @@ describe('RichDescription', () => {
     const { container } = render(<RichDescription {...props} />);
     expect(within(container).getByTestId(TEST_ID)).toHaveTextContent(text);
   });
+  test('the MarkdownTemplate receives the registry and the uiSchema of the field', () => {
+    const CustomMarkdown = vi.fn(({ children }: MarkdownTemplateProps) => <i>{children}</i>);
+    const uiSchema = { 'ui:enableMarkdownInDescription': true };
+    const registry = getTestRegistry({}, undefined, { MarkdownTemplate: CustomMarkdown });
+    render(<RichDescription {...getProps({ description: 'text', registry, uiSchema })} />);
+    expect(CustomMarkdown).toHaveBeenCalledWith(
+      expect.objectContaining({ children: 'text', registry, uiSchema }),
+      undefined,
+    );
+  });
 });

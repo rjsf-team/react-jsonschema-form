@@ -32,5 +32,9 @@ export default function RichDescription<
     return description;
   }
   const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
-  return <MarkdownTemplate>{description}</MarkdownTemplate>;
+  return (
+    <MarkdownTemplate registry={registry} uiSchema={uiSchema}>
+      {description}
+    </MarkdownTemplate>
+  );
 }

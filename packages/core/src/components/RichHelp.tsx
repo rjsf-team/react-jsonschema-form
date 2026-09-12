@@ -25,5 +25,9 @@ export default function RichHelp<T = any, S extends StrictRJSFSchema = RJSFSchem
     return help;
   }
   const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
-  return <MarkdownTemplate>{help}</MarkdownTemplate>;
+  return (
+    <MarkdownTemplate registry={registry} uiSchema={uiSchema}>
+      {help}
+    </MarkdownTemplate>
+  );
 }

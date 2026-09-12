@@ -909,6 +909,8 @@ Like any template it can also be registered in a theme, or swapped per field wit
 The following props are passed to the `MarkdownTemplate`:
 
 - `children`: The markdown text to render.
+- `uiSchema`: The uiSchema of the field whose text is being rendered, so a renderer can honour per-field `ui:options`.
+- `registry`: The `registry` object.
 
 ## MultiSchemaFieldTemplate
 
