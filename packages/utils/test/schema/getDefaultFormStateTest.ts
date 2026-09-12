@@ -6111,35 +6111,51 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('with dependencies', () => {
-      it('should populate dependency defaults when formData is undefined', () => {
-        testValidator.setReturnValues({ isValid: [true, false] });
-        const schema: RJSFSchema = {
-          type: 'object',
-          required: ['type'],
-          properties: {
-            type: { type: 'integer', default: 0 },
-          },
-          dependencies: {
-            type: {
-              oneOf: [
-                {
-                  properties: {
-                    type: { enum: [0] },
-                    value: { type: 'integer', default: 5 },
-                  },
-                  required: ['value'],
-                },
-                {
-                  properties: {
-                    type: { enum: [1] },
-                  },
-                },
-              ],
+      it.each(['inline', 'allOf', '$ref'])(
+        'should populate dependency defaults when formData is undefined with %s',
+        (variant) => {
+          testValidator.setReturnValues({ isValid: [true, false] });
+          const dependencySchema: RJSFSchema = {
+            type: 'object',
+            required: ['type'],
+            properties: {
+              type: { type: 'integer', default: 0 },
             },
-          },
-        };
-        expect(getDefaultFormState(testValidator, schema)).toEqual({ type: 0, value: 5 });
-      });
+            dependencies: {
+              type: {
+                oneOf: [
+                  {
+                    properties: {
+                      type: { enum: [0] },
+                      value: { type: 'integer', default: 5 },
+                    },
+                    required: ['value'],
+                  },
+                  {
+                    properties: {
+                      type: { enum: [1] },
+                    },
+                  },
+                ],
+              },
+            },
+          };
+          let schema = dependencySchema;
+          if (variant === '$ref') {
+            schema = { $ref: '#/definitions/dep', definitions: { dep: dependencySchema } };
+          } else if (variant === 'allOf') {
+            schema = {
+              ...dependencySchema,
+              allOf: [{ properties: { fromAllOf: { type: 'string', default: 'A' } } }],
+            };
+          }
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
+            type: 0,
+            value: 5,
+            ...(variant === 'allOf' ? { fromAllOf: 'A' } : {}),
+          });
+        },
+      );
       it('should populate defaults for dependencies', () => {
         const schema: RJSFSchema = {
           type: 'object',
