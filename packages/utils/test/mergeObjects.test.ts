@@ -103,5 +103,13 @@ describe('mergeObjects()', () => {
         a: { b: [1, 2] },
       });
     });
+
+    it('should replace a primitive on the left with the object on the right', () => {
+      expect(mergeObjects({ a: 5 }, { a: { b: 1 } })).toEqual({ a: { b: 1 } });
+    });
+
+    it('should replace an array on the left with the object on the right', () => {
+      expect(mergeObjects({ a: [1] }, { a: { b: 1 } })).toEqual({ a: { b: 1 } });
+    });
   });
 });
