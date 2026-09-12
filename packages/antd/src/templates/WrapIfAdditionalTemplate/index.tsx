@@ -1,4 +1,10 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, TranslatableString, buttonId } from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
@@ -60,10 +66,10 @@ export default function WrapIfAdditionalTemplate<
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
   const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
-  const buttonUiOptions = {
-    ...uiSchema,
+  // oxlint-disable-next-line prefer-object-spread -- a spread erases the per-field half of a generic uiSchema's type; Object.assign keeps it
+  const buttonUiOptions: UiSchema<T, S, F> = Object.assign({}, uiSchema, {
     [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
-  };
+  });
 
   return (
     <div className={classNames} style={style}>

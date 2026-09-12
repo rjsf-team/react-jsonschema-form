@@ -161,7 +161,8 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
   const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
   const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
-  const fieldUiSchema = { ...localUiSchema };
+  // oxlint-disable-next-line prefer-object-spread -- a spread erases the per-field half of a generic uiSchema's type; Object.assign keeps it
+  const fieldUiSchema: UiSchema<T, S, F> = Object.assign({}, localUiSchema);
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;
   }

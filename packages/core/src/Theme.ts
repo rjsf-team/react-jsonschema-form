@@ -68,7 +68,7 @@ export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   schema: S,
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): Registry<T, S, F> {
-  const { translateString = englishStringTranslator, uiSchema = {} } = props;
+  const { translateString = englishStringTranslator, uiSchema = {} }: FormProps<T, S, F> = props;
   const { fields, templates, widgets } = generateTheme<T, S, F>();
   return {
     fields: { ...fields, ...props.fields },
