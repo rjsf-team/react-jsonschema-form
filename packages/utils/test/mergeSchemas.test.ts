@@ -115,5 +115,12 @@ describe('mergeSchemas()', () => {
 
       expect(mergeSchemas(obj1, obj2)).toEqual({ required: [2] });
     });
+
+    it('should replace an array on the left with the object schema on the right', () => {
+      const obj1 = { items: [{ type: 'string' }] };
+      const obj2 = { items: { type: 'string' } };
+
+      expect(mergeSchemas(obj1, obj2)).toEqual({ items: { type: 'string' } });
+    });
   });
 });
