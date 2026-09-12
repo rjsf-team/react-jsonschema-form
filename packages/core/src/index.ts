@@ -1,5 +1,5 @@
 import type { FormProps, FormState, IChangeEvent } from './components/Form.tsx';
-import Form from './components/Form.tsx';
+import Form, { buildRegistry } from './components/Form.tsx';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
 import type { RichHelpProps } from './components/RichHelp.tsx';
@@ -24,5 +24,5 @@ export * from './components/fields/index.ts';
 export * from './components/templates/index.ts';
 export * from './components/widgets/index.ts';
 
-export { withTheme, generateTheme, RichDescription, RichHelp, SchemaExamples };
+export { withTheme, buildRegistry, generateTheme, RichDescription, RichHelp, SchemaExamples };
 export default Form;

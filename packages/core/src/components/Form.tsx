@@ -679,7 +679,7 @@ export default class Form<
     }
 
     // Only store a new registry when the props cause a different one to be created
-    const newRegistry = Form.getRegistry(props, rootSchema, schemaUtils);
+    const newRegistry = buildRegistry(props, rootSchema, schemaUtils);
     const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
 
     // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
@@ -1208,64 +1208,6 @@ export default class Form<
     }
   };
 
-  /** Extracts the `GlobalFormOptions` from the given Form `props`
-   *
-   * @param props - The form props to extract the global form options from
-   * @returns - The `GlobalFormOptions` from the props
-   * @private
-   */
-  private static getGlobalFormOptions<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any,
-  >(props: FormProps<T, S, F>): GlobalFormOptions {
-    const {
-      experimental_componentUpdateStrategy,
-      idSeparator = DEFAULT_ID_SEPARATOR,
-      idPrefix = DEFAULT_ID_PREFIX,
-      nameGenerator,
-      useFallbackUiForUnsupportedType = false,
-    } = props;
-    // Omit any options that are undefined or null
-    return {
-      idPrefix,
-      idSeparator,
-      useFallbackUiForUnsupportedType,
-      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
-      ...(nameGenerator !== undefined && { nameGenerator }),
-    };
-  }
-
-  /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
-  static getRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    props: FormProps<T, S, F>,
-    schema: S,
-    schemaUtils: SchemaUtilsType<T, S, F>,
-  ): Registry<T, S, F> {
-    const { translateString = englishStringTranslator, uiSchema = {} } = props;
-    const { fields, templates, widgets } = generateTheme<T, S, F>();
-    return {
-      fields: { ...fields, ...props.fields },
-      templates: {
-        ...templates,
-        ...props.templates,
-        ButtonTemplates: {
-          ...templates.ButtonTemplates,
-          ...props.templates?.ButtonTemplates,
-        },
-      },
-      widgets: { ...widgets, ...props.widgets },
-      rootSchema: schema,
-      // `F` may be narrower than `{}`; an omitted formContext has always defaulted to an empty object regardless
-      formContext: props.formContext ?? ({} as F),
-      schemaUtils,
-      translateString,
-      globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: Form.getGlobalFormOptions(props),
-      uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
-    };
-  }
-
   /** Provides a function that can be used to programmatically submit the `Form` */
   submit = () => {
     if (this.formElement.current) {
@@ -1453,4 +1395,65 @@ export default class Form<
       </FormTag>
     );
   }
+}
+
+/** Extracts the `GlobalFormOptions` from the given Form `props`
+ *
+ * @param props - The form props to extract the global form options from
+ * @returns - The `GlobalFormOptions` from the props
+ */
+function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FormProps<T, S, F>,
+): GlobalFormOptions {
+  const {
+    experimental_componentUpdateStrategy,
+    idSeparator = DEFAULT_ID_SEPARATOR,
+    idPrefix = DEFAULT_ID_PREFIX,
+    nameGenerator,
+    useFallbackUiForUnsupportedType = false,
+  } = props;
+  // Omit any options that are undefined or null
+  return {
+    idPrefix,
+    idSeparator,
+    useFallbackUiForUnsupportedType,
+    ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
+    ...(nameGenerator !== undefined && { nameGenerator }),
+  };
+}
+
+/** Builds the `Registry` for a form from the given `props`, `schema` and `schemaUtils`
+ *
+ * @param props - The form props to build the registry from
+ * @param schema - The root schema for the form
+ * @param schemaUtils - The `SchemaUtilsType` implementation to put on the registry
+ * @returns - The `Registry` described by the inputs
+ */
+export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FormProps<T, S, F>,
+  schema: S,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+): Registry<T, S, F> {
+  const { translateString = englishStringTranslator, uiSchema = {} } = props;
+  const { fields, templates, widgets } = generateTheme<T, S, F>();
+  return {
+    fields: { ...fields, ...props.fields },
+    templates: {
+      ...templates,
+      ...props.templates,
+      ButtonTemplates: {
+        ...templates.ButtonTemplates,
+        ...props.templates?.ButtonTemplates,
+      },
+    },
+    widgets: { ...widgets, ...props.widgets },
+    rootSchema: schema,
+    // `F` may be narrower than `{}`; an omitted formContext has always defaulted to an empty object regardless
+    formContext: props.formContext ?? ({} as F),
+    schemaUtils,
+    translateString,
+    globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
+    globalFormOptions: getGlobalFormOptions(props),
+    uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
+  };
 }
