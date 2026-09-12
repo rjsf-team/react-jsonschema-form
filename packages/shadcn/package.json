@@ -48,8 +48,9 @@
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@testing-library/user-event": "^14.6.6",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@tailwindcss/cli": "^4.3.0",
+    "@testing-library/user-event": "^14.6.6",
     "tailwindcss": "^4.3.0"
   },
   "dependencies": {

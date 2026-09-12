@@ -6,22 +6,31 @@ const ROOT = join(__dirname, '..', '..');
 // Budgets only where one already existed; elsewhere the PR comment's delta column
 // catches a regression without the bump commits a per-theme budget invites.
 // Canaries are single-export imports that fail if tree-shaking regresses.
+// Every export subpath is measured as its own entry, except those listed in a package's `nodeOnly`, which import
+// Node built-ins such as `fs` and cannot be bundled for a browser.
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '92 kB',
+    installed: '47 kB',
     own: '24 kB',
-    // getTestRegistry pulls the AJV chain into core's lib/, but it is a
-    // devDependency there — a consumer installing @rjsf/core never gets it.
-    extraIgnore: ['@rjsf/validator-ajv8'],
-    canaries: [{ label: 'Form', import: 'Form', limit: '53 kB' }],
+    canaries: [{ label: 'Form', import: 'Form', limit: '47 kB' }],
   },
   '@rjsf/utils': {
     installed: '34 kB',
     own: '19 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
-  '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB' },
+  '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB', nodeOnly: ['./compileSchemaValidators'] },
+  '@rjsf/validator-ata': { nodeOnly: ['./compileSchemaValidators'] },
 };
+
+// The `default` condition is what a consumer's bundler resolves; a subpath without one has no browser entry to measure
+function subpathEntry(pkg, key, target) {
+  const entry = typeof target === 'string' ? target : target.default;
+  if (!entry) {
+    throw new Error(`${pkg.name} exports "${key}" without a "default" condition; add one or list it in nodeOnly`);
+  }
+  return entry;
+}
 
 const released = readdirSync(join(ROOT, 'packages'))
   .filter((dir) => existsSync(join(ROOT, 'packages', dir, 'package.json')))
@@ -34,18 +43,28 @@ const released = readdirSync(join(ROOT, 'packages'))
 module.exports = released.flatMap(({ dir, pkg }) => {
   const path = join(ROOT, 'packages', dir, 'lib', 'index.js');
   const deps = Object.keys(pkg.dependencies ?? {});
-  // react-dom is never declared but is always the host's to provide.
-  const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'];
-  const { installed, own, extraIgnore = [], canaries = [] } = PACKAGES[pkg.name] ?? {};
+  // react-dom is never declared but is always the host's to provide. An optional peer is measured: the consumer only
+  // installs it for the subpath that needs it, so its cost belongs to that subpath's row.
+  const optionalPeers = Object.keys(pkg.peerDependenciesMeta ?? {});
+  const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'].filter((dep) => !optionalPeers.includes(dep));
+  const { installed, own, canaries = [], nodeOnly = [] } = PACKAGES[pkg.name] ?? {};
+  const subpaths = Object.entries(pkg.exports ?? {}).filter(
+    ([key]) => key !== '.' && !key.startsWith('./lib') && !nodeOnly.includes(key),
+  );
 
   return [
     { name: pkg.name, path, ignore: peers, ...(installed && { limit: installed }) },
-    ...(deps.length || extraIgnore.length
+    ...subpaths.map(([key, target]) => ({
+      name: `${pkg.name}${key.slice(1)}`,
+      path: join(ROOT, 'packages', dir, subpathEntry(pkg, key, target)),
+      ignore: peers,
+    })),
+    ...(deps.length
       ? [
           {
             name: `${pkg.name} (without dependencies)`,
             path,
-            ignore: [...peers, ...deps, ...extraIgnore],
+            ignore: [...peers, ...deps],
             ...(own && { limit: own }),
           },
         ]
