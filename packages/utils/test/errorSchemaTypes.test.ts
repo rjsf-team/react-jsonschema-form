@@ -11,6 +11,7 @@ interface Data {
   either: string | { city: string };
   eitherShape: { city: string } | { zip: number };
   eitherList: string | string[];
+  pair: [string, { city: string }];
 }
 
 describe('ErrorSchema type', () => {
@@ -48,6 +49,20 @@ describe('ErrorSchema type', () => {
     expect(eachShape.eitherShape?.city?.__errors).toEqual(['bad city']);
     expect(eachShape.eitherShape?.zip?.__errors).toEqual(['bad zip']);
     expect(listMember.eitherList?.[0]?.__errors).toEqual(['bad item']);
+  });
+
+  it('describes each position of a tuple by its own type', () => {
+    const leafPosition: ErrorSchema<Data> = { pair: { 0: { __errors: ['bad label'] } } };
+    const objectPosition: ErrorSchema<Data> = { pair: { 1: { city: { __errors: ['bad city'] } } } };
+    // @ts-expect-error position 0 holds a string, so its node has no children
+    const wrongLeaf: ErrorSchema<Data> = { pair: { 0: { city: { __errors: ['bad city'] } } } };
+    // @ts-expect-error a tuple has no index 2
+    const pastTheEnd: ErrorSchema<Data> = { pair: { 2: { __errors: ['bad'] } } };
+
+    expect(leafPosition.pair?.[0]?.__errors).toEqual(['bad label']);
+    expect(objectPosition.pair?.[1]?.city?.__errors).toEqual(['bad city']);
+    expect(wrongLeaf.pair?.[0]).toBeDefined();
+    expect(pastTheEnd.pair).toBeDefined();
   });
 
   it('describes a form whose root is not an object', () => {

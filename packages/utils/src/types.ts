@@ -266,9 +266,15 @@ type AtomicValue = Date | RegExp | File | Blob | ((...args: never[]) => unknown)
  */
 type ErrorTreeChildData<V> = IsAny<V> extends true ? Record<string, any> : ChildDataOf<NonNullable<V>>;
 
-/** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union */
+/** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union.
+ *
+ * A fixed-length tuple keeps each position's own type, so index `0` of a `[string, { city: string }]` is a leaf while
+ * index `1` has children; a plain array has no per-position type to keep, so every index holds the element type.
+ */
 type ChildDataOf<V> = V extends readonly unknown[]
-  ? Record<number, V[number]>
+  ? number extends V['length']
+    ? Record<number, V[number]>
+    : { [key in Extract<keyof V, `${number}`>]: V[key] }
   : V extends AtomicValue
     ? Record<never, never>
     : V extends object
