@@ -8,6 +8,8 @@ import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
 import SchemaExamples from './components/SchemaExamples.tsx';
 import getDefaultRegistry from './getDefaultRegistry.ts';
 import getTestRegistry from './getTestRegistry.tsx';
+import type { StrictUiSchemaFormProps } from './withStrictUiSchema.tsx';
+import withStrictUiSchema from './withStrictUiSchema.tsx';
 import type { ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 
@@ -19,7 +21,16 @@ export type {
   RichDescriptionProps,
   RichHelpProps,
   SchemaExamplesProps,
+  StrictUiSchemaFormProps,
 };
 
-export { withTheme, getDefaultRegistry, getTestRegistry, RichDescription, RichHelp, SchemaExamples };
+export {
+  withTheme,
+  withStrictUiSchema,
+  getDefaultRegistry,
+  getTestRegistry,
+  RichDescription,
+  RichHelp,
+  SchemaExamples,
+};
 export default Form;
