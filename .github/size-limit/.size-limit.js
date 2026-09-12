@@ -48,7 +48,7 @@ module.exports = released.flatMap(({ dir, pkg }) => {
   const optionalPeers = Object.keys(pkg.peerDependenciesMeta ?? {});
   const peers = [...Object.keys(pkg.peerDependencies ?? {}), 'react-dom'].filter((dep) => !optionalPeers.includes(dep));
   const { installed, own, canaries = [], nodeOnly = [] } = PACKAGES[pkg.name] ?? {};
-  const subpaths = Object.entries(pkg.exports).filter(
+  const subpaths = Object.entries(pkg.exports ?? {}).filter(
     ([key]) => key !== '.' && !key.startsWith('./lib') && !nodeOnly.includes(key),
   );
 
