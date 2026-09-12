@@ -47,7 +47,6 @@ function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     nameGenerator,
     useFallbackUiForUnsupportedType = false,
   } = props;
-  // Omit any options that are undefined or null
   return {
     idPrefix,
     idSeparator,

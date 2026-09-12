@@ -1,8 +1,8 @@
 import type { Registry } from '@rjsf/utils';
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { generateTheme } from './Theme.ts';
+import { buildRegistry } from './Theme.ts';
 
 /** Use for react testing library tests where we directly test the component rather than testing inside a Form
  */
@@ -18,16 +18,13 @@ export function getTestRegistry(
     useFallbackUiForUnsupportedType: false,
   },
 ): Registry {
-  const defaults = generateTheme();
   const schemaUtils = createSchemaUtils(validator, rootSchema);
   return {
-    fields: { ...defaults.fields, ...fields },
-    templates: { ...defaults.templates, ...templates },
-    widgets: { ...defaults.widgets, ...widgets },
-    formContext,
-    rootSchema,
-    schemaUtils,
-    translateString: englishStringTranslator,
+    ...buildRegistry(
+      { schema: rootSchema, validator, fields, templates, widgets, formContext },
+      rootSchema,
+      schemaUtils,
+    ),
     globalFormOptions,
   };
 }
