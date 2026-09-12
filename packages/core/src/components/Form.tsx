@@ -53,6 +53,7 @@ import {
   ID_KEY,
   getUsedFormData,
   getFieldNames,
+  schemaHasNestedConditional,
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
@@ -616,6 +617,11 @@ export default class Form<
     let computedRetrievedSchema: S;
     let wasSanitized = false;
     const preventInfiniteSanitize: string[] = [];
+    // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved
+    // schema (only the schema's own top-level `dependencies`/`if` get resolved into it), so comparing
+    // `computedRetrievedSchema` to `state.retrievedSchema` below can't detect it. When the schema has such a
+    // nested conditional, skip that (root-only) short-circuit so sanitization is still attempted (#5250).
+    const hasNestedConditionalSchema = shouldSanitize && schemaHasNestedConditional(rootSchema, rootSchema);
     do {
       formData = schemaUtils.getDefaultFormState(
         rootSchema,
@@ -631,10 +637,10 @@ export default class Form<
       if (
         shouldSanitize &&
         !preventInfiniteSanitize.includes(formHash) &&
-        !deepEquals(computedRetrievedSchema, state.retrievedSchema)
+        (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema))
       ) {
         // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
-        // we have a different retrieved schema from when we last ran the state
+        // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           computedRetrievedSchema,
           state.retrievedSchema,
