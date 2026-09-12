@@ -39,6 +39,7 @@ export {
   FieldHelpTemplate,
   FieldTemplate,
   GridTemplate,
+  MarkdownTemplate,
   MultiSchemaFieldTemplate,
   ObjectFieldTemplate,
   OptionalDataControlsTemplate,
