@@ -24,11 +24,13 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
   if (!uiSchema) {
     return { ...globalOptions };
   }
-  return Object.keys(uiSchema)
+  // Walked by runtime key, so view it as the keyed object it is rather than by its declared properties
+  const uiSchemaByKey = uiSchema as Record<string, unknown>;
+  return Object.keys(uiSchemaByKey)
     .filter((key) => key.startsWith('ui:'))
     .reduce(
       (options, key) => {
-        const value = uiSchema[key];
+        const value = uiSchemaByKey[key];
         if (key === UI_WIDGET_KEY && isObject(value)) {
           // oxlint-disable-next-line no-console
           console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
