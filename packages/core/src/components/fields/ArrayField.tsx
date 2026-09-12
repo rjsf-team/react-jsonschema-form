@@ -1039,7 +1039,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
       const lastPathIsItemIndex = typeof path.at(-1) === 'number';
       onChange(
         // We need to treat undefined items as nulls to have validation.
@@ -1047,7 +1047,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         // Only set to null for array items, and not for object properties within array items
         lastPathIsItemIndex && value === undefined ? null : value,
         path,
-        newErrorSchema as ErrorSchema<T[]>,
+        newErrorSchema,
         id,
       );
     },
