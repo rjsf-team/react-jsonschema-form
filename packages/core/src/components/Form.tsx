@@ -917,7 +917,7 @@ export default class Form<
           const lastSegment = path[path.length - 1];
           if (typeof lastSegment === 'number') {
             // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
-            valueForPath = null as unknown as T;
+            valueForPath = null;
           } else {
             const { field: leaf } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
             const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
