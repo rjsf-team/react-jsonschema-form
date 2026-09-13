@@ -172,9 +172,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const isReplacingAnyOrOneOf = uiOptions.field && uiOptions.fieldReplacesAnyOrOneOf === true;
   let XxxOfField: Field<T, S, F> | undefined;
   let XxxOfOptions: S[] | undefined;
-  // When rendering the `XxxOfField` we'll need to change the id of the main component, since the `XxxOfField`
-  // renders the selected option for the same data address
-  let fieldPathProps: { fieldPath: FieldPath; id: string } = { fieldPath, id: fieldId };
+  // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
+  // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
+  let fieldComponentId = fieldId;
   if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
@@ -191,12 +191,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
     const hasFormData = isFormDataAvailable<T>(formData);
     displayLabel = displayLabel && (!isOptionalRender || hasFormData);
-    fieldPathProps = {
-      fieldPath,
-      // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
-      // rendering of the same data address by the `XxxOfField`; the fieldPath itself stays the truthful data address
-      id: fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions),
-    };
+    // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
+    // rendering of the same data address by the `XxxOfField`
+    fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
   }
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
@@ -225,7 +222,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
-      {...fieldPathProps}
+      id={fieldComponentId}
       schema={schema}
       uiSchema={fieldUiSchema}
       disabled={disabled}

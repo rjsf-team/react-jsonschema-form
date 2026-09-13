@@ -179,6 +179,8 @@ interface ArrayAsFieldProps<
 > extends FieldProps<T, S, F> {
   /** The callback used to update the array when the selector changes */
   onSelectChange: (value: T) => void;
+  /** The HTML name for the widget, generated with the multi-value flag since these widgets accept several values */
+  htmlName?: string;
 }
 
 /** Renders an array as a set of checkboxes using the 'select' widget
@@ -188,7 +190,6 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 ) {
   const {
     schema,
-    fieldPath,
     id,
     uiSchema,
     formData: items = [],
@@ -202,8 +203,9 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     rawErrors,
     name,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
   // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
   // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
@@ -218,8 +220,6 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // Both the id and the multi-value html name are plain strings derived from `fieldPath`, so no memoization is needed
-  const multiValueName = fieldPathToName(fieldPath, globalFormOptions, true);
   return (
     <Widget
       id={id}
@@ -241,7 +241,7 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      htmlName={multiValueName}
+      htmlName={htmlName}
     />
   );
 }
@@ -253,7 +253,6 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 ) {
   const {
     schema,
-    fieldPath,
     id,
     uiSchema,
     disabled = false,
@@ -268,14 +267,13 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     rawErrors,
     name,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // Both the id and the multi-value html name are plain strings derived from `fieldPath`, so no memoization is needed
-  const multiValueName = fieldPathToName(fieldPath, globalFormOptions, true);
   return (
     <Widget
       id={id}
@@ -298,7 +296,7 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      htmlName={multiValueName}
+      htmlName={htmlName}
     />
   );
 }
@@ -311,7 +309,6 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const {
     schema,
     uiSchema,
-    fieldPath,
     id,
     name,
     disabled = false,
@@ -324,8 +321,9 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     formData: items = [],
     rawErrors,
     onSelectChange,
+    htmlName,
   } = props;
-  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const {
     widget = 'files',
     title: uiTitle,
@@ -335,8 +333,6 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // Both the id and the multi-value html name are plain strings derived from `fieldPath`, so no memoization is needed
-  const multiValueName = fieldPathToName(fieldPath, globalFormOptions, true);
   return (
     <Widget
       options={options}
@@ -358,7 +354,7 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       label={label}
       hideLabel={!displayLabel}
       placeholder={placeholder}
-      htmlName={multiValueName}
+      htmlName={htmlName}
     />
   );
 }
@@ -618,7 +614,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   );
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} id={id} /> : undefined;
+  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
     items: actualFormData.map((keyedItem, index: number) => {
@@ -728,7 +724,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   }
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
-  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} id={id} /> : undefined;
+  const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
   const canAdd =
@@ -1069,6 +1065,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     formData,
     fieldPath,
     onSelectChange,
+    htmlName: fieldPathToName(fieldPath, globalFormOptions, true),
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,

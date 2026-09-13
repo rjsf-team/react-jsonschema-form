@@ -836,6 +836,10 @@ export default class Form<
    * `FieldPathList`. To set the root element, used either `''` or `[]` for the path. Passing undefined will clear the
    * value in the field.
    *
+   * The dotted form splits on `.` only, so it cannot express an array index as a number or a property name
+   * containing a dot. Pass a `FieldPathList` for either — an item of an array wants the numeric index, since
+   * that is what makes a cleared item resolve to `null` rather than `undefined`.
+   *
    * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
    * @param [newValue] - The new value for the field
    */

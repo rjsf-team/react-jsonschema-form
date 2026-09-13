@@ -413,7 +413,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 
   const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
   const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} id={id} schema={schema} />
+    <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
   const templateProps = {
