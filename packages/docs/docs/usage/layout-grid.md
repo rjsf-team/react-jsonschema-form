@@ -123,14 +123,14 @@ As mentioned before, another theme's grid system may render the above example di
 lined up next to each other. Assume all examples from here on out will be shown using the `core` theme. You may have to
 adjust the `uiSchema` for your theme to achieve the same results.
 
-### ui:layoutGrid
+### `ui:layoutGrid`
 
 The `LayoutGridField` will do nothing if used as a field without having the `ui:layoutGrid` object as its sibling.
 This root "syntax" keyword defines the structure of how the grid should be laid out for the field. Due to the nature of
 JSON objects, it must contain a single `ui:row` "syntax" keyword inside of which the rest of the grid is defined. Providing
 a second `ui:row` will create an invalid object.
 
-### ui:row, part 1
+### `ui:row`, part 1
 
 The `ui:row` "syntax" represents a row of data in the grid. It has, at minimum, a single `children` property that
 describes what that row will render. In this first example, the children are the ids of the fields to render in order,
@@ -311,7 +311,7 @@ schema will also produce the exact same result.
 
 Here is how the `LayoutGridField` "syntax" above is used.
 
-### ui:row, part 2
+### `ui:row`, part 2
 
 As the above examples show, the `ui:row` object can be nested inside of the `children` of a `ui:row`. This signifies the
 nesting of one row inside another row. It also shows that any additional properties added to the `ui:row` object, in this
@@ -319,7 +319,7 @@ case the `"className": "row"` will be spread onto the underlying theme's grid im
 properties, such as `style` blocks or, in the case of other themes, properties that will affect the underlying grid system
 components.
 
-### ui:col
+### `ui:col`
 
 The `ui:col` "syntax" represents a single column of data in the grid. Like `ui:row` this syntax will spread the
 `"className": "col-xs-12"` and `"className": "col-xs-4"` properties onto the underlying theme's grid implementation, as
@@ -400,7 +400,7 @@ Person Info
   +--------------------------------+  +---------+  +--------------------------------+
 ```
 
-### ui:columns
+### `ui:columns`
 
 The `ui:columns` "syntax" represents a group of columns in the grid. Like `ui:row` and `ui:col` this syntax will spread
 the properties onto the underlying theme's grid implementation (in an earlier example `"className": "col-xs-4"` ), as
@@ -716,7 +716,7 @@ and
 
 As mentioned before, another theme's grid system may render the above example differently.
 
-### ui:condition
+### `ui:condition`
 
 The `ui:condition` "syntax" represents conditional rendering of data in the grid. The condition has four required
 properties, `field`, `value`, `operator` and `children`. Let's talk about each in turn.
