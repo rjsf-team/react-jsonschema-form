@@ -18,7 +18,7 @@ the uiSchema for that field the object contained under a `ui:layoutGrid` element
 See the [LayoutGridField usage](../usage/layout-grid.md) for more detailed walk-through on how to use the component. This page is condensed
 version of the `uiSchema` APIs for faster reference.
 
-## ui:row
+## `ui:row`
 
 The outermost level of a `LayoutGridField` is the `ui:row` that defines the nested rows, columns, and/or condition
 elements (i.e. "grid elements") in the grid. This definition is either a simple "grid elements" OR an object with
@@ -66,7 +66,7 @@ Complex `ui:row` definition, with additional `GridTemplate` (this example uses `
 > together to form one className with the values from `cssInJs.GridRowClass` and `cssInJs.GridColumnClass`. See the
 > [example](../usage/layout-grid.md#named-lookup-support-for-classname) in the usage documentation.
 
-## ui:col
+## `ui:col`
 
 The `ui:col` grid element is used to specify the list of columns within a grid row. A `ui:col` element can take on
 several forms:
@@ -136,7 +136,7 @@ uses @mui/material/Grid2 native props):
 > string, its value will be looked up in the `formContext.lookupMap` first before defaulting to a null render. If the
 > resulting looked up `render` is not a function (React components are functions), then it will be a null render.
 
-## ui:columns
+## `ui:columns`
 
 The `ui:columns` grid element is syntactic sugar to specify a set of `ui:col` columns that all share the same set of
 native `GridTemplate` props. In other words rather than writing the following configuration that renders a
@@ -210,7 +210,7 @@ One can write this instead:
 > the `ui:col` will render the two children fields inside a single `<GridTemplate "className": "col-md-6",>`
 > element.
 
-## ui:condition
+## `ui:condition`
 
 The final grid element, `ui:condition`, allows for conditionally displaying "grid elements" within a row based on the
 current value of a field as it relates to a (list of) hard-coded value(s). There are four elements that make up a
