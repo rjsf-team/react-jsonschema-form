@@ -14,13 +14,11 @@ import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = { ...obj1 }; // Prevent mutation of source object.
   const result = Object.keys(obj2).reduce((accumulator, key) => {
-    const left = obj1 ? obj1[key] : {},
+    const left = obj1[key],
       right = obj2[key];
-    if (obj1 && key in obj1 && isObject(right)) {
-      accumulator[key] = mergeSchemas(left, right);
+    if (key in obj1 && isObject(right)) {
+      accumulator[key] = mergeSchemas(isObject(left) ? left : {}, right);
     } else if (
-      obj1 &&
-      obj2 &&
       (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') &&
       key === REQUIRED_KEY &&
       Array.isArray(left) &&
