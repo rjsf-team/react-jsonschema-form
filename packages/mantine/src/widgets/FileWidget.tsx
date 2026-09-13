@@ -33,14 +33,18 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   const themeProps = cleanupOptions(options);
 
   const handleOnChange = useCallback(
-    (files: any) => {
-      if (typeof files === 'object') {
-        // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
-        // oxlint-disable-next-line no-floating-promises, no-void
-        void handleChange(files);
+    (files: File[] | File | null) => {
+      // Mantine's `FileInput` hands back a `File[]` when `multiple` and a single `File` otherwise; its clear button
+      // sends `[]` or `null`, which must reach the form as an empty value rather than be dropped or concatenated
+      if (files === null || (Array.isArray(files) && files.length === 0)) {
+        onChange(multiple ? [] : undefined);
+        return;
       }
+      // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+      // oxlint-disable-next-line no-floating-promises, no-void
+      void handleChange(Array.isArray(files) ? files : [files]);
     },
-    [handleChange],
+    [handleChange, multiple, onChange],
   );
 
   const ValueComponent = useCallback(() => {

@@ -18,10 +18,27 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.1
 
+## @rjsf/chakra-ui
+
+- Fixed `getChakra()` deleting the non-forwardable keys straight out of `uiSchema['ui:options'].chakra`, mutating the caller's own uiSchema as a side effect of rendering. It now returns a filtered copy
+- Fixed `ChakraUiSchema`, which used `Omit<UiSchema, 'ui:options'>`. `UiSchema` has a string index signature, so `keyof UiSchema` includes `string` and `Omit` erased every named member, leaving a type that accepted anything. It now intersects instead
+
+## @rjsf/core
+
+- Fixed `ui:placeholder` being dropped for multi-select arrays and custom array widgets. Both read `placeholder` from props, which nothing passes, so it stayed `undefined` while the value sat unused in `options`. They now read it from `getUiOptions()`, as `StringField` does
+- Fixed a `ui:FieldTemplate` or `ui:FieldErrorTemplate` override being ignored on a `LayoutMultiSchemaField`, which resolved both templates by passing `options` — the anyOf/oneOf option schemas — where `getTemplate()` expects the UI options
+
 ## @rjsf/mantine
 
 - Fixed `BaseInputTemplate` passing an `undefined` value straight through to `NumberInput`/`TextInput`, which let the DOM input fall out of sync with React's controlled value and retain a stray digit after clearing a multi-digit number field ([#5269](https://github.com/rjsf-team/react-jsonschema-form/issues/5269))
 - Backported the `fluid` `Container` layout fix from the v7 Mantine 9 upgrade ([#5260](https://github.com/rjsf-team/react-jsonschema-form/pull/5260)): `GridTemplate`'s and `ObjectFieldTemplate`'s root `Container` now use Mantine's `fluid` prop so forms fill their available width instead of centering at Mantine's default 960px max-width
+- Fixed `BaseInputTemplate` routing `onChange` and `onChangeOverride` through one variable and handing the value to both, so an `onChangeOverride` received a string where its declared type, and `@rjsf/core`, both give the change event. **Potentially breaking change:** an `onChangeOverride` used with this theme now receives the event
+- Fixed `FileWidget` dropping the selected file for a non-multiple input: Mantine's `FileInput` hands back a lone `File`, which is not iterable, so `Array.from()` produced `[]`. Its clear button sends `null` for a single input and `[]` for a multiple one; `null` used to throw a `TypeError` and `[]` was concatenated onto the existing value. Both now report an empty value to the form
+
+## @rjsf/utils
+
+- Fixed `mergeObjects()` and `mergeSchemas()` mishandling a key whose left-hand value isn't an object while the right-hand one is. A truthy primitive on the left (`{ a: 5 }` merged with `{ a: { b: 1 } }`) threw `TypeError: Cannot use 'in' operator`, and an array on the left (a tuple `items` merged with a single-schema `items`) produced an object holding the array's indices alongside the right-hand keys. In both cases the right-hand object now replaces the left-hand value, which is what a falsy left-hand value (`false`, `null`, `undefined`) already did. **Potentially breaking change:** both functions now require their first argument to be an object, as their signatures have always declared; calling `mergeObjects(undefined, obj)` or `mergeSchemas(undefined, schema)` throws instead of treating the missing argument as `{}`
+- Widened `useFileWidgetProps`' `handleChange` from `FileList` to `FileList | File[]`; themes legitimately hand it arrays, and `processFiles()` already used `Array.from()`
 
 ## Dev / docs / playground
 

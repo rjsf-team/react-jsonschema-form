@@ -50,9 +50,13 @@ export default function BaseInputTemplate<
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handler = onChangeOverride || onChange;
-      const newValue = e.target.value === '' ? options.emptyValue : e.target.value;
-      handler(newValue);
+      // `onChangeOverride` receives the raw change event (as it does in `@rjsf/core`); `onChange` receives the value.
+      // Calling them through one variable passed the value to both, which broke `onChangeOverride` consumers.
+      if (onChangeOverride) {
+        onChangeOverride(e);
+        return;
+      }
+      onChange(e.target.value === '' ? options.emptyValue : e.target.value);
     },
     [onChange, onChangeOverride, options],
   );
