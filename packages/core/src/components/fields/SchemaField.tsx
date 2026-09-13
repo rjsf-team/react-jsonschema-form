@@ -201,16 +201,24 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   }
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
-  // See #439: uiSchema: Don't pass consumed class names or style to child components
-  // oxlint-disable-next-line prefer-object-spread -- a spread erases the per-field half of a generic uiSchema's type; Object.assign keeps it
-  const fieldUiSchema: UiSchema<T, S, F> = Object.assign({}, uiSchema);
-  delete fieldUiSchema['ui:classNames'];
-  delete fieldUiSchema.classNames;
-  delete fieldUiSchema['ui:style'];
-  const consumedUiOptions = fieldUiSchema[UI_OPTIONS_KEY];
-  if (consumedUiOptions) {
-    const { classNames: consumedOptionClassNames, style: consumedOptionStyle, ...fieldUiOptions } = consumedUiOptions;
-    fieldUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
+  // See #439: uiSchema: Don't pass consumed class names or style to child components. Most uiSchemas carry none of
+  // them, so the copy is only made when there is something to strip, leaving `uiSchema` itself untouched otherwise
+  const consumedUiOptions = uiSchema[UI_OPTIONS_KEY];
+  const consumesStyling =
+    'ui:classNames' in uiSchema ||
+    'classNames' in uiSchema ||
+    'ui:style' in uiSchema ||
+    (!!consumedUiOptions && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions));
+  let fieldUiSchema: UiSchema<T, S, F> = uiSchema;
+  if (consumesStyling) {
+    fieldUiSchema = { ...uiSchema };
+    delete fieldUiSchema['ui:classNames'];
+    delete fieldUiSchema.classNames;
+    delete fieldUiSchema['ui:style'];
+    if (consumedUiOptions) {
+      const { classNames: consumedOptionClassNames, style: consumedOptionStyle, ...fieldUiOptions } = consumedUiOptions;
+      fieldUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
+    }
   }
 
   const field = (

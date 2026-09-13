@@ -2,9 +2,10 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@r
 
 import type { DaisyProps } from './types/DaisyProps.ts';
 
-export type DaisyUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Omit<
-  UiSchema<T, S, F>,
-  'ui:options'
+export type DaisyUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = UiSchema<
+  T,
+  S,
+  F
 > & {
   'ui:options'?: DaisyUiOptions<T, S, F>;
 };

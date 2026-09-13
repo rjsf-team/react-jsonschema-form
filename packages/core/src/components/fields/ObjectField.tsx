@@ -237,7 +237,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     onChange,
     registry,
     title,
-  }: FieldProps<T, S, F> = props;
+  } = props;
   const { fields, schemaUtils, translateString, globalUiOptions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);

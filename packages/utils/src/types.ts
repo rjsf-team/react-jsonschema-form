@@ -1268,8 +1268,13 @@ type UiSchemaChildData<T> =
     : [NonNullable<T>] extends [readonly unknown[]]
       ? Record<never, never>
       : [NonNullable<T>] extends [object]
-        ? UnionMembersMerged<NonNullable<T>>
+        ? IsUnion<NonNullable<T>> extends true
+          ? UnionMembersMerged<NonNullable<T>>
+          : NonNullable<T>
         : Record<never, never>;
+
+/** True when `T` is a union of more than one member, which is the only case `UnionMembersMerged` has work to do for */
+type IsUnion<T, U = T> = T extends unknown ? ([U] extends [T] ? false : true) : never;
 
 /** Every key of every member of a union, each typed as the union of what the members that declare it hold. A
  * `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.

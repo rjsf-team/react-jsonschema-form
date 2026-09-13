@@ -65,11 +65,11 @@ export default function WrapIfAdditionalTemplate<
   }
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
-  const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
-  // oxlint-disable-next-line prefer-object-spread -- a spread erases the per-field half of a generic uiSchema's type; Object.assign keeps it
-  const buttonUiOptions: UiSchema<T, S, F> = Object.assign({}, uiSchema, {
-    [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
-  });
+  const baseUiSchema: UiSchema<T, S, F> = uiSchema ?? {};
+  const buttonUiOptions: UiSchema<T, S, F> = {
+    ...baseUiSchema,
+    [UI_OPTIONS_KEY]: { ...baseUiSchema[UI_OPTIONS_KEY], block: true },
+  };
 
   return (
     <div className={classNames} style={style}>

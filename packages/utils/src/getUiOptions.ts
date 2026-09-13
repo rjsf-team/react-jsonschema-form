@@ -9,6 +9,11 @@ import type {
   UiSchema,
 } from './types.ts';
 
+/** Narrows a uiSchema key to the `ui:` namespace, so indexing resolves against that index signature */
+function isUiKey(key: string): key is `ui:${string}` {
+  return key.startsWith('ui:');
+}
+
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off. Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
  *
@@ -24,20 +29,17 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
   if (!uiSchema) {
     return { ...globalOptions };
   }
-  return Object.entries(uiSchema)
-    .filter(([key]) => key.startsWith('ui:'))
-    .reduce(
-      (options, [key, value]) => {
-        if (key === UI_WIDGET_KEY && isObject(value)) {
-          // oxlint-disable-next-line no-console
-          console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
-          return options;
-        }
-        if (key === UI_OPTIONS_KEY && isObject(value)) {
-          return { ...options, ...value };
-        }
-        return { ...options, [key.substring(3)]: value };
-      },
-      { ...globalOptions },
-    );
+  const options: UIOptionsType<T, S, F> = { ...globalOptions };
+  for (const key of Object.keys(uiSchema).filter(isUiKey)) {
+    const value = uiSchema[key];
+    if (key === UI_WIDGET_KEY && isObject(value)) {
+      // oxlint-disable-next-line no-console
+      console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
+    } else if (key === UI_OPTIONS_KEY && isObject(value)) {
+      Object.assign(options, value);
+    } else {
+      Object.assign(options, { [key.substring(3)]: value });
+    }
+  }
+  return options;
 }
