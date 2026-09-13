@@ -24,6 +24,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -45,6 +46,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_person"
                 style="padding: 0rem;"
@@ -99,6 +101,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][name]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -112,6 +115,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
                         style="padding: 0rem;"
@@ -166,6 +170,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][street]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -204,6 +209,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][city]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -242,6 +248,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][country]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -302,6 +309,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -589,6 +597,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1256,6 +1265,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1302,6 +1312,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                     name="root[firstName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -1340,6 +1351,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                     name="root[lastName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -1484,6 +1496,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1505,6 +1518,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_person"
                 style="padding: 0rem;"
@@ -1559,6 +1573,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.name"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1572,6 +1587,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
                         style="padding: 0rem;"
@@ -1626,6 +1642,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.street"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1664,6 +1681,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.city"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1724,6 +1742,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2334,6 +2353,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2380,6 +2400,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                     name="root.firstName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -2418,6 +2439,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                     name="root.lastName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -2562,6 +2584,7 @@ exports[`object fields > additionalProperties 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2810,6 +2833,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3091,6 +3115,7 @@ exports[`object fields > additionalProperties, description 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3357,6 +3382,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3605,6 +3631,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3688,6 +3715,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_foo"
                         style="padding: 0rem;"
@@ -3742,6 +3770,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                     name="root_foo_foo"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -3885,6 +3914,7 @@ exports[`object fields > object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3931,6 +3961,7 @@ exports[`object fields > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -4075,6 +4106,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4323,6 +4355,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4586,6 +4619,7 @@ exports[`object fields > with title and description > object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4656,6 +4690,7 @@ exports[`object fields > with title and description > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -4809,6 +4844,7 @@ exports[`object fields > with title and description > show add button and fields
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5072,6 +5108,7 @@ exports[`object fields > with title and description from both > additionalProper
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5335,6 +5372,7 @@ exports[`object fields > with title and description from both > object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5405,6 +5443,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5558,6 +5597,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5821,6 +5861,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5891,6 +5932,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6044,6 +6086,7 @@ exports[`object fields > with title and description from uiSchema > show add but
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -6307,6 +6350,7 @@ exports[`object fields > with title and description with global label off > addi
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -6537,6 +6581,7 @@ exports[`object fields > with title and description with global label off > obje
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -6574,6 +6619,7 @@ exports[`object fields > with title and description with global label off > obje
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6709,6 +6755,7 @@ exports[`object fields > with title and description with global label off > show
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
