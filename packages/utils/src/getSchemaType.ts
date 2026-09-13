@@ -1,3 +1,4 @@
+import { JSON_SCHEMA_TYPES_NAME } from './constants.ts';
 import guessType from './guessType.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -16,7 +17,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
 ): string | string[] | undefined {
-  let { type } = schema;
+  const { type } = schema;
 
   if (!type && schema.const) {
     return guessType(schema.const);
@@ -31,12 +32,17 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (Array.isArray(type)) {
-    if (type.length === 2 && type.includes('null')) {
-      type = type.find((t) => t !== 'null');
-    } else {
-      // oxlint-disable-next-line prefer-destructuring
-      type = type[0];
+    const filteredTypes = type.filter((t) => JSON_SCHEMA_TYPES_NAME.includes(t));
+
+    if (filteredTypes.length === 1) {
+      return type[0];
     }
+
+    if (filteredTypes.length === 2 && filteredTypes.includes('null')) {
+      return filteredTypes.find((t) => t !== 'null');
+    }
+
+    return filteredTypes;
   }
 
   return type;

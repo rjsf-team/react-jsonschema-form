@@ -193,14 +193,15 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ## Nullable types
 
-JSON Schema supports specifying multiple types in an array; however, react-jsonschema-form only supports a restricted subset of this -- nullable types, in which an element is either a given type or equal to null.
+JSON Schema supports specifying multiple types in an array.
+If an array with multiple values is given in schema type, a selector with those types will be displayed, allowing to switch between them.
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
-  type: ['string', 'null'],
+  type: ['string', 'boolean', 'null'],
 };
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));

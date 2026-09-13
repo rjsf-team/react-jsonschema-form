@@ -1,3 +1,5 @@
+import type { JSONSchema7TypeName } from 'json-schema';
+
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
  * `RJSF_REF_KEY`, and `RJSF_REF_CYCLE_KEY` Symbols that are added to a schema under certain conditions by the
@@ -55,3 +57,13 @@ export const UI_DEFINITIONS_KEY = 'ui:definitions';
  */
 export const JSON_SCHEMA_DRAFT_2019_09 = 'https://json-schema.org/draft/2019-09/schema';
 export const JSON_SCHEMA_DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
+
+export const JSON_SCHEMA_TYPES_NAME = [
+  'string',
+  'number',
+  'boolean',
+  'object',
+  'array',
+  'integer',
+  'null',
+] as const satisfies JSONSchema7TypeName[];

@@ -4,6 +4,7 @@ import {
   getTemplate,
   getUiOptions,
   hashObject,
+  JSON_SCHEMA_TYPES_NAME,
   toFieldPathId,
   TranslatableString,
   useDeepCompareMemo,
@@ -11,16 +12,21 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 /**
- * Get the schema for the type selection component.
- * @param title - The translated title for the type selection schema.
+ * Get the schema enum for the type selection component.
+ * @param type - The additionalProperties type value.
  */
-function getFallbackTypeSelectionSchema(title: string): RJSFSchema {
-  return {
-    type: 'string',
-    enum: ['string', 'number', 'boolean', 'object', 'array'],
-    default: 'string',
-    title,
-  };
+function getTypeEnum(type: JSONSchema7TypeName | JSONSchema7TypeName[] | undefined): JSONSchema7TypeName[] {
+  if (!type) {
+    return JSON_SCHEMA_TYPES_NAME;
+  }
+
+  if (Array.isArray(type)) {
+    const filteredTypes = type.filter((t) => JSON_SCHEMA_TYPES_NAME.includes(t));
+
+    return filteredTypes.length === 0 ? JSON_SCHEMA_TYPES_NAME : filteredTypes;
+  }
+
+  return JSON_SCHEMA_TYPES_NAME.includes(type) ? [type] : JSON_SCHEMA_TYPES_NAME;
 }
 
 /**
@@ -52,8 +58,18 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
       const castedNumber = Number(formData);
       return (Number.isNaN(castedNumber) ? 0 : castedNumber) as T;
     }
+    case 'integer': {
+      const castedNumber = Number(formData);
+      return (Number.isNaN(castedNumber) ? 0 : Math.round(castedNumber)) as T;
+    }
     case 'boolean':
       return Boolean(formData) as T;
+    case 'null':
+      return null as T;
+    case 'array':
+      return [] as T;
+    case 'object':
+      return {} as T;
     default:
       return formData;
   }
@@ -86,7 +102,7 @@ export default function FallbackField<
     errorSchema,
   } = props;
   const { translateString, fields, globalFormOptions } = registry;
-  const [type, setType] = useState<JSONSchema7TypeName>(getTypeOfFormData(formData));
+  const [type, setType] = useState<JSONSchema7TypeName>(() => getTypeOfFormData(formData));
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 
@@ -95,7 +111,15 @@ export default function FallbackField<
   );
 
   const schemaTitle = translateString(TranslatableString.Type);
-  const typesOptionSchema = useMemo(() => getFallbackTypeSelectionSchema(schemaTitle), [schemaTitle]);
+  const typesOptionSchema = useMemo(
+    () => ({
+      type: 'string',
+      enum: getTypeEnum(schema.type),
+      default: 'string',
+      title: schemaTitle,
+    }),
+    [schemaTitle, schema],
+  );
 
   const onTypeChange = (newType: T | undefined) => {
     if (newType != null) {
