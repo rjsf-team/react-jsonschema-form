@@ -30,6 +30,10 @@
       "@rjsf/source": "./src/index.ts",
       "default": "./lib/index.js"
     },
+    "./markdown": {
+      "@rjsf/source": "./src/markdown.tsx",
+      "default": "./lib/markdown.js"
+    },
     "./lib": "./lib/index.js",
     "./lib/*.js": "./lib/*.js",
     "./testing": {
@@ -48,15 +52,16 @@
   "peerDependencies": {
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
+    "markdown-to-jsx": "^9.8.2",
     "react": ">=19"
   },
   "peerDependenciesMeta": {
     "@rjsf/validator-ajv8": {
       "optional": true
+    },
+    "markdown-to-jsx": {
+      "optional": true
     }
-  },
-  "dependencies": {
-    "markdown-to-jsx": "^9.8.2"
   },
   "devDependencies": {
     "@rjsf/snapshot-tests": "workspace:^",
@@ -66,7 +71,8 @@
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.6",
     "@types/json-schema": "^7.0.15",
-    "ajv": "^8.20.0"
+    "ajv": "^8.20.0",
+    "markdown-to-jsx": "^9.8.2"
   },
   "directories": {
     "test": "test"

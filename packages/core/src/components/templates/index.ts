@@ -15,6 +15,7 @@ import FieldErrorTemplate from './FieldErrorTemplate.tsx';
 import FieldHelpTemplate from './FieldHelpTemplate.tsx';
 import FieldTemplate from './FieldTemplate/index.ts';
 import GridTemplate from './GridTemplate.tsx';
+import MarkdownTemplate from './MarkdownTemplate.tsx';
 import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate.tsx';
 import ObjectFieldTemplate from './ObjectFieldTemplate.tsx';
 import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
@@ -38,6 +39,7 @@ export {
   FieldHelpTemplate,
   FieldTemplate,
   GridTemplate,
+  MarkdownTemplate,
   MultiSchemaFieldTemplate,
   ObjectFieldTemplate,
   OptionalDataControlsTemplate,
@@ -67,6 +69,7 @@ export function generateTemplates<
     FieldErrorTemplate,
     FieldHelpTemplate,
     GridTemplate,
+    MarkdownTemplate,
     MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     OptionalDataControlsTemplate,

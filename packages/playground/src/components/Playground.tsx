@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
@@ -269,6 +270,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 schema={schema}
                 uiSchema={uiSchema}
                 formData={formData}
+                templates={{ MarkdownTemplate, ...otherFormProps.templates }}
                 fields={{
                   ...otherFormProps.fields,
                   geo: GeoPosition,

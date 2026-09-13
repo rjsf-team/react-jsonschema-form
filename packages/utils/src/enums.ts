@@ -2,7 +2,8 @@
  * enumeration keys is expected to be the actual english string. Some strings contain replaceable parameter values
  * as indicated by `%1`, `%2`, etc. The number after the `%` indicates the order of the parameter. The ordering of
  * parameters is important because some languages may choose to put the second parameter before the first in its
- * translation. Also, some strings are rendered using `markdown-to-jsx` and thus support markdown and inline html.
+ * translation. Some strings are rendered through the registered `MarkdownTemplate`, when there is one, and so may
+ * contain markdown; the english defaults are plain text so they read the same either way.
  */
 export const TranslatableString = {
   /** Fallback title of an array item, used by ArrayField */
@@ -75,29 +76,21 @@ export const TranslatableString = {
   /** Cyclic schema message */
   CycleDetected:
     'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',
-  // Strings with replaceable parameters AND/OR that support markdown and html
-  /** Invalid object field configuration as provided by the ObjectField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  InvalidObjectField: 'Invalid "%1" object field configuration: _%2_.',
+  /** Invalid object field configuration as provided by the ObjectField. */
+  InvalidObjectField: 'Invalid "%1" object field configuration: %2.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField: 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  UnsupportedFieldWithId: 'Unsupported field schema for field `%1`.',
-  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
-   */
-  UnsupportedFieldWithReason: 'Unsupported field schema: _%1_.',
+  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField. */
+  UnsupportedFieldWithId: 'Unsupported field schema for field %1.',
+  /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField. */
+  UnsupportedFieldWithReason: 'Unsupported field schema: %1.',
   /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
    * respectively, as provided by UnsupportedField.
-   * NOTE: Use markdown notation rather than html tags.
    */
-  UnsupportedFieldWithIdAndReason: 'Unsupported field schema for field `%1`: _%2_.',
+  UnsupportedFieldWithIdAndReason: 'Unsupported field schema for field %1: %2.',
   /** File name, type and size info, where %1, %2 and %3 will be replaced by the file name, file type and file size as
    * provided by FileWidget
    */
-  FilesInfo: '**%1** (%2, %3 bytes)',
+  FilesInfo: '%1 (%2, %3 bytes)',
 } as const;
 export type TranslatableString = (typeof TranslatableString)[keyof typeof TranslatableString];

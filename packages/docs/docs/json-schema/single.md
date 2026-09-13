@@ -29,7 +29,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Fields can have titles and descriptions specified by the `title` keyword in the schema and the `description` keyword in the schema, respectively. These two can also be overridden by the `ui:title` and `ui:description` keywords in the uiSchema.
 
-Description can render markdown. This feature is disabled by default. It needs to be enabled by the `ui:enableMarkdownInDescription` keyword and setting to `true`. Read more about markdown options in the `markdown-to-jsx` official [docs](https://markdown-to-jsx.quantizor.dev/).
+Descriptions render as markdown once a markdown-capable `MarkdownTemplate` is registered; see [MarkdownTemplate](../advanced-customization/custom-templates.md#markdowntemplate). The default renders them as plain text.
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';

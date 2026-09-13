@@ -878,6 +878,55 @@ The following props are passed to the `GridTemplate`:
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 
+## MarkdownTemplate
+
+The `MarkdownTemplate` renders field descriptions, `ui:help` text and the translatable strings that allow markdown.
+The core default renders them as plain text, so no markdown library is bundled.
+`@rjsf/core/markdown` exports a `MarkdownTemplate` built on [`markdown-to-jsx`](https://markdown-to-jsx.quantizor.dev/) with raw HTML parsing disabled; `markdown-to-jsx` is an optional peer dependency, so install it alongside `@rjsf/core` when you use this entry point.
+Register it and enable markdown for descriptions or help independently:
+
+```tsx
+import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    templates={{ MarkdownTemplate }}
+    uiSchema={{ 'ui:globalOptions': { enableMarkdownInDescription: true, enableMarkdownInHelp: true } }}
+  />,
+  document.getElementById('app'),
+);
+```
+
+Like any template it can also be registered in a theme, or swapped per field with the `ui:MarkdownTemplate` uiSchema directive.
+
+Because the template is the renderer, any markdown behaviour is yours to choose: register your own component to use a different library, or to pass different options to `markdown-to-jsx`.
+Raw HTML, which the `@rjsf/core/markdown` renderer disables, is the common case:
+
+```tsx
+import { Markdown } from 'markdown-to-jsx/react';
+import { MarkdownTemplateProps } from '@rjsf/utils';
+
+/** Renders raw HTML embedded in markdown. Only register this when you control the markdown text — HTML from an
+ * untrusted source can inject scripts and styles into your page.
+ */
+function UnsafeHtmlMarkdownTemplate({ children }: MarkdownTemplateProps) {
+  return <Markdown>{children}</Markdown>;
+}
+```
+
+The following props are passed to the `MarkdownTemplate`:
+
+- `children`: The markdown text to render.
+- `uiSchema`: The uiSchema of the field whose text is being rendered, so a renderer can honour per-field `ui:options`.
+- `registry`: The `registry` object.
+
 ## MultiSchemaFieldTemplate
 
 Each theme implements a `MultiSchemaFieldTemplate` used to render the layout of a MultiSchemaField, i.e. a field described by a `oneOf` or `anyOf` schema.

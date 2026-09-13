@@ -112,7 +112,15 @@ export default function FallbackField<
       uiOptions,
     );
 
-    return <UnsupportedFieldTemplate schema={schema} fieldPathId={fieldPathId} reason={reason} registry={registry} />;
+    return (
+      <UnsupportedFieldTemplate
+        schema={schema}
+        uiSchema={uiSchema}
+        fieldPathId={fieldPathId}
+        reason={reason}
+        registry={registry}
+      />
+    );
   }
 
   const FallbackFieldTemplate = getTemplate<'FallbackFieldTemplate', T, S, F>(
