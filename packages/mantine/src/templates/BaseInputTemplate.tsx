@@ -106,7 +106,7 @@ export default function BaseInputTemplate<
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
         description={description}
-        value={value}
+        value={value ?? ''}
         min={typeof min === 'number' ? min : undefined}
         max={typeof max === 'number' ? max : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
@@ -118,7 +118,7 @@ export default function BaseInputTemplate<
         {...inputProps}
         {...themeProps}
         description={description}
-        value={value}
+        value={value ?? ''}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     );

@@ -24,6 +24,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -80,6 +81,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="m_7485cace mantine-Container-root"
+                            data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_0"
                             style="padding: 0rem;"
@@ -333,6 +335,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="m_7485cace mantine-Container-root"
+                            data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_1"
                             style="padding: 0rem;"
@@ -665,6 +668,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1144,6 +1148,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1374,6 +1379,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1395,6 +1401,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_person"
                 style="padding: 0rem;"
@@ -1449,6 +1456,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][firstName]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1487,6 +1495,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][lastName]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1500,6 +1509,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
                         style="padding: 0rem;"
@@ -1554,6 +1564,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][street]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1592,6 +1603,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][city]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1652,6 +1664,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -1833,6 +1846,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2050,6 +2064,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2096,6 +2111,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     name="root[firstName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -2295,6 +2311,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2392,6 +2409,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -2448,6 +2466,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="m_7485cace mantine-Container-root"
+                            data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_0"
                             style="padding: 0rem;"
@@ -2701,6 +2720,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="m_7485cace mantine-Container-root"
+                            data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_1"
                             style="padding: 0rem;"
@@ -3033,6 +3053,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3512,6 +3533,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -3533,6 +3555,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_person"
                 style="padding: 0rem;"
@@ -3587,6 +3610,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.firstName"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3625,6 +3649,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.lastName"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3638,6 +3663,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
                         style="padding: 0rem;"
@@ -3692,6 +3718,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.street"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -3730,6 +3757,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.city"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -3790,6 +3818,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4007,6 +4036,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4053,6 +4083,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     name="root.firstName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -4252,6 +4283,7 @@ exports[`single fields > Cyclic schema 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -4288,6 +4320,7 @@ exports[`single fields > Cyclic schema 1`] = `
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_child"
                 style="padding: 0rem;"
@@ -5598,6 +5631,7 @@ exports[`single fields > field with description 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5653,6 +5687,7 @@ exports[`single fields > field with description 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5705,6 +5740,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5760,6 +5796,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5812,6 +5849,7 @@ exports[`single fields > field with markdown description 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5867,6 +5905,7 @@ exports[`single fields > field with markdown description 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5919,6 +5958,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -5974,6 +6014,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6422,6 +6463,7 @@ exports[`single fields > help and error display 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
         <p
@@ -6509,6 +6551,7 @@ exports[`single fields > hidden field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -6584,6 +6627,7 @@ exports[`single fields > hidden label 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -6910,6 +6954,7 @@ exports[`single fields > optional data controls > does not show optional control
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -6939,6 +6984,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -6993,6 +7039,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObjectOptional_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7006,6 +7053,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
                         style="padding: 0rem;"
@@ -7060,6 +7108,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -7077,6 +7126,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
                         style="padding: 0rem;"
@@ -7131,6 +7181,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -7440,6 +7491,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -7494,6 +7546,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7754,6 +7807,7 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -7811,6 +7865,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 name="root_optionalObjectWithOneofs_name"
                                 placeholder=""
                                 type="text"
+                                value=""
                               />
                             </div>
                           </div>
@@ -8114,6 +8169,7 @@ exports[`single fields > optional data controls > does not show optional control
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -8143,6 +8199,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -8200,6 +8257,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObjectOptional_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -8213,6 +8271,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
                         style="padding: 0rem;"
@@ -8270,6 +8329,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -8287,6 +8347,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
                         style="padding: 0rem;"
@@ -8344,6 +8405,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -8661,6 +8723,7 @@ exports[`single fields > optional data controls > does not show optional control
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -8718,6 +8781,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -8985,6 +9049,7 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -9042,6 +9107,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 name="root_optionalObjectWithOneofs_name"
                                 placeholder=""
                                 type="text"
+                                value=""
                               />
                             </div>
                           </div>
@@ -9352,6 +9418,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -9381,6 +9448,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -9518,6 +9586,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
                         style="padding: 0rem;"
@@ -9619,6 +9688,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
                         style="padding: 0rem;"
@@ -9673,6 +9743,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -10179,6 +10250,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -10233,6 +10305,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -10329,6 +10402,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -10578,6 +10652,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -10607,6 +10682,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -10678,6 +10754,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
                         style="padding: 0rem;"
@@ -10716,6 +10793,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
                         style="padding: 0rem;"
@@ -10773,6 +10851,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -11158,6 +11237,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -11215,6 +11295,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -11313,6 +11394,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -11436,6 +11518,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -11465,6 +11548,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -11664,6 +11748,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -11718,6 +11803,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -11814,6 +11900,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -12063,6 +12150,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -12092,6 +12180,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
                 style="padding: 0rem;"
@@ -12165,6 +12254,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             >
               <div
                 class="m_7485cace mantine-Container-root"
+                data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
                 style="padding: 0rem;"
@@ -12222,6 +12312,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -12320,6 +12411,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 >
                   <div
                     class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
                     style="padding: 0rem;"
@@ -12850,6 +12942,7 @@ exports[`single fields > required checkbox field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -12965,6 +13058,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -13099,6 +13193,7 @@ exports[`single fields > schema examples 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16126,6 +16221,7 @@ exports[`single fields > string field > field with markdown help and description
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16227,6 +16323,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16328,6 +16425,7 @@ exports[`single fields > string field > field with markdown help text without en
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16469,6 +16567,7 @@ exports[`single fields > string field > format email 1`] = `
             name="root"
             placeholder=""
             type="email"
+            value=""
           />
         </div>
       </div>
@@ -16533,6 +16632,7 @@ exports[`single fields > string field > format uri 1`] = `
             name="root"
             placeholder=""
             type="url"
+            value=""
           />
         </div>
       </div>
@@ -16597,6 +16697,7 @@ exports[`single fields > string field > regular 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16928,6 +17029,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             name="root"
             placeholder="placeholder"
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -17039,6 +17141,7 @@ exports[`single fields > title field 1`] = `
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
         id="root"
         style="padding: 0rem;"
@@ -17093,6 +17196,7 @@ exports[`single fields > title field 1`] = `
                     name="root_title"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -17342,6 +17446,7 @@ exports[`single fields > using custom tagName 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -17407,6 +17512,7 @@ exports[`string field with autocapitalize 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
