@@ -268,13 +268,13 @@ type ErrorTreeChildData<V> = IsAny<V> extends true ? Record<string, any> : Child
 
 /** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union.
  *
- * A fixed-length tuple keeps each position's own type, so index `0` of a `[string, { city: string }]` is a leaf while
- * index `1` has children; a plain array has no per-position type to keep, so every index holds the element type.
+ * A tuple keeps each declared position's own type, so index `0` of a `[string, { city: string }]` is a leaf while
+ * index `1` has children. An array has no per-position type to keep, so it gets a numeric index signature holding the
+ * element type; a tuple with a rest element gets both, and a declared position takes precedence over the index
+ * signature because they live in the same object type rather than an intersection.
  */
 type ChildDataOf<V> = V extends readonly unknown[]
-  ? number extends V['length']
-    ? Record<number, V[number]>
-    : { [key in Extract<keyof V, `${number}`>]: V[key] }
+  ? { [key in Extract<keyof V, `${number}`> | (number extends V['length'] ? number : never)]: V[key] }
   : V extends AtomicValue
     ? Record<never, never>
     : V extends object

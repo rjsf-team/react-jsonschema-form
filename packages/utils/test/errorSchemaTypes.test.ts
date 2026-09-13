@@ -12,6 +12,7 @@ interface Data {
   eitherShape: { city: string } | { zip: number };
   eitherList: string | string[];
   pair: [string, { city: string }];
+  labelled: [string, ...{ city: string }[]];
 }
 
 describe('ErrorSchema type', () => {
@@ -63,6 +64,17 @@ describe('ErrorSchema type', () => {
     expect(objectPosition.pair?.[1]?.city?.__errors).toEqual(['bad city']);
     expect(wrongLeaf.pair?.[0]).toBeDefined();
     expect(pastTheEnd.pair).toBeDefined();
+  });
+
+  it('describes the declared positions of a variadic tuple by their own type and the rest by the element type', () => {
+    const leadingLeaf: ErrorSchema<Data> = { labelled: { 0: { __errors: ['bad label'] } } };
+    const restObject: ErrorSchema<Data> = { labelled: { 3: { city: { __errors: ['bad city'] } } } };
+    // @ts-expect-error position 0 holds a string, so its node has no children
+    const wrongLeadingLeaf: ErrorSchema<Data> = { labelled: { 0: { city: { __errors: ['bad city'] } } } };
+
+    expect(leadingLeaf.labelled?.[0]?.__errors).toEqual(['bad label']);
+    expect(restObject.labelled?.[3]?.city?.__errors).toEqual(['bad city']);
+    expect(wrongLeadingLeaf.labelled?.[0]).toBeDefined();
   });
 
   it('describes a form whose root is not an object', () => {
