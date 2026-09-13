@@ -2273,10 +2273,10 @@ describe('extraErrors set after submit (#4965)', () => {
     };
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise(50);
         setExtraErrors(sampleErrors);
       }, []);
@@ -2311,10 +2311,10 @@ describe('extraErrors set after submit (#4965)', () => {
     };
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);
@@ -2352,10 +2352,10 @@ describe('extraErrors set after submit (#4965)', () => {
     const formRef = createRef<Form>();
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);

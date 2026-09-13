@@ -252,8 +252,13 @@ export interface FieldErrors {
 /** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
 type IsAny<V> = 0 extends 1 & V ? true : false;
 
-/** Values that are objects but hold no form fields of their own, so their error node has no children */
-type AtomicValue = Date | RegExp | File | Blob | ((...args: never[]) => unknown);
+/** Values that are objects but hold no form fields of their own, so their error node has no children.
+ *
+ * `createErrorHandler()` recurses into plain objects only, so at runtime every class instance is a leaf. TypeScript
+ * has no way to say "plain object", so this lists the two `isObject()` already special-cases; any other class
+ * instance still gets its properties offered as children.
+ */
+type AtomicValue = Date | File;
 
 /** The data whose keys become the children of an error node for a value of type `V`.
  *
