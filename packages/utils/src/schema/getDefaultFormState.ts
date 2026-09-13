@@ -16,6 +16,8 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
+import getUiOptions from '../getUiOptions.ts';
 import isConstant from '../isConstant.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
@@ -31,6 +33,7 @@ import type {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
   ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
@@ -226,7 +229,7 @@ function maybeAddDefaultToObject<T = any>(
   }
 }
 
-interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema> {
+interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
   /** The options root schema, used to primarily to look up `$ref`s */
@@ -254,6 +257,8 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   shouldMergeDefaultsIntoFormData?: boolean;
   /** Indicates whether initial defaults have been generated */
   initialDefaultsGenerated?: boolean;
+  /** Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults */
+  uiSchema?: UiSchema<T, S, F>;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -267,7 +272,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
 export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
 ): T | T[] | undefined {
   const {
     parentDefaults,
@@ -280,6 +285,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     required,
     shouldMergeDefaultsIntoFormData = false,
     initialDefaultsGenerated,
+    uiSchema,
   } = computeDefaultsProps;
   let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -364,8 +370,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items.
+    // Only the plain-object form of `uiSchema.items` can be resolved here (see getStaticItemsUiSchema()); it's
+    // applied uniformly across tuple positions.
+    const fixedItemsUiSchema = getStaticItemsUiSchema<T, S, F>(uiSchema);
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
-      computeDefaults<T, S>(validator, itemSchema, {
+      computeDefaults<T, S, F>(validator, itemSchema, {
         rootSchema,
         includeUndefinedValues,
         _recurseList,
@@ -375,6 +384,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rawFormData: formData,
         required,
         shouldMergeDefaultsIntoFormData,
+        uiSchema: fixedItemsUiSchema,
       }),
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
@@ -441,12 +451,24 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       required,
       shouldMergeDefaultsIntoFormData,
       initialDefaultsGenerated,
+      uiSchema,
     });
   }
 
   // No defaults defined for this node, fallback to generic typed ones.
   if (defaults === undefined) {
     defaults = schema.default as unknown as T;
+  }
+
+  // `ui:initialValue` takes priority over `schema.default`; `ui:emptyValue` is only used as a last resort, when
+  // nothing else (formData, schema default or `ui:initialValue`) has produced a value for the field.
+  if (uiSchema) {
+    const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
+    if (initialValue !== undefined) {
+      defaults = initialValue as unknown as T;
+    } else if (defaults === undefined && emptyValue !== undefined) {
+      defaults = emptyValue as unknown as T;
+    }
   }
 
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
@@ -564,7 +586,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     required,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
-  }: ComputeDefaultsProps<T, S> = {},
+    uiSchema,
+  }: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T {
   {
@@ -604,6 +627,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
+          uiSchema: uiSchema?.[key] as UiSchema<T, S, F> | undefined,
         });
 
         maybeAddDefaultToObject<T>(
@@ -656,6 +680,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
+          uiSchema: uiSchema?.[key] as UiSchema<T, S, F> | undefined,
         });
         // Since these are additional properties we don't need to add the `defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
@@ -693,11 +718,13 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     requiredAsRoot = false,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
-  }: ComputeDefaultsProps<T, S> = {},
+    uiSchema,
+  }: ComputeDefaultsProps<T, S, F> = {},
   initialDefaults?: T[],
 ): T[] | undefined {
   let defaults = initialDefaults;
   const schema: S = rawSchema;
+  const itemUiSchema = getStaticItemsUiSchema<T, S, F>(uiSchema);
 
   const arrayMinItemsStateBehavior = defaultFormStateBehavior?.arrayMinItems ?? {};
   const { populate: arrayMinItemsPopulate, mergeExtraDefaults: arrayMergeExtraDefaults } = arrayMinItemsStateBehavior;
@@ -725,6 +752,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
+        uiSchema: itemUiSchema,
       });
     }) as T[];
   }
@@ -746,6 +774,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           required,
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
+          uiSchema: itemUiSchema,
         }),
       ) as T[];
 
@@ -797,6 +826,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         customMergeAllOf,
         required,
         shouldMergeDefaultsIntoFormData,
+        uiSchema: itemUiSchema,
       }),
     ) as T[];
     // then fill up the rest with either the item default or empty, up to minItems
@@ -858,6 +888,7 @@ export function getDefaultBasedOnSchemaType<
  * @param [defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param initialDefaultsGenerated - Optional flag, indicates whether or not initial defaults have been generated
+ * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -873,6 +904,7 @@ export default function getDefaultFormState<
   defaultFormStateBehavior?: DefaultFormStateBehavior,
   customMergeAllOf?: CustomMergeAllOf<S>,
   initialDefaultsGenerated?: boolean,
+  uiSchema?: UiSchema<T, S, F>,
 ) {
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
@@ -904,6 +936,7 @@ export default function getDefaultFormState<
     shouldMergeDefaultsIntoFormData: true,
     initialDefaultsGenerated,
     requiredAsRoot: true,
+    uiSchema,
   });
 
   if (schema.type !== 'object' && isObject(schema.default)) {

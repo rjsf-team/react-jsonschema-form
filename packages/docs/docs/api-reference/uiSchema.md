@@ -63,7 +63,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### `ui:definitions`
+### `ui:definitions` {#ui-definitions}
 
 The `ui:definitions` property allows you to define reusable UI customizations for schema `$ref` references. This is particularly useful for:
 
@@ -162,6 +162,8 @@ const uiSchema: UiSchema = {
   },
 };
 ```
+
+> Note: [`ui:required`](#required), [`ui:initialValue`](#initialvalue), and [`ui:emptyValue`](#emptyvalue) set inside a `ui:definitions` fragment are applied to the rendered field, but are not currently seen by schema validation or default-value computation. Set them on the field's local uiSchema path (as in the `shipping_address` override above) if they need to be enforced.
 
 ### `ui:field`
 
@@ -556,7 +558,13 @@ render(
 
 ### emptyValue
 
-The `ui:emptyValue` uiSchema directive provides the value to store when the input for a field is emptied, whether by typing or by clicking the `ui:allowClearTextInputs` clear button. It defaults to `undefined`, which omits the field from the form data entirely.
+The `ui:emptyValue` uiSchema directive provides the value to store whenever a field is blank — whether it was emptied by typing, by clicking the `ui:allowClearTextInputs` clear button, was never filled in on initial render, or is blank again after a form reset. It defaults to `undefined`, which omits the field from the form data entirely.
+
+> Note: because it now populates untouched fields too, `ui:emptyValue` can change what validation reports for a field the user never interacted with. A non-empty `emptyValue` (e.g. `''`) can trip a schema constraint the field would otherwise never see — `minLength`, `pattern`, `format`, or an `enum` that doesn't include that value — on an optional field. On a schema-required field, it has the opposite effect: an `emptyValue` present from the first render satisfies `required` even though the user never entered anything, so pair it with a schema constraint (like `minLength`) if an effectively-empty value shouldn't be allowed to pass as complete.
+>
+> `ui:emptyValue` is not currently applied to a field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment; set it on the field's local uiSchema path if it needs to be enforced.
+
+> Note: for array items, only the plain-object form of `uiSchema.items` is applied when computing defaults (including a `minItems` filler item or a new row added via the array's "Add" button); the dynamic `(itemData, index, formContext) => UiSchema` function form can't be resolved before there's item data to call it with, so it's ignored for that purpose (it still works normally for rendering existing items).
 
 ### enumDisabled
 
@@ -658,6 +666,32 @@ The `ui:hideError` uiSchema directive will, if set to `true`, hide the default e
 If you need to enable the default error display of a child in the hierarchy after setting `hideError: true` on the parent field, simply set `hideError: false` on the child.
 
 This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
+
+### initialValue
+
+The `ui:initialValue` uiSchema directive pre-fills a field on initial render and after a form reset. It takes priority over `schema.default`, but never overrides form data that has already been provided. This is useful for a field, often hidden, that a particular form wants to fix to a known value without changing the underlying schema:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  country: {
+    'ui:widget': 'hidden',
+    'ui:initialValue': 'US',
+  },
+};
+```
+
+> Note: `ui:initialValue` is applied as an ordinary default, the same way `schema.default` is, so it comes back after the field is cleared (`onChange` storing `undefined` re-triggers default computation, which reapplies it) rather than leaving the field genuinely empty. If a field needs to be clearable, pair `ui:initialValue` with a distinct [`ui:emptyValue`](#emptyvalue) rather than relying on it alone.
+>
+> `ui:initialValue` is not currently applied to a field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment; set it on the field's local uiSchema path if it needs to be enforced. The same [array-items caveat as `ui:emptyValue`](#emptyvalue) applies to array items too.
 
 ### inputType
 
@@ -792,6 +826,44 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
+
+### required
+
+The `ui:required` uiSchema directive overrides a field's `required` status on the UI side only. Setting it to `true` shows the required indicator and adds the field to the effective required set used for validation, even if the schema doesn't mark it required. Setting it to `false` hides the required indicator on a schema-required field, but does **not** suppress schema-level validation — if the field is left empty, validation still fails.
+
+Because of that, `ui:required: false` is only useful alongside `ui:initialValue` or `ui:emptyValue`, which guarantee the field always has a value. If it's used on a schema-required field without either, a `console.warn` is emitted, since the UI would show the field as optional while validation still rejects an empty value:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  required: ['country'],
+  properties: {
+    country: { type: 'string' },
+    nickname: { type: 'string' },
+  },
+};
+
+const uiSchema: UiSchema = {
+  country: {
+    'ui:widget': 'hidden',
+    'ui:initialValue': 'US',
+    'ui:required': false, // hidden and pre-filled, no need to show as required
+  },
+  nickname: {
+    'ui:required': true, // required in this form, even though the schema doesn't say so
+  },
+};
+```
+
+`ui:required` must be set per field; it is **not** honored when set via `ui:globalOptions`. Unlike most global options, it also has to be seen by schema validation (which only ever looks at a field's own uiSchema), so a form-wide default would make the required indicator and validation disagree.
+
+A few narrower cases where `ui:required: true` shows the indicator but is **not** currently folded into schema validation:
+
+- A field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment rather than its local uiSchema path.
+- A field nested inside an array's items.
+- A field only reachable through a `dependencies`/`if`-`then`-`else` branch, when validating against a schema your own code retrieved and passed to `Form` (the default validation path, where `Form` retrieves the schema itself, handles this correctly).
 
 ### rows
 

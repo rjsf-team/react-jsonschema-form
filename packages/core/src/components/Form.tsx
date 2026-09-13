@@ -28,6 +28,7 @@ import {
   setByPath,
   toPath,
   unsetByPath,
+  augmentSchemaWithUiRequired,
   createSchemaUtils,
   deepEquals,
   ErrorSchemaBuilder,
@@ -561,6 +562,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         defaultsFormData,
         false,
         state.initialDefaultsGenerated,
+        uiSchema,
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
       const formHash = shouldSanitize ? hashObject({ formData }) : '';
@@ -722,6 +724,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
+    // ui:required only exists in the uiSchema, so fold it into the schema's own `required` before validating,
+    // otherwise AJV would never see it.
+    const effectiveValidationSchema = augmentSchemaWithUiRequired<T, S>(validationSchema, uiSchema);
 
     // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
     // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
@@ -729,8 +734,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     return schemaUtils
       .getValidator()
-      .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
-  };
+      .validateFormData(validationFormData, effectiveValidationSchema, customValidate, transformErrors, uiSchema);
+  }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {
