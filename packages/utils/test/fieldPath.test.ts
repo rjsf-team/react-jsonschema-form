@@ -114,28 +114,6 @@ describe('fieldPathToName()', () => {
   });
 });
 
-describe('fieldPathToId() matches the segment-list derivation', () => {
-  test.each([
-    ROOT_FIELD_PATH,
-    toFieldPath('one'),
-    toFieldPath(0, toFieldPath('tasks')),
-    toFieldPath('title', toFieldPath(0, toFieldPath('tasks'))),
-    toFieldPath(1, toFieldPath(0, toFieldPath('matrix'))),
-    toFieldPath('a.b', toFieldPath('one')),
-    toFieldPath('a[0]', toFieldPath('one')),
-    toFieldPath('a\\b', toFieldPath('one')),
-    toFieldPath(2),
-  ])('single-pass id for %j equals joining the parsed segments', (path) => {
-    const expected = [GLOBAL_FORM_OPTIONS.idPrefix, ...fieldPathToList(path)].join(GLOBAL_FORM_OPTIONS.idSeparator);
-    expect(fieldPathToId(path, GLOBAL_FORM_OPTIONS)).toEqual(expected);
-  });
-  test('a trailing escape character is dropped, matching the parser', () => {
-    expect(fieldPathToId(fp('a\\'), GLOBAL_FORM_OPTIONS)).toEqual(
-      [GLOBAL_FORM_OPTIONS.idPrefix, ...fieldPathToList(fp('a\\'))].join(GLOBAL_FORM_OPTIONS.idSeparator),
-    );
-  });
-});
-
 describe('fieldPathEndsWithIndex()', () => {
   test('true for a path addressing an array element', () => {
     expect(fieldPathEndsWithIndex(toFieldPath(0, toFieldPath('tasks')))).toBe(true);

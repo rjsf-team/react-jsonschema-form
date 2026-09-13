@@ -120,7 +120,7 @@ When making a change to a widget or template, consider if the change should be g
 - Form data: `mergeDefaultsWithFormData`, `omitExtraData`
 - Error handling: `toErrorSchema`, `toErrorList`
 - Enum helpers: `enumOptionsSelectValue`, `enumOptionsDeselectValue`
-- React hooks: `useDeepCompareMemo`, `useFileWidgetProps`, `useAltDateWidgetProps`
+- React hooks: `useFileWidgetProps`, `useAltDateWidgetProps`
 
 ## Code style
 
