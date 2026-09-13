@@ -1278,6 +1278,9 @@ type UnionMembersMerged<T> = {
   [K in T extends unknown ? keyof T : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
 };
 
+/** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
+type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : any;
+
 /** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAnyType<V> extends true ? any : UiSchema<V, S, F>;
@@ -1309,8 +1312,10 @@ export type UiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     items?:
       | UiSchema<ArrayElement<T>, S, F>
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
-    /** The uiSchema applied to properties added through the schema's `additionalProperties` */
-    additionalProperties?: UiSchema<T, S, F>;
+    /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
+     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
+     */
+    additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F>;
     /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
     additionalItems?: UiSchema<ArrayElement<T>, S, F>;
     /** The uiSchema for each subschema of an `anyOf`, positionally */

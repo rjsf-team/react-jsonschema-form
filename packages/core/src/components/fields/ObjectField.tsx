@@ -17,6 +17,7 @@ import {
   getByPath,
   hasByPath,
   setByPath,
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   deepEquals,
@@ -424,9 +425,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     description: uiOptions.label === false ? undefined : description,
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
-      const fieldUiSchema = addedByAdditionalProperties
-        ? uiSchema.additionalProperties
-        : getByPath<UiSchema<T, S, F> | undefined>(uiSchema, propertyName);
+      const fieldUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
+        uiSchema,
+        addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
+      );
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>

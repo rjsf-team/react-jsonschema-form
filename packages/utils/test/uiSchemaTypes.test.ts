@@ -27,6 +27,20 @@ describe('UiSchema type', () => {
     expect(ui.items?.items).toBeDefined();
   });
 
+  it('types additionalProperties by the index signature and leaves it open without one', () => {
+    const open: Known = { additionalProperties: { city: { 'ui:placeholder': 'City' } } };
+    const indexed: UiSchema<Record<string, { city: string }>> = {
+      additionalProperties: { city: { 'ui:placeholder': 'City' } },
+    };
+    const wrong: UiSchema<Record<string, { city: string }>> = {
+      // @ts-expect-error: TS2353, `zip` is not a field of the index signature's value
+      additionalProperties: { zip: { 'ui:placeholder': 'Zip' } },
+    };
+
+    expect(open.additionalProperties?.city).toBeDefined();
+    expect([indexed, wrong]).toHaveLength(2);
+  });
+
   it('accepts a key from any branch of a union-typed field', () => {
     const ui: Known = {
       thing: {
