@@ -525,6 +525,31 @@ describe('LayoutMultiSchemaField', () => {
     const fakeFieldErrorTemplate = screen.queryByTestId(FIELD_ERROR_TEST_ID);
     expect(fakeFieldErrorTemplate).not.toBeInTheDocument();
   });
+  test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
+    const overrideTemplateTestId = 'override-field-template';
+    const overrideErrorTestId = 'override-field-error-template';
+    const props = getProps({
+      errorSchema: NESTED_ERROR_SCHEMA,
+      uiSchema: {
+        'ui:FieldTemplate': ({ children, errors }: FieldTemplateProps) => (
+          <div data-testid={overrideTemplateTestId}>
+            {children}
+            {errors}
+          </div>
+        ),
+        'ui:FieldErrorTemplate': ({ errors }: FieldErrorProps) => (
+          <span data-testid={overrideErrorTestId}>{errors}</span>
+        ),
+      },
+    });
+
+    render(<LayoutMultiSchemaField {...props} />);
+
+    expect(screen.getByTestId(overrideTemplateTestId)).toBeInTheDocument();
+    expect(screen.getByTestId(overrideErrorTestId)).toBeInTheDocument();
+    expect(screen.queryByTestId(FIELD_TEMPLATE_TEST_ID)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(FIELD_ERROR_TEST_ID)).not.toBeInTheDocument();
+  });
   describe('computeEnumOptions', () => {
     test('Reads oneOfs from refs', () => {
       const schema = oneOfSchema as RJSFSchema;

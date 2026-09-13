@@ -20,7 +20,7 @@ export interface UseFileWidgetPropsResult {
   /** The list of FileInfoType contained within the FileWidget */
   filesInfo: FileInfoType[];
   /** The callback handler to pass to the onChange of the input */
-  handleChange: (files: FileList) => void | Promise<void>;
+  handleChange: (files: FileList | File[]) => void | Promise<void>;
   /** The callback handler to pass in order to delete a file */
   handleRemove: (index: number) => void;
 }
@@ -71,7 +71,7 @@ async function processFile(file: File): Promise<FileInfoType> {
  * @param files - The list of files to read
  * @returns - The list of read files
  */
-async function processFiles(files: FileList) {
+async function processFiles(files: FileList | File[]) {
   return Promise.all(Array.from(files).map(processFile));
 }
 
@@ -129,7 +129,7 @@ export default function useFileWidgetProps(
   );
 
   const handleChange = useCallback(
-    async (files: FileList) => {
+    async (files: FileList | File[]) => {
       const filesInfoEvent = await processFiles(files);
       const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL || null);
       if (multiple) {

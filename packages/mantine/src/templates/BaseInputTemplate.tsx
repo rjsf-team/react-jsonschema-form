@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
-import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
@@ -14,9 +14,9 @@ import { cleanupOptions } from '../utils.ts';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -50,9 +50,13 @@ export default function BaseInputTemplate<
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handler = onChangeOverride || onChange;
-      const newValue = e.target.value === '' ? options.emptyValue : e.target.value;
-      handler(newValue);
+      // `onChangeOverride` receives the raw change event (as it does in `@rjsf/core`); `onChange` receives the value.
+      // Calling them through one variable passed the value to both, which broke `onChangeOverride` consumers.
+      if (onChangeOverride) {
+        onChangeOverride(e);
+        return;
+      }
+      onChange(e.target.value === '' ? options.emptyValue : e.target.value);
     },
     [onChange, onChangeOverride, options],
   );
