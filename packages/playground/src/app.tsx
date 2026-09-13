@@ -16,6 +16,16 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import type { PlaygroundProps } from './components/index.ts';
 import Playground from './components/index.ts';
 import Layout from './layout/index.ts';
+import shadcnAmethystHaze from './themes/shadcn/amethyst-haze.css?url';
+import shadcnCaffeine from './themes/shadcn/caffeine.css?url';
+import shadcnClaude from './themes/shadcn/claude.css?url';
+import shadcnCleanSlate from './themes/shadcn/clean-slate.css?url';
+import shadcnDefault from './themes/shadcn/default.css?url';
+import shadcnNeoBrutalism from './themes/shadcn/neo-brutalism.css?url';
+import shadcnPastelDreams from './themes/shadcn/pastel-dreams.css?url';
+import shadcnSoftPop from './themes/shadcn/soft-pop.css?url';
+import shadcnTwitter from './themes/shadcn/twitter.css?url';
+import shadcnVercel from './themes/shadcn/vercel.css?url';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
@@ -167,38 +177,38 @@ const themes: PlaygroundProps['themes'] = {
     theme: BootstrapTheme,
   },
   shadcn: {
-    stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/default.css',
+    stylesheet: shadcnDefault,
     theme: shadcnTheme,
     subthemes: {
       default: {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/default.css',
+        stylesheet: shadcnDefault,
       },
       'Amethyst Haze': {
-        stylesheet:
-          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/amethyst-haze.css',
+        stylesheet: shadcnAmethystHaze,
       },
       Caffeine: {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/caffeine.css',
+        stylesheet: shadcnCaffeine,
       },
       Claude: {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/claude.css',
+        stylesheet: shadcnClaude,
+      },
+      'Clean Slate': {
+        stylesheet: shadcnCleanSlate,
       },
       'Neo Brutalism': {
-        stylesheet:
-          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/neo-brutalism.css',
+        stylesheet: shadcnNeoBrutalism,
       },
       'Pastel Dreams': {
-        stylesheet:
-          '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/pastel-dreams.css',
+        stylesheet: shadcnPastelDreams,
       },
       'Soft Pop': {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/soft-pop.css',
+        stylesheet: shadcnSoftPop,
       },
       Twitter: {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/twitter.css',
+        stylesheet: shadcnTwitter,
       },
       Vercel: {
-        stylesheet: '//cdn.jsdelivr.net/gh/rjsf-team/react-jsonschema-form@main/packages/shadcn/resources/vercel.css',
+        stylesheet: shadcnVercel,
       },
     },
   },
