@@ -130,6 +130,12 @@ export default function useFileWidgetProps(
 
   const handleChange = useCallback(
     async (files: FileList | File[]) => {
+      if (files.length === 0) {
+        // An empty selection is a cleared input, not an empty append; `values.concat()` below would silently keep the
+        // existing files
+        onChange(multiple ? [] : undefined);
+        return;
+      }
       const filesInfoEvent = await processFiles(files);
       const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL || null);
       if (multiple) {

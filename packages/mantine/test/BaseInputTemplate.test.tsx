@@ -7,17 +7,7 @@ import BaseInputTemplate from '../src/templates/BaseInputTemplate.tsx';
 
 const schema: RJSFSchema = { type: 'string' };
 
-/** Renders the template inside a `MantineProvider`, which its components require */
-function renderTemplate(props: Record<string, unknown>) {
-  return render(
-    <MantineProvider>
-      <BaseInputTemplate {...(props as unknown as BaseInputTemplateProps)} />
-    </MantineProvider>,
-  );
-}
-
-/** Builds the props `BaseInputTemplate` needs, with `onChange`/`onChangeOverride` supplied by the caller */
-function makeProps(overrides: Record<string, unknown> = {}) {
+function makeProps(props: Partial<BaseInputTemplateProps> = {}): BaseInputTemplateProps {
   return {
     id: 'root_name',
     name: 'name',
@@ -26,19 +16,27 @@ function makeProps(overrides: Record<string, unknown> = {}) {
     options: {},
     label: 'Name',
     value: '',
-    onChange: vi.fn(),
-    onBlur: vi.fn(),
-    onFocus: vi.fn(),
-    ...overrides,
-  };
+    onChange: () => undefined,
+    onBlur: () => undefined,
+    onFocus: () => undefined,
+    ...props,
+  } as unknown as BaseInputTemplateProps;
+}
+
+/** Renders the template inside a `MantineProvider`, which its components require */
+function renderTemplate(props: Partial<BaseInputTemplateProps> = {}) {
+  return render(
+    <MantineProvider>
+      <BaseInputTemplate {...makeProps(props)} />
+    </MantineProvider>,
+  );
 }
 
 describe('mantine BaseInputTemplate', () => {
   test('calls `onChange` with the new value when there is no override', () => {
     const onChange = vi.fn();
-    const props = makeProps({ onChange });
 
-    const { container } = renderTemplate(props);
+    const { container } = renderTemplate({ onChange });
     const input = container.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Bob' } });
 
@@ -46,30 +44,22 @@ describe('mantine BaseInputTemplate', () => {
   });
 
   test('calls `onChangeOverride` with the change event, not the value', () => {
-    // This template used to route both callbacks through one variable and hand the *value* to each, so an
-    // `onChangeOverride` — which `@rjsf/core` and the declared type both define as taking the event — got a string.
     const onChange = vi.fn();
     const onChangeOverride = vi.fn();
-    const props = makeProps({ onChange, onChangeOverride });
 
-    const { container } = renderTemplate(props);
+    const { container } = renderTemplate({ onChange, onChangeOverride });
     const input = container.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Bob' } });
 
     expect(onChangeOverride).toHaveBeenCalledTimes(1);
-    const [arg] = onChangeOverride.mock.calls[0];
-    // the override used to receive the string 'Bob'; it must receive the event whose target is the input
-    expect(typeof arg).toBe('object');
-    expect(arg).toHaveProperty('target', input);
-    // the override replaces the default handling
+    expect(onChangeOverride.mock.calls[0][0]).toHaveProperty('target', input);
     expect(onChange).not.toHaveBeenCalled();
   });
 
   test('sends `options.emptyValue` through `onChange` when the input is cleared', () => {
     const onChange = vi.fn();
-    const props = makeProps({ onChange, value: 'Bob', options: { emptyValue: 'nothing' } });
 
-    const { container } = renderTemplate(props);
+    const { container } = renderTemplate({ onChange, value: 'Bob', options: { emptyValue: 'nothing' } });
     const input = container.querySelector('input')!;
     fireEvent.change(input, { target: { value: '' } });
 

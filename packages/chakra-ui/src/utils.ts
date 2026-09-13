@@ -7,9 +7,8 @@ const { isValidProperty } = defaultSystem;
 
 /** A `UiSchema` whose `ui:options` are known to carry the theme's `chakra` prop bag.
  *
- * NOTE: this intersects rather than using `Omit<UiSchema, 'ui:options'>`. `UiSchema` has a string index signature, so
- * `keyof UiSchema` includes `string` and `Omit` erases every named member, leaving only the index signature — which
- * silently typed the whole uiSchema as `any`.
+ * NOTE: intersects rather than using `Omit`, whose `keyof UiSchema` includes `UiSchema`'s string index signature and so
+ * erases every named member.
  */
 export type ChakraUiSchema = UiSchema & {
   'ui:options'?: ChakraUiOptions;
@@ -24,10 +23,9 @@ export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps 
    * Leveraging `shouldForwardProp` to remove props
    * https://chakra-ui.com/docs/styling/chakra-factory#forwarding-props
    *
-   * This builds a filtered copy. Deleting from `chakraProps` mutated the caller's own `ui:options.chakra` object,
-   * permanently stripping those keys from the uiSchema the consumer passed in.
+   * Filtered into a copy, since `chakraProps` belongs to the caller's uiSchema.
    */
-  const forwardable = Object.entries(chakraProps).filter(([key]) => isValidProperty(key) && !shouldForwardProp(key));
-
-  return Object.fromEntries(forwardable) as ChakraField.RootProps;
+  return Object.fromEntries(
+    Object.entries(chakraProps).filter(([key]) => isValidProperty(key) && !shouldForwardProp(key)),
+  ) as ChakraField.RootProps;
 }

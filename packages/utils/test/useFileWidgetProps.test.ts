@@ -101,6 +101,24 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
     });
   });
+  test('File initial value, single, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith(undefined);
+    });
+  });
+  test('File initial value, multiple, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps([FILE_2_STR], onChange, true));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input, not an empty append onto the existing files
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith([]);
+    });
+  });
   test('File initial value, single, handleRemove', async () => {
     const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange));
     const { filesInfo, handleChange, handleRemove } = result.current;

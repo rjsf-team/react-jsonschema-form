@@ -50,15 +50,9 @@ export default function BaseInputTemplate<
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      // `onChangeOverride` receives the raw change event (as it does in `@rjsf/core`); `onChange` receives the value.
-      // Calling them through one variable passed the value to both, which broke `onChangeOverride` consumers.
-      if (onChangeOverride) {
-        onChangeOverride(e);
-        return;
-      }
       onChange(e.target.value === '' ? options.emptyValue : e.target.value);
     },
-    [onChange, onChangeOverride, options],
+    [onChange, options.emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -117,7 +111,7 @@ export default function BaseInputTemplate<
       />
     ) : (
       <TextInput
-        onChange={!readonly ? handleChange : undefined}
+        onChange={!readonly ? (onChangeOverride ?? handleChange) : undefined}
         {...componentProps}
         {...inputProps}
         {...themeProps}

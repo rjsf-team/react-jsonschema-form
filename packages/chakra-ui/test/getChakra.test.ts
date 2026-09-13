@@ -16,20 +16,11 @@ describe('getChakra()', () => {
   });
 
   test('does not mutate the `ui:options.chakra` object it was given', () => {
-    // The dropped props used to be `delete`d straight out of the caller's uiSchema, so the consumer's own object was
-    // permanently stripped as a side effect of rendering.
     const chakra = { mb: 4, notAStyleProp: 'nope' };
     const uiSchema: ChakraUiSchema = { 'ui:options': { chakra } };
 
     getChakra(uiSchema);
 
     expect(chakra).toEqual({ mb: 4, notAStyleProp: 'nope' });
-  });
-
-  test('returns the same result when called twice with the same uiSchema', () => {
-    const chakra = { mb: 4, notAStyleProp: 'nope' };
-    const uiSchema: ChakraUiSchema = { 'ui:options': { chakra } };
-
-    expect(getChakra(uiSchema)).toEqual(getChakra(uiSchema));
   });
 });

@@ -36,17 +36,13 @@ export default function FileWidget<
 
   const handleOnChange = useCallback(
     (files: File[] | File | null) => {
-      // Mantine's `FileInput` hands back a `File[]` when `multiple` and a single `File` otherwise; its clear button
-      // sends `[]` or `null`, which must reach the form as an empty value rather than be dropped or concatenated
-      if (files === null || (Array.isArray(files) && files.length === 0)) {
-        onChange(multiple ? [] : undefined);
-        return;
-      }
+      // Mantine's `FileInput` hands back a `File[]` when `multiple` and a lone `File` otherwise, and `null` when cleared
+      const selected = files ? [files].flat() : [];
       // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
       // oxlint-disable-next-line no-floating-promises, no-void
-      void handleChange(Array.isArray(files) ? files : [files]);
+      void handleChange(selected);
     },
-    [handleChange, multiple, onChange],
+    [handleChange],
   );
 
   const ValueComponent = useCallback(() => {
