@@ -1,5 +1,13 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  augmentSchemaWithUiRequired,
+  ErrorSchemaBuilder,
+  JUNK_OPTION_ID,
+  RJSF_REF_KEY,
+  hashForSchema,
+  noop,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -59,6 +67,49 @@ describe('ATAPrecompiledValidator', () => {
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
         );
+      });
+      it('using rootSchema augmented with ui:required, unresolved, returns true', () => {
+        // Matches what Form.validate() passes on a plain submit, which calls this.validate(formData) with no
+        // retrievedSchema: augmentSchemaWithUiRequired() applied directly to the raw root schema, never resolved.
+        const uiSchema: UiSchema = { foo: { 'ui:required': true } };
+        const augmentedSchema = augmentSchemaWithUiRequired(rootSchema, uiSchema);
+        expect(validator.ensureSameRootSchema(augmentedSchema, undefined, uiSchema)).toBe(true);
+      });
+      it('using rootSchema augmented with ui:required and the matching uiSchema returns true', () => {
+        // Matches what Form.validate() passes when it does have a retrievedSchema (e.g. live validation):
+        // augmentSchemaWithUiRequired() applied to the *resolved* schema, not the raw root.
+        const uiSchema: UiSchema = { foo: { 'ui:required': true } };
+        const resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
+        const augmentedSchema = augmentSchemaWithUiRequired(resolvedRootSchema, uiSchema);
+        expect(validator.ensureSameRootSchema(augmentedSchema, undefined, uiSchema)).toBe(true);
+      });
+      it('using rootSchema augmented with ui:required but no uiSchema throws', () => {
+        const uiSchema: UiSchema = { foo: { 'ui:required': true } };
+        const resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
+        const augmentedSchema = augmentSchemaWithUiRequired(resolvedRootSchema, uiSchema);
+        expect(() => validator.ensureSameRootSchema(augmentedSchema)).toThrow(
+          new Error(
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+          ),
+        );
+      });
+      it('tolerates ui:required on a field only introduced by dependencies resolution', () => {
+        // Reproduces a schema where the ui:required target ("b") does not exist in the root schema's own
+        // `properties` at all -- it's only introduced once the "a" dependency resolves against formData. Augmenting
+        // before resolution (the raw root) would never find "b"; augmenting after (what Form.validate() does via
+        // `retrievedSchema ?? schema`) does.
+        const depSchema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          dependencies: { a: { properties: { b: { type: 'string' } } } },
+        };
+        const depValidateFns = loadModule(compileSchemaValidatorsCode(depSchema)) as ValidatorFunctions;
+        const depValidator = new ATAPrecompiledValidator(depValidateFns, depSchema);
+        const uiSchema: UiSchema = { b: { 'ui:required': true } };
+        const formData = { a: 'x' };
+        const resolvedRootSchema = retrieveSchema(depValidator, depSchema, depSchema, formData);
+        const augmentedSchema = augmentSchemaWithUiRequired(resolvedRootSchema, uiSchema);
+        expect(depValidator.ensureSameRootSchema(augmentedSchema, formData, uiSchema)).toBe(true);
       });
     });
     describe('validator.isValid()', () => {

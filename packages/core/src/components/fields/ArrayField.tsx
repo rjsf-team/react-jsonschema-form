@@ -16,6 +16,7 @@ import type {
 import {
   setByPath,
   allowAdditionalItems,
+  getStaticItemsUiSchema,
   getTemplate,
   getUiOptions,
   getWidget,
@@ -158,6 +159,7 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   registry: Registry<T[], S, F>,
   schema: S,
+  uiSchema?: UiSchema<T[], S, F>,
 ): T {
   const { schemaUtils, globalFormOptions } = registry;
   let itemSchema = schema.items as S;
@@ -167,8 +169,10 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
     itemSchema = schema.additionalItems as S;
   }
-  // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
-  return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
+  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T[] caused by the
+  // FieldProps<T[], S, F> call on the class
+  const itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema);
+  return schemaUtils.getDefaultFormState(itemSchema, undefined, false, undefined, itemUiSchema) as unknown as T;
 }
 
 /** Props used for ArrayAsXxxx type components*/
@@ -920,7 +924,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema),
+        item: getNewFormDataRow<T, S, F>(registry, schema, uiSchema),
       };
       const newKeyedFormData = [...keyedFormDataRef.current];
       if (index !== undefined) {
@@ -930,7 +934,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       }
       onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
-    [registry, schema, onChange, updateKeyedFormData, childFieldPathId],
+    [registry, schema, uiSchema, onChange, updateKeyedFormData, childFieldPathId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of

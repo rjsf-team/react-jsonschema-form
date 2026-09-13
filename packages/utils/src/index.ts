@@ -1,5 +1,6 @@
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import augmentSchemaWithUiRequired from './augmentSchemaWithUiRequired.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
@@ -29,6 +30,7 @@ import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscr
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaType from './getSchemaType.ts';
+import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
@@ -125,6 +127,7 @@ export {
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
+  augmentSchemaWithUiRequired,
   buttonId,
   canExpand,
   createErrorHandler,
@@ -158,6 +161,7 @@ export {
   getOptionValueFormat,
   getSchemaType,
   getByPath,
+  getStaticItemsUiSchema,
   getSubmitButtonOptions,
   getTemplate,
   getTestIds,

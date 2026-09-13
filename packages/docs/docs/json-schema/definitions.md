@@ -34,7 +34,7 @@ Note that this library only supports local definition referencing. The value in 
 
 To customize the UI for schemas referenced via `$ref`, use the `ui:definitions` property in your uiSchema. This works for both reused and recursive schemas.
 
-See [ui:definitions](../api-reference/uiSchema.md#uidefinitions) for full details and more examples.
+See [ui:definitions](../api-reference/uiSchema.md#ui-definitions) for full details and more examples.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

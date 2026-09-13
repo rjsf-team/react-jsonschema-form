@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { augmentSchemaWithUiRequired, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
@@ -124,6 +124,43 @@ describe('ATAValidator', () => {
       // ErrorSchemaBuilder gives us a stable shape to compare against.
       const expected = new ErrorSchemaBuilder().addErrors(formatError!.message!, 'email').ErrorSchema;
       expect(errorSchema.email).toEqual(expected.email);
+    });
+
+    it('enforces ui:required folded into the schema by augmentSchemaWithUiRequired()', () => {
+      // Unlike ATAPrecompiledValidator, ATAValidator builds/caches its engine instance per schema id/hash rather
+      // than a fixed rootSchema identity, so a schema Form.tsx augmented with ui:required just builds -- and
+      // enforces -- fresh, with no special accommodation needed.
+      const v = customizeValidator<{ nickname?: string }>();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { nickname: { type: 'string' } },
+      };
+      const uiSchema: UiSchema = { nickname: { 'ui:required': true } };
+      const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+
+      const { errors } = v.validateFormData({}, augmentedSchema);
+      expect(errors.some((error) => error.name === 'required')).toBe(true);
+
+      const { errors: passingErrors } = v.validateFormData({ nickname: 'Chuck' }, augmentedSchema);
+      expect(passingErrors).toHaveLength(0);
+    });
+
+    it('does not let ui:required: false remove a schema-required field from the augmented schema', () => {
+      // augmentSchemaWithUiRequired() only ever adds to `required`; it never removes an entry for
+      // ui:required: false, so this augmented schema is byte-for-byte the original one, and validation must still
+      // enforce it.
+      const v = customizeValidator<{ country?: string }>();
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['country'],
+        properties: { country: { type: 'string' } },
+      };
+      const uiSchema: UiSchema = { country: { 'ui:required': false } };
+      const augmentedSchema = augmentSchemaWithUiRequired(schema, uiSchema);
+      expect(augmentedSchema).toBe(schema);
+
+      const { errors } = v.validateFormData({}, augmentedSchema);
+      expect(errors.some((error) => error.name === 'required')).toBe(true);
     });
 
     it('runs the user-supplied transformErrors hook', () => {
