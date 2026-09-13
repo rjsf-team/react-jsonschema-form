@@ -205,16 +205,16 @@ export type FieldPathList = (string | number)[];
 /** Dot string or segment list for `getFromSchema` / `findFieldInSchema` (same segment rules as {@link FieldPathList}). */
 export type SchemaFieldPath = string | FieldPathList;
 
+declare const FIELD_PATH_BRAND: unique symbol;
+
 /** Type identifying a field: a canonical, escaped string path such as `friends[0].firstName`, with the root
  * form as the empty string. A string's identity is its value, so a `FieldPath` passed as a prop is stable across
  * renders for free and memo boundaries keep working without deep comparison. The `$id`, HTML `name` and segment
  * list are derived from it on demand by `fieldPathToId`, `fieldPathToName` and `fieldPathToList`.
- */
-declare const FIELD_PATH_BRAND: unique symbol;
-
-/** A canonical, escaped string path identifying a field — see `toFieldPath`. Branded so a plain string (such as a
- * DOM id, which is also a string) cannot be passed where a `FieldPath` is expected; construct one with `toFieldPath`
- * or start from `ROOT_FIELD_PATH`. A `FieldPath` is still assignable wherever a `string` is accepted.
+ *
+ * Branded so a plain string (such as a DOM id, which is also a string) cannot be passed where a `FieldPath` is
+ * expected; construct one with `toFieldPath` or start from `ROOT_FIELD_PATH`. A `FieldPath` is still assignable
+ * wherever a `string` is accepted.
  */
 export type FieldPath = string & { readonly [FIELD_PATH_BRAND]: true };
 
