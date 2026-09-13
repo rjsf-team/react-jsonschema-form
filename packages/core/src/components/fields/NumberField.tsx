@@ -95,13 +95,16 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     const { schema, uiSchema } = props;
     const { schemaUtils, widgets } = registry;
     const { defaultWidget } = resolveDefaultWidget<T, S, F>(schema, uiSchema, schemaUtils, widgets);
-    const { widget = defaultWidget } = getUiOptions(uiSchema);
+    const { widget = defaultWidget, inputType } = getUiOptions(uiSchema);
 
     // Only the built-in text widget renders as a plain text input in this locale (see
     // getInputProps()), so it's the only one whose displayed value needs to match the
     // locale separator. Every other widget (custom, radio, select, hidden,
     // format-registered, ...) keeps receiving the numeric formData its contract promises.
-    if (widget === 'text') {
+    // An explicit `inputType` option takes priority over the locale detection inside
+    // getInputProps(), so a `text` widget with `inputType: 'number'` (or any type other than
+    // `text`) still ends up in a native, locale-unaware input; skip the comma formatting there too.
+    if (widget === 'text' && (inputType === undefined || inputType === 'text')) {
       displayValue = String(value).replace('.', separator) as unknown as T;
     }
   }

@@ -1119,7 +1119,7 @@ The default is `select` when `schema` has enumerable options, the schema's `form
 
 #### Returns
 
-- { defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
+- \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
 
 ### resolveUiSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

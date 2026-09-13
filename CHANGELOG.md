@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
+- Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
 
 ## @rjsf/utils
 

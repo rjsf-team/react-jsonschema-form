@@ -626,6 +626,27 @@ describe('NumberField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('type', 'text');
     });
 
+    it('should not comma-format the display value when an explicit inputType overrides the resolved text widget', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'number',
+          },
+        },
+        formData: 2.3,
+      });
+
+      // getInputProps() gives the explicit inputType priority over the locale detection, so
+      // this renders a native <input type="number">, which rejects/blanks a comma-formatted
+      // value like "2,3". The display value must stay dot-formatted to match.
+      const $input = node.querySelector('.rjsf-field input')!;
+      expect($input).toHaveAttribute('type', 'number');
+      expect($input).toHaveValue(2.3);
+    });
+
     it('should handle a change event using comma decimal separator', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
