@@ -38,26 +38,27 @@ export default function retainObjectIdentity<T>(prev: unknown, next: T): T {
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);
-    const retained: Record<string, unknown> = {};
     let sameAsPrev = nextKeys.length === Object.keys(prev).length;
     let sameAsNext = true;
-    for (const key of nextKeys) {
+    const entries = nextKeys.map((key) => {
       const value = retainObjectIdentity(prev[key], next[key]);
-      retained[key] = value;
       if (!Object.is(value, prev[key]) || !(key in prev)) {
         sameAsPrev = false;
       }
       if (!Object.is(value, next[key])) {
         sameAsNext = false;
       }
-    }
+      return [key, value] as const;
+    });
     if (sameAsPrev) {
       return prev as T;
     }
     if (sameAsNext) {
       return next;
     }
-    return retained as T;
+    // `Object.fromEntries` defines own data properties, so a JSON-sourced own `__proto__` key stays a key instead of
+    // reaching the prototype setter; the prototype is copied so a null-prototype object stays one
+    return Object.setPrototypeOf(Object.fromEntries(entries), Object.getPrototypeOf(next)) as T;
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {
     return prev as T;

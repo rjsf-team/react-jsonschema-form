@@ -66,10 +66,11 @@ describe('render stability across sibling fields', () => {
 
     const firstBefore = renderCounts.root_first;
     const secondBefore = renderCounts.root_second;
+    const innerBefore = renderCounts.root_nested_inner;
 
     await user.type(node.querySelector('#root_nested_inner')!, 'abc');
 
-    expect(renderCounts.root_nested_inner).toBeGreaterThan(renderCounts.root_second);
+    expect(renderCounts.root_nested_inner).toBeGreaterThan(innerBefore);
     expect(renderCounts.root_first).toBe(firstBefore);
     expect(renderCounts.root_second).toBe(secondBefore);
   });

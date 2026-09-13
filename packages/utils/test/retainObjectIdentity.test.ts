@@ -101,6 +101,21 @@ describe('retainObjectIdentity()', () => {
     expect(result.sibling).toBe(prev.sibling);
   });
 
+  it('keeps an own __proto__ key as data and preserves a null prototype when grafting', () => {
+    const prev = JSON.parse('{"__proto__": {"polluted": true}, "changed": 1, "same": {"a": 1}}');
+    const next = JSON.parse('{"__proto__": {"polluted": true}, "changed": 2, "same": {"a": 1}}');
+    const result = retainObjectIdentity(prev, next);
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(Object.hasOwn(result, '__proto__')).toBe(true);
+    expect(result.same).toBe(prev.same);
+
+    const bare = Object.assign(Object.create(null), { changed: 1, same: { a: 1 } });
+    const bareNext = Object.assign(Object.create(null), { changed: 2, same: { a: 1 } });
+    const bareResult = retainObjectIdentity(bare, bareNext);
+    expect(Object.getPrototypeOf(bareResult)).toBeNull();
+    expect(bareResult.same).toBe(bare.same);
+  });
+
   it('does not retain across mismatched container types', () => {
     expect(retainObjectIdentity([1], { 0: 1 })).toEqual({ 0: 1 });
     expect(retainObjectIdentity({ 0: 1 }, [1])).toEqual([1]);
