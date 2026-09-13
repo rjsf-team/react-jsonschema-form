@@ -1518,7 +1518,7 @@ describe('setFieldValue()', () => {
       expect.objectContaining({
         formData: 'populated value',
       }),
-      // An empty segment names no field, so the id is the root id rather than the trailing-separator `root_`
+      // An empty segment names no field, so the change is reported against the root id
       'root',
     );
 
@@ -1940,6 +1940,27 @@ describe('optionalDataControls', () => {
     expect(addObjectControlNode).not.toEqual(null);
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
+  });
+  it('gives the controls of an object that is itself a oneOf a distinct id from those of the selected option', () => {
+    const oneOfObjectSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: {
+          type: 'object',
+          properties: { shared: { type: 'string' } },
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema: oneOfObjectSchema, uiSchema: objectOnUiSchema });
+    const ids = [...node.querySelectorAll('[id]')].map((element) => element.id);
+
+    expect(new Set(ids).size).toEqual(ids.length);
+    expect(ids).toContain(objectControlAddId);
+    expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
   });
 });
 

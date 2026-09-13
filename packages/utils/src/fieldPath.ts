@@ -30,15 +30,13 @@ export function toFieldPath(segment: string | number, parentPath: FieldPath = RO
   return (parentPath === ROOT_FIELD_PATH ? escaped : `${parentPath}.${escaped}`) as FieldPath;
 }
 
-/** Determines whether the last segment of `fieldPath` is an array index. In the `FieldPath` grammar only an
- * unescaped trailing `[n]` can be an array index — an escaped `]` inside a property name renders as `\]`, whose
- * preceding character is a backslash rather than a digit — so the test needs no parsing.
+/** Determines whether the last segment of `fieldPath` is an array index
  *
  * @param fieldPath - The `FieldPath` to check
  * @returns - True when the path addresses an array element, otherwise false
  */
 export function fieldPathEndsWithIndex(fieldPath: FieldPath): boolean {
-  return /\[\d+\]$/.test(fieldPath);
+  return typeof fieldPathToList(fieldPath).at(-1) === 'number';
 }
 
 /** Parses `fieldPath` back into its list of segments, with array indexes as numbers and property names unescaped
@@ -100,32 +98,7 @@ export function fieldPathToList(fieldPath: FieldPath): FieldPathList {
  */
 export function fieldPathToId(fieldPath: FieldPath, globalFormOptions: GlobalFormOptions): string {
   const { idPrefix, idSeparator } = globalFormOptions;
-  // Single pass over the path, mirroring `[idPrefix, ...fieldPathToList(fieldPath)].join(idSeparator)` without
-  // building the intermediate segment list; ids are derived per field per render, so this is a hot path
-  let id = idPrefix;
-  let pendingSeparator = fieldPath !== ROOT_FIELD_PATH;
-  let i = 0;
-  while (i < fieldPath.length) {
-    const char = fieldPath[i];
-    if (char === '.' || char === '[' || char === ']') {
-      // `].` and `][` boundaries collapse into one separator via the lazy emit below
-      pendingSeparator = true;
-      i += 1;
-    } else {
-      if (pendingSeparator) {
-        id += idSeparator;
-        pendingSeparator = false;
-      }
-      if (char === '\\') {
-        id += fieldPath[i + 1] ?? '';
-        i += 2;
-      } else {
-        id += char;
-        i += 1;
-      }
-    }
-  }
-  return id;
+  return [idPrefix, ...fieldPathToList(fieldPath)].join(idSeparator);
 }
 
 /** Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalFormOptions`, when one is provided

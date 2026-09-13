@@ -19,6 +19,7 @@ import {
   ANY_OF_KEY,
   deepEquals,
   descriptionId,
+  fieldPathToId,
   getSchemaType,
   getTemplate,
   getUiOptions,
@@ -29,6 +30,7 @@ import {
   shallowEquals,
   shouldRenderOptionalField,
   isObject,
+  toFieldPath,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
@@ -191,9 +193,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     displayLabel = displayLabel && (!isOptionalRender || hasFormData);
     fieldPathProps = {
       fieldPath,
-      // The main FieldComponent gets an `XxxOf`-suffixed id to avoid DOM id duplication with the rendering of the
-      // same data address by the `XxxOfField`; the fieldPath itself stays the truthful data address
-      id: `${fieldId}${globalFormOptions.idSeparator}XxxOf`,
+      // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
+      // rendering of the same data address by the `XxxOfField`; the fieldPath itself stays the truthful data address
+      id: fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions),
     };
   }
 
