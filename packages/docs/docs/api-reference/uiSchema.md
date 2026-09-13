@@ -51,7 +51,7 @@ Be sure to pay attention to the hierarchical intersection to these other types: 
 
 There are 4 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
 
-### ui:globalOptions
+### `ui:globalOptions`
 
 The set of globally relevant `UiSchema` options that are read from the root-level `UiSchema` and stored in the `registry` for use everywhere.
 
@@ -63,7 +63,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### ui:definitions
+### `ui:definitions`
 
 The `ui:definitions` property allows you to define reusable UI customizations for schema `$ref` references. This is particularly useful for:
 
@@ -163,7 +163,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### ui:rootFieldId (deprecated)
+### `ui:rootFieldId` (deprecated)
 
 > DEPRECATED: Use `Form.idPrefix` instead, will be removed in a future major version
 
@@ -180,25 +180,25 @@ const uiSchema: UiSchema = {
 
 This will make all widgets have an id prefixed with `myform`.
 
-### ui:field
+### `ui:field`
 
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
 Specify either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself.
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
-### ui:fieldReplacesAnyOrOneOf
+### `ui:fieldReplacesAnyOrOneOf`
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
 By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
 If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
 
-### ui:options
+### `ui:options`
 
 The `ui:options` property cannot be nested inside itself and thus is the last exception.
 
-## ui:XXX or ui:options.XXX
+## `ui:XXX` or `ui:options.XXX`
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
