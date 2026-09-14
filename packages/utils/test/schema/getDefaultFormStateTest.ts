@@ -7333,6 +7333,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual([{ name: 'tuple position' }, { name: 'beyond the tuple' }]);
       });
+
+      it('applies additionalItems uiSchema to existing formData beyond a tuple length', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string' }],
+          additionalItems: { type: 'string' },
+        };
+        const uiSchema = {
+          items: { 'ui:emptyValue': 'tuple' },
+          additionalItems: { 'ui:emptyValue': 'extra' },
+        };
+        const formData = [undefined, undefined];
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            formData,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual(['tuple', 'extra']);
+      });
     });
 
     describe('ui:initialValue for additionalProperties', () => {

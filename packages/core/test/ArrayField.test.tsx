@@ -3357,6 +3357,26 @@ describe('ArrayField', () => {
       expect(textareas).toHaveLength(2);
     });
 
+    it('supports the array (per-tuple-position) form of uiSchema.items for a non-fixed array', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string' },
+      };
+
+      const uiSchema: UiSchema = {
+        items: [{ 'ui:placeholder': 'first' }, { 'ui:placeholder': 'second' }],
+      };
+
+      const formData = ['', ''];
+
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      const inputs = node.querySelectorAll<HTMLInputElement>('.rjsf-array-item input[type="text"]');
+      expect(inputs).toHaveLength(2);
+      expect(inputs[0]).toHaveAttribute('placeholder', 'first');
+      expect(inputs[1]).toHaveAttribute('placeholder', 'second');
+    });
+
     it('should call dynamic uiSchema.items function with correct parameters', () => {
       const schema: RJSFSchema = {
         type: 'array',

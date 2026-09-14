@@ -120,7 +120,7 @@ function canAddItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 }
 
 /** Helper method to compute item UI schema for both normal and fixed arrays
- * Handles both static object and dynamic function cases
+ * Handles the static object, static array (per-tuple-position), and dynamic function cases
  *
  * @param uiSchema - The parent UI schema containing items definition
  * @param item - The item data
@@ -147,6 +147,10 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       // Fall back to undefined to allow the field to still render
       return undefined;
     }
+  } else if (Array.isArray(uiSchema.items)) {
+    // Static array (per-tuple-position) case, e.g. from a non-fixed array schema paired with a tuple-shaped
+    // uiSchema.items to vary ui:options per position rather than uniformly.
+    return uiSchema.items[index] as UiSchema<T[], S, F> | undefined;
   } else {
     // Static object case - preserve undefined to maintain backward compatibility
     return uiSchema.items as UiSchema<T[], S, F> | undefined;
