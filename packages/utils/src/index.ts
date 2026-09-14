@@ -1,6 +1,5 @@
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
-import augmentSchemaWithUiRequired from './augmentSchemaWithUiRequired.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
@@ -127,7 +126,6 @@ export {
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
-  augmentSchemaWithUiRequired,
   buttonId,
   canExpand,
   createErrorHandler,

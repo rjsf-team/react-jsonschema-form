@@ -32,7 +32,11 @@ export default function resolveUiSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(schema: S, rawLocalUiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): UiSchema<T, S, F> {
+>(
+  schema: S,
+  rawLocalUiSchema: UiSchema<T, S, F> | undefined,
+  registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
+): UiSchema<T, S, F> {
   const ref = ((schema as RJSFMarkedSchema)[RJSF_REF_KEY] ?? schema[REF_KEY]) as string | undefined;
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;

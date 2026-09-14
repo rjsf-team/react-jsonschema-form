@@ -3115,34 +3115,8 @@ describe('uiSchema', () => {
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
     });
-
-    it('reuses the same augmented schema reference across repeated liveValidate calls', async () => {
-      // AJV caches compiled schemas by object identity for schemas without an `$id` (the common case), and never
-      // evicts that cache, so a schema that's rebuilt on every validation call — as augmentSchemaWithUiRequired()
-      // would without memoization — both forces a needless recompile and leaks a cache entry on every keystroke.
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-          bar: { type: 'string' },
-        },
-      };
-      const uiSchema: UiSchema = {
-        foo: { 'ui:required': true },
-      };
-      const rawValidationSpy = vi.spyOn(validator, 'rawValidation');
-      const { node } = createFormComponent({ schema, uiSchema, liveValidate: 'onChange' });
-      rawValidationSpy.mockClear();
-      const input = node.querySelector<HTMLInputElement>('#root_bar')!;
-      await user.type(input, 'a');
-      await user.type(input, 'b');
-      expect(rawValidationSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
-      const [firstSchema] = rawValidationSpy.mock.calls[0];
-      const [secondSchema] = rawValidationSpy.mock.calls[1];
-      expect(secondSchema).toBe(firstSchema);
-      rawValidationSpy.mockRestore();
-    });
   });
+
   describe('ui:initialValue and ui:emptyValue', () => {
     it('pre-fills a field with ui:initialValue on initial render', () => {
       const schema: RJSFSchema = {
