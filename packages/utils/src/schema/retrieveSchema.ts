@@ -614,24 +614,9 @@ export function retrieveSchemaInternal<
         return [...(allOf as S[]), restOfSchema as S];
       }
       try {
-        const withContainsSchemas = [] as S[];
-        const withoutContainsSchemas = [] as S[];
-        resolvedSchema.allOf?.forEach((allOfItem) => {
-          if (typeof allOfItem === 'object' && allOfItem.contains) {
-            withContainsSchemas.push(allOfItem as S);
-          } else {
-            withoutContainsSchemas.push(allOfItem as S);
-          }
-        });
-        if (withContainsSchemas.length) {
-          resolvedSchema = { ...resolvedSchema, allOf: withoutContainsSchemas };
-        }
         resolvedSchema = experimental_customMergeAllOf
           ? experimental_customMergeAllOf(resolvedSchema)
           : mergeAllOf(resolvedSchema);
-        if (withContainsSchemas.length) {
-          resolvedSchema.allOf = withContainsSchemas;
-        }
       } catch (e) {
         // oxlint-disable-next-line no-console
         console.warn('could not merge subschemas in allOf:\n', e);
