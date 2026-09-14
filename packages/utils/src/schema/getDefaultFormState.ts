@@ -1,6 +1,7 @@
 import type { JSONSchema7Object } from 'json-schema';
 
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
@@ -31,6 +32,7 @@ import type {
   DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -349,9 +351,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items.
-    // Only the plain-object form of `uiSchema.items` can be resolved here (see getStaticItemsUiSchema()); it's
-    // applied uniformly across tuple positions.
-    const fixedItemsUiSchema = getStaticItemsUiSchema<T, S, F>(uiSchema);
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S, F>(validator, itemSchema, {
         rootSchema,
@@ -363,7 +362,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         rawFormData: formData,
         required,
         shouldMergeDefaultsIntoFormData,
-        uiSchema: fixedItemsUiSchema,
+        uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
       }),
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
@@ -587,6 +586,10 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
           defaultFormStateBehavior?.constAsDefaults !== 'never' &&
           !constIsAjvDataReference(propertySchema);
+        // A property already materialized by `retrieveSchema()`'s `stubExistingAdditionalProperties()` from
+        // `additionalProperties`/`patternProperties` (flagged here, same as ObjectField's own rendering) shares
+        // `uiSchema.additionalProperties` with every other such property, rather than a dynamically-named entry.
+        const addedByAdditionalProperty = Boolean((propertySchema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {
@@ -600,7 +603,9 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
-          uiSchema: uiSchema?.[key] as UiSchema<T, S, F> | undefined,
+          uiSchema: (addedByAdditionalProperty ? uiSchema?.additionalProperties : uiSchema?.[key]) as
+            | UiSchema<T, S, F>
+            | undefined,
         });
 
         maybeAddDefaultToObject<T>(
@@ -653,7 +658,9 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
-          uiSchema: uiSchema?.[key] as UiSchema<T, S, F> | undefined,
+          // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
+          // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
+          uiSchema: uiSchema?.additionalProperties as UiSchema<T, S, F> | undefined,
         });
         // Since these are additional properties we don't need to add the `defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
@@ -697,7 +704,6 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
 ): T[] | undefined {
   let defaults = initialDefaults;
   const schema: S = rawSchema;
-  const itemUiSchema = getStaticItemsUiSchema<T, S, F>(uiSchema);
 
   const arrayMinItemsStateBehavior = defaultFormStateBehavior?.arrayMinItems ?? {};
   const { populate: arrayMinItemsPopulate, mergeExtraDefaults: arrayMergeExtraDefaults } = arrayMinItemsStateBehavior;
@@ -725,7 +731,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
-        uiSchema: itemUiSchema,
+        uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
       });
     }) as T[];
   }
@@ -747,7 +753,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           required,
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
-          uiSchema: itemUiSchema,
+          uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
         }),
       ) as T[];
 
@@ -788,6 +794,12 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     const defaultEntries: T[] = defaults || [];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
     const fillerDefault = fillerSchema.default;
+    // Filler entries sit beyond the fixed tuple's own positions, so they take the same uiSchema as any other item
+    // added past the tuple (see ArrayField's getNewFormDataRow()): `uiSchema.additionalItems` when the schema is a
+    // tuple, or the regular (non-tuple) `uiSchema.items` otherwise.
+    const fillerUiSchema = isFixedItems(schema)
+      ? (uiSchema?.additionalItems as UiSchema<T, S, F> | undefined)
+      : getStaticItemsUiSchema<T, S, F>(uiSchema);
 
     // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
     const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, () =>
@@ -799,7 +811,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         customMergeAllOf,
         required,
         shouldMergeDefaultsIntoFormData,
-        uiSchema: itemUiSchema,
+        uiSchema: fillerUiSchema,
       }),
     ) as T[];
     // then fill up the rest with either the item default or empty, up to minItems

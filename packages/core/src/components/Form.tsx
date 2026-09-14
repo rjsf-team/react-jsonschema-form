@@ -351,6 +351,17 @@ export default class Form<
    */
   private isProcessingUserChange = false;
 
+  /** The `schema`/`uiSchema` pair last passed to `augmentSchemaWithUiRequired()` in `validate()`, along with the
+   * schema it produced. AJV caches compiled schemas by object identity for schemas without an `$id`, so reusing the
+   * same augmented schema reference across calls with unchanged inputs avoids both a needless recompile and an
+   * unbounded, never-evicted growth of AJV's internal cache.
+   */
+  private lastValidationSchema?: S;
+
+  private lastValidationUiSchema?: UiSchema<T, S, F>;
+
+  private lastEffectiveValidationSchema?: S;
+
   /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
    * state before render, ensuring the updated errors are visible immediately in a single render cycle.
    *
@@ -732,8 +743,17 @@ export default class Form<
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
     // ui:required only exists in the uiSchema, so fold it into the schema's own `required` before validating,
-    // otherwise AJV would never see it.
-    const effectiveValidationSchema = augmentSchemaWithUiRequired<T, S>(validationSchema, uiSchema);
+    // otherwise AJV would never see it. Reuse the previous result when the inputs are referentially unchanged so
+    // repeated validation (e.g. liveValidate on every keystroke) doesn't hand AJV a new schema object each time.
+    let effectiveValidationSchema: S;
+    if (this.lastValidationSchema === validationSchema && this.lastValidationUiSchema === uiSchema) {
+      effectiveValidationSchema = this.lastEffectiveValidationSchema!;
+    } else {
+      effectiveValidationSchema = augmentSchemaWithUiRequired<T, S>(validationSchema, uiSchema);
+      this.lastValidationSchema = validationSchema;
+      this.lastValidationUiSchema = uiSchema;
+      this.lastEffectiveValidationSchema = effectiveValidationSchema;
+    }
 
     // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
     // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).

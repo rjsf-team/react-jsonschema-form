@@ -564,7 +564,7 @@ The `ui:emptyValue` uiSchema directive provides the value to store whenever a fi
 >
 > `ui:emptyValue` is not currently applied to a field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment; set it on the field's local uiSchema path if it needs to be enforced.
 
-> Note: for array items, only the plain-object form of `uiSchema.items` is applied when computing defaults (including a `minItems` filler item or a new row added via the array's "Add" button); the dynamic `(itemData, index, formContext) => UiSchema` function form can't be resolved before there's item data to call it with, so it's ignored for that purpose (it still works normally for rendering existing items).
+> Note: for array items, the plain-object and array (per-tuple-position) forms of `uiSchema.items` are both applied when computing defaults (including a `minItems` filler item or a new row added via the array's "Add" button, which uses `uiSchema.additionalItems` instead when it's added past a fixed/tuple `items` schema); the dynamic `(itemData, index, formContext) => UiSchema` function form can't be resolved before there's item data to call it with, so it's ignored for that purpose (it still works normally for rendering existing items).
 
 ### enumDisabled
 
@@ -863,7 +863,8 @@ A few narrower cases where `ui:required: true` shows the indicator but is **not*
 
 - A field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment rather than its local uiSchema path.
 - A field nested inside an array's items.
-- A field only reachable through a `dependencies`/`if`-`then`-`else` branch, when validating against a schema your own code retrieved and passed to `Form` (the default validation path, where `Form` retrieves the schema itself, handles this correctly).
+- A field declared via `allOf` rather than as a plain nested object property (`$ref` is fine when reached via `liveValidate` — see below). Schema resolution doesn't flatten a nested `allOf` into a single object schema, so augmentation, which only walks a schema's own `properties`, doesn't see the field to augment.
+- A field only reachable through a `dependencies`/`if`-`then`-`else` branch, or nested under `$ref`, when validating on submit (`validateForm()`/the form's `onSubmit`) rather than via `liveValidate`. The submit path validates against the schema as originally provided, before dependencies or references resolve, so augmentation — which only walks a schema's own `properties` — doesn't see the field. `liveValidate` doesn't have this gap: it always validates against the schema already resolved for the current `formData`.
 
 ### rows
 

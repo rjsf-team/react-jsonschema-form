@@ -163,15 +163,18 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 ): T {
   const { schemaUtils, globalFormOptions } = registry;
   let itemSchema = schema.items as S;
+  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
+  // FieldProps<T[], S, F> call on the class
+  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema);
   if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
     // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
     itemSchema = {} as S;
   } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+    // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
+    // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
     itemSchema = schema.additionalItems as S;
+    itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
   }
-  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T[] caused by the
-  // FieldProps<T[], S, F> call on the class
-  const itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema);
   return schemaUtils.getDefaultFormState(itemSchema, undefined, false, undefined, itemUiSchema) as unknown as T;
 }
 
