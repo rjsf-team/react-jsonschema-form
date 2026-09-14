@@ -704,6 +704,26 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
   }
 }
 
+/** Resolves the `uiSchema` for the array item at `idx`, mirroring `getInnerSchemaForArrayItem()`'s own fallback: for
+ * a fixed (tuple) `schema` whose tuple doesn't extend to `idx`, that position's data is really an "additional item"
+ * (`schema.additionalItems`), so its uiSchema is `uiSchema.additionalItems` rather than the tuple's `uiSchema.items`.
+ *
+ * @param schema - The array schema being defaulted
+ * @param uiSchema - The parent (array) uiSchema, if any
+ * @param idx - The index of the item within the array
+ * @returns - The uiSchema to use for the item at `idx`
+ */
+function getItemUiSchemaForIndex<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  schema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  idx: number,
+): UiSchema<T, S, F> | undefined {
+  if (isFixedItems(schema) && idx >= (schema.items as S[]).length) {
+    return uiSchema?.additionalItems as UiSchema<T, S, F> | undefined;
+  }
+  return getStaticItemsUiSchema<T, S, F>(uiSchema, idx);
+}
+
 /** Computes the default value for arrays.
  *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
@@ -758,7 +778,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
-        uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
+        uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
       });
     }) as T[];
   }
@@ -780,7 +800,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           required,
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
-          uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
+          uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
         }),
       ) as T[];
 

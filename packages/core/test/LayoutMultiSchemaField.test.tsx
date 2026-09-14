@@ -370,6 +370,58 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  test('applies ui:initialValue from uiSchema when a new option is selected', async () => {
+    const selectorField = 'name';
+    const uiSchema = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
+      [UI_WIDGET_KEY]: 'select',
+      unique_to_second: { 'ui:initialValue': 42 },
+    };
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: oneOfSchema as RJSFSchema,
+      formData: { name: 'first_option', flag: true },
+      uiSchema,
+    });
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const button = screen.getByRole('combobox');
+    // select the second option, whose schema has the `unique_to_second` field
+    await user.selectOptions(button, '1');
+
+    const retrievedOptions = props.options.map((opt: object) =>
+      props.registry.schemaUtils.retrieveSchema(opt, props.formData),
+    );
+    const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
+      retrievedOptions[1],
+      retrievedOptions[0],
+      props.formData,
+    );
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenCalledWith(
+        {
+          ...props.registry.schemaUtils.getDefaultFormState(
+            retrievedOptions[1],
+            sanitizedFormData,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+          [selectorField]: 'second_option',
+        },
+        props.fieldPathId.path,
+        undefined,
+        DEFAULT_ID,
+      );
+    });
+    // Sanity check that the assertion above actually exercises the new default, not just an object shape match
+    expect(props.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ unique_to_second: 42 }),
+      props.fieldPathId.path,
+      undefined,
+      DEFAULT_ID,
+    );
+  });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
     const selectorField = 'name';
     const props = getProps({

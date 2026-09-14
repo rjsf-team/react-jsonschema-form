@@ -3229,6 +3229,48 @@ describe('uiSchema', () => {
       await user.click(node.querySelector('.rjsf-array-item-add button')!);
       expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
     });
+
+    it('applies ui:initialValue to a new additionalProperties entry added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        additionalProperties: {
+          name: { 'ui:initialValue': 'Anonymous' },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue on a oneOf branch selected via the option selector', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          {
+            type: 'object',
+            properties: { firstName: { type: 'string' } },
+          },
+          {
+            type: 'object',
+            properties: { idCode: { type: 'string' } },
+          },
+        ],
+      };
+      const uiSchema: UiSchema = {
+        oneOf: [{}, { idCode: { 'ui:initialValue': 'ID-1' } }],
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const select = node.querySelector<HTMLSelectElement>('#root__oneof_select')!;
+      await user.selectOptions(select, '1');
+      expect(node.querySelector<HTMLInputElement>('#root_idCode')).toHaveValue('ID-1');
+    });
   });
   it('string field with autocapitalize', () => {
     const schema: RJSFSchema = {

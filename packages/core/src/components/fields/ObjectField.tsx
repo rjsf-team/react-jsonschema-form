@@ -304,14 +304,26 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
-        if (REF_KEY in apSchema) {
+        const wasRef = REF_KEY in apSchema;
+        if (wasRef) {
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           type = apSchema.type;
           constValue = apSchema.const;
-          defaultValue = schemaUtils.getDefaultFormState(apSchema as S, defaultValue as T) as RJSFSchema['default'];
         }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
+        }
+        if (wasRef || type === 'object') {
+          // Route through the normal default pipeline (the same one an existing additionalProperties entry already
+          // goes through) so nested schema defaults and ui:initialValue/ui:emptyValue on uiSchema.additionalProperties
+          // apply the same way they do when Form first mounts with that key already present in formData.
+          defaultValue = schemaUtils.getDefaultFormState(
+            apSchema as S,
+            defaultValue as T,
+            undefined,
+            undefined,
+            uiSchema?.additionalProperties,
+          ) as RJSFSchema['default'];
         }
       }
 
@@ -325,7 +337,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     setAdditionalPropertyOrder((order) => [...order, newKey]);
     onChange(newFormData, fieldPath);
-  }, [formData, onChange, translateString, schemaUtils, fieldPath, getAvailableKey, schema]);
+  }, [formData, onChange, translateString, schemaUtils, fieldPath, getAvailableKey, schema, uiSchema]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.

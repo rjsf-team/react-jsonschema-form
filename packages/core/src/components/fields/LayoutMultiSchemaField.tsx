@@ -171,8 +171,16 @@ export default function LayoutMultiSchemaField<
 
     let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
     if (newFormData && newOption) {
-      // Call getDefaultFormState to make sure defaults are populated on change.
-      newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
+      // Call getDefaultFormState to make sure defaults are populated on change. Passes the field's own uiSchema
+      // (this component doesn't support a per-option uiSchema split the way AnyOfField's uiSchema.oneOf/anyOf does)
+      // so ui:initialValue/ui:emptyValue on the newly-selected option's fields apply on selection.
+      newFormData = schemaUtils.getDefaultFormState(
+        newOption,
+        newFormData,
+        'excludeObjectChildren',
+        undefined,
+        uiSchema,
+      ) as T;
     }
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);

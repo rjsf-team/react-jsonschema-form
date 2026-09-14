@@ -256,7 +256,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       id={fieldComponentId}
       schema={schema}
       uiSchema={fieldUiSchema}
-      {...(uiOptions.required !== undefined ? { required: effectiveRequired } : {})}
+      {...(fieldUiRequired !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}
