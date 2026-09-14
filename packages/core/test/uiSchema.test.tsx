@@ -2772,6 +2772,19 @@ describe('uiSchema', () => {
       });
     });
   });
+  it('renders a field whose uiSchema or ui:options is not an object', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    // Only untyped JavaScript can put a non-object here, so these stand in for a caller the types never saw
+    const nonObjectOptions: GenericObjectType = { 'ui:options': 'oops' };
+    const nonObjectField: GenericObjectType = { foo: 'oops' };
+
+    const withOptions = render(<Form schema={schema} validator={validator} uiSchema={nonObjectOptions} />);
+    const withField = render(<Form schema={schema} validator={validator} uiSchema={nonObjectField} />);
+
+    expect(withOptions.container.querySelector('input')).toBeDefined();
+    expect(withField.container.querySelector('input')).toBeDefined();
+  });
+
   it('string field with autocapitalize', () => {
     const schema: RJSFSchema = {
       type: 'string',

@@ -204,11 +204,14 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // See #439: uiSchema: Don't pass consumed class names or style to child components. Most uiSchemas carry none of
   // them, so the copy is only made when there is something to strip, leaving `uiSchema` itself untouched otherwise
   const consumedUiOptions = uiSchema[UI_OPTIONS_KEY];
+  // `in` throws on a non-object, and neither a field's uiSchema nor its `ui:options` is guaranteed to be one: a caller
+  // can put any value under a field's name, and nothing rejects it on the way here
   const consumesStyling =
-    'ui:classNames' in uiSchema ||
-    'classNames' in uiSchema ||
-    'ui:style' in uiSchema ||
-    (!!consumedUiOptions && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions));
+    isObject(uiSchema) &&
+    ('ui:classNames' in uiSchema ||
+      'classNames' in uiSchema ||
+      'ui:style' in uiSchema ||
+      (isObject(consumedUiOptions) && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions)));
   let fieldUiSchema: UiSchema<T, S, F> = uiSchema;
   if (consumesStyling) {
     fieldUiSchema = { ...uiSchema };

@@ -1269,7 +1269,7 @@ type UiSchemaChildData<T> =
       ? Record<never, never>
       : [NonNullable<T>] extends [object]
         ? IsUnion<NonNullable<T>> extends true
-          ? UnionMembersMerged<NonNullable<T>>
+          ? UnionMembersMerged<Exclude<NonNullable<T>, readonly unknown[]>>
           : NonNullable<T>
         : Record<never, never>;
 
@@ -1277,7 +1277,9 @@ type UiSchemaChildData<T> =
 type IsUnion<T, U = T> = T extends unknown ? ([U] extends [T] ? false : true) : never;
 
 /** Every key of every member of a union, each typed as the union of what the members that declare it hold. A
- * `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
+ * `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch. An array member
+ * contributes nothing, since an array nests through `items` rather than by key, and merging one in would offer
+ * `Array.prototype`'s method names as field names.
  */
 type UnionMembersMerged<T> = {
   [K in T extends unknown ? keyof T : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;

@@ -7,6 +7,7 @@ interface Data {
   tags: string[];
   items: { label: string }[];
   thing: { common: string; onlyA: string } | { common: string; onlyB: number };
+  listOrObject: string[] | { foo: string };
 }
 
 type Known = UiSchema<Data>;
@@ -51,6 +52,19 @@ describe('UiSchema type', () => {
     };
 
     expect(ui.thing?.onlyA?.['ui:title']).toBe('A');
+  });
+
+  it('takes no field names from an array branch of a union-typed field', () => {
+    const ui: Known = { listOrObject: { foo: { 'ui:title': 'Foo' } } };
+    const nested: Known = { listOrObject: { items: { 'ui:widget': 'text' } } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `toLocaleString` is an Array method, not a field of Data['listOrObject']
+      listOrObject: { toLocaleString: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.listOrObject?.foo?.['ui:title']).toBe('Foo');
+    expect(nested.listOrObject?.items).toBeDefined();
+    expect(wrong.listOrObject).toBeDefined();
   });
 
   it('keeps the ui: namespace open for theme and application directives', () => {

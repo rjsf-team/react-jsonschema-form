@@ -207,17 +207,17 @@ describe('optionsList()', () => {
           },
         ],
       };
-      const anyOfUiSchema: UiSchema = {
+      const anyOfUiSchema = {
         anyOf: [
           {
             'ui:title': 'Alternate',
           },
         ],
-      };
+      } satisfies UiSchema;
       expect(optionsList(anyOfSchema, anyOfUiSchema)).toEqual(
         anyOfSchema.anyOf!.map((schema, index) => ({
           schema,
-          label: anyOfUiSchema.anyOf![index]['ui:title'],
+          label: anyOfUiSchema.anyOf[index]['ui:title'],
           value: getByPath(schema, CONST_KEY),
         })),
       );
@@ -517,17 +517,17 @@ describe('optionsList()', () => {
           },
         ],
       };
-      const oneOfUiSchema: UiSchema = {
+      const oneOfUiSchema = {
         oneOf: [
           {
             'ui:title': 'Alternate',
           },
         ],
-      };
+      } satisfies UiSchema;
       expect(optionsList(oneOfSchema, oneOfUiSchema)).toEqual(
         oneOfSchema.oneOf!.map((schema, index) => ({
           schema,
-          label: oneOfUiSchema.oneOf![index]['ui:title'],
+          label: oneOfUiSchema.oneOf[index]['ui:title'],
           value: getByPath(schema, CONST_KEY),
         })),
       );
