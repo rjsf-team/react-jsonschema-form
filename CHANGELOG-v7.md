@@ -74,6 +74,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Converted the internal `forwardRef`-wrapped `Command` and `CommandInput` components to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
 - Fixed the `getTestRegistry()` test helper passing an options object where positional arguments were expected, which silently dropped its templates and widgets; it now imports from `@rjsf/core/testing` ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
+- **BREAKING CHANGE** Stopped shipping compiled stylesheets. The package styled itself through ten full Tailwind builds under `src/css`, each compiled by a `build:css` script into a 37KB stylesheet carrying preflight, which restyled the rest of the consumer's page. `src/css`, `build-css.ts`, the `build:css` script and the `tailwindcss` dependency are all gone; the package now ships only its source, and a consumer's own Tailwind build scans it with `@source` and supplies the design tokens, which is how a Tailwind library is meant to be consumed and how shadcn itself expects the application to own its theme. The ten themes live on as token files in the playground for anyone who wants to copy one ([#5287](https://github.com/rjsf-team/react-jsonschema-form/pull/5287))
 
 ## @rjsf/utils
 
@@ -97,7 +98,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - **BREAKING CHANGE** Dropped support for Node 20, 23, 25, and 24 releases before 24.11.0; `engines.node` is now `^22.18.0 || ^24.11.0 || >=26.0.0` across all packages, matching the active Node.js LTS lines, and CI now runs against Node 22, 24, and 26
 - Upgraded pnpm from 10.17.1 to 12.3.4, which was previously pinned because pnpm 11+ requires Node >=22.13
-- Dropped the `tsx` dev dependency; `@rjsf/shadcn`'s `build:css` script runs `build-css.ts` with `node` directly, which every Node release the `engines` field now allows strips types natively
+- Dropped the `tsx` dev dependency; every Node release the `engines` field now allows strips types natively, so a TypeScript script runs under `node` directly
+- The playground imports each shadcn theme's tokens from `src/themes/shadcn`, where a shared `base.css` holds the `@theme inline` mapping the ten themes had in common and each theme file holds only its own tokens ([#5287](https://github.com/rjsf-team/react-jsonschema-form/pull/5287))
 - Upgraded TypeScript to 7.0.2. The root `typecheck` runs in 5 s instead of 22 s; `@rjsf/docs`'s editor-only tsconfig no longer extends `@tsconfig/docusaurus`, which sets `baseUrl`, an option TypeScript 7 removed (Docusaurus's own `@docusaurus/tsconfig` still sets it too) ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
 - `module` is now `nodenext` in `tsconfig.base.json` (was `esnext` with `moduleResolution: bundler`), so `tsc` checks the published `lib/` against Node's ESM rules. `@rjsf/chakra-ui` keeps bundler resolution with a comment saying why: `@chakra-ui/react` ships declarations Node's rules cannot resolve. Test files gained `with { type: 'json' }` on JSON imports and import `userEvent` by name, both of which the stricter rules require ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
 - Enabled `erasableSyntaxOnly`, which rejects `enum`, `namespace` and parameter properties; the four exported enums were the only violations ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))

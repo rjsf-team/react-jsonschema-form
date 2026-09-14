@@ -32,8 +32,8 @@
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "dependencies": {
-    "@ant-design/icons": "^6.2.5",
     "@ant-design/cssinjs": "^2.1.2",
+    "@ant-design/icons": "^6.2.5",
     "@chakra-ui/react": "^3.35.0",
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^9.6.1",
@@ -70,8 +70,10 @@
     "@emotion/styled": "^11.14.1",
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^9.1.1",
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.2",
     "gh-pages": "^6.3.0",
+    "tailwindcss": "^4.3.1",
     "vite": "8.0.16"
   },
   "directories": {

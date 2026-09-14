@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
 import { defineConfig } from 'vite';
@@ -10,7 +11,7 @@ export default defineConfig({
     port: 8080,
     open: process.env.NODE_ENV !== 'production',
   }, // maintain the old webpack behavior in dev
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     preserveSymlinks: false,
     alias: {
