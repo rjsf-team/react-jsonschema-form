@@ -1,5 +1,6 @@
+import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getWidget } from '@rjsf/utils';
 import { Form, Grid } from 'semantic-ui-react';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -28,8 +29,9 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
     registry,
+    propertyNamesEnum,
   } = props;
-  const { templates, translateString } = registry;
+  const { templates, translateString, widgets } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -37,6 +39,19 @@ export default function WrapIfAdditionalTemplate<
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const margin = rawDescription ? 4 : 24;
+
+  // Use SelectWidget when propertyNamesEnum is available
+  const SelectWidget = propertyNamesEnum && propertyNamesEnum.length > 0 ? getWidget(widgets, 'SelectWidget') : null;
+  const enumOptions = propertyNamesEnum?.map((value) => ({ value, label: String(value) })) ?? [];
+
+  // Handle onBlur for SelectWidget which expects (id: string, value: any) => void
+  // but onKeyRenameBlur expects (event: FocusEvent<HTMLInputElement>) => void
+  const handleSelectBlur = useCallback(
+    (_id: string, value: any) => {
+      onKeyRenameBlur({ target: { value } } as any);
+    },
+    [onKeyRenameBlur],
+  );
 
   if (!additional) {
     return (
@@ -52,22 +67,49 @@ export default function WrapIfAdditionalTemplate<
         <Grid.Row>
           <Grid.Column width={7} className='form-additional'>
             <Form.Group widths='equal' grouped>
-              <Form.Input
-                key={label}
-                className='form-group'
-                hasFeedback
-                fluid
-                htmlFor={id}
-                label={displayLabel ? keyLabel : undefined}
-                required={required}
-                defaultValue={label}
-                disabled={disabled || (readonlyAsDisabled && readonly)}
-                id={id}
-                name={id}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                style={wrapperStyle}
-                type='text'
-              />
+              {SelectWidget ? (
+                <SelectWidget
+                  key={label}
+                  id={id}
+                  name={id}
+                  value={label}
+                  required={required}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  readonly={readonly}
+                  options={{
+                    enumOptions,
+                    enumDisabled: [],
+                  }}
+                  onBlur={handleSelectBlur}
+                  onFocus={handleSelectBlur}
+                  onChange={(value) => {
+                    onKeyRenameBlur({ target: { value } } as any);
+                  }}
+                  schema={{ type: 'string', enum: propertyNamesEnum }}
+                  as
+                  any
+                  registry={registry as any}
+                  uiSchema={uiSchema as any}
+                  label={keyLabel}
+                />
+              ) : (
+                <Form.Input
+                  key={label}
+                  className='form-group'
+                  hasFeedback
+                  fluid
+                  htmlFor={id}
+                  label={displayLabel ? keyLabel : undefined}
+                  required={required}
+                  defaultValue={label}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  id={id}
+                  name={id}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  style={wrapperStyle}
+                  type='text'
+                />
+              )}
             </Form.Group>
           </Grid.Column>
           <Grid.Column width={7} className='form-additional' verticalAlign='middle'>
