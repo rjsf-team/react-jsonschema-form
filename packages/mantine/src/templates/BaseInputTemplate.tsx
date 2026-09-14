@@ -94,32 +94,35 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <NumberInput
-        onChange={!readonly ? handleNumberChange : undefined}
-        {...componentProps}
-        {...restInputProps}
-        {...themeProps}
-        step={typeof inputProps.step === 'number' ? inputProps.step : 1}
-        type='text'
-        description={description}
-        value={value}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <TextInput
-        onChange={!readonly ? (onChangeOverride ?? handleChange) : undefined}
-        {...componentProps}
-        {...inputProps}
-        {...themeProps}
-        description={description}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
+  // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  const input = isNumeric ? (
+    <NumberInput
+      onChange={!readonly ? handleNumberChange : undefined}
+      {...componentProps}
+      {...restInputProps}
+      {...themeProps}
+      step={typeof inputProps.step === 'number' ? inputProps.step : 1}
+      type='text'
+      description={description}
+      value={value}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+    />
+  ) : (
+    <TextInput
+      onChange={!readonly ? (onChangeOverride ?? handleChange) : undefined}
+      {...componentProps}
+      {...inputProps}
+      {...themeProps}
+      description={description}
+      value={value}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+    />
+  );
 
   return (
     <>

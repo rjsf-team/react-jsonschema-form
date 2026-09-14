@@ -56,6 +56,39 @@ describe('mantine BaseInputTemplate', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  test('calls `onChangeOverride` with the change event for a numeric field too', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+    const onChange = vi.fn();
+    const onChangeOverride = vi.fn();
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      onChange,
+      onChangeOverride,
+    });
+    const input = container.querySelector('input')!;
+    fireEvent.change(input, { target: { value: '42' } });
+
+    expect(onChangeOverride).toHaveBeenCalledTimes(1);
+    expect(onChangeOverride.mock.calls[0][0]).toHaveProperty('target', input);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('sends the parsed value through `onChange` for a numeric field without an override', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+    const onChange = vi.fn();
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      onChange,
+    });
+    fireEvent.change(container.querySelector('input')!, { target: { value: '42' } });
+
+    expect(onChange).toHaveBeenCalledWith(42);
+  });
+
   test('sends `options.emptyValue` through `onChange` when the input is cleared', () => {
     const onChange = vi.fn();
 
