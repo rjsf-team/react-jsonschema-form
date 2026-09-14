@@ -18,10 +18,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.1
 
+## @rjsf/core
+
+- Fixed a `dependencies`/`if` branch switch nested inside an object property never sanitizing a sibling field's now-invalid value. The check gating sanitization only compared the root retrieved schema, which never reflects a conditional resolved deeper in the tree, so it always skipped sanitizing in that case, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+
 ## @rjsf/mantine
 
 - Fixed `BaseInputTemplate` passing an `undefined` value straight through to `NumberInput`/`TextInput`, which let the DOM input fall out of sync with React's controlled value and retain a stray digit after clearing a multi-digit number field ([#5269](https://github.com/rjsf-team/react-jsonschema-form/issues/5269))
 - Backported the `fluid` `Container` layout fix from the v7 Mantine 9 upgrade ([#5260](https://github.com/rjsf-team/react-jsonschema-form/pull/5260)): `GridTemplate`'s and `ObjectFieldTemplate`'s root `Container` now use Mantine's `fluid` prop so forms fill their available width instead of centering at Mantine's default 960px max-width
+
+## @rjsf/utils
+
+- Fixed `sanitizeDataForNewSchema()` to resolve `dependencies`, `if`/`then`/`else` and `allOf` (not just `$ref`) on each property's old/new schema before comparing them, so a conditional nested inside an object property is taken into account when sanitizing its data, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Added `schemaHasNestedConditional()`, which `Form` uses to detect a `dependencies`/`if` nested below a schema's top level (behind a `$ref`, `patternProperties`, tuple `items`, `additionalProperties` or `allOf`/`anyOf`/`oneOf`) so sanitization isn't skipped just because the root retrieved schema looks unchanged ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
 
 ## Dev / docs / playground
 
