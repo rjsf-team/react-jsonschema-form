@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Fixed a `dependencies`/`if` branch switch nested inside an object property never sanitizing a sibling field's now-invalid value. The check gating sanitization only compared the root retrieved schema, which never reflects a conditional resolved deeper in the tree, so it always skipped sanitizing in that case, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
 - Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
 - Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
 
@@ -30,6 +31,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Fixed `sanitizeDataForNewSchema()` to resolve `dependencies`, `if`/`then`/`else` and `allOf` (not just `$ref`) on each property's old/new schema before comparing them, so a conditional nested inside an object property is taken into account when sanitizing its data, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Added `schemaHasNestedConditional()`, which `Form` uses to detect a `dependencies`/`if` nested below a schema's top level (behind a `$ref`, `patternProperties`, tuple `items`, `additionalProperties` or `allOf`/`anyOf`/`oneOf`) so sanitization isn't skipped just because the root retrieved schema looks unchanged ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
 - Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
 - Added `resolveDefaultWidget()`, extracting the widget-name/`enumOptions` fallback logic shared by `@rjsf/core`'s `StringField` and `NumberField` so the two can no longer drift out of sync
 

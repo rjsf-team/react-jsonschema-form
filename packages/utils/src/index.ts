@@ -73,6 +73,7 @@ import removeOptionalEmptyObjects from './removeOptionalEmptyObjects.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
+import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
@@ -189,6 +190,7 @@ export {
   replaceStringParameters,
   resolveDefaultWidget,
   resolveUiSchema,
+  schemaHasNestedConditional,
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,
