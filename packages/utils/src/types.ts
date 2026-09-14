@@ -254,9 +254,9 @@ type IsAny<V> = 0 extends 1 & V ? true : false;
 
 /** Values that are objects but hold no form fields of their own, so their error node has no children.
  *
- * `createErrorHandler()` recurses into plain objects only, so at runtime every class instance is a leaf. TypeScript
- * has no way to say "plain object", so this lists the two `isObject()` already special-cases; any other class
- * instance still gets its properties offered as children.
+ * `createErrorHandler()` and `toErrorList()` recurse through `isPlainObject()`, so at runtime every class instance is
+ * a leaf. TypeScript has no way to say "plain object", so this lists the two class instances RJSF itself puts in form
+ * data; any other one still gets its properties offered as children, which accepts a node the runtime never builds.
  */
 type AtomicValue = Date | File;
 
@@ -267,9 +267,9 @@ type AtomicValue = Date | File;
  * `ErrorSchema<string>` would resolve to `string`. An array contributes a node per index, because
  * `ErrorSchemaBuilder` writes numeric path segments as object keys and never as array indices. The conditional
  * distributes, so a union-typed value (a `oneOf`/`anyOf` property, say) contributes the children of every member it
- * can hold.
+ * can hold. `any` and `unknown` say nothing about what the data holds, so they contribute unconstrained children.
  */
-type ErrorTreeChildData<V> = IsAny<V> extends true ? Record<string, any> : ChildDataOf<NonNullable<V>>;
+type ErrorTreeChildData<V> = unknown extends V ? Record<string, any> : ChildDataOf<NonNullable<V>>;
 
 /** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union.
  *

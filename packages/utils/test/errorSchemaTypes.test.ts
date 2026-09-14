@@ -13,6 +13,7 @@ interface Data {
   eitherList: string | string[];
   pair: [string, { city: string }];
   labelled: [string, ...{ city: string }[]];
+  loose: unknown;
 }
 
 describe('ErrorSchema type', () => {
@@ -89,6 +90,14 @@ describe('ErrorSchema type', () => {
     const untyped: ErrorSchema = { foo: { bar: { __errors: ['deep'] } } };
 
     expect(untyped.foo.bar.__errors).toEqual(['deep']);
+  });
+
+  it('leaves the node of a field whose type says nothing about its data unconstrained', () => {
+    const leaf: ErrorSchema<Data> = { loose: { __errors: ['bad'] } };
+    const nested: ErrorSchema<Data> = { loose: { nested: { __errors: ['bad'] } } };
+
+    expect(leaf.loose?.__errors).toEqual(['bad']);
+    expect(nested.loose?.nested.__errors).toEqual(['bad']);
   });
 });
 
