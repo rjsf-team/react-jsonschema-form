@@ -36,7 +36,7 @@ import type {
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import retrieveSchema, { resolveAllReferences, resolveDependencies } from './retrieveSchema.ts';
+import retrieveSchema, { resolveDependencies, retrieveSchemaInternal } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -857,17 +857,23 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
   }
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
+  // Without formData, dependency conditions need the defaults that computeDefaults will generate.
+  const [schema] = retrieveSchemaInternal<T, S, F>(
+    validator,
+    theSchema,
+    rootSchema ?? ({} as S),
+    formData,
+    undefined,
+    undefined,
+    experimental_customMergeAllOf,
+    undefined,
+    formData === undefined,
+  );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
-  const resolvedSchema = formData === undefined ? resolveAllReferences(theSchema, rootSchema ?? ({} as S), []) : schema;
-  const schemaForDefaults =
-    formData === undefined && DEPENDENCIES_KEY in resolvedSchema
-      ? { ...schema, dependencies: resolvedSchema.dependencies }
-      : schema;
-  const defaults = computeDefaults<T, S, F>(validator, schemaForDefaults, {
+  const defaults = computeDefaults<T, S, F>(validator, schema, {
     rootSchema,
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,

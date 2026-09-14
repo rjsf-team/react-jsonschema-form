@@ -18,6 +18,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.1
 
+## @rjsf/mantine
+
+- Fixed `BaseInputTemplate` passing an `undefined` value straight through to `NumberInput`/`TextInput`, which let the DOM input fall out of sync with React's controlled value and retain a stray digit after clearing a multi-digit number field ([#5269](https://github.com/rjsf-team/react-jsonschema-form/issues/5269))
+- Backported the `fluid` `Container` layout fix from the v7 Mantine 9 upgrade ([#5260](https://github.com/rjsf-team/react-jsonschema-form/pull/5260)): `GridTemplate`'s and `ObjectFieldTemplate`'s root `Container` now use Mantine's `fluid` prop so forms fill their available width instead of centering at Mantine's default 960px max-width
+
 ## @rjsf/utils
 
 - Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data ([#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198))
