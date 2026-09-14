@@ -13,7 +13,8 @@ const RESERVED = /[\\.[\]]/g;
  * with a backslash, which is what makes the grammar unambiguous — unlike the `idSeparator` join, which
  * collides whenever a property name contains the separator.
  *
- * An empty `segment` names no field, so the parent path is returned unchanged.
+ * `''` is a property name like any other, so `toFieldPath('', 'a')` addresses `a['']`. At the root it is the only
+ * name the grammar cannot hold, since the root path is itself empty, so `toFieldPath('')` is the root.
  *
  * @param segment - The property name or array index of the field
  * @param [parentPath] - The optional `FieldPath` of the parent field
@@ -22,9 +23,6 @@ const RESERVED = /[\\.[\]]/g;
 export function toFieldPath(segment: string | number, parentPath: FieldPath = ROOT_FIELD_PATH): FieldPath {
   if (typeof segment === 'number') {
     return `${parentPath}[${segment}]` as FieldPath;
-  }
-  if (segment === '') {
-    return parentPath;
   }
   const escaped = segment.replace(RESERVED, '\\$&');
   return (parentPath === ROOT_FIELD_PATH ? escaped : `${parentPath}.${escaped}`) as FieldPath;
@@ -60,7 +58,8 @@ export function fieldPathToList(fieldPath: FieldPath): FieldPathList {
         segments.push(name);
       }
       name = '';
-      hasName = false;
+      // A `.` separates two names rather than terminating one, so whatever follows it is a segment even when empty
+      hasName = true;
       i += 1;
     } else if (char === '[') {
       if (hasName) {
@@ -88,6 +87,15 @@ export function fieldPathToList(fieldPath: FieldPath): FieldPathList {
     segments.push(name);
   }
   return segments;
+}
+
+/** Folds a `FieldPathList` into the `FieldPath` that addresses the same field, the inverse of `fieldPathToList()`
+ *
+ * @param fieldPathList - The list of property names and array indexes to fold
+ * @returns - The `FieldPath` for `fieldPathList`
+ */
+export function fieldPathFromList(fieldPathList: FieldPathList): FieldPath {
+  return fieldPathList.reduce<FieldPath>((acc, segment) => toFieldPath(segment, acc), ROOT_FIELD_PATH);
 }
 
 /** Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`

@@ -1,5 +1,5 @@
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { expandButtonId, TranslatableString } from '@rjsf/utils';
 import { AlertCircle } from 'lucide-react';
 
 import { Alert, AlertDescription } from '../components/ui/alert.tsx';
@@ -17,7 +17,6 @@ export default function CyclicSchemaExpandTemplate<
 >(props: CyclicSchemaExpandProps<T, S, F>) {
   const { name, id, registry, onExpand } = props;
   const { translateString } = registry;
-  const buttonId = `${id}-button`;
   return (
     <div className='mt-4'>
       <Alert variant='default' className='mb-2'>
@@ -25,7 +24,7 @@ export default function CyclicSchemaExpandTemplate<
         <AlertDescription>{translateString(TranslatableString.CycleDetected, [name])}</AlertDescription>
       </Alert>
       <Button
-        id={buttonId}
+        id={expandButtonId(id)}
         type='button'
         variant='outline'
         size='sm'
