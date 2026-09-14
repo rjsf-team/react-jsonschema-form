@@ -158,7 +158,7 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   forceReadonly?: boolean,
 ) {
   // `required` is deliberately excluded from both the global options and the grid config's own `uiProps` propagated
-  // here: unlike the rest of `GlobalUISchemaOptions`/`uiProps`, it also has to be seen by augmentSchemaWithUiRequired()
+  // here: unlike the rest of `GlobalUISchemaOptions`/`uiProps`, it also has to be seen by getUiRequiredErrorSchema()
   // for validation, which only ever sees a field's own uiSchema, so a grid-level or form-wide default would make the
   // required indicator and schema validation disagree
   const { required: _globalRequired, ...globalUiOptions } = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};

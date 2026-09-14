@@ -9,6 +9,7 @@ import {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,
   isSelect,
@@ -27,6 +28,7 @@ import type {
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
+  UiSchemaDefinitions,
   ValidatorType,
 } from './types.ts';
 
@@ -316,6 +318,21 @@ class SchemaUtils<
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
+  getUiRequiredErrorSchema(
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData?: T,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+  ) {
+    return getUiRequiredErrorSchema<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      uiSchema,
+      formData,
+      this.customMergeAllOf,
+      uiSchemaDefinitions,
+    );
+  }
+
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
     return retrieveSchema<T, S, F>(
       this.validator,
