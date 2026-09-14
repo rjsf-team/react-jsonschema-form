@@ -159,8 +159,12 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   forceReadonly?: boolean,
 ) {
   const globalUiOptions = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
-  const localUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
-  const localUiOptions = { ...(localUiSchema?.[UI_OPTIONS_KEY] ?? {}), ...uiProps, ...globalUiOptions };
+  // This reads the caller's uiSchema before `resolveUiSchema()` has normalized it, so neither value is known to be an
+  // object yet; spreading a non-object would scatter its characters or digits as keys
+  const rawLocalUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
+  const localUiSchema = isObject(rawLocalUiSchema) ? rawLocalUiSchema : undefined;
+  const rawLocalUiOptions = localUiSchema?.[UI_OPTIONS_KEY];
+  const localUiOptions = { ...(isObject(rawLocalUiOptions) ? rawLocalUiOptions : {}), ...uiProps, ...globalUiOptions };
   const fieldUiSchema: UiSchema<T, S, F> = localUiSchema ? { ...localUiSchema } : {};
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;

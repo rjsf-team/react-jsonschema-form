@@ -203,22 +203,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components. Most uiSchemas carry none of
   // them, so the copy is only made when there is something to strip, leaving `uiSchema` itself untouched otherwise
+  // `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
   const consumedUiOptions = uiSchema[UI_OPTIONS_KEY];
-  // `in` throws on a non-object, and neither a field's uiSchema nor its `ui:options` is guaranteed to be one: a caller
-  // can put any value under a field's name, and nothing rejects it on the way here
   const consumesStyling =
-    isObject(uiSchema) &&
-    ('ui:classNames' in uiSchema ||
-      'classNames' in uiSchema ||
-      'ui:style' in uiSchema ||
-      (isObject(consumedUiOptions) && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions)));
+    'ui:classNames' in uiSchema ||
+    'classNames' in uiSchema ||
+    'ui:style' in uiSchema ||
+    (consumedUiOptions !== undefined && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions));
   let fieldUiSchema: UiSchema<T, S, F> = uiSchema;
   if (consumesStyling) {
     fieldUiSchema = { ...uiSchema };
     delete fieldUiSchema['ui:classNames'];
     delete fieldUiSchema.classNames;
     delete fieldUiSchema['ui:style'];
-    if (isObject(consumedUiOptions)) {
+    if (consumedUiOptions) {
       const { classNames: consumedOptionClassNames, style: consumedOptionStyle, ...fieldUiOptions } = consumedUiOptions;
       fieldUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
     }

@@ -1,4 +1,4 @@
-import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY } from './constants.ts';
+import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -52,6 +52,12 @@ export default function resolveUiSchema<
       S,
       F
     >;
+  }
+
+  // The same goes for `ui:options`: consumers spread it and use `in` on it, both of which assume an object
+  if (UI_OPTIONS_KEY in result && !isObject(result[UI_OPTIONS_KEY])) {
+    result = { ...result };
+    delete result[UI_OPTIONS_KEY];
   }
 
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField

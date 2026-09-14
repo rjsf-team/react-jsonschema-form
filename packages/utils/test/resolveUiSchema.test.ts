@@ -79,6 +79,19 @@ describe('resolveUiSchema() - non-object local uiSchema', () => {
       expect(resolveUiSchema(schema, value as unknown as UiSchema, baseRegistry)).toEqual({});
     },
   );
+
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['null', null],
+    ['true', true],
+  ])("drops a `ui:options` that is %s, leaving the caller's uiSchema untouched", (_label, value) => {
+    const schema: RJSFSchema = { type: 'string' };
+    const local = { 'ui:widget': 'textarea', 'ui:options': value } as unknown as UiSchema;
+
+    expect(resolveUiSchema(schema, local, baseRegistry)).toEqual({ 'ui:widget': 'textarea' });
+    expect(local).toHaveProperty('ui:options', value);
+  });
 });
 
 describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
