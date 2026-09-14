@@ -8,6 +8,11 @@ interface Data {
   items: { label: string }[];
   thing: { common: string; onlyA: string } | { common: string; onlyB: number };
   listOrObject: string[] | { foo: string };
+  scalarOrObject: string | { city: string };
+  pair: [string, { city: string }];
+  when: Date;
+  upload: File;
+  loose: unknown;
 }
 
 type Known = UiSchema<Data>;
@@ -65,6 +70,37 @@ describe('UiSchema type', () => {
     expect(ui.listOrObject?.foo?.['ui:title']).toBe('Foo');
     expect(nested.listOrObject?.items).toBeDefined();
     expect(wrong.listOrObject).toBeDefined();
+  });
+
+  it('accepts a key from the object branch of a union with a primitive, as a oneOf of mixed types produces', () => {
+    const ui: Known = { scalarOrObject: { city: { 'ui:title': 'City' } } };
+    const asLeaf: Known = { scalarOrObject: { 'ui:widget': 'text' } };
+
+    expect(ui.scalarOrObject?.city?.['ui:title']).toBe('City');
+    expect(asLeaf.scalarOrObject?.['ui:widget']).toBe('text');
+  });
+
+  it("types a tuple's items entry by what any position can hold", () => {
+    const ui: Known = { pair: { items: { city: { 'ui:title': 'City' } } } };
+
+    expect(ui.pair?.items).toBeDefined();
+  });
+
+  it('treats a value that holds no form fields of its own as a leaf', () => {
+    const ui: Known = { when: { 'ui:widget': 'alt-date' }, upload: { 'ui:widget': 'file' } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `getTime` is a Date method, not a field of Data['when']
+      when: { getTime: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.when?.['ui:widget']).toBe('alt-date');
+    expect(wrong.when).toBeDefined();
+  });
+
+  it('leaves a field whose type says nothing about its data unconstrained', () => {
+    const ui: Known = { loose: { nested: { 'ui:title': 'Nested' } } };
+
+    expect(ui.loose?.nested?.['ui:title']).toBe('Nested');
   });
 
   it('keeps the ui: namespace open for theme and application directives', () => {

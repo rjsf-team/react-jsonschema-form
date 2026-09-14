@@ -2772,17 +2772,49 @@ describe('uiSchema', () => {
       });
     });
   });
-  it('renders a field whose uiSchema or ui:options is not an object', () => {
+  describe('a uiSchema value that is not an object', () => {
+    // Only untyped JavaScript can put these here, so they stand in for a caller the types never saw. A uiSchema is
+    // user input, so every one of them has to render rather than throw
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
-    // Only untyped JavaScript can put a non-object here, so these stand in for a caller the types never saw
-    const nonObjectOptions: GenericObjectType = { 'ui:options': 'oops' };
-    const nonObjectField: GenericObjectType = { foo: 'oops' };
+    const nonObjects: [string, unknown][] = [
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+      ['an array', ['oops']],
+      ['null', null],
+    ];
 
-    const withOptions = render(<Form schema={schema} validator={validator} uiSchema={nonObjectOptions} />);
-    const withField = render(<Form schema={schema} validator={validator} uiSchema={nonObjectField} />);
+    it.each(nonObjects)('renders when the root ui:options is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:options': value };
 
-    expect(withOptions.container.querySelector('input')).toBeDefined();
-    expect(withField.container.querySelector('input')).toBeDefined();
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own uiSchema is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own ui:options is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: { 'ui:options': value } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)('renders when ui:globalOptions is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:globalOptions': value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
   });
 
   it('string field with autocapitalize', () => {

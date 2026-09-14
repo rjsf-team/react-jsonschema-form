@@ -64,6 +64,23 @@ describe('resolveUiSchema() - branching keyword runtime resolution', () => {
   });
 });
 
+describe('resolveUiSchema() - non-object local uiSchema', () => {
+  // Only untyped JavaScript can put a non-object here, so these stand in for a caller the types never saw
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['an array', ['oops']],
+    ['true', true],
+  ])(
+    'replaces %s with an empty uiSchema, so every consumer can treat its own uiSchema as an object',
+    (_label, value) => {
+      const schema: RJSFSchema = { type: 'string' };
+
+      expect(resolveUiSchema(schema, value as unknown as UiSchema, baseRegistry)).toEqual({});
+    },
+  );
+});
+
 describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
   it('populates uiSchema.oneOf[i] for branches with $ref matching definitions', () => {
     const schema: RJSFSchema = {

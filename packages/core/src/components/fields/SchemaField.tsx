@@ -218,7 +218,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     delete fieldUiSchema['ui:classNames'];
     delete fieldUiSchema.classNames;
     delete fieldUiSchema['ui:style'];
-    if (consumedUiOptions) {
+    if (isObject(consumedUiOptions)) {
       const { classNames: consumedOptionClassNames, style: consumedOptionStyle, ...fieldUiOptions } = consumedUiOptions;
       fieldUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
     }

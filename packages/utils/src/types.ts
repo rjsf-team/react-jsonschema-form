@@ -1259,30 +1259,30 @@ export type UiSchemaDefinitions<
 /** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
 type IsAnyType<V> = 0 extends 1 & V ? true : false;
 
-/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Unknown data keeps
- * every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+/** Values that are objects but hold no form fields of their own, matching what `ErrorSchema`'s tree treats as a leaf */
+type AtomicUiValue = Date | File;
+
+/** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
+ * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
+ * a primitive is its prototype's method names.
  */
-type UiSchemaChildData<T> =
-  IsAnyType<T> extends true
-    ? GenericObjectType
-    : [NonNullable<T>] extends [readonly unknown[]]
-      ? Record<never, never>
-      : [NonNullable<T>] extends [object]
-        ? IsUnion<NonNullable<T>> extends true
-          ? UnionMembersMerged<Exclude<NonNullable<T>, readonly unknown[]>>
-          : NonNullable<T>
-        : Record<never, never>;
+type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicUiValue>;
 
-/** True when `T` is a union of more than one member, which is the only case `UnionMembersMerged` has work to do for */
-type IsUnion<T, U = T> = T extends unknown ? ([U] extends [T] ? false : true) : never;
+/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
+ * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+ */
+type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
 
-/** Every key of every member of a union, each typed as the union of what the members that declare it hold. A
- * `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch. An array member
- * contributes nothing, since an array nests through `items` rather than by key, and merging one in would offer
- * `Array.prototype`'s method names as field names.
+/** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
+ * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
+ */
+type FieldKeys<X> = { [K in keyof X]-?: NonNullable<X[K]> extends (...args: never[]) => unknown ? never : K }[keyof X];
+
+/** Every field-naming key of every member of a union, each typed as the union of what the members that declare it
+ * hold. A `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
  */
 type UnionMembersMerged<T> = {
-  [K in T extends unknown ? keyof T : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
+  [K in T extends unknown ? FieldKeys<T> : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
 };
 
 /** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
