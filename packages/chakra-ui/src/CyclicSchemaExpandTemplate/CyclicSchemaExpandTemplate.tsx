@@ -1,6 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { expandButtonId, TranslatableString } from '@rjsf/utils';
 
 import { Alert } from '../components/ui/alert.tsx';
 
@@ -15,11 +15,10 @@ export default function CyclicSchemaExpandTemplate<
 >(props: CyclicSchemaExpandProps<T, S, F>) {
   const { name, id, registry, onExpand } = props;
   const { translateString } = registry;
-  const buttonId = `${id}-button`;
   return (
     <Box mt={4}>
       <Alert status='warning' title={translateString(TranslatableString.CycleDetected, [name])} mb={2} />
-      <Button id={buttonId} size='sm' variant='outline' onClick={() => onExpand(id)}>
+      <Button id={expandButtonId(id)} size='sm' variant='outline' onClick={() => onExpand(id)}>
         {translateString(TranslatableString.ExpandButton)}
       </Button>
     </Box>

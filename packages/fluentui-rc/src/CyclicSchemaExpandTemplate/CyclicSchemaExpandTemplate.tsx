@@ -1,6 +1,6 @@
 import { Button, Card, Text, makeStyles, shorthands, tokens } from '@fluentui/react-components';
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { expandButtonId, TranslatableString } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   card: {
@@ -27,12 +27,11 @@ export default function CyclicSchemaExpandTemplate<
   const { name, id, registry, onExpand } = props;
   const { translateString } = registry;
   const classes = useStyles();
-  const buttonId = `${id}-button`;
   return (
     <Card appearance='outline' className={classes.card}>
       <Text>{translateString(TranslatableString.CycleDetected, [name])}</Text>
       <div className={classes.buttonRow}>
-        <Button id={buttonId} appearance='secondary' onClick={() => onExpand(id)}>
+        <Button id={expandButtonId(id)} appearance='secondary' onClick={() => onExpand(id)}>
           {translateString(TranslatableString.ExpandButton)}
         </Button>
       </div>

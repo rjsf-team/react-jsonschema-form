@@ -84,6 +84,15 @@ export function buttonId(id: string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp'
   return idGenerator(id, btn);
 }
 
+/** Return a consistent `id` for the expand button of a cyclic schema's expand controls
+ *
+ * @param id - The id of the field whose cyclic schema can be expanded
+ * @returns - The consistent id for the expand button from the given `id`
+ */
+export function expandButtonId(id: string) {
+  return `${id}-button`;
+}
+
 /** Return a consistent `id` for the optional data controls `element`
  *
  * @param id - The id of the parent component for the option

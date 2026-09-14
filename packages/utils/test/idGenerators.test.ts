@@ -1,6 +1,7 @@
 import {
   ariaDescribedByIds,
   buttonId,
+  expandButtonId,
   descriptionId,
   errorId,
   examplesId,
@@ -47,6 +48,9 @@ describe('idGenerators', () => {
   });
   it('button ids of an remove button are generated for simple id', () => {
     expect(buttonId(SIMPLE_ID, 'remove')).toEqual(`${SIMPLE_ID}__remove`);
+  });
+  it('expand button ids of a cyclic schema are generated for simple id', () => {
+    expect(expandButtonId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}-button`);
   });
   it('optional controls ids of an Add element are generated for simple id', () => {
     expect(optionalControlsId(SIMPLE_ID, 'Add')).toEqual(`${SIMPLE_ID}__optionalAdd`);

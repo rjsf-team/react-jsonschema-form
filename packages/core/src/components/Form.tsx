@@ -41,7 +41,7 @@ import {
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
-  toFieldPath,
+  fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
   ROOT_FIELD_PATH,
@@ -846,7 +846,7 @@ export default class Form<
   setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
     const { registry } = this.state;
     const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
-    const targetFieldPath = path.reduce<FieldPath>((acc, segment) => toFieldPath(segment, acc), ROOT_FIELD_PATH);
+    const targetFieldPath = fieldPathFromList(path);
     this.onChange(newValue, targetFieldPath, undefined, fieldPathToId(targetFieldPath, registry.globalFormOptions));
   };
 

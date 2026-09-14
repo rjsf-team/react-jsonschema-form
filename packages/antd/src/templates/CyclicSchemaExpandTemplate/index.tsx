@@ -1,5 +1,5 @@
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { expandButtonId, TranslatableString } from '@rjsf/utils';
 import { Alert, Button, Space } from 'antd';
 
 /** The `CyclicSchemaExpandTemplate` is the template to use to render the cyclic schema expand message and controls
@@ -13,7 +13,6 @@ export default function CyclicSchemaExpandTemplate<
 >(props: CyclicSchemaExpandProps<T, S, F>) {
   const { name, id, registry, onExpand } = props;
   const { translateString } = registry;
-  const buttonId = `${id}-button`;
 
   return (
     <Alert
@@ -21,7 +20,7 @@ export default function CyclicSchemaExpandTemplate<
       title={translateString(TranslatableString.CycleDetected, [name])}
       action={
         <Space>
-          <Button id={buttonId} size='small' type='default' onClick={() => onExpand(id)}>
+          <Button id={expandButtonId(id)} size='small' type='default' onClick={() => onExpand(id)}>
             {translateString(TranslatableString.ExpandButton)}
           </Button>
         </Space>

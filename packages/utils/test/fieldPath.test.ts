@@ -2,6 +2,7 @@ import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
   ROOT_FIELD_PATH,
+  fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
   fieldPathToName,
@@ -27,9 +28,9 @@ describe('toFieldPath()', () => {
   test('no parent, number segment', () => {
     expect(toFieldPath(1)).toEqual('[1]');
   });
-  test('an empty segment names no field, so the parent is returned unchanged', () => {
+  test('an empty property name addresses a field, except at the root where the path itself is empty', () => {
     expect(toFieldPath('')).toEqual(ROOT_FIELD_PATH);
-    expect(toFieldPath('', fp('one'))).toEqual('one');
+    expect(toFieldPath('', fp('one'))).toEqual('one.');
   });
   test('appends a property name to a parent', () => {
     expect(toFieldPath('two', toFieldPath('one'))).toEqual('one.two');
@@ -70,6 +71,26 @@ describe('fieldPathToList()', () => {
     const path = toFieldPath(1, toFieldPath(0, fp('matrix')));
     expect(path).toEqual('matrix[0][1]');
     expect(fieldPathToList(path)).toEqual(['matrix', 0, 1]);
+  });
+  test('round-trips an empty property name below the root', () => {
+    expect(fieldPathToList(fp('a.'))).toEqual(['a', '']);
+    expect(fieldPathToList(fp('a..b'))).toEqual(['a', '', 'b']);
+    expect(fieldPathToList(fp('a[0].'))).toEqual(['a', 0, '']);
+  });
+});
+
+describe('fieldPathFromList()', () => {
+  test('the empty list is the root path', () => {
+    expect(fieldPathFromList([])).toEqual(ROOT_FIELD_PATH);
+  });
+  test('round-trips every list fieldPathToList() can produce', () => {
+    const lists = [
+      ['tasks', 0, 'title'],
+      ['a.b', 'c[0]', 'd\\e'],
+      ['a', '', 'b'],
+      ['matrix', 0, 1],
+    ];
+    lists.forEach((list) => expect(fieldPathToList(fieldPathFromList(list))).toEqual(list));
   });
 });
 

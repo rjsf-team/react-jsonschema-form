@@ -1656,6 +1656,32 @@ describe('setFieldValue()', () => {
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
   });
+  it('Sets a field whose property name is the empty string', () => {
+    const ref = createRef<Form>();
+    const props: NoValFormProps = {
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'object',
+            properties: { '': { type: 'object', properties: { bar: { type: 'string' } } } },
+          },
+        },
+      },
+      formData: {},
+      ref,
+    };
+    const { onChange } = createFormComponent(props);
+
+    act(() => {
+      ref.current!.setFieldValue(['foo', '', 'bar'], 'populated value');
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { foo: { '': { bar: 'populated value' } } } }),
+      'root_foo__bar',
+    );
+  });
 });
 
 describe('optionalDataControls', () => {
