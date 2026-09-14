@@ -636,6 +636,42 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         { animal: 'Fish', food: 'worms' },
       ]);
     });
+    it('resolves an items schema whose object type and dependency are only reachable through allOf, not a direct $ref (#5250)', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          Animal: {
+            type: 'object',
+            properties: {
+              animal: { type: 'string', enum: ['Cat', 'Fish'] },
+            },
+            dependencies: {
+              animal: {
+                oneOf: [
+                  { properties: { animal: { enum: ['Cat'] }, food: { type: 'string', enum: ['meat'] } } },
+                  { properties: { animal: { enum: ['Fish'] }, food: { type: 'string', enum: ['worms'] } } },
+                ],
+              },
+            },
+          },
+        },
+        type: 'array',
+        // No direct `$ref` on `items` itself -- the object type and the nested dependency are only visible after
+        // resolving the `allOf` wrapper, which the array-items type check must do to detect them (#5250).
+        items: {
+          allOf: [{ $ref: '#/definitions/Animal' }],
+        },
+      };
+      testValidator.setReturnValues({ isValid: [true, false, false, true] });
+      expect(
+        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, [
+          { animal: 'Cat', food: 'worms' },
+          { animal: 'Fish', food: 'meat' },
+        ]),
+      ).toEqual([
+        { animal: 'Cat', food: 'meat' },
+        { animal: 'Fish', food: 'worms' },
+      ]);
+    });
     it('returns data when two arrays have same boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',

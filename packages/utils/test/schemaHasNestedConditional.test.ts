@@ -199,4 +199,65 @@ describe('schemaHasNestedConditional()', () => {
     };
     expect(schemaHasNestedConditional(schema, schema)).toBe(true);
   });
+  it("returns true for a dependencies keyword nested inside the root's own if's then branch", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { switch: { type: 'boolean' } },
+      if: { properties: { switch: { const: true } } },
+      then: {
+        properties: {
+          m: {
+            type: 'object',
+            properties: { animal: { type: 'string' } },
+            dependencies: { animal: { required: ['food'] } },
+          },
+        },
+      },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(true);
+  });
+  it("returns true for a dependencies keyword nested inside the root's own if's else branch", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { switch: { type: 'boolean' } },
+      if: { properties: { switch: { const: true } } },
+      then: {},
+      else: {
+        properties: {
+          m: {
+            type: 'object',
+            properties: { animal: { type: 'string' } },
+            dependencies: { animal: { required: ['food'] } },
+          },
+        },
+      },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(true);
+  });
+  it("returns true for an if keyword nested inside the root's own schema-style dependencies value", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { m: { type: 'object' } },
+      dependencies: {
+        m: {
+          properties: {
+            m: {
+              type: 'object',
+              if: { properties: { animal: { const: 'Cat' } } },
+              then: { required: ['food'] },
+            },
+          },
+        },
+      },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(true);
+  });
+  it("does not walk into a property-list (array-valued) dependencies entry's non-existent value-schema", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+      dependencies: { foo: ['bar'] },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(false);
+  });
 });

@@ -3,12 +3,14 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  ELSE_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  THEN_KEY,
 } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
@@ -65,6 +67,11 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
   const properties = resolved[PROPERTIES_KEY];
   const patternProperties = resolved[PATTERN_PROPERTIES_KEY];
   const items = resolved[ITEMS_KEY] as S | boolean | (S | boolean)[] | undefined;
+  const dependencies = resolved[DEPENDENCIES_KEY];
+  // A schema (as opposed to property-list) `dependencies` entry's value-schema, and an `if`'s `then`/`else`
+  // branches, can themselves hide a conditional that neither `retrieveSchema()` nor the `atRoot`/direct-key check
+  // above surfaces, so they must be walked into just like `properties` or `allOf` are (#5250).
+  const dependentSchemas = isObject(dependencies) ? Object.values(dependencies).filter(isObject) : [];
   const nestedSchemas: (S | boolean | undefined)[] = [
     ...(isObject(properties) ? (Object.values(properties) as (S | boolean)[]) : []),
     ...(isObject(patternProperties) ? (Object.values(patternProperties) as (S | boolean)[]) : []),
@@ -73,6 +80,9 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
     ...((resolved[ALL_OF_KEY] as (S | boolean)[] | undefined) ?? []),
     ...((resolved[ANY_OF_KEY] as (S | boolean)[] | undefined) ?? []),
     ...((resolved[ONE_OF_KEY] as (S | boolean)[] | undefined) ?? []),
+    ...(dependentSchemas as (S | boolean)[]),
+    resolved[THEN_KEY] as S | boolean | undefined,
+    resolved[ELSE_KEY] as S | boolean | undefined,
   ];
   return nestedSchemas.some((nested) => schemaHasNestedConditional(nested, rootSchema, false, refs));
 }

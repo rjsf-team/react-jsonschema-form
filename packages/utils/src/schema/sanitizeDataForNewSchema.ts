@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
@@ -221,28 +221,23 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
-      // Keep the raw (pre-$ref-resolution) items schema around: a conditional nested inside `items` must be
+      // Keep the raw (pre-resolution) items schema around: a conditional nested inside `items` must be
       // re-resolved per element below, against that element's own value, rather than the whole array (#5250)
       const oldSchemaItemsRaw = oldSchemaItems as S;
       const newSchemaItemsRaw = newSchemaItems as S;
-      if (hasByPath(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          oldSchemaItems as S,
-          rootSchema,
-          data as T,
-          experimental_customMergeAllOf,
-        );
-      }
-      if (hasByPath(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          newSchemaItems as S,
-          rootSchema,
-          data as T,
-          experimental_customMergeAllOf,
-        );
-      }
+      // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
+      // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
+      oldSchemaItems = retrieveSchema<T, S, F>(
+        validator,
+        oldSchemaItemsRaw,
+        rootSchema,
+        data as T,
+        experimental_customMergeAllOf,
+      );
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case
+      newSchemaItems = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+        ? oldSchemaItems
+        : retrieveSchema<T, S, F>(validator, newSchemaItemsRaw, rootSchema, data as T, experimental_customMergeAllOf);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
