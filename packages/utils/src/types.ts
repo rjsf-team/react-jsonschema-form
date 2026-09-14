@@ -255,8 +255,9 @@ type IsAny<V> = 0 extends 1 & V ? true : false;
 /** Values that are objects but hold no form fields of their own, so their error node has no children.
  *
  * `createErrorHandler()` and `toErrorList()` recurse through `isPlainObject()`, so at runtime every class instance is
- * a leaf. TypeScript has no way to say "plain object", so this lists the two class instances RJSF itself puts in form
- * data; any other one still gets its properties offered as children, which accepts a node the runtime never builds.
+ * a leaf. TypeScript has no way to say "plain object", so this lists the two classes a custom widget most commonly
+ * hands back (the built-in date and file widgets store strings); any other class instance still gets its properties
+ * offered as children, which accepts a node the runtime never builds.
  */
 type AtomicValue = Date | File;
 
