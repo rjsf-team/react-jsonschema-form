@@ -717,11 +717,9 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
   }
 
   if (UIComponent) {
-    // `required` is excluded from `uiProps` here for the same reason `computeFieldUiSchema()` excludes it from a
-    // grid cell's own config object above: it isn't seen by augmentSchemaWithUiRequired() for validation, so
-    // letting it override the schema-derived `isRequired` would create the exact indicator/validation disagreement
-    // this feature otherwise guards against.
-    const { required: _uiPropsRequired, ...restUiProps } = uiProps;
+    // Unlike `computeFieldUiSchema()` above, this renders an arbitrary user-supplied component with `uiProps` as
+    // plain component props, unconnected to schema validation — so `required` isn't stripped out here: a custom
+    // component may read it for its own purposes, and `uiProps` is otherwise passed through untouched.
     return (
       <UIComponent
         data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
@@ -738,7 +736,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
         onBlur={onBlur}
         onFocus={onFocus}
         registry={registry}
-        {...restUiProps}
+        {...uiProps}
       />
     );
   }

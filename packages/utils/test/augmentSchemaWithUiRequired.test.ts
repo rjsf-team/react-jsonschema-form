@@ -158,4 +158,75 @@ describe('augmentSchemaWithUiRequired()', () => {
     const result = augmentSchemaWithUiRequired(schema, uiSchema);
     expect(result.required).toEqual(['foo']);
   });
+
+  it('folds ui:required into a schema-form dependency, using the sibling uiSchema entry', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      dependencies: {
+        a: {
+          properties: { b: { type: 'string' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:required': true } };
+    const result = augmentSchemaWithUiRequired(schema, uiSchema);
+    expect((result.dependencies!.a as RJSFSchema).required).toEqual(['b']);
+    expect(result.dependencies).not.toBe(schema.dependencies);
+    expect(result).not.toBe(schema);
+  });
+
+  it('augments more than one dependency, copying the dependencies map only once', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, c: { type: 'string' } },
+      dependencies: {
+        a: { properties: { b: { type: 'string' } } },
+        c: { properties: { d: { type: 'string' } } },
+      },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:required': true }, d: { 'ui:required': true } };
+    const result = augmentSchemaWithUiRequired(schema, uiSchema);
+    expect((result.dependencies!.a as RJSFSchema).required).toEqual(['b']);
+    expect((result.dependencies!.c as RJSFSchema).required).toEqual(['d']);
+  });
+
+  it('leaves a property-dependency (array form) untouched', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      dependencies: { a: ['b'] },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:required': true } };
+    const result = augmentSchemaWithUiRequired(schema, uiSchema);
+    expect(result).toBe(schema);
+  });
+
+  it('returns the same schema when a dependency has a uiSchema but no ui:required changes', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      dependencies: {
+        a: {
+          properties: { b: { type: 'string' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:widget': 'textarea' } };
+    expect(augmentSchemaWithUiRequired(schema, uiSchema)).toBe(schema);
+  });
+
+  it('augments a schema with dependencies but no top-level properties', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      dependencies: {
+        a: {
+          properties: { b: { type: 'string' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = { b: { 'ui:required': true } };
+    const result = augmentSchemaWithUiRequired(schema, uiSchema);
+    expect((result.dependencies!.a as RJSFSchema).required).toEqual(['b']);
+  });
 });

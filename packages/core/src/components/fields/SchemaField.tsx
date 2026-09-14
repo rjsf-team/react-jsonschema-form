@@ -164,13 +164,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
   // most ui:options, it has to be seen by augmentSchemaWithUiRequired() too, which only ever sees a field's own
   // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
+  const {
+    required: fieldUiRequired,
+    initialValue: fieldInitialValue,
+    emptyValue: fieldEmptyValue,
+  } = getUiOptions<T, S, F>(uiSchema);
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
   if (
     fieldUiRequired === false &&
     required &&
-    uiOptions.initialValue === undefined &&
-    uiOptions.emptyValue === undefined &&
+    // Checked field-only (no globalUiOptions), matching computeDefaults()'s own resolution of these options: a
+    // global ui:emptyValue/ui:initialValue wouldn't actually be applied to this field's default, so it must not
+    // silence a warning about the field staying genuinely empty.
+    fieldInitialValue === undefined &&
+    fieldEmptyValue === undefined &&
     !hasWarnedMisconfiguredRequired.current
   ) {
     hasWarnedMisconfiguredRequired.current = true;

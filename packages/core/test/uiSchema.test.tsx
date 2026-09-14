@@ -3048,14 +3048,15 @@ describe('uiSchema', () => {
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    it('does not honor required set via a grid cell config for a custom render component', () => {
+    it('passes required set via a grid cell config through to a custom render component as a plain prop', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
           foo: { type: 'string' },
         },
       };
-      // No matching schema property, so this cell renders through the raw UIComponent path rather than SchemaField.
+      // No matching schema property, so this cell renders through the raw UIComponent path rather than SchemaField;
+      // `required` here is just a component prop, unconnected to schema validation, so it isn't stripped out.
       const CustomRenderer = (props: { required?: boolean }) => (
         <div data-testid='custom-renderer' data-required={String(Boolean(props.required))} />
       );
@@ -3066,7 +3067,7 @@ describe('uiSchema', () => {
         },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('[data-testid="custom-renderer"]')).toHaveAttribute('data-required', 'false');
+      expect(node.querySelector('[data-testid="custom-renderer"]')).toHaveAttribute('data-required', 'true');
     });
 
     it('still warns when a field rendered via LayoutGridField sets ui:required: false with no fallback', () => {
@@ -3107,9 +3108,39 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         b: { 'ui:required': true },
       };
+      // fireEvent.submit bypasses the browser's own constraint validation (which would otherwise block submission
+      // on the rendered `required` field regardless of what schema validation does), isolating what this test
+      // actually means to check: that AJV itself rejects the missing field.
       const { node, onSubmit } = createFormComponent({ schema, uiSchema, formData: { a: 'x' } });
-      await submitForm(node, user);
+      await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('reuses the same augmented schema reference across repeated liveValidate calls', async () => {
+      // AJV caches compiled schemas by object identity for schemas without an `$id` (the common case), and never
+      // evicts that cache, so a schema that's rebuilt on every validation call — as augmentSchemaWithUiRequired()
+      // would without memoization — both forces a needless recompile and leaks a cache entry on every keystroke.
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+          bar: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': true },
+      };
+      const rawValidationSpy = vi.spyOn(validator, 'rawValidation');
+      const { node } = createFormComponent({ schema, uiSchema, liveValidate: 'onChange' });
+      rawValidationSpy.mockClear();
+      const input = node.querySelector<HTMLInputElement>('#root_bar')!;
+      await user.type(input, 'a');
+      await user.type(input, 'b');
+      expect(rawValidationSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
+      const [firstSchema] = rawValidationSpy.mock.calls[0];
+      const [secondSchema] = rawValidationSpy.mock.calls[1];
+      expect(secondSchema).toBe(firstSchema);
+      rawValidationSpy.mockRestore();
     });
   });
   describe('ui:initialValue and ui:emptyValue', () => {

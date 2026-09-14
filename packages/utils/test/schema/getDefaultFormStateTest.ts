@@ -7507,6 +7507,94 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual([{}]);
       });
+
+      it('applies a per-position ui:initialValue when uiSchema.items is itself a tuple (array)', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [
+            { type: 'object', properties: { name: { type: 'string' } } },
+            { type: 'object', properties: { name: { type: 'string' } } },
+          ],
+        };
+        const uiSchema = {
+          items: [{ name: { 'ui:initialValue': 'first' } }, { name: { 'ui:initialValue': 'second' } }],
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'first' }, { name: 'second' }]);
+      });
+
+      it('applies additionalItems uiSchema, not the tuple uiSchema.items, to items beyond the tuple', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: [{ type: 'object', properties: { name: { type: 'string' } } }],
+          additionalItems: { type: 'object', properties: { name: { type: 'string' } } },
+        };
+        const uiSchema = {
+          items: { name: { 'ui:initialValue': 'tuple position' } },
+          additionalItems: { name: { 'ui:initialValue': 'beyond the tuple' } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'tuple position' }, { name: 'beyond the tuple' }]);
+      });
+    });
+
+    describe('ui:initialValue for additionalProperties', () => {
+      it('applies uiSchema.additionalProperties, not a dynamically-named uiSchema entry, to an additional property', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: { type: 'string' },
+          },
+          additionalProperties: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema = {
+          extraKey: { name: { 'ui:initialValue': 'wrong entry' } },
+          additionalProperties: { name: { 'ui:initialValue': 'from additionalProperties' } },
+        };
+        const rawFormData = { foo: 'x', extraKey: {} };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            rawFormData,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          foo: 'x',
+          extraKey: { name: 'from additionalProperties' },
+        });
+      });
     });
   });
 }
