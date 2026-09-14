@@ -32,7 +32,8 @@
       "types": "./lib/*.d.ts",
       "require": "./dist/*.cjs",
       "import": "./lib/*.js"
-    }
+    },
+    "./dist/*.css": "./dist/*.css"
   },
   "files": [
     "dist",
