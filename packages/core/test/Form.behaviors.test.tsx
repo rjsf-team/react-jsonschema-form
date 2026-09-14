@@ -1656,6 +1656,18 @@ describe('setFieldValue()', () => {
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
   });
+  it("gives a property named the empty string an id of its own, not its parent's", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { obj: { type: 'object', properties: { '': { type: 'string' } } } },
+    };
+
+    const { node } = createFormComponent({ schema });
+    const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
+
+    expect(node.querySelector('input#root_obj_')).toBeInTheDocument();
+    expect(new Set(ids).size).toBe(ids.length);
+  });
   it('Sets a field whose property name is the empty string', () => {
     const ref = createRef<Form>();
     const props: NoValFormProps = {

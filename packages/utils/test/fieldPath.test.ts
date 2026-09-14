@@ -8,6 +8,7 @@ import {
   fieldPathToName,
   fieldPathEndsWithIndex,
   toFieldPath,
+  deepEquals,
 } from '../src/index.ts';
 import type { FieldPath } from '../src/index.ts';
 
@@ -76,6 +77,40 @@ describe('fieldPathToList()', () => {
     expect(fieldPathToList(fp('a.'))).toEqual(['a', '']);
     expect(fieldPathToList(fp('a..b'))).toEqual(['a', '', 'b']);
     expect(fieldPathToList(fp('a[0].'))).toEqual(['a', 0, '']);
+  });
+});
+
+describe('the FieldPath encoding round-trips', () => {
+  // Every segment shape that interacts with the grammar: the reserved characters on their own and embedded, an empty
+  // name, a numeric-looking name that must stay a string, and a real array index
+  const SEGMENTS: (string | number)[] = ['a', '', '.', '[', ']', '\\', 'a.b', 'a[0]', 'a\\b', '0', 0];
+
+  /** Every list of `length` segments drawn from `SEGMENTS`, which is small enough to enumerate exhaustively */
+  function listsOfLength(length: number): (string | number)[][] {
+    if (length === 0) {
+      return [[]];
+    }
+    return listsOfLength(length - 1).flatMap((rest) => SEGMENTS.map((segment) => [segment, ...rest]));
+  }
+
+  const lists = [1, 2, 3].flatMap(listsOfLength);
+
+  test('every list enumerated here is round-tripped, so the cases below are not the only coverage', () => {
+    expect(lists).toHaveLength(SEGMENTS.length + SEGMENTS.length ** 2 + SEGMENTS.length ** 3);
+  });
+
+  test('a list parses back to itself, except for the root exception below', () => {
+    const broken = lists
+      .filter((list) => list[0] !== '')
+      .filter((list) => !deepEquals(fieldPathToList(fieldPathFromList(list)), list))
+      .map((list) => ({ list, path: fieldPathFromList(list), parsed: fieldPathToList(fieldPathFromList(list)) }));
+
+    expect(broken).toEqual([]);
+  });
+
+  test('a leading empty name is the root itself, since the root path is the empty string', () => {
+    expect(fieldPathFromList([''])).toEqual(ROOT_FIELD_PATH);
+    expect(fieldPathToList(fieldPathFromList(['', 'a']))).toEqual(['a']);
   });
 });
 
