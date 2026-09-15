@@ -1275,100 +1275,14 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
 /** A single `{ when, then }` rule: when a field's form-data type is assignable to `when`, the widget/field names and
  * options listed in `then` become valid `ui:widget`/`ui:field`/`ui:options` values for that field in `UiSchema`,
  * once a `Checks` union is passed as `UiSchema`'s fourth type parameter. Build a union of these to extend the
- * type-safe vocabulary a `Checks` union accepts - a theme package adds a union of its own widgets this way, and a
- * consumer of a theme adds their own domain-specific options the same way. See `CoreUiOptionsChecks` for the rules
- * describing `@rjsf/core`'s own built-in widgets/fields/options.
+ * type-safe vocabulary a `Checks` union accepts - a theme package builds a union of its own widgets this way and
+ * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
+ * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
 export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
   when: When;
   then: Then;
 }
-
-/** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
- * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Always
- * included by `UiSchema` whenever a `Checks` union is supplied, in addition to whatever that `Checks` union adds.
- *
- * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not
- * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
- * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here).
- */
-export type CoreUiOptionsChecks =
-  | UiOptionsCheck<
-      string,
-      {
-        widget?:
-          | 'TextWidget'
-          | 'TextareaWidget'
-          | 'PasswordWidget'
-          | 'EmailWidget'
-          | 'URLWidget'
-          | 'ColorWidget'
-          | 'DateWidget'
-          | 'DateTimeWidget'
-          | 'TimeWidget'
-          | 'AltDateWidget'
-          | 'AltDateTimeWidget'
-          | 'SelectWidget'
-          | 'RadioWidget'
-          | 'FileWidget'
-          | 'HiddenWidget';
-        field?: 'StringField';
-        placeholder?: string;
-        rows?: number;
-        inputType?: string;
-        autocomplete?: HTMLInputElement['autocomplete'];
-        autocapitalize?: HTMLInputElement['autocapitalize'];
-        emptyValue?: string;
-        filePreview?: boolean;
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: EnumValue[];
-      }
-    >
-  | UiOptionsCheck<
-      number,
-      {
-        widget?: 'TextWidget' | 'RangeWidget' | 'UpDownWidget' | 'SelectWidget' | 'RadioWidget' | 'HiddenWidget';
-        field?: 'NumberField';
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: EnumValue[];
-      }
-    >
-  | UiOptionsCheck<
-      boolean,
-      {
-        widget?: 'CheckboxWidget' | 'RadioWidget' | 'SelectWidget' | 'HiddenWidget';
-        field?: 'BooleanField';
-      }
-    >
-  | UiOptionsCheck<
-      null,
-      {
-        widget?: 'HiddenWidget';
-        field?: 'NullField';
-      }
-    >
-  | UiOptionsCheck<
-      unknown[],
-      {
-        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget';
-        field?: 'ArrayField';
-        addable?: boolean;
-        orderable?: boolean;
-        removable?: boolean;
-        copyable?: boolean;
-        inline?: boolean;
-      }
-    >
-  | UiOptionsCheck<
-      object & { length?: never },
-      {
-        field?: 'ObjectField';
-        optionsSchemaSelector?: string;
-        order?: string[];
-      }
-    >;
 
 /** @internal Distributes over a `Checks` union, collapsing each member into an intersection of its `then` type
  * (minus `widget`/`field`) for every member whose `when` the field type `T` is assignable to.
@@ -1416,7 +1330,7 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
   } & RawOptsFor<T, Checks>;
 }
 
-/** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from `CoreUiOptionsChecks`
+/** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
  * since they aren't type-specific vocabulary - available whenever `Checks` narrows the vocabulary, same as they
  * always are through `UIOptionsBaseType` when it doesn't.
  */
@@ -1436,15 +1350,15 @@ interface ClosedCommonUiOptions {
 /** @internal The vocabulary part of `UiSchema`: `ui:widget`/`ui:field`/`ui:options` and their `ui:`-prefixed raw
  * option equivalents. `[Checks] extends [never]` (tuple-wrapped to avoid distribution) is `UiSchema`'s default,
  * unnarrowed, permissive shape - identical to what `UiSchema` has always had. A concrete `Checks` union instead
- * narrows `ui:widget`/`ui:field` to only the names `CoreUiOptionsChecks`/`Checks` declare for the field's type, and
- * closes the `ui:` namespace to just the options they declare plus `ClosedCommonUiOptions`: every other key,
- * including a typo like `ui:wigdet`, becomes a type error instead of only failing at runtime.
+ * narrows `ui:widget`/`ui:field` to only the names `Checks` declares for the field's type, and closes the `ui:`
+ * namespace to just the options it declares plus `ClosedCommonUiOptions`: every other key, including a typo like
+ * `ui:wigdet`, becomes a type error instead of only failing at runtime. `@rjsf/utils` has no built-in vocabulary of
+ * its own to always include here - a theme's `Checks` union (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to
+ * be unioned in by whoever passes `Checks`, not baked into `UiSchema` itself.
  */
 type UiVocabularyPart<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = [Checks] extends [never]
   ? MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> }
-  : ClosedCommonUiOptions &
-      UiOptionsComponentPart<T, S, F, CoreUiOptionsChecks | Checks> &
-      MakeUIType<RawOptsFor<T, CoreUiOptionsChecks | Checks>>;
+  : ClosedCommonUiOptions & UiOptionsComponentPart<T, S, F, Checks> & MakeUIType<RawOptsFor<T, Checks>>;
 
 /** Type describing the uiSchema definitions that can be applied to schemas referenced by `$ref`.
  * Keys are the full `$ref` path (e.g., '#/$defs/node', '#/definitions/address').
@@ -1494,8 +1408,9 @@ type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType, Che
  * `Checks` (a union of `UiOptionsCheck`, defaulting to `never`) is an opt-in, stricter mode: with no `Checks`
  * supplied, `UiSchema` behaves exactly as it always has, accepting any `ui:widget`/`ui:field` name and any
  * `ui:`-prefixed option. Pass a `Checks` union to narrow `ui:widget`/`ui:field` to only the names valid for each
- * field's form-data type and close the `ui:` namespace to just the options they declare - see `UiOptionsCheck` and
- * `CoreUiOptionsChecks`.
+ * field's form-data type and close the `ui:` namespace to just the options they declare - see `UiOptionsCheck`.
+ * `@rjsf/utils` has no widgets of its own, so it doesn't export a `Checks` union to pass; use a theme's, e.g.
+ * `@rjsf/core`'s `CoreUiOptionsChecks`.
  */
 export type UiSchema<
   T = any,

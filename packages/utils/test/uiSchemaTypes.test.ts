@@ -1,4 +1,4 @@
-import type { CoreUiOptionsChecks, FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
+import type { FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -167,6 +167,16 @@ interface ReferencesFormData {
   contact: { name: string; details: string };
 }
 
+// @rjsf/utils has no widgets of its own, so these tests exercise the generic Checks mechanism with a made-up example
+// vocabulary rather than a real theme's - see @rjsf/core's own tests for CoreUiOptionsChecks against real widgets.
+type ExampleChecks =
+  | UiOptionsCheck<
+      string,
+      { widget?: 'ExampleTextWidget' | 'ExampleTextareaWidget'; placeholder?: string; rows?: number }
+    >
+  | UiOptionsCheck<number, { widget?: 'ExampleRangeWidget' }>
+  | UiOptionsCheck<unknown[], { widget?: 'ExampleListWidget'; orderable?: boolean }>;
+
 describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
   it('leaves UiSchema fully open when Checks is omitted, same as ever - passing a Checks union is what narrows it', () => {
     const ui: UiSchema<ReferencesFormData> = {
@@ -176,31 +186,28 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
     expect(ui.tree?.name?.['ui:widget']).toBe('AnyStringWhatsoever');
   });
 
-  it('narrows widgets per field type on a recursive, nested form-data shape, using just the core vocabulary', () => {
-    // CoreUiOptionsChecks is always included once any Checks is passed - pass it directly for "core vocabulary,
-    // no theme/consumer extensions".
-    type Checked = UiSchema<ReferencesFormData, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+  it('narrows widgets per field type on a recursive, nested form-data shape', () => {
+    type Checked = UiSchema<ReferencesFormData, RJSFSchema, FormContextType, ExampleChecks>;
 
     const ui: Checked = {
-      'ui:order': ['billing_address', 'contact', 'tree'],
       tree: {
         name: { 'ui:placeholder': 'Enter node name', 'ui:help': 'Applies at every recursion level' },
         children: { 'ui:options': { orderable: false }, items: { 'ui:help': 'Per-item help on a recursive element' } },
       },
       contact: {
         name: { 'ui:placeholder': 'Full name (e.g., John Doe)' },
-        details: { 'ui:widget': 'TextareaWidget' },
+        details: { 'ui:widget': 'ExampleTextareaWidget' },
       },
     };
     const badWidget: Checked = {
       tree: {
-        // @ts-expect-error RangeWidget is a number widget; `name` is a string field
-        name: { 'ui:widget': 'RangeWidget' },
+        // @ts-expect-error ExampleRangeWidget is a number widget; `name` is a string field
+        name: { 'ui:widget': 'ExampleRangeWidget' },
       },
     };
     const badRawOption: Checked = {
       tree: {
-        // @ts-expect-error `rows` (a string/textarea option) is not valid for `children`, an array field
+        // @ts-expect-error `rows` (a string widget option) is not valid for `children`, an array field
         children: { 'ui:rows': 4 },
       },
     };
@@ -210,7 +217,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
   });
 
   it('supports both the `ui:optionName` and `ui:options: { optionName }` forms once Checks is supplied', () => {
-    type Checked = UiSchema<{ bio: string }, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+    type Checked = UiSchema<{ bio: string }, RJSFSchema, FormContextType, ExampleChecks>;
 
     const viaPrefix: Checked = { bio: { 'ui:placeholder': 'Tell us about yourself' } };
     const viaOptions: Checked = { bio: { 'ui:options': { placeholder: 'Tell us about yourself' } } };
@@ -226,15 +233,15 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
       lastName: string;
       [dynamicKey: string]: string;
     }
-    type Checked = UiSchema<PatternPropsFormData, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+    type Checked = UiSchema<PatternPropsFormData, RJSFSchema, FormContextType, ExampleChecks>;
 
     const ui: Checked = {
       firstName: { 'ui:autofocus': true },
       assKickCount: { 'ui:placeholder': 'a dynamic, non-declared key still type-checks as `string`' },
     };
     const bad: Checked = {
-      // @ts-expect-error firstName is `string`; RangeWidget is a number widget
-      firstName: { 'ui:widget': 'RangeWidget' },
+      // @ts-expect-error firstName is `string`; ExampleRangeWidget is a number widget
+      firstName: { 'ui:widget': 'ExampleRangeWidget' },
     };
 
     expect(ui.firstName?.['ui:autofocus']).toBe(true);

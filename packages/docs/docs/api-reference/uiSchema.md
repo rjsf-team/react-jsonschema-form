@@ -1048,10 +1048,11 @@ const uiSchema: UiSchema = {
 
 `UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#uischemat-checks-field-names-breaking-change)), but by default it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
 
-`UiSchema` takes a fourth, opt-in type parameter, `Checks`, that closes that gap. Pass a `Checks` union and `UiSchema` narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, recursing into nested objects/arrays the same way. `@rjsf/utils` exports `CoreUiOptionsChecks` - `@rjsf/core`'s own built-in widget/field/option vocabulary - to pass as `Checks`:
+`UiSchema` takes a fourth, opt-in type parameter, `Checks`, that closes that gap. Pass a `Checks` union and `UiSchema` narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, recursing into nested objects/arrays the same way. `@rjsf/utils` itself has no widgets of its own, so it has no vocabulary to pass - each theme exports its own `Checks` union next to its widgets; `@rjsf/core` exports `CoreUiOptionsChecks`, describing its own built-in widget/field/option vocabulary:
 
 ```ts
-import type { CoreUiOptionsChecks, FormContextType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, UiSchema } from '@rjsf/utils';
 
 interface FormData {
   age: number;
@@ -1071,10 +1072,11 @@ Passing `Checks` is entirely opt-in, and can be adopted incrementally, field by 
 
 ### Extending the widget/option vocabulary
 
-The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." `CoreUiOptionsChecks` is always included once any `Checks` is passed, in addition to whatever else the union adds - a theme extends the vocabulary with its own widgets this way, and a consumer of a theme extends it further with their own domain-specific options:
+The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Unlike a theme's own vocabulary, `Checks` is never included automatically - union it in yourself with whatever else you want to add:
 
 ```ts
-import type { CoreUiOptionsChecks, FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '@rjsf/utils';
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '@rjsf/utils';
 
 type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
 type MyUiSchema<T = any> = UiSchema<T, RJSFSchema, FormContextType, CoreUiOptionsChecks | MyThemeChecks>;
