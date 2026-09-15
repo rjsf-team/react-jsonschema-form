@@ -163,8 +163,6 @@ const uiSchema: UiSchema = {
 };
 ```
 
-> Note: [`ui:required`](#required), [`ui:initialValue`](#initialvalue), and [`ui:emptyValue`](#emptyvalue) set inside a `ui:definitions` fragment are applied to the rendered field, but are not currently seen by schema validation or default-value computation. Set them on the field's local uiSchema path (as in the `shipping_address` override above) if they need to be enforced.
-
 ### ui:field
 
 The `ui:field` property overrides the `Field` implementation used for rendering any field in the form's hierarchy.
@@ -562,8 +560,6 @@ The `ui:emptyValue` uiSchema directive provides the value to store whenever a fi
 
 > Note: because it now populates untouched fields too, `ui:emptyValue` can change what validation reports for a field the user never interacted with. A non-empty `emptyValue` (e.g. `''`) can trip a schema constraint the field would otherwise never see — `minLength`, `pattern`, `format`, or an `enum` that doesn't include that value — on an optional field. On a schema-required field, it has the opposite effect: an `emptyValue` present from the first render satisfies `required` even though the user never entered anything, so pair it with a schema constraint (like `minLength`) if an effectively-empty value shouldn't be allowed to pass as complete.
 >
-> `ui:emptyValue` is not currently applied to a field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment; set it on the field's local uiSchema path if it needs to be enforced.
-
 > Note: for array items, the plain-object and array (per-tuple-position) forms of `uiSchema.items` are both applied when computing defaults (including a `minItems` filler item or a new row added via the array's "Add" button, which uses `uiSchema.additionalItems` instead when it's added past a fixed/tuple `items` schema); the dynamic `(itemData, index, formContext) => UiSchema` function form can't be resolved before there's item data to call it with, so it's ignored for that purpose (it still works normally for rendering existing items).
 
 ### enumDisabled
@@ -691,7 +687,7 @@ const uiSchema: UiSchema = {
 
 > Note: `ui:initialValue` is applied as an ordinary default, the same way `schema.default` is, so it comes back after the field is cleared (`onChange` storing `undefined` re-triggers default computation, which reapplies it) rather than leaving the field genuinely empty. If a field needs to be clearable, pair `ui:initialValue` with a distinct [`ui:emptyValue`](#emptyvalue) rather than relying on it alone.
 >
-> `ui:initialValue` is not currently applied to a field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment; set it on the field's local uiSchema path if it needs to be enforced. The same [array-items caveat as `ui:emptyValue`](#emptyvalue) applies to array items too.
+> The same [array-items caveat as `ui:emptyValue`](#emptyvalue) applies to array items too.
 
 ### inputType
 
@@ -859,12 +855,9 @@ const uiSchema: UiSchema = {
 
 `ui:required` must be set per field; it is **not** honored when set via `ui:globalOptions`. Unlike most global options, it also has to be seen by schema validation (which only ever looks at a field's own uiSchema), so a form-wide default would make the required indicator and validation disagree.
 
-A few narrower cases where `ui:required: true` shows the indicator but is **not** currently folded into schema validation:
+`ui:required` is enforced by walking the form the same way it's rendered — resolving each node's schema (`$ref`, `allOf`, `dependencies`, `if`/`then`/`else`, the selected `oneOf`/`anyOf` branch) and uiSchema (including a [`ui:definitions`](#ui-definitions) fragment) against the current `formData`, exactly as `SchemaField` does. Because of that, it's enforced everywhere a field can appear — nested objects, array items, a `ui:definitions` fragment, a field only reachable through `dependencies`/`$ref`/`allOf`, and inside the currently-selected `oneOf`/`anyOf` branch — on both the submit and `liveValidate` paths, and by precompiled validators (which never see the schema mutated, since it isn't).
 
-- A field whose uiSchema comes only from a [`ui:definitions`](#ui-definitions) fragment rather than its local uiSchema path.
-- A field nested inside an array's items.
-- A field declared via `allOf` rather than as a plain nested object property (`$ref` is fine when reached via `liveValidate` — see below). Schema resolution doesn't flatten a nested `allOf` into a single object schema, so augmentation, which only walks a schema's own `properties`, doesn't see the field to augment.
-- A field only reachable through a `dependencies`/`if`-`then`-`else` branch, or nested under `$ref`, when validating on submit (`validateForm()`/the form's `onSubmit`) rather than via `liveValidate`. The submit path validates against the schema as originally provided, before dependencies or references resolve, so augmentation — which only walks a schema's own `properties` — doesn't see the field. `liveValidate` doesn't have this gap: it always validates against the schema already resolved for the current `formData`.
+The one difference worth knowing: a `ui:required` error is built by RJSF itself, not by your validator, so it has a `property` and `message` but not a validator-specific shape (e.g. AJV's `params.missingProperty`/`schemaPath`), and it does not pass through a custom `transformErrors` function the way schema-level errors do. It renders under the field and participates in `focusOnFirstError` normally, worded identically to a schema-level required error (`must have required property 'x'`) so it reads the same in an error list.
 
 ### rows
 

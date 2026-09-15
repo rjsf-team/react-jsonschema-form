@@ -275,7 +275,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   // Apply `ui:definitions` at every node, keyed by the `$ref` `retrieveSchema()` recorded when it resolved this
   // node, so defaults see the same uiSchema `SchemaField` renders with.
   const uiSchema = uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema: rootSchema ?? rawSchema, uiSchemaDefinitions })
+    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
