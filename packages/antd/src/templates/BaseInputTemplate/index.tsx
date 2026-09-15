@@ -72,8 +72,11 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
+  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
+  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  const input = isNumeric ? (
       <InputNumber
         disabled={disabled || (readonlyAsDisabled && readonly)}
         id={id}
