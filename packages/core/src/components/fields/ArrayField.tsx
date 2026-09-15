@@ -159,17 +159,21 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
+ *
+ * @param index - The position the new row is being inserted at, so a tuple-position (array) form of
+ *          `uiSchema.items` resolves the same entry that the row will actually render with once added
  */
 function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   registry: Registry<T[], S, F>,
   schema: S,
+  index: number,
   uiSchema?: UiSchema<T[], S, F>,
 ): T {
   const { schemaUtils, globalFormOptions } = registry;
   let itemSchema = schema.items as S;
   // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
   // FieldProps<T[], S, F> call on the class
-  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema);
+  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
   if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
     // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
     itemSchema = {} as S;
@@ -931,7 +935,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema, uiSchema),
+        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? keyedFormDataRef.current.length, uiSchema),
       };
       const newKeyedFormData = [...keyedFormDataRef.current];
       if (index !== undefined) {

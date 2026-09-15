@@ -322,6 +322,8 @@ class SchemaUtils<
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
     uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    globalUiOptions?: GlobalUISchemaOptions,
+    formContext?: F,
   ) {
     return getUiRequiredErrorSchema<T, S, F>(
       this.validator,
@@ -330,6 +332,8 @@ class SchemaUtils<
       formData,
       this.customMergeAllOf,
       uiSchemaDefinitions,
+      globalUiOptions,
+      formContext,
     );
   }
 

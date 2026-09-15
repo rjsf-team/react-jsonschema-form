@@ -3377,6 +3377,15 @@ describe('ArrayField', () => {
       expect(inputs[1]).toHaveAttribute('placeholder', 'second');
     });
 
+    it('applies the tuple-position uiSchema.items entry to a row added via the "Add" button', async () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      const uiSchema: UiSchema = { items: [{ 'ui:initialValue': 'a' }, { 'ui:initialValue': 'b' }] };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      const input = node.querySelector<HTMLInputElement>('.rjsf-array-item input[type="text"]');
+      expect(input).toHaveValue('a');
+    });
+
     it('should call dynamic uiSchema.items function with correct parameters', () => {
       const schema: RJSFSchema = {
         type: 'array',
