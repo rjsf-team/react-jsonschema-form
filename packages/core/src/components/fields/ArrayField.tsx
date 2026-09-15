@@ -16,6 +16,7 @@ import type {
 import {
   setByPath,
   allowAdditionalItems,
+  getStaticItemsUiSchema,
   getTemplate,
   getUiOptions,
   getWidget,
@@ -119,7 +120,7 @@ function canAddItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 }
 
 /** Helper method to compute item UI schema for both normal and fixed arrays
- * Handles both static object and dynamic function cases
+ * Handles the static object, static array (per-tuple-position), and dynamic function cases
  *
  * @param uiSchema - The parent UI schema containing items definition
  * @param item - The item data
@@ -146,6 +147,10 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       // Fall back to undefined to allow the field to still render
       return undefined;
     }
+  } else if (Array.isArray(uiSchema.items)) {
+    // Static array (per-tuple-position) case, e.g. from a non-fixed array schema paired with a tuple-shaped
+    // uiSchema.items to vary ui:options per position rather than uniformly.
+    return uiSchema.items[index] as UiSchema<T[], S, F> | undefined;
   } else {
     // Static object case - preserve undefined to maintain backward compatibility
     return uiSchema.items as UiSchema<T[], S, F> | undefined;
@@ -154,21 +159,31 @@ function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
+ *
+ * @param index - The position the new row is being inserted at, so a tuple-position (array) form of
+ *          `uiSchema.items` resolves the same entry that the row will actually render with once added
  */
 function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   registry: Registry<T[], S, F>,
   schema: S,
+  index: number,
+  uiSchema?: UiSchema<T[], S, F>,
 ): T {
   const { schemaUtils, globalFormOptions } = registry;
   let itemSchema = schema.items as S;
+  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
+  // FieldProps<T[], S, F> call on the class
+  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
   if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
     // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
     itemSchema = {} as S;
   } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+    // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
+    // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
     itemSchema = schema.additionalItems as S;
+    itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
   }
-  // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
-  return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
+  return schemaUtils.getDefaultFormState(itemSchema, undefined, false, undefined, itemUiSchema) as unknown as T;
 }
 
 /** Props used for ArrayAsXxxx type components*/
@@ -920,7 +935,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema),
+        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? keyedFormDataRef.current.length, uiSchema),
       };
       const newKeyedFormData = [...keyedFormDataRef.current];
       if (index !== undefined) {
@@ -930,7 +945,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       }
       onChange(updateKeyedFormData(newKeyedFormData), childFieldPathId.path, newErrorSchema);
     },
-    [registry, schema, onChange, updateKeyedFormData, childFieldPathId],
+    [registry, schema, uiSchema, onChange, updateKeyedFormData, childFieldPathId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of

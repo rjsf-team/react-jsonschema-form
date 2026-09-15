@@ -25,6 +25,13 @@ describe('createSchemaUtils()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
   });
 
+  it('getUiRequiredErrorSchema()', () => {
+    const requiredSchema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const requiredUtils = createSchemaUtils(testValidator, requiredSchema);
+    const errorSchema = requiredUtils.getUiRequiredErrorSchema({ nick: { 'ui:required': true } }, {});
+    expect(errorSchema).toEqual({ nick: { __errors: ["must have required property 'nick'"] } });
+  });
+
   describe('2020-12 schema', () => {
     const rootSchema2020: RJSFSchema = {
       [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,

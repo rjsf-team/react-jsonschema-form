@@ -223,7 +223,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const {
     schema: rawSchema,
-    uiSchema = {},
+    uiSchema: rawUiSchema,
     formData,
     errorSchema,
     fieldPathId,
@@ -238,6 +238,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     registry,
     title,
   } = props;
+  const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? {};
   const { fields, schemaUtils, translateString, globalUiOptions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
@@ -307,14 +308,26 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
-        if (REF_KEY in apSchema) {
+        const wasRef = REF_KEY in apSchema;
+        if (wasRef) {
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           type = apSchema.type;
           constValue = apSchema.const;
-          defaultValue = schemaUtils.getDefaultFormState(apSchema as S, defaultValue as T) as RJSFSchema['default'];
         }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
+        }
+        if (wasRef || type === 'object') {
+          // Route through the normal default pipeline (the same one an existing additionalProperties entry already
+          // goes through) so nested schema defaults and ui:initialValue/ui:emptyValue on uiSchema.additionalProperties
+          // apply the same way they do when Form first mounts with that key already present in formData.
+          defaultValue = schemaUtils.getDefaultFormState(
+            apSchema as S,
+            defaultValue as T,
+            undefined,
+            undefined,
+            getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+          ) as RJSFSchema['default'];
         }
       }
 
@@ -328,7 +341,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     setAdditionalPropertyOrder((order) => [...order, newKey]);
     onChange(newFormData, childFieldPathId.path);
-  }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema]);
+  }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema, uiSchema]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.

@@ -41,6 +41,7 @@ import {
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
   toFieldPathId,
+  UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   validationDataMerge,
   ERRORS_KEY,
@@ -513,6 +514,10 @@ export default class Form<
    *          changed, only called when those paths are needed, which is when live validation is not going to run
    * @param [skipLiveValidate=false] - Optional flag, if true, means that we are not running live validation
    * @param [shouldSanitize=false] - Optional flag, if true, means that we should attempt to sanitize formData
+   * @param [isReset=false] - Optional flag, if true, means this pass originated from `reset()` and should compute
+   *          defaults the same way an initial render does, even though this instance has generated defaults before.
+   *          Determined explicitly rather than inferred from `inputFormData === IS_RESET`, since `reset()` doesn't
+   *          always pass that sentinel (e.g. when the caller provided an explicit `initialFormData`/`formData`).
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -523,6 +528,7 @@ export default class Form<
     getFormDataChangedFields: () => string[] = () => [],
     skipLiveValidate = false,
     shouldSanitize = false,
+    isReset = false,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -553,6 +559,9 @@ export default class Form<
     } else if (inputFormData === undefined && isUncontrolled) {
       defaultsFormData = state.formData;
     }
+    // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
+    // though this instance has generated defaults before.
+    const initialDefaultsGenerated = state.initialDefaultsGenerated && !isReset;
     let formData: T;
     let computedRetrievedSchema: S;
     let wasSanitized = false;
@@ -562,7 +571,8 @@ export default class Form<
         rootSchema,
         defaultsFormData,
         false,
-        state.initialDefaultsGenerated,
+        initialDefaultsGenerated,
+        uiSchema,
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
       const formHash = shouldSanitize ? hashObject({ formData }) : '';
@@ -729,14 +739,25 @@ export default class Form<
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
-
     // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
     // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
     const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
 
-    return schemaUtils
+    const schemaValidation = schemaUtils
       .getValidator()
       .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
+    // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
+    // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
+    return validationDataMerge<T>(
+      schemaValidation,
+      schemaUtils.getUiRequiredErrorSchema(
+        uiSchema,
+        formData,
+        undefined,
+        uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+        this.props.formContext,
+      ),
+    );
   }
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
@@ -1078,6 +1099,10 @@ export default class Form<
       undefined,
       undefined,
       true,
+      false,
+      // Explicitly marks this pass as a reset so `ui:initialValue` applies again, even when the caller passed an
+      // explicit `initialFormData`/`formData` rather than relying on the `IS_RESET` sentinel above.
+      true,
     );
     const newFormData = newState.formData;
     const state = {
@@ -1086,7 +1111,11 @@ export default class Form<
       errors: [],
       schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
-      initialDefaultsGenerated: false,
+      // Matches what this reset pass actually computed defaults with (see getStateFromProps's `isReset` handling),
+      // rather than unconditionally `false`, which previously left the flag and the formData it describes out of
+      // sync — the very next unrelated recompute would then treat itself as an initial pass too and resurrect a
+      // `ui:initialValue` the user had since cleared.
+      initialDefaultsGenerated: newState.initialDefaultsGenerated,
       customErrors: undefined,
     } satisfies Partial<FormState<T, S, F>>;
 

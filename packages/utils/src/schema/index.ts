@@ -5,6 +5,7 @@ import getDefaultFormState from './getDefaultFormState.ts';
 import getDisplayLabel from './getDisplayLabel.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
+import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
@@ -20,6 +21,7 @@ export {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,
   isSelect,

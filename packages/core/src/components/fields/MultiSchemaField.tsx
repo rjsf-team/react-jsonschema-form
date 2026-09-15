@@ -97,6 +97,38 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
   const fieldId = `${fieldPathId.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
+  const { widgets, fields, translateString, globalUiOptions } = registry;
+  const {
+    widget = 'select',
+    placeholder,
+    autofocus,
+    autocomplete,
+    title = schema.title,
+    ...uiOptions
+  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+
+  // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
+  // `onOptionChange`, so that callback can pass the newly-selected option's own uiSchema (rather than none at all)
+  // to `getDefaultFormState`, letting `ui:initialValue`/`ui:emptyValue` on that option's fields apply on selection.
+  // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
+  // a fresh `[]` on every render, which would otherwise break its memoization and re-warn on every render too.
+  const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
+    if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
+      if (Array.isArray(uiSchema[ONE_OF_KEY])) {
+        return uiSchema[ONE_OF_KEY];
+      }
+      // oxlint-disable-next-line no-console
+      console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
+    } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
+      if (Array.isArray(uiSchema[ANY_OF_KEY])) {
+        return uiSchema[ANY_OF_KEY];
+      }
+      // oxlint-disable-next-line no-console
+      console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
+    }
+    return [];
+  }, [schema, uiSchema, title, name]);
+
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
    * the `onChange` handler.
@@ -114,12 +146,20 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       }
       const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
       const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+      const newOptionUiSchema =
+        intOption >= 0 && optionsUiSchema.length > intOption ? optionsUiSchema[intOption] : uiSchema;
 
       let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
       if (newOption) {
         // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
         // so that only the root objects themselves are created without adding undefined children properties
-        newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
+        newFormData = schemaUtils.getDefaultFormState(
+          newOption,
+          newFormData,
+          'excludeObjectChildren',
+          undefined,
+          newOptionUiSchema,
+        ) as T;
       }
 
       setSelectedOption(intOption);
@@ -127,10 +167,21 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       onChange(newFormData, fieldPathId.path, undefined, fieldId);
     },
     // setSelectedOption is stable (guaranteed by useState); skipNextOptionRecalculation is a ref
-    [selectedOption, retrievedOptions, disabled, readonly, schemaUtils, formData, fieldPathId, onChange, fieldId],
+    [
+      selectedOption,
+      retrievedOptions,
+      disabled,
+      readonly,
+      schemaUtils,
+      formData,
+      fieldPathId,
+      onChange,
+      fieldId,
+      optionsUiSchema,
+      uiSchema,
+    ],
   );
 
-  const { widgets, fields, translateString, globalUiOptions } = registry;
   const { SchemaField: SchemaFieldComponent } = fields;
   const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
     'MultiSchemaFieldTemplate',
@@ -140,14 +191,6 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
 
-  const {
-    widget = 'select',
-    placeholder,
-    autofocus,
-    autocomplete,
-    title = schema.title,
-    ...uiOptions
-  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
@@ -175,23 +218,6 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
   }
 
-  // First we will check to see if there is an anyOf/oneOf override for the UI schema
-  let optionsUiSchema: UiSchema<T, S, F>[] = [];
-  if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
-    if (Array.isArray(uiSchema[ONE_OF_KEY])) {
-      optionsUiSchema = uiSchema[ONE_OF_KEY];
-    } else {
-      // oxlint-disable-next-line no-console
-      console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
-    }
-  } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
-    if (Array.isArray(uiSchema[ANY_OF_KEY])) {
-      optionsUiSchema = uiSchema[ANY_OF_KEY];
-    } else {
-      // oxlint-disable-next-line no-console
-      console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
-    }
-  }
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   let optionUiSchema = uiSchema;
   if (selectedOption >= 0 && optionsUiSchema.length > selectedOption) {
