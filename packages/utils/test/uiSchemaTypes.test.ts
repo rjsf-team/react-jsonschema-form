@@ -12,6 +12,7 @@ interface Data {
   pair: [string, { city: string }];
   when: Date;
   upload: File;
+  counts: Map<string, number>;
   loose: unknown;
 }
 
@@ -95,6 +96,17 @@ describe('UiSchema type', () => {
 
     expect(ui.when?.['ui:widget']).toBe('alt-date');
     expect(wrong.when).toBeDefined();
+  });
+
+  it('treats any built-in class instance as a leaf, not only Date and File', () => {
+    const ui: Known = { counts: { 'ui:widget': 'counts' } };
+    const wrong: Known = {
+      // @ts-expect-error: TS2353, `size` is a Map property, not a field of Data['counts']
+      counts: { size: { 'ui:title': 'Nope' } },
+    };
+
+    expect(ui.counts?.['ui:widget']).toBe('counts');
+    expect(wrong.counts).toBeDefined();
   });
 
   it('leaves a field whose type says nothing about its data unconstrained', () => {
