@@ -17,6 +17,10 @@ const reIsIndex = /^(?:0|[1-9]\d*)$/;
  * quoted keys are not recognized and keys containing dots must be addressed with a segment list
  * instead of a string.
  *
+ * This is NOT the parser for a `FieldPath`, which looks similar but escapes reserved characters and
+ * distinguishes an array index from a numeric key. Read one of those with `fieldPathToList` instead;
+ * feeding it here silently mangles any escaped segment.
+ *
  * @param path - The string path to convert, such as `'.level1.level2[2].level3'`
  * @returns - The list of path segments, such as `['level1', 'level2', '2', 'level3']`
  */

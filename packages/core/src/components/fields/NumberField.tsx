@@ -1,12 +1,5 @@
 import { useState, useCallback } from 'react';
-import type {
-  ErrorSchema,
-  FieldPathList,
-  FieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ErrorSchema, FieldPath, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { asNumber, getDecimalSeparator, getUiOptions, optionsList } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
@@ -47,7 +40,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (newValue: FieldProps<T, S, F>['value'], path: FieldPathList, errorSchema?: ErrorSchema<T>, id?: string) => {
+    (newValue: FieldProps<T, S, F>['value'], path: FieldPath, errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
       setLastValue(newValue);
 

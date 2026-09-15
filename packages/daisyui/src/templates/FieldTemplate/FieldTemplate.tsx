@@ -47,7 +47,7 @@ export default function FieldTemplate<
     rawDescription,
     hidden,
     onChange,
-    fieldPathId,
+    fieldPath,
     style,
     ...divProps
   } = props;

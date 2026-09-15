@@ -22,6 +22,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. A bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
 
+**`FieldPath`** — The identity of a field in a form: a canonical string path such as `friends[0].firstName`, with the root form as the empty string (`ROOT_FIELD_PATH`). Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped, so the grammar is unambiguous even when property names contain dots or brackets. It is a branded `string`, so a plain string (such as a DOM id) cannot be passed where a `FieldPath` is expected; build one with [toFieldPath()](#tofieldpath) and derive the HTML id, HTML name or segment list from it with [fieldPathToId()](#fieldpathtoid), [fieldPathToName()](#fieldpathtoname) and [fieldPathToList()](#fieldpathtolist).
+
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
 ## Enums
@@ -51,7 +53,7 @@ Return a list of element ids that contain additional information about the field
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 - [includeExamples=false]: boolean - Optional flag, if true, will add the `examplesId` into the list
 
 #### Returns
@@ -94,7 +96,7 @@ Return a consistent `id` for the `btn` button element
 
 #### Parameters
 
-- id: FieldPathId | string - The id of the parent component for the option
+- id: string - The id of the parent component for the option
 - btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove' - The button type for which to generate the id
 
 #### Returns
@@ -179,7 +181,7 @@ Return a consistent `id` for the field description element.
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 
 #### Returns
 
@@ -361,7 +363,7 @@ Return a consistent `id` for the field error element.
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 
 #### Returns
 
@@ -373,11 +375,62 @@ Return a consistent `id` for the field examples element.
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 
 #### Returns
 
 - string: The consistent id for the field examples element from the given `id`
+
+### fieldPathEndsWithIndex()
+
+Determines whether the last segment of `fieldPath` is an array index, i.e. whether the path addresses an array element.
+
+#### Parameters
+
+- fieldPath: FieldPath - The `FieldPath` to check
+
+#### Returns
+
+- boolean: True when the path addresses an array element, otherwise false
+
+### fieldPathToId()
+
+Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, joining the prefix and every segment of the path with the separator.
+
+#### Parameters
+
+- fieldPath: FieldPath - The `FieldPath` of the field
+- globalFormOptions: GlobalFormOptions - The `GlobalFormOptions` used to get the `idPrefix` and `idSeparator`
+
+#### Returns
+
+- string: The id for the field
+
+### fieldPathToList()
+
+Parses `fieldPath` back into its list of segments, with array indexes as numbers and property names unescaped.
+
+#### Parameters
+
+- fieldPath: FieldPath - The `FieldPath` to parse
+
+#### Returns
+
+- FieldPathList: The `FieldPathList` for `fieldPath`
+
+### fieldPathToName()
+
+Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalFormOptions`, when one is provided.
+
+#### Parameters
+
+- fieldPath: FieldPath - The `FieldPath` of the field
+- globalFormOptions: GlobalFormOptions - The `GlobalFormOptions` used to get the `nameGenerator` and `idPrefix`
+- [isMultiValue]: boolean | undefined - Optional flag indicating this field accepts multiple values
+
+#### Returns
+
+- string | undefined: The name for the field, or undefined when no `nameGenerator` is configured or `fieldPath` is the root
 
 ### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -779,7 +832,7 @@ Return a consistent `id` for the field help element.
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 
 #### Returns
 
@@ -1283,7 +1336,7 @@ Return a consistent `id` for the field title element.
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: string - The id of the field
 
 #### Returns
 
@@ -1361,22 +1414,18 @@ const intoThis = {
 
 - ErrorSchema&lt;T>: The `ErrorSchema` built from the list of `RJSFValidationErrors`
 
-### toFieldPathId()
+### toFieldPath()
 
-Constructs the `FieldPathId` for `fieldPath`. If `parentPathId` is provided, the `fieldPath` is appended to the end
-of the parent path. Then the `ID_KEY` of the resulting `FieldPathId` is constructed from the `idPrefix` and
-`idSeparator` contained within the `globalFormOptions`. If `fieldPath` is passed as an empty string, it will simply
-generate the path from the `parentPath` (if provided) and the `idPrefix` and `idSeparator`
+Appends `segment` to `parentPath`, returning the `FieldPath` of the child field. Property names are separated by `.` and array indexes are bracketed, so `toFieldPath('firstName', toFieldPath(0, toFieldPath('friends')))` is `friends[0].firstName`. A property name containing `\`, `.`, `[` or `]` is backslash-escaped. An empty `segment` names no field, so the parent path is returned unchanged.
 
 #### Parameters
 
-- fieldPath: string | number - The property name or array index of the current field element
-- globalFormOptions: GlobalFormOptions - The `GlobalFormOptions` used to get the `idPrefix` and `idSeparator`
-- [parentPath]: FieldPathId | FieldPathList | undefined - The optional `FieldPathId` or `FieldPathList` of the parent element for this field element
+- segment: string | number - The property name or array index of the field
+- [parentPath=ROOT_FIELD_PATH]: FieldPath - The optional `FieldPath` of the parent field
 
 #### Returns
 
-- FieldPathId: The `FieldPathId` for the given `fieldPath` and the optional `parentPathId`
+- FieldPath: The `FieldPath` of the field
 
 ### toPath()
 
@@ -1448,19 +1497,6 @@ and to handle the clicking of the `clear` and `setNow` buttons.
 #### Returns
 
 - UseAltDateWidgetResult: The `UseAltDateWidgetResult` to be used within a `AltDateWidget` implementation
-
-### useDeepCompareMemo&lt;T = unknown>()
-
-Hook that stores and returns a `T`. If `newValue` is the same as the stored one, then the stored one is returned to
-avoid having a component rerender due it being a different object. Otherwise, the `newValue` is stored and returned.
-
-#### Parameters
-
-- newValue: T - The potential new `T` value
-
-#### Returns
-
-- T: The latest stored `T` value
 
 ### useFileWidgetProps()
 

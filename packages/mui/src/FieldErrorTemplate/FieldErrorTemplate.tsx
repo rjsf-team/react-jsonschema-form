@@ -31,11 +31,11 @@ export default function FieldErrorTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], fieldPathId, uiSchema } = props;
+  const { errors = [], id: fieldId, uiSchema } = props;
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId(fieldPathId);
+  const id = errorId(fieldId);
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const muiProps = getMuiProps<T, S, F, FieldErrorTemplateMuiProps>(uiOptions);

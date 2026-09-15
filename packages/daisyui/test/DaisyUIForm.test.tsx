@@ -52,7 +52,7 @@ describe('DaisyUI array field title/description', () => {
     expect(title).toHaveClass('text-2xl', 'font-bold');
   });
 
-  test('gives the array title the same id core would derive from the fieldPathId', () => {
+  test('gives the array title the same id core would derive from the field id', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
     expect(container.querySelector('#root_tags__title')).not.toBeNull();
   });
@@ -64,7 +64,7 @@ describe('DaisyUI array field title/description', () => {
     expect(description).toHaveTextContent('A list of tags');
   });
 
-  test('gives the array description the same id core would derive from the fieldPathId', () => {
+  test('gives the array description the same id core would derive from the field id', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
     expect(container.querySelector('#root_tags__description')).not.toBeNull();
   });

@@ -1,5 +1,5 @@
 import type { FieldProps, TitleFieldProps } from '@rjsf/utils';
-import { ID_KEY, noop, titleId } from '@rjsf/utils';
+import { noop, ROOT_FIELD_PATH, titleId } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 
 import LayoutHeaderField from '../src/components/fields/LayoutHeaderField.tsx';
@@ -25,7 +25,8 @@ function TestTitleField(props: TitleFieldProps) {
 describe('LayoutHeaderField', () => {
   function getProps(overrideProps: Partial<FieldProps> = {}): FieldProps {
     const {
-      fieldPathId = { [ID_KEY]: 'root', path: [] },
+      fieldPath = ROOT_FIELD_PATH,
+      id = 'root',
       schema = {},
       name = '',
       uiSchema = {},
@@ -45,7 +46,8 @@ describe('LayoutHeaderField', () => {
       title,
       required,
       // end required FieldProps
-      fieldPathId,
+      fieldPath,
+      id,
       schema,
       uiSchema,
       name,
@@ -67,36 +69,36 @@ describe('LayoutHeaderField', () => {
     // renders header field and has expected text and no id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD);
-    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId));
+    expect(headerField).toHaveAttribute('id', titleId(props.id));
 
     // Is required
     const requiredSpan = within(headerField).getByTestId(REQUIRED_ID);
     expect(requiredSpan).toBeInTheDocument();
   });
 
-  test('name is provided, schema has title, fieldPathId has ID_KEY, not required', () => {
+  test('name is provided, schema has title, id is provided, not required', () => {
     const props = getProps({
       name: TITLE_BOLD,
       schema: { title: TITLE_NORMAL },
-      fieldPathId: { [ID_KEY]: 'foo', path: [] },
+      id: 'foo',
     });
     render(<LayoutHeaderField {...props} />);
 
     // renders header field and has expected text and id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_NORMAL);
-    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.id));
 
     // Is not required
     const requiredSpan = within(headerField).queryByTestId(REQUIRED_ID);
     expect(requiredSpan).not.toBeInTheDocument();
   });
 
-  test('title prop is passed, schema has title, fieldPathId has ID_KEY, required', () => {
+  test('title prop is passed, schema has title, id is provided, required', () => {
     const props = getProps({
       title: TITLE_BOLD,
       schema: { title: TITLE_NORMAL },
-      fieldPathId: { [ID_KEY]: 'foo', path: [] },
+      id: 'foo',
       required: true,
     });
     render(<LayoutHeaderField {...props} />);
@@ -104,7 +106,7 @@ describe('LayoutHeaderField', () => {
     // renders header field and has expected text and id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD);
-    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.id));
 
     // Is not required
     const requiredSpan = within(headerField).getByTestId(REQUIRED_ID);
@@ -117,14 +119,14 @@ describe('LayoutHeaderField', () => {
       uiSchema: {
         'ui:title': TITLE_BOLD_2,
       },
-      fieldPathId: { [ID_KEY]: 'foo', path: [] },
+      id: 'foo',
     });
     render(<LayoutHeaderField {...props} />);
 
     // renders header field and has expected text and no id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD_2);
-    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.id));
 
     // Is not required
     const requiredSpan = within(headerField).queryByTestId(REQUIRED_ID);
