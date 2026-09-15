@@ -859,6 +859,8 @@ const uiSchema: UiSchema = {
 
 The one difference worth knowing: a `ui:required` error is built by RJSF itself, not by your validator, so it has a `property` and `message` but not a validator-specific shape (e.g. AJV's `params.missingProperty`/`schemaPath`), and it does not pass through a custom `transformErrors` function the way schema-level errors do. It renders under the field and participates in `focusOnFirstError` normally, worded identically to a schema-level required error (`must have required property 'x'`) so it reads the same in an error list.
 
+A known limitation under `oneOf`/`anyOf`: which branch is "selected" is picked by matching `formData` against each option's schema, the same way `MultiSchemaField` picks its initial branch. `MultiSchemaField` then keeps the user's own selection in component state, independent of that matching, so once the `formData` for the field no longer disambiguates the options (e.g. it's empty, or matches more than one branch equally well), a manual switch between options can leave the enforced branch out of sync with the one actually rendered — a `ui:required` error can appear for a field that isn't shown, or fail to appear for one that is. This can't be fixed from outside the rendered form, since the walk that enforces `ui:required` has no access to `MultiSchemaField`'s component state. It only arises when the data itself doesn't distinguish the branches; giving each option a distinguishing property (e.g. a `const`-valued discriminator field) avoids it entirely.
+
 ### rows
 
 You can set the initial height of a textarea widget by specifying `rows` option.
