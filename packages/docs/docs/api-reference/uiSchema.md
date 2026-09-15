@@ -978,9 +978,9 @@ const uiSchema: UiSchema = {
 
 ## Type-safe UiSchema
 
-`UiSchema` is deliberately loose: it blends in `Record<string, any>`, so any key and any value type-check, including a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field) or a typo in a `ui:`-prefixed option name (`ui:wigdet`). Those mistakes only surface at runtime, if at all.
+`UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#uischemat-checks-field-names-breaking-change)), but it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
 
-For consumers who type their form data with an explicit TypeScript type, `@rjsf/utils` also exports `UiOptions<T, S, F, Checks>`, an opt-in, stricter alternative. `UiOptions` narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, and recurses into nested objects/arrays typing each field the same way:
+For consumers who type their form data with an explicit TypeScript type, `@rjsf/utils` also exports `UiOptions<T, S, F, Checks>`, an opt-in, stricter alternative to `UiSchema`. `UiOptions` narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, and recurses into nested objects/arrays typing each field the same way:
 
 ```ts
 import type { UiOptions } from '@rjsf/utils';
@@ -999,11 +999,11 @@ const uiSchema: UiOptions<FormData> = {
 };
 ```
 
-This is purely additive - `UiSchema` is unchanged, and adopting `UiOptions` is entirely opt-in, incrementally, field by field or form by form.
+Using the `UiOptions` type is not mandatory when providing `uiSchema` in TypeScript; adopting it is entirely opt-in, and can be adopted incrementally, field by field or form by form.
 
 ### Extending the widget/option vocabulary
 
-The widget/field names and options that `UiOptions` recognizes out of the box come from `CoreUiOptionsChecks`, a union of `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Themes and consumers extend that vocabulary with their own `Checks` union, passed as `UiOptions`'s fourth type parameter, rather than by modifying `CoreUiOptionsChecks` itself:
+The widget/field names and options that `UiOptions` recognizes out of the box come from `CoreUiOptionsChecks`, a union of `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Themes and consumers extend that vocabulary with their own `Checks` union, passed as `UiOptions`'s fourth type parameter, rather than by modifying or augmenting `CoreUiOptionsChecks` itself:
 
 ```ts
 import type { FormContextType, RJSFSchema, UiOptions, UiOptionsCheck } from '@rjsf/utils';
@@ -1020,11 +1020,11 @@ const uiSchema: MyUiOptions<{ active: boolean }> = {
 
 - With no type parameter (`T` defaulting to `any`), `UiOptions` does **not** fall back to `UiSchema`-style unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `CoreUiOptionsChecks`/`Checks`. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
 - `UiOptions` does not yet support `ui:globalOptions`, `ui:fieldReplacesAnyOrOneOf` or `ui:definitions`; use `UiSchema` for uiSchema fragments that need those.
-- A field whose form-data shape includes an index signature (e.g. from `additionalProperties`/`patternProperties`) only gets type-checking for its explicitly-declared keys; dynamic keys still type-check but without narrowing beyond the index signature's value type.
+- A field whose form-data shape includes an index signature (e.g. from `additionalProperties`/`patternProperties`) only gets type-checking for its explicitly-declared keys; dynamic keys are type-checked but without narrowing beyond the index signature's value type.
 
-### Enforcing it with `withStrictUiSchema`
+### Applying it to an inline uiSchema with `satisfies`
 
-Declaring an intermediate `const uiSchema: UiOptions<FormData> = {...}` and passing that to `Form`'s `uiSchema` prop gets you the narrowing above, because `FormProps['uiSchema']` is typed as `UiSchema<T, S, F>`, which is permissive enough to accept a well-formed `UiOptions` value with no cast. But that also means an inline `uiSchema` object literal passed directly as a JSX prop gets **no narrowing at all** - it's checked against the permissive `UiSchema` type instead, so the same `RangeWidget`-on-a-`string`-field mistake would not be caught:
+Declaring an intermediate `const uiSchema: UiOptions<FormData> = {...}` and passing that to `Form`'s `uiSchema` prop gets you the narrowing above, because `FormProps['uiSchema']` is typed as `UiSchema<T, S, F>`, which is permissive enough to accept a well-formed `UiOptions` value with no cast. But an inline `uiSchema` object literal passed directly as a JSX prop gets **no narrowing at all**, since it's checked against that same permissive `UiSchema` type:
 
 ```tsx
 // No compile error here, even though it's the exact same mistake as above -
@@ -1032,17 +1032,17 @@ Declaring an intermediate `const uiSchema: UiOptions<FormData> = {...}` and pass
 <Form schema={schema} uiSchema={{ bio: { 'ui:widget': 'RangeWidget' } }} validator={validator} />
 ```
 
-`@rjsf/core` exports `withStrictUiSchema`, a Higher-Order Component that wraps `Form` (or a themed `Form` returned by `withTheme()`) and returns a version of it whose `uiSchema` prop only accepts `UiOptions<T, S, F, Checks>`, with no permissive `UiSchema` fallback for a mistake to slip through:
+Check an inline literal against `UiOptions` with TypeScript's `satisfies` operator instead. It validates the expression against `UiOptions<FormData>` while leaving the expression's own type in place for the surrounding `uiSchema` prop, so no wrapper component or cast is needed:
 
 ```tsx
-import { withStrictUiSchema } from '@rjsf/core';
-
-const StrictForm = withStrictUiSchema<FormData>(Form);
-
-// Compile error: RangeWidget is not valid for `bio`, a string field.
-<StrictForm schema={schema} uiSchema={{ bio: { 'ui:widget': 'RangeWidget' } }} validator={validator} />;
+<Form
+  schema={schema}
+  uiSchema={
+    {
+      // Compile error: RangeWidget is not valid for `bio`, a string field.
+      bio: { 'ui:widget': 'RangeWidget' },
+    } satisfies UiOptions<FormData>
+  }
+  validator={validator}
+/>
 ```
-
-A plain `UiSchema<T,S,F> | UiOptions<T,S,F,Checks>` union on `uiSchema` would not achieve this: as long as `UiSchema`'s permissive `Record<string, any>` remains an accepted alternative on the same prop, TypeScript only needs the literal to match _one_ member of the union, and it always matches the permissive one. `withStrictUiSchema` only exposes `UiOptions`, which is what actually closes the gap.
-
-`UiOptions` has no runtime representation - `withStrictUiSchema` does no runtime validation or transformation of its own. It renders the wrapped component with the exact same props it was given; the extra safety exists only at compile time, for code that renders through the wrapper instead of `Form` directly.
