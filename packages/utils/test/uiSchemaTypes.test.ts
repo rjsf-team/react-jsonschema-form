@@ -1,4 +1,4 @@
-import type { UiSchema } from '../src/index.ts';
+import type { CoreUiOptionsChecks, FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -151,5 +151,104 @@ describe('UiSchema key openness', () => {
     const directivesOpen: `ui:${string}` extends keyof Known ? true : false = true;
 
     expect([fieldNamesClosed, directivesOpen]).toEqual([true, true]);
+  });
+});
+
+// A self-referential shape (no depth cap), matching how a recursive `$ref` (e.g.
+// packages/playground/src/samples/references.ts's `node` definition) actually behaves.
+interface TreeNode {
+  name: string;
+  children: (TreeNode | null)[];
+}
+
+interface ReferencesFormData {
+  billing_address: { street_address: string; city: string; state: string };
+  tree: TreeNode;
+  contact: { name: string; details: string };
+}
+
+describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
+  it('leaves UiSchema fully open when Checks is omitted, same as ever - passing a Checks union is what narrows it', () => {
+    const ui: UiSchema<ReferencesFormData> = {
+      tree: { name: { 'ui:widget': 'AnyStringWhatsoever' } },
+    };
+
+    expect(ui.tree?.name?.['ui:widget']).toBe('AnyStringWhatsoever');
+  });
+
+  it('narrows widgets per field type on a recursive, nested form-data shape, using just the core vocabulary', () => {
+    // CoreUiOptionsChecks is always included once any Checks is passed - pass it directly for "core vocabulary,
+    // no theme/consumer extensions".
+    type Checked = UiSchema<ReferencesFormData, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      'ui:order': ['billing_address', 'contact', 'tree'],
+      tree: {
+        name: { 'ui:placeholder': 'Enter node name', 'ui:help': 'Applies at every recursion level' },
+        children: { 'ui:options': { orderable: false }, items: { 'ui:help': 'Per-item help on a recursive element' } },
+      },
+      contact: {
+        name: { 'ui:placeholder': 'Full name (e.g., John Doe)' },
+        details: { 'ui:widget': 'TextareaWidget' },
+      },
+    };
+    const badWidget: Checked = {
+      tree: {
+        // @ts-expect-error RangeWidget is a number widget; `name` is a string field
+        name: { 'ui:widget': 'RangeWidget' },
+      },
+    };
+    const badRawOption: Checked = {
+      tree: {
+        // @ts-expect-error `rows` (a string/textarea option) is not valid for `children`, an array field
+        children: { 'ui:rows': 4 },
+      },
+    };
+
+    expect(ui.tree?.name?.['ui:placeholder']).toBe('Enter node name');
+    expect([badWidget, badRawOption]).toHaveLength(2);
+  });
+
+  it('supports both the `ui:optionName` and `ui:options: { optionName }` forms once Checks is supplied', () => {
+    type Checked = UiSchema<{ bio: string }, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+
+    const viaPrefix: Checked = { bio: { 'ui:placeholder': 'Tell us about yourself' } };
+    const viaOptions: Checked = { bio: { 'ui:options': { placeholder: 'Tell us about yourself' } } };
+
+    expect(viaPrefix.bio?.['ui:placeholder']).toBe('Tell us about yourself');
+    expect(viaOptions.bio?.['ui:options']?.placeholder).toBe('Tell us about yourself');
+  });
+
+  it('still type-checks the fixed keys of a field whose shape also has an index signature (additionalProperties)', () => {
+    // Mirrors what packages/playground/src/samples/patternProperties.ts's formData shape compiles to in TS.
+    interface PatternPropsFormData {
+      firstName: string;
+      lastName: string;
+      [dynamicKey: string]: string;
+    }
+    type Checked = UiSchema<PatternPropsFormData, RJSFSchema, FormContextType, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      firstName: { 'ui:autofocus': true },
+      assKickCount: { 'ui:placeholder': 'a dynamic, non-declared key still type-checks as `string`' },
+    };
+    const bad: Checked = {
+      // @ts-expect-error firstName is `string`; RangeWidget is a number widget
+      firstName: { 'ui:widget': 'RangeWidget' },
+    };
+
+    expect(ui.firstName?.['ui:autofocus']).toBe(true);
+    expect(bad).toBeDefined();
+  });
+
+  it('lets a theme/consumer extend the widget and option vocabulary via a Checks union', () => {
+    type MyThemeChecks =
+      | UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>
+      | UiOptionsCheck<number, { widget?: 'SliderWidget' }>;
+    type Checked = UiSchema<{ active: boolean }, RJSFSchema, FormContextType, MyThemeChecks>;
+
+    const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+
+    expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
   });
 });

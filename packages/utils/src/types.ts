@@ -1272,103 +1272,12 @@ export type UIOptionsType<
  */
 export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
 
-/** Type describing the uiSchema definitions that can be applied to schemas referenced by `$ref`.
- * Keys are the full `$ref` path (e.g., '#/$defs/node', '#/definitions/address').
- * When a schema with a matching `$ref` is resolved, the corresponding uiSchema definition
- * is automatically applied and merged with any local uiSchema overrides.
- */
-export type UiSchemaDefinitions<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = Record<string, UiSchema<T, S, F>>;
-
-/** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
- * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
- * a primitive is its prototype's method names.
- */
-type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicValue>;
-
-/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
- * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
- */
-type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
-
-/** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
- * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
- */
-type FieldKeys<X> = { [K in keyof X]-?: NonNullable<X[K]> extends (...args: never[]) => unknown ? never : K }[keyof X];
-
-/** Every field-naming key of every member of a union, each typed as the union of what the members that declare it
- * hold. A `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
- */
-type UnionMembersMerged<T> = {
-  [K in T extends unknown ? FieldKeys<T> : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
-};
-
-/** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
-type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : any;
-
-/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
-type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? any : UiSchema<V, S, F>;
-
-/** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
- * starting with `ui:`.
- */
-export type UiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
-  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsBaseType<T, S, F>> & {
-    /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
-     * Registry for use everywhere.
-     */
-    'ui:globalOptions'?: GlobalUISchemaOptions;
-    /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
-     * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
-     * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-     * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
-     * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
-     * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
-     */
-    'ui:fieldReplacesAnyOrOneOf'?: boolean;
-    /** An object that contains all the potential UI options in a single object */
-    'ui:options'?: UIOptionsType<T, S, F>;
-    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
-     * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
-     * based on the item's data and index.
-     * When using a function, it receives the item data, index, and optionally the form context as parameters.
-     */
-    items?:
-      | UiSchema<ArrayElement<T>, S, F>
-      | UiSchema<ArrayElement<T>, S, F>[]
-      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
-    /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
-     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
-     */
-    additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F>;
-    /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
-    additionalItems?: UiSchema<ArrayElement<T>, S, F>;
-    /** The uiSchema for each subschema of an `anyOf`, positionally */
-    anyOf?: UiSchema<T, S, F>[];
-    /** The uiSchema for each subschema of a `oneOf`, positionally */
-    oneOf?: UiSchema<T, S, F>[];
-    /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
-     * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
-     */
-    classNames?: string;
-    /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
-     * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
-     * applied and merged with any local uiSchema overrides at that path.
-     * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address').
-     */
-    'ui:definitions'?: UiSchemaDefinitions<T, S, F>;
-  };
-
 /** A single `{ when, then }` rule: when a field's form-data type is assignable to `when`, the widget/field names and
- * options listed in `then` become valid `ui:widget`/`ui:field`/`ui:options` values for that field in `UiOptions`.
- * Build a union of these to extend the type-safe vocabulary `UiOptions` accepts - a theme package adds a union of
- * its own widgets this way, and a consumer of a theme adds their own domain-specific options the same way. See
- * `CoreUiOptionsChecks` for the rules describing `@rjsf/core`'s own built-in widgets/fields/options.
+ * options listed in `then` become valid `ui:widget`/`ui:field`/`ui:options` values for that field in `UiSchema`,
+ * once a `Checks` union is passed as `UiSchema`'s fourth type parameter. Build a union of these to extend the
+ * type-safe vocabulary a `Checks` union accepts - a theme package adds a union of its own widgets this way, and a
+ * consumer of a theme adds their own domain-specific options the same way. See `CoreUiOptionsChecks` for the rules
+ * describing `@rjsf/core`'s own built-in widgets/fields/options.
  */
 export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
   when: When;
@@ -1377,7 +1286,7 @@ export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
 
 /** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
  * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Always
- * included by `UiOptions`, in addition to whatever `Checks` union is passed to it.
+ * included by `UiSchema` whenever a `Checks` union is supplied, in addition to whatever that `Checks` union adds.
  *
  * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not
  * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
@@ -1457,6 +1366,7 @@ export type CoreUiOptionsChecks =
       {
         field?: 'ObjectField';
         optionsSchemaSelector?: string;
+        order?: string[];
       }
     >;
 
@@ -1506,37 +1416,11 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
   } & RawOptsFor<T, Checks>;
 }
 
-/** An experimental, opt-in alternative to `UiSchema` that narrows `ui:widget`/`ui:field`/`ui:options` (and their
- * `ui:`-prefixed raw-option equivalents) to only the values that are valid for each field's form-data type, and
- * recurses into nested objects/arrays typing each field the same way. Unlike `UiSchema`, `UiOptions` does not fall
- * back to `Record<string, any>`: every key not covered below is a type error, so a typo like `ui:wigdet` or a widget
- * name that isn't valid for the field's type is caught at compile time instead of only failing at runtime.
- *
- * Pass a `Checks` union (built from `UiOptionsCheck`) to extend the widget/field/option vocabulary beyond
- * `CoreUiOptionsChecks` - a theme package extends it with its own widgets, and a consumer extends it further with
- * their own domain-specific options:
- *
- * ```ts
- * type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
- * type MyUiOptions<T = any> = UiOptions<T, RJSFSchema, FormContextType, MyThemeChecks>;
- * ```
- *
- * `T` defaults to `any` so `UiOptions` can be used without a type parameter for vanilla/untyped form data. This does
- * *not* fall back to `UiSchema`-style unrestricted strings, though: `ui:widget`/`ui:field` are still limited to the
- * names declared in `CoreUiOptionsChecks`/`Checks` even when `T` is `any` (any custom widget/field not declared
- * there must be passed as an actual component instance instead of a string, or added to a `Checks` union).
- *
- * This is a new, additive export: it does not replace or change `UiSchema`, and existing code is unaffected.
- * Known gaps versus `UiSchema`: it does not yet support `ui:globalOptions`, `ui:fieldReplacesAnyOrOneOf` or
- * `ui:definitions`, and a field whose form-data shape includes an index signature (e.g. from `additionalProperties`
- * or `patternProperties`) only gets type-checking for its explicitly-declared keys.
+/** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from `CoreUiOptionsChecks`
+ * since they aren't type-specific vocabulary - available whenever `Checks` narrows the vocabulary, same as they
+ * always are through `UIOptionsBaseType` when it doesn't.
  */
-export type UiOptions<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-  Checks = never,
-> = {
+interface ClosedCommonUiOptions {
   'ui:help'?: string;
   'ui:title'?: string;
   'ui:description'?: string;
@@ -1547,14 +1431,120 @@ export type UiOptions<
   'ui:readonly'?: boolean;
   'ui:hideError'?: boolean;
   'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
-} & UiOptionsComponentPart<T, S, F, CoreUiOptionsChecks | Checks> &
-  MakeUIType<RawOptsFor<T, CoreUiOptionsChecks | Checks>> &
-  (T extends (infer U)[] ? { items?: UiOptions<U, S, F, Checks> } : object) &
-  (T extends unknown[]
-    ? object
-    : T extends object
-      ? { 'ui:order'?: (Extract<keyof T, string> | '*')[] } & { [K in keyof T]?: UiOptions<T[K], S, F, Checks> }
-      : object);
+}
+
+/** @internal The vocabulary part of `UiSchema`: `ui:widget`/`ui:field`/`ui:options` and their `ui:`-prefixed raw
+ * option equivalents. `[Checks] extends [never]` (tuple-wrapped to avoid distribution) is `UiSchema`'s default,
+ * unnarrowed, permissive shape - identical to what `UiSchema` has always had. A concrete `Checks` union instead
+ * narrows `ui:widget`/`ui:field` to only the names `CoreUiOptionsChecks`/`Checks` declare for the field's type, and
+ * closes the `ui:` namespace to just the options they declare plus `ClosedCommonUiOptions`: every other key,
+ * including a typo like `ui:wigdet`, becomes a type error instead of only failing at runtime.
+ */
+type UiVocabularyPart<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = [Checks] extends [never]
+  ? MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> }
+  : ClosedCommonUiOptions &
+      UiOptionsComponentPart<T, S, F, CoreUiOptionsChecks | Checks> &
+      MakeUIType<RawOptsFor<T, CoreUiOptionsChecks | Checks>>;
+
+/** Type describing the uiSchema definitions that can be applied to schemas referenced by `$ref`.
+ * Keys are the full `$ref` path (e.g., '#/$defs/node', '#/definitions/address').
+ * When a schema with a matching `$ref` is resolved, the corresponding uiSchema definition
+ * is automatically applied and merged with any local uiSchema overrides.
+ */
+export type UiSchemaDefinitions<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+  Checks = never,
+> = Record<string, UiSchema<T, S, F, Checks>>;
+
+/** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
+ * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
+ * a primitive is its prototype's method names.
+ */
+type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicValue>;
+
+/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
+ * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+ */
+type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
+
+/** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
+ * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
+ */
+type FieldKeys<X> = { [K in keyof X]-?: NonNullable<X[K]> extends (...args: never[]) => unknown ? never : K }[keyof X];
+
+/** Every field-naming key of every member of a union, each typed as the union of what the members that declare it
+ * hold. A `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
+ */
+type UnionMembersMerged<T> = {
+  [K in T extends unknown ? FieldKeys<T> : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
+};
+
+/** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
+type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : any;
+
+/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
+type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType, Checks> =
+  IsAny<V> extends true ? any : UiSchema<V, S, F, Checks>;
+
+/** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
+ * starting with `ui:`.
+ *
+ * `Checks` (a union of `UiOptionsCheck`, defaulting to `never`) is an opt-in, stricter mode: with no `Checks`
+ * supplied, `UiSchema` behaves exactly as it always has, accepting any `ui:widget`/`ui:field` name and any
+ * `ui:`-prefixed option. Pass a `Checks` union to narrow `ui:widget`/`ui:field` to only the names valid for each
+ * field's form-data type and close the `ui:` namespace to just the options they declare - see `UiOptionsCheck` and
+ * `CoreUiOptionsChecks`.
+ */
+export type UiSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+  Checks = never,
+> = {
+  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F, Checks>;
+} & UiVocabularyPart<T, S, F, Checks> & {
+    /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
+     * Registry for use everywhere.
+     */
+    'ui:globalOptions'?: GlobalUISchemaOptions;
+    /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
+     * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
+     * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
+     * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
+     * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
+     * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+     */
+    'ui:fieldReplacesAnyOrOneOf'?: boolean;
+    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
+     * or a function that returns a dynamic uiSchema based on the item's data and index.
+     * When using a function, it receives the item data, index, and optionally the form context as parameters.
+     */
+    items?:
+      | UiSchema<ArrayElement<T>, S, F, Checks>
+      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F, Checks>);
+    /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
+     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
+     */
+    additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F, Checks>;
+    /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
+    additionalItems?: UiSchema<ArrayElement<T>, S, F, Checks>;
+    /** The uiSchema for each subschema of an `anyOf`, positionally */
+    anyOf?: UiSchema<T, S, F, Checks>[];
+    /** The uiSchema for each subschema of a `oneOf`, positionally */
+    oneOf?: UiSchema<T, S, F, Checks>[];
+    /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
+     * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
+     */
+    classNames?: string;
+    /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
+     * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
+     * applied and merged with any local uiSchema overrides at that path.
+     * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address').
+     */
+    'ui:definitions'?: UiSchemaDefinitions<T, S, F, Checks>;
+  };
 
 /** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`
  * object back, while potentially adding additional messages to the `errors`
