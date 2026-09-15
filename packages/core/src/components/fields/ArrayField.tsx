@@ -323,7 +323,12 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onSelectChange,
   } = props;
   const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
-  const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
+  const {
+    widget = 'files',
+    title: uiTitle,
+    placeholder,
+    ...options
+  } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
@@ -349,6 +354,7 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       rawErrors={rawErrors}
       label={label}
       hideLabel={!displayLabel}
+      placeholder={placeholder}
       htmlName={multiValueFieldPathId.name}
     />
   );

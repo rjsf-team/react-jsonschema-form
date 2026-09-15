@@ -1646,6 +1646,18 @@ describe('ArrayField', () => {
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('must NOT have fewer than 5 items');
     });
+
+    it('should pass ui:placeholder to the file widget', () => {
+      const CustomFileWidget = ({ placeholder }: WidgetProps) => <div id='files-placeholder'>{placeholder}</div>;
+
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'string', format: 'data-url' } },
+        widgets: { FileWidget: CustomFileWidget },
+        uiSchema: { 'ui:placeholder': 'Drop files here' },
+      });
+
+      expect(node.querySelector('#files-placeholder')).toHaveTextContent('Drop files here');
+    });
   });
 
   describe('Nested lists', () => {
