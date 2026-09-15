@@ -1,4 +1,5 @@
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   ONE_OF_KEY,
@@ -10,6 +11,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import mergeSchemas from '../mergeSchemas.ts';
+import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
 import type {
@@ -163,18 +165,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (typeof propertySchema === 'boolean') {
         return;
       }
-      const childUiSchema = (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]
-        ? uiSchema.additionalProperties
-        : uiSchema[key];
-      const childRequired = Boolean(retrieved.required?.includes(key));
-      walk(
-        ctx,
-        propertySchema as S,
-        childUiSchema as UiSchema<T, S, F> | undefined,
-        data[key],
-        [...path, key],
-        childRequired,
+      const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
+        uiSchema,
+        (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] ? ADDITIONAL_PROPERTIES_KEY : key,
       );
+      const childRequired = Boolean(retrieved.required?.includes(key));
+      walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired);
     });
   } else if (Array.isArray(formData)) {
     formData.forEach((item, idx) => {

@@ -221,7 +221,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const {
     schema: rawSchema,
-    uiSchema = {},
+    uiSchema: rawUiSchema,
     formData,
     errorSchema,
     fieldPath,
@@ -237,6 +237,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     registry,
     title,
   } = props;
+  const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? {};
   const { fields, schemaUtils, translateString, globalUiOptions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
@@ -322,7 +323,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
             defaultValue as T,
             undefined,
             undefined,
-            uiSchema?.additionalProperties,
+            getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
           ) as RJSFSchema['default'];
         }
       }
