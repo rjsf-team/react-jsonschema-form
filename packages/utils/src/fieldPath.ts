@@ -13,8 +13,8 @@ const RESERVED = /[\\.[\]]/g;
  * with a backslash, which is what makes the grammar unambiguous — unlike the `idSeparator` join, which
  * collides whenever a property name contains the separator.
  *
- * `''` is a property name like any other, so `toFieldPath('', 'a')` addresses `a['']`. At the root it is the only
- * name the grammar cannot hold, since the root path is itself empty, so `toFieldPath('')` is the root.
+ * `''` is a property name like any other, so `toFieldPath('', 'a')` addresses `a['']`. The root path is itself empty,
+ * so an empty name directly under the root is written as a lone `.`, which keeps it distinct from the root.
  *
  * @param segment - The property name or array index of the field
  * @param [parentPath] - The optional `FieldPath` of the parent field
@@ -25,7 +25,10 @@ export function toFieldPath(segment: string | number, parentPath: FieldPath = RO
     return `${parentPath}[${segment}]` as FieldPath;
   }
   const escaped = segment.replace(RESERVED, '\\$&');
-  return (parentPath === ROOT_FIELD_PATH ? escaped : `${parentPath}.${escaped}`) as FieldPath;
+  if (parentPath === ROOT_FIELD_PATH) {
+    return (escaped === '' ? '.' : escaped) as FieldPath;
+  }
+  return `${parentPath}.${escaped}` as FieldPath;
 }
 
 /** Determines whether the last segment of `fieldPath` is an array index

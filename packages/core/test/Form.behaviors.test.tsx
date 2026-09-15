@@ -1668,6 +1668,22 @@ describe('setFieldValue()', () => {
     expect(node.querySelector('input#root_obj_')).toBeInTheDocument();
     expect(new Set(ids).size).toBe(ids.length);
   });
+  it('keeps a root-level property named the empty string apart from the form itself', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { '': { type: 'string' }, other: { type: 'string' } },
+    };
+    const { node, onChange } = createFormComponent({ schema, formData: { other: 'kept' } });
+
+    const input = node.querySelector('input#root_');
+    expect(input).toBeInTheDocument();
+    await user.type(input!, 'x');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { '': 'x', other: 'kept' } }),
+      'root_',
+    );
+  });
   it('Sets a field whose property name is the empty string', () => {
     const ref = createRef<Form>();
     const props: NoValFormProps = {
