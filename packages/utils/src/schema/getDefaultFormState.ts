@@ -1,6 +1,7 @@
 import type { JSONSchema7Object } from 'json-schema';
 
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
@@ -619,9 +620,10 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
-          uiSchema: (addedByAdditionalProperty ? uiSchema?.additionalProperties : uiSchema?.[key]) as
-            | UiSchema<T, S, F>
-            | undefined,
+          uiSchema: getByPath<UiSchema<T, S, F> | undefined>(
+            uiSchema,
+            addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key,
+          ),
           uiSchemaDefinitions,
         });
 

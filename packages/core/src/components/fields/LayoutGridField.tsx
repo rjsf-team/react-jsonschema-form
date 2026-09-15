@@ -169,7 +169,11 @@ export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
   const rawLocalUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(field));
   const localUiSchema = isObject(rawLocalUiSchema) ? rawLocalUiSchema : undefined;
   const rawLocalUiOptions = localUiSchema?.[UI_OPTIONS_KEY];
-  const localUiOptions = { ...(isObject(rawLocalUiOptions) ? rawLocalUiOptions : {}), ...restUiProps, ...globalUiOptions };
+  const localUiOptions = {
+    ...(isObject(rawLocalUiOptions) ? rawLocalUiOptions : {}),
+    ...restUiProps,
+    ...globalUiOptions,
+  };
   const fieldUiSchema: UiSchema<T, S, F> = localUiSchema ? { ...localUiSchema } : {};
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;
