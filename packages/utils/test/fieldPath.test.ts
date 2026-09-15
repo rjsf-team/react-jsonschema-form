@@ -29,9 +29,10 @@ describe('toFieldPath()', () => {
   test('no parent, number segment', () => {
     expect(toFieldPath(1)).toEqual('[1]');
   });
-  test('an empty property name addresses a field, except at the root where the path itself is empty', () => {
-    expect(toFieldPath('')).toEqual(ROOT_FIELD_PATH);
+  test('an empty property name addresses a field, written as a lone `.` at the root', () => {
+    expect(toFieldPath('')).toEqual('.');
     expect(toFieldPath('', fp('one'))).toEqual('one.');
+    expect(toFieldPath('a', toFieldPath(''))).toEqual('..a');
   });
   test('appends a property name to a parent', () => {
     expect(toFieldPath('two', toFieldPath('one'))).toEqual('one.two');
@@ -99,18 +100,19 @@ describe('the FieldPath encoding round-trips', () => {
     expect(lists).toHaveLength(SEGMENTS.length + SEGMENTS.length ** 2 + SEGMENTS.length ** 3);
   });
 
-  test('a list parses back to itself, except for the root exception below', () => {
+  test('every list parses back to itself', () => {
     const broken = lists
-      .filter((list) => list[0] !== '')
       .filter((list) => !deepEquals(fieldPathToList(fieldPathFromList(list)), list))
       .map((list) => ({ list, path: fieldPathFromList(list), parsed: fieldPathToList(fieldPathFromList(list)) }));
 
     expect(broken).toEqual([]);
   });
 
-  test('a leading empty name is the root itself, since the root path is the empty string', () => {
-    expect(fieldPathFromList([''])).toEqual(ROOT_FIELD_PATH);
-    expect(fieldPathToList(fieldPathFromList(['', 'a']))).toEqual(['a']);
+  test('a leading empty name is not the root', () => {
+    expect(fieldPathFromList([''])).not.toEqual(ROOT_FIELD_PATH);
+    expect(fieldPathToList(fp('.'))).toEqual(['']);
+    expect(fieldPathToList(fp('..a'))).toEqual(['', 'a']);
+    expect(fieldPathToList(fp('.[0]'))).toEqual(['', 0]);
   });
 });
 

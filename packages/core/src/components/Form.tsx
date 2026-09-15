@@ -845,7 +845,11 @@ export default class Form<
    */
   setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
     const { registry } = this.state;
-    const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
+    let path = fieldPath;
+    if (typeof path === 'string') {
+      // `''` is the documented spelling of the root; splitting it would name a property called `''` instead
+      path = path === '' ? [] : path.split('.');
+    }
     const targetFieldPath = fieldPathFromList(path);
     this.onChange(newValue, targetFieldPath, undefined, fieldPathToId(targetFieldPath, registry.globalFormOptions));
   };
