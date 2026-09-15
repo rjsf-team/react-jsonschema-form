@@ -10,6 +10,8 @@ import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
+import isFixedItems from '../isFixedItems.ts';
+import isObject from '../isObject.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
@@ -31,27 +33,38 @@ import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem, getItemUiSchemaForIndex } from './getDefaultFormState.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
-/** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the same way `computeDefaults()` and
- * `MultiSchemaField` pick the option they render, so the walk descends into the branch the user actually sees.
+/** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node. */
+interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  schema: S;
+  uiSchema: UiSchema<T, S, F>;
+}
+
+/** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the same way `computeDefaults()` picks
+ * the option it uses, so the walk descends into the branch's schema. Also resolves the uiSchema that
+ * `MultiSchemaField` would pass down to that branch's children: `uiSchema[ONE_OF_KEY][index]` /
+ * `uiSchema[ANY_OF_KEY][index]` when the matching keyword's uiSchema is an array reaching that index, falling back to
+ * `uiSchema` itself otherwise (`AnyOfField`'s own `optionsUiSchema`/`optionUiSchema`) — a plain per-key entry on
+ * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
+  uiSchema: UiSchema<T, S, F>,
   formData: unknown,
   customMergeAllOf?: CustomMergeAllOf<S>,
-): S {
+): SelectedBranch<T, S, F> {
   let keyword: typeof ONE_OF_KEY | typeof ANY_OF_KEY;
   if (ONE_OF_KEY in schema) {
     keyword = ONE_OF_KEY;
   } else if (ANY_OF_KEY in schema) {
     keyword = ANY_OF_KEY;
   } else {
-    return schema;
+    return { schema, uiSchema };
   }
   const { [keyword]: options, ...remaining } = schema;
   if (!Array.isArray(options) || options.length === 0) {
-    return schema;
+    return { schema, uiSchema };
   }
   const index = getClosestMatchingOption<T, S, F>(
     validator,
@@ -62,7 +75,13 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     getDiscriminatorFieldFromSchema<S>(schema),
     customMergeAllOf,
   );
-  return mergeSchemas(remaining as S, options[index] as S) as S;
+  const branchUiSchemas = uiSchema[keyword];
+  const branchUiSchema =
+    Array.isArray(branchUiSchemas) && branchUiSchemas.length > index ? branchUiSchemas[index] : uiSchema;
+  return {
+    schema: mergeSchemas(remaining as S, options[index] as S) as S,
+    uiSchema: branchUiSchema ?? {},
+  };
 }
 
 /** Determines whether `schema` (resolved, but with `anyOf`/`oneOf` left intact, matching what `SchemaField` itself
@@ -88,9 +107,12 @@ function isOptionalDataControlType<T, S extends StrictRJSFSchema, F extends Form
   );
 }
 
-/** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution: the dynamic
- * `(itemData, index, formContext) => UiSchema` function form of `uiSchema.items` is called here (unlike
- * `getItemUiSchemaForIndex()`, used for defaults, where an item's data isn't available yet), falling back to
+/** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
+ * row past its own positions is checked first, exactly as `ArrayField`'s fixed-items render checks
+ * `index >= schemaItems.length` before anything else: that row always uses `uiSchema.additionalItems`, never the
+ * function form of `uiSchema.items` (`ArrayField.computeItemUiSchema()` is never even called for it). Only a genuine
+ * tuple position or a non-fixed array reaches the function form, which is called here (unlike
+ * `getItemUiSchemaForIndex()`, used for defaults, where an item's data isn't available yet) and falls back to
  * `undefined` if it throws, the same way `ArrayField.computeItemUiSchema()` does for rendering.
  */
 function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -100,6 +122,9 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
   idx: number,
   formContext: F | undefined,
 ): UiSchema<T, S, F> | undefined {
+  if (isFixedItems<S>(retrieved) && idx >= (retrieved.items as S[]).length) {
+    return uiSchema.additionalItems as UiSchema<T, S, F> | undefined;
+  }
   if (typeof uiSchema.items === 'function') {
     try {
       return uiSchema.items(item as never, idx, formContext) as UiSchema<T, S, F>;
@@ -158,7 +183,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // opts in, so a `ui:required` field beneath it isn't visible for the user to fill in or correct either.
     return;
   }
-  const retrieved = resolveSelectedBranch<T, S, F>(validator, rootSchema, resolvedSchema, formData, customMergeAllOf);
+  const { schema: retrieved, uiSchema: branchUiSchema } = resolveSelectedBranch<T, S, F>(
+    validator,
+    rootSchema,
+    resolvedSchema,
+    uiSchema,
+    formData,
+    customMergeAllOf,
+  );
   if (getSchemaType<S>(retrieved) === 'object') {
     const data = (formData ?? {}) as GenericObjectType;
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
@@ -166,7 +198,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         return;
       }
       const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
-        uiSchema,
+        branchUiSchema,
         (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const childRequired = Boolean(retrieved.required?.includes(key));
@@ -181,13 +213,44 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           AdditionalItemsHandling.Fallback,
           Array.isArray(retrieved.items) ? idx : -1,
         ),
-        resolveArrayItemUiSchema<T, S, F>(retrieved, uiSchema, item, idx, formContext),
+        resolveArrayItemUiSchema<T, S, F>(retrieved, branchUiSchema, item, idx, formContext),
         item,
         [...path, idx],
         false,
       );
     });
   }
+}
+
+/** Whether `node` (a uiSchema fragment, or a `ui:definitions` entry) declares `ui:required`/`ui:options.required`
+ * anywhere within it. Once a `ui:definitions` fragment is present anywhere, the walk's per-node prune (no local
+ * uiSchema, no active definitions) can no longer rule a subtree out — every node's schema gets resolved via
+ * `retrieveSchema()` just in case a definition attaches a `ui:required` further down. Scanning the (comparatively
+ * tiny) uiSchema/definitions tree once up front, instead of the full data-shaped schema on every validation pass, is
+ * what makes the "definitions exist, but no `ui:required` anywhere" case cheap again.
+ *
+ * The function form of `uiSchema.items` can't be inspected statically — it may return a fragment containing
+ * `ui:required` for some item — so it's treated as though it might, rather than silently skipping the walk.
+ */
+function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContextType>(node: unknown): boolean {
+  if (typeof node === 'function') {
+    return true;
+  }
+  if (!isObject(node)) {
+    return false;
+  }
+  if (getUiOptions<T, S, F>(node as UiSchema<T, S, F>).required !== undefined) {
+    return true;
+  }
+  return Object.entries(node).some(([key, value]) => {
+    if (key.startsWith('ui:')) {
+      return false;
+    }
+    if (Array.isArray(value)) {
+      return value.some((entry) => hasUiRequiredOption<T, S, F>(entry));
+    }
+    return hasUiRequiredOption<T, S, F>(value);
+  });
 }
 
 /** Walks the `schema` (resolved node by node against `formData`, exactly as `SchemaField` does while rendering) and
@@ -211,6 +274,13 @@ export default function getUiRequiredErrorSchema<
 ): ErrorSchema<T> {
   const builder = new ErrorSchemaBuilder<T>();
   const hasDefinitions = uiSchemaDefinitions && Object.keys(uiSchemaDefinitions).length > 0;
+  const mightHaveUiRequired =
+    hasUiRequiredOption<T, S, F>(uiSchema) ||
+    (uiSchemaDefinitions !== undefined &&
+      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<T, S, F>(fragment)));
+  if (!mightHaveUiRequired) {
+    return builder.ErrorSchema;
+  }
   walk<T, S, F>(
     {
       validator,

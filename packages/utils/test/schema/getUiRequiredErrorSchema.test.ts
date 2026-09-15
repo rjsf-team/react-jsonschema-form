@@ -79,9 +79,11 @@ describe('getUiRequiredErrorSchema()', () => {
   });
 
   it('walks into an object schema with no properties without erroring', () => {
-    const schema: RJSFSchema = { type: 'object', properties: { empty: { type: 'object' } } };
-    const uiSchema: UiSchema = { empty: { 'ui:widget': 'someWidget' } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { empty: {} });
+    // A satisfied, unrelated ui:required keeps the top-level short-circuit from skipping the walk entirely, so this
+    // still exercises the "no properties" branch it's meant to check.
+    const schema: RJSFSchema = { type: 'object', properties: { empty: { type: 'object' }, nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { empty: { 'ui:widget': 'someWidget' }, nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { empty: {}, nick: 'x' });
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
@@ -207,6 +209,32 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.home.zip');
   });
 
+  it('never resolves a descendant node when ui:definitions is present but nothing declares ui:required', () => {
+    // Once any ui:definitions fragment exists, the walk's per-node prune (no local uiSchema, no active definitions)
+    // can't rule out a subtree on its own — a definition might attach a ui:required further down. Without a cheaper
+    // check first, that turns every validation pass into a full, uncached schema resolution. `if` is resolved via
+    // `validator.isValid()` on every node retrieveSchema() actually visits, so a node the walk should never reach
+    // acts as a tripwire: if the walk is properly skipped up front, `isValid` is never called at all.
+    const validator = getTestValidator({});
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        a: {
+          type: 'object',
+          if: { properties: { flag: { const: true } } },
+          then: { properties: { flag2: { type: 'string' } } },
+          properties: { flag: { type: 'boolean' } },
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      'ui:definitions': { '#/definitions/Unrelated': { zip: { 'ui:widget': 'text' } } },
+    };
+    const errorSchema = getUiRequiredErrorSchema(validator, schema, uiSchema, { a: { flag: true } });
+    expect(toErrorList(errorSchema)).toEqual([]);
+    expect(validator.isValid).not.toHaveBeenCalled();
+  });
+
   it('reports a ui:required field nested inside array items', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -247,6 +275,24 @@ describe('getUiRequiredErrorSchema()', () => {
     };
     const uiSchema: UiSchema = {
       items: { first: { 'ui:required': true } },
+      additionalItems: { extra: { 'ui:required': true } },
+    };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{ first: 'x' }, {}]);
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.1.extra');
+  });
+
+  it('uses uiSchema.additionalItems, not the function form of uiSchema.items, for a row past a fixed tuple', () => {
+    // ArrayField's fixed-items render checks `index >= schemaItems.length` before anything else, so an overflow row
+    // never reaches the function form of `uiSchema.items` at all — it always renders with `uiSchema.additionalItems`.
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: [{ type: 'object', properties: { first: { type: 'string' } } }],
+      additionalItems: { type: 'object', properties: { extra: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      items: () => ({ first: { 'ui:required': true } }),
       additionalItems: { extra: { 'ui:required': true } },
     };
     const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{ first: 'x' }, {}]);
@@ -307,6 +353,87 @@ describe('getUiRequiredErrorSchema()', () => {
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('enforces a ui:required field declared inside uiSchema.oneOf[i] for the branch matching formData', () => {
+    // MultiSchemaField renders `uiSchema.oneOf[selectedOption]` in place of the parent uiSchema for that branch's own
+    // fields (see AnyOfField's `optionsUiSchema`/`optionUiSchema`) rather than merging it with a per-key entry on the
+    // parent (`uiSchema.thing.bField`), so the walk has to resolve the branch's uiSchema the same way.
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { oneOf: [{}, { bField: { 'ui:required': true } }] } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('enforces a ui:required field declared inside uiSchema.anyOf[i] for the branch matching formData', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { anyOf: [{}, { bField: { 'ui:required': true } }] } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('falls back to the parent uiSchema for a branch when uiSchema.oneOf has fewer entries than the schema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    // Only one entry for two options: the second (selected) branch isn't covered by the array, so it falls back to
+    // the parent uiSchema (`uiSchema.thing`) exactly as `AnyOfField` does when `optionsUiSchema.length <= selectedOption`.
+    const uiSchema: UiSchema = {
+      thing: { bField: { 'ui:required': true }, oneOf: [{ aField: { 'ui:required': true } }] },
+    };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('treats a sparse entry in uiSchema.oneOf at the selected index as an empty uiSchema rather than throwing', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          oneOf: [
+            { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+            { type: 'object', properties: { kind: { type: 'string', const: 'b' }, bField: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { oneOf: [{ aField: { 'ui:required': true } }, undefined as never] } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    expect(toErrorList(errorSchema)).toEqual([]);
   });
 
   it('treats an empty oneOf list as a plain schema rather than throwing', () => {
