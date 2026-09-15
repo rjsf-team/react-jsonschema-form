@@ -50,6 +50,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** Removed `RichDescription.TEST_IDS` and `RichHelp.TEST_IDS`, since neither component renders markdown itself any more; use `MarkdownTemplate.TEST_IDS.markdown` from `@rjsf/core/markdown` instead. Added the default `MarkdownTemplate` to the individual component exports, so it can be imported from `@rjsf/core` like every other template ([#5263](https://github.com/rjsf-team/react-jsonschema-form/pull/5263))
 - Fixed `ui:placeholder` being dropped for multi-select arrays, file arrays, custom array widgets and boolean fields. They read `placeholder` from props, which nothing passes, so it stayed `undefined` while the value sat unused in `options`. They now read it from `getUiOptions()`, as `StringField` does
 - Fixed a `ui:FieldTemplate` or `ui:FieldErrorTemplate` override being ignored on a `LayoutMultiSchemaField`, which resolved both templates by passing `options` — the anyOf/oneOf option schemas — where `getTemplate()` expects the UI options
+- `FileWidget` ignores a `change` event whose `FileList` is empty instead of forwarding it to `useFileWidgetProps`, which now reads an empty selection as a cleared value. Some pickers re-fire `change` with an empty list when the dialog is cancelled, which would have wiped the existing selection
 
 ## @rjsf/daisyui
 

@@ -102,7 +102,8 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
 
   const handleOnChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
+    // Some pickers re-fire `change` with an empty FileList on cancel; an empty list would clear the value
+    if (event.target.files?.length) {
       // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
       // oxlint-disable-next-line no-floating-promises, no-void
       void handleChange(event.target.files);
