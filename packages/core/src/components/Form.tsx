@@ -54,6 +54,7 @@ import {
 
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
+import type { FormHandle } from './FormHandle.ts';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
@@ -238,7 +239,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
-  /** Support receiving a React ref to the Form
+  /** Support receiving a React ref to the Form. Type it as the `Form` class, but write against `FormHandle`: only the
+   * handle's members are supported API. TSX types a class element's `ref` by the instance, so this cannot be
+   * `Ref<FormHandle>` until `Form` is a function component; `ref.current` assigns to a `FormHandle` today.
    */
   ref?: Ref<Form<T, S, F>>;
 }
@@ -335,11 +338,10 @@ interface PendingChange<T> {
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
-export default class Form<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
+export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  extends Component<FormProps<T, S, F>, FormState<T, S, F>>
+  implements FormHandle<T, S, F>
+{
   /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
    * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
    */
@@ -1073,6 +1075,13 @@ export default class Form<
   private omitFormExtraData(formData?: T): T | undefined {
     const { schema, schemaUtils } = this.state;
     return schemaUtils.omitExtraData(schema, formData);
+  }
+
+  /** Returns the form data currently rendered, see `FormHandle.getFormData()`. Until strict ownership lands this is the
+   * reconciled internal value in both modes; afterwards it reads the owner directly.
+   */
+  getFormData(): T | undefined {
+    return this.state.formData;
   }
 
   /**

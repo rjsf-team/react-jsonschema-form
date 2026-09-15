@@ -73,6 +73,34 @@ i.glyphicon {
 }
 ```
 
+## The imperative handle
+
+A `ref` on `Form` gives you its `FormHandle`: `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Those are the supported members; `state` and the lifecycle methods are internals. Type the ref as the `Form` class (TSX requires the instance type for a class element's `ref`) and narrow to `FormHandle` where you use it.
+
+## Read form data programmatically
+
+`getFormData()` returns the data the form currently renders. For a self-owned form (one seeded with `initialFormData`) it is the way to read the value between `onChange` calls without mirroring every change into your own state:
+
+```tsx
+import { useRef } from 'react';
+import type { FormHandle } from '@rjsf/core';
+import Form from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'object', properties: { title: { type: 'string' } } };
+const formRef = useRef<Form>(null);
+
+function saveDraft() {
+  const form: FormHandle | null = formRef.current;
+  localStorage.setItem('draft', JSON.stringify(form?.getFormData()));
+}
+
+<Form ref={formRef} schema={schema} validator={validator} initialFormData={{ title: 'Untitled' }} />;
+```
+
+It reads committed data: an edit or `setFieldValue()` made in the same tick is visible only after React commits it. For a form you control through `formData`, it returns the value you passed.
+
 ## Submit form programmatically
 
 You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
