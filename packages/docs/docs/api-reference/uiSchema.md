@@ -1072,7 +1072,7 @@ Passing `Checks` is entirely opt-in, and can be adopted incrementally, field by 
 
 ### Extending the widget/option vocabulary
 
-The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Unlike a theme's own vocabulary, `Checks` is never included automatically - union it in yourself with whatever else you want to add:
+The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Extend a built-in vocabulary - `@rjsf/core`'s `CoreUiOptionsChecks`, or a theme's own equivalent - by unioning in your own `UiOptionsCheck` entries, not by modifying or augmenting that export itself. `Checks` is also never included automatically - union it in yourself with whatever else you want to add:
 
 ```ts
 import type { CoreUiOptionsChecks } from '@rjsf/core';
@@ -1093,15 +1093,7 @@ const uiSchema: MyUiSchema<{ active: boolean }> = {
 
 ### Applying it to an inline uiSchema with `satisfies`
 
-Declaring an intermediate `const uiSchema: UiSchema<FormData, RJSFSchema, FormContextType, CoreUiOptionsChecks> = {...}` and passing that to `Form`'s `uiSchema` prop gets you the narrowing above, because `FormProps['uiSchema']` is typed as the open `UiSchema<T, S, F>` (no `Checks`), which is permissive enough to accept a well-formed closed value with no cast. But an inline `uiSchema` object literal passed directly as a JSX prop gets **no narrowing at all**, since it's checked against that same open type:
-
-```tsx
-// No compile error here, even though it's the exact same mistake as above -
-// FormProps['uiSchema'] is the open UiSchema<T,S,F>, which accepts any widget name string.
-<Form schema={schema} uiSchema={{ bio: { 'ui:widget': 'RangeWidget' } }} validator={validator} />
-```
-
-Check an inline literal against the closed form with TypeScript's `satisfies` operator instead. It validates the expression while leaving the expression's own type in place for the surrounding `uiSchema` prop, so no wrapper component or cast is needed:
+Declaring an intermediate `const uiSchema: UiSchema<FormData, RJSFSchema, FormContextType, CoreUiOptionsChecks> = {...}` and passing that to `Form`'s `uiSchema` prop gets you the narrowing above, because `FormProps['uiSchema']` is typed as the open `UiSchema<T, S, F>` (no `Checks`), which is permissive enough to accept a well-formed closed value with no cast. An inline `uiSchema` object literal passed directly as a JSX prop, though, is checked against that same open type and gets no narrowing at all - check it against the closed form with TypeScript's `satisfies` operator instead. `satisfies` validates the expression while leaving the expression's own type in place for the surrounding `uiSchema` prop, so no intermediate variable or cast is needed:
 
 ```tsx
 <Form
