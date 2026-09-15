@@ -252,7 +252,8 @@ export interface FieldErrors {
 /** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
 type IsAny<V> = 0 extends 1 & V ? true : false;
 
-/** Values that are objects but hold no form fields of their own, so their error node has no children.
+/** Values that are objects but hold no form fields of their own, so their error node has no children and their
+ * uiSchema has no nested field entries.
  *
  * `createErrorHandler()` and `toErrorList()` recurse through `isPlainObject()`, so at runtime every class instance is
  * a leaf. TypeScript has no way to say "plain object", so this lists the two classes a custom widget most commonly
@@ -1256,17 +1257,11 @@ export type UiSchemaDefinitions<
   F extends FormContextType = any,
 > = Record<string, UiSchema<T, S, F>>;
 
-/** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
-type IsAnyType<V> = 0 extends 1 & V ? true : false;
-
-/** Values that are objects but hold no form fields of their own, matching what `ErrorSchema`'s tree treats as a leaf */
-type AtomicUiValue = Date | File;
-
 /** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
  * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
  * a primitive is its prototype's method names.
  */
-type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicUiValue>;
+type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicValue>;
 
 /** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
  * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
@@ -1290,7 +1285,7 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
 
 /** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAnyType<V> extends true ? any : UiSchema<V, S, F>;
+  IsAny<V> extends true ? any : UiSchema<V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
