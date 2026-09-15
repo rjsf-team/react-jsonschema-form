@@ -64,6 +64,36 @@ describe('resolveUiSchema() - branching keyword runtime resolution', () => {
   });
 });
 
+describe('resolveUiSchema() - non-object local uiSchema', () => {
+  // Only untyped JavaScript can put a non-object here, so these stand in for a caller the types never saw
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['an array', ['oops']],
+    ['true', true],
+  ])(
+    'replaces %s with an empty uiSchema, so every consumer can treat its own uiSchema as an object',
+    (_label, value) => {
+      const schema: RJSFSchema = { type: 'string' };
+
+      expect(resolveUiSchema(schema, value as unknown as UiSchema, baseRegistry)).toEqual({});
+    },
+  );
+
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 42],
+    ['null', null],
+    ['true', true],
+  ])("drops a `ui:options` that is %s, leaving the caller's uiSchema untouched", (_label, value) => {
+    const schema: RJSFSchema = { type: 'string' };
+    const local = { 'ui:widget': 'textarea', 'ui:options': value } as unknown as UiSchema;
+
+    expect(resolveUiSchema(schema, local, baseRegistry)).toEqual({ 'ui:widget': 'textarea' });
+    expect(local).toHaveProperty('ui:options', value);
+  });
+});
+
 describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
   it('populates uiSchema.oneOf[i] for branches with $ref matching definitions', () => {
     const schema: RJSFSchema = {
@@ -76,9 +106,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, undefined, reg);
-    expect(result.oneOf).toHaveLength(2);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Option A' });
-    expect(result.oneOf[1]).toEqual({ 'ui:title': 'Option B' });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Option A' }, { 'ui:title': 'Option B' }]);
   });
 
   it('merges local uiSchema.oneOf overrides on top of definitions', () => {
@@ -88,7 +116,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, local, reg);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Custom', name: { 'ui:placeholder': 'Name' } });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Custom', name: { 'ui:placeholder': 'Name' } }]);
   });
 
   it('walks oneOf on a resolved schema (via RJSF_REF_KEY from #4967)', () => {
@@ -106,9 +134,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
 
     const result = resolveUiSchema(resolvedSchema, undefined, reg);
     expect(result['ui:title']).toBe('Parent');
-    expect(result.oneOf).toHaveLength(2);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'A' });
-    expect(result.oneOf[1]).toEqual({ 'ui:title': 'B' });
+    expect(result.oneOf).toEqual([{ 'ui:title': 'A' }, { 'ui:title': 'B' }]);
   });
 
   it('does not populate uiSchema.oneOf when no options have matching definitions', () => {
@@ -130,8 +156,7 @@ describe('resolveUiSchema() - oneOf/anyOf branch walking', () => {
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
 
     const result = resolveUiSchema(schema, undefined, reg);
-    expect(result.oneOf[0]).toEqual({ 'ui:title': 'Known' });
-    expect(result.oneOf[1]).toBeUndefined();
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Known' }]);
   });
 
   it('resolves an unresolved $ref to walk its oneOf branches', () => {

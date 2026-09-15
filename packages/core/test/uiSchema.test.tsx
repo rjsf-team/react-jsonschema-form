@@ -2772,6 +2772,51 @@ describe('uiSchema', () => {
       });
     });
   });
+  describe('a uiSchema value that is not an object', () => {
+    // Only untyped JavaScript can put these here, so they stand in for a caller the types never saw. A uiSchema is
+    // user input, so every one of them has to render rather than throw
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const nonObjects: [string, unknown][] = [
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+      ['an array', ['oops']],
+      ['null', null],
+    ];
+
+    it.each(nonObjects)('renders when the root ui:options is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:options': value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own uiSchema is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)("renders when a field's own ui:options is %s", (_label, value) => {
+      const uiSchema: GenericObjectType = { foo: { 'ui:options': value } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+
+    it.each(nonObjects)('renders when ui:globalOptions is %s', (_label, value) => {
+      const uiSchema: GenericObjectType = { 'ui:globalOptions': value };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('input')).not.toBeNull();
+    });
+  });
+
   it('string field with autocapitalize', () => {
     const schema: RJSFSchema = {
       type: 'string',

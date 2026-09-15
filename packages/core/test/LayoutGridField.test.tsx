@@ -1254,6 +1254,25 @@ describe('LayoutGridField', () => {
     });
   });
   describe('computeFieldUiSchema()', () => {
+    test.each([
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+    ])('ignores a field uiSchema that is %s instead of spreading it', (_label, value) => {
+      const uiSchema = { foo: value } as unknown as UiSchema;
+      expect(computeFieldUiSchema('foo', {}, uiSchema)).toEqual({ fieldUiSchema: {}, uiReadonly: undefined });
+    });
+    test.each([
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+    ])('ignores a field ui:options that is %s instead of spreading it', (_label, value) => {
+      const uiSchema = { foo: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: value } } as unknown as UiSchema;
+      expect(computeFieldUiSchema('foo', { fullWidth: true }, uiSchema)).toEqual({
+        fieldUiSchema: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: { fullWidth: true } },
+        uiReadonly: undefined,
+      });
+    });
     test('field with empty uiProps', () => {
       const uiProps = {};
       expect(computeFieldUiSchema('foo', uiProps)).toEqual({

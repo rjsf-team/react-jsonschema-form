@@ -252,14 +252,27 @@ export interface FieldErrors {
 /** True when `V` is `any`, which a conditional type otherwise matches on every branch at once */
 type IsAny<V> = 0 extends 1 & V ? true : false;
 
-/** Values that are objects but hold no form fields of their own, so their error node has no children.
+/** Values that are objects but hold no form fields of their own, so their error node has no children and their
+ * uiSchema has no nested field entries.
  *
  * `createErrorHandler()` and `toErrorList()` recurse through `isPlainObject()`, so at runtime every class instance is
- * a leaf. TypeScript has no way to say "plain object", so this lists the two classes a custom widget most commonly
- * hands back (the built-in date and file widgets store strings); any other class instance still gets its properties
- * offered as children, which accepts a node the runtime never builds.
+ * a leaf. TypeScript has no way to say "plain object", so this lists the built-in classes a form-data type plausibly
+ * holds: the two a custom widget most commonly hands back (the built-in date and file widgets store strings), and the
+ * collection, pattern, URL and promise classes whose non-method properties (`size`, `source`, `href`) would otherwise
+ * be offered as field names. A user-defined class instance still gets its properties offered as children, which
+ * accepts a node the runtime never builds.
  */
-type AtomicValue = Date | File;
+type AtomicValue =
+  | Date
+  | File
+  | Blob
+  | RegExp
+  | URL
+  | Promise<unknown>
+  | Map<unknown, unknown>
+  | Set<unknown>
+  | WeakMap<WeakKey, unknown>
+  | WeakSet<WeakKey>;
 
 /** The data whose keys become the children of an error node for a value of type `V`.
  *
@@ -1256,15 +1269,42 @@ export type UiSchemaDefinitions<
   F extends FormContextType = any,
 > = Record<string, UiSchema<T, S, F>>;
 
+/** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
+ * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
+ * a primitive is its prototype's method names.
+ */
+type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicValue>;
+
+/** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
+ * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+ */
+type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
+
+/** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
+ * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
+ */
+type FieldKeys<X> = { [K in keyof X]-?: NonNullable<X[K]> extends (...args: never[]) => unknown ? never : K }[keyof X];
+
+/** Every field-naming key of every member of a union, each typed as the union of what the members that declare it
+ * hold. A `oneOf`/`anyOf` field's data is a union, and its uiSchema legitimately names keys from any branch.
+ */
+type UnionMembersMerged<T> = {
+  [K in T extends unknown ? FieldKeys<T> : never]: T extends unknown ? (K extends keyof T ? T[K] : never) : never;
+};
+
+/** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
+type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : any;
+
+/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
+type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
+  IsAny<V> extends true ? any : UiSchema<V, S, F>;
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
  */
-export type UiSchema<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = GenericObjectType &
-  MakeUIType<UIOptionsBaseType<T, S, F>> & {
+export type UiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
+} & MakeUIType<UIOptionsBaseType<T, S, F>> & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
      */
@@ -1286,6 +1326,20 @@ export type UiSchema<
     items?:
       | UiSchema<ArrayElement<T>, S, F>
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
+    /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
+     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
+     */
+    additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F>;
+    /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
+    additionalItems?: UiSchema<ArrayElement<T>, S, F>;
+    /** The uiSchema for each subschema of an `anyOf`, positionally */
+    anyOf?: UiSchema<T, S, F>[];
+    /** The uiSchema for each subschema of a `oneOf`, positionally */
+    oneOf?: UiSchema<T, S, F>[];
+    /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
+     * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
+     */
+    classNames?: string;
     /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
      * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
      * applied and merged with any local uiSchema overrides at that path.

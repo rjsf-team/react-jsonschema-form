@@ -68,7 +68,7 @@ export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   schema: S,
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): Registry<T, S, F> {
-  const { translateString = englishStringTranslator, uiSchema = {} } = props;
+  const { translateString = englishStringTranslator, uiSchema } = props;
   const { fields, templates, widgets } = generateTheme<T, S, F>();
   return {
     fields: { ...fields, ...props.fields },
@@ -86,8 +86,8 @@ export function buildRegistry<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     formContext: props.formContext ?? ({} as F),
     schemaUtils,
     translateString,
-    globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
+    globalUiOptions: uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     globalFormOptions: getGlobalFormOptions(props),
-    uiSchemaDefinitions: uiSchema[UI_DEFINITIONS_KEY] ?? {},
+    uiSchemaDefinitions: uiSchema?.[UI_DEFINITIONS_KEY] ?? {},
   };
 }

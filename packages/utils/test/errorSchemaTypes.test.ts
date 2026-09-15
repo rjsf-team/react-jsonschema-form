@@ -8,6 +8,7 @@ interface Data {
   tags: string[];
   items: { label: string }[];
   when: Date;
+  counts: Map<string, number>;
   either: string | { city: string };
   eitherShape: { city: string } | { zip: number };
   eitherList: string | string[];
@@ -27,6 +28,11 @@ describe('ErrorSchema type', () => {
     const arrayOfObjects: ErrorSchema<Data> = { items: { 1: { label: { __errors: ['bad label'] } } } };
     // A Date holds no form fields, so its node has errors but no children
     const atomic: ErrorSchema<Data> = { when: { __errors: ['bad date'] } };
+    const atomicMap: ErrorSchema<Data> = { counts: { __errors: ['bad counts'] } };
+    const wrong: ErrorSchema<Data> = {
+      // @ts-expect-error: TS2353, `size` is a Map property, not a field of Data['counts']
+      counts: { size: { __errors: ['nope'] } },
+    };
 
     expect(rootErrors.__errors).toEqual(['bad']);
     expect(stringLeaf.name?.__errors).toEqual(['bad name']);
@@ -36,6 +42,8 @@ describe('ErrorSchema type', () => {
     expect(arrayOfLeaves.tags?.[0]?.__errors).toEqual(['bad tag']);
     expect(arrayOfObjects.items?.[1]?.label?.__errors).toEqual(['bad label']);
     expect(atomic.when?.__errors).toEqual(['bad date']);
+    expect(atomicMap.counts?.__errors).toEqual(['bad counts']);
+    expect(wrong.counts).toBeDefined();
   });
 
   it('describes the children of a union-typed field, as oneOf/anyOf produces', () => {
