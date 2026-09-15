@@ -75,11 +75,11 @@ i.glyphicon {
 
 ## The imperative handle
 
-A `ref` on `Form` gives you its `FormHandle`: `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Those are the supported members; `state` and the lifecycle methods are internals. Type the ref as the `Form` class (TSX requires the instance type for a class element's `ref`) and narrow to `FormHandle` where you use it.
+A `ref` on `Form` exposes its `FormHandle`: `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Nothing else on the instance is supported. Type the ref as `Form` (TSX types a class element's `ref` by its instance) and narrow to `FormHandle` where you use it.
 
 ## Read form data programmatically
 
-`getFormData()` returns the data the form currently renders. For a self-owned form (one seeded with `initialFormData`) it is the way to read the value between `onChange` calls without mirroring every change into your own state:
+`getFormData()` returns the data the form currently renders. Use it with `initialFormData`, where the form owns the data and there is otherwise no way to read it between `onChange` calls:
 
 ```tsx
 import { useRef } from 'react';
@@ -99,7 +99,7 @@ function saveDraft() {
 <Form ref={formRef} schema={schema} validator={validator} initialFormData={{ title: 'Untitled' }} />;
 ```
 
-It reads committed data: an edit or `setFieldValue()` made in the same tick is visible only after React commits it. For a form you control through `formData`, it returns the value you passed.
+It reads committed data, so an edit or `setFieldValue()` in the same tick is visible only after React commits. With `formData` it returns the value you passed.
 
 ## Submit form programmatically
 
