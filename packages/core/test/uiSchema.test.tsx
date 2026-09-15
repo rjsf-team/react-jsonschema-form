@@ -3169,6 +3169,57 @@ describe('uiSchema', () => {
       expect(input).toHaveValue('US');
     });
 
+    it('restores ui:initialValue after reset when an explicit initialFormData is provided', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const formRef = createRef<Form>();
+      // Passing initialFormData means reset() calls getStateFromProps with that data directly rather than the
+      // IS_RESET sentinel, which is what previously caused this case to be missed.
+      const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
+      const { node } = createFormComponent(props);
+      const input = node.querySelector<HTMLInputElement>('input')!;
+      await user.clear(input);
+      await user.type(input, 'FR');
+      expect(input).toHaveValue('FR');
+      act(() => {
+        formRef.current!.reset();
+      });
+      expect(input).toHaveValue('US');
+    });
+
+    it('does not resurrect a cleared ui:initialValue on an unrelated recompute after a reset with initialFormData', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: { type: 'string' },
+          other: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        country: { 'ui:initialValue': 'US' },
+      };
+      const formRef = createRef<Form>();
+      const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
+      const { node } = createFormComponent(props);
+      const countryInput = node.querySelector<HTMLInputElement>('#root_country')!;
+      act(() => {
+        formRef.current!.reset();
+      });
+      // The user clears the restored value again after the reset, then edits something unrelated.
+      await user.clear(countryInput);
+      expect(countryInput).toHaveValue('');
+      const otherInput = node.querySelector<HTMLInputElement>('#root_other')!;
+      await user.type(otherInput, 'x');
+      expect(countryInput).toHaveValue('');
+    });
+
     it('extends ui:emptyValue to apply on initial render, not just on widget clear', () => {
       const schema: RJSFSchema = {
         type: 'object',

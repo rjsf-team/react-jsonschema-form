@@ -1,15 +1,23 @@
-import { ADDITIONAL_PROPERTY_FLAG, ANY_OF_KEY, ONE_OF_KEY, UI_DEFINITIONS_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  RJSF_REF_CYCLE_KEY,
+  UI_DEFINITIONS_KEY,
+} from '../constants.ts';
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
+import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
 import type {
   CustomMergeAllOf,
   ErrorSchema,
   FormContextType,
   GenericObjectType,
+  GlobalUISchemaOptions,
   RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -55,11 +63,58 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   return mergeSchemas(remaining as S, options[index] as S) as S;
 }
 
+/** Determines whether `schema` (resolved, but with `anyOf`/`oneOf` left intact, matching what `SchemaField` itself
+ * checks against) is configured as an Optional Data Control — the same check `shouldRenderOptionalField()` makes,
+ * minus the `isRootSchema` guard, which the walk's callers never need since a root is never checked this way.
+ */
+function isOptionalDataControlType<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  globalUiOptions?: GlobalUISchemaOptions,
+): boolean {
+  let schemaType: ReturnType<typeof getSchemaType<S>> | string[];
+  if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
+    schemaType = getSchemaTypesForXxxOf<S>(schema[ANY_OF_KEY] as S[]);
+  } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
+    schemaType = getSchemaTypesForXxxOf<S>(schema[ONE_OF_KEY] as S[]);
+  } else {
+    schemaType = getSchemaType<S>(schema);
+  }
+  const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  return (
+    !!schemaType && !Array.isArray(schemaType) && !!enableOptionalDataFieldForType.find((val) => val === schemaType)
+  );
+}
+
+/** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution: the dynamic
+ * `(itemData, index, formContext) => UiSchema` function form of `uiSchema.items` is called here (unlike
+ * `getItemUiSchemaForIndex()`, used for defaults, where an item's data isn't available yet), falling back to
+ * `undefined` if it throws, the same way `ArrayField.computeItemUiSchema()` does for rendering.
+ */
+function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  retrieved: S,
+  uiSchema: UiSchema<T, S, F>,
+  item: unknown,
+  idx: number,
+  formContext: F | undefined,
+): UiSchema<T, S, F> | undefined {
+  if (typeof uiSchema.items === 'function') {
+    try {
+      return uiSchema.items(item as never, idx, formContext) as UiSchema<T, S, F>;
+    } catch {
+      return undefined;
+    }
+  }
+  return getItemUiSchemaForIndex<T, S, F>(retrieved, uiSchema, idx);
+}
+
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   validator: ValidatorType<T, S, F>;
   rootSchema: S;
   uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
   customMergeAllOf?: CustomMergeAllOf<S>;
+  globalUiOptions?: GlobalUISchemaOptions;
+  formContext?: F;
   builder: ErrorSchemaBuilder<T>;
 }
 
@@ -69,10 +124,18 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   localUiSchema: UiSchema<T, S, F> | undefined,
   formData: unknown,
   path: (string | number)[],
+  required: boolean,
 ) {
-  const { validator, rootSchema, uiSchemaDefinitions, customMergeAllOf, builder } = ctx;
+  const { validator, rootSchema, uiSchemaDefinitions, customMergeAllOf, globalUiOptions, formContext, builder } = ctx;
+  // A repeated $ref is never expanded again for rendering either (see SchemaField/CyclicSchemaField) — without this,
+  // a recursive $ref reached through `ui:definitions` (the only thing that disables the prune below) would have
+  // `retrieveSchema()` re-resolve the same cycle forever.
+  if ((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
+    return;
+  }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
-  if (path.length > 0 && getUiOptions<T, S, F>(uiSchema).required === true && formData === undefined) {
+  const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
+  if (path.length > 0 && fieldUiRequired === true && formData === undefined) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text.
     builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
@@ -81,13 +144,19 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchemaDefinitions && Object.keys(uiSchema).length === 0) {
     return;
   }
-  const retrieved = resolveSelectedBranch<T, S, F>(
-    validator,
-    rootSchema,
-    retrieveSchema<T, S, F>(validator, schema, rootSchema, formData as T, customMergeAllOf),
-    formData,
-    customMergeAllOf,
-  );
+  const resolvedSchema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData as T, customMergeAllOf);
+  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  if (
+    path.length > 0 &&
+    formData === undefined &&
+    !effectiveRequired &&
+    isOptionalDataControlType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)
+  ) {
+    // Matches ObjectField/MultiSchemaField's Optional Data Controls: this node isn't rendered at all until the user
+    // opts in, so a `ui:required` field beneath it isn't visible for the user to fill in or correct either.
+    return;
+  }
+  const retrieved = resolveSelectedBranch<T, S, F>(validator, rootSchema, resolvedSchema, formData, customMergeAllOf);
   if (getSchemaType<S>(retrieved) === 'object') {
     const data = (formData ?? {}) as GenericObjectType;
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
@@ -97,7 +166,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const childUiSchema = (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]
         ? uiSchema.additionalProperties
         : uiSchema[key];
-      walk(ctx, propertySchema as S, childUiSchema as UiSchema<T, S, F> | undefined, data[key], [...path, key]);
+      const childRequired = Boolean(retrieved.required?.includes(key));
+      walk(
+        ctx,
+        propertySchema as S,
+        childUiSchema as UiSchema<T, S, F> | undefined,
+        data[key],
+        [...path, key],
+        childRequired,
+      );
     });
   } else if (Array.isArray(formData)) {
     formData.forEach((item, idx) => {
@@ -108,9 +185,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           AdditionalItemsHandling.Fallback,
           Array.isArray(retrieved.items) ? idx : -1,
         ),
-        getItemUiSchemaForIndex<T, S, F>(retrieved, uiSchema, idx),
+        resolveArrayItemUiSchema<T, S, F>(retrieved, uiSchema, item, idx, formContext),
         item,
         [...path, idx],
+        false,
       );
     });
   }
@@ -132,6 +210,8 @@ export default function getUiRequiredErrorSchema<
   formData: T | undefined,
   customMergeAllOf?: CustomMergeAllOf<S>,
   uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
+  globalUiOptions?: GlobalUISchemaOptions,
+  formContext?: F,
 ): ErrorSchema<T> {
   const builder = new ErrorSchemaBuilder<T>();
   const hasDefinitions = uiSchemaDefinitions && Object.keys(uiSchemaDefinitions).length > 0;
@@ -141,12 +221,15 @@ export default function getUiRequiredErrorSchema<
       rootSchema,
       uiSchemaDefinitions: hasDefinitions ? uiSchemaDefinitions : undefined,
       customMergeAllOf,
+      globalUiOptions,
+      formContext,
       builder,
     },
     rootSchema,
     uiSchema,
     formData,
     [],
+    true,
   );
   return builder.ErrorSchema;
 }

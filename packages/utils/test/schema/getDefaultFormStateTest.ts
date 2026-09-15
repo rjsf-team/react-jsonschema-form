@@ -7585,6 +7585,41 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual(['tuple', 'extra']);
       });
+
+      it('does not resurrect ui:initialValue on a cleared tuple position after the initial pass', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { pair: { type: 'array', items: [{ type: 'string' }, { type: 'string' }] } },
+        };
+        const uiSchema = { pair: { items: [{ 'ui:initialValue': 'a' }, {}] } };
+        // initialDefaultsGenerated: true (the 8th positional arg) means this is a subsequent recompute, not the
+        // initial/reset pass, so `ui:initialValue` must not spring back onto the cleared first position.
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { pair: [undefined, 'z'] },
+            schema,
+            false,
+            undefined,
+            undefined,
+            true,
+            uiSchema,
+          ),
+        ).toEqual({ pair: [undefined, 'z'] });
+      });
+
+      it('does not apply ui:initialValue to a minItems filler entry after the initial pass', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'string' },
+        };
+        const uiSchema = { items: { 'ui:initialValue': 'a' } };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, false, undefined, undefined, true, uiSchema),
+        ).toEqual([undefined, undefined]);
+      });
     });
 
     describe('ui:initialValue for additionalProperties', () => {

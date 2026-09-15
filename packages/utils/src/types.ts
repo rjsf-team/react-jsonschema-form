@@ -1608,6 +1608,8 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
     uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    globalUiOptions?: GlobalUISchemaOptions,
+    formContext?: F,
   ): ErrorSchema<T>;
   retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the

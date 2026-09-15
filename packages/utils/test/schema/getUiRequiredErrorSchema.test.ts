@@ -338,4 +338,235 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.nick');
   });
+
+  describe('recursive $ref cycles', () => {
+    it('does not stack overflow on a recursive $ref reached through a ui:definitions fragment', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { root: {} });
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.root.value');
+    });
+
+    it('does not report past the point retrieveSchema() itself marks as a $ref cycle', () => {
+      // retrieveSchema() (the same one SchemaField/CyclicSchemaField render against) marks the *second* occurrence
+      // of a repeated $ref within a single resolution pass as a cycle without expanding it further — here, that's
+      // `root.next` itself, one level shallower than the recursive structure might suggest. Matching that boundary
+      // (rather than either stack-overflowing past it or silently swallowing the first, legitimate level) is the
+      // property under test, not the traversal depth as such.
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {
+        root: { value: 'x', next: {} },
+      });
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+  });
+
+  describe('Optional Data Controls', () => {
+    it('does not fire for a field inside an unselected anyOf branch configured as an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            anyOf: [
+              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
+      const errorSchema = getUiRequiredErrorSchema(
+        testValidator,
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        undefined,
+        globalUiOptions,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('does not fire for a field inside an unselected oneOf branch configured as an Optional Data Control', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            oneOf: [
+              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
+      const errorSchema = getUiRequiredErrorSchema(
+        testValidator,
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        undefined,
+        globalUiOptions,
+      );
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+
+    it('still fires once the Optional Data Control has been opted into (formData present)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            anyOf: [
+              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
+      const errorSchema = getUiRequiredErrorSchema(
+        testValidator,
+        schema,
+        uiSchema,
+        { thing: {} },
+        undefined,
+        undefined,
+        globalUiOptions,
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.aField');
+    });
+
+    it('still fires for an absent Optional-Data-Control-eligible field that is itself ui:required', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: { type: 'object', properties: { aField: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { 'ui:required': true } };
+      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
+      const errorSchema = getUiRequiredErrorSchema(
+        testValidator,
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        undefined,
+        globalUiOptions,
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing');
+    });
+
+    it('does not treat an absent field as an Optional Data Control when the type is not enabled for it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: { type: 'object', properties: { aField: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.aField');
+    });
+  });
+
+  describe('the function form of uiSchema.items', () => {
+    it('enforces ui:required returned by the function form of uiSchema.items', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: { items: () => ({ name: { 'ui:required': true } }) },
+      };
+      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}] });
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.people.0.name');
+    });
+
+    it('passes formContext through to the function form of uiSchema.items', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: {
+          items: (_item: unknown, _index: number, formContext?: { requireName?: boolean }) => ({
+            name: { 'ui:required': formContext?.requireName === true },
+          }),
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        testValidator,
+        schema,
+        uiSchema,
+        { people: [{}] },
+        undefined,
+        undefined,
+        undefined,
+        { requireName: true },
+      );
+      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.people.0.name');
+    });
+
+    it('falls back to no uiSchema when the function form of uiSchema.items throws', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: {
+          items: () => {
+            throw new Error('boom');
+          },
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}] });
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+  });
 });
