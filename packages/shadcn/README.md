@@ -113,31 +113,36 @@ Add the following line to your equivalent global.css
 
 #### Use the theme on demo site
 
-All shadcn's default color theme are included in the npm packages. Simply do
+A prebuilt stylesheet for each bundled theme is included in the npm package. Simply do
 
 ```
-import '@rjsf/shadcn/dist/[color].css';
+import '@rjsf/shadcn/dist/[theme].css';
 e.g:
-import '@rjsf/shadcn/dist/zinc.css';
+import '@rjsf/shadcn/dist/default.css';
 ```
 
-Supported colors are:
+Note that these stylesheets are complete Tailwind builds and include Tailwind's preflight reset, so importing one
+will also restyle the rest of your page. If your application already builds Tailwind, use the
+[Using Tailwind](#using-tailwind) section above instead.
+
+Supported themes are:
 
 - default
-- zinc
-- red
-- rose
-- orange
-- green
-- blue
-- yellow
-- violet
+- amethyst-haze
+- caffeine
+- claude
+- clean-slate
+- neo-brutalism
+- pastel-dreams
+- soft-pop
+- twitter
+- vercel
 
 #### Coloring
 
 - Generate a theme from [official shadCN site](https://ui.shadcn.com/themes)
   or  [tweakcn](https://tweakcn.com/editor/theme)
-- Navigate to shadcn/css, create a new file called [your-theme].css
+- Navigate to `packages/shadcn/src/css`, create a new file called [your-theme].css
 - Replace the base layer code with your new color
 - Follow the next section to build your CSS file
 
@@ -153,7 +158,7 @@ npm i
 npm run build:css
 ```
 
-- Include the built file in /dist/rjsf-shadcn.css in your application
+- Include the built `dist/[your-theme].css` in your application
 
 ## Dark mode (Tailwind only)
 

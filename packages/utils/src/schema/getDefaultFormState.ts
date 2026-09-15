@@ -857,7 +857,7 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
   }
-  // Without formData, dependency conditions need the defaults that computeDefaults will generate.
+  // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
   const [schema] = retrieveSchemaInternal<T, S, F>(
     validator,
     theSchema,
@@ -867,14 +867,15 @@ export default function getDefaultFormState<
     undefined,
     experimental_customMergeAllOf,
     undefined,
-    formData === undefined,
+    formData === undefined || (isObject(formData) && Object.keys(formData).length === 0),
   );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
-    rootSchema,
+    // Preserved dependencies may still contain references to the original schema.
+    rootSchema: rootSchema ?? (DEPENDENCIES_KEY in schema ? theSchema : undefined),
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
     experimental_customMergeAllOf,
