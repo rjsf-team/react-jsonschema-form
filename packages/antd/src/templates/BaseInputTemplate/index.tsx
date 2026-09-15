@@ -72,44 +72,47 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <InputNumber
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleNumberChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        changeOnWheel={false}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...restInputProps}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        type={undefined}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <Input
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleTextChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
+  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  const input = isNumeric ? (
+    <InputNumber
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleNumberChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      required={required}
+      style={INPUT_STYLE}
+      changeOnWheel={false}
+      list={schema.examples ? examplesId(id) : undefined}
+      {...restInputProps}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+      type={undefined}
+      value={value}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+    />
+  ) : (
+    <Input
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleTextChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      required={required}
+      style={INPUT_STYLE}
+      list={schema.examples ? examplesId(id) : undefined}
+      {...inputProps}
+      value={value}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+    />
+  );
 
   return (
     <>

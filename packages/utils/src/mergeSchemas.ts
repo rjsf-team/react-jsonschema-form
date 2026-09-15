@@ -14,8 +14,8 @@ import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = { ...obj1 }; // Prevent mutation of source object.
   const result = Object.keys(obj2).reduce((accumulator, key) => {
-    const left = obj1[key],
-      right = obj2[key];
+    const left: unknown = obj1[key],
+      right: unknown = obj2[key];
     if (key in obj1 && isObject(right)) {
       accumulator[key] = mergeSchemas(isObject(left) ? left : {}, right);
     } else if (

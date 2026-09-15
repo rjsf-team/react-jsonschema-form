@@ -17,8 +17,8 @@ export default function mergeObjects(
 ) {
   return Object.keys(obj2).reduce(
     (acc, key) => {
-      const left = obj1[key],
-        right = obj2[key];
+      const left: unknown = obj1[key],
+        right: unknown = obj2[key];
       if (key in obj1 && isObject(right)) {
         acc[key] = mergeObjects(isObject(left) ? left : {}, right, concatArrays);
       } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {

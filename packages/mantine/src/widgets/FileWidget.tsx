@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { FileInput, Pill } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue, useFileWidgetProps } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
@@ -10,9 +10,11 @@ import { cleanupOptions } from '../utils.ts';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function FileWidget<
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     name,
@@ -33,12 +35,12 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
   const themeProps = cleanupOptions(options);
 
   const handleOnChange = useCallback(
-    (files: any) => {
-      if (typeof files === 'object') {
-        // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
-        // oxlint-disable-next-line no-floating-promises, no-void
-        void handleChange(files);
-      }
+    (files: File[] | File | null) => {
+      // Mantine's `FileInput` hands back a `File[]` when `multiple` and a lone `File` otherwise, and `null` when cleared
+      const selected = Array.isArray(files) ? files : [files].filter((file) => file !== null);
+      // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
+      // oxlint-disable-next-line no-floating-promises, no-void
+      void handleChange(selected);
     },
     [handleChange],
   );
@@ -63,7 +65,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     <FileInput
       id={id}
       name={name}
-      value={value || ''}
+      value={value || null}
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}

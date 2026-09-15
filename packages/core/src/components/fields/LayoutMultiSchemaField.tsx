@@ -115,8 +115,6 @@ export default function LayoutMultiSchemaField<
   const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
   const id = fieldPathId[ID_KEY];
   const discriminator = getDiscriminatorFieldFromSchema(schema);
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, options);
   const schemaHash = hashObject(schema);
   const optionsHash = hashObject(options);
   const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
@@ -135,6 +133,10 @@ export default function LayoutMultiSchemaField<
     hideError: uiSchemaHideError,
     ...uiOptions
   } = getUiOptions<T, S, F>(uiSchema);
+  // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
+  // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
+  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
+  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }

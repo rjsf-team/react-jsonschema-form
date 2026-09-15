@@ -1226,6 +1226,18 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('select option')).toHaveLength(3);
       });
 
+      it('should pass ui:placeholder to the select widget', () => {
+        const CustomSelect = ({ placeholder }: WidgetProps) => <div id='multiselect-placeholder'>{placeholder}</div>;
+
+        const { node } = createFormComponent({
+          schema,
+          widgets: { SelectWidget: CustomSelect },
+          uiSchema: { 'ui:placeholder': 'Pick some' },
+        });
+
+        expect(node.querySelector('#multiselect-placeholder')).toHaveTextContent('Pick some');
+      });
+
       it('should handle a change event', async () => {
         const { node, onChange } = createFormComponent({ schema });
 
@@ -1633,6 +1645,18 @@ describe('ArrayField', () => {
       const matches = node.querySelectorAll('#custom');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('must NOT have fewer than 5 items');
+    });
+
+    it('should pass ui:placeholder to the file widget', () => {
+      const CustomFileWidget = ({ placeholder }: WidgetProps) => <div id='files-placeholder'>{placeholder}</div>;
+
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'string', format: 'data-url' } },
+        widgets: { FileWidget: CustomFileWidget },
+        uiSchema: { 'ui:placeholder': 'Drop files here' },
+      });
+
+      expect(node.querySelector('#files-placeholder')).toHaveTextContent('Drop files here');
     });
   });
 
@@ -2157,6 +2181,27 @@ describe('ArrayField', () => {
       });
 
       expect(node.querySelector('#custom-ui-option-value')).toHaveTextContent('foo');
+    });
+
+    it('should pass ui:placeholder to the custom widget', () => {
+      const CustomWidget = ({ placeholder }: WidgetProps) => <div id='custom-placeholder'>{placeholder}</div>;
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
+        widgets: { CustomWidget },
+        uiSchema: {
+          'ui:widget': 'CustomWidget',
+          'ui:placeholder': 'Pick some',
+        },
+        formData: ['foo'],
+      });
+
+      expect(node.querySelector('#custom-placeholder')).toHaveTextContent('Pick some');
     });
 
     it('if the schema has fixed items, it should still render the custom widget.', () => {

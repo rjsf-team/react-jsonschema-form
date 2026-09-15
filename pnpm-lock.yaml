@@ -436,6 +436,9 @@ importers:
       '@rjsf/utils':
         specifier: workspace:^
         version: link:../utils
+      '@rjsf/validator-ajv8':
+        specifier: workspace:^
+        version: link:../validator-ajv8
 
   packages/mui:
     dependencies:
