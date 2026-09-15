@@ -7622,5 +7622,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
     });
+
+    describe('ui:definitions in getDefaultFormState', () => {
+      it('applies ui:initialValue declared inside a ui:definitions fragment', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Address: { type: 'object', properties: { country: { type: 'string' } } },
+          },
+          properties: { home: { $ref: '#/definitions/Address' } },
+        };
+        const uiSchema = {
+          'ui:definitions': { '#/definitions/Address': { country: { 'ui:initialValue': 'US' } } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ home: { country: 'US' } });
+      });
+    });
   });
 }
