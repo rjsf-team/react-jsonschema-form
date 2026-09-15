@@ -102,6 +102,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Widened `useFileWidgetProps`' `handleChange` from `FileList` to `FileList | File[]`; themes legitimately hand it arrays, and `processFiles()` already used `Array.from()`
 - `useFileWidgetProps`' `handleChange` treats an empty `FileList`/`File[]` as a cleared input, reporting `[]` when `multiple` and `undefined` otherwise. It previously appended nothing, so a multi-file widget silently kept its existing files
 - `mergeObjects()` and `mergeSchemas()` annotate the values they pull off their operands as `unknown` rather than letting them ride in as `any` from `GenericObjectType`, so every use is guarded by `isObject()` or `Array.isArray()` rather than assumed
+- Added `UiOptions`, an opt-in, type-safe alternative to `UiSchema` that narrows `ui:widget`/`ui:field`/`ui:options` to only the values valid for each field's form-data type (instead of falling back to `Record<string, any>`), recursing into nested objects/arrays. The built-in widget/field/option vocabulary lives in the new `CoreUiOptionsChecks`; themes and consumers extend it with their own `UiOptionsCheck` entries via `UiOptions`'s `Checks` type parameter. This is purely additive - `UiSchema` is unchanged ([#4916](https://github.com/rjsf-team/react-jsonschema-form/issues/4916))
 
 ## @rjsf/validator-ajv8
 
