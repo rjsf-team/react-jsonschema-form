@@ -440,9 +440,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       rawFormData,
       experimental_customMergeAllOf,
     );
-    // `retrieveSchema()` leaves `allOf` in place when it cannot merge every subschema, such as when
-    // one of them uses `contains`. Recursing on such a schema would never terminate, so only use it
-    // once the merge has actually resolved the `allOf`.
+    // `retrieveSchema()` isn't guaranteed to fully resolve `allOf`: it deliberately leaves it in place
+    // when a subschema uses `contains`, since recursing on that would never terminate — that's the case
+    // this guard protects against. A genuine merge failure instead drops `allOf` entirely rather than
+    // leaving it in place (the same tradeoff `getObjectDefaults()` already makes for object schemas), so
+    // this only guarantees no infinite recursion, not that every subschema was actually merged.
     if (!(ALL_OF_KEY in mergedSchema)) {
       schemaToCompute = mergedSchema;
     }
