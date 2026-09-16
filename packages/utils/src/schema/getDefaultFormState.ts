@@ -433,21 +433,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
     // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    const mergedSchema = retrieveSchema<T, S, F>(
+    schemaToCompute = retrieveSchema<T, S, F>(
       validator,
       schema,
       rootSchema,
       rawFormData,
       experimental_customMergeAllOf,
     );
-    // `retrieveSchema()` isn't guaranteed to fully resolve `allOf`: it deliberately leaves it in place
-    // when a subschema uses `contains`, since recursing on that would never terminate — that's the case
-    // this guard protects against. A genuine merge failure instead drops `allOf` entirely rather than
-    // leaving it in place (the same tradeoff `getObjectDefaults()` already makes for object schemas), so
-    // this only guarantees no infinite recursion, not that every subschema was actually merged.
-    if (!(ALL_OF_KEY in mergedSchema)) {
-      schemaToCompute = mergedSchema;
-    }
   }
 
   if (schemaToCompute) {

@@ -3121,9 +3121,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({ pet: { name: 'Rex', legs: 4 } });
       });
-      it('should not recurse endlessly on an `allOf` that cannot be merged', () => {
-        // An `allOf` subschema using `contains` is left in place by `retrieveSchema()` instead of
-        // being merged away, so the merged schema must not be resolved a second time.
+      it('should populate no default for a non-object `allOf` schema that merges to one with no default', () => {
+        // A `contains` subschema inside `allOf` merges into the array schema rather than producing a
+        // default, so the array property is correctly left out of the result.
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
