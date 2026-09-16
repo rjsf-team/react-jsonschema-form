@@ -100,6 +100,15 @@ function hasContent(value: unknown): boolean {
   return false;
 }
 
+/** Checks whether form data is undefined or an empty object.
+ *
+ * @param formData - The form data to inspect
+ * @returns - True if there is no existing form data
+ */
+function isEmptyFormData(formData: unknown): boolean {
+  return formData === undefined || (isObject(formData) && Object.keys(formData).length === 0);
+}
+
 /** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
  * the schema is `null` AND the `computedDefault` is empty. If all of those conditions are true, then the `schema`'s
  * default should be `null` rather than `computedDefault`.
@@ -312,9 +321,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // Then set the defaults from the current schema for the referenced schema.
     // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
     // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
-    const hasNoExistingData =
-      rawFormData === undefined || (isObject(rawFormData) && Object.keys(rawFormData).length === 0);
-    if (schemaToCompute && !defaults && hasNoExistingData) {
+    if (schemaToCompute && !defaults && isEmptyFormData(rawFormData)) {
       defaults = schema.default as T | undefined;
     }
 
@@ -858,6 +865,7 @@ export default function getDefaultFormState<
     throw new Error(`Invalid schema: ${theSchema}`);
   }
   // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
+  const emptyFormData = isEmptyFormData(formData);
   const [schema] = retrieveSchemaInternal<T, S, F>(
     validator,
     theSchema,
@@ -867,15 +875,15 @@ export default function getDefaultFormState<
     undefined,
     experimental_customMergeAllOf,
     undefined,
-    formData === undefined || (isObject(formData) && Object.keys(formData).length === 0),
+    emptyFormData,
   );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
-    // Preserved dependencies may still contain references to the original schema.
-    rootSchema: rootSchema ?? (DEPENDENCIES_KEY in schema ? theSchema : undefined),
+    // Empty data can leave dependency references unresolved, including inside oneOf/anyOf.
+    rootSchema: rootSchema ?? (emptyFormData ? theSchema : undefined),
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
     experimental_customMergeAllOf,

@@ -6207,6 +6207,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState(testValidator, schema, formData)).toEqual({ type: 0, extraField: 'RefDefault' });
         },
       );
+      describe.each(['oneOf', 'anyOf'])('inside %s', (keyword) => {
+        it.each([undefined, {}])(
+          'should resolve dependency references without rootSchema and with formData=%j',
+          (formData) => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: { extra: { type: 'string', default: 'RefDefault' } },
+              [keyword]: [
+                {
+                  properties: { type: { type: 'integer', default: 0 } },
+                  dependencies: {
+                    type: {
+                      properties: { extraField: { $ref: '#/definitions/extra' } },
+                    },
+                  },
+                },
+              ],
+            };
+            expect(getDefaultFormState(testValidator, schema, formData)).toEqual({ type: 0, extraField: 'RefDefault' });
+          },
+        );
+      });
       it('should preserve dependency defaults when resolving a conditional branch', () => {
         const schema: RJSFSchema = {
           type: 'object',
