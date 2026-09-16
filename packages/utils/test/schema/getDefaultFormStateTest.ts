@@ -3078,6 +3078,70 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
       });
+      it('should populate the default of a `$ref` wrapped in a single-element `allOf`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            animal: { title: 'Animal', allOf: [{ $ref: '#/definitions/Animal' }] },
+          },
+          required: ['animal'],
+          definitions: {
+            Animal: { type: 'string', enum: ['Cat', 'Dog', 'Bird'], default: 'Dog' },
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
+          }),
+        ).toEqual({ animal: 'Dog' });
+      });
+      it('should populate the defaults of a `$ref` to an object wrapped in a single-element `allOf`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pet: { allOf: [{ $ref: '#/definitions/Pet' }] },
+          },
+          definitions: {
+            Pet: {
+              type: 'object',
+              properties: {
+                name: { type: 'string', default: 'Rex' },
+                legs: { type: 'integer', default: 4 },
+              },
+            },
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
+          }),
+        ).toEqual({ pet: { name: 'Rex', legs: 4 } });
+      });
+      it('should populate no default for a non-object `allOf` schema that merges to one with no default', () => {
+        // A `contains` subschema inside `allOf` merges into the array schema rather than producing a
+        // default, so the array property is correctly left out of the result.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              items: { type: 'string' },
+              allOf: [{ contains: { const: 'a' } }],
+            },
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
+          }),
+        ).toEqual({});
+      });
     });
 
     describe('default form state behaviour: allOf = "skipDefaults"', () => {
@@ -3125,6 +3189,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
           }),
         ).toEqual({ animalInfo: { animal: 'Cat' } });
+      });
+      it('should not populate the default of a `$ref` wrapped in a single-element `allOf`', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            animal: { title: 'Animal', allOf: [{ $ref: '#/definitions/Animal' }] },
+          },
+          required: ['animal'],
+          definitions: {
+            Animal: { type: 'string', enum: ['Cat', 'Dog', 'Bird'], default: 'Dog' },
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
+          }),
+        ).toEqual({});
       });
     });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {

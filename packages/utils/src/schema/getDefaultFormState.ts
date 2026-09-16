@@ -48,6 +48,20 @@ export enum AdditionalItemsHandling {
   Fallback,
 }
 
+/** Determines whether a schema has an allOf key AND the experimental_defaultFormStateBehavior for all of is set
+ * to `populateDefaults`.
+ *
+ * @params schema - The schema to check
+ * @params defaultFormStateBehavior - The Experimental_DefaultFormStateBehavior to check
+ * @returns - True if allOf defaults should be populated, false otherwise.
+ */
+function shouldPopulateAllOfDefaults<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
+): boolean {
+  return Boolean(defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema);
+}
+
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
  * `additionalItems` enum and the value of `idx`. There are four possible returns:
  * 1. If `idx` is >= 0, then if `schema.items` is an array the `idx`th element of the array is returned if it is a valid
@@ -411,6 +425,21 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
+  } else if (
+    shouldPopulateAllOfDefaults(schema, experimental_defaultFormStateBehavior) &&
+    getSchemaType<S>(schema) !== 'object'
+  ) {
+    // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
+    // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
+    // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
+    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
+    schemaToCompute = retrieveSchema<T, S, F>(
+      validator,
+      schema,
+      rootSchema,
+      rawFormData,
+      experimental_customMergeAllOf,
+    );
   }
 
   if (schemaToCompute) {
@@ -487,8 +516,7 @@ export function ensureFormDataMatchingSchema<
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | T[] | undefined {
-  const shouldRetrieveAllOf =
-    experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema;
+  const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, experimental_defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf
     ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
     : schema;
@@ -562,7 +590,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     // - OR if schema contains an 'if' AND `emptyObjectFields` is not set to `skipEmptyDefaults`
     // This ensures we compute defaults correctly for schemas with these keywords.
     const shouldRetrieveSchema =
-      (experimental_defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema) ||
+      shouldPopulateAllOfDefaults(schema, experimental_defaultFormStateBehavior) ||
       (experimental_defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
     const retrievedSchema = shouldRetrieveSchema
       ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf)
