@@ -17,18 +17,11 @@ import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } 
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  readonly,
-  required,
-  onChange,
-  onFocus,
-  onBlur,
-}: WidgetProps<T, S, F>) {
+export default function CheckboxesWidget<
+  T,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, htmlName, disabled, options, value, readonly, required, onChange, onFocus, onBlur }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';

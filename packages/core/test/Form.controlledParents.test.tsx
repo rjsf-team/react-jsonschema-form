@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -20,8 +20,9 @@ const schema: RJSFSchema = {
 
 interface Data {
   name?: string;
-  other?: string;
+  other?: string | null;
 }
+const validator = customizeValidator<Data, RJSFSchema, Data>();
 
 describe('controlled parent harnesses', () => {
   it('an accepting parent commits each proposal and the form renders the committed value', async () => {
@@ -63,8 +64,8 @@ describe('controlled parent harnesses', () => {
   it('two near-simultaneous changes both reach an accepting parent', async () => {
     // The Form.handlers variant merges into an external variable, which proves nothing about composition through a
     // parent. Here the parent is real and the second change composes onto the first committed value.
-    function changeOnMount(from: string, to: string) {
-      return function Widget(props: WidgetProps) {
+    function changeOnMount<V extends string | null | undefined>(from: string, to: string) {
+      return function Widget(props: WidgetProps<V>) {
         const { value, id, onChange, uiSchema, registry } = props;
         const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, getUiOptions(uiSchema));
         useEffect(() => {
@@ -75,9 +76,9 @@ describe('controlled parent harnesses', () => {
         return <BaseInputTemplate {...props} />;
       };
     }
-    const uiSchema: UiSchema = {
-      name: { 'ui:widget': changeOnMount('a', 'a2') },
-      other: { 'ui:widget': changeOnMount('b', 'b2') },
+    const uiSchema: UiSchema<Data> = {
+      name: { 'ui:widget': changeOnMount<Data['name']>('a', 'a2') },
+      other: { 'ui:widget': changeOnMount<Data['other']>('b', 'b2') },
     };
     const log = createParentLog<Data>();
 
@@ -105,7 +106,7 @@ describe('controlled parent harnesses', () => {
       fieldPath,
       onChange,
       registry,
-    }: FieldProps<string | null, RJSFSchema, Data>) {
+    }: FieldProps<string | null | undefined, RJSFSchema, Data>) {
       const sibling = registry.formContext.name;
       useEffect(() => {
         if (sibling) {
@@ -114,7 +115,7 @@ describe('controlled parent harnesses', () => {
       }, [sibling, fieldPath, onChange]);
       return <span id='root_other'>{formData ?? 'null'}</span>;
     }
-    const uiSchema: UiSchema = { other: { 'ui:field': ClearWhenSiblingChanges } };
+    const uiSchema: UiSchema<Data, RJSFSchema, Data> = { other: { 'ui:field': ClearWhenSiblingChanges } };
     const committed: (Data | undefined)[] = [];
     function Parent() {
       const [data, setData] = useState<Data | undefined>({ name: '', other: 'keep' });

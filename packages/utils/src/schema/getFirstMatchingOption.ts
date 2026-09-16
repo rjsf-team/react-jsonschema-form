@@ -15,9 +15,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } fro
  * @returns - The index of the first matched option or 0 if none is available
  */
 export default function getFirstMatchingOption<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   formData: T | undefined,

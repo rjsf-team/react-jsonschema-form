@@ -10,9 +10,9 @@ import isSelect from './isSelect.ts';
  * @returns - True if schema contains a multi-select, otherwise false
  */
 export default function isMultiSelect<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(validator: ValidatorType<T, S, F>, schema: S, rootSchema?: S, customMergeAllOf?: CustomMergeAllOf<S>) {
   if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
     return false;

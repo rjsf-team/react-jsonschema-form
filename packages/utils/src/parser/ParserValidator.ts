@@ -26,9 +26,9 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, 
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
 export default class ParserValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements ValidatorType<T, S, F> {
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;

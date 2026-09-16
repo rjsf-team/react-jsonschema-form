@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
+import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
@@ -143,14 +143,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           };
 
-          const result = getDefaultFormState(testValidator, schema, existingFormData, schema);
+          const result = getDefaultFormState(testValidator, schema, existingFormData, schema) as GenericObjectType;
 
           // The user's value should be preserved, NOT overridden by the default
           expect(result?.outer?.inner?.str).toBe('user_value');
         });
 
         test('getDefaultFormState should apply defaults when formData is undefined', () => {
-          const result = getDefaultFormState(testValidator, schema, undefined, schema);
+          const result = getDefaultFormState(testValidator, schema, undefined, schema) as GenericObjectType;
 
           // Defaults should be applied when no formData exists
           expect(result?.outer?.inner?.str).toBe('default_str');
@@ -6962,7 +6962,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       };
 
       it('should create independent object instances for array items via getDefaultFormState', () => {
-        const result = getDefaultFormState(testValidator, schema, undefined, schema);
+        const result = getDefaultFormState(testValidator, schema, undefined, schema) as GenericObjectType;
 
         expect(result).toStrictEqual({ config: { items: [{}, {}] } });
 
@@ -6979,7 +6979,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it('should create independent object instances for array items via computeDefaults', () => {
         const result = computeDefaults(testValidator, schema, {
           rootSchema: schema,
-        });
+        }) as GenericObjectType;
 
         expect(result).toStrictEqual({ config: { items: [{}, {}] } });
 
@@ -7009,7 +7009,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         const result = getArrayDefaults(testValidator, arraySchema, {
           rootSchema: arraySchema,
-        });
+        }) as GenericObjectType[];
 
         expect(result).toStrictEqual([{}, {}, {}]);
 
@@ -7018,12 +7018,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances
-        result![0].field = 'test-value-1';
-        result![1].field = 'test-value-2';
-        expect(result![2].field).toBeUndefined();
-        expect(result![0]).not.toBe(result![1]);
-        expect(result![1]).not.toBe(result![2]);
-        expect(result![0]).not.toBe(result![2]);
+        result[0].field = 'test-value-1';
+        result[1].field = 'test-value-2';
+        expect(result[2].field).toBeUndefined();
+        expect(result[0]).not.toBe(result[1]);
+        expect(result[1]).not.toBe(result[2]);
+        expect(result[0]).not.toBe(result[2]);
       });
 
       it('should ensure array items with default values are independent instances', () => {
@@ -7043,7 +7043,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         const result = getArrayDefaults(testValidator, arraySchemaWithDefaults, {
           rootSchema: arraySchemaWithDefaults,
-        });
+        }) as GenericObjectType[];
 
         expect(result).toStrictEqual([{ field: 'default-value' }, { field: 'default-value' }]);
 
@@ -7052,9 +7052,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances - modifying one shouldn't affect the other
-        result![0].field = 'modified-value';
-        expect(result![1].field).toBe('default-value');
-        expect(result![0]).not.toBe(result![1]);
+        result[0].field = 'modified-value';
+        expect(result[1].field).toBe('default-value');
+        expect(result[0]).not.toBe(result[1]);
       });
 
       it('should ensure nested objects in arrays are independent instances', () => {
@@ -7079,7 +7079,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         const result = getArrayDefaults(testValidator, nestedObjectSchema, {
           rootSchema: nestedObjectSchema,
-        });
+        }) as GenericObjectType[];
 
         expect(result).toStrictEqual([
           { nested: { value: 'nested-default' } },
@@ -7091,10 +7091,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify nested objects are independent instances
-        result![0].nested.value = 'modified-nested-value';
-        expect(result![1].nested.value).toBe('nested-default');
-        expect(result![0]).not.toBe(result![1]);
-        expect(result![0].nested).not.toBe(result![1].nested);
+        result[0].nested.value = 'modified-nested-value';
+        expect(result[1].nested.value).toBe('nested-default');
+        expect(result[0]).not.toBe(result[1]);
+        expect(result[0].nested).not.toBe(result[1].nested);
       });
     });
 

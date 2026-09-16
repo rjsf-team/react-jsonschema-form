@@ -268,7 +268,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         const formData = { pass1: 'aaa', pass2: 'b' };
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          const { pass1, pass2 } = formData;
+          const { pass1, pass2 } = formData as { pass1: string; pass2: string };
           if (pass1 !== pass2) {
             (errors.pass2 as FormValidation).addError("Passwords don't match");
           }
@@ -317,7 +317,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         ];
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          formData.forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
+          (formData as GenericObjectType[]).forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
             if (pass1 !== pass2) {
               (errors as GenericObjectType)[i].pass2.addError("Passwords don't match");
             }
@@ -352,7 +352,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         const formData = ['aaa', 'bbb', 'ccc'];
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          if (formData.indexOf('bbb') !== -1) {
+          if ((formData as string[]).indexOf('bbb') !== -1) {
             errors.addError('Forbidden value: bbb');
           }
           return errors;

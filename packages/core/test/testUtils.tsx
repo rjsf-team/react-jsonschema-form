@@ -67,7 +67,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
   return (
     <Form<T>
       {...formProps}
-      validator={validator}
+      validator={validator as ValidatorType<T>}
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);
@@ -83,7 +83,7 @@ export function RejectingParent<T>({ initialValue, log, ...formProps }: Controll
   return (
     <Form<T>
       {...formProps}
-      validator={validator}
+      validator={validator as ValidatorType<T>}
       formData={initialValue}
       onChange={(event) => log?.proposals.push(event.formData)}
     />
@@ -102,7 +102,7 @@ export function TransformingParent<T>({
   return (
     <Form<T>
       {...formProps}
-      validator={validator}
+      validator={validator as ValidatorType<T>}
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);

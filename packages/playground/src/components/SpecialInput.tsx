@@ -5,7 +5,7 @@ import type { FieldProps } from '@rjsf/utils';
 const COLORS = ['red', 'green', 'blue'];
 
 export default function SpecialInput({ id, fieldPath, onChange, formData }: PropsWithChildren<FieldProps>) {
-  const [text, setText] = useState<string>(formData || '');
+  const [text, setText] = useState<string>(typeof formData === 'string' ? formData : '');
 
   const inputBgColor = COLORS[text.length % COLORS.length];
 

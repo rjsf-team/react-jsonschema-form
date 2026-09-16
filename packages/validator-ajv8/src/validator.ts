@@ -19,9 +19,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
 export default class AJV8Validator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements ValidatorType<T, S, F> {
   /** The AJV instance to use for all validations
    *

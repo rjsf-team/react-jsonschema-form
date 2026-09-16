@@ -9,9 +9,9 @@ import type { FieldErrorProps, StrictRJSFSchema, RJSFSchema, FormContextType } f
  * @param props - The `FieldErrorProps` for the component
  */
 export default function FieldErrorTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
   const { errors } = props;
   return (

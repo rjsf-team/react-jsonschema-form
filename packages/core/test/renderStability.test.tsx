@@ -1,5 +1,5 @@
 import { createRef, forwardRef, useState } from 'react';
-import type { ErrorSchema, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldTemplateProps, RJSFSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -112,11 +112,11 @@ describe('render stability across sibling fields', () => {
   it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
     const seen: IChangeEvent<FormValue>[] = [];
     function Parent() {
-      const [formData, setFormData] = useState(initialFormData);
+      const [formData, setFormData] = useState<FormValue | undefined>(initialFormData);
       return (
-        <Form
+        <Form<FormValue>
           schema={schema}
-          validator={validator}
+          validator={validator as ValidatorType<FormValue>}
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {

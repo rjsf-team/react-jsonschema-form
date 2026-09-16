@@ -5,9 +5,9 @@ import { generateTemplates } from '../Templates/index.ts';
 import { generateWidgets } from '../Widgets/index.ts';
 
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
   return {
     templates: generateTemplates<T, S, F>(),

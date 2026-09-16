@@ -13,11 +13,11 @@ const useStyles = makeStyles({
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  title,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, title, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const classes = useStyles();
   let heading = (
     <Text as='h5' size={600} style={{ marginBlock: 0 }}>

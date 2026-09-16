@@ -12,9 +12,9 @@ const INPUT_STYLE = {
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   disabled,
   registry,

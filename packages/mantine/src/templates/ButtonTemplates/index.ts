@@ -5,9 +5,9 @@ import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } f
 import SubmitButton from './SubmitButton.tsx';
 
 function buttonTemplates<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): TemplatesType<T, S, F>['ButtonTemplates'] {
   return {
     SubmitButton,

@@ -53,10 +53,11 @@ function isRequired<S extends StrictRJSFSchema = RJSFSchema>(schema: S, name: st
  * @param translateString - The string translation function from the registry
  * @param type - The type of the new additional schema property
  */
-function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  translateString: Registry<T, S, F>['translateString'],
-  type?: RJSFSchema['type'],
-) {
+function getDefaultValue<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(translateString: Registry<T, S, F>['translateString'], type?: RJSFSchema['type']) {
   switch (type) {
     case 'array':
       return [];
@@ -105,9 +106,9 @@ function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(sche
 
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends Omit<FieldProps<T, S, F>, 'name'> {
   /** The name of the property within the parent object */
   propertyName: string;
@@ -123,9 +124,11 @@ interface ObjectFieldPropertyProps<
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
  */
-function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ObjectFieldPropertyProps<T, S, F>,
-) {
+function ObjectFieldPropertyFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ObjectFieldPropertyProps<T, S, F>) {
   const {
     fieldPath,
     schema,
@@ -240,9 +243,11 @@ const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPro
  *
  * @param props - The `FieldProps` for this template
  */
-export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+export default function ObjectField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema: rawSchema,
     uiSchema: rawUiSchema,

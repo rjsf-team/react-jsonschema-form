@@ -18,9 +18,9 @@ import TitleField from './TitleField/index.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.tsx';
 
 export function generateTemplates<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     ArrayFieldItemTemplate,

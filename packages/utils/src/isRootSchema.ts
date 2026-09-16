@@ -13,10 +13,11 @@ import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from './
  *        function will return true.
  * @returns - Flag indicating whether the `schemaToCompare` is the root schema
  */
-export default function isRootSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  registry: Registry<T, S, F>,
-  schemaToCompare: S,
-): boolean {
+export default function isRootSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T, S, F>, schemaToCompare: S): boolean {
   const { rootSchema, schemaUtils } = registry;
   if (deepEquals(schemaToCompare, rootSchema)) {
     return true;

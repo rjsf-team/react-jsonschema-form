@@ -7,7 +7,7 @@ import type { FieldValidation, FormValidation } from './types.ts';
  * @param formData - The form data around which the error handler is created
  * @returns - A `FormValidation` object based on the `formData` structure
  */
-export default function createErrorHandler<T = any>(formData: T): FormValidation<T> {
+export default function createErrorHandler<T = unknown>(formData: T): FormValidation<T> {
   const handler: FieldValidation = {
     // We store the list of errors for this node in a property named __errors
     // to avoid name collision with a possible sub schema field named

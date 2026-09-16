@@ -43,9 +43,11 @@ function booleanConstantTitle(constant: unknown, yes: string, no: string): strin
  *
  * @param props - The `FieldProps` for this template
  */
-function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+function BooleanField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema,
     name,

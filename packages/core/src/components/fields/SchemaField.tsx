@@ -119,7 +119,11 @@ function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { 
  * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
  *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
  */
-function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function getFieldComponent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
@@ -197,9 +201,11 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  *
  * @param props - The `FieldProps` for this component
  */
-function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+function SchemaFieldRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema: _schema,
     fieldPath,

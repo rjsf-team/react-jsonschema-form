@@ -5,9 +5,9 @@ import { buttonId } from '@rjsf/utils';
  * using DaisyUI's join component when multiple buttons are present.
  */
 export default function ArrayFieldItemButtonsTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemButtonsTemplateProps<T, S, F>) {
   const {
     disabled,

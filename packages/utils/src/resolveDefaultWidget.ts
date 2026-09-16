@@ -21,9 +21,9 @@ import type {
  * @returns - The default widget name and the `enumOptions`, if any, computed along the way
  */
 export default function resolveDefaultWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   schema: S,
   uiSchema: UiSchema<T, S, F> | undefined,

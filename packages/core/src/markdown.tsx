@@ -8,9 +8,9 @@ const TEST_IDS = getTestIds();
  * `markdown-to-jsx`, which is what lets it be an optional peer dependency.
  */
 export default function MarkdownTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ children }: MarkdownTemplateProps<T, S, F>) {
   return (
     <Markdown options={{ disableParsingRawHTML: true }} data-testid={TEST_IDS.markdown}>

@@ -8,9 +8,9 @@ import ATAValidator from './validator.ts';
  * `@rjsf/validator-ajv8`'s `customizeValidator`.
  */
 export default function customizeValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(options: CustomValidatorOptionsType = {}, localizer?: Localizer) {
   return new ATAValidator<T, S, F>(options, localizer);
 }

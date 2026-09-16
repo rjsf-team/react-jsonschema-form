@@ -4,11 +4,11 @@ import { ariaDescribedByIds } from '@rjsf/utils';
 
 import { Textarea } from '../components/ui/textarea.tsx';
 
-type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
-  T,
-  S,
-  F
-> & {
+type CustomWidgetProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = WidgetProps<T, S, F> & {
   options: any;
 };
 
@@ -17,9 +17,9 @@ type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   htmlName,

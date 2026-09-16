@@ -4,10 +4,11 @@ import { TranslatableString } from '@rjsf/utils';
 
 import { Alert } from '../components/ui/alert.tsx';
 
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <Alert status='error' title={translateString(TranslatableString.ErrorsLabel)} mb={3}>

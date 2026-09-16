@@ -2,9 +2,11 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps }
 import { getSubmitButtonOptions } from '@rjsf/utils';
 import { Button } from 'react-bootstrap';
 
-export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: SubmitButtonProps<T, S, F>,
-) {
+export default function SubmitButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: SubmitButtonProps<T, S, F>) {
   const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions<T, S, F>(props.uiSchema);
   if (norender) {
     return null;

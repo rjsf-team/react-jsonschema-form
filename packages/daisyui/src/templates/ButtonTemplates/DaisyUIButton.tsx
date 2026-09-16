@@ -5,9 +5,9 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 
 /** Interface for props specific to DaisyUIButton, extending IconButtonProps but with stricter icon typing */
 interface DaisyUIButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends Omit<IconButtonProps<T, S, F>, 'icon'> {
   /** The FontAwesome icon to display in the button */
   icon: IconDefinition;
@@ -18,9 +18,11 @@ interface DaisyUIButtonProps<
  *
  * @param props - The component props
  */
-function DaisyUIButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: DaisyUIButtonProps<T, S, F>,
-) {
+function DaisyUIButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: DaisyUIButtonProps<T, S, F>) {
   const { icon, iconType, uiSchema, registry, className, ...otherProps } = props;
   return (
     <button type='button' className={className} aria-label={props.title} {...otherProps}>

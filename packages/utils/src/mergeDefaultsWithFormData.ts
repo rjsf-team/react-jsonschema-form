@@ -23,7 +23,7 @@ import isObject from './isObject.ts';
  *       that does not exist in defaults.
  * @returns - The resulting merged form data with defaults
  */
-export default function mergeDefaultsWithFormData<T = any>(
+export default function mergeDefaultsWithFormData<T = unknown>(
   defaults?: T,
   formData?: T,
   mergeExtraArrayDefaults = false,

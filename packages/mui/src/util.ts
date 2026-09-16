@@ -9,9 +9,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, Gene
  * @returns {P}
  */
 export function getMuiProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
   P extends GenericObjectType = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);

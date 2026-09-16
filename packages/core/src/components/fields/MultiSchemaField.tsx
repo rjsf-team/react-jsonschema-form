@@ -22,7 +22,7 @@ import {
  *
  * @param props - The `FieldProps` for this template
  */
-function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const {

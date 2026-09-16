@@ -1,10 +1,12 @@
 import type { FieldPath, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { getTemplate, noop, toFieldPath } from '@rjsf/utils';
+import { getTemplate, isObject, noop, toFieldPath } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
 function UiField(props: FieldProps) {
   const { fieldPath, id: _id, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
+  // The form data is unknown to the `Form` this sample renders, so narrow it before reading the branch fields
+  const location = isObject(formData) ? formData : {};
   const { fields, schemaUtils } = registry;
   const changeHandlerFactory = (childPath: FieldPath) => (value: any) => {
     onChange(value, childPath);
@@ -61,7 +63,7 @@ function UiField(props: FieldProps) {
               required={citySchema.isRequired}
               fieldPath={cityPath}
               id={cityKey}
-              formData={formData.city}
+              formData={location.city}
               onChange={changeHandlerFactory(cityPath)}
             />
           </FieldTemplate>
@@ -83,7 +85,7 @@ function UiField(props: FieldProps) {
               required={latSchema.isRequired}
               fieldPath={latPath}
               id={latKey}
-              formData={formData.lat}
+              formData={location.lat}
               onChange={changeHandlerFactory(latPath)}
             />
           </FieldTemplate>
@@ -96,7 +98,7 @@ function UiField(props: FieldProps) {
               required={lonSchema.isRequired}
               fieldPath={lonPath}
               id={lonKey}
-              formData={formData.lon}
+              formData={location.lon}
               onChange={changeHandlerFactory(lonPath)}
             />
           </FieldTemplate>

@@ -142,7 +142,7 @@ function isEmptyFormData(formData: unknown): boolean {
  * @param computedDefault - The computed default for the schema
  * @returns - Flag indicating whether a null should be returned instead of the computedDefault
  */
-export function computeDefaultBasedOnSchemaTypeAndDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   computedDefault: T,
 ) {
@@ -173,7 +173,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = any, S extends St
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
  * @param isNullType - The type of the schema is null
  */
-function maybeAddDefaultToObject<T = any>(
+function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
   computedDefault: T | T[] | undefined,
@@ -236,7 +236,11 @@ function maybeAddDefaultToObject<T = any>(
   }
 }
 
-interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+interface ComputeDefaultsProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
   /** The options root schema, used to primarily to look up `$ref`s */
@@ -278,7 +282,11 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
  * @param computeDefaultsProps - Optional props for this function
  * @returns - The resulting `formData` with all the defaults provided
  */
-export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function computeDefaults<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
   inputProps: ComputeDefaultsProps<T, S, F> = {},
@@ -532,9 +540,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @returns - valid formData that matches schema
  */
 export function ensureFormDataMatchingSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
@@ -591,7 +599,11 @@ export function ensureFormDataMatchingSchema<
  * @param defaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
-export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getObjectDefaults<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
   {
@@ -736,11 +748,11 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
  * @param idx - The index of the item within the array
  * @returns - The uiSchema to use for the item at `idx`
  */
-function getItemUiSchemaForIndex<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  schema: S,
-  uiSchema: UiSchema<T, S, F> | undefined,
-  idx: number,
-): UiSchema<T, S, F> | undefined {
+function getItemUiSchemaForIndex<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema: UiSchema<T, S, F> | undefined, idx: number): UiSchema<T, S, F> | undefined {
   if (isFixedItems(schema) && idx >= (schema.items as S[]).length) {
     return uiSchema?.additionalItems as UiSchema<T, S, F> | undefined;
   }
@@ -755,7 +767,11 @@ function getItemUiSchemaForIndex<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param initialDefaults - Optional props for this function
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
-export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getArrayDefaults<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
   {
@@ -901,13 +917,13 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 export function getDefaultBasedOnSchemaType<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rawSchema: S,
-  computeDefaultsProps: ComputeDefaultsProps<T, S> = {},
+  computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T | T[] | undefined {
   switch (getSchemaType<S>(rawSchema)) {
@@ -948,9 +964,9 @@ export function getDefaultBasedOnSchemaType<
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   theSchema: S,

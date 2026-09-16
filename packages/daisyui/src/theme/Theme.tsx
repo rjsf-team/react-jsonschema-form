@@ -11,9 +11,9 @@ import { generateWidgets } from '../widgets/Widgets.tsx';
  * @returns A ThemeProps object containing all necessary components for the theme
  */
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
   const generatedWidgets = generateWidgets<T, S, F>();
   const templates = generateTemplates<T, S, F>();

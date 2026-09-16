@@ -23,7 +23,7 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value cached in the state. If it matches the cached value, the cached
  *    value is passed to the input instead of the formData value
  */
-function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const { registry, onChange, formData, value: initialValue } = props;

@@ -202,7 +202,7 @@ describe('Live validation onBlur', () => {
             liveValidate={liveValidate}
             extraErrors={extraErrors}
             formData={value}
-            onChange={(event) => setValue(event.formData)}
+            onChange={(event) => setValue(event.formData as typeof value)}
           />
         </>
       );
@@ -1685,7 +1685,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
       changed = true;
       latestProps.current.onChange(
         'test',
-        toFieldPath(latestProps.current.formData.length, latestProps.current.fieldPath),
+        toFieldPath((latestProps.current.formData as unknown[]).length, latestProps.current.fieldPath),
       );
     });
     return <ArrayField {...fieldProps} />;
@@ -1741,7 +1741,7 @@ describe('Deriving state from changed props', () => {
           validator={validator}
           liveValidate='onChange'
           formData={formData}
-          onChange={(event) => setFormData(event.formData)}
+          onChange={(event) => setFormData(event.formData as { name: string })}
           {...steps[step]}
         />
       </>
@@ -1990,10 +1990,10 @@ describe('Committing a handler result', () => {
 
   it('renders the data its parent holds when a prop change lands in the same render as a blur validation', async () => {
     const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 5 } } };
-    let parentData: { name?: string } = {};
+    let parentData: { name?: string } | undefined = {};
     const onBlur = vi.fn();
     function Parent() {
-      const [formData, setFormData] = useState<{ name?: string }>({});
+      const [formData, setFormData] = useState<{ name?: string } | undefined>({});
       parentData = formData;
       return (
         <Form
@@ -2017,13 +2017,13 @@ describe('Committing a handler result', () => {
     // The blur's own `onChange` hands the parent `ab` after its `hello`, as on `v7`; what this pins is that the form
     // renders the value the parent ends up holding rather than the `hello` it saw in between
     expect(onBlur).toHaveBeenCalledTimes(1);
-    expect(parentData.name).toBe('ab');
+    expect(parentData?.name).toBe('ab');
     expect(container.querySelector('input')).toHaveValue('ab');
   });
 
   it('keeps an edit when the parent re-renders in the same event, before it has been told of the edit', async () => {
     const renderedValues: unknown[] = [];
-    function RecordingWidget(props: WidgetProps) {
+    function RecordingWidget(props: WidgetProps<string>) {
       renderedValues.push(props.value);
       return <input value={props.value ?? ''} onChange={(event) => props.onChange(event.target.value)} />;
     }
@@ -3381,7 +3381,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
       return (
         <input
           type='text'
-          value={formData ?? ''}
+          value={typeof formData === 'string' ? formData : ''}
           onChange={(event) => onChange(event.target.value, fieldPath, { __errors: ['custom!'] })}
         />
       );

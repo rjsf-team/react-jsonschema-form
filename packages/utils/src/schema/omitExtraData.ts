@@ -59,9 +59,9 @@ function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S, custom
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,

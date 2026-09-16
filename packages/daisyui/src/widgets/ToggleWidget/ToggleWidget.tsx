@@ -14,9 +14,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function ToggleWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ id, value, required, disabled, readonly, autofocus, onChange, onFocus, onBlur, options }: WidgetProps<T, S, F>) {
   /** Handle change events from the toggle input
    *

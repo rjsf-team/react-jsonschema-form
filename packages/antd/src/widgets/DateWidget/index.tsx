@@ -20,7 +20,11 @@ type DateWidgetProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function DateWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   disabled,
   registry,
   id,

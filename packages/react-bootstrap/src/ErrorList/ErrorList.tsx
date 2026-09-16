@@ -2,10 +2,11 @@ import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } fr
 import { TranslatableString } from '@rjsf/utils';
 import { Card, ListGroup } from 'react-bootstrap';
 
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <Card border='danger' className='mb-4'>

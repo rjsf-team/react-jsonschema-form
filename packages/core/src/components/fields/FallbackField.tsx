@@ -180,7 +180,11 @@ const HELP_UI_OPTION = 'help';
  * @param widgets - The widgets registered with the form.
  * @param isLabelled - Whether the field around the value renders the schema's title and description.
  */
-function getValueUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function getValueUiSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   uiSchema: UiSchema<T, S, F> | undefined,
   valueSchema: S,
   widgets: RegistryWidgetsType<T, S, F>,
@@ -225,7 +229,7 @@ const DECIMAL_NOTATION = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
  * @param formData - The form data to be casted.
  * @param newType - The target type to which the form data should be casted.
  */
-function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
+function castToNewType<T = unknown>(formData: T, newType: JSONSchema7TypeName): T {
   switch (newType) {
     case 'string':
       // A value of any other shape has no text form a user would have typed: `String()` would put the literal
@@ -286,9 +290,11 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
  * it takes to render — the schemas, the `uiSchema` and the `getDisplayLabel()` call behind them — for every typeless
  * or unknown-type field it has.
  */
-function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FallbackFieldProps<T, S, F>,
-) {
+function FallbackUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FallbackFieldProps<T, S, F>) {
   const {
     id,
     formData,
@@ -425,9 +431,9 @@ function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
  * `useFallbackUiForUnsupportedType` is enabled in the `globalUiOptions`, it provides a type selector
  */
 export default function FallbackField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FallbackFieldProps<T, S, F>) {
   const { id, schema, uiSchema, registry } = props;
   const { translateString, globalFormOptions } = registry;

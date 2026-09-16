@@ -6,7 +6,7 @@ import { fieldPathToName, getUiOptions, getWidget, resolveDefaultWidget } from '
  *
  * @param props - The `FieldProps` for this template
  */
-function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const {

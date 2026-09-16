@@ -8,9 +8,9 @@ import SelectWidget from '../SelectWidget/SelectWidget.tsx';
 import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 
 export function generateWidgets<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     CheckboxWidget,

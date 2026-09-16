@@ -20,7 +20,11 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The internal schema from the `schema` for the given `path` or undefined if not found
  */
-function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function getFromSchemaInternal<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
@@ -56,9 +60,9 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
  * @returns - The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
  */
 export default function getFromSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
@@ -68,9 +72,9 @@ export default function getFromSchema<
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T;
 export default function getFromSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
@@ -80,9 +84,9 @@ export default function getFromSchema<
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): S;
 export default function getFromSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,

@@ -10,7 +10,7 @@ import { customizeValidator } from '../../src/index.ts';
  *
  * @param options
  */
-export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType<T> {
+export default function getTestValidator<T = unknown>(options: CustomValidatorOptionsType): TestValidatorType<T> {
   const validator = customizeValidator<T>(options);
   return {
     validateFormData(

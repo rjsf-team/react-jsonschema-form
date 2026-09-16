@@ -4,7 +4,7 @@ import type { TestValidatorType } from '../../../utils/test/schema/index.ts';
 import type { CustomValidatorOptionsType } from '../../src/index.ts';
 import { customizeValidator } from '../../src/index.ts';
 
-export default function getTestValidator<T = any>(options: CustomValidatorOptionsType): TestValidatorType<T> {
+export default function getTestValidator<T = unknown>(options: CustomValidatorOptionsType): TestValidatorType<T> {
   const validator = customizeValidator<T>(options);
   return {
     validateFormData(

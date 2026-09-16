@@ -24,9 +24,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
  * still resolves between schemas RJSF passes in.
  */
 export default class ATAValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements ValidatorType<T, S, F> {
   /** Stable copy of the constructor options, used when (re)building per-schema
    * `Validator` instances on demand.

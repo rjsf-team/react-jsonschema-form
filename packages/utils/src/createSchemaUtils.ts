@@ -40,9 +40,9 @@ import type {
  * implements the `SchemaUtilsType` interface.
  */
 class SchemaUtils<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements SchemaUtilsType<T, S, F> {
   rootSchema: S;
   validator: ValidatorType<T, S, F>;
@@ -409,9 +409,9 @@ class SchemaUtils<
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,

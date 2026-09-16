@@ -26,9 +26,9 @@ export interface DescriptionFieldMuiProps extends GenericObjectType {
  * @param props - The `DescriptionFieldProps` for this component
  */
 export default function DescriptionField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description, registry, uiSchema } = props;
 

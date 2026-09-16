@@ -15,7 +15,11 @@ import { Field } from '../components/ui/field.tsx';
 import { Radio, RadioGroup } from '../components/ui/radio.tsx';
 import { getChakra } from '../utils.ts';
 
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
   options,

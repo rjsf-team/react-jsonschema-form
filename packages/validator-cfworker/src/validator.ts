@@ -55,9 +55,9 @@ export function normalizeFormDataForValidation<D>(data: D): D {
 
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements ValidatorType<T, S, F> {
   /** The resolved options used to configure this validator.
    *

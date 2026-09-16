@@ -15,9 +15,11 @@ import { getTemplate, getUiOptions, TranslatableString, buttonId } from '@rjsf/u
  *
  * @param props - The `ArrayFieldTemplateProps` for the component
  */
-export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldTemplateProps<T, S, F>,
-) {
+export default function ArrayFieldTemplate<
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,

@@ -8,9 +8,11 @@ import RichDescription from '../RichDescription.tsx';
  *
  * @param props - The `FieldProps` for this template
  */
-function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: UnsupportedFieldProps<T, S, F>,
-) {
+function UnsupportedField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: UnsupportedFieldProps<T, S, F>) {
   const { schema, uiSchema, id, reason, registry } = props;
   const { translateString } = registry;
   let translateEnum: TranslatableString = TranslatableString.UnsupportedField;

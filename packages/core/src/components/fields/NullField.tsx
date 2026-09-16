@@ -6,7 +6,7 @@ import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '
  *
  * @param props - The `FieldProps` for this template
  */
-function NullField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function NullField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const { formData, onChange, fieldPath } = props;

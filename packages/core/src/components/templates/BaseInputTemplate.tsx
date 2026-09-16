@@ -12,9 +12,9 @@ import SchemaExamples from '../SchemaExamples.tsx';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,

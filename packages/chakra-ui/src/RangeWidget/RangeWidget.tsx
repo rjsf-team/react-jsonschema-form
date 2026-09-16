@@ -7,7 +7,11 @@ import { Field } from '../components/ui/field.tsx';
 import { Slider } from '../components/ui/slider.tsx';
 import { getChakra } from '../utils.ts';
 
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   value,
   readonly,
   disabled,

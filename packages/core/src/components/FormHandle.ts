@@ -7,7 +7,7 @@ import type { FieldPathList, RJSFValidationError, ValidationData } from '@rjsf/u
  *
  * Only the members listed here are supported. Everything else on the class instance may change without notice.
  */
-export interface FormHandle<T = any> {
+export interface FormHandle<T = unknown> {
   /** Returns the form data the `Form` currently renders: the `formData` prop of a parent-owned form, the committed
    * data of a self-owned one. It is the read path for a self-owned form, whose data is not otherwise reachable between
    * `onChange` calls (autosave, route guards, a submit button outside the form).

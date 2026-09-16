@@ -5,9 +5,9 @@ import CFWorkerValidator from './validator.ts';
 
 /** Creates a customized cfworker-backed `ValidatorType` implementation. */
 export default function customizeValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(options: CustomValidatorOptionsType = {}) {
   return new CFWorkerValidator<T, S, F>(options);
 }

@@ -9,9 +9,9 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   children,

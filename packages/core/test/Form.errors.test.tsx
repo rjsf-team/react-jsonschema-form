@@ -5,13 +5,8 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import {
-  AcceptingParent,
-  createFormRef,
-  describeRepeated,
-  expectToHaveBeenCalledWithFormData,
-  submitForm,
-} from './testUtils.tsx';
+import type Form from '../src/index.ts';
+import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -142,7 +137,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
             required: ['foo.bar', 'baz'],
           };
-          const formRef = createFormRef();
+          const formRef = createRef<Form<Record<string, unknown>>>();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -184,7 +179,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
               },
             },
           };
-          const formRef = createFormRef();
+          const formRef = createRef<Form<Record<string, unknown>>>();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -1226,8 +1221,8 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           Start?: number;
           End?: number;
         }
-        const customValidate = (formData: StartEnd | undefined, errors: FormValidation) => {
-          const { Start, End } = formData ?? {};
+        const customValidate = (formData: unknown, errors: FormValidation) => {
+          const { Start, End } = (formData ?? {}) as StartEnd;
           if (Start !== undefined && End !== undefined && Start > End) {
             errors.Start?.addError('Validate error: Test should be LE than End');
           }

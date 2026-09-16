@@ -24,9 +24,9 @@ import type {
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ata` library.
  */
 export default class ATAPrecompiledValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements ValidatorType<T, S, F> {
   /** The root schema object used to construct this validator
    *

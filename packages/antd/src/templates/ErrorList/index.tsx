@@ -7,10 +7,11 @@ import { Alert, Space, theme } from 'antd';
  *
  * @param props - The `ErrorListProps` for this component
  */
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   // Antd's List component has been deprecated and waiting to be replaced: https://ant.design/components/list#faq-listy-replacement
   // In the meantime we can mimic the Look & Feel of the List component by adding some inline CSS

@@ -10,9 +10,11 @@ import { cleanupOptions } from '../utils.ts';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     name,

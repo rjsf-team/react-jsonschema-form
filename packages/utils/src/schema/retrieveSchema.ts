@@ -47,9 +47,9 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
 export default function retrieveSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
@@ -97,7 +97,11 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
-export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveCondition<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -245,7 +249,11 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
-export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -334,7 +342,11 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list schemas retrieved after having all references resolved
  */
-export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveReference<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -597,9 +609,9 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   theSchema: S,
@@ -703,9 +715,9 @@ function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
  *          resolved. Multiple schemas may be returned if `expandAllBranches` is true.
  */
 export function retrieveSchemaInternal<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
@@ -830,9 +842,9 @@ export function retrieveSchemaInternal<
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function resolveAnyOrOneOfSchemas<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
@@ -905,7 +917,11 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with their dependencies resolved
  */
-export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function resolveDependencies<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -951,7 +967,11 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema with the `dependencies` resolved into it
  */
-export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function processDependencies<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   dependencies: S['dependencies'],
   resolvedSchema: S,
@@ -1038,7 +1058,11 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with the dependent schema resolved into them
  */
-export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function withDependentSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -1106,9 +1130,9 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function withExactlyOneSubschema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,

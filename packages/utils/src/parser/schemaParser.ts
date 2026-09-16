@@ -15,7 +15,7 @@ import ParserValidator from './ParserValidator.ts';
  * @param rootSchema - The root schema from which the schema parsing began
  * @param schema - The current schema element being parsed
  */
-function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   validator: ParserValidator<T, S, F>,
   recurseList: S[],
   rootSchema: S,
@@ -47,9 +47,11 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
  * @param rootSchema - The root schema to parse for sub-schemas used by `isValid()` calls
  * @returns - The `SchemaMap` of all schemas that were parsed
  */
-export default function schemaParser<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  rootSchema: S,
-): SchemaMap<S> {
+export default function schemaParser<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(rootSchema: S): SchemaMap<S> {
   const validator = new ParserValidator<T, S, F>(rootSchema);
   const recurseList: S[] = [];
 

@@ -10,9 +10,9 @@ import { getDateTimeLocalValue, getTemplate, localToUTC, padTimeSeconds, utcToLo
  * @param props - The `WidgetProps` for this component
  */
 export default function DateTimeWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { onChange, value, options, registry, schema } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);

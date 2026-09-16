@@ -1,5 +1,5 @@
 import { createRef, useEffect } from 'react';
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { act, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -166,7 +166,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const ids: (string | undefined)[] = [];
       const onChange: FormProps['onChange'] = (data, id) => {
         const { formData: fd } = data;
-        formData = { ...formData, ...fd };
+        formData = { ...formData, ...(fd as GenericObjectType) };
         ids.push(id);
       };
       createFormComponent({
@@ -400,7 +400,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       expect(contentInput!.value).toEqual('placeholder');
 
       // Also verify the final formData has correct values
-      const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
+      const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData as GenericObjectType;
       expect(lastFormData.types).toEqual('advanced');
       expect(lastFormData.content).toEqual('placeholder');
     });

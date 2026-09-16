@@ -18,9 +18,9 @@ import { getDaisy } from '../../utils.ts';
  * @param props - The `FieldTemplateProps` for the component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,

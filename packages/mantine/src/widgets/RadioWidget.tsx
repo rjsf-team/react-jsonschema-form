@@ -18,9 +18,11 @@ import { cleanupOptions, visibleErrorText } from '../utils.ts';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     htmlName,

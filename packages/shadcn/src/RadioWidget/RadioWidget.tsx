@@ -18,18 +18,11 @@ import { cn } from '../lib/utils.ts';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  className,
-}: WidgetProps<T, S, F>) {
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, options, value, required, disabled, readonly, onChange, onBlur, onFocus, className }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 

@@ -9,9 +9,9 @@ import { Alert } from '../components/ui/alert.tsx';
  * @param props - The `CyclicSchemaExpandProps` for this component
  */
 export default function CyclicSchemaExpandTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: CyclicSchemaExpandProps<T, S, F>) {
   const { name, id, registry, onExpand } = props;
   const { translateString } = registry;

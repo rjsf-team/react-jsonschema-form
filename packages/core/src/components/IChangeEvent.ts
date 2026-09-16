@@ -16,7 +16,11 @@ import type {
  * applied to, which for a parent-owned form is the parent's own object, so writing into the event writes into that
  * data. Copy what you need out of the event instead.
  */
-export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+export interface IChangeEvent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
   /** The JSON schema object for the form */
   readonly schema: S;
   /** The uiSchema for the form */

@@ -12,9 +12,9 @@ import SelectWidget from './SelectWidget.tsx';
 import TextareaWidget from './TextareaWidget.tsx';
 
 export function generateWidgets<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     AltDateTimeWidget,

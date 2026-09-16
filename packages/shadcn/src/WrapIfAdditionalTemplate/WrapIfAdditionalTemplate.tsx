@@ -10,9 +10,9 @@ import { Separator } from '../components/ui/separator.tsx';
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   classNames,
   style,

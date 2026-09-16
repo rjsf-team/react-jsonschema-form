@@ -4,9 +4,9 @@ import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,

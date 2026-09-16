@@ -326,9 +326,9 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
  * untouched, so this works identically on the submit and live-validation paths and with precompiled validators.
  */
 export default function getUiRequiredErrorSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,

@@ -12,9 +12,9 @@ import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 import UpDownWidget from '../UpDownWidget/UpDownWidget.tsx';
 
 export function generateWidgets<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     AltDateTimeWidget,

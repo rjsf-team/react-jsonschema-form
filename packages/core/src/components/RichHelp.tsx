@@ -3,7 +3,11 @@ import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema 
 
 import RichText from './RichText.tsx';
 
-export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+export interface RichHelpProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
   /** The help text for a field, potentially containing markdown */
   help: string | ReactElement;
   /** The uiSchema object for this base component */
@@ -13,10 +17,10 @@ export interface RichHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 /** Renders help with the registered renderer when its markdown option is enabled. */
-export default function RichHelp<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  help,
-  registry,
-  uiSchema,
-}: RichHelpProps<T, S, F>) {
+export default function RichHelp<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ help, registry, uiSchema }: RichHelpProps<T, S, F>) {
   return <RichText<T, S, F> text={help} enabledBy='enableMarkdownInHelp' registry={registry} uiSchema={uiSchema} />;
 }

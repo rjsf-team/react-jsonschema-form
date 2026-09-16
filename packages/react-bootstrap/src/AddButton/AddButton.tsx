@@ -3,11 +3,11 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { TranslatableString } from '@rjsf/utils';
 import { Button } from 'react-bootstrap';
 
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  uiSchema,
-  registry,
-  ...props
-}: IconButtonProps<T, S, F>) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ uiSchema, registry, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <Button

@@ -16,9 +16,9 @@ import type { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } fr
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
 export default function createPrecompiledValidator<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validateFns: ValidatorFunctions,
   rootSchema: S,

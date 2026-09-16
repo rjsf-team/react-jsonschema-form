@@ -43,9 +43,9 @@ import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.ts';
  * @returns A partial `TemplatesType` object with all required template components
  */
 export function generateTemplates<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     ArrayFieldDescriptionTemplate,

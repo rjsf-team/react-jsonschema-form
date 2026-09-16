@@ -6,9 +6,9 @@ import { getTemplate, getUiOptions } from '@rjsf/utils';
  * @param props - The `ArrayFieldItemTemplateProps` props for the component
  */
 export default function ArrayFieldItemTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);

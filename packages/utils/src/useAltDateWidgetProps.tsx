@@ -21,7 +21,11 @@ function readyForChange(state: DateObject) {
 }
 
 /** The Props for the `DateElement` component */
-export type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
+export type DateElementProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = Pick<
   WidgetProps<T, S, F>,
   'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
 > & {
@@ -40,9 +44,11 @@ export type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  *
  * @param props - The `DateElementProps` for the date element
  */
-export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: DateElementProps<T, S, F>,
-) {
+export function DateElement<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: DateElementProps<T, S, F>) {
   const {
     className = 'form-control',
     type,
@@ -103,9 +109,9 @@ export interface UseAltDateWidgetResult {
  * @param props - The `WidgetProps` for the `AltDateWidget`
  */
 export default function useAltDateWidgetProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
   const [state, setState] = useState(parseDateString(value, time));

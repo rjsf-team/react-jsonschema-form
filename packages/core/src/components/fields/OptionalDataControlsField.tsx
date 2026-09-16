@@ -20,9 +20,9 @@ import {
  * @param props - The `FieldProps` for this template
  */
 export default function OptionalDataControlsField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
     schema,

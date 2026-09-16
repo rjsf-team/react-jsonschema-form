@@ -2,7 +2,11 @@ import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
-export interface RichTextProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+export interface RichTextProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
   /** The text to render, potentially containing markdown */
   text: string | ReactElement;
   /** The `ui:options` flag that enables markdown for this kind of text */
@@ -18,12 +22,11 @@ export interface RichTextProps<T = any, S extends StrictRJSFSchema = RJSFSchema,
  *
  * @param props - The `RichTextProps` for this component
  */
-export default function RichText<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  text,
-  enabledBy,
-  registry,
-  uiSchema = {},
-}: RichTextProps<T, S, F>) {
+export default function RichText<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ text, enabledBy, registry, uiSchema = {} }: RichTextProps<T, S, F>) {
   if (typeof text !== 'string') {
     return text;
   }

@@ -7,9 +7,11 @@ import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
 import { getChakra } from '../utils.ts';
 
-export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function UpDownWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);

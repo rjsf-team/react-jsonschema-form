@@ -7,9 +7,9 @@ import Templates, { generateTemplates } from './templates/index.ts';
 import Widgets, { generateWidgets } from './widgets/index.ts';
 
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
   return {
     templates: generateTemplates<T, S, F>(),
@@ -20,9 +20,9 @@ export function generateTheme<
 const Theme = generateTheme();
 
 export function generateForm<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ComponentType<FormProps<T, S, F>> {
   return withTheme<T, S, F>(generateTheme<T, S, F>());
 }

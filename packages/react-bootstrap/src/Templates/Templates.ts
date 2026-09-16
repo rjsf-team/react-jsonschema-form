@@ -20,9 +20,9 @@ import TitleField from '../TitleField/index.ts';
 import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate/index.ts';
 
 export function generateTemplates<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     ArrayFieldItemTemplate,

@@ -10,12 +10,11 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if schema contains a select, otherwise false
  */
-export default function isSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
-  theSchema: S,
-  rootSchema: S = {} as S,
-  customMergeAllOf?: CustomMergeAllOf<S>,
-) {
+export default function isSelect<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema: S = {} as S, customMergeAllOf?: CustomMergeAllOf<S>) {
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, customMergeAllOf);
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {

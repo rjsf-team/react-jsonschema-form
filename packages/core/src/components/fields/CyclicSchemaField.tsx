@@ -8,9 +8,9 @@ import { getTemplate, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
  * @param props - The `FieldProps` for this template
  */
 export default function CyclicSchemaField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const [expanded, setExpanded] = useState(false);
   const { name, registry, schema, uiSchema, id } = props;

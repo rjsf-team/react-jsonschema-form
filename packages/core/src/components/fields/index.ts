@@ -34,9 +34,9 @@ export {
 
 /** The core fields, keyed by the names the `SchemaField` looks them up by */
 export function generateFields<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): RegistryFieldsType<T, S, F> {
   return {
     AnyOfField: MultiSchemaField,
