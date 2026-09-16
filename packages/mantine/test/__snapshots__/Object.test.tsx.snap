@@ -100,6 +100,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][name]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -167,6 +168,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][street]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -204,6 +206,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][city]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -241,6 +244,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][country]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1298,6 +1302,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                     name="root[firstName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -1335,6 +1340,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                     name="root[lastName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -1555,6 +1561,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.name"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1622,6 +1629,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.street"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1659,6 +1667,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.city"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -2373,6 +2382,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                     name="root.firstName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -2410,6 +2420,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                     name="root.lastName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -3731,6 +3742,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                     name="root_foo_foo"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -3920,6 +3932,7 @@ exports[`object fields > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -4643,6 +4656,7 @@ exports[`object fields > with title and description > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5390,6 +5404,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5875,6 +5890,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6556,6 +6572,7 @@ exports[`object fields > with title and description with global label off > obje
                     name="root_a"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>

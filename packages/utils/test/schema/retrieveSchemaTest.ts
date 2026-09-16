@@ -983,17 +983,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
           maxItems: 5,
-          allOf: [
-            {
-              contains: {
-                type: 'object',
-                properties: {
-                  a: {
-                    pattern: '1',
-                  },
-                },
+          contains: {
+            type: 'object',
+            properties: {
+              a: {
+                pattern: '1',
               },
             },
+          },
+          allOf: [
             {
               contains: {
                 type: 'object',

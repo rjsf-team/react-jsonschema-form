@@ -849,6 +849,7 @@ exports[`array fields > empty errors array 1`] = `
                     name="root_name"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -940,6 +941,7 @@ exports[`array fields > fixed array 1`] = `
                         placeholder=""
                         required=""
                         type="text"
+                        value=""
                       />
                     </div>
                   </div>
@@ -1224,6 +1226,7 @@ exports[`array fields > has errors 1`] = `
                     name="root_name"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
                 <p
@@ -1353,6 +1356,7 @@ exports[`array fields > no errors 1`] = `
                     name="root_name"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6046,6 +6050,7 @@ exports[`with title and description > fixed array 1`] = `
                         placeholder=""
                         required=""
                         type="text"
+                        value=""
                       />
                     </div>
                   </div>
@@ -7189,6 +7194,7 @@ exports[`with title and description from both > fixed array 1`] = `
                         placeholder=""
                         required=""
                         type="text"
+                        value=""
                       />
                     </div>
                   </div>
@@ -8332,6 +8338,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                         placeholder=""
                         required=""
                         type="text"
+                        value=""
                       />
                     </div>
                   </div>
@@ -9333,6 +9340,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         placeholder=""
                         required=""
                         type="text"
+                        value=""
                       />
                     </div>
                   </div>

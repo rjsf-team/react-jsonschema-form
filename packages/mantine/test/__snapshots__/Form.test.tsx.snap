@@ -1593,6 +1593,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][firstName]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1630,6 +1631,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             name="root[person][lastName]"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -1697,6 +1699,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][street]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1734,6 +1737,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     name="root[person][address][city]"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -2247,6 +2251,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     name="root[firstName]"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -3742,6 +3747,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.firstName"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3779,6 +3785,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             name="root.person.lastName"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3846,6 +3853,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.street"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -3883,6 +3891,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     name="root.person.address.city"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -4211,6 +4220,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     name="root.firstName"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5844,6 +5854,7 @@ exports[`single fields > field with description 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -5951,6 +5962,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6058,6 +6070,7 @@ exports[`single fields > field with markdown description 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6165,6 +6178,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                     name="root_my-field"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -6609,6 +6623,7 @@ exports[`single fields > help and error display 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
         <p
@@ -6771,6 +6786,7 @@ exports[`single fields > hidden label 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -7181,6 +7197,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObjectOptional_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7248,6 +7265,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -7319,6 +7337,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -7682,6 +7701,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -8003,6 +8023,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 name="root_optionalObjectWithOneofs_name"
                                 placeholder=""
                                 type="text"
+                                value=""
                               />
                             </div>
                           </div>
@@ -8397,6 +8418,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObjectOptional_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -8467,6 +8489,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -8541,6 +8564,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -8915,6 +8939,7 @@ exports[`single fields > optional data controls > does not show optional control
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -9243,6 +9268,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 name="root_optionalObjectWithOneofs_name"
                                 placeholder=""
                                 type="text"
+                                value=""
                               />
                             </div>
                           </div>
@@ -9880,6 +9906,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -10439,6 +10466,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -10982,6 +11010,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     name="root_nestedObjectOptional_deepObject_deepTest"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -11423,6 +11452,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -11929,6 +11959,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -12436,6 +12467,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             name="root_nestedObject_test"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -13341,6 +13373,7 @@ exports[`single fields > schema examples 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16423,6 +16456,7 @@ exports[`single fields > string field > field with markdown help and description
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16523,6 +16557,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16623,6 +16658,7 @@ exports[`single fields > string field > field with markdown help text without a 
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -16766,6 +16802,7 @@ exports[`single fields > string field > format email 1`] = `
             name="root"
             placeholder=""
             type="email"
+            value=""
           />
         </div>
       </div>
@@ -16829,6 +16866,7 @@ exports[`single fields > string field > format uri 1`] = `
             name="root"
             placeholder=""
             type="url"
+            value=""
           />
         </div>
       </div>
@@ -16892,6 +16930,7 @@ exports[`single fields > string field > regular 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -17219,6 +17258,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             name="root"
             placeholder="placeholder"
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -17383,6 +17423,7 @@ exports[`single fields > title field 1`] = `
                     name="root_title"
                     placeholder=""
                     type="text"
+                    value=""
                   />
                 </div>
               </div>
@@ -17621,6 +17662,7 @@ exports[`single fields > using custom tagName 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>
@@ -17685,6 +17727,7 @@ exports[`string field with autocapitalize 1`] = `
             name="root"
             placeholder=""
             type="text"
+            value=""
           />
         </div>
       </div>

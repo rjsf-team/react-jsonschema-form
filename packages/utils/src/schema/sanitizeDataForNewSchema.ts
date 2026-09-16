@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
@@ -131,15 +131,22 @@ export default function sanitizeDataForNewSchema<
     keys.forEach((key) => {
       const formValue = data?.[key];
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
-      let oldKeyedSchema = getPropertySchema<S>(oldSchema, key);
-      let newKeyedSchema = getPropertySchema<S>(newSchema, key);
-      // Resolve the refs if they exist
-      if (hasByPath(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue, customMergeAllOf);
-      }
-      if (hasByPath(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(validator, newKeyedSchema, rootSchema, formValue, customMergeAllOf);
-      }
+      const oldRawKeyedSchema = getPropertySchema<S>(oldSchema, key);
+      const newRawKeyedSchema = getPropertySchema<S>(newSchema, key);
+      // Resolve refs, dependencies, if/then/else and allOf so a dependency nested inside this key
+      // (not just at the root schema) is taken into account when sanitizing its data (#5250)
+      const oldKeyedSchema = retrieveSchema<T, S, F>(
+        validator,
+        oldRawKeyedSchema,
+        rootSchema,
+        formValue,
+        customMergeAllOf,
+      );
+      // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
+      // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
+      const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
+        ? oldKeyedSchema
+        : retrieveSchema<T, S, F>(validator, newRawKeyedSchema, rootSchema, formValue, customMergeAllOf);
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
@@ -214,24 +221,17 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
-      if (hasByPath(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          oldSchemaItems as S,
-          rootSchema,
-          data as T,
-          customMergeAllOf,
-        );
-      }
-      if (hasByPath(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          newSchemaItems as S,
-          rootSchema,
-          data as T,
-          customMergeAllOf,
-        );
-      }
+      // Keep the raw (pre-resolution) items schema around: a conditional nested inside `items` must be
+      // re-resolved per element below, against that element's own value, rather than the whole array (#5250)
+      const oldSchemaItemsRaw = oldSchemaItems as S;
+      const newSchemaItemsRaw = newSchemaItems as S;
+      // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
+      // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
+      oldSchemaItems = retrieveSchema<T, S, F>(validator, oldSchemaItemsRaw, rootSchema, data as T, customMergeAllOf);
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case
+      newSchemaItems = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+        ? oldSchemaItems
+        : retrieveSchema<T, S, F>(validator, newSchemaItemsRaw, rootSchema, data as T, customMergeAllOf);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
@@ -240,11 +240,23 @@ export default function sanitizeDataForNewSchema<
         const maxItems = newSchema.maxItems ?? -1;
         if (newSchemaType === 'object') {
           newFormData = data.reduce((newValue, aValue) => {
+            // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
+            // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
+            const oldItemSchema = retrieveSchema<T, S, F>(
+              validator,
+              oldSchemaItemsRaw,
+              rootSchema,
+              aValue,
+              customMergeAllOf,
+            );
+            const newItemSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+              ? oldItemSchema
+              : retrieveSchema<T, S, F>(validator, newSchemaItemsRaw, rootSchema, aValue, customMergeAllOf);
             const itemValue = sanitizeDataForNewSchema<T, S, F>(
               validator,
               rootSchema,
-              newSchemaItems as S,
-              oldSchemaItems as S,
+              newItemSchema,
+              oldItemSchema,
               aValue,
               customMergeAllOf,
             );

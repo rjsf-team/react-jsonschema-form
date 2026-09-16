@@ -37,6 +37,7 @@ import {
   hashObject,
   isObject,
   mergeObjects,
+  schemaHasNestedConditional,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
@@ -270,6 +271,11 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   customErrors?: ErrorSchemaBuilder<T>;
   /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
   retrievedSchema: S;
+  /** @description result of schemaHasNestedConditional(rootSchema, rootSchema). A memoized value, recomputed only
+   * when `schemaUtils` (and thus the root schema) is rebuilt, to avoid re-walking the whole schema on every
+   * `getStateFromProps()` call
+   */
+  hasNestedConditionalSchema: boolean;
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
@@ -536,12 +542,18 @@ export default class Form<
     const defaultFormStateBehavior =
       'defaultFormStateBehavior' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior;
     const customMergeAllOf = 'customMergeAllOf' in props ? props.customMergeAllOf : this.props.customMergeAllOf;
-    let { schemaUtils } = state;
+    let { schemaUtils, hasNestedConditionalSchema } = state;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(validator, schema, defaultFormStateBehavior, customMergeAllOf)
     ) {
       schemaUtils = createSchemaUtils<T, S, F>(validator, schema, defaultFormStateBehavior, customMergeAllOf);
+      // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved
+      // schema (only the schema's own top-level `dependencies`/`if` get resolved into it), so comparing
+      // `computedRetrievedSchema` to `state.retrievedSchema` below can't detect it (#5250). `hasNestedConditionalSchema`
+      // lets sanitization run anyway when that's possible. It's a pure function of the root schema, so it only needs
+      // to be recomputed when `schemaUtils` (and thus the root schema) is rebuilt, not on every call here.
+      hasNestedConditionalSchema = schemaHasNestedConditional(schemaUtils.getRootSchema(), schemaUtils.getRootSchema());
     }
 
     const rootSchema = schemaUtils.getRootSchema();
@@ -572,10 +584,10 @@ export default class Form<
       if (
         shouldSanitize &&
         !preventInfiniteSanitize.includes(formHash) &&
-        !deepEquals(computedRetrievedSchema, state.retrievedSchema)
+        (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema))
       ) {
         // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
-        // we have a different retrieved schema from when we last ran the state
+        // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           computedRetrievedSchema,
           state.retrievedSchema,
@@ -693,6 +705,7 @@ export default class Form<
       schemaValidationErrors,
       schemaValidationErrorSchema,
       retrievedSchema: computedRetrievedSchema,
+      hasNestedConditionalSchema,
       initialDefaultsGenerated: true,
       registry,
     };
