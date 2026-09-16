@@ -1,7 +1,7 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
-import deepEquals from '../deepEquals';
-import getPropertySchema from '../getPropertySchema';
-import { getByPath, hasByPath } from '../pathUtils';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
+import getPropertySchema from '../getPropertySchema.ts';
+import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -9,8 +9,8 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import retrieveSchema from './retrieveSchema';
+} from '../types.ts';
+import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
@@ -69,7 +69,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - Otherwise, check for default or const values:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
- *             - If the old `default` value DOES match the form value, then:
+ *             - If the key is new and its form value is undefined, or the old `default` matches the form value, then:
  *               - Replace `removeOldSchemaData[key]` with the new `default`
  *               - Otherwise, if the new schema is `readOnly` then replace `removeOldSchemaData[key]` with undefined
  *         - Get the old and new `const` values from the schema and check:
@@ -78,7 +78,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - Replace `removeOldSchemaData[key]` with the new `const`
  *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
  *   - Once all keys have been processed, return an object built as follows:
- *     - `{ ...removeOldSchemaData, ...nestedData, ...pick(data, keysToKeep) }`
+ *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the new and old schema types are array and the `data` is an array then:
  *   - If the type of the old and new schema `items` are a non-array objects:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
@@ -130,27 +130,23 @@ export default function sanitizeDataForNewSchema<
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
       const formValue = data?.[key];
-      let oldKeyedSchema = getPropertySchema<S>(oldSchema, key);
-      let newKeyedSchema = getPropertySchema<S>(newSchema, key);
-      // Resolve the refs if they exist
-      if (hasByPath(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          oldKeyedSchema,
-          rootSchema,
-          formValue,
-          experimental_customMergeAllOf,
-        );
-      }
-      if (hasByPath(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(
-          validator,
-          newKeyedSchema,
-          rootSchema,
-          formValue,
-          experimental_customMergeAllOf,
-        );
-      }
+      const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
+      const oldRawKeyedSchema = getPropertySchema<S>(oldSchema, key);
+      const newRawKeyedSchema = getPropertySchema<S>(newSchema, key);
+      // Resolve refs, dependencies, if/then/else and allOf so a dependency nested inside this key
+      // (not just at the root schema) is taken into account when sanitizing its data (#5250)
+      const oldKeyedSchema = retrieveSchema<T, S, F>(
+        validator,
+        oldRawKeyedSchema,
+        rootSchema,
+        formValue,
+        experimental_customMergeAllOf,
+      );
+      // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
+      // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
+      const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
+        ? oldKeyedSchema
+        : retrieveSchema<T, S, F>(validator, newRawKeyedSchema, rootSchema, formValue, experimental_customMergeAllOf);
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
@@ -167,7 +163,7 @@ export default function sanitizeDataForNewSchema<
             validator,
             rootSchema,
             newKeyedSchema,
-            oldKeyedSchema,
+            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
             experimental_customMergeAllOf,
           );
@@ -182,8 +178,8 @@ export default function sanitizeDataForNewSchema<
           const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
           const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
           if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
-            if (oldOptionDefault === formValue) {
-              // If the old default matches the formValue, we'll update the new value to match the new default
+            if ((isNewProperty && formValue === undefined) || oldOptionDefault === formValue) {
+              // Initialize a newly entered property or replace an old default with the new default.
               removeOldSchemaData[key] = newOptionDefault;
             } else if (newKeyedSchema.readOnly === true) {
               // If the new schema has the default set to read-only, treat it like a const and remove the value
@@ -225,24 +221,23 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(oldSchemaItems) &&
       !Array.isArray(newSchemaItems)
     ) {
-      if (hasByPath(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          oldSchemaItems as S,
-          rootSchema,
-          data as T,
-          experimental_customMergeAllOf,
-        );
-      }
-      if (hasByPath(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(
-          validator,
-          newSchemaItems as S,
-          rootSchema,
-          data as T,
-          experimental_customMergeAllOf,
-        );
-      }
+      // Keep the raw (pre-resolution) items schema around: a conditional nested inside `items` must be
+      // re-resolved per element below, against that element's own value, rather than the whole array (#5250)
+      const oldSchemaItemsRaw = oldSchemaItems as S;
+      const newSchemaItemsRaw = newSchemaItems as S;
+      // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
+      // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
+      oldSchemaItems = retrieveSchema<T, S, F>(
+        validator,
+        oldSchemaItemsRaw,
+        rootSchema,
+        data as T,
+        experimental_customMergeAllOf,
+      );
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case
+      newSchemaItems = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+        ? oldSchemaItems
+        : retrieveSchema<T, S, F>(validator, newSchemaItemsRaw, rootSchema, data as T, experimental_customMergeAllOf);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
@@ -251,11 +246,29 @@ export default function sanitizeDataForNewSchema<
         const maxItems = newSchema.maxItems ?? -1;
         if (newSchemaType === 'object') {
           newFormData = data.reduce((newValue, aValue) => {
+            // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
+            // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
+            const oldItemSchema = retrieveSchema<T, S, F>(
+              validator,
+              oldSchemaItemsRaw,
+              rootSchema,
+              aValue,
+              experimental_customMergeAllOf,
+            );
+            const newItemSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+              ? oldItemSchema
+              : retrieveSchema<T, S, F>(
+                  validator,
+                  newSchemaItemsRaw,
+                  rootSchema,
+                  aValue,
+                  experimental_customMergeAllOf,
+                );
             const itemValue = sanitizeDataForNewSchema<T, S, F>(
               validator,
               rootSchema,
-              newSchemaItems as S,
-              oldSchemaItems as S,
+              newItemSchema,
+              oldItemSchema,
               aValue,
               experimental_customMergeAllOf,
             );

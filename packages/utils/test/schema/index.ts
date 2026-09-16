@@ -1,19 +1,19 @@
-import findFieldInSchemaTest from './findFieldInSchemaTest';
-import findSelectedOptionInXxxOfTest from './findSelectedOptionInXxxOfTest';
-import getClosestMatchingOptionTest from './getClosestMatchingOptionTest';
-import getDefaultFormStateTest from './getDefaultFormStateTest';
-import getDisplayLabelTest from './getDisplayLabelTest';
-import getFirstMatchingOptionTest from './getFirstMatchingOptionTest';
-import getFromSchemaTest from './getFromSchemaTest';
-import isFilesArrayTest from './isFilesArrayTest';
-import isMultiSelectTest from './isMultiSelectTest';
-import isSelectTest from './isSelectTest';
-import omitExtraDataTest from './omitExtraDataTest';
-import retrieveSchemaTest from './retrieveSchemaTest';
-import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
-import toPathSchemaTest from './toPathSchemaTest';
+import findFieldInSchemaTest from './findFieldInSchemaTest.ts';
+import findSelectedOptionInXxxOfTest from './findSelectedOptionInXxxOfTest.ts';
+import getClosestMatchingOptionTest from './getClosestMatchingOptionTest.ts';
+import getDefaultFormStateTest from './getDefaultFormStateTest.ts';
+import getDisplayLabelTest from './getDisplayLabelTest.ts';
+import getFirstMatchingOptionTest from './getFirstMatchingOptionTest.ts';
+import getFromSchemaTest from './getFromSchemaTest.ts';
+import isFilesArrayTest from './isFilesArrayTest.ts';
+import isMultiSelectTest from './isMultiSelectTest.ts';
+import isSelectTest from './isSelectTest.ts';
+import omitExtraDataTest from './omitExtraDataTest.ts';
+import retrieveSchemaTest from './retrieveSchemaTest.ts';
+import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest.ts';
+import toPathSchemaTest from './toPathSchemaTest.ts';
 
-export type * from './types';
+export type * from './types.ts';
 
 export {
   findFieldInSchemaTest,

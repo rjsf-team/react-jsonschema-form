@@ -1,7 +1,7 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { LOOKUP_MAP_NAME } from '@rjsf/utils';
 
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.ts';
 
 const layoutGrid: Sample = {
   formContext: {

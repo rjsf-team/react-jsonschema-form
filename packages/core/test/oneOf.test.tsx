@@ -3,9 +3,9 @@ import type { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetP
 import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import SchemaField from '../src/components/fields/SchemaField';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils';
+import SchemaField from '../src/components/fields/SchemaField.tsx';
+import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -125,6 +125,34 @@ describe('oneOf', () => {
       }),
       'root__oneof_select',
     );
+  });
+
+  it('should restore defaults when returning to an option with disjoint properties', async () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'First method of identification',
+            properties: {
+              firstName: { type: 'string', default: 'Chuck' },
+            },
+          },
+          {
+            title: 'Second method of identification',
+            properties: {
+              idCode: { type: 'string' },
+            },
+          },
+        ],
+      },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__oneof_select');
+
+    await user.selectOptions($select!, '1');
+    await user.selectOptions($select!, '0');
+
+    expect(node.querySelector('#root_firstName')).toHaveValue('Chuck');
   });
 
   it('should assign a default value and set defaults on option change when using refs', async () => {

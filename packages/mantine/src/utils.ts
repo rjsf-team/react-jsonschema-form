@@ -9,6 +9,7 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'help',
   'autofocus',
   'autocomplete',
+  'autocapitalize',
   'disabled',
   'enumDisabled',
   'enumNames',

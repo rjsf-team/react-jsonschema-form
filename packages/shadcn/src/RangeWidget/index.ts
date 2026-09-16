@@ -1,2 +1,2 @@
-export { default } from './RangeWidget';
-export * from './RangeWidget';
+export { default } from './RangeWidget.tsx';
+export * from './RangeWidget.tsx';

@@ -23,7 +23,7 @@ import {
 } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
-import type { SuppressDuplicateFilteringType } from './types';
+import type { SuppressDuplicateFilteringType } from './types.ts';
 
 export interface RawValidationErrorsType<Result = any> {
   errors?: Result[];

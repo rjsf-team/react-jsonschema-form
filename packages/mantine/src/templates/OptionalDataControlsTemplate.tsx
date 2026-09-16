@@ -1,7 +1,7 @@
 import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import AddButton from './ButtonTemplates/AddButton';
-import { RemoveButton } from './ButtonTemplates/IconButton';
+import AddButton from './ButtonTemplates/AddButton.tsx';
+import { RemoveButton } from './ButtonTemplates/IconButton.tsx';
 
 /** The OptionalDataControlsTemplate renders one of three different states. If
  * there is an `onAddClick()` function, it renders the "Add" button. If there is

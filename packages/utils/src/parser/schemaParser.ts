@@ -1,9 +1,9 @@
-import { ITEMS_KEY, PROPERTIES_KEY } from '../constants';
-import deepEquals from '../deepEquals';
-import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types';
-import type { SchemaMap } from './ParserValidator';
-import ParserValidator from './ParserValidator';
+import { ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
+import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types.ts';
+import type { SchemaMap } from './ParserValidator.ts';
+import ParserValidator from './ParserValidator.ts';
 
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The `validator` is used to
  * capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the

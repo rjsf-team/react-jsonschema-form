@@ -1,5 +1,5 @@
-import { enumOptionValueDecoder } from '../src';
-import type { EnumOptionsType, RJSFSchema } from '../src';
+import { enumOptionValueDecoder } from '../src/index.ts';
+import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },

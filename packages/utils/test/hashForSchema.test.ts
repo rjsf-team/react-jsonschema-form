@@ -1,6 +1,13 @@
-import type { RJSFSchema } from '../src';
-import { hashForSchema, hashObject, hashString, sortedJSONStringify, RJSF_REF_CYCLE_KEY, RJSF_REF_KEY } from '../src';
-import { RECURSIVE_REF } from './testUtils/testData';
+import type { RJSFSchema } from '../src/index.ts';
+import {
+  hashForSchema,
+  hashObject,
+  hashString,
+  sortedJSONStringify,
+  RJSF_REF_CYCLE_KEY,
+  RJSF_REF_KEY,
+} from '../src/index.ts';
+import { RECURSIVE_REF } from './testUtils/testData.ts';
 
 const TINY_SCHEMA: RJSFSchema = {
   type: 'string',

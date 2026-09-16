@@ -2,8 +2,8 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 
-import type { FileInfoType } from '../src';
-import { useFileWidgetProps } from '../src';
+import type { FileInfoType } from '../src/index.ts';
+import { useFileWidgetProps } from '../src/index.ts';
 
 const FILE_1_STR = 'data:text/plain;name=file1.txt;base64,';
 const FILE_2_STR = 'data:text/plain;name=file2.txt;base64,';

@@ -14158,3 +14158,70 @@ exports[`single fields > using custom tagName 1`] = `
   </div>
 </DocumentFragment>
 `;
+
+exports[`string field with autocapitalize 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control"
+        >
+          <label
+            class="label hidden"
+            for="root"
+            style="display: none;"
+          >
+            <span
+              class="label-text"
+            />
+          </label>
+          <div
+            style="position: relative;"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autocapitalize="words"
+              class="input input-bordered w-full"
+              id="root"
+              name="root"
+              placeholder=""
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

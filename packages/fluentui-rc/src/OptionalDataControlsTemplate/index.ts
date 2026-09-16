@@ -1,2 +1,2 @@
-export { default } from './OptionalDataControlsTemplate';
-export * from './OptionalDataControlsTemplate';
+export { default } from './OptionalDataControlsTemplate.tsx';
+export * from './OptionalDataControlsTemplate.tsx';

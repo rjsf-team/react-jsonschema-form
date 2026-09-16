@@ -5,8 +5,8 @@ import { forwardRef } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
-import { cn } from '../../lib/utils';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog';
+import { cn } from '../../lib/utils.ts';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog.tsx';
 
 /**
  * The root Command component that provides command menu functionality

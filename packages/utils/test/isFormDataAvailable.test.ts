@@ -1,4 +1,4 @@
-import { isFormDataAvailable } from '../src';
+import { isFormDataAvailable } from '../src/index.ts';
 
 const TEST_CASES = [
   { value: undefined, result: false },

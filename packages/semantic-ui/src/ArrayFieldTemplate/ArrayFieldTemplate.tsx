@@ -1,7 +1,7 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions, isFixedItems, buttonId } from '@rjsf/utils';
 
-import { cleanClassNames } from '../util';
+import { cleanClassNames } from '../util.tsx';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *

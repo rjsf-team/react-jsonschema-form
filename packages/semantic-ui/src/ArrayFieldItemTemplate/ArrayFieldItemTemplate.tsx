@@ -2,7 +2,7 @@ import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJ
 import { getUiOptions, getTemplate } from '@rjsf/utils';
 import { Button, Grid, Segment } from 'semantic-ui-react';
 
-import { getSemanticProps, MaybeWrap } from '../util';
+import { getSemanticProps, MaybeWrap } from '../util.tsx';
 
 const gridStyle = (vertical: boolean) => ({
   display: 'grid',

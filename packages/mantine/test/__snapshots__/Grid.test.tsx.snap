@@ -24,8 +24,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -40,8 +41,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
           >
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -80,8 +82,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -140,6 +143,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -183,6 +187,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             name="root_person_name_middle"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -234,6 +239,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -244,8 +250,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -596,8 +603,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -623,8 +631,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
-                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                        style="padding: calc(0.25rem * var(--mantine-scale));"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -683,6 +692,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -726,6 +736,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       name="root_person_address_line_2"
                                       placeholder=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -777,6 +788,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -784,8 +796,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             </div>
                             <div
                               class="m_7485cace mantine-Container-root"
+                              data-fluid="true"
                               data-strategy="block"
-                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                              style="padding: calc(0.25rem * var(--mantine-scale));"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -1650,6 +1663,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             placeholder=""
                                             required=""
                                             type="text"
+                                            value=""
                                           />
                                         </div>
                                       </div>
@@ -1673,8 +1687,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div
                       class="m_7485cace mantine-Container-root"
+                      data-fluid="true"
                       data-strategy="block"
-                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                      style="padding: calc(0.25rem * var(--mantine-scale));"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -1905,6 +1920,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1948,6 +1964,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     name="root_employment_title"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -1999,6 +2016,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -2865,8 +2883,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -2881,8 +2900,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
           >
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -2921,8 +2941,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -2981,6 +3002,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3024,6 +3046,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             name="root_person_name_middle"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3075,6 +3098,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -3085,8 +3109,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -3437,8 +3462,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -3464,8 +3490,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
-                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                        style="padding: calc(0.25rem * var(--mantine-scale));"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -3524,6 +3551,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -3567,6 +3595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       name="root_person_address_line_2"
                                       placeholder=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -3618,6 +3647,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -3625,8 +3655,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             </div>
                             <div
                               class="m_7485cace mantine-Container-root"
+                              data-fluid="true"
                               data-strategy="block"
-                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                              style="padding: calc(0.25rem * var(--mantine-scale));"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -4491,6 +4522,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             placeholder=""
                                             required=""
                                             type="text"
+                                            value=""
                                           />
                                         </div>
                                       </div>
@@ -4514,8 +4546,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div
                       class="m_7485cace mantine-Container-root"
+                      data-fluid="true"
                       data-strategy="block"
-                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                      style="padding: calc(0.25rem * var(--mantine-scale));"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -4738,6 +4771,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     name="root_employment_district"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -4789,6 +4823,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -4832,6 +4867,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     name="root_employment_title"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -4883,6 +4919,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -5749,8 +5786,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -5765,8 +5803,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
           >
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -5805,8 +5844,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -5865,6 +5905,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -5908,6 +5949,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             name="root_person_name_middle"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -5959,6 +6001,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -5969,8 +6012,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -6321,8 +6365,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -6348,8 +6393,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
-                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                        style="padding: calc(0.25rem * var(--mantine-scale));"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -6408,6 +6454,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -6451,6 +6498,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       name="root_person_address_line_2"
                                       placeholder=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -6502,6 +6550,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -6509,8 +6558,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             </div>
                             <div
                               class="m_7485cace mantine-Container-root"
+                              data-fluid="true"
                               data-strategy="block"
-                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                              style="padding: calc(0.25rem * var(--mantine-scale));"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -7375,6 +7425,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             placeholder=""
                                             required=""
                                             type="text"
+                                            value=""
                                           />
                                         </div>
                                       </div>
@@ -7398,8 +7449,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div
                       class="m_7485cace mantine-Container-root"
+                      data-fluid="true"
                       data-strategy="block"
-                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                      style="padding: calc(0.25rem * var(--mantine-scale));"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -7690,8 +7742,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -7706,8 +7759,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
           >
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -7746,8 +7800,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -7806,6 +7861,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7849,6 +7905,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             name="root_person_name_middle"
                             placeholder=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7900,6 +7957,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             placeholder=""
                             required=""
                             type="text"
+                            value=""
                           />
                         </div>
                       </div>
@@ -7910,8 +7968,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -8262,8 +8321,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
             <div
               class="m_7485cace mantine-Container-root"
+              data-fluid="true"
               data-strategy="block"
-              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+              style="padding: calc(0.25rem * var(--mantine-scale));"
             >
               <style
                 data-mantine-styles="inline"
@@ -8289,8 +8349,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="m_7485cace mantine-Container-root"
+                        data-fluid="true"
                         data-strategy="block"
-                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                        style="padding: calc(0.25rem * var(--mantine-scale));"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -8349,6 +8410,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -8392,6 +8454,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       name="root_person_address_line_2"
                                       placeholder=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -8443,6 +8506,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       placeholder=""
                                       required=""
                                       type="text"
+                                      value=""
                                     />
                                   </div>
                                 </div>
@@ -8450,8 +8514,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             </div>
                             <div
                               class="m_7485cace mantine-Container-root"
+                              data-fluid="true"
                               data-strategy="block"
-                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                              style="padding: calc(0.25rem * var(--mantine-scale));"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -9316,6 +9381,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             placeholder=""
                                             required=""
                                             type="text"
+                                            value=""
                                           />
                                         </div>
                                       </div>
@@ -9339,8 +9405,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   >
                     <div
                       class="m_7485cace mantine-Container-root"
+                      data-fluid="true"
                       data-strategy="block"
-                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+                      style="padding: calc(0.25rem * var(--mantine-scale));"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -9571,6 +9638,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -9614,6 +9682,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     name="root_employment_title"
                                     placeholder=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -9665,6 +9734,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     placeholder=""
                                     required=""
                                     type="text"
+                                    value=""
                                   />
                                 </div>
                               </div>
@@ -10531,8 +10601,9 @@ exports[`Three even column grid > renders person and address in three columns, n
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -10612,6 +10683,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -10655,6 +10727,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_name_middle"
                       placeholder=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -10706,6 +10779,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -11090,6 +11164,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -11133,6 +11208,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -11184,6 +11260,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12051,8 +12128,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
     >
       <div
         class="m_7485cace mantine-Container-root"
+        data-fluid="true"
         data-strategy="block"
-        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
+        style="padding: calc(0.25rem * var(--mantine-scale));"
       >
         <style
           data-mantine-styles="inline"
@@ -12132,6 +12210,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12175,6 +12254,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_name_middle"
                       placeholder=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12226,6 +12306,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12610,6 +12691,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12653,6 +12735,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>
@@ -12704,6 +12787,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       placeholder=""
                       required=""
                       type="text"
+                      value=""
                     />
                   </div>
                 </div>

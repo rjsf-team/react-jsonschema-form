@@ -5,9 +5,9 @@ import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FormProps } from '../src';
-import Form from '../src';
-import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils';
+import type { FormProps } from '../src/index.ts';
+import Form from '../src/index.ts';
+import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1143,6 +1143,95 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
         expect(formRef.current!.state.retrievedSchema.properties).not.toHaveProperty('water');
+      });
+
+      it('should sanitize stale enum data for a dependency nested inside an object (#5250)', async () => {
+        const nestedDependentEnumSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            m: {
+              type: 'object',
+              properties: {
+                animal: {
+                  type: 'string',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              dependencies: {
+                animal: {
+                  oneOf: [
+                    {
+                      properties: {
+                        animal: { enum: ['Cat'] },
+                        food: { type: 'string', enum: ['meat'] },
+                      },
+                    },
+                    {
+                      properties: {
+                        animal: { enum: ['Fish'] },
+                        food: { type: 'string', enum: ['worms'] },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({
+          schema: nestedDependentEnumSchema,
+          formData: { m: { animal: 'Fish', food: 'worms' } },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, '0');
+
+        expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
+      });
+
+      it('should sanitize stale enum data for a dependency nested behind a $ref (#5250)', async () => {
+        const refDependentEnumSchema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Animal: {
+              type: 'object',
+              properties: {
+                animal: {
+                  type: 'string',
+                  enum: ['Cat', 'Fish'],
+                },
+              },
+              dependencies: {
+                animal: {
+                  oneOf: [
+                    {
+                      properties: {
+                        animal: { enum: ['Cat'] },
+                        food: { type: 'string', enum: ['meat'] },
+                      },
+                    },
+                    {
+                      properties: {
+                        animal: { enum: ['Fish'] },
+                        food: { type: 'string', enum: ['worms'] },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+          properties: {
+            m: { $ref: '#/definitions/Animal' },
+          },
+        };
+        const { node, onChange } = createFormComponent({
+          schema: refDependentEnumSchema,
+          formData: { m: { animal: 'Fish', food: 'worms' } },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, '0');
+
+        expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
       });
     });
 

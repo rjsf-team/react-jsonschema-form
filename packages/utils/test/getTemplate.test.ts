@@ -1,7 +1,7 @@
-import type { RJSFSchema, Registry, UIOptionsType } from '../src';
-import { createSchemaUtils, englishStringTranslator, getTemplate } from '../src';
-import getTestValidator from './testUtils/getTestValidator';
-import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
+import type { RJSFSchema, Registry, UIOptionsType } from '../src/index.ts';
+import { createSchemaUtils, englishStringTranslator, getTemplate } from '../src/index.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
+import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
 const FakeTemplate = () => null;
 

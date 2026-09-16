@@ -23,12 +23,14 @@ const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) =>
   return newCache;
 });
 
-export const __createChakraFrameProvider = (props: any) => ({ document }: any) => (
-  <div style={{ margin: 2 }}>
-    <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-      <EnvironmentProvider value={() => document}>
-        <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
-      </EnvironmentProvider>
-    </CacheProvider>
-  </div>
-);
+export const __createChakraFrameProvider =
+  (props: any) =>
+  ({ document }: any) => (
+    <div style={{ margin: 2 }}>
+      <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
+        <EnvironmentProvider value={() => document}>
+          <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
+        </EnvironmentProvider>
+      </CacheProvider>
+    </div>
+  );

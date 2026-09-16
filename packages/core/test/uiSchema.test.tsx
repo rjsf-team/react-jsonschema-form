@@ -6,10 +6,10 @@ import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import Form from '../src';
-import RadioWidget from '../src/components/widgets/RadioWidget';
-import SelectWidget from '../src/components/widgets/SelectWidget';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
+import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import Form from '../src/index.ts';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -2877,5 +2877,15 @@ describe('uiSchema', () => {
         expect(nodeOption).toBeDefined();
       });
     });
+  });
+  it('string field with autocapitalize', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+    };
+    const uiSchema: UiSchema = {
+      'ui:autocapitalize': 'words',
+    };
+    const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+    expect(container.querySelector('input')?.getAttribute('autocapitalize')).toBe('words');
   });
 });

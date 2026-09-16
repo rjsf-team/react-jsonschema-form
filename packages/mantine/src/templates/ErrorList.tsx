@@ -2,7 +2,7 @@ import { Alert, Title, List } from '@mantine/core';
 import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import { ExclamationCircle } from './icons';
+import { ExclamationCircle } from './icons.tsx';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *

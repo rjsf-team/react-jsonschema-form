@@ -21,7 +21,7 @@ import {
 import type { DropdownProps, DropdownItemProps } from 'semantic-ui-react';
 import { Form } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.tsx';
 
 /**
  * Returns and creates an array format required for semantic drop down

@@ -1,9 +1,8 @@
-import type { GlobalUISchemaOptions } from '../lib';
-import type { Registry, RJSFSchema, TemplatesType } from '../src';
-import { createSchemaUtils, englishStringTranslator, shouldRenderOptionalField } from '../src';
-import { getSchemaTypesForXxxOf } from '../src/shouldRenderOptionalField';
-import getTestValidator from './testUtils/getTestValidator';
-import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
+import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
+import { createSchemaUtils, englishStringTranslator, shouldRenderOptionalField } from '../src/index.ts';
+import { getSchemaTypesForXxxOf } from '../src/shouldRenderOptionalField.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
+import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
 const TEST_ROOT_SCHEMA: RJSFSchema = {
   type: 'object',

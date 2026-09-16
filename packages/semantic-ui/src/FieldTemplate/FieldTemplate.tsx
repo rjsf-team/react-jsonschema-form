@@ -2,7 +2,7 @@ import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema 
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { Form } from 'semantic-ui-react';
 
-import { getSemanticProps, MaybeWrap } from '../util';
+import { getSemanticProps, MaybeWrap } from '../util.tsx';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.

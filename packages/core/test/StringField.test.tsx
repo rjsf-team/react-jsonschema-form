@@ -3,15 +3,15 @@ import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@
 import { fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import StringField from '../src/components/fields/StringField';
+import StringField from '../src/components/fields/StringField.tsx';
 import {
   createFormComponent,
   getSelectedOptionValue,
   setupConsoleErrorSuppression,
   submitForm,
   expectToHaveBeenCalledWithFormData,
-} from './testUtils';
-import { TextWidgetTest } from './TextWidgetTest';
+} from './testUtils.tsx';
+import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const consoleErrorSuppression = setupConsoleErrorSuppression();
 
@@ -315,6 +315,16 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('input')).toHaveAttribute('autocomplete', 'family-name');
+    });
+
+    it('should create and set autocapitalize attribute', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:autocapitalize': 'words' },
+        formData: undefined,
+      });
+
+      expect(node.querySelector('input')).toHaveAttribute('autocapitalize', 'words');
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {

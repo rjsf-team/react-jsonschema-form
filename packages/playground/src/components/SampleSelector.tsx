@@ -10,7 +10,7 @@ import MuiTab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 
-import { samples } from '../samples';
+import { samples } from '../samples/index.ts';
 
 const drawerWidth = 200;
 

@@ -1,7 +1,7 @@
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 
-import IconButton from './IconButton';
+import IconButton from './IconButton.tsx';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */

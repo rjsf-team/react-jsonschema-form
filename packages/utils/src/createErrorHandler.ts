@@ -1,6 +1,6 @@
-import { ERRORS_KEY } from './constants';
-import isPlainObject from './isPlainObject';
-import type { FieldValidation, FormValidation } from './types';
+import { ERRORS_KEY } from './constants.ts';
+import isPlainObject from './isPlainObject.ts';
+import type { FieldValidation, FormValidation } from './types.ts';
 
 /** Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
  *

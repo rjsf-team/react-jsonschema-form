@@ -5,9 +5,9 @@ import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FormProps, IChangeEvent } from '../src';
-import Form from '../src';
-import type { NoValFormProps } from './testUtils';
+import type { FormProps, IChangeEvent } from '../src/index.ts';
+import Form from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import {
   actWrappedDelayPromise,
   createComponent,
@@ -16,7 +16,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   submitForm,
-} from './testUtils';
+} from './testUtils.tsx';
 import widgetsSchema from './widgets_schema.json';
 
 const user = userEvent.setup();
@@ -2480,6 +2480,66 @@ describe('clearing a field with a schema default does not re-apply the default (
     const { formData } = onSubmit.mock.calls[onSubmit.mock.calls.length - 1][0];
     expect(formData).not.toHaveProperty('someStrings', 'Chuck');
     expect(formData).not.toHaveProperty('someNumbers', 1);
+  });
+});
+
+describe('dependency defaults in controlled forms', () => {
+  const triggersSchema: RJSFSchema = {
+    type: 'array',
+    default: [],
+    items: { type: 'object' },
+  };
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      triggersOverride: {
+        type: 'boolean',
+        oneOf: [
+          { title: 'Override Repo Triggers', enum: [true] },
+          { title: 'Default to Repo Triggers', enum: [false] },
+        ],
+      },
+    },
+    dependencies: {
+      triggersOverride: {
+        oneOf: [
+          {
+            properties: {
+              triggersOverride: { enum: [false] },
+              repoData: {
+                type: 'object',
+                properties: {
+                  triggers: triggersSchema,
+                },
+              },
+            },
+          },
+          {
+            properties: {
+              triggersOverride: { enum: [true] },
+              triggers: triggersSchema,
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  it('preserves an empty array already present when enabling the dependency branch', async () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: {
+        triggersOverride: false,
+        triggers: [],
+        repoData: { triggersOverride: true, triggers: [] },
+      },
+      liveValidate: 'onChange',
+      uiSchema: { triggersOverride: { 'ui:widget': 'radio' } },
+    });
+
+    await user.click(node.querySelectorAll<HTMLInputElement>('input[type=radio]')[0]);
+
+    expectToHaveBeenCalledWithFormData(onChange, { triggersOverride: true, triggers: [] }, 'root_triggersOverride');
   });
 });
 

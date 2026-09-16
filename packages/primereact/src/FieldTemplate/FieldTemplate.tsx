@@ -1,7 +1,7 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
-import { Label } from '../util';
+import { Label } from '../util.tsx';
 
 export default function FieldTemplate<
   T = any,

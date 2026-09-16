@@ -11,7 +11,7 @@ import type {
 } from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util';
+import { computeSxProps, getMuiProps } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */

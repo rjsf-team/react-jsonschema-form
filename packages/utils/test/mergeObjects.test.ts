@@ -1,4 +1,4 @@
-import { mergeObjects } from '../src';
+import { mergeObjects } from '../src/index.ts';
 
 describe('mergeObjects()', () => {
   it('shouldn`t mutate the provided objects', () => {

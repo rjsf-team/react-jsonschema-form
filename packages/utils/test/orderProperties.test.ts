@@ -1,4 +1,4 @@
-import { orderProperties } from '../src';
+import { orderProperties } from '../src/index.ts';
 
 describe('orderProperties()', () => {
   it('returns properties when order array is not specified', () => {

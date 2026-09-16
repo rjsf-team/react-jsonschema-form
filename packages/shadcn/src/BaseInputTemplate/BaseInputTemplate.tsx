@@ -4,8 +4,8 @@ import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
 
-import { Input } from '../components/ui/input';
-import { cn } from '../lib/utils';
+import { Input } from '../components/ui/input.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.

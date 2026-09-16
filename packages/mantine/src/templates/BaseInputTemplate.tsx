@@ -5,7 +5,7 @@ import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils';
+import { cleanupOptions } from '../utils.ts';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -106,7 +106,7 @@ export default function BaseInputTemplate<
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
         description={description}
-        value={value}
+        value={value ?? ''}
         min={typeof min === 'number' ? min : undefined}
         max={typeof max === 'number' ? max : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
@@ -118,7 +118,7 @@ export default function BaseInputTemplate<
         {...inputProps}
         {...themeProps}
         description={description}
-        value={value}
+        value={value ?? ''}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     );

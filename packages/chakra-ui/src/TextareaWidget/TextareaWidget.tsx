@@ -3,8 +3,8 @@ import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
-import { Field } from '../components/ui/field';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field.tsx';
+import { getChakra } from '../utils.ts';
 
 export default function TextareaWidget<
   T = any,

@@ -1,4 +1,4 @@
-import { getSchemaType } from '../src';
+import { getSchemaType } from '../src/index.ts';
 
 const cases: { schema: object; expected: string | undefined }[] = [
   {

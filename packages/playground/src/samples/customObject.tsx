@@ -7,7 +7,7 @@ import type {
 } from '@rjsf/utils';
 import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
-import type { Sample } from './Sample';
+import type { Sample } from './Sample.ts';
 
 function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldTemplateProps<T, S, F>,
@@ -19,7 +19,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     <div>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(fieldPathId)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}

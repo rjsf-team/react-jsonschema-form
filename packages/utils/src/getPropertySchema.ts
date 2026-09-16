@@ -1,5 +1,5 @@
-import { PROPERTIES_KEY } from './constants';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { PROPERTIES_KEY } from './constants.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema
  * when the schema has no such property. Callers treat the properties of a schema as schemas of the same type `S`,

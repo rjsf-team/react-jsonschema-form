@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { getWidget, getUiOptions, optionsList, hasWidget } from '@rjsf/utils';
+import { getWidget, getUiOptions, resolveDefaultWidget } from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -27,13 +27,9 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     hideError,
     title,
   } = props;
-  const { title: schemaTitle, format } = schema;
+  const { title: schemaTitle } = schema;
   const { widgets, schemaUtils, globalUiOptions } = registry;
-  const enumOptions = schemaUtils.isSelect(schema) ? optionsList<T, S, F>(schema, uiSchema) : undefined;
-  let defaultWidget = enumOptions ? 'select' : 'text';
-  if (format && hasWidget<T, S, F>(schema, format, widgets)) {
-    defaultWidget = format;
-  }
+  const { defaultWidget, enumOptions } = resolveDefaultWidget<T, S, F>(schema, uiSchema, schemaUtils, widgets);
   const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? schemaTitle ?? name;

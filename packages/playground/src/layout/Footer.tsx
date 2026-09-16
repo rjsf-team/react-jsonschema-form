@@ -1,4 +1,4 @@
-import { DRAWER_WIDTH } from '../components/OptionsDrawer';
+import { DRAWER_WIDTH } from '../components/OptionsDrawer.tsx';
 
 export default function Footer() {
   return (

@@ -1,5 +1,6 @@
-import rangeSpec from './rangeSpec';
-import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types';
+import getDecimalSeparator from './getDecimalSeparator.ts';
+import rangeSpec from './rangeSpec.ts';
+import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types.ts';
 
 /** Using the `schema`, `defaultType` and `options`, extract out the props for the <input> element that make sense.
  *
@@ -30,12 +31,18 @@ export default function getInputProps<
   } else if (!defaultType) {
     // If the schema is of type number or integer, set the input type to number
     if (schema.type === 'number') {
-      inputProps.type = 'number';
-      // Only add step if one isn't already defined and we are auto-defaulting the "any" step
-      if (autoDefaultStepAny && inputProps.step === undefined) {
-        // Setting step to 'any' fixes a bug in Safari where decimals are not
-        // allowed in number inputs
-        inputProps.step = 'any';
+      // Native number inputs reject a locale decimal separator other than '.' and can discard it
+      // while typing, so fall back to a text input in locales that use one.
+      if (getDecimalSeparator() === '.') {
+        inputProps.type = 'number';
+        // Only add step if one isn't already defined and we are auto-defaulting the "any" step
+        if (autoDefaultStepAny && inputProps.step === undefined) {
+          // Setting step to 'any' fixes a bug in Safari where decimals are not
+          // allowed in number inputs
+          inputProps.step = 'any';
+        }
+      } else {
+        inputProps.type = 'text';
       }
     } else if (schema.type === 'integer') {
       inputProps.type = 'number';
@@ -59,6 +66,10 @@ export default function getInputProps<
 
   if (options.autocomplete) {
     inputProps.autoComplete = options.autocomplete;
+  }
+
+  if (options.autocapitalize) {
+    inputProps.autoCapitalize = options.autocapitalize;
   }
 
   if (options.accept) {

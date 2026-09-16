@@ -16,10 +16,10 @@ import type {
 import { noop } from '@rjsf/utils';
 import userEvent from '@testing-library/user-event';
 
-import ArrayField from '../src/components/fields/ArrayField';
-import SchemaField from '../src/components/fields/SchemaField';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
-import { TextWidgetTest } from './TextWidgetTest';
+import ArrayField from '../src/components/fields/ArrayField.tsx';
+import SchemaField from '../src/components/fields/SchemaField.tsx';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const user = userEvent.setup();
 

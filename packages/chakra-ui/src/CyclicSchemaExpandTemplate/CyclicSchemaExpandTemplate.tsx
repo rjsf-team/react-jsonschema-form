@@ -2,7 +2,7 @@ import { Box, Button } from '@chakra-ui/react';
 import type { CyclicSchemaExpandProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ID_KEY, TranslatableString } from '@rjsf/utils';
 
-import { Alert } from '../components/ui/alert';
+import { Alert } from '../components/ui/alert.tsx';
 
 /** The `CyclicSchemaExpandTemplate` is the template to use to render the cyclic schema expand message and controls
  *

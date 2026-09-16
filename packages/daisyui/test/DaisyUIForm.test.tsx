@@ -2,7 +2,7 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-import Form, { generateForm, generateTemplates, generateTheme, generateWidgets } from '../src';
+import Form, { generateForm, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 describe('daisyui entry points', () => {
   test('generateForm() renders a working Form', () => {

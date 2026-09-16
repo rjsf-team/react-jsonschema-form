@@ -1,6 +1,6 @@
-import { DISCRIMINATOR_PATH } from './constants';
-import { getByPath } from './pathUtils';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import { DISCRIMINATOR_PATH } from './constants.ts';
+import { getByPath } from './pathUtils.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when
  * it is not a string. Returns `undefined` when a valid discriminator is not present.

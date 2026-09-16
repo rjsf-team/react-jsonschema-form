@@ -2,7 +2,7 @@ import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } f
 import { errorId } from '@rjsf/utils';
 import { Label, List } from 'semantic-ui-react';
 
-import { getSemanticErrorProps } from '../util';
+import { getSemanticErrorProps } from '../util.tsx';
 
 const DEFAULT_OPTIONS = {
   options: {

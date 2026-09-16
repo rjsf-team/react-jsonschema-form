@@ -1,2 +1,2 @@
-export { default } from './FluentForm';
-export * from './FluentForm';
+export { default } from './FluentForm.ts';
+export * from './FluentForm.ts';

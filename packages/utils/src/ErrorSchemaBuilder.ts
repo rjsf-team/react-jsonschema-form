@@ -1,6 +1,6 @@
-import { ERRORS_KEY } from './constants';
-import { getByPath, setByPath, toPath } from './pathUtils';
-import type { ErrorSchema, FieldPathList } from './types';
+import { ERRORS_KEY } from './constants.ts';
+import { getByPath, setByPath, toPath } from './pathUtils.ts';
+import type { ErrorSchema, FieldPathList } from './types.ts';
 
 /** Represents the type of the path which can be a string of dotted path values or a list of string or numbers where
  * numbers represent array indexes/

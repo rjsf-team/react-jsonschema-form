@@ -1,7 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
-import Label from './FieldTemplate/Label';
+import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.

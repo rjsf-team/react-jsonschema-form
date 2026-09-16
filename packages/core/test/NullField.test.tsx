@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

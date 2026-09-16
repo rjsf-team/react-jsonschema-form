@@ -1,7 +1,7 @@
 import { Children } from 'react';
 import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent } from './testUtils';
+import { createFormComponent } from './testUtils.tsx';
 
 describe('FieldTemplate', () => {
   describe('FieldTemplate should only have one child', () => {

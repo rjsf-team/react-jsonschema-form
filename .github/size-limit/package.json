@@ -1,0 +1,14 @@
+{
+  "name": "@rjsf/size-limit-ci",
+  "private": true,
+  "description": "Tooling for the size-limit workflow. A separate pnpm project so size-limit and its preset are installed only in CI, not in the repo root.",
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "13.0.3",
+    "size-limit": "13.0.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

@@ -1,9 +1,9 @@
-import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getSchemaType from '../getSchemaType';
-import isObject from '../isObject';
-import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils';
+import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants.ts';
+import findSchemaDefinition from '../findSchemaDefinition.ts';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getSchemaType from '../getSchemaType.ts';
+import isObject from '../isObject.ts';
+import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   FormContextType,
@@ -12,11 +12,11 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import isSelect from './isSelect';
-import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema';
-import shallowAllOfMerge from './shallowAllOfMerge';
+} from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import isSelect from './isSelect.ts';
+import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
+import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 /** Returns the `formData` with only the elements specified in the `fields` list
  *

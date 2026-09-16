@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
-import { getMuiProps } from '../util';
+import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
 export interface FieldTemplateMuiProps extends GenericObjectType {

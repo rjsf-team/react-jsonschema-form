@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 
-import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider';
+import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider.tsx';
 
 let localStorageMock: Record<string, string> = {};
 const mockSetItem = vi.fn((key, value) => {

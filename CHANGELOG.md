@@ -16,11 +16,83 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.9.1
+# 6.10.1
+
+## @rjsf/core
+
+- Fixed a `dependencies`/`if` branch switch nested inside an object property never sanitizing a sibling field's now-invalid value. The check gating sanitization only compared the root retrieved schema, which never reflects a conditional resolved deeper in the tree, so it always skipped sanitizing in that case, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
+- Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
+
+## @rjsf/mantine
+
+- Fixed `BaseInputTemplate` passing an `undefined` value straight through to `NumberInput`/`TextInput`, which let the DOM input fall out of sync with React's controlled value and retain a stray digit after clearing a multi-digit number field ([#5269](https://github.com/rjsf-team/react-jsonschema-form/issues/5269))
+- Backported the `fluid` `Container` layout fix from the v7 Mantine 9 upgrade ([#5260](https://github.com/rjsf-team/react-jsonschema-form/pull/5260)): `GridTemplate`'s and `ObjectFieldTemplate`'s root `Container` now use Mantine's `fluid` prop so forms fill their available width instead of centering at Mantine's default 960px max-width
+
+## @rjsf/shadcn
+
+- Fixed the documented `import '@rjsf/shadcn/dist/[theme].css'` failing to resolve. The prebuilt stylesheets were in the published tarball but no `exports` entry matched them, so Node and every bundler that honours the exports map rejected the path
 
 ## @rjsf/utils
 
+- Fixed `sanitizeDataForNewSchema()` to resolve `dependencies`, `if`/`then`/`else` and `allOf` (not just `$ref`) on each property's old/new schema before comparing them, so a conditional nested inside an object property is taken into account when sanitizing its data, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Added `schemaHasNestedConditional()`, which `Form` uses to detect a `dependencies`/`if` nested below a schema's top level (behind a `$ref`, `patternProperties`, tuple `items`, `additionalProperties` or `allOf`/`anyOf`/`oneOf`) so sanitization isn't skipped just because the root retrieved schema looks unchanged ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
+- Added `resolveDefaultWidget()`, extracting the widget-name/`enumOptions` fallback logic shared by `@rjsf/core`'s `StringField` and `NumberField` so the two can no longer drift out of sync
+- Upgraded `@x0k/json-schema-merge` to `^1.0.6`, which now preserves Symbol-keyed properties (e.g. `Symbol(__rjsf_ref)`) when merging `allOf` schemas and no longer collapses distinct `allOf.contains` branches into one over-constrained schema; removed the corresponding Symbol-preservation and `contains`-extraction workarounds from `retrieveSchemaInternal()`, fixing ([#5146](https://github.com/rjsf-team/react-jsonschema-form/issues/5146))
+- Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
 - Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
+
+## Dev / docs / playground
+
+- Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now records the PR number in its artifact, and the comment workflow looks that PR up directly, accepts it only if its head sha matches the run's trusted `workflow_run` head sha, and fails loudly rather than skipping when the PR cannot be found
+- Extended the size-limit checks to cover every released package rather than just `@rjsf/core`, `@rjsf/utils` and `@rjsf/validator-ajv8`. The checks are derived from each package's own `package.json`, so a new package or a dependency change needs no config edit; only the packages that already had budgets enforce one, the rest are measured and reported
+- Moved `size-limit` and its preset out of the root `devDependencies` into their own pnpm project under `.github/size-limit`, so they are installed only by the size-limit workflow
+
+# 6.10.0
+
+## @rjsf/chakra-ui
+
+- Removed an `environment` prop the test wrapper passed to `EnvironmentProvider`, which has no such prop and silently ignored it
+
+## @rjsf/core
+
+- Fixed defaults not being restored when returning to an `anyOf` or `oneOf` option with disjoint properties ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Added `ui:autocapitalize` support for inputs rendered by `BaseInputTemplate`, allowing mobile keyboards to apply the requested capitalization behavior ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mantine
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/mui
+
+- Added `ui:autocapitalize` support for text inputs ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/utils
+
+- Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
+- Added `autocapitalize` UI option handling to `getInputProps()` and its public input prop types ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## Dev / docs / playground
+
+- Documented `ui:autocapitalize`, added it to the simple playground sample, and added cross-theme regression coverage ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
+## @rjsf/validator-ajv8
+
+- Changed the `standaloneCode` import to name the file, `ajv/dist/standalone/index.js`, instead of the directory subpath `ajv/dist/standalone`. A `tsc-alias` replacer used to patch this into the emitted output; the source now says what it means. No public API changed
+
+## Dev / docs / playground
+
+- Relative TypeScript imports now name their real `.ts`/`.tsx` source file (and an explicit `index.ts` for directory imports), and TypeScript's `rewriteRelativeImportExtensions` emits the `.js` specifiers directly. This removes `tsc-alias` and its post-emit string rewriting entirely, along with the `tsc-alias-replacer/` directory, both `tsconfig.replacer.json` files, the `compileReplacer` scripts and `move-file-cli`. Naming the source file rather than the output is deliberate: Node's native type stripping requires exact `.ts` extensions and does no extension or directory-index searching, so this avoids a second repository-wide import migration later
+- Fixed `packages/daisyui/test/tsconfig.json`, which was configured to emit into `../dist` — the esbuild/rollup bundle output directory — instead of type-checking without emit like every other test project
+- Collapsed each package's `tsconfig.json` + `tsconfig.build.json` + `src/tsconfig.json` chain into one source config plus one test config extending a new shared root `tsconfig.test.json`. Building a package no longer pulls its dependencies' test projects into the graph
+- Fixed the root `tsconfig.json`, which referenced `snapshot-tests` twice and omitted `mantine`, `primereact`, `validator-ata` and `validator-cfworker`. It now lists every source and test project once, and a new root `typecheck` script runs in CI, so tests are typechecked for the first time. That surfaced stale tests in `@rjsf/chakra-ui` and `@rjsf/validator-ata` and two drifted playground samples, fixed here. `@rjsf/chakra-ui`'s `type-check` script previously ran against a solution config with `files: []` and checked nothing
+- Every package now emits `lib/` with the same settings: `esnext` target plus `.js.map` and `.d.ts.map`. Previously only `@rjsf/core` did; the rest emitted ES2018 with JS source maps only, depending on which root config their `src/tsconfig.json` extended
+- `tsconfig.tsbuildinfo` is no longer written into `lib/` and published with it. In 6.8.0 it was 446 kB of `@rjsf/antd`'s 959 kB unpacked tarball
+- Set `"types": []` in `tsconfig.base.json` so packages no longer see every hoisted `@types/*`, with Node-using packages opting in, and `"lib": ["ESNext"]` in the three validator packages so they cannot compile against browser globals
+- `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
+- Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
+- Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
 
 # 6.9.0
 

@@ -1,7 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
-import { Separator } from '../components/ui/separator';
+import { Separator } from '../components/ui/separator.tsx';
 
 /** The `TitleField` is the template to use to render the title of a field
  *

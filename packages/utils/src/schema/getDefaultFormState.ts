@@ -9,21 +9,21 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
-} from '../constants';
-import constIsAjvDataReference from '../constIsAjvDataReference';
-import deepEquals from '../deepEquals';
-import findSchemaDefinition from '../findSchemaDefinition';
-import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import getPropertySchema from '../getPropertySchema';
-import getSchemaType from '../getSchemaType';
-import isConstant from '../isConstant';
-import isFixedItems from '../isFixedItems';
-import isObject from '../isObject';
-import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
-import mergeObjects from '../mergeObjects';
-import mergeSchemas from '../mergeSchemas';
-import optionsList from '../optionsList';
-import { getByPath } from '../pathUtils';
+} from '../constants.ts';
+import constIsAjvDataReference from '../constIsAjvDataReference.ts';
+import deepEquals from '../deepEquals.ts';
+import findSchemaDefinition from '../findSchemaDefinition.ts';
+import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getPropertySchema from '../getPropertySchema.ts';
+import getSchemaType from '../getSchemaType.ts';
+import isConstant from '../isConstant.ts';
+import isFixedItems from '../isFixedItems.ts';
+import isObject from '../isObject.ts';
+import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
+import mergeObjects from '../mergeObjects.ts';
+import mergeSchemas from '../mergeSchemas.ts';
+import optionsList from '../optionsList.ts';
+import { getByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
@@ -32,11 +32,11 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
-} from '../types';
-import getClosestMatchingOption from './getClosestMatchingOption';
-import isMultiSelect from './isMultiSelect';
-import isSelect from './isSelect';
-import retrieveSchema, { resolveDependencies } from './retrieveSchema';
+} from '../types.ts';
+import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import isMultiSelect from './isMultiSelect.ts';
+import isSelect from './isSelect.ts';
+import retrieveSchema, { resolveDependencies, retrieveSchemaInternal } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -98,6 +98,15 @@ function hasContent(value: unknown): boolean {
     return Object.keys(value).length > 0;
   }
   return false;
+}
+
+/** Checks whether form data is undefined or an empty object.
+ *
+ * @param formData - The form data to inspect
+ * @returns - True if there is no existing form data
+ */
+function isEmptyFormData(formData: unknown): boolean {
+  return formData === undefined || (isObject(formData) && Object.keys(formData).length === 0);
 }
 
 /** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
@@ -312,9 +321,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // Then set the defaults from the current schema for the referenced schema.
     // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
     // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
-    const hasNoExistingData =
-      rawFormData === undefined || (isObject(rawFormData) && Object.keys(rawFormData).length === 0);
-    if (schemaToCompute && !defaults && hasNoExistingData) {
+    if (schemaToCompute && !defaults && isEmptyFormData(rawFormData)) {
       defaults = schema.default as T | undefined;
     }
 
@@ -879,13 +886,26 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
   }
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
+  // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
+  const emptyFormData = isEmptyFormData(formData);
+  const [schema] = retrieveSchemaInternal<T, S, F>(
+    validator,
+    theSchema,
+    rootSchema ?? ({} as S),
+    formData,
+    undefined,
+    undefined,
+    experimental_customMergeAllOf,
+    undefined,
+    emptyFormData,
+  );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
-    rootSchema,
+    // Empty data can leave dependency references unresolved, including inside oneOf/anyOf.
+    rootSchema: rootSchema ?? (emptyFormData ? theSchema : undefined),
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
     experimental_customMergeAllOf,

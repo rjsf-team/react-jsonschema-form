@@ -1,6 +1,6 @@
 import type { GridTemplateProps } from '@rjsf/utils';
 
-import { cn } from '../lib/utils';
+import { cn } from '../lib/utils.ts';
 
 /** Renders a `GridTemplate` for mui, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Grid2`.

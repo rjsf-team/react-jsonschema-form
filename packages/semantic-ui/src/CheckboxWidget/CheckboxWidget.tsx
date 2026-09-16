@@ -4,7 +4,7 @@ import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequi
 import type { CheckboxProps } from 'semantic-ui-react';
 import { Form } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

@@ -3,7 +3,7 @@ import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequi
 import type { CheckboxChangeEvent } from 'primereact/checkbox';
 import { Checkbox } from 'primereact/checkbox';
 
-import { Label } from '../util';
+import { Label } from '../util.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.

@@ -3,7 +3,7 @@ import { TranslatableString } from '@rjsf/utils';
 import type { ButtonProps } from 'semantic-ui-react';
 import { Button, Icon } from 'semantic-ui-react';
 
-import type { SemanticIconButtonProps } from '../IconButton';
+import type { SemanticIconButtonProps } from '../IconButton/index.ts';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */

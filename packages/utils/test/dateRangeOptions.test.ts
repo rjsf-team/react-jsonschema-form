@@ -1,4 +1,4 @@
-import { dateRangeOptions, pad } from '../src';
+import { dateRangeOptions, pad } from '../src/index.ts';
 
 describe('dateRangeOptions()', () => {
   it('start & stop are positive integers, where stop < start', () => {

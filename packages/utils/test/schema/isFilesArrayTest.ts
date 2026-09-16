@@ -1,6 +1,6 @@
-import type { RJSFSchema } from '../../src';
-import { UI_WIDGET_KEY, isFilesArray, createSchemaUtils } from '../../src';
-import type { TestValidatorType } from './types';
+import type { RJSFSchema } from '../../src/index.ts';
+import { UI_WIDGET_KEY, isFilesArray, createSchemaUtils } from '../../src/index.ts';
+import type { TestValidatorType } from './types.ts';
 
 export default function isFilesArrayTest(testValidator: TestValidatorType) {
   describe('isFilesArray()', () => {

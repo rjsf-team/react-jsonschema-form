@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '../src';
-import constIsAjvDataReference from '../src/constIsAjvDataReference';
+import constIsAjvDataReference from '../src/constIsAjvDataReference.ts';
+import type { RJSFSchema } from '../src/index.ts';
 
 describe('constIsAjvDataReference()', () => {
   describe('check if schema contains $data reference', () => {

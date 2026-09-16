@@ -23,7 +23,7 @@ import {
 } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
-import type { SuppressDuplicateFilteringType } from './types';
+import type { SuppressDuplicateFilteringType } from './types.ts';
 
 export interface RawValidationErrorsType<Result = any> {
   errors?: Result[];

@@ -1,6 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
-import { createFormComponent } from './testUtils';
+import { createFormComponent } from './testUtils.tsx';
 
 describe('const', () => {
   it('should render a schema that uses const with a string value', () => {

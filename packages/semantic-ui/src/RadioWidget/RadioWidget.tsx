@@ -11,7 +11,7 @@ import {
 import type { CheckboxProps } from 'semantic-ui-react';
 import { Form, Radio } from 'semantic-ui-react';
 
-import { getSemanticProps } from '../util';
+import { getSemanticProps } from '../util.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.

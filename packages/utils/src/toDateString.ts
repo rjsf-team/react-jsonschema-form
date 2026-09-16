@@ -1,4 +1,4 @@
-import type { DateObject } from './types';
+import type { DateObject } from './types.ts';
 
 /** Returns a UTC date string for the given `dateObject`. If `time` is false, then the time portion of the string is
  * removed.

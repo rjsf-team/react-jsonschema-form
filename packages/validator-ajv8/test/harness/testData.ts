@@ -1,7 +1,7 @@
 import { noop } from '@rjsf/utils';
 import type Ajv from 'ajv';
 
-import type { CustomValidatorOptionsType } from '../../src';
+import type { CustomValidatorOptionsType } from '../../src/index.ts';
 
 /** Runs `fn` with console.warn stubbed, asserts it warned with `expectedWarning`, and returns the result. */
 export function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {

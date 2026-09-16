@@ -1,6 +1,6 @@
 import type { RJSFValidationError } from '@rjsf/utils';
 
-import { filterDuplicateErrors, transformRJSFValidationErrors } from '../src/processRawValidationErrors';
+import { filterDuplicateErrors, transformRJSFValidationErrors } from '../src/processRawValidationErrors.ts';
 
 describe('filterDuplicateErrors', () => {
   // Fixture: one anyOf duplicate pair + one oneOf duplicate pair

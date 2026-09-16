@@ -4,8 +4,8 @@ import { TranslatableString } from '@rjsf/utils';
 import type { VariantProps } from 'class-variance-authority';
 import { ChevronDown, ChevronUp, Copy, Trash2, X } from 'lucide-react';
 
-import type { buttonVariants } from '../components/ui/button';
-import { Button } from '../components/ui/button';
+import type { buttonVariants } from '../components/ui/button.tsx';
+import { Button } from '../components/ui/button.tsx';
 
 export type ShadIconButtonProps<
   T = any,

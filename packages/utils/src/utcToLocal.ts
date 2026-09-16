@@ -1,4 +1,4 @@
-import pad from './pad';
+import pad from './pad.ts';
 
 /** Converts a UTC date string into a local Date format
  *

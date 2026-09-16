@@ -1,5 +1,5 @@
-import isObject from './isObject';
-import type { RJSFSchema, StrictRJSFSchema } from './types';
+import isObject from './isObject.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Checks the schema to see if it is allowing additional items, by verifying that `schema.additionalItems` is an
  * object. The user is warned in the console if `schema.additionalItems` has the value `true`.

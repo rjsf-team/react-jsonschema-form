@@ -1,2 +1,2 @@
-export { default } from './ArrayFieldTitleTemplate';
-export * from './ArrayFieldTitleTemplate';
+export { default } from './ArrayFieldTitleTemplate.tsx';
+export * from './ArrayFieldTitleTemplate.tsx';

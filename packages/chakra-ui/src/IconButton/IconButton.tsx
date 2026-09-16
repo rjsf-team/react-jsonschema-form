@@ -3,8 +3,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils'
 import { TranslatableString } from '@rjsf/utils';
 import { ArrowUpIcon, ArrowDownIcon, CopyIcon, DeleteIcon, X } from 'lucide-react';
 
-import type { ChakraIconButtonProps } from './ChakraIconButton';
-import ChakraIconButton from './ChakraIconButton';
+import type { ChakraIconButtonProps } from './ChakraIconButton.tsx';
+import ChakraIconButton from './ChakraIconButton.tsx';
 
 function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ChakraIconButtonProps<T, S, F>,

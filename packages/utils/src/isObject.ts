@@ -1,4 +1,4 @@
-import type { GenericObjectType } from './types';
+import type { GenericObjectType } from './types.ts';
 
 /** Determines whether a `thing` is an object for the purposes of RJSF. In this case, `thing` is an object if it has
  * the type `object` but is NOT null, an array or a File.

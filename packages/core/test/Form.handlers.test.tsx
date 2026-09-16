@@ -4,8 +4,8 @@ import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FormProps, IChangeEvent } from '../src';
-import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils';
+import type { FormProps, IChangeEvent } from '../src/index.ts';
+import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
 

@@ -8,9 +8,9 @@ import {
   JSON_SCHEMA_DRAFT_2020_12,
   REF_KEY,
   SCHEMA_KEY,
-} from './constants';
-import isObject from './isObject';
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
+} from './constants.ts';
+import isObject from './isObject.ts';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle

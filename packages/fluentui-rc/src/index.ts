@@ -1,9 +1,9 @@
-import FluentForm from './FluentForm';
+import FluentForm from './FluentForm/index.ts';
 
-export { default as Form, generateForm } from './FluentForm';
-export { default as Templates, generateTemplates } from './Templates';
-export { default as Theme, generateTheme } from './Theme';
-export { default as Widgets, generateWidgets } from './Widgets';
-export { __createFluentUIRCFrameProvider } from './FluentUIRCFrameProvider';
+export { default as Form, generateForm } from './FluentForm/index.ts';
+export { default as Templates, generateTemplates } from './Templates/index.ts';
+export { default as Theme, generateTheme } from './Theme/index.ts';
+export { default as Widgets, generateWidgets } from './Widgets/index.ts';
+export { __createFluentUIRCFrameProvider } from './FluentUIRCFrameProvider.tsx';
 
 export default FluentForm;

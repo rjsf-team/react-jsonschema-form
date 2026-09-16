@@ -1,2 +1,2 @@
-export { default } from './AddButton';
-export * from './AddButton';
+export { default } from './AddButton.tsx';
+export * from './AddButton.tsx';

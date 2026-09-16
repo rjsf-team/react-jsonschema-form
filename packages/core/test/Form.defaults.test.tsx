@@ -6,7 +6,7 @@ import {
   setupConsoleErrorSuppression,
   submitForm,
   describeRepeated,
-} from './testUtils';
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 const renderErrorSuppression = setupConsoleErrorSuppression();

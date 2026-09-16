@@ -2,8 +2,8 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
-import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance';
-import type { CustomValidatorOptionsType } from './types';
+import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per

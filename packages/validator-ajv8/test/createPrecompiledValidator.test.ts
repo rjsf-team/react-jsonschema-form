@@ -1,7 +1,7 @@
-import type { Localizer } from '../src';
-import createPrecompiledValidator from '../src/createPrecompiledValidator';
-import AJV8PrecompiledValidator from '../src/precompiledValidator';
-import { compileSuperSchema, superSchema } from './harness/compileSuperSchema';
+import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
+import type { Localizer } from '../src/index.ts';
+import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
+import { compileSuperSchema, superSchema } from './harness/compileSuperSchema.ts';
 
 vi.mock('../src/precompiledValidator');
 

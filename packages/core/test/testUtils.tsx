@@ -7,8 +7,8 @@ import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { Mock, MockInstance } from 'vitest';
 
-import type { FormProps } from '../src';
-import Form from '../src';
+import type { FormProps } from '../src/index.ts';
+import Form from '../src/index.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 

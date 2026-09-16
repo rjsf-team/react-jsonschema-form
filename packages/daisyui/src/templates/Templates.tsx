@@ -1,11 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
-import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
-import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
-import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
-import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
-import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate/index.ts';
+import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate/index.ts';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate/index.ts';
+import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate.tsx';
+import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate/index.ts';
+import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate.tsx';
 import {
   AddButton,
   CopyButton,
@@ -14,19 +14,19 @@ import {
   RemoveButton,
   SubmitButton,
   ClearButton,
-} from './ButtonTemplates';
-import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate';
-import DescriptionField from './DescriptionField';
-import ErrorList from './ErrorList';
-import FieldErrorTemplate from './FieldErrorTemplate';
-import FieldHelpTemplate from './FieldHelpTemplate';
-import FieldTemplate from './FieldTemplate';
-import GridTemplate from './GridTemplate/GridTemplate';
-import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
-import ObjectFieldTemplate from './ObjectFieldTemplate';
-import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';
-import TitleFieldTemplate from './TitleField/TitleField';
-import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
+} from './ButtonTemplates/index.ts';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate/index.ts';
+import DescriptionField from './DescriptionField/index.ts';
+import ErrorList from './ErrorList/index.ts';
+import FieldErrorTemplate from './FieldErrorTemplate/index.ts';
+import FieldHelpTemplate from './FieldHelpTemplate/index.ts';
+import FieldTemplate from './FieldTemplate/index.ts';
+import GridTemplate from './GridTemplate/GridTemplate.tsx';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate/index.ts';
+import ObjectFieldTemplate from './ObjectFieldTemplate/index.ts';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate/index.ts';
+import TitleFieldTemplate from './TitleField/TitleField.tsx';
+import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.ts';
 
 /** Function that generates all the template components required for the DaisyUI theme.
  *
