@@ -3,39 +3,42 @@
 RJSF fully supports Typescript.
 The [types and functions](../api-reference/utility-functions.md) exported by `@rjsf/utils` are fully typed (as needed) using one or more of the following 3 optional generics:
 
-- `T = any`: This represents the type of the `formData` and defaults to `any`.
+- `T = unknown`: This represents the type of the `formData` and defaults to `unknown`.
 - `S extends StrictRJSFSchema = RJSFSchema`: This represents the type of the `schema` and extends the `StrictRJSFSchema` type and defaults to the `RJSFSchema` type.
-- `F extends FormContextType = any`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `any`.
+- `F extends FormContextType = FormContextType`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `FormContextType`.
 
 Every other library in the `@rjsf/*` ecosystem use these same generics in their functions and React component definitions.
 For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
 export default class Form<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   // ... class implementation
 }
 
-export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>,
-) {
+export default function withTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(themeProps: ThemeProps<T, S, F>) {
   // ... function implementation
 }
 
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> {
   // ... function implementation
 }
 ```
 
-Out of the box, the defaults for these generics will work for all use-cases.
-Providing custom types for any of these generics may be useful for situations where the caller is working with typed `formData`, `schema` or `formContext` props, Typescript is complaining and type casting isn't allowed.
+The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
+Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
+Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
 
 ## Overriding generics
 

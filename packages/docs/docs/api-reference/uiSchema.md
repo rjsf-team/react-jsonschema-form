@@ -1137,7 +1137,7 @@ import type { CoreUiOptionsChecks } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '@rjsf/utils';
 
 type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
-type MyUiSchema<T = any> = UiSchema<T, RJSFSchema, FormContextType, CoreUiOptionsChecks | MyThemeChecks>;
+type MyUiSchema<T = unknown> = UiSchema<T, RJSFSchema, FormContextType, CoreUiOptionsChecks | MyThemeChecks>;
 
 const uiSchema: MyUiSchema<{ active: boolean }> = {
   active: { 'ui:widget': 'ToggleWidget' },

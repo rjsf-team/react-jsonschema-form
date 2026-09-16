@@ -37,7 +37,7 @@ These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 ## Non-Validator utility functions
 
-### AdditionalPropertyKeySelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### AdditionalPropertyKeySelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 A component that renders the key of an `additionalProperties` property as the theme's own `SelectWidget`, limited to
 the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) allows.
@@ -127,7 +127,7 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
-### canExpand&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
 The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
@@ -143,7 +143,7 @@ A `schema.propertyNames.enum` caps the object in the same way: once every name i
 
 - boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
-### createErrorHandler&lt;T = any>()
+### createErrorHandler&lt;T = unknown>()
 
 Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
 
@@ -619,7 +619,7 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
 
-### getFreePropertyNames&lt;T = any, S extends StrictRJSFSchema = RJSFSchema>()
+### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
 A name `schema.properties` declares is taken however empty its value is, since adding under it would write into that declared property rather than create an additional one.
@@ -639,7 +639,7 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
 
-### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
 
@@ -748,7 +748,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 
 - string | string[] | undefined: The type of the schema
 
-### getSubmitButtonOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getSubmitButtonOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`
 
@@ -760,7 +760,7 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 
 - UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones
 
-### getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F>, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F>, T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
 otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
@@ -792,7 +792,7 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 
 - TestIdShape: An object that auto-generates test ids upon request the first time and then returns the same value on subsequent calls
 
-### getUiOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
@@ -834,7 +834,7 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 
 - string[]: The errors to display, or an empty array when there are none or they are being hidden
 
-### getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
@@ -969,7 +969,7 @@ It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the compo
 
 - boolean: True when there are errors the component should surface, otherwise false
 
-### hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### hasWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it does, or false if it doesn't.
 
@@ -1008,7 +1008,7 @@ This happens when either the schema has an `enum` array with a single value or t
 
 - boolean: True if the `schema` has a single constant value, false otherwise
 
-### isCustomWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
 
@@ -1047,7 +1047,7 @@ This is the case when `schema.items` is a non-empty array that only contains obj
 
 - boolean: True if there are fixed items in the schema, false otherwise
 
-### isFormDataAvailable&lt;T = any>()
+### isFormDataAvailable&lt;T = unknown>()
 
 Determines whether the given `formData` represents valid form data, such as a primitive type, an array, or a non-empty object.
 
@@ -1085,7 +1085,7 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 
 - boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
 
-### isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isRootSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
 key or a root `$ref` key. If the `schemaToCompare` has a root `oneOf` property, the function will
@@ -1155,7 +1155,7 @@ Converts a local Date string into a UTC date string
 
 - string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
 
-### lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any, R = unknown>()
+### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 
 Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`.
 This might be contained within the lookup map in the formContext.
@@ -1171,7 +1171,7 @@ If no such value exists, return the `fallback` value.
 
 - R: The value associated with `toLookup` in the form context or `fallback`
 
-### mergeDefaultsWithFormData&lt;T = any>()
+### mergeDefaultsWithFormData&lt;T = unknown>()
 
 Merges the `defaults` object of type `T` into the `formData` of type `T`
 
@@ -1268,7 +1268,7 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 
 - string: The `time` string with any trailing offset removed
 
-### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
+### optionsList&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
@@ -1395,7 +1395,7 @@ When a `params` array is provided, each value in the array is used to replace an
 
 - string: The updated string with any replacement specifiers replaced
 
-### resolveDefaultWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
 The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it, or `text` otherwise.
@@ -1411,7 +1411,7 @@ The default is `select` when `schema` has enumerable options, the schema's `form
 
 - \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
 
-### resolveUiSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### resolveUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
 Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
@@ -1493,7 +1493,7 @@ setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects 
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 ```
 
-### shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
+### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType>()
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
@@ -1565,7 +1565,7 @@ If `time` is false, then the time portion of the string is removed.
 
 - string: The UTC date string
 
-### toErrorList&lt;T = any>()
+### toErrorList&lt;T = unknown>()
 
 Converts an `errorSchema` into a list of `RJSFValidationErrors`
 
@@ -1578,7 +1578,7 @@ Converts an `errorSchema` into a list of `RJSFValidationErrors`
 
 - RJSFValidationErrors[]: The list of `RJSFValidationErrors` extracted from the `errorSchema`
 
-### toErrorSchema&lt;T = any>()
+### toErrorSchema&lt;T = unknown>()
 
 Transforms a RJSF validation errors list into an `ErrorSchema`
 
@@ -1663,7 +1663,7 @@ unsetByPath(obj, ['a', 'b']); // true, obj is now { a: {} }
 unsetByPath(obj, ['a', 'missing']); // true, nothing to remove
 ```
 
-### unwrapErrorHandler&lt;T = any>()
+### unwrapErrorHandler&lt;T = unknown>()
 
 Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
 
@@ -1675,7 +1675,7 @@ Unwraps the `errorHandler` structure into the associated `ErrorSchema`, strippin
 
 - ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
 
-### useAltDateWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;`()
+### useAltDateWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType&gt;`()
 
 Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
 the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
@@ -1706,7 +1706,7 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
 
-### useTimeWidgetProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()
+### useTimeWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType&gt;()
 
 Hook which encapsulates the logic needed to compute the local (offset-free) display value of a `time` widget, and to
 transform a newly entered value into a value compliant with the JSON Schema `time` format (RFC 3339 `full-time`,
@@ -1734,7 +1734,7 @@ Converts a UTC date string into a local Date format
 
 - string: An empty string when `jsonDate` is falsey, otherwise a date string in local format
 
-### validationDataMerge&lt;T = any>()
+### validationDataMerge&lt;T = unknown>()
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
@@ -1764,7 +1764,7 @@ This is used in isValid to make references to the rootSchema
 
 ## Validator-based utility functions
 
-### findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### findFieldInSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
 
@@ -1781,7 +1781,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 - FoundFieldType&lt;S>: An object that contains the field and its required state. If no field can be found then `{ field: undefined, isRequired: undefined }` is returned.
 
-### findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### findSelectedOptionInXxxOf&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or `properties[selectorField].const` that matches the `formData[selectorField]` value.
 For the purposes of this function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
@@ -1800,7 +1800,7 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 
 - S | undefined: The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
 
-### getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getDefaultFormState&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the superset of `formData` that includes the given set updated to include any missing fields that have computed to have defaults provided in the `schema`.
 
@@ -1819,7 +1819,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 - T: The resulting `formData` with all the defaults provided
 
-### getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
 
@@ -1835,7 +1835,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 - boolean: True if the label should be displayed or false if it should not
 
-### getClosestMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines which of the given `options` provided most closely matches the `formData`.
 Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
@@ -1856,7 +1856,7 @@ The closest match is determined using the number of matching properties, and mor
 
 - number: The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
 
-### getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
 
@@ -1873,7 +1873,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 - boolean: True if the label should be displayed or false if it should not
 
-### getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getFromSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve schemas containing potentially nested `$ref`s.
 The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathList`-style segment array).
@@ -1904,7 +1904,7 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 
 - Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
 
-### getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getFirstMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.
@@ -1921,7 +1921,7 @@ Always returns the first option if there is nothing that matches.
 
 - number: The index of the first matched option or 0 if none is available
 
-### isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isMultiSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `schema` combination represents a multi-select
 
@@ -1936,7 +1936,7 @@ Checks to see if the `schema` combination represents a multi-select
 
 - boolean: True if schema contains a multi-select, otherwise false
 
-### isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `schema` combination represents a select
 
@@ -1968,7 +1968,7 @@ Any option whose `additionalProperties` is `false` is widened to `true` so that 
 
 - S[]: A new array of plain schema objects with `additionalProperties` relaxed where needed
 
-### retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### retrieveSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
 resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -1991,7 +1991,7 @@ It leaves out the subschema keywords (`allOf`, `not`, `if`, ...), since one nami
 It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` constrains the property in no way at all, i.e. it is `true` or has no keyword asserting something about the value.
 Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`, `contentEncoding`, or one it does not recognize, leaves the property unconstrained.
 
-### omitExtraData&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### omitExtraData&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
 This is useful for ensuring that only data that is relevant to the schema is preserved.
@@ -2054,7 +2054,7 @@ console.log(filteredFormData);
 
 - T: The new form data, with any fields not defined in the schema removed
 
-### sanitizeDataForNewSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### sanitizeDataForNewSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
@@ -2078,7 +2078,7 @@ A new schema that declares a type of its own is the type the data has to satisfy
 
 ## Schema utils creation function
 
-### createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `validator` and `rootSchema` parameters.
 The resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
@@ -2094,7 +2094,7 @@ The resulting interface implementation will forward the `validator` and `rootSch
 
 ## ErrorSchema builder class
 
-### ErrorSchemaBuilder&lt;T = any>(initialSchema?: ErrorSchema&lt;T>) constructor
+### ErrorSchemaBuilder&lt;T = unknown>(initialSchema?: ErrorSchema&lt;T>) constructor
 
 The `ErrorSchemaBuilder&lt;T>` is used to build an `ErrorSchema&lt;T>` since the definition of the `ErrorSchema` type is designed for reading information rather than writing it.
 Use this class to add, replace or clear errors in an error schema by using either dotted path or an array of path names.

@@ -9,9 +9,11 @@ import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
-function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ObjectFieldTemplateProps<T, S, F>,
-) {
+function ObjectFieldTemplate<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ObjectFieldTemplateProps<T, S, F>) {
   const { registry, properties, title, description, uiSchema, required, schema, id } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);

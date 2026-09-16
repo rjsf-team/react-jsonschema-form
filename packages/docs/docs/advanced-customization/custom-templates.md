@@ -504,7 +504,7 @@ const schema: RJSFSchema = {
   },
 };
 
-function CyclicSchemaExpandTemplate<T = any>(props: CyclicSchemaExpandProps<T>) {
+function CyclicSchemaExpandTemplate<T = unknown>(props: CyclicSchemaExpandProps<T>) {
   const { name, id, onExpand } = props;
   const buttonId = `${id}-button`;
   return (
