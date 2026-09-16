@@ -77,7 +77,7 @@
     ]
   },
   "dependencies": {
-    "ata-validator": "^1.7.1"
+    "ata-validator": "^1.23.0"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^"
