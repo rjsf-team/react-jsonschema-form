@@ -1154,6 +1154,22 @@ When a `params` array is provided, each value in the array is used to replace an
 
 - string: The updated string with any replacement specifiers replaced
 
+### resolveDefaultWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
+The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it, or `text` otherwise.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field
+- schemaUtils: SchemaUtilsType&lt;T, S, F> - The `SchemaUtilsType` used to detect whether `schema` has enumerable options
+- [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
+
+#### Returns
+
+- \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
+
 ### resolveUiSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
@@ -1174,6 +1190,23 @@ Resolution order (later sources override earlier):
 #### Returns
 
 - UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
+
+### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or a `patternProperties` entry.
+`retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens deeper in the tree.
+`Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
+
+#### Parameters
+
+- schema: S | boolean | undefined - The raw schema node to search
+- rootSchema: S - The root schema, used to resolve any `$ref`s encountered while searching
+- atRoot: boolean = true - Whether `schema` is the root of the search, whose own `dependencies`/`if` don't count
+- seenRefs: string[] = [] - The `$ref`s already resolved along this branch of the search, to guard against cycles
+
+#### Returns
+
+- boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
 
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

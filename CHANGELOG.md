@@ -18,6 +18,31 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.1
 
+## @rjsf/core
+
+- Fixed a `dependencies`/`if` branch switch nested inside an object property never sanitizing a sibling field's now-invalid value. The check gating sanitization only compared the root retrieved schema, which never reflects a conditional resolved deeper in the tree, so it always skipped sanitizing in that case, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
+- Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
+
+## @rjsf/mantine
+
+- Fixed `BaseInputTemplate` passing an `undefined` value straight through to `NumberInput`/`TextInput`, which let the DOM input fall out of sync with React's controlled value and retain a stray digit after clearing a multi-digit number field ([#5269](https://github.com/rjsf-team/react-jsonschema-form/issues/5269))
+- Backported the `fluid` `Container` layout fix from the v7 Mantine 9 upgrade ([#5260](https://github.com/rjsf-team/react-jsonschema-form/pull/5260)): `GridTemplate`'s and `ObjectFieldTemplate`'s root `Container` now use Mantine's `fluid` prop so forms fill their available width instead of centering at Mantine's default 960px max-width
+
+## @rjsf/shadcn
+
+- Fixed the documented `import '@rjsf/shadcn/dist/[theme].css'` failing to resolve. The prebuilt stylesheets were in the published tarball but no `exports` entry matched them, so Node and every bundler that honours the exports map rejected the path
+
+## @rjsf/utils
+
+- Fixed `sanitizeDataForNewSchema()` to resolve `dependencies`, `if`/`then`/`else` and `allOf` (not just `$ref`) on each property's old/new schema before comparing them, so a conditional nested inside an object property is taken into account when sanitizing its data, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Added `schemaHasNestedConditional()`, which `Form` uses to detect a `dependencies`/`if` nested below a schema's top level (behind a `$ref`, `patternProperties`, tuple `items`, `additionalProperties` or `allOf`/`anyOf`/`oneOf`) so sanitization isn't skipped just because the root retrieved schema looks unchanged ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
+- Fixed `getInputProps()` defaulting `type: number` schemas to a native `number` input in locales whose decimal separator isn't `.`, where the browser rejects the localized value; it now defaults to a `text` input in those locales unless an explicit `inputType` is set
+- Added `resolveDefaultWidget()`, extracting the widget-name/`enumOptions` fallback logic shared by `@rjsf/core`'s `StringField` and `NumberField` so the two can no longer drift out of sync
+- Upgraded `@x0k/json-schema-merge` to `^1.0.6`, which now preserves Symbol-keyed properties (e.g. `Symbol(__rjsf_ref)`) when merging `allOf` schemas and no longer collapses distinct `allOf.contains` branches into one over-constrained schema; removed the corresponding Symbol-preservation and `contains`-extraction workarounds from `retrieveSchemaInternal()`, fixing ([#5146](https://github.com/rjsf-team/react-jsonschema-form/issues/5146))
+- Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
+- Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
+
 ## Dev / docs / playground
 
 - Fixed the size-limit report never being posted on a pull request from a fork. The comment workflow resolved the PR from its head sha, which the base repository cannot associate with a fork's commit, so it warned and skipped — leaving a green check and no comment. The measuring job now records the PR number in its artifact, and the comment workflow looks that PR up directly, accepts it only if its head sha matches the run's trusted `workflow_run` head sha, and fails loudly rather than skipping when the PR cannot be found

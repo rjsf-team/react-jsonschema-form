@@ -36,7 +36,7 @@ import type {
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import retrieveSchema, { resolveDependencies } from './retrieveSchema.ts';
+import retrieveSchema, { resolveDependencies, retrieveSchemaInternal } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -48,6 +48,20 @@ export const AdditionalItemsHandling = {
   Fallback: 2,
 } as const;
 export type AdditionalItemsHandling = (typeof AdditionalItemsHandling)[keyof typeof AdditionalItemsHandling];
+
+/** Determines whether a schema has an allOf key AND the defaultFormStateBehavior for all of is set
+ * to `populateDefaults`.
+ *
+ * @params schema - The schema to check
+ * @params defaultFormStateBehavior - The DefaultFormStateBehavior to check
+ * @returns - True if allOf defaults should be populated, false otherwise.
+ */
+function shouldPopulateAllOfDefaults<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  defaultFormStateBehavior?: DefaultFormStateBehavior,
+): boolean {
+  return Boolean(defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema);
+}
 
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
  * `additionalItems` enum and the value of `idx`. There are four possible returns:
@@ -99,6 +113,15 @@ function hasContent(value: unknown): boolean {
     return Object.keys(value).length > 0;
   }
   return false;
+}
+
+/** Checks whether form data is undefined or an empty object.
+ *
+ * @param formData - The form data to inspect
+ * @returns - True if there is no existing form data
+ */
+function isEmptyFormData(formData: unknown): boolean {
+  return formData === undefined || (isObject(formData) && Object.keys(formData).length === 0);
 }
 
 /** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
@@ -312,9 +335,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // Then set the defaults from the current schema for the referenced schema.
     // Only do this if rawFormData has no meaningful data - we don't want to override user's existing values.
     // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
-    const hasNoExistingData =
-      rawFormData === undefined || (isObject(rawFormData) && Object.keys(rawFormData).length === 0);
-    if (schemaToCompute && !defaults && hasNoExistingData) {
+    if (schemaToCompute && !defaults && isEmptyFormData(rawFormData)) {
       defaults = schema.default as T | undefined;
     }
 
@@ -400,6 +421,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
+  } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
+    // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
+    // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
+    // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
+    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
+    schemaToCompute = retrieveSchema<T, S, F>(validator, schema, rootSchema, rawFormData, customMergeAllOf);
   }
 
   if (schemaToCompute) {
@@ -476,7 +503,7 @@ export function ensureFormDataMatchingSchema<
   defaultFormStateBehavior?: DefaultFormStateBehavior,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T | T[] | undefined {
-  const shouldRetrieveAllOf = defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema;
+  const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf
     ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, customMergeAllOf)
     : schema;
@@ -548,7 +575,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     // - OR if schema contains an 'if' AND `emptyObjectFields` is not set to `skipEmptyDefaults`
     // This ensures we compute defaults correctly for schemas with these keywords.
     const shouldRetrieveSchema =
-      (defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema) ||
+      shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
     const retrievedSchema = shouldRetrieveSchema
       ? retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, customMergeAllOf)
@@ -850,13 +877,26 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
   }
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, customMergeAllOf);
+  // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
+  const emptyFormData = isEmptyFormData(formData);
+  const [schema] = retrieveSchemaInternal<T, S, F>(
+    validator,
+    theSchema,
+    rootSchema ?? ({} as S),
+    formData,
+    undefined,
+    undefined,
+    customMergeAllOf,
+    undefined,
+    emptyFormData,
+  );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
-    rootSchema,
+    // Empty data can leave dependency references unresolved, including inside oneOf/anyOf.
+    rootSchema: rootSchema ?? (emptyFormData ? theSchema : undefined),
     includeUndefinedValues,
     defaultFormStateBehavior,
     customMergeAllOf,

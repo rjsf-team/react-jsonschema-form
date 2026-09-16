@@ -26,7 +26,7 @@ first install both `@rjsf/core` and `@rjsf/mui`. Then you can import the form by
 import Form from '@rjsf/mui';
 ```
 
-Each theme renders against its own UI framework, so that framework's stylesheet has to be loaded for the form to look
+Each theme renders against its own UI framework, so the framework's stylesheet has to be loaded for the form to look
 right. `@rjsf/shadcn` ships no stylesheet of its own: it is styled by your application's Tailwind build and CSS
 variables, the same way shadcn components are. See the
 [`@rjsf/shadcn` README](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/shadcn/README.md#theming)
