@@ -35,6 +35,7 @@ import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getInputProps from './getInputProps.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
+import getOptionUiSchema from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaType from './getSchemaType.ts';
@@ -166,6 +167,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
+  getOptionUiSchema,
   getPropertySchema,
   getOptionValueFormat,
   getSchemaType,

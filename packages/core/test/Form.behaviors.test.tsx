@@ -1899,6 +1899,24 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
   });
+  it('applies ui:initialValue to a field revealed by the object optional data Add control', async () => {
+    const uiSchema: UiSchema = {
+      ...objectOnUiSchema,
+      nestedObjectOptional: {
+        test: { 'ui:initialValue': 'default text' },
+      },
+    };
+    const props: NoValFormProps = {
+      schema,
+      uiSchema,
+      defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    const addObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`)!;
+    await user.click(addObjectControlNode);
+    const testInput = node.querySelector<HTMLInputElement>(`#${objectId}_test`);
+    expect(testInput).toHaveValue('default text');
+  });
   it('only render array optional data controls when only array is turned on', async () => {
     const props: NoValFormProps = {
       schema,

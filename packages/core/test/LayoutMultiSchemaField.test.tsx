@@ -422,6 +422,39 @@ describe('LayoutMultiSchemaField', () => {
       DEFAULT_ID,
     );
   });
+  test('applies ui:initialValue from registry.uiSchemaDefinitions when a new option is selected', async () => {
+    // `oneOf[1]` (`second_option_def`) is only ever reached via its own `$ref`, so `unique_to_second`'s
+    // `ui:initialValue` lives in `ui:definitions` rather than directly on the field's own uiSchema - this only
+    // resolves if onOptionChange threads the root's `ui:definitions` (via the registry) into getDefaultFormState().
+    const selectorField = 'name';
+    const uiSchema = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
+      [UI_WIDGET_KEY]: 'select',
+    };
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: oneOfSchema as RJSFSchema,
+      formData: { name: 'first_option', flag: true },
+      uiSchema,
+    });
+    props.registry.uiSchemaDefinitions = {
+      '#/definitions/second_option_def': { unique_to_second: { 'ui:initialValue': 42 } },
+    };
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const button = screen.getByRole('combobox');
+    // select the second option, whose schema has the `unique_to_second` field
+    await user.selectOptions(button, '1');
+
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ unique_to_second: 42 }),
+        props.fieldPathId.path,
+        undefined,
+        DEFAULT_ID,
+      );
+    });
+  });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
     const selectorField = 'name';
     const props = getProps({

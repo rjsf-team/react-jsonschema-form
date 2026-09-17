@@ -163,6 +163,10 @@ class SchemaUtils<
    *          object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
    * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
+   * @param [uiSchemaDefinitions] - Optional `ui:definitions`, applied at every `$ref`-resolved node the same way
+   *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
+   *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
+   *          doesn't carry the root's own `ui:definitions`.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -171,6 +175,7 @@ class SchemaUtils<
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -182,6 +187,7 @@ class SchemaUtils<
       this.customMergeAllOf,
       initialDefaultsGenerated,
       uiSchema,
+      uiSchemaDefinitions,
     );
   }
 

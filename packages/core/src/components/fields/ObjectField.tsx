@@ -238,7 +238,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     title,
   } = props;
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? {};
-  const { fields, schemaUtils, translateString, globalUiOptions } = registry;
+  const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
@@ -324,6 +324,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
             undefined,
             undefined,
             getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+            uiSchemaDefinitions,
           ) as RJSFSchema['default'];
         }
       }
@@ -338,7 +339,17 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     setAdditionalPropertyOrder((order) => [...order, newKey]);
     onChange(newFormData, fieldPath);
-  }, [formData, onChange, translateString, schemaUtils, fieldPath, getAvailableKey, schema, uiSchema]);
+  }, [
+    formData,
+    onChange,
+    translateString,
+    schemaUtils,
+    fieldPath,
+    getAvailableKey,
+    schema,
+    uiSchema,
+    uiSchemaDefinitions,
+  ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.

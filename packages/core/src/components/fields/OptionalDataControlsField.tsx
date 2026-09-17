@@ -37,7 +37,7 @@ export default function OptionalDataControlsField<
     registry,
   } = props;
 
-  const { globalUiOptions = {}, schemaUtils, translateString } = registry;
+  const { globalUiOptions = {}, schemaUtils, translateString, uiSchemaDefinitions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const OptionalDataControlsTemplate = getTemplate<'OptionalDataControlsTemplate', T, S, F>(
     'OptionalDataControlsTemplate',
@@ -61,8 +61,17 @@ export default function OptionalDataControlsField<
     } else {
       id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
-        // If it has form data, store an empty object, otherwise get the default form state and use it
-        let newFormData: unknown = schemaUtils.getDefaultFormState(schema, formData, 'excludeObjectChildren');
+        // If it has form data, store an empty object, otherwise get the default form state and use it. Passes
+        // uiSchema/uiSchemaDefinitions so a ui:initialValue on a field beneath this control applies immediately,
+        // the same as it would if the field had been present since the initial render.
+        let newFormData: unknown = schemaUtils.getDefaultFormState(
+          schema,
+          formData,
+          'excludeObjectChildren',
+          undefined,
+          uiSchema,
+          uiSchemaDefinitions,
+        );
         if (newFormData === undefined) {
           // If new form data ended up being undefined, and we have pushed the add button we need to actually add data
           newFormData = getSchemaType<S>(schema) === 'array' ? [] : {};

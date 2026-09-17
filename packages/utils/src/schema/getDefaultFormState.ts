@@ -17,6 +17,7 @@ import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -311,6 +312,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let schemaToCompute: S | null = null;
   let dfsb_to_compute = defaultFormStateBehavior;
   let updatedRecurseList = _recurseList;
+  // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
+  // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
+  // the parent uiSchema, which is otherwise passed straight through.
+  let branchUiSchema = uiSchema;
   if (
     schema[CONST_KEY] !== undefined &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -415,36 +420,34 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         constAsDefaults: 'never',
       };
     }
-    schemaToCompute = oneOf![
-      getClosestMatchingOption<T, S, F>(
-        validator,
-        rootSchema,
-        rawFormData ?? (schema.default as T),
-        oneOf as S[],
-        0,
-        discriminator,
-        customMergeAllOf,
-      )
-    ] as S;
-    schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
+    const oneOfIndex = getClosestMatchingOption<T, S, F>(
+      validator,
+      rootSchema,
+      rawFormData ?? (schema.default as T),
+      oneOf as S[],
+      0,
+      discriminator,
+      customMergeAllOf,
+    );
+    schemaToCompute = mergeSchemas(remaining, oneOf![oneOfIndex] as S) as S;
+    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ONE_OF_KEY, oneOfIndex);
   } else if (ANY_OF_KEY in schema) {
     const { anyOf, ...remaining } = schema;
     if (anyOf!.length === 0) {
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    schemaToCompute = anyOf![
-      getClosestMatchingOption<T, S, F>(
-        validator,
-        rootSchema,
-        rawFormData ?? (schema.default as T),
-        anyOf as S[],
-        0,
-        discriminator,
-        customMergeAllOf,
-      )
-    ] as S;
-    schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
+    const anyOfIndex = getClosestMatchingOption<T, S, F>(
+      validator,
+      rootSchema,
+      rawFormData ?? (schema.default as T),
+      anyOf as S[],
+      0,
+      discriminator,
+      customMergeAllOf,
+    );
+    schemaToCompute = mergeSchemas(remaining, anyOf![anyOfIndex] as S) as S;
+    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ANY_OF_KEY, anyOfIndex);
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
@@ -465,7 +468,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       required,
       shouldMergeDefaultsIntoFormData,
       initialDefaultsGenerated,
-      uiSchema,
+      uiSchema: branchUiSchema,
       uiSchemaDefinitions,
     });
   }
@@ -864,15 +867,11 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     const defaultEntries: T[] = defaults || [];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
     const fillerDefault = fillerSchema.default;
-    // Filler entries sit beyond the fixed tuple's own positions, so they take the same uiSchema as any other item
-    // added past the tuple (see ArrayField's getNewFormDataRow()): `uiSchema.additionalItems` when the schema is a
-    // tuple, or the regular (non-tuple) `uiSchema.items` otherwise.
-    const fillerUiSchema = isFixedItems(schema)
-      ? (uiSchema?.additionalItems as UiSchema<T, S, F> | undefined)
-      : getStaticItemsUiSchema<T, S, F>(uiSchema);
 
-    // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
-    const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, () =>
+    // Calculate filler entries for remaining items (minItems - existing raw data/defaults), each resolving the
+    // uiSchema for its own final position (`defaultsLength + i`) the same way `ArrayField` resolves it once rendered,
+    // rather than sharing a single uiSchema across every filler row regardless of position.
+    const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, (_unused, i) =>
       computeDefaults<any, S, F>(validator, fillerSchema, {
         parentDefaults: fillerDefault,
         rootSchema,
@@ -882,7 +881,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
-        uiSchema: fillerUiSchema,
+        uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, defaultsLength + i),
         uiSchemaDefinitions,
       }),
     ) as T[];
@@ -962,6 +961,10 @@ export default function getDefaultFormState<
   customMergeAllOf?: CustomMergeAllOf<S>,
   initialDefaultsGenerated?: boolean,
   uiSchema?: UiSchema<T, S, F>,
+  // Defaults to the `ui:definitions` on `uiSchema` itself, but callers that only have a sub-uiSchema in hand
+  // (an array's `uiSchema.items`, a `oneOf`/`anyOf` option's own uiSchema, `uiSchema.additionalProperties`, ...) need
+  // to pass the root uiSchema's `ui:definitions` explicitly, since `ui:definitions` only ever lives at the root.
+  uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
 ) {
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${theSchema}`);
@@ -994,7 +997,7 @@ export default function getDefaultFormState<
     initialDefaultsGenerated,
     requiredAsRoot: true,
     uiSchema,
-    uiSchemaDefinitions: uiSchema?.[UI_DEFINITIONS_KEY],
+    uiSchemaDefinitions,
   });
 
   if (schema.type !== 'object' && isObject(schema.default)) {

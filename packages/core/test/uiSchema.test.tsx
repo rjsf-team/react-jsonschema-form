@@ -3296,6 +3296,78 @@ describe('uiSchema', () => {
       await user.selectOptions(select, '1');
       expect(node.querySelector<HTMLInputElement>('#root_idCode')).toHaveValue('ID-1');
     });
+
+    it('applies ui:initialValue from ui:definitions to a new array item added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { $ref: '#/$defs/person' },
+        $defs: {
+          person: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/person': { name: { 'ui:initialValue': 'Anonymous' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue from ui:definitions to a new additionalProperties entry added via the add button', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { $ref: '#/$defs/person' },
+        $defs: {
+          person: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/person': { name: { 'ui:initialValue': 'Anonymous' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
+    });
+
+    it('applies ui:initialValue from ui:definitions to a field nested inside a newly selected oneOf branch', async () => {
+      // The selected option itself isn't a $ref (only `contact`, one of its own properties, is), so
+      // `resolveUiSchema()`'s oneOf/anyOf pre-population (which only expands an option that is itself a $ref)
+      // never fires here: `uiSchema.oneOf` stays empty, and MultiSchemaField's `newOptionUiSchema` falls back to
+      // the field's own (empty) uiSchema, exercising getDefaultFormState()'s own uiSchemaDefinitions threading.
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            oneOf: [
+              { type: 'object', properties: { firstName: { type: 'string' } } },
+              { type: 'object', properties: { contact: { $ref: '#/$defs/contact' } } },
+            ],
+          },
+        },
+        $defs: {
+          contact: { type: 'object', properties: { idCode: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': {
+          '#/$defs/contact': { idCode: { 'ui:initialValue': 'ID-1' } },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+      const select = node.querySelector<HTMLSelectElement>('#root_thing__oneof_select')!;
+      await user.selectOptions(select, '1');
+      expect(node.querySelector<HTMLInputElement>('#root_thing_contact_idCode')).toHaveValue('ID-1');
+    });
   });
   it('string field with autocapitalize', () => {
     const schema: RJSFSchema = {

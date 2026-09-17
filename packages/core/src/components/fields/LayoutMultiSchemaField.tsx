@@ -112,7 +112,7 @@ export default function LayoutMultiSchemaField<
     errorSchema,
     hideError = false,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const schemaHash = hashObject(schema);
@@ -174,12 +174,15 @@ export default function LayoutMultiSchemaField<
       // Call getDefaultFormState to make sure defaults are populated on change. Passes the field's own uiSchema
       // (this component doesn't support a per-option uiSchema split the way AnyOfField's uiSchema.oneOf/anyOf does)
       // so ui:initialValue/ui:emptyValue on the newly-selected option's fields apply on selection.
+      // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
+      // never carries the root's `ui:definitions` itself.
       newFormData = schemaUtils.getDefaultFormState(
         newOption,
         newFormData,
         'excludeObjectChildren',
         undefined,
         uiSchema,
+        uiSchemaDefinitions,
       ) as T;
     }
     if (newFormData) {

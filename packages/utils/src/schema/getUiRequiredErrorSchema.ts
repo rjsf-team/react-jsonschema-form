@@ -8,6 +8,7 @@ import {
 } from '../constants.ts';
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import isFixedItems from '../isFixedItems.ts';
@@ -75,12 +76,9 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     getDiscriminatorFieldFromSchema<S>(schema),
     customMergeAllOf,
   );
-  const branchUiSchemas = uiSchema[keyword];
-  const branchUiSchema =
-    Array.isArray(branchUiSchemas) && branchUiSchemas.length > index ? branchUiSchemas[index] : uiSchema;
   return {
     schema: mergeSchemas(remaining as S, options[index] as S) as S,
-    uiSchema: branchUiSchema ?? {},
+    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, index) ?? {},
   };
 }
 

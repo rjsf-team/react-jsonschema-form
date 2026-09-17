@@ -169,7 +169,7 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   index: number,
   uiSchema?: UiSchema<T[], S, F>,
 ): T {
-  const { schemaUtils, globalFormOptions } = registry;
+  const { schemaUtils, globalFormOptions, uiSchemaDefinitions } = registry;
   let itemSchema = schema.items as S;
   // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
   // FieldProps<T[], S, F> call on the class
@@ -183,7 +183,16 @@ function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     itemSchema = schema.additionalItems as S;
     itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
   }
-  return schemaUtils.getDefaultFormState(itemSchema, undefined, false, undefined, itemUiSchema) as unknown as T;
+  // `uiSchemaDefinitions` comes from the registry (the root uiSchema's `ui:definitions`) since `itemUiSchema` is
+  // only the array's own sub-uiSchema and never carries `ui:definitions` itself.
+  return schemaUtils.getDefaultFormState(
+    itemSchema,
+    undefined,
+    false,
+    undefined,
+    itemUiSchema,
+    uiSchemaDefinitions,
+  ) as unknown as T;
 }
 
 /** Props used for ArrayAsXxxx type components*/

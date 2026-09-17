@@ -98,7 +98,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
 
   const fieldId = `${id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
 
-  const { widgets, fields, translateString, globalUiOptions } = registry;
+  const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const {
     widget = 'select',
     placeholder,
@@ -154,12 +154,15 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       if (newOption) {
         // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
         // so that only the root objects themselves are created without adding undefined children properties
+        // `uiSchemaDefinitions` comes from the registry since `newOptionUiSchema` is only the selected option's own
+        // sub-uiSchema and never carries the root's `ui:definitions` itself.
         newFormData = schemaUtils.getDefaultFormState(
           newOption,
           newFormData,
           'excludeObjectChildren',
           undefined,
           newOptionUiSchema,
+          uiSchemaDefinitions,
         ) as T;
       }
 
@@ -180,6 +183,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       fieldId,
       optionsUiSchema,
       uiSchema,
+      uiSchemaDefinitions,
     ],
   );
 
