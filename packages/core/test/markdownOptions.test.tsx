@@ -21,8 +21,10 @@ describe('markdown options', () => {
   });
 
   it('lets local options disable globally enabled markdown', () => {
-    const registry = getTestRegistry({}, undefined, { MarkdownTemplate: MarkdownRenderer });
-    registry.globalUiOptions = { enableMarkdownInDescription: true, enableMarkdownInHelp: true };
+    const registry = {
+      ...getTestRegistry({}, undefined, { MarkdownTemplate: MarkdownRenderer }),
+      globalUiOptions: { enableMarkdownInDescription: true, enableMarkdownInHelp: true },
+    };
     const { container, rerender } = render(<RichHelp help='**help**' registry={registry} />);
     expect(container.querySelector('strong')).toHaveTextContent('help');
     rerender(<RichHelp help='**help**' registry={registry} uiSchema={{ 'ui:enableMarkdownInHelp': false }} />);

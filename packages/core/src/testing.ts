@@ -19,7 +19,7 @@ export function getTestRegistry(
   },
 ): Registry {
   const schemaUtils = createSchemaUtils(validator, rootSchema);
-  return {
+  const registry: Registry = {
     ...buildRegistry(
       { schema: rootSchema, validator, fields, templates, widgets, formContext },
       rootSchema,
@@ -27,4 +27,10 @@ export function getTestRegistry(
     ),
     globalFormOptions,
   };
+  // Freeze shallowly so a test that mutates the registry or swaps an entry in a component map fails loudly. A deep
+  // freeze would reach caller-owned objects like `formContext`, `rootSchema` and the validator's internal caches.
+  Object.freeze(registry.fields);
+  Object.freeze(registry.templates);
+  Object.freeze(registry.widgets);
+  return Object.freeze(registry);
 }
