@@ -1474,12 +1474,14 @@ export type UiSchema<
      * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
      */
     'ui:fieldReplacesAnyOrOneOf'?: boolean;
-    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
-     * or a function that returns a dynamic uiSchema based on the item's data and index.
+    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
+     * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
+     * based on the item's data and index.
      * When using a function, it receives the item data, index, and optionally the form context as parameters.
      */
     items?:
       | UiSchema<ArrayElement<T>, S, F, Checks>
+      | UiSchema<ArrayElement<T>, S, F, Checks>[]
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F, Checks>);
     /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
      * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
