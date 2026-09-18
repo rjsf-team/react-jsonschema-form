@@ -151,7 +151,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData: formData1,
+      initialFormData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -172,7 +172,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData, // Use form data with nothing to omit to test case
+      initialFormData: formData, // Use form data with nothing to omit to test case
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -191,7 +191,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData: formData1,
+      initialFormData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -238,7 +238,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node } = createFormComponent({
       ref,
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -268,7 +268,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node } = createFormComponent({
       ref,
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
     });
 
@@ -294,7 +294,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node, onChange } = createFormComponent({
       ref: createRef(),
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -323,7 +323,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -347,7 +347,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -371,7 +371,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -399,7 +399,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz', add: { prop: 123 } };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -420,7 +420,7 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         },
       },
-      formData: { nested: { key1: 'value' } },
+      initialFormData: { nested: { key1: 'value' } },
       omitExtraData: true,
       liveOmit: 'onChange',
     });
@@ -456,7 +456,7 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         ],
       },
-      formData: { lorum: '' },
+      initialFormData: { lorum: '' },
       omitExtraData: true,
       liveOmit: 'onChange',
     });
@@ -490,7 +490,7 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         ],
       },
-      formData: { ipsum: '' },
+      initialFormData: { ipsum: '' },
       omitExtraData: true,
       liveOmit: 'onChange',
     });
@@ -530,7 +530,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node, onChange } = createFormComponent({
       ref: createRef(),
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData: true,
       liveOmit: 'onChange',
     });
@@ -737,7 +737,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on change when omitExtraData and liveOmit are true', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: 'value' } },
+      initialFormData: { name: 'Alice', address: { street: 'value' } },
       omitExtraData: true,
       liveOmit: 'onChange',
     });
@@ -750,7 +750,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on blur when omitExtraData is true and liveOmit is onBlur', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: 'value' } },
+      initialFormData: { name: 'Alice', address: { street: 'value' } },
       omitExtraData: true,
       liveOmit: 'onBlur',
     });
@@ -1673,7 +1673,7 @@ describe('setFieldValue()', () => {
       type: 'object',
       properties: { '': { type: 'string' }, other: { type: 'string' } },
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { other: 'kept' } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { other: 'kept' } });
 
     const input = node.querySelector('input#root_');
     expect(input).toBeInTheDocument();
@@ -2534,7 +2534,7 @@ describe('patternProperties with fixed properties (#4518)', () => {
 
     const { container, node, onSubmit, onError } = createFormComponent({
       schema,
-      formData: { annotations: {} },
+      initialFormData: { annotations: {} },
     });
 
     await submitForm(node, user);
@@ -2676,7 +2676,7 @@ describe('dependency defaults in controlled forms', () => {
   it('preserves an empty array already present when enabling the dependency branch', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         triggersOverride: false,
         triggers: [],
         repoData: { triggersOverride: true, triggers: [] },
@@ -2746,7 +2746,7 @@ describe('enum-based array values do not update when dependencies change (#1357 
     const { node, onChange } = createFormComponent({
       schema,
       uiSchema,
-      formData: { opt: false },
+      initialFormData: { opt: false },
     });
 
     const checkboxC = node.querySelector('#root_arr-0');
@@ -2812,7 +2812,7 @@ describe('enum-based array values do not update when dependencies change (#1357 
     };
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { select_item: 'item1' },
+      initialFormData: { select_item: 'item1' },
       defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
     });
 
