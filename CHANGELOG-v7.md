@@ -34,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `ChakraUiSchema`, which used `Omit<UiSchema, 'ui:options'>`. `UiSchema` has a string index signature, so `keyof UiSchema` includes `string` and `Omit` erased every named member, leaving a type that accepted anything. It now intersects instead
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using `Select.ItemGroup`/`Select.ItemGroupLabel`
+- **BREAKING CHANGE:** Removed `chakra-react-select` from `peerDependencies`; the package no longer uses it, so it no longer needs to be installed alongside `@rjsf/chakra-ui`
 
 ## @rjsf/core
 

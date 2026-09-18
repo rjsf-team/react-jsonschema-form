@@ -40,7 +40,6 @@
     "@chakra-ui/react": ">=3.16.1",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "chakra-react-select": ">=6",
     "react": ">=19"
   },
   "publishConfig": {
