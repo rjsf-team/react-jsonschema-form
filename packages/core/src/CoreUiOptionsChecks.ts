@@ -2,6 +2,27 @@ import type { EnumValue, UiOptionsCheck, WidgetAliasFor } from '@rjsf/utils';
 
 import type { LayoutGridSchemaType } from './components/fields/LayoutGridField.tsx';
 
+/** @internal An object type excluding values branded by the well-known symbols JS's built-in iterable, awaitable, or
+ * pattern-matching classes carry (arrays and `Map`/`Set` via `Symbol.iterator`, `Date` via `Symbol.toPrimitive`,
+ * `Promise`/`WeakMap`/`WeakSet` via `Symbol.toStringTag`, `RegExp` via its `Symbol.match`/`replace`/`search`/`split`
+ * methods) rather than being a plain object holding form fields of its own - excluding them keeps a field typed as
+ * one of these, reachable only through a fully custom widget since none of `@rjsf/core`'s built-in widgets ever
+ * produce one, out of the object branch below.
+ *
+ * `File`/`Blob`/`URL` carry none of these symbols and so aren't excluded by this - a keyed exclusion (checking for,
+ * say, `size`/`type`/`href`) was considered and rejected instead, since those are exactly the kind of names a real
+ * object field legitimately uses.
+ */
+type NonBuiltInObject = object & {
+  [Symbol.iterator]?: never;
+  [Symbol.toPrimitive]?: never;
+  [Symbol.toStringTag]?: never;
+  [Symbol.match]?: never;
+  [Symbol.replace]?: never;
+  [Symbol.search]?: never;
+  [Symbol.split]?: never;
+};
+
 /** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
  * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Pass it as
  * `UiSchema`'s fourth type parameter (`Checks`) to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
@@ -89,7 +110,10 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       null,
       {
-        widget?: 'HiddenWidget';
+        // `NullField` never calls `getWidget` (there's no widget map entry for the `null` schema type, and nothing to
+        // render), so `'HiddenWidget'` has no runtime effect here - only the literal `'hidden'`, checked the same way
+        // as the object branch below, actually hides a null field.
+        widget?: 'hidden';
         field?: 'NullField';
       }
     >
@@ -112,7 +136,7 @@ export type CoreUiOptionsChecks =
       }
     >
   | UiOptionsCheck<
-      object & { [Symbol.iterator]?: never },
+      NonBuiltInObject,
       {
         // Only the literal `'hidden'` has any runtime effect here: `ObjectField`/`SchemaField` decide to hide an
         // object field via `uiOptions.widget === 'hidden'`, a strict comparison to that exact alias - unlike
