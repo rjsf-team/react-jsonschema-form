@@ -20,47 +20,37 @@ export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
     let sameAsPrev = prev.length === next.length;
-    let retained: unknown[] | undefined;
+    let copy: unknown[] | undefined;
     for (let i = 0; i < next.length; i++) {
       const value = replaceEqualDeep(prev[i], next[i]);
-      if (!Object.is(value, prev[i])) {
-        sameAsPrev = false;
-      }
-      if (!Object.is(value, next[i]) && !retained) {
-        retained = next.slice();
-      }
-      if (retained) {
-        retained[i] = value;
+      sameAsPrev &&= Object.is(value, prev[i]);
+      if (!Object.is(value, next[i])) {
+        copy ??= next.slice();
+        copy[i] = value;
       }
     }
-    if (sameAsPrev) {
-      return prev as unknown as T;
-    }
-    return (retained ?? next) as T;
+    return (sameAsPrev ? prev : (copy ?? next)) as T;
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);
     let sameAsPrev = nextKeys.length === Object.keys(prev).length;
-    let sameAsNext = true;
-    const entries = nextKeys.map((key) => {
+    let copy: Record<string, unknown> | undefined;
+    for (const key of nextKeys) {
       const value = replaceEqualDeep(prev[key], next[key]);
-      if (!Object.is(value, prev[key]) || !Object.hasOwn(prev, key)) {
-        sameAsPrev = false;
-      }
+      sameAsPrev &&= Object.hasOwn(prev, key) && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
-        sameAsNext = false;
+        // Spread defines own data properties, so a JSON-sourced own `__proto__` key stays a key on the copy, and the
+        // assignment then writes to that own key instead of reaching the prototype setter
+        copy ??= { ...next };
+        copy[key] = value;
       }
-      return [key, value] as const;
-    });
+    }
     if (sameAsPrev) {
       return prev as T;
     }
-    if (sameAsNext) {
+    if (!copy) {
       return next;
     }
-    // `Object.fromEntries` defines own data properties, so a JSON-sourced own `__proto__` key stays a key instead of
-    // reaching the prototype setter
-    const copy = Object.fromEntries(entries);
     const proto = Object.getPrototypeOf(next);
     // reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
     return (proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto)) as T;

@@ -336,17 +336,8 @@ class SchemaUtils<
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
     // A `Form` given a non-object schema renders an error rather than throwing, so this runs with a non-object
     // `schema` despite the type, and a `WeakMap` refuses one as a key
-    if (schema === null || typeof schema !== 'object') {
-      return retrieveSchema<T, S, F>(
-        this.validator,
-        schema,
-        this.rootSchema,
-        rawFormData,
-        this.customMergeAllOf,
-        resolveAnyOfOrOneOfRefs,
-      );
-    }
-    const cached = this.lastRetrievedSchemas.get(schema);
+    const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
+    const cached = cacheKey && this.lastRetrievedSchemas.get(cacheKey);
     if (
       cached &&
       Object.is(cached.rawFormData, rawFormData) &&
@@ -365,7 +356,9 @@ class SchemaUtils<
         resolveAnyOfOrOneOfRefs,
       ),
     );
-    this.lastRetrievedSchemas.set(schema, { rawFormData, resolveAnyOfOrOneOfRefs, result });
+    if (cacheKey) {
+      this.lastRetrievedSchemas.set(cacheKey, { rawFormData, resolveAnyOfOrOneOfRefs, result });
+    }
     return result;
   }
 

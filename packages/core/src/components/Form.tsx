@@ -1,5 +1,5 @@
 import type { ElementType, ReactNode, Ref, RefObject, SubmitEvent } from 'react';
-import { Component, createRef } from 'react';
+import { PureComponent, createRef } from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -39,7 +39,6 @@ import {
   mergeObjects,
   replaceEqualDeep,
   schemaHasNestedConditional,
-  shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
   fieldPathFromList,
@@ -316,7 +315,7 @@ interface PendingChange<T> {
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Component<FormProps<T, S, F>, FormState<T, S, F>>
+  extends PureComponent<FormProps<T, S, F>, FormState<T, S, F>>
   implements FormHandle<T, S, F>
 {
   /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
@@ -697,16 +696,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     return nextState;
   }
 
-  /** React lifecycle method that is used to determine whether component should be updated.
-   *
-   * @param nextProps - The next version of the props
-   * @param nextState - The next version of the state
-   * @returns - True if the component should be updated, false otherwise
-   */
-  shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
-    return shouldRender(this, nextProps, nextState);
-  }
-
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
    * `schemaUtils` in the state), returning the results.
    *
@@ -904,17 +893,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors, retrievedSchema } = this.state;
-    // The value and errors this change is applied to. Sharing the result's references with them is what keeps the
-    // props of sibling fields stable; under controlled ownership the value is the parent's, so it is named explicitly
-    // rather than read back out of `this.state` where the sharing happens
-    const current = {
-      formData: oldFormData,
-      errors,
-      errorSchema: this.state.errorSchema,
-      schemaValidationErrors: this.state.schemaValidationErrors,
-      schemaValidationErrorSchema,
-      retrievedSchema,
-    };
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -1062,9 +1040,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
 
-    // Structural sharing: every unchanged subtree keeps the reference it had in `current`, so sibling fields stay
-    // reference-equal across the change; SchemaField's shallow memo comparison depends on it to skip their re-renders
-    state = replaceEqualDeep(current, state);
+    // Structural sharing: every unchanged subtree keeps the reference it has in the current state, so sibling fields
+    // stay reference-equal across the change; SchemaField's shallow memo comparison depends on it to skip re-renders
+    state = replaceEqualDeep(this.state, state);
 
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
