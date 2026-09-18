@@ -1296,8 +1296,15 @@ export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
   then: Then;
 }
 
-/** @internal A generic union-to-intersection helper, with no knowledge of `Checks`. */
-type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never;
+/** @internal Merges a union of object types into a single object type, unioning each key's value type across every
+ * union member that declares it, rather than intersecting them. A plain intersection collapses a key declared with a
+ * different type in two matching `Checks` members - e.g. `emptyValue: string` on the string check and
+ * `emptyValue: number` on the number check, both matching a `T = any` or `T = string | number` field - down to
+ * `string & number` = `never`. Unioning by key keeps it usable as `string | number` instead.
+ */
+type UnionToMergedKeys<U> = {
+  [K in U extends unknown ? keyof U : never]?: U extends unknown ? (K extends keyof U ? U[K] : never) : never;
+};
 
 /** @internal Whether `Then` declares its own `K` key, as opposed to merely admitting one through a string index
  * signature (as `UiOptionsCheck`'s default `Then = GenericObjectType` does). Without this guard, `Then extends {
@@ -1336,8 +1343,10 @@ type FieldsFor<T, Checks> =
       : never
     : never;
 
-/** @internal The intersection of every `then` option (minus `widget`/`field`) valid for form-data type `T`. */
-type RawOptsFor<T, Checks> = UnionToIntersection<
+/** @internal The `ui:`-prefixed options (minus `widget`/`field`) valid for form-data type `T`, merged by key across
+ * every matching `Checks` member - see `UnionToMergedKeys`.
+ */
+type RawOptsFor<T, Checks> = UnionToMergedKeys<
   Checks extends UiOptionsCheck<infer When, infer Then>
     ? T extends When
       ? Omit<Then, 'widget' | 'field'>
@@ -1354,7 +1363,8 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
   'ui:options'?: {
     widget?: WidgetsFor<T, Checks> | Widget<T, S, F>;
     field?: FieldsFor<T, Checks> | Field<T, S, F>;
-  } & RawOptsFor<T, Checks>;
+  } & RawOptsFor<T, Checks> &
+    CommonUiOptions<T, S, F>;
 }
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
