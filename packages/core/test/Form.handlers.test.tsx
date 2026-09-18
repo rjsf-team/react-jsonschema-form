@@ -506,6 +506,49 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
     });
+    it('should keep a switch to a null oneOf option in an uncontrolled form when an unrelated prop changes', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'Advanced Configuration',
+            type: 'object',
+            properties: { types: { const: 'advanced', title: 'Types' }, content: { type: 'string', title: 'Content' } },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced', content: 'placeholder' },
+      };
+      const experimental_defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
+      const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+      rerender({ schema, experimental_defaultFormStateBehavior, uiSchema: { 'ui:title': 'Changed' } });
+
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      expect(node.querySelector('#root_content')).not.toBeInTheDocument();
+    });
+    it('should apply the defaults of a changed experimental_defaultFormStateBehavior to echoed formData', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { nested: { type: 'object', properties: { foo: { type: 'string', default: 'bar' } } } },
+      };
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: {},
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+      });
+      expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('');
+
+      rerender({
+        schema,
+        formData: {},
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('bar');
+    });
     it('Should modify anyOf definition references when the defaults are set.', async () => {
       const schema: RJSFSchema = {
         definitions: {

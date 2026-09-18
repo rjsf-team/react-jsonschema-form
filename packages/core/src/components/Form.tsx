@@ -504,8 +504,9 @@ export default class Form<
         !isStateDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
-      // The parent handing back the `formData` the form just emitted through `onChange`, against the same schema
-      const isEchoOfState = !isStateDataChanged && !isSchemaChanged;
+      // The parent handing back the `formData` the form just emitted through `onChange`, with nothing that feeds the
+      // defaults changed; any change to the schema, validator or defaults behavior rebuilds `schemaUtils`
+      const isEchoOfState = !isStateDataChanged && nextState.schemaUtils === this.state.schemaUtils;
       return { nextState, shouldUpdate, isEchoOfState };
     }
     return { shouldUpdate: false };

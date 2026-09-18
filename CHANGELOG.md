@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed a `schema` prop change being silently dropped when it adds a property with a `default`, either as the parent's reply to `onChange` or at any point after a change to an uncontrolled form. The guard that keeps a oneOf/anyOf option switch from reverting now only applies when the parent hands back the form's own `formData` against an unchanged schema, fixing [#5294](https://github.com/rjsf-team/react-jsonschema-form/issues/5294)
+- Fixed a `schema` prop change being silently dropped when it adds a property with a `default`, either as the parent's reply to `onChange` or at any point after a change to an uncontrolled form. The guard that keeps a oneOf/anyOf option switch from reverting now only applies when the parent hands back the form's own `formData` and nothing that feeds its defaults (the schema, `validator`, `experimental_defaultFormStateBehavior` or `experimental_customMergeAllOf`) has changed, fixing [#5294](https://github.com/rjsf-team/react-jsonschema-form/issues/5294)
 
 ## @rjsf/validator-ata
 
