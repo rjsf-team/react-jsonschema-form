@@ -137,4 +137,93 @@ describe('render stability across sibling fields', () => {
     expect(renderCounts.root_nested).toBe(nestedBefore);
     expect(renderCounts.root_nested_inner).toBe(innerBefore);
   });
+
+  it('a parent re-render with equal but rebuilt props re-renders no field', () => {
+    function Parent({ tick }: { tick: number }) {
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          formData={initialFormData()}
+          uiSchema={{ first: { 'ui:help': <span>tick {tick >= 0 ? 'help' : ''}</span> } }}
+          formContext={{ label: 'stable' }}
+          templates={{ FieldTemplate: CountingFieldTemplate }}
+          onChange={() => undefined}
+        />
+      );
+    }
+    const { rerender } = render(<Parent tick={0} />);
+    const before = { ...renderCounts };
+    expect(Object.keys(before)).toEqual(expect.arrayContaining(['root_first', 'root_second', 'root_nested_inner']));
+
+    rerender(<Parent tick={1} />);
+
+    expect(renderCounts).toEqual(before);
+  });
+
+  it('live validation on change leaves a sibling with an unchanged error alone', async () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { first: { type: 'string' }, second: { type: 'string', minLength: 3 } },
+      },
+      formData: { first: '', second: 'ab' },
+      liveValidate: 'onChange',
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    await user.type(node.querySelector('#root_first')!, 'a');
+    expect(node.textContent).toContain('must NOT have fewer than 3 characters');
+    const secondBefore = renderCounts.root_second;
+    expect(secondBefore).toBeGreaterThan(0);
+
+    await user.type(node.querySelector('#root_first')!, 'bc');
+
+    expect(renderCounts.root_second).toBe(secondBefore);
+  });
+
+  it('live validation on blur leaves sibling fields alone', async () => {
+    const { node } = createFormComponent({
+      schema,
+      formData: initialFormData(),
+      liveValidate: 'onBlur',
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    await user.type(node.querySelector('#root_first')!, 'abc');
+    const secondBefore = renderCounts.root_second;
+    const innerBefore = renderCounts.root_nested_inner;
+    expect(secondBefore).toBeGreaterThan(0);
+
+    await user.tab();
+
+    expect(renderCounts.root_second).toBe(secondBefore);
+    expect(renderCounts.root_nested_inner).toBe(innerBefore);
+  });
+
+  it('a submit that changes no errors re-renders no field', async () => {
+    const { node } = createFormComponent({
+      schema,
+      formData: initialFormData(),
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    const before = { ...renderCounts };
+    expect(Object.keys(before)).toEqual(expect.arrayContaining(['root_first', 'root_second', 'root_nested_inner']));
+
+    await user.click(node.querySelector('button[type=submit]')!);
+
+    expect(renderCounts).toEqual(before);
+  });
+
+  it('typing in one array item does not re-render the other items', async () => {
+    const { node } = createFormComponent({
+      schema: { type: 'array', items: { type: 'string' } },
+      formData: ['', ''],
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    const otherBefore = renderCounts.root_1;
+    expect(otherBefore).toBeGreaterThan(0);
+
+    await user.type(node.querySelector('#root_0')!, 'abc');
+
+    expect(renderCounts.root_1).toBe(otherBefore);
+  });
 });
