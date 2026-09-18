@@ -1336,16 +1336,16 @@ This function compares objects by checking if all keys and their values are equa
 
 - boolean: True if the `a` and `b` are shallow equal, false otherwise
 
-### shouldRender()
+### shouldRender&lt;P, S>()
 
 Determines whether the given `component` should be rerendered by comparing its current set of props and state against the next set.
 If either of those two sets are not the same, then the component should be rerendered.
 
 #### Parameters
 
-- component: React.Component - A React component being checked
-- nextProps: any - The next set of props against which to check
-- nextState: any - The next set of state against which to check
+- component: Pick&lt;React.Component&lt;P, S>, 'props' | 'state'> - The React component being checked, or anything carrying its `props` and `state`
+- nextProps: P - The next set of props against which to check
+- nextState: S - The next set of state against which to check
 
 #### Returns
 

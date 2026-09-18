@@ -10,7 +10,8 @@ import isPlainObject from './isPlainObject.ts';
  * @returns - `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged
  *   subtree with `prev`
  */
-export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
+export default function replaceEqualDeep<T>(prev: unknown, next: T): T;
+export default function replaceEqualDeep(prev: unknown, next: unknown): unknown {
   if (Object.is(prev, next)) {
     return next;
   }
@@ -18,14 +19,14 @@ export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
     let sameAsPrev = prev.length === next.length;
     let copy: unknown[] | undefined;
     for (let i = 0; i < next.length; i++) {
-      const value = replaceEqualDeep(prev[i], next[i]);
+      const value: unknown = replaceEqualDeep(prev[i], next[i]);
       sameAsPrev &&= Object.is(value, prev[i]);
       if (!Object.is(value, next[i])) {
         copy ??= next.slice();
         copy[i] = value;
       }
     }
-    return (sameAsPrev ? prev : (copy ?? next)) as T;
+    return sameAsPrev ? prev : (copy ?? next);
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);
@@ -41,17 +42,17 @@ export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
       }
     }
     if (sameAsPrev) {
-      return prev as T;
+      return prev;
     }
     if (!copy) {
       return next;
     }
     const proto = Object.getPrototypeOf(next);
     // Reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
-    return (proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto)) as T;
+    return proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto);
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {
-    return prev as T;
+    return prev;
   }
   return next;
 }

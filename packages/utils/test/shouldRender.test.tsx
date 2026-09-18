@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { shouldRender } from '../src/index.ts';
 
 interface MyComponentProps {
@@ -11,13 +9,10 @@ interface MyComponentState {
 }
 
 describe('shouldRender()', () => {
-  let initial: React.Component<MyComponentProps, MyComponentState>;
-  beforeAll(() => {
-    initial = {
-      props: { myProp: 1 },
-      state: { myState: 1 },
-    } as React.Component<MyComponentProps, MyComponentState>;
-  });
+  const initial = {
+    props: { myProp: 1 } satisfies MyComponentProps,
+    state: { myState: 1 } satisfies MyComponentState,
+  };
 
   it('returns false when props and state are shallow equal', () => {
     expect(shouldRender(initial, { myProp: 1 }, { myState: 1 })).toBe(false);
@@ -33,18 +28,18 @@ describe('shouldRender()', () => {
 
   it('returns true for equal-but-new nested object references (comparison is shallow)', () => {
     const withObject = {
-      props: { myProp: { mySubProp: 1 } },
-      state: { myState: 1 },
-    } as React.Component<MyComponentProps, MyComponentState>;
+      props: { myProp: { mySubProp: 1 } } satisfies MyComponentProps,
+      state: { myState: 1 } satisfies MyComponentState,
+    };
     expect(shouldRender(withObject, { myProp: { mySubProp: 1 } }, { myState: 1 })).toBe(true);
   });
 
   it('returns false when a nested object keeps its reference', () => {
     const sharedObject = { mySubProp: 1 };
     const withObject = {
-      props: { myProp: sharedObject },
-      state: { myState: 1 },
-    } as React.Component<MyComponentProps, MyComponentState>;
+      props: { myProp: sharedObject } satisfies MyComponentProps,
+      state: { myState: 1 } satisfies MyComponentState,
+    };
     expect(shouldRender(withObject, { myProp: sharedObject }, { myState: 1 })).toBe(false);
   });
 });
