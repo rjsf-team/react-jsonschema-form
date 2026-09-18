@@ -336,11 +336,11 @@ export type FormValidation<T = any> = ErrorTree<T, FieldValidation>;
 /** The base properties passed to various RJSF components. */
 export interface RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The schema object for the field being described */
-  schema: S;
+  readonly schema: S;
   /** The uiSchema object for this base component */
-  uiSchema?: UiSchema<T, S, F>;
+  readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
-  registry: Registry<T, S, F>;
+  readonly registry: Registry<T, S, F>;
 }
 
 export type CyclicSchemaExpandProps<
@@ -1111,9 +1111,9 @@ export interface BaseInputTemplateProps<
 /** The type that defines the props used by the Submit button */
 export interface SubmitButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The uiSchema for this widget */
-  uiSchema?: UiSchema<T, S, F>;
+  readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
-  registry: Registry<T, S, F>;
+  readonly registry: Registry<T, S, F>;
 }
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
