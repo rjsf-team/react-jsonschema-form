@@ -20,7 +20,6 @@ import {
   getTemplate,
   getUiOptions,
   getWidget,
-  hashObject,
   isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
@@ -35,7 +34,7 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
-/** Type used to represent the keyed form data used in the state */
+/** An item of the `formData` paired with its stable React key */
 interface KeyedFormDataType<T> {
   key: string;
   item: T;
@@ -47,20 +46,6 @@ let rowIdCounter = 0;
 function generateRowId() {
   rowIdCounter += 1;
   return `rjsf-array-item-${rowIdCounter}`;
-}
-
-/** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
- *
- * @param formData - The data for the form
- * @returns - The `formData` converted into a `KeyedFormDataType` element
- */
-function generateKeyedFormData<T>(formData?: T[]): KeyedFormDataType<T>[] {
-  return !Array.isArray(formData)
-    ? []
-    : formData.map((item) => ({
-        key: generateRowId(),
-        item,
-      }));
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -543,7 +528,7 @@ interface InternalArrayFieldProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > extends FieldProps<T[], S, F> {
-  /** The keyedFormData from the `ArrayField` state */
+  /** The `formData` items paired with their stable React keys */
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */
   handleAddItem: (event: MouseEvent, index?: number) => void;
@@ -803,49 +788,30 @@ interface KeyedFormDataState<T = any> {
   updateKeyedFormData: (newData: KeyedFormDataType<T>[]) => T[];
 }
 
-/** Type used for the state of the `ArrayField` component */
-interface ArrayFieldState<T> {
-  /** The hash of the last formData passed in */
-  formDataHash: string;
-  /** The keyed form data elements */
-  keyedFormData: KeyedFormDataType<T>[];
-}
+const NO_ITEMS: never[] = [];
 
-/** A custom hook that handles the updating of the keyedFormData from an external `formData` change as well as
- * internally by the `ArrayField`. If there was an external `formData` change, then the `keyedFormData` is recomputed
- * in order to preserve the unique keys from the old `keyedFormData` to the new `formData`. Along with the
- * `keyedFormData` this hook also returns an `updateKeyedFormData()` function for use by the `ArrayField`. The detection
- * of external `formData` are handled by storing the hash of that `formData` along with the `keyedFormData` associated
- * with it. The `updateKeyedFormData()` will update that hash whenever the `keyedFormData` is modified and as well as
- * returning the plain `formData` from the `keyedFormData`.
+/** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
+ * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
+ * made and the form did not commit. The keys are UI metadata, kept so that React reuses row instances (and their DOM
+ * focus) across accepted adds, removes and reorders. When the array's length changes outside the handlers, an external
+ * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
+ * regenerated, as the previous hash-based detection also did.
  */
-function useKeyedFormData<T = any>(formData: T[] = []): KeyedFormDataState<T> {
-  const newHash = useMemo(() => hashObject(formData), [formData]);
-  const [state, setState] = useState<ArrayFieldState<T>>(() => ({
-    formDataHash: newHash,
-    keyedFormData: generateKeyedFormData<T>(formData),
-  }));
+function useKeyedFormData<T = any>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
+  const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
+  const [keys, setKeys] = useState<string[]>(() => items.map(generateRowId));
 
-  let { keyedFormData, formDataHash } = state;
-  if (newHash !== formDataHash) {
-    const nextFormData = Array.isArray(formData) ? formData : [];
-    const previousKeyedFormData = keyedFormData || [];
-    keyedFormData =
-      nextFormData.length === previousKeyedFormData.length
-        ? previousKeyedFormData.map((previousKeyedFormDatum, index) => ({
-            key: previousKeyedFormDatum.key,
-            item: nextFormData[index],
-          }))
-        : generateKeyedFormData<T>(nextFormData);
-    formDataHash = newHash;
-    setState({ formDataHash, keyedFormData });
+  let itemKeys = keys;
+  if (itemKeys.length !== items.length) {
+    itemKeys = items.map(generateRowId);
+    setKeys(itemKeys);
   }
 
+  const keyedFormData = useMemo(() => itemKeys.map((key, index) => ({ key, item: items[index] })), [itemKeys, items]);
+
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    const plainFormData = keyedToPlainFormData(newData);
-    const updatedHash = hashObject(plainFormData);
-    setState({ formDataHash: updatedHash, keyedFormData: newData });
-    return plainFormData;
+    setKeys(newData.map((keyedItem) => keyedItem.key));
+    return keyedToPlainFormData(newData);
   }, []);
 
   return { keyedFormData, updateKeyedFormData };
