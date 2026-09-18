@@ -1,15 +1,7 @@
-/** Determines whether `value` is a plain object — one whose prototype is `Object.prototype` or `null` — as opposed
- * to an array, class instance, Date or other exotic object
- */
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  if (value === null || typeof value !== 'object') {
-    return false;
-  }
-  const proto = Object.getPrototypeOf(value);
-  return proto === Object.prototype || proto === null;
-}
+import isPlainObject from './isPlainObject.ts';
 
-/** Returns `next` with the object references of `prev` grafted back in wherever a subtree is unchanged, so that
+/** Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the
+ * `prev` instance (structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results), so that
  * consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
  * When the whole value is unchanged, `prev` itself is returned. Sharing happens for plain objects and arrays;
  * equal-valued `Date`s retain the previous instance; any other object type is treated as opaque and `next` is kept.
@@ -22,27 +14,37 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  * @returns - `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged
  *   subtree with `prev`
  */
-export default function retainObjectIdentity<T>(prev: unknown, next: T): T {
+export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
   if (Object.is(prev, next)) {
     return next;
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
-    const retained = next.map((value, i) => retainObjectIdentity(prev[i], value));
-    if (prev.length === next.length && retained.every((value, i) => Object.is(value, prev[i]))) {
+    let sameAsPrev = prev.length === next.length;
+    let retained: unknown[] | undefined;
+    for (let i = 0; i < next.length; i++) {
+      const value = replaceEqualDeep(prev[i], next[i]);
+      if (!Object.is(value, prev[i])) {
+        sameAsPrev = false;
+      }
+      if (!Object.is(value, next[i]) && !retained) {
+        retained = next.slice();
+      }
+      if (retained) {
+        retained[i] = value;
+      }
+    }
+    if (sameAsPrev) {
       return prev as unknown as T;
     }
-    if (retained.every((value, i) => Object.is(value, next[i]))) {
-      return next;
-    }
-    return retained as unknown as T;
+    return (retained ?? next) as T;
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);
     let sameAsPrev = nextKeys.length === Object.keys(prev).length;
     let sameAsNext = true;
     const entries = nextKeys.map((key) => {
-      const value = retainObjectIdentity(prev[key], next[key]);
-      if (!Object.is(value, prev[key]) || !(key in prev)) {
+      const value = replaceEqualDeep(prev[key], next[key]);
+      if (!Object.is(value, prev[key]) || !Object.hasOwn(prev, key)) {
         sameAsPrev = false;
       }
       if (!Object.is(value, next[key])) {
@@ -57,8 +59,11 @@ export default function retainObjectIdentity<T>(prev: unknown, next: T): T {
       return next;
     }
     // `Object.fromEntries` defines own data properties, so a JSON-sourced own `__proto__` key stays a key instead of
-    // reaching the prototype setter; the prototype is copied so a null-prototype object stays one
-    return Object.setPrototypeOf(Object.fromEntries(entries), Object.getPrototypeOf(next)) as T;
+    // reaching the prototype setter
+    const copy = Object.fromEntries(entries);
+    const proto = Object.getPrototypeOf(next);
+    // reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
+    return (proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto)) as T;
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {
     return prev as T;

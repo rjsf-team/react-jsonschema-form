@@ -1193,6 +1193,23 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 - RangeSpecType: A range specification from the schema
 
+### replaceEqualDeep&lt;T>()
+
+Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the `prev` instance, so consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
+When the whole value is unchanged, `prev` itself is returned.
+Sharing happens for plain objects and arrays; equal-valued `Date`s retain the previous instance; any other object type is treated as opaque and `next` is kept.
+Neither argument is mutated: when a container is only partially unchanged, a new container holding the retained children is returned.
+This is structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results. `Form` applies it to the state it builds for a change, and `SchemaUtils.retrieveSchema()` to a recomputed schema.
+
+#### Parameters
+
+- prev: unknown - The previous value whose references should be retained where possible
+- next: T - The newly computed value
+
+#### Returns
+
+- T: `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged subtree with `prev`
+
 ### replaceStringParameters()
 
 Potentially substitutes all replaceable parameters with the associated value(s) from the `params` if available.
@@ -1243,23 +1260,6 @@ Resolution order (later sources override earlier):
 #### Returns
 
 - UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
-
-### retainObjectIdentity&lt;T>()
-
-Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the `prev` instance, so consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
-When the whole value is unchanged, `prev` itself is returned.
-Sharing happens for plain objects and arrays; equal-valued `Date`s retain the previous instance; any other object type is treated as opaque and `next` is kept.
-Neither argument is mutated: when a container is only partially unchanged, a new container holding the retained children is returned.
-`Form` applies it to `formData`, `errorSchema` and `errors` once per change.
-
-#### Parameters
-
-- prev: unknown - The previous value whose references should be retained where possible
-- next: T - The newly computed value
-
-#### Returns
-
-- T: `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged subtree with `prev`
 
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

@@ -1,6 +1,7 @@
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
+import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
@@ -47,10 +48,14 @@ class SchemaUtils<
   validator: ValidatorType<T, S, F>;
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
-  /** The last `retrieveSchema()` result per input schema; a deep-equal recomputation returns the retained instance so
-   * consumers comparing by reference (React.memo, useMemo dependencies) see an unchanged schema as unchanged
+  /** The last `retrieveSchema()` call per input schema, keyed on the inputs so an unchanged call skips the resolution
+   * altogether and a changed one still retains the references of every unchanged subtree; consumers comparing by
+   * reference (React.memo, useMemo dependencies) then see an unchanged schema as unchanged
    */
-  private lastRetrievedSchemas = new WeakMap<object, S>();
+  private lastRetrievedSchemas = new WeakMap<
+    object,
+    { rawFormData?: T; resolveAnyOfOrOneOfRefs?: boolean; result: S }
+  >();
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
@@ -329,23 +334,38 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    const result = retrieveSchema<T, S, F>(
-      this.validator,
-      schema,
-      this.rootSchema,
-      rawFormData,
-      this.customMergeAllOf,
-      resolveAnyOfOrOneOfRefs,
-    );
-    /* v8 ignore next 3 -- schemas are objects by type; the guard only keeps a runtime non-object out of the WeakMap */
+    // A `Form` given a non-object schema renders an error rather than throwing, so this runs with a non-object
+    // `schema` despite the type, and a `WeakMap` refuses one as a key
     if (schema === null || typeof schema !== 'object') {
-      return result;
+      return retrieveSchema<T, S, F>(
+        this.validator,
+        schema,
+        this.rootSchema,
+        rawFormData,
+        this.customMergeAllOf,
+        resolveAnyOfOrOneOfRefs,
+      );
     }
-    const retained = this.lastRetrievedSchemas.get(schema);
-    if (retained && deepEquals(retained, result)) {
-      return retained;
+    const cached = this.lastRetrievedSchemas.get(schema);
+    if (
+      cached &&
+      Object.is(cached.rawFormData, rawFormData) &&
+      cached.resolveAnyOfOrOneOfRefs === resolveAnyOfOrOneOfRefs
+    ) {
+      return cached.result;
     }
-    this.lastRetrievedSchemas.set(schema, result);
+    const result = replaceEqualDeep(
+      cached?.result,
+      retrieveSchema<T, S, F>(
+        this.validator,
+        schema,
+        this.rootSchema,
+        rawFormData,
+        this.customMergeAllOf,
+        resolveAnyOfOrOneOfRefs,
+      ),
+    );
+    this.lastRetrievedSchemas.set(schema, { rawFormData, resolveAnyOfOrOneOfRefs, result });
     return result;
   }
 

@@ -88,10 +88,10 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
+import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
-import retainObjectIdentity from './retainObjectIdentity.ts';
 import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -213,10 +213,10 @@ export {
   padTimeSeconds,
   parseDateString,
   rangeSpec,
+  replaceEqualDeep,
   replaceStringParameters,
   resolveDefaultWidget,
   resolveUiSchema,
-  retainObjectIdentity,
   schemaHasNestedConditional,
   schemaRequiresTrueValue,
   setByPath,

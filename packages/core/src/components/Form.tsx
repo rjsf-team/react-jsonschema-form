@@ -37,7 +37,7 @@ import {
   hashObject,
   isObject,
   mergeObjects,
-  retainObjectIdentity,
+  replaceEqualDeep,
   schemaHasNestedConditional,
   shouldRender,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -1046,15 +1046,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
 
-    // Graft the previous state's references back into every unchanged subtree so sibling fields keep reference
-    // equality across the change; SchemaField's shallow memo comparison depends on it to skip their re-renders
-    state.formData = retainObjectIdentity(this.state.formData, state.formData);
-    if (state.errorSchema) {
-      state.errorSchema = retainObjectIdentity(this.state.errorSchema, state.errorSchema);
-    }
-    if (state.errors) {
-      state.errors = retainObjectIdentity(this.state.errors, state.errors);
-    }
+    // Structural sharing: every unchanged subtree keeps the previous state's reference so sibling fields stay
+    // reference-equal across the change; SchemaField's shallow memo comparison depends on it to skip their re-renders
+    state = replaceEqualDeep(this.state, state);
 
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
