@@ -46,13 +46,10 @@ describe('SelectWidget optgroups', () => {
     expect(Array.from(options).map((option) => option.textContent)).toEqual(['baz', 'qux', 'foo', 'bar']);
   });
 
-  test('renders every option in the collection when optionValueFormat is realValue and an enum value is empty', () => {
+  test('skips options that encode to an empty value when optionValueFormat is realValue', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
         optionValueFormat: 'realValue',
-        optgroups: {
-          'Group A': ['foo', ''],
-        },
       },
     };
 
@@ -61,6 +58,23 @@ describe('SelectWidget optgroups', () => {
     );
 
     const options = container.querySelectorAll('[role="option"]');
-    expect(Array.from(options).map((option) => option.textContent)).toEqual(['foo', '', 'bar']);
+    expect(Array.from(options).map((option) => option.textContent)).toEqual(['foo', 'bar']);
+  });
+
+  test('omits a group whose options all encode to an empty value when optionValueFormat is realValue', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optionValueFormat: 'realValue',
+        optgroups: {
+          'Group A': ['foo'],
+          'Empty Group': [''],
+        },
+      },
+    };
+
+    render(<Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+    expect(screen.queryByText('Empty Group')).not.toBeInTheDocument();
   });
 });
