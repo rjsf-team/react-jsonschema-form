@@ -20,48 +20,50 @@ function sameOwnSymbols(prev: object, next: object): boolean {
   );
 }
 
-/** The container pairs the walk is currently inside. A `formContext` may hold a graph that refers back to itself, and
- * `deepEquals()` survives one, so this walk has to as well. Pairs are dropped on the way out, so a value reachable by
- * more than one path is still shared as long as it does not contain itself.
+/** The container pairs the walk is currently inside, as a flat `prev, next, prev, next, ...` stack. A `formContext`
+ * may hold a graph that refers back to itself, and `deepEquals()` survives one, so this walk has to as well. A cycle can
+ * only recur through an ancestor on the current path, so the path is all that needs checking, and one array per call
+ * keeps the cycle safety from costing an allocation per container in the plain data that never has one. Pairs are
+ * popped on the way out, so a value reachable by more than one path is still shared as long as it does not contain
+ * itself.
  */
-type WalkedPairs = WeakMap<object, Set<object>>;
+type WalkedPairs = object[];
 
-function enterPair(walked: WalkedPairs | undefined, prev: object, next: object): WalkedPairs {
-  const pairs = walked ?? new WeakMap<object, Set<object>>();
-  const walkedNexts = pairs.get(prev);
-  if (walkedNexts) {
-    walkedNexts.add(next);
-  } else {
-    pairs.set(prev, new Set([next]));
+function isWalking(walked: WalkedPairs, prev: object, next: object): boolean {
+  for (let i = 0; i < walked.length; i += 2) {
+    if (walked[i] === prev && walked[i + 1] === next) {
+      return true;
+    }
   }
-  return pairs;
+  return false;
 }
 
-function leavePair<R>(walked: WalkedPairs, prev: object, next: object, result: R): R {
-  walked.get(prev)?.delete(next);
+function leavePair<R>(walked: WalkedPairs, result: R): R {
+  walked.pop();
+  walked.pop();
   return result;
 }
 
-function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs | undefined): unknown {
+function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unknown {
   if (Object.is(prev, next)) {
     return next;
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
-    if (walked?.get(prev)?.has(next)) {
+    if (isWalking(walked, prev, next)) {
       return next;
     }
-    const pairs = enterPair(walked, prev, next);
+    walked.push(prev, next);
     let sameAsPrev = prev.length === next.length;
     let copy: unknown[] | undefined;
     for (let i = 0; i < next.length; i++) {
-      const value: unknown = shareUnchanged(prev[i], next[i], pairs);
+      const value: unknown = shareUnchanged(prev[i], next[i], walked);
       sameAsPrev &&= Object.is(value, prev[i]);
       if (!Object.is(value, next[i])) {
         copy ??= next.slice();
         copy[i] = value;
       }
     }
-    return leavePair(pairs, prev, next, sameAsPrev ? prev : (copy ?? next));
+    return leavePair(walked, sameAsPrev ? prev : (copy ?? next));
   }
   if (isReactElement(prev) && isReactElement(next)) {
     // A React element's identity is its type, key and props; `_owner` and the dev-only `_debug*` fields differ on
@@ -74,15 +76,15 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs | unde
       : next;
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
-    if (walked?.get(prev)?.has(next)) {
+    if (isWalking(walked, prev, next)) {
       return next;
     }
-    const pairs = enterPair(walked, prev, next);
+    walked.push(prev, next);
     const nextKeys = Object.keys(next);
     let sameAsPrev = true;
     let copy: Record<string, unknown> | undefined;
     for (const key of nextKeys) {
-      const value = shareUnchanged(prev[key], next[key], pairs);
+      const value = shareUnchanged(prev[key], next[key], walked);
       sameAsPrev &&= Object.hasOwn(prev, key) && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
         // Spread keeps a JSON-sourced own `__proto__` key an own key, so the assignment below never reaches the setter
@@ -91,14 +93,14 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs | unde
       }
     }
     if (sameAsPrev && nextKeys.length === Object.keys(prev).length && sameOwnSymbols(prev, next)) {
-      return leavePair(pairs, prev, next, prev);
+      return leavePair(walked, prev);
     }
     if (!copy) {
-      return leavePair(pairs, prev, next, next);
+      return leavePair(walked, next);
     }
     const proto = Object.getPrototypeOf(next);
     // Reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
-    return leavePair(pairs, prev, next, proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto));
+    return leavePair(walked, proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto));
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {
     return prev;
@@ -119,5 +121,5 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs | unde
  */
 export default function replaceEqualDeep<T>(prev: unknown, next: T): T;
 export default function replaceEqualDeep(prev: unknown, next: unknown): unknown {
-  return shareUnchanged(prev, next, undefined);
+  return shareUnchanged(prev, next, []);
 }
