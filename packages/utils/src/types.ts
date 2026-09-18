@@ -1211,6 +1211,15 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
     emptyValue?: any;
+    /** Pre-fills the field on initial render and after a form reset. Takes priority over `schema.default`, but never
+     * overrides form data the user (or caller) has already provided.
+     */
+    initialValue?: any;
+    /** Overrides the schema's `required` status for the field on the UI side only: `true` shows the required
+     * indicator and adds the field to the effective required set used for validation; `false` hides the indicator
+     * but does not suppress schema-level validation for a field the schema itself marks required.
+     */
+    required?: boolean;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: EnumValue[];
     /** Allows a user to provide a list of labels for enum values in the schema.
@@ -1324,12 +1333,14 @@ export type UiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     'ui:fieldReplacesAnyOrOneOf'?: boolean;
     /** An object that contains all the potential UI options in a single object */
     'ui:options'?: UIOptionsType<T, S, F>;
-    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
-     * or a function that returns a dynamic uiSchema based on the item's data and index.
+    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
+     * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
+     * based on the item's data and index.
      * When using a function, it receives the item data, index, and optionally the form context as parameters.
      */
     items?:
       | UiSchema<ArrayElement<T>, S, F>
+      | UiSchema<ArrayElement<T>, S, F>[]
       | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
     /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
      * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
@@ -1495,6 +1506,11 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
    *          false when computing defaults for any nested object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+   * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
+   * @param [uiSchemaDefinitions] - Optional `ui:definitions`, applied at every `$ref`-resolved node the same way
+   *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
+   *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
+   *          doesn't carry the root's own `ui:definitions`.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -1502,6 +1518,8 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     formData?: T,
     includeUndefinedValues?: boolean | 'excludeObjectChildren',
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
@@ -1591,6 +1609,23 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
+  /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
+   * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
+   *
+   * @param uiSchema - The uiSchema to scan for `ui:required` fields
+   * @param [formData] - The current formData, used to determine which `ui:required` fields are missing
+   * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
+   * @param [globalUiOptions] - Optional global ui:options applied to every field
+   * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
+   */
+  getUiRequiredErrorSchema(
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData?: T,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    globalUiOptions?: GlobalUISchemaOptions,
+    formContext?: F,
+  ): ErrorSchema<T>;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the

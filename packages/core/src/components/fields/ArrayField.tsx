@@ -15,6 +15,8 @@ import type {
 import {
   setByPath,
   allowAdditionalItems,
+  getItemUiSchemaForItem,
+  getStaticItemsUiSchema,
   getTemplate,
   getUiOptions,
   getWidget,
@@ -118,57 +120,42 @@ function canAddItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   return addable;
 }
 
-/** Helper method to compute item UI schema for both normal and fixed arrays
- * Handles both static object and dynamic function cases
- *
- * @param uiSchema - The parent UI schema containing items definition
- * @param item - The item data
- * @param index - The index of the item
- * @param formContext - The form context
- * @returns The computed UI schema for the item
- */
-function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  uiSchema: UiSchema<T[], S, F>,
-  item: T,
-  index: number,
-  formContext: F,
-): UiSchema<T[], S, F> | undefined {
-  if (typeof uiSchema.items === 'function') {
-    try {
-      // Call the function with item data, index, and form context
-      // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
-      const result = uiSchema.items(item, index, formContext);
-      // Only use the result if it's truthy
-      return result as UiSchema<T[], S, F>;
-    } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
-      // Fall back to undefined to allow the field to still render
-      return undefined;
-    }
-  } else {
-    // Static object case - preserve undefined to maintain backward compatibility
-    return uiSchema.items as UiSchema<T[], S, F> | undefined;
-  }
-}
-
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
+ *
+ * @param index - The position the new row is being inserted at, so a tuple-position (array) form of
+ *          `uiSchema.items` resolves the same entry that the row will actually render with once added
  */
 function getNewFormDataRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   registry: Registry<T[], S, F>,
   schema: S,
+  index: number,
+  uiSchema?: UiSchema<T[], S, F>,
 ): T {
-  const { schemaUtils, globalFormOptions } = registry;
+  const { schemaUtils, globalFormOptions, uiSchemaDefinitions } = registry;
   let itemSchema = schema.items as S;
+  // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
+  // FieldProps<T[], S, F> call on the class
+  let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
   if (globalFormOptions.useFallbackUiForUnsupportedType && !itemSchema) {
     // If we don't have itemSchema and useFallbackUiForUnsupportedType is on, use an empty schema
     itemSchema = {} as S;
   } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+    // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
+    // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
     itemSchema = schema.additionalItems as S;
+    itemUiSchema = uiSchema?.additionalItems as UiSchema<T[], S, F> | undefined;
   }
-  // Cast this as a T to work around schema utils being for T[] caused by the FieldProps<T[], S, F> call on the class
-  return schemaUtils.getDefaultFormState(itemSchema) as unknown as T;
+  // `uiSchemaDefinitions` comes from the registry (the root uiSchema's `ui:definitions`) since `itemUiSchema` is
+  // only the array's own sub-uiSchema and never carries `ui:definitions` itself.
+  return schemaUtils.getDefaultFormState(
+    itemSchema,
+    undefined,
+    false,
+    undefined,
+    itemUiSchema,
+    uiSchemaDefinitions,
+  ) as unknown as T;
 }
 
 /** Props used for ArrayAsXxxx type components*/
@@ -624,7 +611,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
-      const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
 
       const itemProps = {
         itemKey: key,
@@ -755,7 +742,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
       } else {
         // Use the helper method for function or static object cases
-        itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
       }
       const itemErrorSchema = errorSchema?.[index];
 
@@ -908,7 +895,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema),
+        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? keyedFormDataRef.current.length, uiSchema),
       };
       const newKeyedFormData = [...keyedFormDataRef.current];
       if (index !== undefined) {
@@ -918,7 +905,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
       }
       onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
     },
-    [registry, schema, onChange, updateKeyedFormData, fieldPath],
+    [registry, schema, uiSchema, onChange, updateKeyedFormData, fieldPath],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of

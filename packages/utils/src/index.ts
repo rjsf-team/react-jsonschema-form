@@ -34,10 +34,13 @@ import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getInputProps from './getInputProps.ts';
+import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
+import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaType from './getSchemaType.ts';
+import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
@@ -164,11 +167,14 @@ export {
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
   getInputProps,
+  getItemUiSchemaForItem,
   getOptionMatchingSimpleDiscriminator,
+  getOptionUiSchema,
   getPropertySchema,
   getOptionValueFormat,
   getSchemaType,
   getByPath,
+  getStaticItemsUiSchema,
   getSubmitButtonOptions,
   getTemplate,
   getTestIds,
@@ -213,6 +219,7 @@ export {
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,
+  selectOptionUiSchema,
   shallowEquals,
   shouldRender,
   shouldRenderOptionalField,

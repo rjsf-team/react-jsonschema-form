@@ -241,8 +241,19 @@ export default function processRawValidationErrors<
     return { errors, errorSchema };
   }
 
-  // Include form data with undefined values, which is required for custom validation.
-  const newFormData = getDefaultFormState<T, S, F>(validator, schema, formData, schema, true) as T;
+  // Include form data with undefined values, which is required for custom validation. `uiSchema` is threaded through
+  // so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed and rendered.
+  const newFormData = getDefaultFormState<T, S, F>(
+    validator,
+    schema,
+    formData,
+    schema,
+    true,
+    undefined,
+    undefined,
+    undefined,
+    uiSchema,
+  ) as T;
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

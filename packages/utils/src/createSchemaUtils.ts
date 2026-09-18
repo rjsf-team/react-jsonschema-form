@@ -9,6 +9,7 @@ import {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,
   isSelect,
@@ -27,6 +28,7 @@ import type {
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
+  UiSchemaDefinitions,
   ValidatorType,
 } from './types.ts';
 
@@ -160,6 +162,11 @@ class SchemaUtils<
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+   * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
+   * @param [uiSchemaDefinitions] - Optional `ui:definitions`, applied at every `$ref`-resolved node the same way
+   *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
+   *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
+   *          doesn't carry the root's own `ui:definitions`.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -167,6 +174,8 @@ class SchemaUtils<
     formData?: T,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -177,6 +186,8 @@ class SchemaUtils<
       this.defaultFormStateBehavior,
       this.customMergeAllOf,
       initialDefaultsGenerated,
+      uiSchema,
+      uiSchemaDefinitions,
     );
   }
 
@@ -321,6 +332,35 @@ class SchemaUtils<
       rawFormData,
       this.customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
+    );
+  }
+
+  /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
+   * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
+   *
+   * @param uiSchema - The uiSchema to scan for `ui:required` fields
+   * @param [formData] - The current formData, used to determine which `ui:required` fields are missing
+   * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
+   * @param [globalUiOptions] - Optional global ui:options applied to every field
+   * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
+   */
+  getUiRequiredErrorSchema(
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData?: T,
+    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    globalUiOptions?: GlobalUISchemaOptions,
+    formContext?: F,
+  ) {
+    return getUiRequiredErrorSchema<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      uiSchema,
+      formData,
+      this.customMergeAllOf,
+      uiSchemaDefinitions,
+      globalUiOptions,
+      formContext,
     );
   }
 

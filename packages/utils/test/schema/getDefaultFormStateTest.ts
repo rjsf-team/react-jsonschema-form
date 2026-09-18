@@ -7097,5 +7097,707 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(result![0].nested).not.toBe(result![1].nested);
       });
     });
+
+    describe('ui:emptyValue in getDefaultFormState', () => {
+      it('uses emptyValue as the default when there is no schema default and no formData', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ name: '' });
+      });
+
+      it('does not use emptyValue when a schema default exists', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string', default: 'hello' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ name: 'hello' });
+      });
+
+      it('does not use emptyValue when formData is provided', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { name: 'world' },
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ name: 'world' });
+      });
+
+      it('applies emptyValue in nested objects', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            address: {
+              type: 'object',
+              properties: {
+                city: { type: 'string' },
+              },
+            },
+          },
+        };
+        const uiSchema = {
+          address: {
+            city: { 'ui:emptyValue': '' },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ address: { city: '' } });
+      });
+
+      it('behaves unchanged when no uiSchema is passed', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({});
+      });
+    });
+
+    describe('ui:initialValue in getDefaultFormState', () => {
+      it('uses initialValue as the default when there is no formData and no schema default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ country: 'US' });
+      });
+
+      it('overrides a schema default with initialValue', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string', default: 'UK' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ country: 'US' });
+      });
+
+      it('does not override formData that was already provided', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { country: 'FR' },
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ country: 'FR' });
+      });
+
+      it('takes priority over emptyValue', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          country: { 'ui:initialValue': 'US', 'ui:emptyValue': '' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ country: 'US' });
+      });
+
+      it('applies initialValue in nested objects', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            address: {
+              type: 'object',
+              properties: {
+                country: { type: 'string' },
+                city: { type: 'string' },
+              },
+            },
+          },
+        };
+        const uiSchema = {
+          address: {
+            country: { 'ui:initialValue': 'US' },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ address: { country: 'US' } });
+      });
+
+      it('applies initialValue on reset (undefined formData)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        };
+        const uiSchema = {
+          name: { 'ui:initialValue': 'default name' },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ name: 'default name' });
+      });
+    });
+
+    describe('ui:initialValue/ui:emptyValue in array items', () => {
+      it('applies ui:initialValue to array items created to satisfy minItems', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema = {
+          items: { name: { 'ui:initialValue': 'Anonymous' } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'Anonymous' }, { name: 'Anonymous' }]);
+      });
+
+      it('applies ui:initialValue to existing array item formData missing the field', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema = {
+          items: { name: { 'ui:initialValue': 'Anonymous' } },
+        };
+        const formData = [{}, { name: 'Chuck' }];
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            formData,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'Anonymous' }, { name: 'Chuck' }]);
+      });
+
+      it('applies ui:emptyValue to tuple (fixed) items', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [
+            { type: 'object', properties: { name: { type: 'string' } } },
+            { type: 'object', properties: { name: { type: 'string' } } },
+          ],
+        };
+        const uiSchema = {
+          items: { name: { 'ui:emptyValue': 'unnamed' } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'unnamed' }, { name: 'unnamed' }]);
+      });
+
+      it('ignores a dynamic (function) uiSchema.items rather than applying it blindly', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 1,
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema = {
+          items: () => ({ name: { 'ui:initialValue': 'Anonymous' } }),
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{}]);
+      });
+
+      it('ignores a dynamic (function) uiSchema.items for tuple (fixed) items too', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'object', properties: { name: { type: 'string' } } }],
+        };
+        const uiSchema = {
+          items: () => ({ name: { 'ui:emptyValue': 'unnamed' } }),
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{}]);
+      });
+
+      it('applies a per-position ui:initialValue to minItems filler entries when uiSchema.items is a tuple (array)', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'string' },
+        };
+        const uiSchema = {
+          items: [{ 'ui:initialValue': 'first' }, { 'ui:initialValue': 'second' }],
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual(['first', 'second']);
+      });
+
+      it('applies a per-position ui:initialValue when uiSchema.items is itself a tuple (array)', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [
+            { type: 'object', properties: { name: { type: 'string' } } },
+            { type: 'object', properties: { name: { type: 'string' } } },
+          ],
+        };
+        const uiSchema = {
+          items: [{ name: { 'ui:initialValue': 'first' } }, { name: { 'ui:initialValue': 'second' } }],
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'first' }, { name: 'second' }]);
+      });
+
+      it('applies additionalItems uiSchema, not the tuple uiSchema.items, to items beyond the tuple', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: [{ type: 'object', properties: { name: { type: 'string' } } }],
+          additionalItems: { type: 'object', properties: { name: { type: 'string' } } },
+        };
+        const uiSchema = {
+          items: { name: { 'ui:initialValue': 'tuple position' } },
+          additionalItems: { name: { 'ui:initialValue': 'beyond the tuple' } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual([{ name: 'tuple position' }, { name: 'beyond the tuple' }]);
+      });
+
+      it('applies additionalItems uiSchema to existing formData beyond a tuple length', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string' }],
+          additionalItems: { type: 'string' },
+        };
+        const uiSchema = {
+          items: { 'ui:emptyValue': 'tuple' },
+          additionalItems: { 'ui:emptyValue': 'extra' },
+        };
+        const formData = [undefined, undefined];
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            formData,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual(['tuple', 'extra']);
+      });
+
+      it('does not resurrect ui:initialValue on a cleared tuple position after the initial pass', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { pair: { type: 'array', items: [{ type: 'string' }, { type: 'string' }] } },
+        };
+        const uiSchema = { pair: { items: [{ 'ui:initialValue': 'a' }, {}] } };
+        // initialDefaultsGenerated: true (the 8th positional arg) means this is a subsequent recompute, not the
+        // initial/reset pass, so `ui:initialValue` must not spring back onto the cleared first position.
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { pair: [undefined, 'z'] },
+            schema,
+            false,
+            undefined,
+            undefined,
+            true,
+            uiSchema,
+          ),
+        ).toEqual({ pair: [undefined, 'z'] });
+      });
+
+      it('does not apply ui:initialValue to a minItems filler entry after the initial pass', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'string' },
+        };
+        const uiSchema = { items: { 'ui:initialValue': 'a' } };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, false, undefined, undefined, true, uiSchema),
+        ).toEqual([undefined, undefined]);
+      });
+    });
+
+    describe('ui:initialValue for additionalProperties', () => {
+      it('applies uiSchema.additionalProperties, not a dynamically-named uiSchema entry, to an additional property', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: { type: 'string' },
+          },
+          additionalProperties: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema = {
+          extraKey: { name: { 'ui:initialValue': 'wrong entry' } },
+          additionalProperties: { name: { 'ui:initialValue': 'from additionalProperties' } },
+        };
+        const rawFormData = { foo: 'x', extraKey: {} };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            rawFormData,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({
+          foo: 'x',
+          extraKey: { name: 'from additionalProperties' },
+        });
+      });
+    });
+
+    describe('ui:initialValue/ui:emptyValue in oneOf/anyOf options', () => {
+      it('applies ui:initialValue declared under uiSchema.oneOf[i] on first render, matching what applies on option change', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              oneOf: [
+                { type: 'object', title: 'A', properties: { a: { type: 'string' } } },
+                { type: 'object', title: 'B', properties: { b: { type: 'string' } } },
+              ],
+            },
+          },
+        };
+        const uiSchema = {
+          thing: { oneOf: [{ a: { 'ui:initialValue': 'x' } }, {}] },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ thing: { a: 'x' } });
+      });
+
+      it('applies ui:initialValue declared under uiSchema.anyOf[i] on first render', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              anyOf: [
+                { type: 'object', title: 'A', properties: { a: { type: 'string' } } },
+                { type: 'object', title: 'B', properties: { b: { type: 'string' } } },
+              ],
+            },
+          },
+        };
+        const uiSchema = {
+          thing: { anyOf: [{ a: { 'ui:initialValue': 'x' } }, {}] },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ thing: { a: 'x' } });
+      });
+    });
+
+    describe('ui:definitions in getDefaultFormState', () => {
+      it('applies ui:initialValue declared inside a ui:definitions fragment', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Address: { type: 'object', properties: { country: { type: 'string' } } },
+          },
+          properties: { home: { $ref: '#/definitions/Address' } },
+        };
+        const uiSchema = {
+          'ui:definitions': { '#/definitions/Address': { country: { 'ui:initialValue': 'US' } } },
+        };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ home: { country: 'US' } });
+      });
+
+      it('applies ui:initialValue from an explicitly-passed uiSchemaDefinitions even when uiSchema itself has none', () => {
+        // Mirrors how a sub-uiSchema (an array's uiSchema.items, a oneOf/anyOf option, additionalProperties, ...)
+        // is handed to getDefaultFormState() without carrying the root's own ui:definitions alongside it.
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Address: { type: 'object', properties: { country: { type: 'string' } } },
+          },
+          properties: { home: { $ref: '#/definitions/Address' } },
+        };
+        const subUiSchema = {};
+        const rootUiSchemaDefinitions = { '#/definitions/Address': { country: { 'ui:initialValue': 'US' } } };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            false,
+            undefined,
+            undefined,
+            undefined,
+            subUiSchema,
+            rootUiSchemaDefinitions,
+          ),
+        ).toEqual({ home: { country: 'US' } });
+      });
+    });
   });
 }

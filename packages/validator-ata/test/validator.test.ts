@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
@@ -148,6 +148,15 @@ describe('ATAValidator', () => {
       const { errorSchema } = v.validateFormData({ x: 'a' }, schema, customValidate);
       expect(customValidate).toHaveBeenCalled();
       expect(errorSchema.x?.__errors).toContain('custom error');
+    });
+
+    it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
+      const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+      const customValidate = vi.fn((_data, errorHandler) => errorHandler);
+      v.validateFormData({}, schema, customValidate, undefined, uiSchema);
+      expect(customValidate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
     });
 
     it('uses the uiSchema title when required is inside allOf', () => {
