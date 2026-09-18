@@ -49,6 +49,20 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
+  it('still reports a schema-required, ui:required field when its parent object is entirely absent, since AJV never validates a missing property against its own required list', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        addr: { type: 'object', required: ['zip'], properties: { zip: { type: 'string' } } },
+      },
+    };
+    const uiSchema: UiSchema = { addr: { zip: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.addr.zip');
+  });
+
   it('does not check ui:required at the root path itself', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     // 'ui:required' isn't a real uiSchema key at the root, but even if present it must not be checked at path []

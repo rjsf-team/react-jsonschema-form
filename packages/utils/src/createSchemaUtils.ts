@@ -324,6 +324,27 @@ class SchemaUtils<
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
+  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
+    return retrieveSchema<T, S, F>(
+      this.validator,
+      schema,
+      this.rootSchema,
+      rawFormData,
+      this.customMergeAllOf,
+      resolveAnyOfOrOneOfRefs,
+    );
+  }
+
+  /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
+   * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
+   *
+   * @param uiSchema - The uiSchema to scan for `ui:required` fields
+   * @param [formData] - The current formData, used to determine which `ui:required` fields are missing
+   * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
+   * @param [globalUiOptions] - Optional global ui:options applied to every field
+   * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
+   */
   getUiRequiredErrorSchema(
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
@@ -340,17 +361,6 @@ class SchemaUtils<
       uiSchemaDefinitions,
       globalUiOptions,
       formContext,
-    );
-  }
-
-  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    return retrieveSchema<T, S, F>(
-      this.validator,
-      schema,
-      this.rootSchema,
-      rawFormData,
-      this.customMergeAllOf,
-      resolveAnyOfOrOneOfRefs,
     );
   }
 

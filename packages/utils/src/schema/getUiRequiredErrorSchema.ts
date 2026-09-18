@@ -143,6 +143,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   formData: unknown,
   path: (string | number)[],
   required: boolean,
+  parentPresent: boolean,
 ) {
   const { validator, rootSchema, uiSchemaDefinitions, customMergeAllOf, globalUiOptions, formContext, builder } = ctx;
   // A repeated $ref is never expanded again for rendering either (see SchemaField/CyclicSchemaField) — without this,
@@ -153,11 +154,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
   const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
-  if (path.length > 0 && fieldUiRequired === true && formData === undefined && !required) {
+  if (path.length > 0 && fieldUiRequired === true && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
-    // when the field is already in its parent's schema `required` list: AJV already raises this exact message for
-    // it, so adding it again here would just duplicate the entry in `errorSchema` and the flat error list.
+    // only when AJV will raise this exact message itself: the field is in its parent's schema `required` list AND
+    // that parent is actually present in formData — AJV never applies a subschema's `required` to a property that
+    // isn't there, so `parentPresent` being false means the schema-required error would never fire either.
     builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
   }
   // Children can only carry ui:required through their own uiSchema entry or a ui:definitions fragment
@@ -186,6 +188,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
   if (getSchemaType<S>(retrieved) === 'object') {
     const data = (formData ?? {}) as GenericObjectType;
+    const childParentPresent = formData !== undefined;
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
       if (typeof propertySchema === 'boolean') {
         return;
@@ -195,7 +198,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const childRequired = Boolean(retrieved.required?.includes(key));
-      walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired);
+      walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent);
     });
   } else if (Array.isArray(formData)) {
     formData.forEach((item, idx) => {
@@ -210,6 +213,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         item,
         [...path, idx],
         false,
+        true,
       );
     });
   }
@@ -328,6 +332,7 @@ export default function getUiRequiredErrorSchema<
     uiSchema,
     formData,
     [],
+    true,
     true,
   );
   return builder.ErrorSchema;

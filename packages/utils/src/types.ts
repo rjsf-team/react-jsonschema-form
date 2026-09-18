@@ -1608,7 +1608,17 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  /** Returns an `ErrorSchema` with a required error for every `ui:required: true` field missing from `formData` */
+  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
+  /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
+   * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
+   *
+   * @param uiSchema - The uiSchema to scan for `ui:required` fields
+   * @param [formData] - The current formData, used to determine which `ui:required` fields are missing
+   * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
+   * @param [globalUiOptions] - Optional global ui:options applied to every field
+   * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
+   */
   getUiRequiredErrorSchema(
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
@@ -1616,7 +1626,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
   ): ErrorSchema<T>;
-  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the

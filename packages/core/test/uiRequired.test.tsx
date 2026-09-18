@@ -196,5 +196,26 @@ describe('ui:required enforcement', () => {
       // property without ui:required's leading-dot convention.
       expect(errors[0].property).toBe('nick');
     });
+
+    it('passes the same formContext to the function form of uiSchema.items as rendering does, even when the formContext prop is omitted', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        people: {
+          items: (_item: unknown, _index: number, formContext: { mode?: string }) =>
+            formContext.mode === 'strict' ? {} : { name: { 'ui:required': true } },
+        },
+      };
+      // No `formContext` prop: the registry normalizes the missing prop to `{}` for rendering, and validation must
+      // see that same `{}` rather than `undefined`, or the function above throws and ui:required silently no-ops.
+      await expectSubmitBlocked(schema, uiSchema, { people: [{}] });
+      expect(errorSpy).not.toHaveBeenCalled();
+      errorSpy.mockRestore();
+    });
   });
 });

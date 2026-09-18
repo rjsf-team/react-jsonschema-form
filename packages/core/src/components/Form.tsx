@@ -748,7 +748,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         formData,
         undefined,
         uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
-        this.props.formContext,
+        // Matches the registry's own normalization (see `buildRegistry()` in Theme.ts), so a function-form
+        // `uiSchema.items` sees the same `formContext` here as it does while rendering, instead of `undefined` when
+        // the prop is unset.
+        this.props.formContext ?? ({} as F),
       ),
     );
   }
