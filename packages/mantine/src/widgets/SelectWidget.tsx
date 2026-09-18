@@ -1,13 +1,15 @@
 import type { FocusEvent } from 'react';
 import { useCallback, useMemo } from 'react';
 import { Select, MultiSelect } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -43,7 +45,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus,
   } = props;
 
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const themeProps = cleanupOptions(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
@@ -76,16 +78,18 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   );
 
   const selectOptions = useMemo(() => {
-    if (Array.isArray(enumOptions)) {
-      return enumOptions.map((option, index) => ({
-        key: String(index),
-        value: enumOptionValueEncoder(option.value, index, optionValueFormat),
-        label: option.label,
-        disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
-      }));
-    }
-    return [];
-  }, [enumDisabled, enumOptions, optionValueFormat]);
+    const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({
+      key: String(option.index),
+      value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+      label: option.label,
+      disabled: option.disabled,
+    });
+    return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+      isEnumOptionsGroup<S>(item)
+        ? { group: item.label, items: item.options.map(toComboboxItem) }
+        : toComboboxItem(item),
+    );
+  }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
 
   const sharedProps = {
     id,

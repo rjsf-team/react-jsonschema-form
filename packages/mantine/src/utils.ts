@@ -14,6 +14,7 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'enumDisabled',
   'enumNames',
   'enumOrder',
+  'optgroups',
   'hideError',
   'readonly',
   'order',

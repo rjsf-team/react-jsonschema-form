@@ -741,6 +741,34 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### optgroups
+
+To group a `select`-backed widget's options into labeled sections (rendered as `<optgroup>` elements, or each theme's closest equivalent), specify the grouping via the `optgroups` key in `ui:options`. Keys are the group labels, values are arrays of enum values belonging to that group. Any enum values not listed in a group are rendered ungrouped after the groups. This is supported by every `@rjsf` theme package.
+
+A value in a group matches the enum entry it is equal to. Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`. Object and array enum values can't be grouped from a JSON-authored uiSchema, since a value only matches that very same object. Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma'],
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    optgroups: {
+      Latin: ['lorem', 'ipsum', 'dolorem'],
+      Greek: ['alpha', 'beta', 'gamma'],
+    },
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### optionValueFormat
 
 Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option values in their DOM `value` attributes. Accepts `'indexed'` (default) or `'realValue'`.

@@ -1,16 +1,26 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
 import MenuItem from '@mui/material/MenuItem';
 import type { SelectProps as MuiSelectProps } from '@mui/material/Select';
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GenericObjectType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -62,7 +72,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     hideError,
     ...textFieldProps
   } = props;
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
   const isMultiple = typeof multiple === 'undefined' ? false : !!multiple;
@@ -82,6 +92,18 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <MenuItem
+        key={option.index}
+        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        disabled={option.disabled}
+      >
+        {option.label}
+      </MenuItem>
+    );
+  }
 
   return (
     <>
@@ -115,19 +137,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i: number) => {
-            const isDisabled: boolean = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
-            return (
-              <MenuItem
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </MenuItem>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>
+          isEnumOptionsGroup<S>(item)
+            ? [
+                <ListSubheader key={`optgroup-${item.label}`} aria-hidden>
+                  {item.label}
+                </ListSubheader>,
+                ...item.options.map(renderOption),
+              ]
+            : [renderOption(item)],
+        )}
       </TextField>
       <SelectedOptionDescription {...props} />
     </>

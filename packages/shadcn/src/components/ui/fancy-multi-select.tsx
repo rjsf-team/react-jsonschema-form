@@ -25,6 +25,17 @@ export interface FancySelectItem {
 }
 
 /**
+ * Represents a labeled section (an `<optgroup>` equivalent) of items in the dropdown. A section without a `label`
+ * renders as a plain, unheaded group, used for options that aren't part of any `ui:options.optgroups` group.
+ */
+export interface FancySelectSection {
+  /** The section's heading, omitted for an unlabeled group */
+  label?: string;
+  /** The items belonging to this section */
+  items: FancySelectItem[];
+}
+
+/**
  * Props interface for the FancyMultiSelect component
  */
 interface FancyMultiSelectProps {
@@ -32,6 +43,8 @@ interface FancyMultiSelectProps {
   multiple: boolean;
   /** Array of items to display in the dropdown */
   items?: FancySelectItem[];
+  /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
+  sections?: FancySelectSection[];
   /** Array of selected item values */
   selected: string[];
   /** Callback function when value changes */
@@ -62,6 +75,7 @@ interface FancyMultiSelectProps {
 export function FancyMultiSelect({
   multiple,
   items = [],
+  sections,
   selected,
   onValueChange,
   autoFocus = false,
@@ -86,6 +100,20 @@ export function FancyMultiSelect({
     () => items.filter((framework) => !selectedItems.some((item) => deepEquals(item.value, framework.value))),
     [items, selectedItems],
   );
+
+  const selectableSections = useMemo(() => {
+    if (!sections) {
+      return undefined;
+    }
+    return sections
+      .map((section) => ({
+        label: section.label,
+        items: section.items.filter(
+          (framework) => !selectedItems.some((item) => deepEquals(item.value, framework.value)),
+        ),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [sections, selectedItems]);
 
   const handleUnselect = useCallback(
     (framework: FancySelectItem) => {
@@ -135,6 +163,29 @@ export function FancyMultiSelect({
     },
     [disabled, onFocus],
   );
+
+  function renderItem(item: FancySelectItem) {
+    return (
+      <CommandItem
+        disabled={item.disabled}
+        key={`${item.value}-command-item`}
+        value={String(item.value)}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        aria-controls={`${item.value}-command-item`}
+        aria-labelledby={`${item.value}-command-item`}
+        id={`${item.value}-command-item`}
+        onSelect={() => handleSelect(item)}
+        className='cursor-pointer'
+      >
+        {item.label}
+      </CommandItem>
+    );
+  }
+
+  const hasSelectableOptions = selectableSections ? selectableSections.length > 0 : selectables.length > 0;
 
   return (
     <Command
@@ -192,31 +243,22 @@ export function FancyMultiSelect({
           />
         </div>
       </div>
-      {open && !disabled && selectables.length > 0 && (
+      {open && !disabled && hasSelectableOptions && (
         <div className='relative mt-2'>
           <div className='absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
-            <CommandGroup className='h-full overflow-auto'>
-              <CommandList>
-                {selectables.map((item) => (
-                  <CommandItem
-                    disabled={item.disabled}
-                    key={`${item.value}-command-item`}
-                    value={String(item.value)}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    aria-controls={`${item.value}-command-item`}
-                    aria-labelledby={`${item.value}-command-item`}
-                    id={`${item.value}-command-item`}
-                    onSelect={() => handleSelect(item)}
-                    className='cursor-pointer'
-                  >
-                    {item.label}
-                  </CommandItem>
+            {selectableSections ? (
+              <CommandList className='h-full overflow-auto'>
+                {selectableSections.map((section, sectionIndex) => (
+                  <CommandGroup key={section.label ?? `ungrouped-${sectionIndex}`} heading={section.label}>
+                    {section.items.map(renderItem)}
+                  </CommandGroup>
                 ))}
               </CommandList>
-            </CommandGroup>
+            ) : (
+              <CommandGroup className='h-full overflow-auto'>
+                <CommandList>{selectables.map(renderItem)}</CommandList>
+              </CommandGroup>
+            )}
           </div>
         </div>
       )}
