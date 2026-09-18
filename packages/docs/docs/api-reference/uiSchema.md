@@ -1043,3 +1043,67 @@ const uiSchema: UiSchema = {
 - [AntD Customization](themes/antd/uiSchema.md)
 - [Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
 - [MUI Customization](themes/mui/uiSchema.md)
+
+## Type-safe UiSchema
+
+`UiSchema<T>` checks that a nested key names a real field of `T` (see the [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#uischemat-checks-field-names-breaking-change)), but by default it does not check the _values_ given to a field's `ui:widget`/`ui:field`/`ui:options` against that field's type - a widget name that doesn't apply to the field it's on (`{ 'ui:widget': 'RangeWidget' }` on a `string` field), or a typo in a `ui:`-prefixed option name (`ui:wigdet`), still only surfaces at runtime, if at all.
+
+`UiSchema` takes a fourth, opt-in type parameter, `Checks`, that closes that gap. Pass a `Checks` union and `UiSchema` narrows `ui:widget`, `ui:field` and `ui:options` (and their `ui:`-prefixed equivalents, e.g. `ui:placeholder`) to only the values valid for each field's form-data type, recursing into nested objects/arrays the same way. `@rjsf/utils` itself has no widgets of its own, so it has no vocabulary to pass - each theme exports its own `Checks` union next to its widgets; `@rjsf/core` exports `CoreUiOptionsChecks`, describing its own built-in widget/field/option vocabulary:
+
+```ts
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, UiSchema } from '@rjsf/utils';
+
+interface FormData {
+  age: number;
+  bio: string;
+}
+
+const uiSchema: UiSchema<FormData, RJSFSchema, FormContextType, CoreUiOptionsChecks> = {
+  age: { 'ui:widget': 'RangeWidget' }, // ok - RangeWidget is valid for `number`
+  bio: {
+    // @ts-expect-error RangeWidget is not valid for a `string` field
+    'ui:widget': 'RangeWidget',
+  },
+};
+```
+
+Passing `Checks` is entirely opt-in, and can be adopted incrementally, field by field or form by form - `UiSchema<T>` with no fourth argument behaves exactly as it always has (fully open, no narrowing).
+
+### Extending the widget/option vocabulary
+
+The widget/field names and options a `Checks` union declares are built from `UiOptionsCheck<When, Then>` rules: "when a field's type is assignable to `When`, the names/options in `Then` become valid for it." Extend a built-in vocabulary - `@rjsf/core`'s `CoreUiOptionsChecks`, or a theme's own equivalent - by unioning in your own `UiOptionsCheck` entries, not by modifying or augmenting that export itself. `Checks` is also never included automatically - union it in yourself with whatever else you want to add:
+
+```ts
+import type { CoreUiOptionsChecks } from '@rjsf/core';
+import type { FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '@rjsf/utils';
+
+type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
+type MyUiSchema<T = any> = UiSchema<T, RJSFSchema, FormContextType, CoreUiOptionsChecks | MyThemeChecks>;
+
+const uiSchema: MyUiSchema<{ active: boolean }> = {
+  active: { 'ui:widget': 'ToggleWidget' },
+};
+```
+
+### Known gaps
+
+- With no form-data type (`T` defaulting to `any`), a closed `UiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
+- A field whose form-data shape includes an index signature (e.g. from `additionalProperties`/`patternProperties`) only gets type-checking for its explicitly-declared keys; dynamic keys are type-checked but without narrowing beyond the index signature's value type.
+
+### Applying it to an inline uiSchema with `satisfies`
+
+Declaring an intermediate `const uiSchema: UiSchema<FormData, RJSFSchema, FormContextType, CoreUiOptionsChecks> = {...}` and passing that to `Form`'s `uiSchema` prop gets you the narrowing above, because `FormProps['uiSchema']` is typed as the open `UiSchema<T, S, F>` (no `Checks`), which is permissive enough to accept a well-formed closed value with no cast. An inline `uiSchema` object literal passed directly as a JSX prop, though, is checked against that same open type and gets no narrowing at all - check it against the closed form with TypeScript's `satisfies` operator instead. `satisfies` validates the expression while leaving the expression's own type in place for the surrounding `uiSchema` prop, so no intermediate variable or cast is needed:
+
+```tsx
+<Form
+  schema={schema}
+  uiSchema={
+    {
+      // Compile error: RangeWidget is not valid for `bio`, a string field.
+      bio: { 'ui:widget': 'RangeWidget' },
+    } satisfies UiSchema<FormData, RJSFSchema, FormContextType, CoreUiOptionsChecks>
+  }
+  validator={validator}
+/>
+```

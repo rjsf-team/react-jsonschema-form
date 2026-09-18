@@ -45,6 +45,7 @@ import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
+import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
@@ -132,6 +133,7 @@ export type {
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
   UseTimeWidgetPropsResult,
+  WidgetAliasFor,
 };
 
 export {
