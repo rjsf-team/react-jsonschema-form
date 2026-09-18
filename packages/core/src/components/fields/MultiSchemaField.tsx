@@ -12,6 +12,7 @@ import {
   isFormDataAvailable,
   mergeSchemas,
   ONE_OF_KEY,
+  selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
 } from '@rjsf/utils';
@@ -147,8 +148,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       }
       const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
       const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
-      const newOptionUiSchema =
-        intOption >= 0 && optionsUiSchema.length > intOption ? optionsUiSchema[intOption] : uiSchema;
+      const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
 
       let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
       if (newOption) {
@@ -224,10 +224,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   }
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
-  let optionUiSchema = uiSchema;
-  if (selectedOption >= 0 && optionsUiSchema.length > selectedOption) {
-    optionUiSchema = optionsUiSchema[selectedOption];
-  }
+  const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix

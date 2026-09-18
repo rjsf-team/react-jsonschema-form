@@ -8,6 +8,7 @@ import {
 } from '../constants.ts';
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -31,7 +32,7 @@ import type {
   ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { AdditionalItemsHandling, getInnerSchemaForArrayItem, getItemUiSchemaForIndex } from './getDefaultFormState.ts';
+import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node. */
@@ -108,10 +109,9 @@ function isOptionalDataControlType<T, S extends StrictRJSFSchema, F extends Form
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
  * row past its own positions is checked first, exactly as `ArrayField`'s fixed-items render checks
  * `index >= schemaItems.length` before anything else: that row always uses `uiSchema.additionalItems`, never the
- * function form of `uiSchema.items` (`ArrayField.computeItemUiSchema()` is never even called for it). Only a genuine
- * tuple position or a non-fixed array reaches the function form, which is called here (unlike
- * `getItemUiSchemaForIndex()`, used for defaults, where an item's data isn't available yet) and falls back to
- * `undefined` if it throws, the same way `ArrayField.computeItemUiSchema()` does for rendering.
+ * function form of `uiSchema.items` (`ArrayField` never even resolves the dynamic/static form for it). Only a genuine
+ * tuple position or a non-fixed array reaches `getItemUiSchemaForItem()`, which — unlike `getItemUiSchemaForIndex()`,
+ * used for defaults, where an item's data isn't available yet — has `item` to pass to the function form.
  */
 function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
   retrieved: S,
@@ -123,16 +123,7 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
   if (isFixedItems<S>(retrieved) && idx >= (retrieved.items as S[]).length) {
     return uiSchema.additionalItems as UiSchema<T, S, F> | undefined;
   }
-  if (typeof uiSchema.items === 'function') {
-    try {
-      return uiSchema.items(item as never, idx, formContext) as UiSchema<T, S, F>;
-    } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.error(`Error executing dynamic uiSchema.items function for item at index ${idx}:`, e);
-      return undefined;
-    }
-  }
-  return getItemUiSchemaForIndex<T, S, F>(retrieved, uiSchema, idx);
+  return getItemUiSchemaForItem<T, S, F>(uiSchema, item as never, idx, formContext);
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {

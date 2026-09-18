@@ -15,6 +15,7 @@ import type {
 import {
   setByPath,
   allowAdditionalItems,
+  getItemUiSchemaForItem,
   getStaticItemsUiSchema,
   getTemplate,
   getUiOptions,
@@ -117,44 +118,6 @@ function canAddItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     }
   }
   return addable;
-}
-
-/** Helper method to compute item UI schema for both normal and fixed arrays
- * Handles the static object, static array (per-tuple-position), and dynamic function cases
- *
- * @param uiSchema - The parent UI schema containing items definition
- * @param item - The item data
- * @param index - The index of the item
- * @param formContext - The form context
- * @returns The computed UI schema for the item
- */
-function computeItemUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  uiSchema: UiSchema<T[], S, F>,
-  item: T,
-  index: number,
-  formContext: F,
-): UiSchema<T[], S, F> | undefined {
-  if (typeof uiSchema.items === 'function') {
-    try {
-      // Call the function with item data, index, and form context
-      // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
-      const result = uiSchema.items(item, index, formContext);
-      // Only use the result if it's truthy
-      return result as UiSchema<T[], S, F>;
-    } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
-      // Fall back to undefined to allow the field to still render
-      return undefined;
-    }
-  } else if (Array.isArray(uiSchema.items)) {
-    // Static array (per-tuple-position) case, e.g. from a non-fixed array schema paired with a tuple-shaped
-    // uiSchema.items to vary ui:options per position rather than uniformly.
-    return uiSchema.items[index] as UiSchema<T[], S, F> | undefined;
-  } else {
-    // Static object case - preserve undefined to maintain backward compatibility
-    return uiSchema.items as UiSchema<T[], S, F> | undefined;
-  }
 }
 
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
@@ -648,7 +611,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
-      const itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
 
       const itemProps = {
         itemKey: key,
@@ -779,7 +742,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
       } else {
         // Use the helper method for function or static object cases
-        itemUiSchema = computeItemUiSchema<T, S, F>(uiSchema, item, index, formContext);
+        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
       }
       const itemErrorSchema = errorSchema?.[index];
 

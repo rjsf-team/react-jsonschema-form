@@ -34,8 +34,9 @@ import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getInputProps from './getInputProps.ts';
+import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
-import getOptionUiSchema from './getOptionUiSchema.ts';
+import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaType from './getSchemaType.ts';
@@ -166,6 +167,7 @@ export {
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
   getInputProps,
+  getItemUiSchemaForItem,
   getOptionMatchingSimpleDiscriminator,
   getOptionUiSchema,
   getPropertySchema,
@@ -217,6 +219,7 @@ export {
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,
+  selectOptionUiSchema,
   shallowEquals,
   shouldRender,
   shouldRenderOptionalField,
