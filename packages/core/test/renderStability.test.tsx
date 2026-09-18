@@ -19,6 +19,7 @@ describe('render stability across sibling fields', () => {
     second: string;
     nested: { inner: string };
   }
+  const initialFormData = (): FormValue => ({ first: '', second: '', nested: { inner: '' } });
   const schema: RJSFSchema = {
     type: 'object',
     properties: {
@@ -47,7 +48,7 @@ describe('render stability across sibling fields', () => {
   it('typing in one field does not re-render sibling fields', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: { first: '', second: '', nested: { inner: '' } },
+      formData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -67,7 +68,7 @@ describe('render stability across sibling fields', () => {
   it('typing in a nested field does not re-render fields outside its branch', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: { first: '', second: '', nested: { inner: '' } },
+      formData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -89,7 +90,7 @@ describe('render stability across sibling fields', () => {
         'ui:field': 'LayoutGridField',
         'ui:layoutGrid': { 'ui:row': { children: [{ 'ui:col': { children: ['first', 'second', 'nested'] } }] } },
       },
-      formData: { first: '', second: '', nested: { inner: '' } },
+      formData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -105,7 +106,7 @@ describe('render stability across sibling fields', () => {
   it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
     const seen: IChangeEvent<FormValue>[] = [];
     function Parent() {
-      const [formData, setFormData] = useState<FormValue>({ first: '', second: '', nested: { inner: '' } });
+      const [formData, setFormData] = useState(initialFormData);
       return (
         <Form
           schema={schema}

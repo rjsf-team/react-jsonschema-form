@@ -97,7 +97,6 @@ import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import shallowEquals from './shallowEquals.ts';
-import shouldRender from './shouldRender.ts';
 import shouldRenderOptionalField from './shouldRenderOptionalField.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
@@ -223,7 +222,6 @@ export {
   SelectedOptionDescription,
   selectOptionUiSchema,
   shallowEquals,
-  shouldRender,
   shouldRenderOptionalField,
   sortedJSONStringify,
   titleId,
