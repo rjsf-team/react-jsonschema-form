@@ -82,6 +82,26 @@ describe('render stability across sibling fields', () => {
     expect(renderCounts.root_second).toBe(secondBefore);
   });
 
+  it('typing in a layout grid cell does not re-render the other cells', async () => {
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': { children: [{ 'ui:col': { children: ['first', 'second', 'nested'] } }] } },
+      },
+      formData: { first: '', second: '', nested: { inner: '' } },
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+
+    const secondBefore = renderCounts.root_second;
+    const innerBefore = renderCounts.root_nested_inner;
+
+    await user.type(node.querySelector('#root_first')!, 'abc');
+
+    expect(renderCounts.root_second).toBe(secondBefore);
+    expect(renderCounts.root_nested_inner).toBe(innerBefore);
+  });
+
   it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
     const seen: IChangeEvent<FormValue>[] = [];
     function Parent() {
