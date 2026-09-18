@@ -2,7 +2,14 @@ import type { FocusEvent } from 'react';
 import { useCallback, useMemo, useRef } from 'react';
 import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
-import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GroupedEnumOptionsType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -72,10 +79,19 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     [optionValueFormat],
   );
 
-  const groupedOptions = useMemo(
-    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
-    [enumDisabled, enumOptions, optgroups],
-  );
+  const groupedOptions = useMemo(() => {
+    // `realValue` encodes '' and null as '', which `enumOptionValueDecoder` reads as "no selection", so an option
+    // encoded that way can never be picked.
+    const isSelectable = (option: IndexedEnumOptionType<S>) =>
+      enumOptionValueEncoder(option.value, option.index, optionValueFormat) !== '';
+    return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item): GroupedEnumOptionsType<S>[] => {
+      if (!isEnumOptionsGroup<S>(item)) {
+        return isSelectable(item) ? [item] : [];
+      }
+      const selectableOptions = item.options.filter(isSelectable);
+      return selectableOptions.length > 0 ? [{ ...item, options: selectableOptions }] : [];
+    });
+  }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
