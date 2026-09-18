@@ -535,7 +535,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   getStateFromProps(
     props: FormProps<T, S, F>,
-    inputFormData?: T,
+    inputFormData?: T | typeof IS_RESET,
     retrievedSchema?: S,
     isSchemaChanged = false,
     getFormDataChangedFields: () => string[] = () => [],
@@ -544,17 +544,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     isReset = false,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
-    const schema = 'schema' in props ? props.schema : this.props.schema;
-    const validator = 'validator' in props ? props.validator : this.props.validator;
-    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
-    const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
-    const edit = typeof inputFormData !== 'undefined';
-    const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
+    const { schema, validator, uiSchema = {}, liveValidate, defaultFormStateBehavior, customMergeAllOf } = props;
+    const isUncontrolled = props.formData === undefined;
+    const edit = inputFormData !== undefined;
     // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const defaultFormStateBehavior =
-      'defaultFormStateBehavior' in props ? props.defaultFormStateBehavior : this.props.defaultFormStateBehavior;
-    const customMergeAllOf = 'customMergeAllOf' in props ? props.customMergeAllOf : this.props.customMergeAllOf;
     let { schemaUtils, hasNestedConditionalSchema } = state;
     if (
       !schemaUtils ||
@@ -571,12 +565,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     const rootSchema = schemaUtils.getRootSchema();
 
-    // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
-    let defaultsFormData = inputFormData;
+    // An uncontrolled form with no new data keeps its own; a reset starts from nothing
+    let defaultsFormData: T | undefined;
     if (inputFormData === IS_RESET) {
       defaultsFormData = undefined;
     } else if (inputFormData === undefined && isUncontrolled) {
       defaultsFormData = state.formData;
+    } else {
+      defaultsFormData = inputFormData;
     }
     // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
     // though this instance has generated defaults before.
@@ -1101,11 +1097,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    *
    */
   reset = () => {
-    // Cast the IS_RESET symbol to T to avoid type issues, we use this symbol to detect reset mode
-    const { formData: propsFormData, initialFormData = IS_RESET as T, onChange } = this.props;
+    const { formData: propsFormData, initialFormData, onChange } = this.props;
     const newState = this.getStateFromProps(
       this.props,
-      propsFormData ?? initialFormData,
+      propsFormData ?? (initialFormData === undefined ? IS_RESET : initialFormData),
       undefined,
       undefined,
       undefined,
