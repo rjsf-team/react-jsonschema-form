@@ -336,11 +336,11 @@ export type FormValidation<T = any> = ErrorTree<T, FieldValidation>;
 /** The base properties passed to various RJSF components. */
 export interface RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The schema object for the field being described */
-  schema: S;
+  readonly schema: S;
   /** The uiSchema object for this base component */
-  uiSchema?: UiSchema<T, S, F>;
+  readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
-  registry: Registry<T, S, F>;
+  readonly registry: Registry<T, S, F>;
 }
 
 export type CyclicSchemaExpandProps<
@@ -585,33 +585,33 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   /** The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any custom
    * registered fields
    */
-  fields: RegistryFieldsType<T, S, F>;
+  readonly fields: RegistryFieldsType<T, S, F>;
   /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom
    * registered templates
    */
-  templates: TemplatesType<T, S, F>;
+  readonly templates: TemplatesType<T, S, F>;
   /** The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any custom
    * registered widgets
    */
-  widgets: RegistryWidgetsType<T, S, F>;
+  readonly widgets: RegistryWidgetsType<T, S, F>;
   /** The `formContext` object that was passed to `Form` */
-  formContext: F;
+  readonly formContext: F;
   /** The root schema, as passed to the `Form`, which can contain referenced definitions */
-  rootSchema: S;
+  readonly rootSchema: S;
   /** The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`.  Used to call any
    * of the validation-schema-based utility functions
    */
-  schemaUtils: SchemaUtilsType<T, S>;
+  readonly schemaUtils: SchemaUtilsType<T, S>;
   /** The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets */
-  translateString: (stringKey: TranslatableString, params?: string[]) => string;
+  readonly translateString: (stringKey: TranslatableString, params?: string[]) => string;
   /** The global Form Options that are available for all templates, fields and widgets to access */
   readonly globalFormOptions: GlobalFormOptions;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
-  globalUiOptions?: GlobalUISchemaOptions;
+  readonly globalUiOptions?: GlobalUISchemaOptions;
   /** The optional uiSchema definitions extracted from the root uiSchema, keyed by `$ref` paths.
    * Used to automatically apply uiSchema when a schema with a matching `$ref` is resolved.
    */
-  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+  readonly uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
 }
 
 /** The properties that are passed to a `Field` implementation */
@@ -1111,9 +1111,9 @@ export interface BaseInputTemplateProps<
 /** The type that defines the props used by the Submit button */
 export interface SubmitButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** The uiSchema for this widget */
-  uiSchema?: UiSchema<T, S, F>;
+  readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
-  registry: Registry<T, S, F>;
+  readonly registry: Registry<T, S, F>;
 }
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */

@@ -1060,8 +1060,30 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     [onChange, fieldPath, fieldId],
   );
 
+  const isMissingItems = !(ITEMS_KEY in schema);
+  if (isMissingItems && !globalFormOptions.useFallbackUiForUnsupportedType) {
+    const uiOptions = getUiOptions<T[], S, F>(uiSchema);
+    const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
+      'UnsupportedFieldTemplate',
+      registry,
+      uiOptions,
+    );
+
+    return (
+      <UnsupportedFieldTemplate
+        schema={schema}
+        uiSchema={uiSchema}
+        id={fieldId}
+        reason={translateString(TranslatableString.MissingItems)}
+        registry={registry}
+      />
+    );
+  }
+  // An items schema with type as undefined triggers FallbackField later on
+  const arraySchema = isMissingItems ? { ...schema, [ITEMS_KEY]: { type: undefined } } : schema;
   const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
     ...props,
+    schema: arraySchema,
     formData,
     fieldPath,
     onSelectChange,
@@ -1069,6 +1091,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,
+    schema: arraySchema,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -1076,30 +1099,6 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
     keyedFormData,
     onChange: handleChange,
   };
-  if (!(ITEMS_KEY in schema)) {
-    if (!globalFormOptions.useFallbackUiForUnsupportedType) {
-      const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-      const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
-        'UnsupportedFieldTemplate',
-        registry,
-        uiOptions,
-      );
-
-      return (
-        <UnsupportedFieldTemplate
-          schema={schema}
-          uiSchema={uiSchema}
-          id={fieldId}
-          reason={translateString(TranslatableString.MissingItems)}
-          registry={registry}
-        />
-      );
-    }
-    // Add an items schema with type as undefined so it triggers FallbackField later on
-    const fallbackSchema = { ...schema, [ITEMS_KEY]: { type: undefined } };
-    arrayAsMultiProps.schema = fallbackSchema;
-    arrayProps.schema = fallbackSchema;
-  }
   if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
     // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
     return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
