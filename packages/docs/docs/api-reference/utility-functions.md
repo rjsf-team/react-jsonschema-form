@@ -1449,7 +1449,7 @@ const intoThis = {
 
 ### toFieldPath()
 
-Appends `segment` to `parentPath`, returning the `FieldPath` of the child field. Property names are separated by `.` and array indexes are bracketed, so `toFieldPath('firstName', toFieldPath(0, toFieldPath('friends')))` is `friends[0].firstName`. A property name containing `\`, `.`, `[` or `]` is backslash-escaped. An empty `segment` names no field, so the parent path is returned unchanged.
+Appends `segment` to `parentPath`, returning the `FieldPath` of the child field. Property names are separated by `.` and array indexes are bracketed, so `toFieldPath('firstName', toFieldPath(0, toFieldPath('friends')))` is `friends[0].firstName`. A property name containing `\`, `.`, `[` or `]` is backslash-escaped. `''` is a property name like any other, so `toFieldPath('', toFieldPath('a'))` is `a.` and `toFieldPath('')` is a lone `.`, which keeps a root-level property named `''` distinct from the root path itself.
 
 #### Parameters
 

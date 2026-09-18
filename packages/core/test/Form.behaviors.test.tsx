@@ -1518,7 +1518,7 @@ describe('setFieldValue()', () => {
       expect.objectContaining({
         formData: 'populated value',
       }),
-      // An empty segment names no field, so the change is reported against the root id
+      // `setFieldValue('')` addresses the root, so the change is reported against the root id
       'root',
     );
 
