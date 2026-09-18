@@ -137,7 +137,7 @@ export default function SelectWidget<
     const encodedValue = enumOptionValueEncoder(option.value, option.index, optionValueFormat);
     return (
       <li
-        key={String(option.value)}
+        key={option.index}
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role='option'
         aria-selected={selectedValues.includes(encodedValue)}

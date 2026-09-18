@@ -777,6 +777,24 @@ describe('StringField', () => {
       expect(groupAOptions[1]).toBeDisabled();
     });
 
+    it('should render sibling options sharing a value without duplicate key warnings', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          oneOf: [
+            { const: 'a', title: 'A1' },
+            { const: 'a', title: 'A2' },
+          ],
+        },
+      });
+
+      const options = Array.from(node.querySelectorAll('option')).map((option) => option.textContent);
+      expect(options).toEqual(expect.arrayContaining(['A1', 'A2']));
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
     it('should reflect the change event for a grouped option', async () => {
       const { node, onChange } = createFormComponent({
         schema: {

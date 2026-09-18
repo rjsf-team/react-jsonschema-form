@@ -28,6 +28,26 @@ describe('groupEnumOptions', () => {
     });
   });
 
+  describe('enumDisabled matching', () => {
+    it('matches primitive enumDisabled values by their string form', () => {
+      const numericOptions: EnumOptionsType[] = [
+        { value: 1, label: '1' },
+        { value: 2, label: '2' },
+      ];
+      const result = groupEnumOptions(numericOptions, undefined, ['1']);
+      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([true, false]);
+    });
+    it('matches object enumDisabled values by deep equality, without matching primitives', () => {
+      const mixedOptions: EnumOptionsType[] = [
+        { value: { id: 1 }, label: 'One' },
+        { value: { id: 2 }, label: 'Two' },
+        { value: 'x', label: 'X' },
+      ];
+      const result = groupEnumOptions(mixedOptions, undefined, [{ id: 2 }, '[object Object]'] as any);
+      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([false, true, false]);
+    });
+  });
+
   describe('with optgroups', () => {
     it('groups options by the provided optgroups, in key order', () => {
       const result = groupEnumOptions(options, { 'Group A': ['foo', 'bar'], 'Group B': ['baz'] });

@@ -28,7 +28,7 @@ const isPrimitive = (value: unknown) => value === null || typeof value !== 'obje
  *
  * A group value matches an option whose `value` is deeply equal to it. Failing that, primitive values also match
  * by their string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas
- * authored as JSON often stringify them.
+ * authored as JSON often stringify them. `enumDisabled` values are matched to options the same way.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -43,29 +43,66 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   if (!Array.isArray(enumOptions)) {
     return [];
   }
+  const disabledPrimitives = new Set<string>();
+  const disabledObjects: unknown[] = [];
+  if (Array.isArray(enumDisabled)) {
+    enumDisabled.forEach((value) => {
+      if (isPrimitive(value)) {
+        disabledPrimitives.add(String(value));
+      } else {
+        disabledObjects.push(value);
+      }
+    });
+  }
+  const isDisabled = (value: unknown) =>
+    isPrimitive(value)
+      ? disabledPrimitives.has(String(value))
+      : disabledObjects.some((disabledValue) => deepEquals(disabledValue, value));
+
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
     index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
+    disabled: isDisabled(option.value),
   }));
   if (!optgroups || typeof optgroups !== 'object') {
     return indexed;
   }
 
-  const claimedIndices = new Set<number>();
-  const claim = (matches: (candidate: unknown) => boolean) => {
-    const option = indexed.find((candidate) => !claimedIndices.has(candidate.index) && matches(candidate.value));
-    if (option) {
-      claimedIndices.add(option.index);
+  const primitivesByValue = new Map<unknown, IndexedEnumOptionType<S>[]>();
+  const primitivesByString = new Map<string, IndexedEnumOptionType<S>[]>();
+  const objectOptions: IndexedEnumOptionType<S>[] = [];
+  const append = <K>(map: Map<K, IndexedEnumOptionType<S>[]>, key: K, option: IndexedEnumOptionType<S>) => {
+    const existing = map.get(key);
+    if (existing) {
+      existing.push(option);
+    } else {
+      map.set(key, [option]);
     }
-    return option;
   };
+  indexed.forEach((option) => {
+    if (isPrimitive(option.value)) {
+      append(primitivesByValue, option.value, option);
+      append(primitivesByString, String(option.value), option);
+    } else {
+      objectOptions.push(option);
+    }
+  });
+
+  const claimedIndices = new Set<number>();
+  const findUnclaimed = (candidates: IndexedEnumOptionType<S>[] | undefined) =>
+    candidates?.find((candidate) => !claimedIndices.has(candidate.index));
+  const findOption = (value: unknown) =>
+    isPrimitive(value)
+      ? (findUnclaimed(primitivesByValue.get(value)) ?? findUnclaimed(primitivesByString.get(String(value))))
+      : objectOptions.find((candidate) => !claimedIndices.has(candidate.index) && deepEquals(candidate.value, value));
+
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
     .map(([label, values]) => {
       const options = values.flatMap((value) => {
-        const option =
-          claim((candidate) => deepEquals(candidate, value)) ??
-          claim((candidate) => isPrimitive(candidate) && isPrimitive(value) && String(candidate) === String(value));
+        const option = findOption(value);
+        if (option) {
+          claimedIndices.add(option.index);
+        }
         return option ? [option] : [];
       });
       return { label, options };

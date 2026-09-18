@@ -57,7 +57,7 @@ export default function SelectWidget<
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
       <option
-        key={String(option.value)}
+        key={option.index}
         id={option.label}
         value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
         disabled={option.disabled}
