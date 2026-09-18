@@ -210,7 +210,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     customMergeAllOf,
   );
   if (getSchemaType<S>(retrieved) === 'object') {
-    const data = (formData ?? {}) as GenericObjectType;
+    // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
+    // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
+    // caller data), indexing the primitive directly (`'abc'['0']` yields `'a'`, not `undefined`) can make a genuinely
+    // missing required child look present.
+    const data = isObject(formData) ? formData : ({} as GenericObjectType);
     const childParentPresent = formData !== undefined;
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
       if (typeof propertySchema === 'boolean') {

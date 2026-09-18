@@ -431,14 +431,21 @@ describe('LayoutMultiSchemaField', () => {
       [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
       [UI_WIDGET_KEY]: 'select',
     };
-    const props = getProps({
+    const baseProps = getProps({
       options: oneOfSchema[ONE_OF_KEY],
       schema: oneOfSchema as RJSFSchema,
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
-    props.registry.uiSchemaDefinitions = {
-      '#/definitions/second_option_def': { unique_to_second: { 'ui:initialValue': 42 } },
+    // getTestRegistry() freezes the registry it returns, so a new object is substituted in rather than mutated.
+    const props = {
+      ...baseProps,
+      registry: {
+        ...baseProps.registry,
+        uiSchemaDefinitions: {
+          '#/definitions/second_option_def': { unique_to_second: { 'ui:initialValue': 42 } },
+        },
+      },
     };
     render(<LayoutMultiSchemaField {...props} />);
 

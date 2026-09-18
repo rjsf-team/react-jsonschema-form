@@ -580,6 +580,25 @@ describe('getUiRequiredErrorSchema()', () => {
     });
   });
 
+  it('does not treat a primitive value at an object-schema node as satisfying a ui:required child, matching computeDefaults isObject(rawFormData) handling', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        // A numeric-string key so that indexing the primitive `formData` directly (rather than guarding with
+        // isObject()) yields a character of the string instead of undefined, silently satisfying the ui:required
+        // check below for a field that was never actually filled in.
+        0: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = { 0: { 'ui:required': true } };
+    // Simulates formData left over from a mismatched source (e.g. a previous oneOf branch), which is a primitive
+    // rather than the object this node's schema expects.
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, 'abc');
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.0');
+  });
+
   describe('Optional Data Controls', () => {
     it('does not fire for a field inside an unselected anyOf branch configured as an Optional Data Control', () => {
       const schema: RJSFSchema = {
