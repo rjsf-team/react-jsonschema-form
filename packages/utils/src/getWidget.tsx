@@ -1,9 +1,11 @@
 import getSchemaType from './getSchemaType.ts';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
 
-/** The map of schema types to widget type to widget name
+/** The map of schema types to widget type to widget name. `as const` so its keys and values stay literal types,
+ * letting `WidgetAliasFor` derive a per-type alias union from it directly instead of a hand-copied one that can
+ * drift out of sync.
  */
-const widgetMap: Record<string, Record<string, string>> = {
+export const widgetMap = {
   boolean: {
     checkbox: 'CheckboxWidget',
     radio: 'RadioWidget',
@@ -56,7 +58,13 @@ const widgetMap: Record<string, Record<string, string>> = {
     files: 'FileWidget',
     hidden: 'HiddenWidget',
   },
-};
+} as const;
+
+/** The lowercase `ui:widget` alias names `getWidget` accepts for a given JSON Schema primitive `type`, e.g.
+ * `WidgetAliasFor<'string'>` is `'text' | 'textarea' | 'password' | ...`. Used to keep a type-safe widget vocabulary
+ * (like `@rjsf/core`'s `CoreUiOptionsChecks`) in sync with the aliases `getWidget` actually resolves.
+ */
+export type WidgetAliasFor<Type extends keyof typeof widgetMap> = keyof (typeof widgetMap)[Type];
 
 /** Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
  * React component that is used to render the widget. If the `widget` is already a React component, it is returned
@@ -94,8 +102,9 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
       throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 
-    if (widget in widgetMap[type]) {
-      const registeredWidget = registeredWidgets[widgetMap[type][widget]];
+    const widgetsForType = widgetMap[type as keyof typeof widgetMap];
+    if (widget in widgetsForType) {
+      const registeredWidget = registeredWidgets[widgetsForType[widget as keyof typeof widgetsForType]];
       return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
     }
   }

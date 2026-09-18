@@ -496,11 +496,11 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   };
 } & Record<string, ComponentType<any> | Record<string, ComponentType<any>> | undefined>;
 
-/** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
- * widget level when no field-level value of the option is provided. Extends GenericObjectType to support allowing users
- * to provide any value they need for their customizations.
+/** The declared keys of `GlobalUISchemaOptions`, kept separate from its `GenericObjectType &` index signature so
+ * a closed vocabulary (like `UiSchema`'s `Checks`-narrowed form) can pick up these keys without also reopening
+ * itself to arbitrary ones.
  */
-export type GlobalUISchemaOptions = GenericObjectType & {
+interface GlobalUISchemaOptionsKeys {
   /** Flag, if set to `false`, new items cannot be added to array fields, unless overridden (defaults to true) */
   addable?: boolean;
   /** Flag, if set to `true`, array items can be copied (defaults to false) */
@@ -550,7 +550,13 @@ export type GlobalUISchemaOptions = GenericObjectType & {
    * - `label` (default): The field is rendered with "(deprecated)" appended to its label.
    */
   deprecatedHandling?: 'hide' | 'disable' | 'label';
-};
+}
+
+/** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
+ * widget level when no field-level value of the option is provided. Extends GenericObjectType to support allowing users
+ * to provide any value they need for their customizations.
+ */
+export type GlobalUISchemaOptions = GenericObjectType & GlobalUISchemaOptionsKeys;
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
  * available.
@@ -1162,27 +1168,33 @@ type MakeUIType<Type> = {
   [Property in keyof Type as `ui:${string & Property}`]: Type[Property];
 };
 
+/** The per-field template overrides `ui:options` supports, i.e. all the properties of `TemplatesType` except
+ * "ButtonTemplates". Shared by `UIOptionsBaseType` (the open, unnarrowed vocabulary) and `CommonUiOptions` (the
+ * closed vocabulary's always-available common options), so the two lists can't drift apart.
+ */
+type UIOptionsTemplateOverrides<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
+  TemplatesType<T, S, F>,
+  | 'ArrayFieldDescriptionTemplate'
+  | 'ArrayFieldItemTemplate'
+  | 'ArrayFieldTemplate'
+  | 'ArrayFieldTitleTemplate'
+  | 'BaseInputTemplate'
+  | 'DescriptionFieldTemplate'
+  | 'ErrorListTemplate'
+  | 'FieldErrorTemplate'
+  | 'FieldHelpTemplate'
+  | 'FieldTemplate'
+  | 'ObjectFieldTemplate'
+  | 'TitleFieldTemplate'
+  | 'UnsupportedFieldTemplate'
+  | 'WrapIfAdditionalTemplate'
+>;
+
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
  * remap the keys. It also contains all the properties, optionally, of `TemplatesType` except "ButtonTemplates"
  */
 type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Partial<
-  Pick<
-    TemplatesType<T, S, F>,
-    | 'ArrayFieldDescriptionTemplate'
-    | 'ArrayFieldItemTemplate'
-    | 'ArrayFieldTemplate'
-    | 'ArrayFieldTitleTemplate'
-    | 'BaseInputTemplate'
-    | 'DescriptionFieldTemplate'
-    | 'ErrorListTemplate'
-    | 'FieldErrorTemplate'
-    | 'FieldHelpTemplate'
-    | 'FieldTemplate'
-    | 'ObjectFieldTemplate'
-    | 'TitleFieldTemplate'
-    | 'UnsupportedFieldTemplate'
-    | 'WrapIfAdditionalTemplate'
-  >
+  UIOptionsTemplateOverrides<T, S, F>
 > &
   GlobalUISchemaOptions & {
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
@@ -1284,17 +1296,25 @@ export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
   then: Then;
 }
 
-/** @internal Distributes over a `Checks` union, collapsing each member into an intersection of its `then` type
- * (minus `widget`/`field`) for every member whose `when` the field type `T` is assignable to.
- */
+/** @internal A generic union-to-intersection helper, with no knowledge of `Checks`. */
 type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) extends (x: infer I) => void ? I : never;
+
+/** @internal Whether `Then` declares its own `K` key, as opposed to merely admitting one through a string index
+ * signature (as `UiOptionsCheck`'s default `Then = GenericObjectType` does). Without this guard, `Then extends {
+ * [K]?: infer W }` matches an index-signature `Then` too - inferring `W` as whatever the index signature's value
+ * type is (typically `any`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
+ * widen the vocabulary for every field its `when` matches, rather than contributing nothing.
+ */
+type DeclaresKey<Then, K extends PropertyKey> = string extends keyof Then ? false : K extends keyof Then ? true : false;
 
 /** @internal The union of `then.widget` names valid for form-data type `T`, drawn from `Checks`. */
 type WidgetsFor<T, Checks> =
   Checks extends UiOptionsCheck<infer When, infer Then>
-    ? Then extends { widget?: infer W }
-      ? T extends When
-        ? W
+    ? DeclaresKey<Then, 'widget'> extends true
+      ? Then extends { widget?: infer W }
+        ? T extends When
+          ? W
+          : never
         : never
       : never
     : never;
@@ -1302,9 +1322,11 @@ type WidgetsFor<T, Checks> =
 /** @internal The union of `then.field` names valid for form-data type `T`, drawn from `Checks`. */
 type FieldsFor<T, Checks> =
   Checks extends UiOptionsCheck<infer When, infer Then>
-    ? Then extends { field?: infer Fl }
-      ? T extends When
-        ? Fl
+    ? DeclaresKey<Then, 'field'> extends true
+      ? Then extends { field?: infer Fl }
+        ? T extends When
+          ? Fl
+          : never
         : never
       : never
     : never;
@@ -1332,33 +1354,38 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
  * since they aren't type-specific vocabulary - available whenever `Checks` narrows the vocabulary, same as they
- * always are through `UIOptionsBaseType` when it doesn't.
+ * always are through `UIOptionsBaseType` when it doesn't. Includes the same per-field template overrides and
+ * `GlobalUISchemaOptions` keys the open vocabulary carries, since those are also type-agnostic and unrecoverable
+ * through `Checks` otherwise.
  */
-interface ClosedCommonUiOptions {
-  'ui:help'?: string;
-  'ui:title'?: string;
-  'ui:description'?: string;
-  'ui:classNames'?: string;
-  'ui:style'?: StyleHTMLAttributes<any>;
-  'ui:autofocus'?: boolean;
-  'ui:disabled'?: boolean;
-  'ui:readonly'?: boolean;
-  'ui:hideError'?: boolean;
-  'ui:submitButtonOptions'?: UISchemaSubmitButtonOptions;
-}
+type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> = Partial<
+  UIOptionsTemplateOverrides<T, S, F>
+> &
+  GlobalUISchemaOptionsKeys & {
+    help?: string;
+    title?: string;
+    description?: string;
+    classNames?: string;
+    style?: StyleHTMLAttributes<any>;
+    autofocus?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    hideError?: boolean;
+    submitButtonOptions?: UISchemaSubmitButtonOptions;
+  };
 
 /** @internal The vocabulary part of `UiSchema`: `ui:widget`/`ui:field`/`ui:options` and their `ui:`-prefixed raw
  * option equivalents. `[Checks] extends [never]` (tuple-wrapped to avoid distribution) is `UiSchema`'s default,
  * unnarrowed, permissive shape - identical to what `UiSchema` has always had. A concrete `Checks` union instead
  * narrows `ui:widget`/`ui:field` to only the names `Checks` declares for the field's type, and closes the `ui:`
- * namespace to just the options it declares plus `ClosedCommonUiOptions`: every other key, including a typo like
+ * namespace to just the options it declares plus `CommonUiOptions`: every other key, including a typo like
  * `ui:wigdet`, becomes a type error instead of only failing at runtime. `@rjsf/utils` has no built-in vocabulary of
  * its own to always include here - a theme's `Checks` union (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to
  * be unioned in by whoever passes `Checks`, not baked into `UiSchema` itself.
  */
 type UiVocabularyPart<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = [Checks] extends [never]
   ? MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> }
-  : ClosedCommonUiOptions & UiOptionsComponentPart<T, S, F, Checks> & MakeUIType<RawOptsFor<T, Checks>>;
+  : MakeUIType<CommonUiOptions<T, S, F>> & UiOptionsComponentPart<T, S, F, Checks> & MakeUIType<RawOptsFor<T, Checks>>;
 
 /** Type describing the uiSchema definitions that can be applied to schemas referenced by `$ref`.
  * Keys are the full `$ref` path (e.g., '#/$defs/node', '#/definitions/address').

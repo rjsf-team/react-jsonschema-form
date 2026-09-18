@@ -1,4 +1,4 @@
-import type { EnumValue, UiOptionsCheck } from '@rjsf/utils';
+import type { EnumValue, UiOptionsCheck, WidgetAliasFor } from '@rjsf/utils';
 
 /** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
  * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Pass it as
@@ -7,7 +7,9 @@ import type { EnumValue, UiOptionsCheck } from '@rjsf/utils';
  *
  * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not
  * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
- * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here).
+ * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here). Widget names include both
+ * the registered PascalCase component name and the lowercase alias(es) `getWidget` resolves for that schema type
+ * (`WidgetAliasFor`), since either spelling is a valid `ui:widget` value at runtime.
  */
 export type CoreUiOptionsChecks =
   | UiOptionsCheck<
@@ -28,7 +30,8 @@ export type CoreUiOptionsChecks =
           | 'SelectWidget'
           | 'RadioWidget'
           | 'FileWidget'
-          | 'HiddenWidget';
+          | 'HiddenWidget'
+          | WidgetAliasFor<'string'>;
         field?: 'StringField';
         placeholder?: string;
         rows?: number;
@@ -37,6 +40,7 @@ export type CoreUiOptionsChecks =
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: string;
         filePreview?: boolean;
+        inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
@@ -45,8 +49,20 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       number,
       {
-        widget?: 'TextWidget' | 'RangeWidget' | 'UpDownWidget' | 'SelectWidget' | 'RadioWidget' | 'HiddenWidget';
+        // `widgetMap.integer`'s aliases are identical to `widgetMap.number`'s (both are the JS `number` type at
+        // runtime), so only one needs including here.
+        widget?:
+          | 'TextWidget'
+          | 'RangeWidget'
+          | 'UpDownWidget'
+          | 'SelectWidget'
+          | 'RadioWidget'
+          | 'HiddenWidget'
+          | WidgetAliasFor<'number'>;
         field?: 'NumberField';
+        placeholder?: string;
+        emptyValue?: number;
+        inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
@@ -55,8 +71,10 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       boolean,
       {
-        widget?: 'CheckboxWidget' | 'RadioWidget' | 'SelectWidget' | 'HiddenWidget';
+        widget?: 'CheckboxWidget' | 'RadioWidget' | 'SelectWidget' | 'HiddenWidget' | WidgetAliasFor<'boolean'>;
         field?: 'BooleanField';
+        placeholder?: string;
+        inline?: boolean;
       }
     >
   | UiOptionsCheck<
@@ -67,20 +85,22 @@ export type CoreUiOptionsChecks =
       }
     >
   | UiOptionsCheck<
-      unknown[],
+      readonly unknown[],
       {
-        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget';
+        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget' | 'HiddenWidget' | WidgetAliasFor<'array'>;
         field?: 'ArrayField';
         addable?: boolean;
         orderable?: boolean;
         removable?: boolean;
         copyable?: boolean;
         inline?: boolean;
+        filePreview?: boolean;
       }
     >
   | UiOptionsCheck<
-      object & { length?: never },
+      object & { [Symbol.iterator]?: never },
       {
+        widget?: 'HiddenWidget' | 'hidden';
         field?: 'ObjectField';
         optionsSchemaSelector?: string;
         order?: string[];

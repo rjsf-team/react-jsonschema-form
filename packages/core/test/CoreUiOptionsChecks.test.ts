@@ -1,4 +1,4 @@
-import type { UiSchema } from '@rjsf/utils';
+import type { UiOptionsCheck, UiSchema } from '@rjsf/utils';
 
 import type { CoreUiOptionsChecks } from '../src/index.ts';
 
@@ -55,6 +55,88 @@ describe('CoreUiOptionsChecks', () => {
       bio: {
         // @ts-expect-error `ui:wigdet` is a typo of `ui:widget` - no longer swallowed by a permissive index signature
         'ui:wigdet': 'TextWidget',
+      },
+    };
+
+    expect(bad).toBeDefined();
+  });
+
+  it('keeps type-agnostic options (template overrides, global options) available under Checks', () => {
+    type Checked = UiSchema<{ bio: string }, any, any, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      'ui:label': false,
+      'ui:ObjectFieldTemplate': () => null,
+      'ui:enableMarkdownInDescription': true,
+      bio: { 'ui:label': false },
+    };
+
+    expect(ui['ui:label']).toBe(false);
+  });
+
+  it('accepts the lowercase widget aliases getWidget resolves, alongside the PascalCase component names', () => {
+    type Checked = UiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      contact: {
+        name: { 'ui:widget': 'textarea' },
+        details: { 'ui:widget': 'hidden' },
+      },
+    };
+
+    expect(ui.contact?.name?.['ui:widget']).toBe('textarea');
+  });
+
+  it('allows hiding an array or object field', () => {
+    type Checked = UiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
+
+    const hiddenArray: Checked = { tree: { children: { 'ui:widget': 'HiddenWidget' } } };
+    const hiddenObject: Checked = { tree: { 'ui:widget': 'hidden' } };
+
+    expect(hiddenArray.tree?.children?.['ui:widget']).toBe('HiddenWidget');
+    expect(hiddenObject.tree?.['ui:widget']).toBe('hidden');
+  });
+
+  it('makes emptyValue/placeholder/inline/filePreview available on every type that actually reads them', () => {
+    type Checked = UiSchema<{ age: number; agree: boolean; tags: string[] }, any, any, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      age: { 'ui:emptyValue': 0, 'ui:placeholder': 'Age', 'ui:options': { inline: true } },
+      agree: { 'ui:placeholder': 'Agree?', 'ui:options': { inline: true } },
+      tags: { 'ui:options': { filePreview: true } },
+    };
+
+    expect(ui.age?.['ui:emptyValue']).toBe(0);
+  });
+
+  it('narrows a readonly array field and does not mistake a length-bearing object for an array', () => {
+    interface Track {
+      length: number;
+      title: string;
+    }
+    type Checked = UiSchema<{ tags: readonly string[]; track: Track }, any, any, CoreUiOptionsChecks>;
+
+    const ui: Checked = {
+      tags: { 'ui:options': { orderable: false } },
+      track: { 'ui:options': { order: ['title'] } },
+    };
+    const badOnArray: Checked = {
+      // @ts-expect-error `order` is an object option, not valid for the readonly array field `tags`
+      tags: { 'ui:options': { order: ['title'] } },
+    };
+
+    expect(ui.tags?.['ui:options']).toEqual({ orderable: false });
+    expect(badOnArray).toBeDefined();
+  });
+
+  it('does not widen the vocabulary for a Checks member that declares no widget/field key', () => {
+    type NoWidgetCheck = UiOptionsCheck<string, { placeholder: string }>;
+    type Checked = UiSchema<{ bio: string }, any, any, CoreUiOptionsChecks | NoWidgetCheck>;
+
+    const bad: Checked = {
+      bio: {
+        // @ts-expect-error unioning in a widget-less/field-less check must not open ui:widget back up to `any`
+        'ui:widget': 'NotARealWidget',
       },
     };
 
