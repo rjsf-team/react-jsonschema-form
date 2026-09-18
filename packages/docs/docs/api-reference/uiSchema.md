@@ -745,7 +745,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 To group a `select`-backed widget's options into labeled sections (rendered as `<optgroup>` elements, or each theme's closest equivalent), specify the grouping via the `optgroups` key in `ui:options`. Keys are the group labels, values are arrays of enum values belonging to that group. Any enum values not listed in a group are rendered ungrouped after the groups. This is supported by every `@rjsf` theme package.
 
-A value in a group matches the enum entry it is deeply equal to. Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`. Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
+A value in a group matches the enum entry it is equal to. Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`. Object and array enum values can't be grouped from a JSON-authored uiSchema, since a value only matches that very same object. Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
 
 ```tsx
 import { Form } from '@rjsf/core';
