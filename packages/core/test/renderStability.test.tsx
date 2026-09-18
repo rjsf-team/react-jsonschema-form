@@ -10,8 +10,8 @@ import { createFormComponent } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-/** Guards the memoization contract: typing in one field must not re-render its sibling fields. `SchemaField` is
- * memoized with shallow comparison, which only holds if every prop a sibling receives keeps reference identity
+/** Pins the render optimization: typing in one field must not re-render its sibling fields. `SchemaField` is
+ * memoized with shallow comparison, which only skips a render if every prop a sibling receives keeps reference identity
  * across a change — the string `fieldPath`/`id`, the retained `formData`/`errorSchema` subtrees, the retained
  * `retrieveSchema()` results, and the stable callbacks. A regression in any of them fails this test.
  */
