@@ -409,7 +409,7 @@ describe('LayoutMultiSchemaField', () => {
           ),
           [selectorField]: 'second_option',
         },
-        props.fieldPathId.path,
+        props.fieldPath,
         undefined,
         DEFAULT_ID,
       );
@@ -417,7 +417,7 @@ describe('LayoutMultiSchemaField', () => {
     // Sanity check that the assertion above actually exercises the new default, not just an object shape match
     expect(props.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ unique_to_second: 42 }),
-      props.fieldPathId.path,
+      props.fieldPath,
       undefined,
       DEFAULT_ID,
     );
@@ -449,7 +449,7 @@ describe('LayoutMultiSchemaField', () => {
     await waitFor(() => {
       expect(props.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ unique_to_second: 42 }),
-        props.fieldPathId.path,
+        props.fieldPath,
         undefined,
         DEFAULT_ID,
       );
