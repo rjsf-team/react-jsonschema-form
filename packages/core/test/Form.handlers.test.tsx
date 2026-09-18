@@ -78,7 +78,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         ref: createRef(),
         schema,
         uiSchema,
-        formData,
+        initialFormData: formData,
       });
 
       await user.type(node.querySelector('[type=text]')!, 'new');
@@ -673,7 +673,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         foo: '',
       };
       const onBlur = vi.fn();
-      const { node } = createFormComponent({ schema, formData, onBlur });
+      const { node } = createFormComponent({ schema, initialFormData: formData, onBlur });
 
       const input = node.querySelector('[type=text]')!;
       await user.type(input, 'new');
@@ -697,7 +697,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         foo: 'new',
       };
       const onFocus = vi.fn();
-      const { node } = createFormComponent({ schema, formData, onFocus });
+      const { node } = createFormComponent({ schema, initialFormData: formData, onFocus });
 
       const input = node.querySelector('[type=text]')!;
       await user.click(input);

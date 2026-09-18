@@ -398,7 +398,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     };
 
     it('should not set default when a text field is cleared', async () => {
-      const { node } = createFormComponent({ schema, formData: 'bar' });
+      const { node } = createFormComponent({ schema, initialFormData: 'bar' });
 
       await user.clear(node.querySelector<HTMLInputElement>('input')!);
 

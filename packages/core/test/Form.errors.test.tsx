@@ -1,13 +1,12 @@
-import { createRef, useState } from 'react';
+import { createRef } from 'react';
 import type { ErrorSchema, FormValidation, RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import Form from '../src/index.ts';
-import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
+import type Form from '../src/index.ts';
+import { AcceptingParent, expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -45,7 +44,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           };
           const { node } = createFormComponent({
             schema: altSchema,
-            formData: {
+            initialFormData: {
               field1: 'short',
               field2: 'short',
             },
@@ -94,20 +93,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
           // The form has to be controlled, since the errors are cleared by comparing the incoming
           // `formData` prop against the previous one.
-          function Controlled() {
-            const [formData, setFormData] = useState<Record<string, unknown>>({ baz: [{}] });
-            return (
-              <Form
-                schema={altSchema}
-                validator={validator}
-                formData={formData}
-                noHtml5Validate
-                onChange={(e) => setFormData(e.formData)}
-              />
-            );
-          }
-
-          const { container } = render(<Controlled />);
+          const { container } = render(
+            <AcceptingParent<Record<string, unknown>>
+              schema={altSchema}
+              initialValue={{ baz: [{}] }}
+              noHtml5Validate
+            />,
+          );
           const node = container.firstElementChild!;
           const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
 
@@ -143,21 +135,14 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           };
           const formRef = createRef<Form>();
 
-          function Controlled() {
-            const [formData, setFormData] = useState<Record<string, unknown>>({});
-            return (
-              <Form
-                ref={formRef}
-                schema={altSchema}
-                validator={validator}
-                formData={formData}
-                noHtml5Validate
-                onChange={(e) => setFormData(e.formData)}
-              />
-            );
-          }
-
-          const { container } = render(<Controlled />);
+          const { container } = render(
+            <AcceptingParent<Record<string, unknown>>
+              ref={formRef}
+              schema={altSchema}
+              initialValue={{}}
+              noHtml5Validate
+            />,
+          );
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
@@ -192,21 +177,14 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           };
           const formRef = createRef<Form>();
 
-          function Controlled() {
-            const [formData, setFormData] = useState<Record<string, unknown>>({ 'has.dot': {} });
-            return (
-              <Form
-                ref={formRef}
-                schema={altSchema}
-                validator={validator}
-                formData={formData}
-                noHtml5Validate
-                onChange={(e) => setFormData(e.formData)}
-              />
-            );
-          }
-
-          const { container } = render(<Controlled />);
+          const { container } = render(
+            <AcceptingParent<Record<string, unknown>>
+              ref={formRef}
+              schema={altSchema}
+              initialValue={{ 'has.dot': {} }}
+              noHtml5Validate
+            />,
+          );
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
@@ -240,20 +218,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
           };
 
-          function Controlled() {
-            const [formData, setFormData] = useState<Record<string, unknown>>({ tags: ['a', 'a'] });
-            return (
-              <Form
-                schema={altSchema}
-                validator={validator}
-                formData={formData}
-                noHtml5Validate
-                onChange={(e) => setFormData(e.formData)}
-              />
-            );
-          }
-
-          const { container } = render(<Controlled />);
+          const { container } = render(
+            <AcceptingParent<Record<string, unknown>>
+              schema={altSchema}
+              initialValue={{ tags: ['a', 'a'] }}
+              noHtml5Validate
+            />,
+          );
           const node = container.firstElementChild!;
           const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
 
@@ -283,20 +254,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
           };
 
-          function Controlled() {
-            const [formData, setFormData] = useState<Record<string, unknown>>({ baz: [{}, { corge: 'z' }] });
-            return (
-              <Form
-                schema={altSchema}
-                validator={validator}
-                formData={formData}
-                noHtml5Validate
-                onChange={(e) => setFormData(e.formData)}
-              />
-            );
-          }
-
-          const { container } = render(<Controlled />);
+          const { container } = render(
+            <AcceptingParent<Record<string, unknown>>
+              schema={altSchema}
+              initialValue={{ baz: [{}, { corge: 'z' }] }}
+              noHtml5Validate
+            />,
+          );
           const node = container.firstElementChild!;
           const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
 
@@ -806,7 +770,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it('should denote the error in the nested item field in error', async () => {
         const { node } = createFormComponent({
           ...formProps,
-          formData: {
+          initialFormData: {
             level1: ['good', 'ba', 'good'],
           },
         });
@@ -1041,7 +1005,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           ref: createRef(),
           schema,
           liveValidate: 'onChange',
-          formData: { branch: 2 },
+          initialFormData: { branch: 2 },
         });
 
         await user.type(node.querySelectorAll<HTMLInputElement>('input[type=number]')[0], '0');
@@ -1064,7 +1028,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           ref: createRef(),
           schema,
           liveValidate: 'onChange',
-          formData: { branch: 3 },
+          initialFormData: { branch: 3 },
         });
 
         await user.selectOptions(node.querySelector('select')!, '3'); // Select by label/text since selectOptions matches text before value attribute
@@ -1127,7 +1091,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node, onChange } = createFormComponent({
           ref: formRef,
           schema: dependentEnumSchema,
-          formData: { animal: 'Fish', food: 'worms', water: 'lake' },
+          initialFormData: { animal: 'Fish', food: 'worms', water: 'lake' },
         });
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
@@ -1180,7 +1144,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         };
         const { node, onChange } = createFormComponent({
           schema: nestedDependentEnumSchema,
-          formData: { m: { animal: 'Fish', food: 'worms' } },
+          initialFormData: { m: { animal: 'Fish', food: 'worms' } },
         });
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, '0');
@@ -1226,7 +1190,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         };
         const { node, onChange } = createFormComponent({
           schema: refDependentEnumSchema,
-          formData: { m: { animal: 'Fish', food: 'worms' } },
+          initialFormData: { m: { animal: 'Fish', food: 'worms' } },
         });
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, '0');
@@ -1266,7 +1230,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node, onChange } = createFormComponent({
           schema,
           liveValidate: 'onChange',
-          formData: { Start: 2, End: 0 },
+          initialFormData: { Start: 2, End: 0 },
           customValidate,
         });
 
