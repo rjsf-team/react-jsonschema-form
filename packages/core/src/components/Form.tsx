@@ -444,22 +444,27 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
     // `replaceEqualDeep()` hands back `prev` exactly when the values are deep-equal with functions by identity
     let isIdentityPropChanged = false;
+    let isSchemaChanged = false;
     for (const key of IDENTITY_PROP_KEYS) {
-      isIdentityPropChanged ||= replaceEqualDeep(prevProps[key], this.props[key]) !== prevProps[key];
+      if (replaceEqualDeep(prevProps[key], this.props[key]) !== prevProps[key]) {
+        isIdentityPropChanged = true;
+        isSchemaChanged ||= key === 'schema';
+      }
     }
     // Any other prop change still re-derives state, which is what snaps a controlled form back to its `formData` prop
     if (!isIdentityPropChanged && deepEquals(this.props, prevProps)) {
       return { shouldUpdate: false };
     }
-    const isSchemaChanged = replaceEqualDeep(prevProps.schema, this.props.schema) !== prevProps.schema;
     // Shared against the state, so a prop echoing the state's own formData is that formData
     const formData = replaceEqualDeep(this.state.formData, this.props.formData);
     const isStateDataChanged = formData !== this.state.formData;
     // An accepting parent hands the proposal back as a prop; without sharing, the rebuilt state would re-render every
     // field
-    const nextState = replaceEqualDeep(
-      prevState,
-      this.getStateFromProps(
+    // Spread over `prevState` so the keys it alone carries, such as `prevExtraErrors`, do not stop `replaceEqualDeep()`
+    // from returning `prevState` itself when nothing changed
+    const nextState = replaceEqualDeep(prevState, {
+      ...prevState,
+      ...this.getStateFromProps(
         this.props,
         formData,
         // The retrieved schema in state matches the state's data, so it only holds while both are unchanged
@@ -471,7 +476,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         // Live validation is skipped only when neither the data nor anything that could take part in it changed
         !isStateDataChanged && !isIdentityPropChanged,
       ),
-    );
+    });
     const shouldUpdate = nextState !== prevState;
     return { nextState, shouldUpdate };
   }

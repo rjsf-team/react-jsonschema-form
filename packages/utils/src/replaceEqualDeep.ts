@@ -1,9 +1,14 @@
 import isPlainObject from './isPlainObject.ts';
 
+function isReactElement(thing: unknown): thing is { type: unknown; key: unknown; props: unknown } {
+  return isPlainObject(thing) && '$$typeof' in thing;
+}
+
 /** Structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results: returns `next` with every
  * subtree deeply equal to its counterpart in `prev` replaced by the `prev` instance, and `prev` itself when the whole
- * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays and
- * equal-valued `Date`s are shared; any other object is opaque and `next` is kept. Neither argument is mutated.
+ * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays,
+ * equal-valued `Date`s and React elements of the same type, key and props are shared; any other object is opaque and
+ * `next` is kept. Neither argument is mutated.
  *
  * @param prev - The previous value whose references should be retained where possible
  * @param next - The newly computed value
@@ -27,6 +32,15 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
       }
     }
     return sameAsPrev ? prev : (copy ?? next);
+  }
+  if (isReactElement(prev) && isReactElement(next)) {
+    // A React element's identity is its type, key and props; `_owner` and the dev-only `_debug*` fields differ on
+    // every render, as `deepEquals()` also disregards them
+    return prev.type === next.type &&
+      prev.key === next.key &&
+      Object.is(replaceEqualDeep(prev.props, next.props), prev.props)
+      ? prev
+      : next;
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);

@@ -1,3 +1,5 @@
+import { createElement } from 'react';
+
 import { replaceEqualDeep } from '../src/index.ts';
 
 describe('replaceEqualDeep()', () => {
@@ -72,6 +74,17 @@ describe('replaceEqualDeep()', () => {
     const prev = [{ x: 1 }];
     const next = [{ x: 2 }, { x: 3 }];
     expect(replaceEqualDeep(prev, next)).toBe(next);
+  });
+
+  it('retains a React element rebuilt with the same type, key and props, and drops one that changed', () => {
+    const prev = createElement('span', { className: 'a' }, 'text');
+    expect(replaceEqualDeep(prev, createElement('span', { className: 'a' }, 'text'))).toBe(prev);
+    const changed = createElement('span', { className: 'b' }, 'text');
+    expect(replaceEqualDeep(prev, changed)).toBe(changed);
+    const otherType = createElement('b', { className: 'a' }, 'text');
+    expect(replaceEqualDeep(prev, otherType)).toBe(otherType);
+    const keyed = createElement('span', { key: 'k', className: 'a' }, 'text');
+    expect(replaceEqualDeep(prev, keyed)).toBe(keyed);
   });
 
   it('retains an equal-valued Date instance', () => {

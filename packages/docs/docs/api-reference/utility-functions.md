@@ -1197,7 +1197,7 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the `prev` instance, so consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
 When the whole value is unchanged, `prev` itself is returned.
-Sharing happens for plain objects and arrays; equal-valued `Date`s retain the previous instance; any other object type is treated as opaque and `next` is kept.
+Sharing happens for plain objects and arrays; equal-valued `Date`s and React elements of the same type, key and props retain the previous instance; any other object type is treated as opaque and `next` is kept.
 Neither argument is mutated: when a container is only partially unchanged, a new container holding the retained children is returned.
 This is structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results. `Form` applies it to the state it builds for a change, and `SchemaUtils.retrieveSchema()` to a recomputed schema.
 
@@ -1321,15 +1321,6 @@ setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an arr
 setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 ```
-
-### Parameters
-
-- a: any - The first element to compare
-- b: any - The second element to compare
-
-#### Returns
-
-- boolean: True if the `a` and `b` are shallow equal, false otherwise
 
 ### shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
