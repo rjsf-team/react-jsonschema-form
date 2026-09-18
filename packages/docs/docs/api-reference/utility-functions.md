@@ -1322,12 +1322,7 @@ setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects 
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 ```
 
-### shallowEquals()
-
-Implements a shallow equals comparison that uses `Object.is()` for comparing values.
-This function compares objects by checking if all keys and their values are equal using `Object.is()`.
-
-#### Parameters
+### Parameters
 
 - a: any - The first element to compare
 - b: any - The second element to compare

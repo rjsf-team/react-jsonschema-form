@@ -39,7 +39,6 @@ import {
   mergeObjects,
   replaceEqualDeep,
   schemaHasNestedConditional,
-  shallowEquals,
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
   fieldPathFromList,
@@ -463,7 +462,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     prevProps: FormProps<T, S, F>,
     prevState: FormState<T, S, F>,
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
-    if (shallowEquals(this.props, prevProps)) {
+    // A state-only update hands over the same props object
+    if (this.props === prevProps) {
       return { shouldUpdate: false };
     }
     const prevStateProps = this.stateProps;
