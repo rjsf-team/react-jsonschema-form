@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { forwardRef, createElement } from 'react';
 
 import { replaceEqualDeep } from '../src/index.ts';
 
@@ -127,6 +127,26 @@ describe('replaceEqualDeep()', () => {
     const bareResult = replaceEqualDeep(bare, bareNext);
     expect(Object.getPrototypeOf(bareResult)).toBeNull();
     expect(bareResult.same).toBe(bare.same);
+  });
+
+  it('does not treat two different forwardRef components as the same one', () => {
+    const first = forwardRef(() => null);
+    const second = forwardRef(() => null);
+    expect(replaceEqualDeep({ widget: first }, { widget: second }).widget).toBe(second);
+  });
+
+  it('does not retain a value whose symbol-keyed markers differ', () => {
+    const marker = Symbol('marker');
+    const prev = { type: 'string' };
+    const next = { type: 'string', [marker]: true };
+    expect(replaceEqualDeep(prev, next)).toBe(next);
+    expect(replaceEqualDeep(next, prev)).toBe(prev);
+    expect(replaceEqualDeep({ a: prev }, { a: next }).a).toBe(next);
+
+    const other = Symbol('other');
+    expect(replaceEqualDeep(next, { type: 'string', [other]: true })).not.toBe(next);
+    expect(replaceEqualDeep(next, { type: 'string', [marker]: false })).not.toBe(next);
+    expect(replaceEqualDeep(next, { type: 'string', [marker]: true })).toBe(next);
   });
 
   it('does not retain across mismatched container types', () => {

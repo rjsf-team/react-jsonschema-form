@@ -1,7 +1,23 @@
 import isPlainObject from './isPlainObject.ts';
 
-function isReactElement(thing: unknown): thing is { type: unknown; key: unknown; props: unknown } {
-  return isPlainObject(thing) && '$$typeof' in thing;
+function isReactElement(thing: unknown): thing is { $$typeof: unknown; type: unknown; key: unknown; props: unknown } {
+  // `$$typeof` alone is not enough: `forwardRef()`, `memo()`, `lazy()`, contexts and portals carry one too and have
+  // no `type`/`props` pair, so comparing those three would report every one of them as equal to every other
+  return isPlainObject(thing) && '$$typeof' in thing && 'type' in thing && 'props' in thing;
+}
+
+/** Whether `prev` and `next` carry the same own enumerable symbol keys with identical values. RJSF marks schemas with
+ * symbols (`ADDITIONAL_PROPERTY_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`), which `Object.keys()` cannot see, so
+ * without this two schemas differing only in a marker would be treated as the same one.
+ */
+function sameOwnSymbols(prev: object, next: object): boolean {
+  const prevSymbols = Object.getOwnPropertySymbols(prev);
+  return (
+    prevSymbols.length === Object.getOwnPropertySymbols(next).length &&
+    prevSymbols.every(
+      (symbol) => Object.hasOwn(next, symbol) && Object.is(Reflect.get(prev, symbol), Reflect.get(next, symbol)),
+    )
+  );
 }
 
 /** Structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results: returns `next` with every
@@ -36,7 +52,8 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
   if (isReactElement(prev) && isReactElement(next)) {
     // A React element's identity is its type, key and props; `_owner` and the dev-only `_debug*` fields differ on
     // every render, as `deepEquals()` also disregards them
-    return prev.type === next.type &&
+    return prev.$$typeof === next.$$typeof &&
+      prev.type === next.type &&
       prev.key === next.key &&
       Object.is(replaceEqualDeep(prev.props, next.props), prev.props)
       ? prev
@@ -55,7 +72,7 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
         copy[key] = value;
       }
     }
-    if (sameAsPrev && nextKeys.length === Object.keys(prev).length) {
+    if (sameAsPrev && nextKeys.length === Object.keys(prev).length && sameOwnSymbols(prev, next)) {
       return prev;
     }
     if (!copy) {
