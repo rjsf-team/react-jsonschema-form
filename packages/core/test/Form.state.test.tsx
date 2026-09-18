@@ -320,7 +320,10 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         rerender({
           ...formProps,
           onError,
-          formData: 'yo',
+          // A numeric-looking string: it satisfies the number field's native `pattern` (so the browser
+          // lets the form submit), but is still a `string`, not a `number`, so AJV's own type check is
+          // what has to catch it.
+          formData: '123',
           schema: { type: 'number' },
         });
         await submitForm(node, user);

@@ -103,8 +103,6 @@ describe('NumberField', () => {
       },
     ];
     for (const uiSchema of uiSchemas) {
-      // an empty uiSchema renders a native number input, so the widget yields numbers rather than strings
-      const isNumberInput = Object.keys(uiSchema).length === 0;
       it('should render a string field with a label', () => {
         const { node } = createFormComponent({
           schema: {
@@ -269,9 +267,7 @@ describe('NumberField', () => {
             await user.type($input!, test.input);
 
             expectToHaveBeenCalledWithFormData(onChange, test.output, 'root');
-            // "2." is not really a valid number in a input field of type number
-            // so we need to use getAttribute("value") instead since .value outputs the empty string
-            expect($input).toHaveValue(isNumberInput ? test.output : test.input);
+            expect($input).toHaveValue(test.input);
           });
         });
       });
@@ -289,8 +285,7 @@ describe('NumberField', () => {
         await user.type($input!, '.00');
 
         expectToHaveBeenCalledWithFormData(onChange, 0, 'root');
-        const expected = isNumberInput ? 0 : '.00';
-        expect($input).toHaveValue(expected);
+        expect($input).toHaveValue('.00');
       });
 
       it('should update input values correctly when formData prop changes', () => {
@@ -332,14 +327,14 @@ describe('NumberField', () => {
 
         await user.type($input!, '231', { initialSelectionStart: 0, initialSelectionEnd: 1 });
 
-        expect($input).toHaveValue(isNumberInput ? 231 : '231');
+        expect($input).toHaveValue('231');
         expectToHaveBeenCalledWithFormData(onChange, 231, 'root');
 
         act(() => {
           ref.current?.reset();
         });
 
-        expect($input).toHaveValue(isNumberInput ? 1 : '1');
+        expect($input).toHaveValue('1');
         // No id on programmatic change
         expectToHaveBeenCalledWithFormData(onChange, 1);
       });
@@ -363,35 +358,16 @@ describe('NumberField', () => {
           uiSchema,
         });
         await user.type(node.querySelector('input')!, '2.');
-
-        if (isNumberInput) {
-          // "2." is not really a valid number in a input field of type number
-          // so we need to use getAttribute("value") instead since .value outputs the empty string
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
       });
 
       it('should allow a zero to be input', async () => {
@@ -403,8 +379,7 @@ describe('NumberField', () => {
         });
 
         await user.type(node.querySelector('input')!, '0');
-        const expected = isNumberInput ? 0 : '0';
-        expect(node.querySelector('.rjsf-field input')).toHaveValue(expected);
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('0');
       });
 
       it('should render customized StringField', () => {

@@ -987,7 +987,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           liveValidate: 'onChange',
         });
 
-        const input = node.querySelector<HTMLInputElement>('input[type=number]');
+        const input = node.querySelector<HTMLInputElement>('input[inputmode=decimal]');
         expect(input).toBeInTheDocument();
         await user.type(input!, '0');
         await user.clear(input!);
@@ -1008,7 +1008,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           initialFormData: { branch: 2 },
         });
 
-        await user.type(node.querySelectorAll<HTMLInputElement>('input[type=number]')[0], '0');
+        await user.type(node.querySelectorAll<HTMLInputElement>('input[inputmode=decimal]')[0], '0');
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({

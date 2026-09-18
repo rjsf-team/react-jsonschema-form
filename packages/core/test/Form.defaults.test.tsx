@@ -256,7 +256,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       await user.click(node.querySelector('.btn-add')!);
 
-      expect(node.querySelector<HTMLInputElement>('input[type=number]')).toHaveValue(0);
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveValue('0');
     });
 
     it('should recursively handle referenced definitions', async () => {
