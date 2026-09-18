@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.2
 
+## @rjsf/core
+
+- Added a `@rjsf/core/testing` export subpath for `getTestRegistry()` and declared `@rjsf/validator-ajv8`, which that helper imports, as a dependency of `@rjsf/core`. Importing `@rjsf/core` pulled `getTestRegistry()` — and through it `@rjsf/validator-ajv8` — into the module graph, so anyone using a different validator had to install `@rjsf/validator-ajv8` anyway or their bundler failed to resolve it, fixing [#5295](https://github.com/rjsf-team/react-jsonschema-form/issues/5295). The existing `@rjsf/core` export of `getTestRegistry()` still works; it is deprecated and moves to `@rjsf/core/testing` in v7 ([#5272](https://github.com/rjsf-team/react-jsonschema-form/pull/5272))
+
 ## @rjsf/validator-ata
 
 - Updated `ata-validator` from `^1.7.1` to `^1.23.0`, picking up the corrected error shape for `unevaluatedProperties` (the error now carries `params.unevaluatedProperty`), the removal of a quadratic in `additionalProperties: false` schemas with many properties, a fix for a hang on truncated JSON input, and enforced strict-mode schema checks ([#5293](https://github.com/rjsf-team/react-jsonschema-form/pull/5293))
