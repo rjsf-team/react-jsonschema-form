@@ -313,57 +313,31 @@ interface PendingChange<T> {
   id?: string;
 }
 
-/** The props state derives from. `Form` interns them, so a deep-equal incoming value becomes the retained instance
- * and every change check is an identity check. Functions compare by identity, so callbacks must be stable references.
+/** The props state derives from. A change to one of them, functions compared by identity, re-derives state, so a
+ * callback recreated on every render re-derives it on every render; wrap those in `useCallback` or hoist them.
  */
-function pickStateProps<T, S extends StrictRJSFSchema, F extends FormContextType>({
-  schema,
-  validator,
-  uiSchema,
-  formData,
-  liveValidate,
-  // oxlint-disable-next-line typescript/no-deprecated
-  noValidate,
-  extraErrors,
-  defaultFormStateBehavior,
-  customMergeAllOf,
-  customValidate,
-  transformErrors,
-  fields,
-  templates,
-  widgets,
-  formContext,
-  translateString,
-  idPrefix,
-  idSeparator,
-  nameGenerator,
-  useFallbackUiForUnsupportedType,
-}: FormProps<T, S, F>) {
-  return {
-    schema,
-    validator,
-    uiSchema,
-    formData,
-    liveValidate,
-    noValidate,
-    extraErrors,
-    defaultFormStateBehavior,
-    customMergeAllOf,
-    customValidate,
-    transformErrors,
-    fields,
-    templates,
-    widgets,
-    formContext,
-    translateString,
-    idPrefix,
-    idSeparator,
-    nameGenerator,
-    useFallbackUiForUnsupportedType,
-  };
-}
-
-type StateProps<T, S extends StrictRJSFSchema, F extends FormContextType> = ReturnType<typeof pickStateProps<T, S, F>>;
+const STATE_PROP_KEYS = [
+  'schema',
+  'validator',
+  'uiSchema',
+  'formData',
+  'liveValidate',
+  'noValidate',
+  'extraErrors',
+  'defaultFormStateBehavior',
+  'customMergeAllOf',
+  'customValidate',
+  'transformErrors',
+  'fields',
+  'templates',
+  'widgets',
+  'formContext',
+  'translateString',
+  'idPrefix',
+  'idSeparator',
+  'nameGenerator',
+  'useFallbackUiForUnsupportedType',
+] as const satisfies readonly (keyof FormProps)[];
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
@@ -374,9 +348,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
    */
   formElement: RefObject<HTMLElement | null>;
-
-  /** The interned props the current state was derived from */
-  private stateProps: StateProps<T, S, F>;
 
   /** The list of pending changes
    */
@@ -434,7 +405,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     const { formData: propsFormData, initialFormData, onChange } = props;
     const formData = propsFormData ?? initialFormData;
-    this.stateProps = pickStateProps(props);
     const initialState = this.getStateFromProps(props, formData, undefined, undefined, undefined, true);
     this.state = {
       ...initialState,
@@ -452,7 +422,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * output is committed to the DOM. It enables your component to capture current values (e.g., scroll position) before
    * they are potentially changed.
    *
-   * Here it interns the props state derives from and, when any prop changed, derives the next state for
+   * Here it checks whether any prop changed and, if so, derives the next state for
    * `componentDidUpdate` to commit, flagging `shouldUpdate` only when that state differs from the previous one.
    *
    * @param prevProps - The previous set of props before the update.
@@ -468,32 +438,29 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     if (this.props === prevProps) {
       return { shouldUpdate: false };
     }
-    const prevStateProps = this.stateProps;
-    const stateProps = replaceEqualDeep(prevStateProps, pickStateProps(this.props));
-    this.stateProps = stateProps;
-    // Any other prop change still re-derives state, which is what snaps a controlled form back to its `formData` prop;
-    // the interned props are identical on both sides, so the deep comparison only walks the rest
-    if (
-      stateProps === prevStateProps &&
-      deepEquals({ ...prevProps, ...prevStateProps }, { ...this.props, ...stateProps })
-    ) {
+    // `replaceEqualDeep()` hands back `prev` exactly when the values are deep-equal with functions by identity
+    const changedKeys = STATE_PROP_KEYS.filter(
+      (key) => replaceEqualDeep(prevProps[key], this.props[key]) !== prevProps[key],
+    );
+    // Any other prop change still re-derives state, which is what snaps a controlled form back to its `formData` prop
+    if (changedKeys.length === 0 && deepEquals(this.props, prevProps)) {
       return { shouldUpdate: false };
     }
-    const isSchemaChanged = stateProps.schema !== prevStateProps.schema;
-    const isFormDataChanged = stateProps.formData !== prevStateProps.formData;
+    const isSchemaChanged = changedKeys.includes('schema');
+    const isFormDataChanged = changedKeys.includes('formData');
     const isValidationChanged =
-      stateProps.validator !== prevStateProps.validator ||
-      stateProps.customValidate !== prevStateProps.customValidate ||
-      stateProps.transformErrors !== prevStateProps.transformErrors;
-    // Interned against the state as well, so a prop echoing the state's own formData is that formData
-    const formData = replaceEqualDeep(this.state.formData, stateProps.formData);
+      changedKeys.includes('validator') ||
+      changedKeys.includes('customValidate') ||
+      changedKeys.includes('transformErrors');
+    // Shared against the state, so a prop echoing the state's own formData is that formData
+    const formData = replaceEqualDeep(this.state.formData, this.props.formData);
     const isStateDataChanged = formData !== this.state.formData;
     // An accepting parent hands the proposal back as a prop; without sharing, the rebuilt state would re-render every
     // field
     const nextState = replaceEqualDeep(
       prevState,
       this.getStateFromProps(
-        { ...this.props, ...stateProps },
+        this.props,
         formData,
         // If the `schema` has changed, we need to update the retrieved schema.
         // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
@@ -502,7 +469,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         isSchemaChanged,
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
         // not, so the walk that produces them is left for `getStateFromProps` to ask for
-        () => getChangedFields(formData, prevStateProps.formData, true),
+        () => getChangedFields(formData, prevProps.formData, true),
         // skipLiveValidate
         !isStateDataChanged && !isValidationChanged,
       ),
@@ -1103,16 +1070,17 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
 
     // Unchanged subtrees keep their state references, so sibling fields' memo boundaries hold across the change
-    state = replaceEqualDeep(this.state, state);
-
-    this.setState(state as FormState<T, S, F>, () => {
-      if (onChange) {
-        onChange(toIChangeEvent({ ...this.state, ...state }), id);
-      }
-      // Now remove the change we just completed and call this again
-      this.pendingChanges.shift();
-      this.processPendingChange();
-    });
+    this.setState(
+      (prevState) => replaceEqualDeep(prevState, state as FormState<T, S, F>),
+      () => {
+        if (onChange) {
+          onChange(toIChangeEvent(this.state), id);
+        }
+        // Now remove the change we just completed and call this again
+        this.pendingChanges.shift();
+        this.processPendingChange();
+      },
+    );
   }
 
   /** Filters the given `formData` down to only the elements described by the current `schema`, using the
@@ -1153,20 +1121,22 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       true,
     );
     const newFormData = newState.formData;
-    const state = replaceEqualDeep(this.state, {
-      formData: newFormData,
-      errorSchema: {},
-      errors: [],
-      schemaValidationErrors: [],
-      schemaValidationErrorSchema: {},
-      // Matches what this reset pass actually computed defaults with (see getStateFromProps's `isReset` handling),
-      // keeping the flag in sync with the formData it describes — otherwise the next unrelated recompute would
-      // treat itself as an initial pass too and resurrect a `ui:initialValue` the user had since cleared.
-      initialDefaultsGenerated: newState.initialDefaultsGenerated,
-      customErrors: undefined,
-    } satisfies Partial<FormState<T, S, F>>);
-
-    this.setState(state, () => onChange?.(toIChangeEvent({ ...this.state, ...state })));
+    this.setState(
+      (prevState) =>
+        replaceEqualDeep(prevState, {
+          formData: newFormData,
+          errorSchema: {},
+          errors: [],
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+          // Matches what this reset pass actually computed defaults with (see getStateFromProps's `isReset` handling),
+          // keeping the flag in sync with the formData it describes — otherwise the next unrelated recompute would
+          // treat itself as an initial pass too and resurrect a `ui:initialValue` the user had since cleared.
+          initialDefaultsGenerated: newState.initialDefaultsGenerated,
+          customErrors: undefined,
+        } satisfies Partial<FormState<T, S, F>>),
+      () => onChange?.(toIChangeEvent(this.state)),
+    );
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
@@ -1203,16 +1173,20 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         );
         state = { formData: newFormData, ...liveValidation, customErrors };
       }
-      state = replaceEqualDeep(this.state, state);
-      const hasChanges = Object.keys(state)
-        // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
-        .filter((key) => !key.startsWith('schemaValidation'))
-        .some((key) => this.state[key as keyof FormState<T, S, F>] !== state[key as keyof FormState<T, S, F>]);
-      this.setState(state as FormState<T, S, F>, () => {
-        if (onChange && hasChanges) {
-          onChange(toIChangeEvent({ ...this.state, ...state }), id);
-        }
-      });
+      const committed = this.state;
+      this.setState(
+        (prevState) => replaceEqualDeep(prevState, state as FormState<T, S, F>),
+        () => {
+          // Shared subtrees make this an identity check. `schemaValidationErrors` and `schemaValidationErrorSchema`
+          // are left out since they aren't IChangeEvent props
+          const hasChanges = Object.keys(state)
+            .filter((key) => !key.startsWith('schemaValidation'))
+            .some((key) => committed[key as keyof FormState<T, S, F>] !== this.state[key as keyof FormState<T, S, F>]);
+          if (onChange && hasChanges) {
+            onChange(toIChangeEvent(this.state), id);
+          }
+        },
+      );
     }
   };
 
@@ -1258,13 +1232,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       const errorSchema = extraErrors || {};
       const errors = extraErrors ? toErrorList(extraErrors) : [];
       this.setState(
-        replaceEqualDeep(this.state, {
-          formData: newFormData,
-          errors,
-          errorSchema,
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
-        }),
+        (prevState) =>
+          replaceEqualDeep(prevState, {
+            formData: newFormData,
+            errors,
+            errorSchema,
+            schemaValidationErrors: [],
+            schemaValidationErrorSchema: {},
+          }),
         () => {
           if (onSubmit) {
             onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
@@ -1344,12 +1319,13 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         }
       }
       this.setState(
-        replaceEqualDeep(this.state, {
-          errors,
-          errorSchema,
-          schemaValidationErrors: schemaValidation.errors,
-          schemaValidationErrorSchema: schemaValidation.errorSchema,
-        }),
+        (prevState) =>
+          replaceEqualDeep(prevState, {
+            errors,
+            errorSchema,
+            schemaValidationErrors: schemaValidation.errors,
+            schemaValidationErrorSchema: schemaValidation.errorSchema,
+          }),
         () => {
           if (onError) {
             onError(errors);
@@ -1361,8 +1337,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       );
     } else if (errors.length > 0) {
       // Non-blocking extraErrors are present — update display state without triggering onError.
-      this.setState(
-        replaceEqualDeep(this.state, {
+      this.setState((prevState) =>
+        replaceEqualDeep(prevState, {
           errors,
           errorSchema,
           schemaValidationErrors: [],
@@ -1370,8 +1346,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         }),
       );
     } else if (prevErrors.length > 0) {
-      this.setState(
-        replaceEqualDeep(this.state, {
+      this.setState((prevState) =>
+        replaceEqualDeep(prevState, {
           errors: [],
           errorSchema: {},
           schemaValidationErrors: [],
