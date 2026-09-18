@@ -725,12 +725,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
    * @param [retrievedSchema] - An optionally retrieved schema for per
    */
-  validate(
+  validate = (
     formData: T | undefined,
     schema = this.state.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
-  ): ValidationData<T> {
+  ): ValidationData<T> => {
     const schemaUtils = altSchemaUtils || this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
@@ -744,7 +744,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     return schemaUtils
       .getValidator()
       .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
-  }
+  };
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {
@@ -1080,9 +1080,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   /** Returns the form data currently rendered, see `FormHandle.getFormData()`. Until strict ownership lands this is the
    * reconciled internal value in both modes; afterwards it reads the owner directly.
    */
-  getFormData(): T | undefined {
-    return this.state.formData;
-  }
+  getFormData = (): T | undefined => this.state.formData;
 
   /**
    * Callback function to handle reset form data.
@@ -1244,7 +1242,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    *
    * @param error - The error on which to focus
    */
-  focusOnError(error: RJSFValidationError) {
+  focusOnError = (error: RJSFValidationError) => {
     const { idPrefix = 'root', idSeparator = '_' } = this.props;
     const { property } = error;
     const path = toPath(property ?? '');
@@ -1264,7 +1262,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     if (field instanceof HTMLElement) {
       field.focus();
     }
-  }
+  };
 
   /** Validates the form using the given `formData`. For use on form submission or on programmatic validation.
    * If `onError` is provided, then it will be called with the list of errors.
@@ -1333,14 +1331,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    *
    * @returns - True if the form is valid, false otherwise.
    */
-  validateForm() {
+  validateForm = (): boolean => {
     const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
     if (omitExtraData === true) {
       newFormData = this.omitFormExtraData(newFormData);
     }
     return this.validateFormWithFormData(newFormData);
-  }
+  };
 
   /** Renders the `Form` fields inside the <form> | `tagName`, rendering any errors if needed along with the submit
    * button or any children of the form.

@@ -16,13 +16,13 @@ import type {
  * Only the members listed here are supported. Everything else on the class instance may change without notice.
  */
 export interface FormHandle<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
-  /** Returns the form data the `Form` currently renders: the value the parent supplied for a parent-owned form, or the
-   * value committed internally for a self-owned form. It is the read path for a self-owned form, whose data is not
+  /** Returns the form data the `Form` currently renders. It is the read path for a self-owned form, whose data is not
    * otherwise reachable between `onChange` calls (autosave, route guards, a submit button outside the form).
    *
-   * It reads committed data only. An edit or `setFieldValue()` in the same tick is not visible until React commits
-   * it, and a proposal a parent-owned form has emitted but the parent has not yet accepted is never returned. Treat the
-   * result as read-only; mutating it mutates what the form renders.
+   * It reads committed data only: an edit or `setFieldValue()` in the same tick is not visible until React commits it.
+   * For a parent-owned form this is still what the form renders rather than what the parent holds — the form keeps a
+   * reconciled copy, so a change the parent declined is returned until the parent re-renders it away. Strict ownership
+   * removes that copy. Treat the result as read-only; mutating it mutates what the form renders.
    */
   getFormData(): T | undefined;
   /** Programmatically submits the `Form`, running validation and `onSubmit`/`onError` as a submit button would */

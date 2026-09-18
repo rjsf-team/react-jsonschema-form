@@ -82,14 +82,14 @@ A `ref` on `Form` exposes its `FormHandle`: `getFormData()`, `submit()`, `reset(
 `getFormData()` returns the data the form currently renders. Use it with `initialFormData`, where the form owns the data and there is otherwise no way to read it between `onChange` calls:
 
 ```tsx
-import { useRef } from 'react';
+import { createRef } from 'react';
 import type { FormHandle } from '@rjsf/core';
 import Form from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = { type: 'object', properties: { title: { type: 'string' } } };
-const formRef = useRef<Form>(null);
+const formRef = createRef<Form>();
 
 function saveDraft() {
   const form: FormHandle | null = formRef.current;
@@ -99,7 +99,7 @@ function saveDraft() {
 <Form ref={formRef} schema={schema} validator={validator} initialFormData={{ title: 'Untitled' }} />;
 ```
 
-It reads committed data, so an edit or `setFieldValue()` in the same tick is visible only after React commits. With `formData` it returns the value you passed.
+It reads committed data, so an edit or `setFieldValue()` in the same tick is visible only after React commits. With a `formData` prop it returns what the form renders, which is not always what you passed: the form still keeps a reconciled copy, so a change your `onChange` handler declined stays until you re-render the form with the value you want.
 
 ## Submit form programmatically
 
