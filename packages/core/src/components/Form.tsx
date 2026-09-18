@@ -425,21 +425,26 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, this.props.formData);
       const isStateDataChanged =
         stateDataChangedFields.length > 0 || !deepEquals(this.state.formData, this.props.formData);
-      const nextState = this.getStateFromProps(
-        this.props,
-        this.props.formData,
-        // If the `schema` has changed, we need to update the retrieved schema.
-        // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
-        //  match one of the subSchemas, the retrieved schema must be updated.
-        isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
-        isSchemaChanged,
-        // Only the error clearing needs the path of each changed field, and it runs only when live validation does
-        // not, so the walk that produces them is left for `getStateFromProps` to ask for
-        () => getChangedFields(this.props.formData, prevProps.formData, true),
-        // Skip live validation for this request if no form data has changed from the last state
-        !isStateDataChanged,
+      // Structural sharing against `prevState`: a parent accepting a proposal hands the same data back as a prop, and
+      // without it the rebuilt state would carry fresh references for every subtree, re-rendering every field
+      const nextState = replaceEqualDeep(
+        prevState,
+        this.getStateFromProps(
+          this.props,
+          this.props.formData,
+          // If the `schema` has changed, we need to update the retrieved schema.
+          // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
+          //  match one of the subSchemas, the retrieved schema must be updated.
+          isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
+          isSchemaChanged,
+          // Only the error clearing needs the path of each changed field, and it runs only when live validation does
+          // not, so the walk that produces them is left for `getStateFromProps` to ask for
+          () => getChangedFields(this.props.formData, prevProps.formData, true),
+          // Skip live validation for this request if no form data has changed from the last state
+          !isStateDataChanged,
+        ),
       );
-      const shouldUpdate = !deepEquals(nextState, prevState);
+      const shouldUpdate = nextState !== prevState;
       return { nextState, shouldUpdate };
     }
     return { shouldUpdate: false };
@@ -476,7 +481,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         return;
       }
 
-      if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData) && this.props.onChange) {
+      if (nextStateDiffersFromProps && nextState.formData !== prevState.formData && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
       // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
@@ -899,6 +904,17 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, disabled, readonly } = this.props;
     const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema, errors } = this.state;
     let { customErrors, retrievedSchema } = this.state;
+    // The value and errors this change is applied to. Sharing the result's references with them is what keeps the
+    // props of sibling fields stable; under controlled ownership the value is the parent's, so it is named explicitly
+    // rather than read back out of `this.state` where the sharing happens
+    const current = {
+      formData: oldFormData,
+      errors,
+      errorSchema: this.state.errorSchema,
+      schemaValidationErrors: this.state.schemaValidationErrors,
+      schemaValidationErrorSchema,
+      retrievedSchema,
+    };
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -1046,9 +1062,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
 
-    // Structural sharing: every unchanged subtree keeps the previous state's reference so sibling fields stay
+    // Structural sharing: every unchanged subtree keeps the reference it had in `current`, so sibling fields stay
     // reference-equal across the change; SchemaField's shallow memo comparison depends on it to skip their re-renders
-    state = replaceEqualDeep(this.state, state);
+    state = replaceEqualDeep(current, state);
 
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
