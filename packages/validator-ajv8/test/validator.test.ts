@@ -672,6 +672,15 @@ describe('AJV8Validator', () => {
             ]);
           });
         });
+        describe('uiSchema declares ui:initialValue', () => {
+          it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
+            const validate = vi.fn((_formData: any, errors: FormValidation) => errors);
+            const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
+            const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+            validator.validateFormData({}, schema, validate, undefined, uiSchema);
+            expect(validate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
+          });
+        });
       });
       describe('Data-Url validation', () => {
         let schema: RJSFSchema;

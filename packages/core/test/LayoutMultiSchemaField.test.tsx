@@ -455,6 +455,37 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  test('applies ui:initialValue from a per-option uiSchema.oneOf[index] entry when a new option is selected', async () => {
+    // Matches AnyOfField's own optionsUiSchema/optionUiSchema resolution: once uiSchema.oneOf is declared as an
+    // array, a plain per-key entry on the parent uiSchema (e.g. uiSchema.unique_to_second) is never consulted for
+    // that option's own fields, so the override must be declared at uiSchema.oneOf[1] to take effect.
+    const selectorField = 'name';
+    const uiSchema = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
+      [UI_WIDGET_KEY]: 'select',
+      [ONE_OF_KEY]: [{}, { unique_to_second: { 'ui:initialValue': 42 } }],
+    };
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: oneOfSchema as RJSFSchema,
+      formData: { name: 'first_option', flag: true },
+      uiSchema,
+    });
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const button = screen.getByRole('combobox');
+    // select the second option, whose schema has the `unique_to_second` field
+    await user.selectOptions(button, '1');
+
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ unique_to_second: 42 }),
+        props.fieldPath,
+        undefined,
+        DEFAULT_ID,
+      );
+    });
+  });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
     const selectorField = 'name';
     const props = getProps({

@@ -17,6 +17,7 @@ import {
   DEFAULT_KEY,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getOptionUiSchema,
   hashObject,
   fieldPathToName,
   ONE_OF_KEY,
@@ -171,17 +172,21 @@ export default function LayoutMultiSchemaField<
 
     let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
     if (newFormData && newOption) {
-      // Call getDefaultFormState to make sure defaults are populated on change. Passes the field's own uiSchema
-      // (this component doesn't support a per-option uiSchema split the way AnyOfField's uiSchema.oneOf/anyOf does)
-      // so ui:initialValue/ui:emptyValue on the newly-selected option's fields apply on selection.
+      // Call getDefaultFormState to make sure defaults are populated on change, resolving the newly-selected
+      // option's own uiSchema the same way AnyOfField's optionsUiSchema/optionUiSchema does — `uiSchema.oneOf[i]`/
+      // `uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling back to this field's own
+      // uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the same way here as they do
+      // when the same schema is rendered through plain SchemaField/AnyOfField.
       // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
+      const keyword = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
+      const newOptionIndex = enumOptions.findIndex(({ schema: enumOptionSchema }) => enumOptionSchema === newOption);
       newFormData = schemaUtils.getDefaultFormState(
         newOption,
         newFormData,
         'excludeObjectChildren',
         undefined,
-        uiSchema,
+        getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
         uiSchemaDefinitions,
       ) as T;
     }

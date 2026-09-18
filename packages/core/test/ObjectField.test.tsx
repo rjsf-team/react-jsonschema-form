@@ -1568,6 +1568,27 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
 
+    it('should apply uiSchema.additionalProperties ui:initialValue to a non-object additionalProperties entry', async () => {
+      // The default pipeline must apply ui:initialValue for every additionalProperties shape, not only when the
+      // schema is object-typed or a $ref.
+      const additionalPropertiesArraySchema: RJSFSchema = {
+        ...schema,
+        additionalProperties: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: additionalPropertiesArraySchema,
+        uiSchema: { additionalProperties: { 'ui:initialValue': ['preset'] } },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: ['preset'] }, 'root');
+    });
+
     it("should add a new default item if default is provided in the additionalProperties' schema", async () => {
       const customSchema: RJSFSchema = {
         ...schema,

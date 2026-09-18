@@ -314,19 +314,18 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
-        if (wasRef || type === 'object') {
-          // Route through the normal default pipeline (the same one an existing additionalProperties entry already
-          // goes through) so nested schema defaults and ui:initialValue/ui:emptyValue on uiSchema.additionalProperties
-          // apply the same way they do when Form first mounts with that key already present in formData.
-          defaultValue = schemaUtils.getDefaultFormState(
-            apSchema as S,
-            defaultValue as T,
-            undefined,
-            undefined,
-            getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
-            uiSchemaDefinitions,
-          ) as RJSFSchema['default'];
-        }
+        // Route through the normal default pipeline (the same one an existing additionalProperties entry already
+        // goes through) for every additionalProperties shape — not just object/$ref — so nested schema defaults and
+        // ui:initialValue/ui:emptyValue on uiSchema.additionalProperties apply the same way they do when Form first
+        // mounts with that key already present in formData.
+        defaultValue = schemaUtils.getDefaultFormState(
+          apSchema as S,
+          defaultValue as T,
+          undefined,
+          undefined,
+          getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+          uiSchemaDefinitions,
+        ) as RJSFSchema['default'];
       }
 
       const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);

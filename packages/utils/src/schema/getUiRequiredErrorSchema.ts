@@ -166,7 +166,21 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchemaDefinitions && Object.keys(uiSchema).length === 0) {
     return;
   }
-  const resolvedSchema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData as T, customMergeAllOf);
+  // resolveAnyOfOrOneOfRefs expands a oneOf/anyOf option that is itself a raw $ref, matching ObjectField's own
+  // retrieveSchema() call for the same schema shape (see ObjectField.tsx) — otherwise resolveSelectedBranch() below
+  // merges the unexpanded `{ $ref }` option and the branch's `properties` are never visited. Scoped to schemas that
+  // actually carry a oneOf/anyOf, rather than passed unconditionally like ObjectField does: unlike ObjectField, this
+  // walk starts a brand new, unmarked `retrieveSchema()` call at every node (no ancestor call has already flagged a
+  // cyclic $ref for it), and resolveAnyOfOrOneOfRefs also disables that flagging for plain (non-xxxOf) object
+  // properties, so passing it unconditionally would spin forever on an ordinary recursive $ref.
+  const resolvedSchema = retrieveSchema<T, S, F>(
+    validator,
+    schema,
+    rootSchema,
+    formData as T,
+    customMergeAllOf,
+    ONE_OF_KEY in schema || ANY_OF_KEY in schema,
+  );
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
   if (
     path.length > 0 &&

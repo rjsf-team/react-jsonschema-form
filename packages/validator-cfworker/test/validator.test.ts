@@ -1,5 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type { RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
@@ -96,6 +96,15 @@ describe('CFWorkerValidator', () => {
     expect(custom).toHaveBeenCalled();
     expect(result.errors[0].message).toBe('transformed');
     expect(result.errorSchema.value?.__errors).toEqual(expect.arrayContaining(['transformed', 'custom']));
+  });
+
+  it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
+    const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+    const custom = vi.fn((_data, errors) => errors);
+    validator.validateFormData({}, schema, custom, undefined, uiSchema);
+    expect(custom).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
   });
 
   it('resolves root-schema references', () => {

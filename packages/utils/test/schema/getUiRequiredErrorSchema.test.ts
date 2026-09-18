@@ -384,6 +384,25 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.thing.aField');
   });
 
+  it('reports a ui:required field inside a selected oneOf branch that is itself a raw $ref', () => {
+    // resolveSelectedBranch() must expand $ref options (resolveAnyOfOrOneOfRefs: true), the same way ObjectField
+    // does when rendering, or the merged branch schema has no `properties` and aField is never visited.
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { type: 'object', properties: { kind: { type: 'string', const: 'a' }, aField: { type: 'string' } } },
+      },
+      properties: {
+        thing: { oneOf: [{ $ref: '#/definitions/A' }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
   it('reports a ui:required field inside the selected anyOf branch', () => {
     const schema: RJSFSchema = {
       type: 'object',
