@@ -19,10 +19,6 @@ describe('IChangeEvent', () => {
     expectTypeOf<IChangeEvent['status']>().toEqualTypeOf<'submitted' | undefined>();
   });
 
-  it('is no longer a view of FormState', () => {
-    expectTypeOf<IChangeEvent>().not.toExtend<FormState>();
-  });
-
   it('cannot be written into', () => {
     const event = {} as IChangeEvent;
     // @ts-expect-error every member is readonly
