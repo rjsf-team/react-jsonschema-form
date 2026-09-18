@@ -1,4 +1,3 @@
-import deepEquals from './deepEquals.ts';
 import type {
   EnumOptionsGroupType,
   EnumOptionsType,
@@ -26,9 +25,10 @@ const isPrimitive = (value: unknown) => value === null || typeof value !== 'obje
  * `optgroups` reference to that value claims the next not-yet-claimed option with it, by index, rather than
  * collapsing them into a single option.
  *
- * A group value matches an option whose `value` is deeply equal to it. Failing that, primitive values also match
- * by their string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas
- * authored as JSON often stringify them. `enumDisabled` values are matched to options the same way.
+ * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
+ * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
+ * JSON often stringify them. Object and array enum values only match the very same object, so a JSON-authored
+ * uiSchema can't group them. `enumDisabled` values are matched to options the same way.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -43,21 +43,10 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   if (!Array.isArray(enumOptions)) {
     return [];
   }
-  const disabledPrimitives = new Set<string>();
-  const disabledObjects: unknown[] = [];
-  if (Array.isArray(enumDisabled)) {
-    enumDisabled.forEach((value) => {
-      if (isPrimitive(value)) {
-        disabledPrimitives.add(String(value));
-      } else {
-        disabledObjects.push(value);
-      }
-    });
-  }
+  const disabledValues: unknown[] = Array.isArray(enumDisabled) ? enumDisabled : [];
+  const disabledStrings = new Set(disabledValues.filter(isPrimitive).map(String));
   const isDisabled = (value: unknown) =>
-    isPrimitive(value)
-      ? disabledPrimitives.has(String(value))
-      : disabledObjects.some((disabledValue) => deepEquals(disabledValue, value));
+    isPrimitive(value) ? disabledStrings.has(String(value)) : disabledValues.includes(value);
 
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
@@ -68,9 +57,8 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
     return indexed;
   }
 
-  const primitivesByValue = new Map<unknown, IndexedEnumOptionType<S>[]>();
-  const primitivesByString = new Map<string, IndexedEnumOptionType<S>[]>();
-  const objectOptions: IndexedEnumOptionType<S>[] = [];
+  const byValue = new Map<unknown, IndexedEnumOptionType<S>[]>();
+  const byString = new Map<string, IndexedEnumOptionType<S>[]>();
   const append = <K>(map: Map<K, IndexedEnumOptionType<S>[]>, key: K, option: IndexedEnumOptionType<S>) => {
     const existing = map.get(key);
     if (existing) {
@@ -80,11 +68,9 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
     }
   };
   indexed.forEach((option) => {
+    append(byValue, option.value, option);
     if (isPrimitive(option.value)) {
-      append(primitivesByValue, option.value, option);
-      append(primitivesByString, String(option.value), option);
-    } else {
-      objectOptions.push(option);
+      append(byString, String(option.value), option);
     }
   });
 
@@ -92,9 +78,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   const findUnclaimed = (candidates: IndexedEnumOptionType<S>[] | undefined) =>
     candidates?.find((candidate) => !claimedIndices.has(candidate.index));
   const findOption = (value: unknown) =>
-    isPrimitive(value)
-      ? (findUnclaimed(primitivesByValue.get(value)) ?? findUnclaimed(primitivesByString.get(String(value))))
-      : objectOptions.find((candidate) => !claimedIndices.has(candidate.index) && deepEquals(candidate.value, value));
+    findUnclaimed(byValue.get(value)) ?? (isPrimitive(value) ? findUnclaimed(byString.get(String(value))) : undefined);
 
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
     .map(([label, values]) => {
