@@ -129,16 +129,12 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     [fieldId, onChange],
   );
 
-  // Memoized so the resolved object keeps its reference while its inputs do, letting child memo boundaries skip
-  // renders; a discarded cache costs one extra render and nothing more
   const uiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
   );
-  // See #439: uiSchema: Don't pass consumed class names or style to child components. Most uiSchemas carry none of
-  // them, so the copy is only made when there is something to strip, leaving `uiSchema` itself untouched otherwise.
-  // Memoized for the same reason: the stripped object keeps its reference while the uiSchema does
-  // `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
+  // See #439: consumed class names and style must not reach child components. Copied only when there is something
+  // to strip. `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => {
     const consumedUiOptions = uiSchema[UI_OPTIONS_KEY];
     const consumesStyling =
@@ -394,9 +390,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
 }
 
-/** The `SchemaField` component wraps `SchemaFieldRender` in `memo`, whose default shallow comparison is correct now
- * that field identity props are primitives; object props bail out of memoization until their references are
- * stabilized.
+/** `SchemaFieldRender` in `memo`; field identity props are primitives, so the default shallow comparison suffices.
  *
  * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
  * since React.memo's return type erases generic parameters.

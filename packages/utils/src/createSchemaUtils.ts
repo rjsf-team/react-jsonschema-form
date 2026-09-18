@@ -48,9 +48,8 @@ class SchemaUtils<
   validator: ValidatorType<T, S, F>;
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
-  /** The last `retrieveSchema()` call per input schema, keyed on the inputs so an unchanged call skips the resolution
-   * altogether and a changed one still retains the references of every unchanged subtree; consumers comparing by
-   * reference (React.memo, useMemo dependencies) then see an unchanged schema as unchanged
+  /** The last `retrieveSchema()` call per input schema: unchanged inputs skip resolution, changed ones share every
+   * unchanged subtree with the previous result, so consumers comparing by reference see an unchanged schema as such
    */
   private lastRetrievedSchemas = new WeakMap<
     object,
@@ -334,8 +333,8 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    // A `Form` given a non-object schema renders an error rather than throwing, so this runs with a non-object
-    // `schema` despite the type, and a `WeakMap` refuses one as a key
+    // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
+    // `WeakMap` refuses it as a key
     const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
     const cached = cacheKey && this.lastRetrievedSchemas.get(cacheKey);
     if (

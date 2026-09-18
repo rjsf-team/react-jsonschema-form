@@ -1,13 +1,9 @@
 import isPlainObject from './isPlainObject.ts';
 
-/** Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the
- * `prev` instance (structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results), so that
- * consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
- * When the whole value is unchanged, `prev` itself is returned. Sharing happens for plain objects and arrays;
- * equal-valued `Date`s retain the previous instance; any other object type is treated as opaque and `next` is kept.
- *
- * Neither argument is mutated: when a container is only partially unchanged, a new container holding the retained
- * children is returned.
+/** Structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results: returns `next` with every
+ * subtree deeply equal to its counterpart in `prev` replaced by the `prev` instance, and `prev` itself when the whole
+ * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays and
+ * equal-valued `Date`s are shared; any other object is opaque and `next` is kept. Neither argument is mutated.
  *
  * @param prev - The previous value whose references should be retained where possible
  * @param next - The newly computed value
@@ -39,8 +35,7 @@ export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
       const value = replaceEqualDeep(prev[key], next[key]);
       sameAsPrev &&= Object.hasOwn(prev, key) && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
-        // Spread defines own data properties, so a JSON-sourced own `__proto__` key stays a key on the copy, and the
-        // assignment then writes to that own key instead of reaching the prototype setter
+        // Spread keeps a JSON-sourced own `__proto__` key an own key, so the assignment below never reaches the setter
         copy ??= { ...next };
         copy[key] = value;
       }
@@ -52,7 +47,7 @@ export default function replaceEqualDeep<T>(prev: unknown, next: T): T {
       return next;
     }
     const proto = Object.getPrototypeOf(next);
-    // reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
+    // Reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
     return (proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto)) as T;
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {

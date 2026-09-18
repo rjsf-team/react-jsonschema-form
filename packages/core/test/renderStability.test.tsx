@@ -10,10 +10,8 @@ import { createFormComponent } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-/** Pins the render optimization: typing in one field must not re-render its sibling fields. `SchemaField` is
- * memoized with shallow comparison, which only skips a render if every prop a sibling receives keeps reference identity
- * across a change — the string `fieldPath`/`id`, the retained `formData`/`errorSchema` subtrees, the retained
- * `retrieveSchema()` results, and the stable callbacks. A regression in any of them fails this test.
+/** Typing in one field must not re-render its siblings. That only holds while every prop a sibling receives keeps
+ * its reference across a change, so a leak in any of them fails here.
  */
 describe('render stability across sibling fields', () => {
   interface FormValue {
@@ -111,8 +109,7 @@ describe('render stability across sibling fields', () => {
 
     const proposals = seen.map((event) => event.formData);
     expect(proposals.map((formData) => formData?.first)).toEqual(['a', 'ab', 'abc']);
-    // Each accepted proposal is what the parent hands back as the next value, so it must share every unchanged
-    // subtree with the value it was applied to for the sibling fields' props to stay reference-equal
+    // Each proposal becomes the next prop, so it must share unchanged subtrees with the value it was applied to
     const nestedInstances = new Set(proposals.map((formData) => formData?.nested));
     expect(nestedInstances.size).toBe(1);
     expect(renderCounts.root_second).toBe(secondBefore);
