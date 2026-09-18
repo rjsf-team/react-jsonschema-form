@@ -5,7 +5,7 @@ import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJ
  * letting `WidgetAliasFor` derive a per-type alias union from it directly instead of a hand-copied one that can
  * drift out of sync.
  */
-export const widgetMap = {
+const widgetMap = {
   boolean: {
     checkbox: 'CheckboxWidget',
     radio: 'RadioWidget',
