@@ -140,7 +140,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>
           isEnumOptionsGroup<S>(item)
             ? [
-                <ListSubheader key={`optgroup-${item.label}`}>{item.label}</ListSubheader>,
+                <ListSubheader key={`optgroup-${item.label}`} aria-hidden>
+                  {item.label}
+                </ListSubheader>,
                 ...item.options.map(renderOption),
               ]
             : [renderOption(item)],

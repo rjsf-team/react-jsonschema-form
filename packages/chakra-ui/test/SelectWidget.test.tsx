@@ -45,4 +45,22 @@ describe('SelectWidget optgroups', () => {
     const options = container.querySelectorAll('[role="option"]');
     expect(Array.from(options).map((option) => option.textContent)).toEqual(['baz', 'qux', 'foo', 'bar']);
   });
+
+  test('renders every option in the collection when optionValueFormat is realValue and an enum value is empty', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optionValueFormat: 'realValue',
+        optgroups: {
+          'Group A': ['foo', ''],
+        },
+      },
+    };
+
+    const { container } = render(
+      <Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />,
+    );
+
+    const options = container.querySelectorAll('[role="option"]');
+    expect(Array.from(options).map((option) => option.textContent)).toEqual(['foo', '', 'bar']);
+  });
 });

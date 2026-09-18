@@ -1,3 +1,4 @@
+import deepEquals from './deepEquals.ts';
 import type {
   EnumOptionsGroupType,
   EnumOptionsType,
@@ -7,6 +8,8 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from './types.ts';
+
+const isPrimitive = (value: unknown) => value === null || typeof value !== 'object';
 
 /** Groups `enumOptions` according to `optgroups`, tagging every option along the way with its original array
  * `index` (needed by `enumOptionValueEncoder` for the `'indexed'` `optionValueFormat`) and its `disabled` status
@@ -22,6 +25,10 @@ import type {
  * heading. If multiple options share the same `value` (e.g. `oneOf` branches with a duplicate discriminator), each
  * `optgroups` reference to that value claims the next not-yet-claimed option with it, by index, rather than
  * collapsing them into a single option.
+ *
+ * A group value matches an option whose `value` is deeply equal to it. Failing that, primitive values also match
+ * by their string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas
+ * authored as JSON often stringify them.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -45,27 +52,22 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
     return indexed;
   }
 
-  const byValue = new Map<EnumValue, IndexedEnumOptionType<S>[]>();
-  indexed.forEach((option) => {
-    const candidates = byValue.get(option.value);
-    if (candidates) {
-      candidates.push(option);
-    } else {
-      byValue.set(option.value, [option]);
-    }
-  });
-
   const claimedIndices = new Set<number>();
+  const claim = (matches: (candidate: unknown) => boolean) => {
+    const option = indexed.find((candidate) => !claimedIndices.has(candidate.index) && matches(candidate.value));
+    if (option) {
+      claimedIndices.add(option.index);
+    }
+    return option;
+  };
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
     .map(([label, values]) => {
-      const options = values.reduce<IndexedEnumOptionType<S>[]>((acc, value) => {
-        const option = byValue.get(value)?.find((candidate) => !claimedIndices.has(candidate.index));
-        if (option) {
-          claimedIndices.add(option.index);
-          acc.push(option);
-        }
-        return acc;
-      }, []);
+      const options = values.flatMap((value) => {
+        const option =
+          claim((candidate) => deepEquals(candidate, value)) ??
+          claim((candidate) => isPrimitive(candidate) && isPrimitive(value) && String(candidate) === String(value));
+        return option ? [option] : [];
+      });
       return { label, options };
     })
     .filter((group) => group.options.length > 0);

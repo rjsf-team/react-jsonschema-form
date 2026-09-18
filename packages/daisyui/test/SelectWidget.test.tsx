@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import SelectWidget from '../src/widgets/SelectWidget/SelectWidget.tsx';
@@ -31,6 +31,31 @@ describe('SelectWidget', () => {
     expect(screen.getByText('Group A')).toBeInTheDocument();
     expect(screen.getByText('Group B')).toBeInTheDocument();
     expect(screen.getAllByRole('option')).toHaveLength(4);
+  });
+
+  test('exposes each optgroup as a labelled group owning its options', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          options: {
+            enumOptions,
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const groupA = screen.getByRole('group', { name: 'Group A' });
+    expect(within(groupA).getAllByRole('option')).toHaveLength(2);
+    expect(within(groupA).getByRole('option', { name: 'Foo' })).toBeInTheDocument();
+    expect(within(groupA).getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    const groupB = screen.getByRole('group', { name: 'Group B' });
+    expect(within(groupB).getAllByRole('option')).toHaveLength(1);
+    expect(screen.getByText('Group A')).toHaveAttribute('aria-hidden', 'true');
   });
 
   test('renders ungrouped options after the optgroups', () => {

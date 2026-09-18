@@ -16,7 +16,6 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
-import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field.tsx';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.tsx';
@@ -62,7 +61,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const toItem = useCallback(
@@ -79,14 +77,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     [enumDisabled, enumOptions, optgroups],
   );
 
-  const displayEnumOptions = useMemo((): OptionsOrGroups<any, any> => {
-    const computedOptions: OptionsOrGroups<any, any> = flattenGroupedOptions<S>(groupedOptions).map(toItem);
-    if (showPlaceholderOption) {
-      (computedOptions as any[]).unshift({ value: '', label: placeholder || '' });
-    }
-    return computedOptions;
-  }, [groupedOptions, placeholder, showPlaceholderOption, toItem]);
-
   const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
   // Chakra's SelectRoot always expects a string array, so flatten the helper's
@@ -97,9 +87,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     .flat()
     .filter((v) => v !== '') as string[];
 
-  const selectOptions = createListCollection({
-    items: displayEnumOptions.filter((item) => item.value),
-  });
+  const selectOptions = useMemo(
+    () => createListCollection({ items: flattenGroupedOptions<S>(groupedOptions).map(toItem) }),
+    [groupedOptions, toItem],
+  );
 
   const containerRef = useRef(null);
   const chakraProps = getChakra({ uiSchema });

@@ -34,6 +34,26 @@ describe('SelectWidget optgroups', () => {
     expect(screen.getByRole('option', { name: 'qux' })).toBeInTheDocument();
   });
 
+  it('hides group headings from assistive tech instead of exposing them as selectable options', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    fireEvent.mouseDown(screen.getByRole('combobox'));
+
+    expect(screen.getByText('Group A')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByText('Group B')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.queryByRole('option', { name: 'Group A' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Group B' })).not.toBeInTheDocument();
+  });
+
   it('renders ungrouped options after the optgroups', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
