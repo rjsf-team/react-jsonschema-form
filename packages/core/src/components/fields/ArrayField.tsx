@@ -795,15 +795,16 @@ const NO_ITEMS: never[] = [];
  * made and the form did not commit. The keys are UI metadata, kept so that React reuses row instances (and their DOM
  * focus) across accepted adds, removes and reorders. When the array's length changes outside the handlers, an external
  * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
- * regenerated, as the previous hash-based detection also did.
+ * regenerated.
  */
 function useKeyedFormData<T = any>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  const [keys, setKeys] = useState<string[]>(() => items.map(generateRowId));
+  const freshKeys = () => items.map(generateRowId);
+  const [keys, setKeys] = useState<string[]>(freshKeys);
 
   let itemKeys = keys;
   if (itemKeys.length !== items.length) {
-    itemKeys = items.map(generateRowId);
+    itemKeys = freshKeys();
     setKeys(itemKeys);
   }
 
