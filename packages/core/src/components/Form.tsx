@@ -55,6 +55,7 @@ import {
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
 import type { FormHandle } from './FormHandle.ts';
+import type { IChangeEvent } from './IChangeEvent.ts';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
@@ -284,21 +285,6 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>;
   /** Tracks the previous `extraErrors` prop reference so that `getDerivedStateFromProps` can detect changes */
   prevExtraErrors?: ErrorSchema<T>;
-}
-
-/** The event data passed when changes have been made to the form, includes everything from the `FormState` except
- * the schema validation errors. An additional `status` is added when returned from `onSubmit`
- */
-export interface IChangeEvent<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> extends Pick<
-  FormState<T, S, F>,
-  'schema' | 'uiSchema' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
-> {
-  /** The status of the form when submitted */
-  status?: 'submitted';
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
