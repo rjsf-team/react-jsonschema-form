@@ -364,6 +364,39 @@ export function formTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('select field single choice optgroups', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar', 'baz', 'qux'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:options': {
+          optgroups: {
+            'Group A': ['foo', 'bar'],
+            'Group B': ['baz'],
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('select field single choice optgroups with enumDisabled', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar', 'baz', 'qux'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumDisabled': ['bar'],
+        'ui:options': {
+          optgroups: {
+            'Group A': ['foo', 'bar'],
+            'Group B': ['baz'],
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('checkboxes widget with custom options and labels', () => {
       const schema: RJSFSchema = {
         type: 'array',

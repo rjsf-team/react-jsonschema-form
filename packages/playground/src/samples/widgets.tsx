@@ -168,6 +168,11 @@ const widgets: Sample = {
           },
         ],
       },
+      selectWidgetOptions3: {
+        title: 'Select widget with options grouped by optgroups',
+        type: 'string',
+        enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma'],
+      },
     },
   },
   uiSchema: {
@@ -281,6 +286,14 @@ const widgets: Sample = {
       },
       'ui:options': {
         backgroundColor: 'pink',
+      },
+    },
+    selectWidgetOptions3: {
+      'ui:options': {
+        optgroups: {
+          Latin: ['lorem', 'ipsum', 'dolorem'],
+          Greek: ['alpha', 'beta', 'gamma'],
+        },
       },
     },
   },

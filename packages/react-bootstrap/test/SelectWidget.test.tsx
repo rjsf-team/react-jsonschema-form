@@ -1,0 +1,110 @@
+import { fireEvent, render } from '@testing-library/react';
+import { vi } from 'vitest';
+
+import SelectWidget from '../src/SelectWidget/index.ts';
+import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+describe('SelectWidget', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo' },
+    { label: 'Bar', value: 'bar' },
+    { label: 'Baz', value: 'baz' },
+    { label: 'Qux', value: 'qux' },
+  ];
+
+  test('renders optgroups when ui:options.optgroups is provided', () => {
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          readonly: false,
+          options: {
+            enumOptions,
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz', 'qux'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const optgroups = container.querySelectorAll('optgroup');
+    expect(optgroups).toHaveLength(2);
+    expect(optgroups[0]).toHaveAttribute('label', 'Group A');
+    expect(optgroups[1]).toHaveAttribute('label', 'Group B');
+    expect(optgroups[0].querySelectorAll('option')).toHaveLength(2);
+    expect(optgroups[1].querySelectorAll('option')).toHaveLength(2);
+  });
+
+  test('renders ungrouped options after the optgroups', () => {
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          readonly: false,
+          options: {
+            enumOptions,
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const select = container.querySelector('select')!;
+    expect(select.querySelectorAll('optgroup')).toHaveLength(1);
+    // The placeholder plus the two ungrouped options (baz, qux) render as direct children of the select
+    const directOptions = Array.from(select.children).filter((child) => child.tagName === 'OPTION');
+    expect(directOptions).toHaveLength(3);
+  });
+
+  test('disables enumDisabled options inside an optgroup', () => {
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          readonly: false,
+          options: {
+            enumOptions,
+            enumDisabled: ['bar'],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const groupAOptions = container.querySelector('optgroup')!.querySelectorAll('option');
+    expect(groupAOptions[0]).not.toBeDisabled();
+    expect(groupAOptions[1]).toBeDisabled();
+  });
+
+  test('fires onChange with the correct value for a grouped option', () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          readonly: false,
+          onChange,
+          options: {
+            enumOptions,
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz', 'qux'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const select = container.querySelector('select')!;
+    const bazOption = container.querySelector<HTMLOptionElement>('optgroup[label="Group B"] option')!;
+    fireEvent.change(select, { target: { value: bazOption.value } });
+
+    expect(onChange).toHaveBeenCalledWith('baz');
+  });
+});

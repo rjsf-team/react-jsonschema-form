@@ -1165,6 +1165,31 @@ export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
   schema?: S;
 }
 
+/** An `EnumOptionsType` enriched with the information a widget needs to render and encode it once it may have been
+ * grouped by `groupEnumOptions()`
+ */
+export interface IndexedEnumOptionType<S extends StrictRJSFSchema = RJSFSchema> extends EnumOptionsType<S> {
+  /** This option's position in the original, ungrouped `enumOptions` array. Needed because `enumOptionValueEncoder`
+   * encodes values by their original index when using the `'indexed'` `optionValueFormat`
+   */
+  index: number;
+  /** Whether this option is disabled, as determined by `ui:enumDisabled` */
+  disabled: boolean;
+}
+
+/** Represents a labeled group of options produced by `groupEnumOptions()` from `ui:options.optgroups` */
+export interface EnumOptionsGroupType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** The group's label */
+  label: string;
+  /** The options belonging to this group, in the order they were listed in `ui:options.optgroups` */
+  options: IndexedEnumOptionType<S>[];
+}
+
+/** A single element of the tree returned by `groupEnumOptions()`: either a standalone option or a group of them */
+export type GroupedEnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> =
+  | IndexedEnumOptionType<S>
+  | EnumOptionsGroupType<S>;
+
 /** This type remaps the keys of `Type` to prepend `ui:` onto them. As a result it does not need to be exported */
 type MakeUIType<Type> = {
   [Property in keyof Type as `ui:${string & Property}`]: Type[Property];
@@ -1244,6 +1269,10 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
      * Supports a `'*'` wildcard to represent all remaining values in their original schema order.
      */
     enumOrder?: EnumValue[];
+    /** Groups enum options into labeled `<optgroup>`-like sections. Keys are group labels, values are arrays of enum
+     * values belonging to that group. Enum values not listed in any group are rendered ungrouped after the groups.
+     */
+    optgroups?: Record<string, EnumValue[]>;
     /** Provides an optional field within a schema to be used as the oneOf/anyOf selector when there isn't a
      * discriminator
      */

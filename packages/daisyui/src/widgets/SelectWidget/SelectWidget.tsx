@@ -1,11 +1,20 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  EnumOptionsType,
+  FormContextType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
@@ -42,7 +51,7 @@ export default function SelectWidget<
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, emptyValue: optEmptyVal } = options;
+  const { enumOptions, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
@@ -117,10 +126,45 @@ export default function SelectWidget<
     .flat()
     .filter((v) => v !== '');
 
-  const optionsList =
+  const optionsList: EnumOptionsType<S>[] =
     enumOptions ||
-    (Array.isArray(schema.examples) ? schema.examples.map((example) => ({ value: example, label: example })) : []);
+    (Array.isArray(schema.examples)
+      ? schema.examples.map((example) => ({ value: example, label: String(example) }))
+      : []);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    const encodedValue = enumOptionValueEncoder(option.value, option.index, optionValueFormat);
+    return (
+      <li
+        key={String(option.value)}
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+        role='option'
+        aria-selected={selectedValues.includes(encodedValue)}
+        tabIndex={0}
+        className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
+          selectedValues.includes(encodedValue) ? 'bg-primary/10' : ''
+        }`}
+        onClick={handleOptionClick}
+        onKeyDown={(e) =>
+          (e.key === 'Enter' || e.key === ' ') && handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
+        }
+        data-value={option.index}
+      >
+        <div className='flex items-center gap-2'>
+          {isMultiple && (
+            <input
+              type='checkbox'
+              className='checkbox checkbox-sm'
+              checked={selectedValues.includes(encodedValue)}
+              readOnly
+            />
+          )}
+          <span>{isEnumeratedObject ? option.label : getDisplayValue(option.label)}</span>
+        </div>
+      </li>
+    );
+  }
 
   return (
     <div className='form-control w-full'>
@@ -146,39 +190,20 @@ export default function SelectWidget<
           role='listbox'
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >
-          {optionsList.map(({ value: optValue, label: enumLabel }, i) => {
-            const encodedValue = enumOptionValueEncoder(optValue, i, optionValueFormat);
-            return (
-              <li
-                key={String(optValue)}
-                // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
-                role='option'
-                aria-selected={selectedValues.includes(encodedValue)}
-                tabIndex={0}
-                className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
-                  selectedValues.includes(encodedValue) ? 'bg-primary/10' : ''
-                }`}
-                onClick={handleOptionClick}
-                onKeyDown={(e) =>
-                  (e.key === 'Enter' || e.key === ' ') &&
-                  handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
-                }
-                data-value={i}
-              >
-                <div className='flex items-center gap-2'>
-                  {isMultiple && (
-                    <input
-                      type='checkbox'
-                      className='checkbox checkbox-sm'
-                      checked={selectedValues.includes(encodedValue)}
-                      readOnly
-                    />
-                  )}
-                  <span>{isEnumeratedObject ? enumLabel : getDisplayValue(enumLabel)}</span>
-                </div>
-              </li>
-            );
-          })}
+          {groupEnumOptions<S>(optionsList, optgroups).flatMap((item) =>
+            isEnumOptionsGroup<S>(item)
+              ? [
+                  <li
+                    key={`optgroup-${item.label}`}
+                    role='presentation'
+                    className='px-4 py-1 text-xs font-semibold uppercase opacity-60'
+                  >
+                    {item.label}
+                  </li>,
+                  ...item.options.map(renderOption),
+                ]
+              : [renderOption(item)],
+          )}
         </ul>
       </div>
       <SelectedOptionDescription

@@ -26,6 +26,7 @@ import {
   toFieldPath,
 } from './fieldPath.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
+import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
@@ -48,6 +49,7 @@ import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
+import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
 import hasWidget from './hasWidget.ts';
@@ -65,6 +67,7 @@ import {
 } from './idGenerators.ts';
 import isConstant from './isConstant.ts';
 import isCustomWidget from './isCustomWidget.ts';
+import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import isObject from './isObject.ts';
@@ -161,6 +164,7 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
+  flattenGroupedOptions,
   getChangedFields,
   getDateElementProps,
   getDateTimeLocalValue,
@@ -181,6 +185,7 @@ export {
   getTestIds,
   getUiOptions,
   getWidget,
+  groupEnumOptions,
   guessType,
   hasByPath,
   hasWidget,
@@ -190,6 +195,7 @@ export {
   helpId,
   isConstant,
   isCustomWidget,
+  isEnumOptionsGroup,
   isFixedItems,
   isFormDataAvailable,
   isObject,
