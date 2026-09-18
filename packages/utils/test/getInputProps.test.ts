@@ -36,18 +36,23 @@ describe('getInputProps', () => {
     };
     expect(getInputProps(schema, 'date')).toEqual({ type: 'date' });
   });
-  it('returns type=number, step=any when schema has number type', () => {
+  it('returns type=text, inputMode=decimal, step=any when schema has number type', () => {
     const schema: RJSFSchema = {
       type: 'number',
     };
-    expect(getInputProps(schema)).toEqual({ type: schema.type, step: 'any' });
+    expect(getInputProps(schema)).toEqual({
+      type: 'text',
+      step: 'any',
+      inputMode: 'decimal',
+      pattern: '-?[0-9]*[.]?[0-9]*',
+    });
   });
-  it('returns type=text, no step when schema has number type and the locale decimal separator is not "."', () => {
+  it('returns type=text, inputMode=decimal, no step when schema has number type and the locale decimal separator is not "."', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
     const schema: RJSFSchema = {
       type: 'number',
     };
-    expect(getInputProps(schema)).toEqual({ type: 'text' });
+    expect(getInputProps(schema)).toEqual({ type: 'text', inputMode: 'decimal', pattern: '-?[0-9]*[,]?[0-9]*' });
   });
   it('returns type=number when schema has number type and an explicit inputType overrides the locale', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
@@ -57,12 +62,12 @@ describe('getInputProps', () => {
     const options: UIOptionsType = { inputType: 'number' };
     expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number' });
   });
-  it('returns type=number, step=1 for integer schemas regardless of the locale decimal separator', () => {
+  it('returns type=text, inputMode=numeric, step=1 for integer schemas regardless of the locale decimal separator', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
     const schema: RJSFSchema = {
       type: 'integer',
     };
-    expect(getInputProps(schema)).toEqual({ type: 'number', step: 1 });
+    expect(getInputProps(schema)).toEqual({ type: 'text', step: 1, inputMode: 'numeric', pattern: '-?[0-9]*' });
   });
   it('returns type=number when schema has number type and we are not auto-defaulting', () => {
     const schema: RJSFSchema = {
@@ -72,37 +77,56 @@ describe('getInputProps', () => {
       type: schema.type,
     });
   });
-  it('returns type=number, step=multipleOf when schema has number type and multipleOf', () => {
+  it('returns type=text, inputMode=decimal, step=multipleOf when schema has number type and multipleOf', () => {
     const schema: RJSFSchema = {
       type: 'number',
       multipleOf: 2.1,
     };
     expect(getInputProps(schema)).toEqual({
-      type: schema.type,
+      type: 'text',
       step: schema.multipleOf,
+      inputMode: 'decimal',
+      pattern: '-?[0-9]*[.]?[0-9]*',
     });
   });
-  it('returns type=number, step=1, min=minimum when schema has integer type and minimum', () => {
+  it('returns type=text, inputMode=numeric, no leading minus in pattern, step=1, min=minimum when schema has a non-negative integer minimum', () => {
     const schema: RJSFSchema = {
       type: 'integer',
       minimum: 0,
     };
     expect(getInputProps(schema)).toEqual({
-      type: 'number',
+      type: 'text',
       step: 1,
       min: schema.minimum,
+      inputMode: 'numeric',
+      pattern: '[0-9]*',
     });
   });
-  it('returns type=number, step=multipleOf, max=maximum when schema has integer type, multipleOf and maximum', () => {
+  it('returns type=text, inputMode=numeric, step=multipleOf, max=maximum when schema has integer type, multipleOf and maximum', () => {
     const schema: RJSFSchema = {
       type: 'integer',
       multipleOf: 5,
       maximum: 100,
     };
     expect(getInputProps(schema)).toEqual({
-      type: 'number',
+      type: 'text',
       step: schema.multipleOf,
       max: schema.maximum,
+      inputMode: 'numeric',
+      pattern: '-?[0-9]*',
+    });
+  });
+  it('allows a leading minus in the pattern when the schema has a negative minimum', () => {
+    const schema: RJSFSchema = {
+      type: 'integer',
+      minimum: -10,
+    };
+    expect(getInputProps(schema)).toEqual({
+      type: 'text',
+      step: 1,
+      min: schema.minimum,
+      inputMode: 'numeric',
+      pattern: '-?[0-9]*',
     });
   });
   it('returns min from formatMinimum when defaultType is date', () => {

@@ -544,10 +544,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_age"
+                      inputmode="decimal"
                       name="root[age]"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value="30"
                     />
                   </div>
@@ -1117,10 +1119,12 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_age"
+                      inputmode="decimal"
                       name="root[age]"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -1430,10 +1434,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_count"
+                      inputmode="decimal"
                       name="root.count"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value="5"
                     />
                   </div>
@@ -1928,10 +1934,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_age"
+                      inputmode="decimal"
                       name="root.age"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -3081,10 +3089,12 @@ exports[`object fields > object 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
+                      inputmode="decimal"
                       name="root_b"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -3616,10 +3626,12 @@ exports[`object fields > with title and description > object 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
+                      inputmode="decimal"
                       name="root_b"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -4187,10 +4199,12 @@ exports[`object fields > with title and description from both > object 1`] = `
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
+                      inputmode="decimal"
                       name="root_b"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -4548,10 +4562,12 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
+                      inputmode="decimal"
                       name="root_b"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>
@@ -5035,10 +5051,12 @@ exports[`object fields > with title and description with global label off > obje
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
+                      inputmode="decimal"
                       name="root_b"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                   </div>

@@ -52,6 +52,24 @@ export default function getInputProps<
         inputProps.step = 1;
       }
     }
+
+    // A native <input type="number"> is inconsistently keyboard-filtered across browsers, silently
+    // discards typed values it can't parse, and never accepts a non-'.' locale decimal separator. A text
+    // input with a numeric `inputMode` gets the same numeric keyboard on mobile without those problems,
+    // and a `pattern` still lets the browser's native constraint validation reject a non-numeric value
+    // the same way it already does for `required`: https://github.com/rjsf-team/react-jsonschema-form/issues/4038
+    // Themes with their own numeric widget (indicated by `autoDefaultStepAny=false`) don't render a
+    // native number input in the first place, so they keep the semantic type as-is.
+    if (autoDefaultStepAny && (schema.type === 'number' || schema.type === 'integer')) {
+      const allowNegative = !(typeof inputProps.min === 'number' && inputProps.min >= 0);
+      const sign = allowNegative ? '-?' : '';
+      inputProps.type = 'text';
+      inputProps.inputMode = schema.type === 'integer' ? 'numeric' : 'decimal';
+      // Only digits, and only the current locale's decimal separator for a `number`: a native
+      // `<input type="number">` never accepted any other separator either.
+      inputProps.pattern =
+        schema.type === 'integer' ? `${sign}[0-9]*` : `${sign}[0-9]*[${getDecimalSeparator()}]?[0-9]*`;
+    }
   }
 
   // For date/time input types, propagate formatMinimum/formatMaximum to min/max

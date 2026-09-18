@@ -1008,7 +1008,7 @@ describe('Async errors', () => {
     // Add an array item and fill it with a valid number
     const addBtn = form.querySelector('.btn-add');
     await user.click(addBtn!);
-    const input = form.querySelector<HTMLInputElement>('input[type="number"]')!;
+    const input = form.querySelector<HTMLInputElement>('input[inputmode="decimal"]')!;
     await user.clear(input);
     await user.type(input, '42');
 
@@ -1110,6 +1110,7 @@ describe('Calling reset from ref object', () => {
     const schema: RJSFSchema = {
       title: 'Test form',
       type: 'number',
+      minimum: 100,
     };
     const formRef = createRef<Form>();
     const props: NoValFormProps = {
@@ -1119,7 +1120,9 @@ describe('Calling reset from ref object', () => {
     const { node } = createFormComponent(props);
     expect(formRef.current!.reset).toBeDefined();
     expect(node.querySelector<HTMLInputElement>('input')).toBeInTheDocument();
-    await user.type(node.querySelector<HTMLInputElement>('input')!, 'Some Value');
+    // A value that satisfies the number field's native `pattern` (so the browser lets the form submit)
+    // but violates the schema's `minimum`, so RJSF's own validation is what produces the error.
+    await user.type(node.querySelector<HTMLInputElement>('input')!, '5');
     expect(formRef.current!.state.errors).toHaveLength(0);
     await submitForm(node, user);
     expect(formRef.current!.state.errors).toHaveLength(1);

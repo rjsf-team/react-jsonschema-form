@@ -1536,10 +1536,12 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_age"
+                    inputmode="decimal"
                     name="root[age]"
+                    pattern="-?[0-9]*[.]?[0-9]*"
                     placeholder=""
                     step="any"
-                    type="number"
+                    type="text"
                     value=""
                   />
                 </span>
@@ -2889,10 +2891,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_age"
+                    inputmode="decimal"
                     name="root.age"
+                    pattern="-?[0-9]*[.]?[0-9]*"
                     placeholder=""
                     step="any"
-                    type="number"
+                    type="text"
                     value=""
                   />
                 </span>
@@ -4384,10 +4388,12 @@ exports[`single fields > number field 0 1`] = `
             aria-describedby="root__error root__description root__help"
             class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
             id="root"
+            inputmode="decimal"
             name="root"
+            pattern="-?[0-9]*[.]?[0-9]*"
             placeholder=""
             step="any"
-            type="number"
+            type="text"
             value="0"
           />
         </span>
@@ -4429,10 +4435,12 @@ exports[`single fields > number field 1`] = `
             aria-describedby="root__error root__description root__help"
             class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
             id="root"
+            inputmode="decimal"
             name="root"
+            pattern="-?[0-9]*[.]?[0-9]*"
             placeholder=""
             step="any"
-            type="number"
+            type="text"
             value=""
           />
         </span>
@@ -9259,11 +9267,13 @@ exports[`single fields > schema examples with mixed types (string examples and n
             aria-describedby="root__error root__description root__help root__examples"
             class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
             id="root"
+            inputmode="numeric"
             list="root__examples"
             name="root"
+            pattern="-?[0-9]*"
             placeholder=""
             step="1"
-            type="number"
+            type="text"
             value="5432"
           />
         </span>

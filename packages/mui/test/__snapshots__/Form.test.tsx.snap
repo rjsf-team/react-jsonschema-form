@@ -6745,10 +6745,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_age"
+                      inputmode="decimal"
                       name="root[age]"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                     <fieldset
@@ -12267,10 +12269,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_age"
+                      inputmode="decimal"
                       name="root.age"
+                      pattern="-?[0-9]*[.]?[0-9]*"
                       placeholder=""
                       step="any"
-                      type="number"
+                      type="text"
                       value=""
                     />
                     <fieldset
@@ -21553,10 +21557,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
+              inputmode="decimal"
               name="root"
+              pattern="-?[0-9]*[.]?[0-9]*"
               placeholder=""
               step="any"
-              type="number"
+              type="text"
               value="0"
             />
             <fieldset
@@ -21946,10 +21952,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
+              inputmode="decimal"
               name="root"
+              pattern="-?[0-9]*[.]?[0-9]*"
               placeholder=""
               step="any"
-              type="number"
+              type="text"
               value=""
             />
             <fieldset
@@ -34811,11 +34819,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
+              inputmode="numeric"
               list="root__examples"
               name="root"
+              pattern="-?[0-9]*"
               placeholder=""
               step="1"
-              type="number"
+              type="text"
               value="5432"
             />
             <fieldset
