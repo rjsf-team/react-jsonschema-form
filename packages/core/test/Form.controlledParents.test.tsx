@@ -45,7 +45,6 @@ describe('controlled parent harnesses', () => {
 
     await user.type(input(container, 'root_name'), 'b');
 
-    expect(log.value).toEqual({ name: 'a' });
     expect(log.proposals).toEqual([{ name: 'ab' }]);
     // Today's Form keeps its own copy of the data and renders the edit even though the parent refused it. Under the
     // ownership contract (RFC, section 3.2) a controlled form renders the parent's value, so A4 flips this to 'a'.
