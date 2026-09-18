@@ -54,6 +54,7 @@ import {
 
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, IS_RESET } from './constants.ts';
+import type { FormHandle } from './FormHandle.ts';
 
 /** The properties that are passed to the `Form` */
 export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
@@ -238,7 +239,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
-  /** Support receiving a React ref to the Form
+  /** Support receiving a React ref to the Form. Type it as the `Form` class, but write against `FormHandle`: only the
+   * handle's members are supported API. TSX types a class element's `ref` by the instance, so this cannot be
+   * `Ref<FormHandle>` until `Form` is a function component; `ref.current` assigns to a `FormHandle` today.
    */
   ref?: Ref<Form<T, S, F>>;
 }
@@ -335,11 +338,10 @@ interface PendingChange<T> {
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
-export default class Form<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
+export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+  extends Component<FormProps<T, S, F>, FormState<T, S, F>>
+  implements FormHandle<T, S, F>
+{
   /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
    * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
    */
@@ -723,12 +725,12 @@ export default class Form<
    * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
    * @param [retrievedSchema] - An optionally retrieved schema for per
    */
-  validate(
+  validate = (
     formData: T | undefined,
     schema = this.state.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
-  ): ValidationData<T> {
+  ): ValidationData<T> => {
     const schemaUtils = altSchemaUtils || this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
@@ -742,7 +744,7 @@ export default class Form<
     return schemaUtils
       .getValidator()
       .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
-  }
+  };
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {
@@ -1075,6 +1077,11 @@ export default class Form<
     return schemaUtils.omitExtraData(schema, formData);
   }
 
+  /** Returns the form data currently rendered, see `FormHandle.getFormData()`. Until strict ownership lands this is the
+   * reconciled internal value in both modes; afterwards it reads the owner directly.
+   */
+  getFormData = (): T | undefined => this.state.formData;
+
   /**
    * Callback function to handle reset form data.
    * - Reset all fields with default values.
@@ -1235,7 +1242,7 @@ export default class Form<
    *
    * @param error - The error on which to focus
    */
-  focusOnError(error: RJSFValidationError) {
+  focusOnError = (error: RJSFValidationError) => {
     const { idPrefix = 'root', idSeparator = '_' } = this.props;
     const { property } = error;
     const path = toPath(property ?? '');
@@ -1255,7 +1262,7 @@ export default class Form<
     if (field instanceof HTMLElement) {
       field.focus();
     }
-  }
+  };
 
   /** Validates the form using the given `formData`. For use on form submission or on programmatic validation.
    * If `onError` is provided, then it will be called with the list of errors.
@@ -1324,14 +1331,14 @@ export default class Form<
    *
    * @returns - True if the form is valid, false otherwise.
    */
-  validateForm() {
+  validateForm = (): boolean => {
     const { omitExtraData } = this.props;
     let { formData: newFormData } = this.state;
     if (omitExtraData === true) {
       newFormData = this.omitFormExtraData(newFormData);
     }
     return this.validateFormWithFormData(newFormData);
-  }
+  };
 
   /** Renders the `Form` fields inside the <form> | `tagName`, rendering any errors if needed along with the submit
    * button or any children of the form.
