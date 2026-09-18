@@ -395,6 +395,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  * The cast to `typeof SchemaFieldRender` preserves the generic type signature (<T, S, F>) for consumers,
  * since React.memo's return type erases generic parameters.
  */
-const SchemaField = memo(SchemaFieldRender) as unknown as typeof SchemaFieldRender;
+const SchemaField = memo(SchemaFieldRender) as typeof SchemaFieldRender;
 
 export default SchemaField;
