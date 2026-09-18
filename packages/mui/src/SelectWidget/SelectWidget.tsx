@@ -96,7 +96,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
       <MenuItem
-        key={String(option.value)}
+        key={option.index}
         value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
         disabled={option.disabled}
       >
