@@ -63,6 +63,11 @@ const enumObjects: Sample = {
         type: 'string',
         enum: ['low', 'medium', 'high', 'critical'],
       },
+      category: {
+        title: 'Category (optgroups)',
+        type: 'string',
+        enum: ['apple', 'banana', 'carrot', 'potato', 'salmon', 'chicken'],
+      },
     },
   },
   uiSchema: {
@@ -99,6 +104,15 @@ const enumObjects: Sample = {
         critical: 'Critical priority',
       },
       'ui:enumOrder': ['critical', 'high', '*'],
+    },
+    category: {
+      'ui:options': {
+        optgroups: {
+          Fruits: ['apple', 'banana'],
+          Vegetables: ['carrot', 'potato'],
+          Meat: ['salmon', 'chicken'],
+        },
+      },
     },
   },
   formData: {

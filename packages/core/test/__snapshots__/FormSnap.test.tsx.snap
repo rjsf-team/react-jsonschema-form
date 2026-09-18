@@ -6289,6 +6289,125 @@ exports[`single fields > select field single choice formData 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > select field single choice optgroups 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <optgroup
+          label="Group A"
+        >
+          <option
+            value="0"
+          >
+            foo
+          </option>
+          <option
+            value="1"
+          >
+            bar
+          </option>
+        </optgroup>
+        <optgroup
+          label="Group B"
+        >
+          <option
+            value="2"
+          >
+            baz
+          </option>
+        </optgroup>
+        <option
+          value="3"
+        >
+          qux
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups with enumDisabled 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <optgroup
+          label="Group A"
+        >
+          <option
+            value="0"
+          >
+            foo
+          </option>
+          <option
+            disabled=""
+            value="1"
+          >
+            bar
+          </option>
+        </optgroup>
+        <optgroup
+          label="Group B"
+        >
+          <option
+            value="2"
+          >
+            baz
+          </option>
+        </optgroup>
+        <option
+          value="3"
+        >
+          qux
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > select field single choice uiSchema disabled using radio widget 1`] = `
 <DocumentFragment>
   <form

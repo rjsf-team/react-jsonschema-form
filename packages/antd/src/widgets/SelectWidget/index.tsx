@@ -1,11 +1,20 @@
 import { useMemo, useState } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GenericObjectType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
@@ -47,7 +56,7 @@ export default function SelectWidget<
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
   const handleChange = (nextValue: any) =>
@@ -80,13 +89,17 @@ export default function SelectWidget<
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
-      const enumOptionsList: DefaultOptionType[] = enumOptions.map(
-        ({ value: optionValue, label: optionLabel }, index) => ({
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(optionValue),
-          key: String(index),
-          value: enumOptionValueEncoder(optionValue, index, optionValueFormat),
-          label: optionLabel,
-        }),
+      const toOptionType = (option: IndexedEnumOptionType<S>): DefaultOptionType => ({
+        disabled: option.disabled,
+        key: String(option.index),
+        value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+        label: option.label,
+      });
+      const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(
+        (item) =>
+          isEnumOptionsGroup<S>(item)
+            ? { label: item.label, options: item.options.map(toOptionType) }
+            : toOptionType(item),
       );
 
       if (showPlaceholderOption) {
@@ -95,7 +108,7 @@ export default function SelectWidget<
       return enumOptionsList;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
+  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, optionValueFormat]);
 
   return (
     <>

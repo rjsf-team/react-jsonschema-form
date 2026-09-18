@@ -1,12 +1,14 @@
 import type { ChangeEvent, FocusEvent, SyntheticEvent } from 'react';
 import { useCallback } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
@@ -44,7 +46,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
 
@@ -76,6 +78,18 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <option
+        key={String(option.value)}
+        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        disabled={option.disabled}
+      >
+        {option.label}
+      </option>
+    );
+  }
+
   return (
     <>
       <SelectedOptionDescription
@@ -102,19 +116,15 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-            return (
-              <option
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </option>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <optgroup key={item.label} label={item.label}>
+              {item.options.map(renderOption)}
+            </optgroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </select>
     </>
   );

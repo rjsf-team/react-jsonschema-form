@@ -168,4 +168,104 @@ describe('SelectWidget', () => {
     expect(carOptions[1]).toHaveAttribute('aria-selected', 'true');
     expect(carOptions[1]).toHaveAttribute('data-selected', 'true');
   });
+
+  test('renders a heading per optgroups entry, plus an unheaded group for the ungrouped options', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          rawErrors: [],
+          value: undefined,
+          options: {
+            enumOptions: [
+              { label: 'Foo', value: 'foo' },
+              { label: 'Bar', value: 'bar' },
+              { label: 'Baz', value: 'baz' },
+              { label: 'Qux', value: 'qux' },
+            ],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('button'));
+
+    expect(screen.getByRole('group', { name: 'Group A' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Foo' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
+  });
+
+  test('selecting a grouped option fires onValueChange with the correct index', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          rawErrors: [],
+          value: undefined,
+          onChange: onValueChange,
+          options: {
+            enumOptions: [
+              { label: 'Foo', value: 'foo' },
+              { label: 'Bar', value: 'bar' },
+              { label: 'Baz', value: 'baz' },
+              { label: 'Qux', value: 'qux' },
+            ],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz', 'qux'],
+            },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('option', { name: 'Baz' }));
+
+    expect(onValueChange).toHaveBeenCalledWith('baz');
+  });
+
+  test('multi-select: renders a heading per optgroups entry', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          rawErrors: [],
+          value: [],
+          options: {
+            enumOptions: [
+              { label: 'Foo', value: 'foo' },
+              { label: 'Bar', value: 'bar' },
+              { label: 'Baz', value: 'baz' },
+            ],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        })}
+      />,
+    );
+
+    const input = screen.getByPlaceholderText('Select ...');
+    await user.click(input);
+
+    expect(screen.getByRole('group', { name: 'Group A' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+  });
 });

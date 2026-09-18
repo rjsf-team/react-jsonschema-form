@@ -1633,8 +1633,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_1m_"
-                        id="radix-_r_1l_"
+                        for="radix-_r_1s_"
+                        id="radix-_r_1r_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -3173,8 +3173,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_1r_"
-                        id="radix-_r_1q_"
+                        for="radix-_r_21_"
+                        id="radix-_r_20_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
@@ -5949,8 +5949,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1a_"
-                            id="radix-_r_19_"
+                            for="radix-_r_1g_"
+                            id="radix-_r_1f_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -6095,8 +6095,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1d_"
-                            id="radix-_r_1c_"
+                            for="radix-_r_1j_"
+                            id="radix-_r_1i_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -7033,8 +7033,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1g_"
-                            id="radix-_r_1f_"
+                            for="radix-_r_1m_"
+                            id="radix-_r_1l_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -7180,8 +7180,8 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1j_"
-                            id="radix-_r_1i_"
+                            for="radix-_r_1p_"
+                            id="radix-_r_1o_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -11397,8 +11397,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_q_"
-              id="radix-_r_p_"
+              for="radix-_r_10_"
+              id="radix-_r_v_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <div
@@ -11471,14 +11471,14 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </span>
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_o_"
+                  aria-controls="radix-_r_u_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_p_"
+                  aria-labelledby="radix-_r_v_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_q_"
+                  id="radix-_r_10_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -11912,8 +11912,8 @@ exports[`single fields > select field single choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_n_"
-              id="radix-_r_m_"
+              for="radix-_r_t_"
+              id="radix-_r_s_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -11927,6 +11927,164 @@ exports[`single fields > select field single choice formData 1`] = `
               >
                 bar
               </span>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              class="relative"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="root"
+        />
+        <div
+          class="p-0.5"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+            cmdk-root=""
+            data-slot="command"
+            tabindex="-1"
+          >
+            <label
+              cmdk-label=""
+              for="radix-_r_n_"
+              id="radix-_r_m_"
+              style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+            />
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+            >
+              <span
+                class="flex-1 line-clamp-1 text-muted-foreground"
+              />
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              class="relative"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups with enumDisabled 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="root"
+        />
+        <div
+          class="p-0.5"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+            cmdk-root=""
+            data-slot="command"
+            tabindex="-1"
+          >
+            <label
+              cmdk-label=""
+              for="radix-_r_q_"
+              id="radix-_r_p_"
+              style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+            />
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+            >
+              <span
+                class="flex-1 line-clamp-1 text-muted-foreground"
+              />
               <svg
                 aria-hidden="true"
                 class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -12111,8 +12269,8 @@ exports[`single fields > select widget with description in schema and FieldTempl
           >
             <label
               cmdk-label=""
-              for="radix-_r_v_"
-              id="radix-_r_u_"
+              for="radix-_r_15_"
+              id="radix-_r_14_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -12204,8 +12362,8 @@ exports[`single fields > select widget with selected oneOf option description 1`
           >
             <label
               cmdk-label=""
-              for="radix-_r_12_"
-              id="radix-_r_11_"
+              for="radix-_r_18_"
+              id="radix-_r_17_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -12289,8 +12447,8 @@ exports[`single fields > select widget with selected oneOf option description an
           >
             <label
               cmdk-label=""
-              for="radix-_r_15_"
-              id="radix-_r_14_"
+              for="radix-_r_1b_"
+              id="radix-_r_1a_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button

@@ -1,14 +1,17 @@
 import type { FocusEvent } from 'react';
-import { useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
-import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -42,7 +45,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     schema,
     uiSchema,
   } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
   const handleMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
@@ -61,23 +64,28 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
+
+  const toItem = useCallback(
+    (option: IndexedEnumOptionType<S>) => ({
+      label: option.label,
+      value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+      disabled: option.disabled,
+    }),
+    [optionValueFormat],
+  );
+
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumDisabled, enumOptions, optgroups],
+  );
+
   const displayEnumOptions = useMemo((): OptionsOrGroups<any, any> => {
-    let computedOptions: OptionsOrGroups<any, any> = [];
-    if (Array.isArray(enumOptions)) {
-      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value: enumValue, label: enumLabel } = option;
-        return {
-          label: enumLabel,
-          value: enumOptionValueEncoder(enumValue, index, optionValueFormat),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
-        };
-      });
-      if (showPlaceholderOption) {
-        (computedOptions as any[]).unshift({ value: '', label: placeholder || '' });
-      }
+    const computedOptions: OptionsOrGroups<any, any> = flattenGroupedOptions<S>(groupedOptions).map(toItem);
+    if (showPlaceholderOption) {
+      (computedOptions as any[]).unshift({ value: '', label: placeholder || '' });
     }
     return computedOptions;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
+  }, [groupedOptions, placeholder, showPlaceholderOption, toItem]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
@@ -95,6 +103,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const containerRef = useRef(null);
   const chakraProps = getChakra({ uiSchema });
+
+  function renderItem(option: IndexedEnumOptionType<S>) {
+    const item = toItem(option);
+    return (
+      <ChakraSelect.Item item={item} key={item.value}>
+        {item.label}
+        <ChakraSelect.ItemIndicator />
+      </ChakraSelect.Item>
+    );
+  }
 
   return (
     <Field
@@ -130,12 +148,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         </ChakraSelect.Control>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
           <ChakraSelect.Content>
-            {selectOptions.items.map((item) => (
-              <ChakraSelect.Item item={item} key={item.value}>
-                {item.label}
-                <ChakraSelect.ItemIndicator />
-              </ChakraSelect.Item>
-            ))}
+            {groupedOptions.map((option) =>
+              isEnumOptionsGroup<S>(option) ? (
+                <ChakraSelect.ItemGroup key={option.label}>
+                  <ChakraSelect.ItemGroupLabel>{option.label}</ChakraSelect.ItemGroupLabel>
+                  {option.options.map(renderItem)}
+                </ChakraSelect.ItemGroup>
+              ) : (
+                renderItem(option)
+              ),
+            )}
           </ChakraSelect.Content>
         </ChakraSelect.Positioner>
       </SelectRoot>
