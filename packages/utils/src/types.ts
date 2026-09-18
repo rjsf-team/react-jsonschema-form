@@ -1304,6 +1304,11 @@ type UnionToIntersection<U> = (U extends unknown ? (x: U) => void : never) exten
  * [K]?: infer W }` matches an index-signature `Then` too - inferring `W` as whatever the index signature's value
  * type is (typically `any`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
  * widen the vocabulary for every field its `when` matches, rather than contributing nothing.
+ *
+ * TypeScript has no way to tell "a key admitted only by an index signature" apart from "a key admitted by an index
+ * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `GenericObjectType &
+ * { widget: 'Foo' }`) is treated as declaring neither - a narrow, silent under-inclusion rather than a type error.
+ * Not a concern for `Then`s written as an explicit object literal, which is the documented, expected shape.
  */
 type DeclaresKey<Then, K extends PropertyKey> = string extends keyof Then ? false : K extends keyof Then ? true : false;
 

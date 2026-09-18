@@ -87,14 +87,19 @@ describe('CoreUiOptionsChecks', () => {
     expect(ui.contact?.name?.['ui:widget']).toBe('textarea');
   });
 
-  it('allows hiding an array or object field', () => {
+  it('allows hiding an array or object field, but only via the alias ObjectField/SchemaField actually check', () => {
     type Checked = UiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
 
     const hiddenArray: Checked = { tree: { children: { 'ui:widget': 'HiddenWidget' } } };
     const hiddenObject: Checked = { tree: { 'ui:widget': 'hidden' } };
+    const badHiddenObject: Checked = {
+      // @ts-expect-error `'HiddenWidget'` has no runtime effect on an object field - only `'hidden'` does
+      tree: { 'ui:widget': 'HiddenWidget' },
+    };
 
     expect(hiddenArray.tree?.children?.['ui:widget']).toBe('HiddenWidget');
     expect(hiddenObject.tree?.['ui:widget']).toBe('hidden');
+    expect(badHiddenObject).toBeDefined();
   });
 
   it('makes emptyValue/placeholder/inline/filePreview available on every type that actually reads them', () => {
@@ -102,11 +107,12 @@ describe('CoreUiOptionsChecks', () => {
 
     const ui: Checked = {
       age: { 'ui:emptyValue': 0, 'ui:placeholder': 'Age', 'ui:options': { inline: true } },
-      agree: { 'ui:placeholder': 'Agree?', 'ui:options': { inline: true } },
-      tags: { 'ui:options': { filePreview: true } },
+      agree: { 'ui:emptyValue': false, 'ui:placeholder': 'Agree?', 'ui:options': { inline: true } },
+      tags: { 'ui:options': { filePreview: true, emptyValue: [] } },
     };
 
     expect(ui.age?.['ui:emptyValue']).toBe(0);
+    expect(ui.agree?.['ui:emptyValue']).toBe(false);
   });
 
   it('narrows a readonly array field and does not mistake a length-bearing object for an array', () => {

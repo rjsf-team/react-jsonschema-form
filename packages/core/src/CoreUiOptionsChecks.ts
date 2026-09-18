@@ -74,6 +74,7 @@ export type CoreUiOptionsChecks =
         widget?: 'CheckboxWidget' | 'RadioWidget' | 'SelectWidget' | 'HiddenWidget' | WidgetAliasFor<'boolean'>;
         field?: 'BooleanField';
         placeholder?: string;
+        emptyValue?: boolean;
         inline?: boolean;
       }
     >
@@ -95,12 +96,17 @@ export type CoreUiOptionsChecks =
         copyable?: boolean;
         inline?: boolean;
         filePreview?: boolean;
+        emptyValue?: unknown[];
       }
     >
   | UiOptionsCheck<
       object & { [Symbol.iterator]?: never },
       {
-        widget?: 'HiddenWidget' | 'hidden';
+        // Only the literal `'hidden'` has any runtime effect here: `ObjectField`/`SchemaField` decide to hide an
+        // object field via `uiOptions.widget === 'hidden'`, a strict comparison to that exact alias - unlike
+        // string/number/boolean/array fields, an object field never resolves `ui:widget` through `getWidget`, so
+        // `'HiddenWidget'` (the PascalCase component name) does nothing for it and is deliberately not offered here.
+        widget?: 'hidden';
         field?: 'ObjectField';
         optionsSchemaSelector?: string;
         order?: string[];
