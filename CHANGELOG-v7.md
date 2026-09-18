@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `getChakra()` deleting the non-forwardable keys straight out of `uiSchema['ui:options'].chakra`, mutating the caller's own uiSchema as a side effect of rendering. It now returns a filtered copy
 - Fixed `ChakraUiSchema`, which used `Omit<UiSchema, 'ui:options'>`. `UiSchema` has a string index signature, so `keyof UiSchema` includes `string` and `Omit` erased every named member, leaving a type that accepted anything. It now intersects instead
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using `Select.ItemGroup`/`Select.ItemGroupLabel`
+- **BREAKING CHANGE:** Removed `chakra-react-select` from `peerDependencies`; the package no longer uses it, so it no longer needs to be installed alongside `@rjsf/chakra-ui`
 
 ## @rjsf/core
 
