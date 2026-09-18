@@ -108,6 +108,54 @@ describe('groupEnumOptions', () => {
         throw new Error('expected a group followed by standalone options');
       }
     });
+    it('matches primitive group values against enum values by their string form', () => {
+      const numericOptions: EnumOptionsType[] = [
+        { value: 1, label: '1' },
+        { value: 2, label: '2' },
+        { value: 3, label: '3' },
+      ];
+      const result = groupEnumOptions(numericOptions, { Low: ['1', '2'] });
+      expect(result).toHaveLength(2);
+      const group = result[0];
+      if (isEnumOptionsGroup(group)) {
+        expect(group.options.map((o) => o.value)).toEqual([1, 2]);
+      } else {
+        throw new Error('expected a group');
+      }
+    });
+    it('prefers an exact match over a string-form match', () => {
+      const mixedOptions: EnumOptionsType[] = [
+        { value: 1, label: 'number' },
+        { value: '1', label: 'string' },
+      ];
+      const result = groupEnumOptions(mixedOptions, { Group: ['1'] });
+      const group = result[0];
+      if (isEnumOptionsGroup(group)) {
+        expect(group.options.map((o) => o.label)).toEqual(['string']);
+      } else {
+        throw new Error('expected a group');
+      }
+    });
+    it('matches object and array enum values by deep equality', () => {
+      const objectOptions: EnumOptionsType[] = [
+        { value: { id: 1 }, label: 'One' },
+        { value: { id: 2 }, label: 'Two' },
+        { value: [3], label: 'Three' },
+      ];
+      const result = groupEnumOptions(objectOptions, { Group: [{ id: 2 }, [3]] as any });
+      const group = result[0];
+      if (isEnumOptionsGroup(group)) {
+        expect(group.options.map((o) => o.label)).toEqual(['Two', 'Three']);
+      } else {
+        throw new Error('expected a group');
+      }
+      expect(result).toHaveLength(2);
+    });
+    it('does not string-match an object enum value against a primitive group value', () => {
+      const objectOptions: EnumOptionsType[] = [{ value: { id: 1 }, label: 'One' }];
+      const result = groupEnumOptions(objectOptions, { Group: ['[object Object]'] });
+      expect(result).toEqual([{ value: { id: 1 }, label: 'One', index: 0, disabled: false }]);
+    });
     it('claims one distinct option per duplicate-value reference when a group lists the same value twice', () => {
       const duplicateValueOptions: EnumOptionsType[] = [
         { value: 'a', label: 'A1' },

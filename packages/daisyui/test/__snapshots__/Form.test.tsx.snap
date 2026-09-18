@@ -13405,61 +13405,79 @@ exports[`single fields > select field single choice optgroups 1`] = `
               role="listbox"
             >
               <li
-                class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
                 role="presentation"
               >
-                Group A
-              </li>
-              <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="0"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
+                <ul
+                  aria-label="Group A"
+                  role="group"
                 >
-                  <span>
-                    foo
-                  </span>
-                </div>
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group A
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="0"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        foo
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="1"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        bar
+                      </span>
+                    </div>
+                  </li>
+                </ul>
               </li>
               <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="1"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
-                >
-                  <span>
-                    bar
-                  </span>
-                </div>
-              </li>
-              <li
-                class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
                 role="presentation"
               >
-                Group B
-              </li>
-              <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="2"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
+                <ul
+                  aria-label="Group B"
+                  role="group"
                 >
-                  <span>
-                    baz
-                  </span>
-                </div>
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group B
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="2"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        baz
+                      </span>
+                    </div>
+                  </li>
+                </ul>
               </li>
               <li
                 aria-selected="false"
@@ -13546,61 +13564,79 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               role="listbox"
             >
               <li
-                class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
                 role="presentation"
               >
-                Group A
-              </li>
-              <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="0"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
+                <ul
+                  aria-label="Group A"
+                  role="group"
                 >
-                  <span>
-                    foo
-                  </span>
-                </div>
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group A
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="0"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        foo
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="1"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        bar
+                      </span>
+                    </div>
+                  </li>
+                </ul>
               </li>
               <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="1"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
-                >
-                  <span>
-                    bar
-                  </span>
-                </div>
-              </li>
-              <li
-                class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
                 role="presentation"
               >
-                Group B
-              </li>
-              <li
-                aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
-                data-value="2"
-                role="option"
-                tabindex="0"
-              >
-                <div
-                  class="flex items-center gap-2"
+                <ul
+                  aria-label="Group B"
+                  role="group"
                 >
-                  <span>
-                    baz
-                  </span>
-                </div>
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group B
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="2"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        baz
+                      </span>
+                    </div>
+                  </li>
+                </ul>
               </li>
               <li
                 aria-selected="false"

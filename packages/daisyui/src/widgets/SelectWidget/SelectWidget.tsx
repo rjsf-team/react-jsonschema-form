@@ -190,19 +190,19 @@ export default function SelectWidget<
           role='listbox'
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >
-          {groupEnumOptions<S>(optionsList, optgroups).flatMap((item) =>
-            isEnumOptionsGroup<S>(item)
-              ? [
-                  <li
-                    key={`optgroup-${item.label}`}
-                    role='presentation'
-                    className='px-4 py-1 text-xs font-semibold uppercase opacity-60'
-                  >
+          {groupEnumOptions<S>(optionsList, optgroups).map((item) =>
+            isEnumOptionsGroup<S>(item) ? (
+              <li key={`optgroup-${item.label}`} role='presentation'>
+                <ul role='group' aria-label={item.label}>
+                  <li aria-hidden className='px-4 py-1 text-xs font-semibold uppercase opacity-60'>
                     {item.label}
-                  </li>,
-                  ...item.options.map(renderOption),
-                ]
-              : [renderOption(item)],
+                  </li>
+                  {item.options.map(renderOption)}
+                </ul>
+              </li>
+            ) : (
+              renderOption(item)
+            ),
           )}
         </ul>
       </div>
