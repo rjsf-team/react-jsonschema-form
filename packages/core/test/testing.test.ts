@@ -16,6 +16,9 @@ describe('getTestRegistry()', () => {
     expect(() => {
       registry.templates.FieldTemplate = () => null;
     }).toThrow(TypeError);
+    expect(() => {
+      registry.templates.ButtonTemplates.SubmitButton = () => null;
+    }).toThrow(TypeError);
   });
 
   it('leaves caller-owned objects unfrozen', () => {

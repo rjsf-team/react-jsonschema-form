@@ -31,6 +31,7 @@ export function getTestRegistry(
   // freeze would reach caller-owned objects like `formContext`, `rootSchema` and the validator's internal caches.
   Object.freeze(registry.fields);
   Object.freeze(registry.templates);
+  Object.freeze(registry.templates.ButtonTemplates);
   Object.freeze(registry.widgets);
   return Object.freeze(registry);
 }
