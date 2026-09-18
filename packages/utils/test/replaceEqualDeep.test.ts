@@ -1,4 +1,4 @@
-import { forwardRef, createElement } from 'react';
+import { createContext, forwardRef, memo, createElement } from 'react';
 
 import { replaceEqualDeep } from '../src/index.ts';
 
@@ -133,6 +133,37 @@ describe('replaceEqualDeep()', () => {
     const first = forwardRef(() => null);
     const second = forwardRef(() => null);
     expect(replaceEqualDeep({ widget: first }, { widget: second }).widget).toBe(second);
+  });
+
+  it('does not treat two different memo components or contexts as the same one', () => {
+    const first = memo(() => null);
+    const second = memo(() => null);
+    expect(replaceEqualDeep({ widget: first }, { widget: second }).widget).toBe(second);
+
+    const firstContext = createContext('a');
+    const secondContext = createContext('b');
+    expect(replaceEqualDeep({ context: firstContext }, { context: secondContext }).context).toBe(secondContext);
+  });
+
+  it('walks out of a value that contains itself instead of overflowing the stack', () => {
+    const prev: Record<string, unknown> = { name: 'x' };
+    prev.self = prev;
+    const next: Record<string, unknown> = { name: 'x' };
+    next.self = next;
+    expect(replaceEqualDeep(prev, next)).toBe(next);
+
+    const prevList: unknown[] = ['x'];
+    prevList.push(prevList);
+    const nextList: unknown[] = ['x'];
+    nextList.push(nextList);
+    expect(replaceEqualDeep(prevList, nextList)).toBe(nextList);
+  });
+
+  it('retains a value reachable by more than one path', () => {
+    const shared = { a: 1 };
+    const prev = { first: shared, second: shared };
+    const result = replaceEqualDeep(prev, { first: { a: 1 }, second: { a: 1 } });
+    expect(result).toBe(prev);
   });
 
   it('does not retain a value whose symbol-keyed markers differ', () => {

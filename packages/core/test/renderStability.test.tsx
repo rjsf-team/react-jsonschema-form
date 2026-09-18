@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { forwardRef, useState } from 'react';
+import type { FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -225,5 +225,31 @@ describe('render stability across sibling fields', () => {
     await user.type(node.querySelector('#root_0')!, 'abc');
 
     expect(renderCounts.root_1).toBe(otherBefore);
+  });
+
+  it('a replaced widget takes effect even when both are forwardRef components', () => {
+    const First = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
+      <input ref={ref} id={props.id} data-which='first' onChange={() => undefined} value='' />
+    ));
+    const Second = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
+      <input ref={ref} id={props.id} data-which='second' onChange={() => undefined} value='' />
+    ));
+    function Parent({ widget }: { widget: typeof First }) {
+      return (
+        <Form
+          schema={{ type: 'object', properties: { first: { type: 'string' } } }}
+          uiSchema={{ first: { 'ui:widget': 'custom' } }}
+          widgets={{ custom: widget }}
+          validator={validator}
+          formData={{ first: '' }}
+        />
+      );
+    }
+    const { container, rerender } = render(<Parent widget={First} />);
+    expect(container.querySelector('#root_first')).toHaveAttribute('data-which', 'first');
+
+    rerender(<Parent widget={Second} />);
+
+    expect(container.querySelector('#root_first')).toHaveAttribute('data-which', 'second');
   });
 });

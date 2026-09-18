@@ -20,34 +20,48 @@ function sameOwnSymbols(prev: object, next: object): boolean {
   );
 }
 
-/** Structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results: returns `next` with every
- * subtree deeply equal to its counterpart in `prev` replaced by the `prev` instance, and `prev` itself when the whole
- * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays,
- * equal-valued `Date`s and React elements of the same type, key and props are shared; any other object is opaque and
- * `next` is kept. Neither argument is mutated.
- *
- * @param prev - The previous value whose references should be retained where possible
- * @param next - The newly computed value
- * @returns - `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged
- *   subtree with `prev`
+/** The container pairs the walk is currently inside. A `formContext` may hold a graph that refers back to itself, and
+ * `deepEquals()` survives one, so this walk has to as well. Pairs are dropped on the way out, so a value reachable by
+ * more than one path is still shared as long as it does not contain itself.
  */
-export default function replaceEqualDeep<T>(prev: unknown, next: T): T;
-export default function replaceEqualDeep(prev: unknown, next: unknown): unknown {
+type WalkedPairs = WeakMap<object, Set<object>>;
+
+function enterPair(walked: WalkedPairs | undefined, prev: object, next: object): WalkedPairs {
+  const pairs = walked ?? new WeakMap<object, Set<object>>();
+  const walkedNexts = pairs.get(prev);
+  if (walkedNexts) {
+    walkedNexts.add(next);
+  } else {
+    pairs.set(prev, new Set([next]));
+  }
+  return pairs;
+}
+
+function leavePair<R>(walked: WalkedPairs, prev: object, next: object, result: R): R {
+  walked.get(prev)?.delete(next);
+  return result;
+}
+
+function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs | undefined): unknown {
   if (Object.is(prev, next)) {
     return next;
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
+    if (walked?.get(prev)?.has(next)) {
+      return next;
+    }
+    const pairs = enterPair(walked, prev, next);
     let sameAsPrev = prev.length === next.length;
     let copy: unknown[] | undefined;
     for (let i = 0; i < next.length; i++) {
-      const value: unknown = replaceEqualDeep(prev[i], next[i]);
+      const value: unknown = shareUnchanged(prev[i], next[i], pairs);
       sameAsPrev &&= Object.is(value, prev[i]);
       if (!Object.is(value, next[i])) {
         copy ??= next.slice();
         copy[i] = value;
       }
     }
-    return sameAsPrev ? prev : (copy ?? next);
+    return leavePair(pairs, prev, next, sameAsPrev ? prev : (copy ?? next));
   }
   if (isReactElement(prev) && isReactElement(next)) {
     // A React element's identity is its type, key and props; `_owner` and the dev-only `_debug*` fields differ on
@@ -55,16 +69,20 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
     return prev.$$typeof === next.$$typeof &&
       prev.type === next.type &&
       prev.key === next.key &&
-      Object.is(replaceEqualDeep(prev.props, next.props), prev.props)
+      Object.is(shareUnchanged(prev.props, next.props, walked), prev.props)
       ? prev
       : next;
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
+    if (walked?.get(prev)?.has(next)) {
+      return next;
+    }
+    const pairs = enterPair(walked, prev, next);
     const nextKeys = Object.keys(next);
     let sameAsPrev = true;
     let copy: Record<string, unknown> | undefined;
     for (const key of nextKeys) {
-      const value = replaceEqualDeep(prev[key], next[key]);
+      const value = shareUnchanged(prev[key], next[key], pairs);
       sameAsPrev &&= Object.hasOwn(prev, key) && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
         // Spread keeps a JSON-sourced own `__proto__` key an own key, so the assignment below never reaches the setter
@@ -73,17 +91,33 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
       }
     }
     if (sameAsPrev && nextKeys.length === Object.keys(prev).length && sameOwnSymbols(prev, next)) {
-      return prev;
+      return leavePair(pairs, prev, next, prev);
     }
     if (!copy) {
-      return next;
+      return leavePair(pairs, prev, next, next);
     }
     const proto = Object.getPrototypeOf(next);
     // Reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
-    return proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto);
+    return leavePair(pairs, prev, next, proto === Object.prototype ? copy : Object.setPrototypeOf(copy, proto));
   }
   if (prev instanceof Date && next instanceof Date && prev.getTime() === next.getTime()) {
     return prev;
   }
   return next;
+}
+
+/** Structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results: returns `next` with every
+ * subtree deeply equal to its counterpart in `prev` replaced by the `prev` instance, and `prev` itself when the whole
+ * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays,
+ * equal-valued `Date`s and React elements of the same type, key and props are shared; any other object is opaque and
+ * `next` is kept. A value containing itself is never shared, but does not end the walk. Neither argument is mutated.
+ *
+ * @param prev - The previous value whose references should be retained where possible
+ * @param next - The newly computed value
+ * @returns - `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged
+ *   subtree with `prev`
+ */
+export default function replaceEqualDeep<T>(prev: unknown, next: T): T;
+export default function replaceEqualDeep(prev: unknown, next: unknown): unknown {
+  return shareUnchanged(prev, next, undefined);
 }
