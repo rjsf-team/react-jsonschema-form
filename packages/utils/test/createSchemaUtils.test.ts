@@ -129,9 +129,11 @@ describe('createSchemaUtils()', () => {
       expect(utils.retrieveSchema(schema, { foo: 'bar' })).toBe(first);
     });
 
-    it('resolves a non-object schema without caching it', () => {
+    it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {
       const utils = createSchemaUtils(testValidator, rootSchema);
-      expect(utils.retrieveSchema(true as unknown as RJSFSchema, {})).toEqual({});
+      const first = utils.retrieveSchema(true as unknown as RJSFSchema, {});
+      expect(first).toEqual({});
+      expect(utils.retrieveSchema(true as unknown as RJSFSchema, {})).not.toBe(first);
     });
   });
 

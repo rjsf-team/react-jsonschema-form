@@ -674,9 +674,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     formData,
     parentFieldPath,
   );
-  // The uiSchema handed to the field always has its `readonly` state matching the `uiReadonly` flag, since
-  // `SchemaField` defers to the uiSchema over the props or schema for it. Memoized so the cell's `SchemaField` sees
-  // the same uiSchema reference across renders that leave it unchanged
+  // Memoized so the cell's `SchemaField` keeps its uiSchema reference while nothing it is built from changed
   const { fieldUiSchema, uiReadonly } = useMemo(
     () => computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly),
     [name, uiProps, uiSchema, isReadonly, readonly],

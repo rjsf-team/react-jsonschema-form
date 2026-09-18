@@ -30,7 +30,7 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
   }
   if (isPlainObject(prev) && isPlainObject(next)) {
     const nextKeys = Object.keys(next);
-    let sameAsPrev = nextKeys.length === Object.keys(prev).length;
+    let sameAsPrev = true;
     let copy: Record<string, unknown> | undefined;
     for (const key of nextKeys) {
       const value = replaceEqualDeep(prev[key], next[key]);
@@ -41,7 +41,7 @@ export default function replaceEqualDeep(prev: unknown, next: unknown): unknown 
         copy[key] = value;
       }
     }
-    if (sameAsPrev) {
+    if (sameAsPrev && nextKeys.length === Object.keys(prev).length) {
       return prev;
     }
     if (!copy) {
