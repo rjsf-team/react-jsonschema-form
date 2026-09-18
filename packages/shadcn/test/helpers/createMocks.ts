@@ -1,4 +1,4 @@
-import { getTestRegistry } from '@rjsf/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 
 import BaseInputTemplate from '../../src/BaseInputTemplate/index.ts';

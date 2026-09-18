@@ -4,7 +4,7 @@
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts ./src/testing.ts --bundle --outdir=dist --out-extension:.js=.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
     "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
@@ -36,6 +36,12 @@
       "types": "./lib/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./lib/index.js"
+    },
+    "./testing": {
+      "@rjsf/source": "./src/testing.ts",
+      "types": "./lib/testing.d.ts",
+      "require": "./dist/testing.cjs",
+      "import": "./lib/testing.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
@@ -72,12 +78,12 @@
     "react": ">=18"
   },
   "dependencies": {
+    "@rjsf/validator-ajv8": "workspace:^",
     "markdown-to-jsx": "^9.8.2"
   },
   "devDependencies": {
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.6",
