@@ -435,11 +435,13 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const { formData: propsFormData, initialFormData, onChange } = props;
     const formData = propsFormData ?? initialFormData;
     this.stateProps = pickStateProps(props);
+    const initialState = this.getStateFromProps(props, formData, undefined, undefined, undefined, true);
     this.state = {
-      ...this.getStateFromProps(props, formData, undefined, undefined, undefined, true),
+      ...initialState,
+      formData: replaceEqualDeep(formData, initialState.formData),
       prevExtraErrors: props.extraErrors,
     };
-    if (onChange && !deepEquals(this.state.formData, formData)) {
+    if (onChange && this.state.formData !== formData) {
       onChange(toIChangeEvent(this.state));
     }
     this.formElement = createRef();
@@ -628,7 +630,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
       const formHash = shouldSanitize ? hashObject({ formData }) : '';
-      computedRetrievedSchema = this.updateRetrievedSchema(
+      // Kept reference-equal to the current one when unchanged, so the validator's compiled-schema cache hits
+      computedRetrievedSchema = replaceEqualDeep(
+        state.retrievedSchema,
         retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
       );
       if (
@@ -638,12 +642,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       ) {
         // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
         // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
-        const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
-          computedRetrievedSchema,
-          state.retrievedSchema,
+        const sanitizedFormData = replaceEqualDeep(
           formData,
+          schemaUtils.sanitizeDataForNewSchema(computedRetrievedSchema, state.retrievedSchema, formData),
         );
-        wasSanitized = !deepEquals(sanitizedFormData, formData);
+        wasSanitized = sanitizedFormData !== formData;
         if (wasSanitized) {
           // Update both the formData AND defaultsFormData due to the sanitize so the loop works with the new data
           formData = sanitizedFormData;
@@ -1110,20 +1113,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       this.pendingChanges.shift();
       this.processPendingChange();
     });
-  }
-
-  /**
-   * If the retrievedSchema has changed the new retrievedSchema is returned.
-   * Otherwise, the old retrievedSchema is returned to persist reference.
-   * -  This ensures that AJV retrieves the schema from the cache when it has not changed,
-   *    avoiding the performance cost of recompiling the schema.
-   *
-   * @param retrievedSchema The new retrieved schema.
-   * @returns The new retrieved schema if it has changed, else the old retrieved schema.
-   */
-  private updateRetrievedSchema(retrievedSchema: S) {
-    const isTheSame = deepEquals(retrievedSchema, this.state?.retrievedSchema);
-    return isTheSame ? this.state.retrievedSchema : retrievedSchema;
   }
 
   /** Filters the given `formData` down to only the elements described by the current `schema`, using the
