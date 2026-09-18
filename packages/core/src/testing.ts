@@ -27,11 +27,16 @@ export function getTestRegistry(
     ),
     globalFormOptions,
   };
-  // Freeze shallowly so a test that mutates the registry or swaps an entry in a component map fails loudly. A deep
-  // freeze would reach caller-owned objects like `formContext`, `rootSchema` and the validator's internal caches.
+  // Freeze the component maps, including any nested template group, so a test that mutates the registry or swaps an
+  // entry fails loudly. The freeze stops there: a deep freeze would reach caller-owned objects like `formContext`,
+  // `rootSchema` and the validator's internal caches.
   Object.freeze(registry.fields);
   Object.freeze(registry.templates);
-  Object.freeze(registry.templates.ButtonTemplates);
+  for (const group of Object.values(registry.templates)) {
+    if (typeof group === 'object' && group !== null) {
+      Object.freeze(group);
+    }
+  }
   Object.freeze(registry.widgets);
   return Object.freeze(registry);
 }
