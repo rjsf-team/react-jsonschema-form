@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -24,6 +25,77 @@ export interface FormComponentResult {
 }
 export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
+}
+
+/** What a controlled parent has done so far: the value it currently renders and every proposal the form sent it.
+ * A `vi.fn()` `onChange` is not a controlled parent: it records the proposal but never hands it back as the next
+ * `formData` prop, so a test built on one exercises the form's own state and nothing about controlled composition.
+ * These parents do hand values back, each with a different policy, so a test can state which policy it relies on.
+ */
+export interface ControlledParentLog<T> {
+  value: T | undefined;
+  proposals: (T | undefined)[];
+}
+
+export function createParentLog<T>(): ControlledParentLog<T> {
+  return { value: undefined, proposals: [] };
+}
+
+export type ControlledParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
+  initialValue?: T;
+  log?: ControlledParentLog<T>;
+};
+
+/** Stores every proposal as its next value, exactly `setData(event.formData)`, the ordinary React controlled pattern */
+export function AcceptingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+  const [value, setValue] = useState(initialValue);
+  Object.assign(log ?? {}, { value });
+  return (
+    <Form<T>
+      {...formProps}
+      validator={validator}
+      formData={value}
+      onChange={(event) => {
+        log?.proposals.push(event.formData);
+        setValue(event.formData);
+      }}
+    />
+  );
+}
+
+/** Keeps rendering its initial value whatever the form proposes, the shape of a parent whose validation refused */
+export function RejectingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+  Object.assign(log ?? {}, { value: initialValue });
+  return (
+    <Form<T>
+      {...formProps}
+      validator={validator}
+      formData={initialValue}
+      onChange={(event) => log?.proposals.push(event.formData)}
+    />
+  );
+}
+
+/** Stores a transformed version of each proposal, the shape of a parent that normalizes what it is handed */
+export function TransformingParent<T>({
+  initialValue,
+  log,
+  transform,
+  ...formProps
+}: ControlledParentProps<T> & { transform: (proposal: T | undefined) => T | undefined }) {
+  const [value, setValue] = useState(initialValue);
+  Object.assign(log ?? {}, { value });
+  return (
+    <Form<T>
+      {...formProps}
+      validator={validator}
+      formData={value}
+      onChange={(event) => {
+        log?.proposals.push(event.formData);
+        setValue(transform(event.formData));
+      }}
+    />
+  );
 }
 
 export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
