@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.10.2
 
+## @rjsf/core
+
+- Fixed a `oneOf`/`anyOf` whose options are all constants (`const` or single-value `enum`) rendering as an unsupported field when the schema omits `type`, including one nested behind another `oneOf`/`anyOf` option. `SchemaField` now infers the `type` from the primitive constant values so the select renders, using `string` when the constants mix types so option order can't route them to a field that coerces or drops values, fixing [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
+
 ## @rjsf/validator-ata
 
 - Updated `ata-validator` from `^1.7.1` to `^1.23.0`, picking up the corrected error shape for `unevaluatedProperties` (the error now carries `params.unevaluatedProperty`), the removal of a quadratic in `additionalProperties: false` schemas with many properties, a fix for a hang on truncated JSON input, and enforced strict-mode schema checks ([#5293](https://github.com/rjsf-team/react-jsonschema-form/pull/5293))

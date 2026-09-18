@@ -1961,6 +1961,23 @@ describe('anyOf', () => {
     expect(select).toHaveValue('1');
   });
 
+  describe('constant options without a type (#4666)', () => {
+    it('should render a select for an anyOf of consts without a type, including falsy values', async () => {
+      const schema: RJSFSchema = {
+        anyOf: [{ const: 0 }, { const: 1 }],
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: 1 });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(getSelectedOptionValue(select!)).toEqual('1');
+
+      await user.selectOptions(select!, '0');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 0 }), 'root');
+    });
+  });
+
   describe('primitive type with non-select anyOf', () => {
     const schema: RJSFSchema = {
       type: 'string',

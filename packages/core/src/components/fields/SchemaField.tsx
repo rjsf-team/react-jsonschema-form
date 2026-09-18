@@ -11,6 +11,7 @@ import type {
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaUtilsType,
   StrictRJSFSchema,
   UIOptionsType,
 } from '@rjsf/utils';
@@ -22,6 +23,7 @@ import {
   getSchemaType,
   getTemplate,
   getUiOptions,
+  guessType,
   ID_KEY,
   isFormDataAvailable,
   ONE_OF_KEY,
@@ -29,6 +31,7 @@ import {
   RJSF_REF_CYCLE_KEY,
   shallowEquals,
   shouldRenderOptionalField,
+  toConstant,
   toFieldPathId,
   isObject,
   TranslatableString,
@@ -45,6 +48,37 @@ const COMPONENT_TYPES: Record<string, string> = {
   string: 'StringField',
   null: 'NullField',
 };
+
+const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
+
+/** A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the schema's `type`.
+ * JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be resolved, so infer it
+ * from the constant values. Only primitive constants are inferred since those are what a select can represent.
+ *
+ * @param schema - The retrieved schema for the field
+ * @param schemaUtils - The `SchemaUtilsType` used to check whether the schema is a select
+ * @returns - The `schema` with an inferred `type` when it is a typeless select, otherwise the `schema` unchanged
+ */
+function inferSelectType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  schema: S,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+): S {
+  const options = schema[ONE_OF_KEY] ?? schema[ANY_OF_KEY];
+  if (getSchemaType<S>(schema) !== undefined || !Array.isArray(options) || !schemaUtils.isSelect(schema)) {
+    return schema;
+  }
+  const types = [...new Set(options.map((option) => guessType(toConstant<S>(option as S))))];
+  if (!types.every((type) => PRIMITIVE_TYPES.includes(type))) {
+    return schema;
+  }
+  const nonNullTypes = types.filter((type) => type !== 'null');
+  if (nonNullTypes.length === 0) {
+    return { ...schema, type: 'null' };
+  }
+  // Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), but the select
+  // widget maps each option back to its original constant, so `string` can represent any mix
+  return { ...schema, type: nonNullTypes.length === 1 ? nonNullTypes[0] : 'string' };
+}
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
  * `schema`. The `uiOptions` are used to alter what potential `Field` implementation is actually returned. If no
@@ -147,7 +181,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   );
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  const schema = schemaUtils.retrieveSchema(_schema, formData);
+  const schema = inferSelectType<T, S, F>(schemaUtils.retrieveSchema(_schema, formData), schemaUtils);
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry);
 

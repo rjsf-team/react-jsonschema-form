@@ -1930,6 +1930,133 @@ describe('oneOf', () => {
       }
     });
   });
+  describe('constant options without a type (#4666)', () => {
+    it('should render a select for a oneOf of consts without a type', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: {
+            oneOf: [
+              { title: 'none', const: 'X' },
+              { title: 'some', const: 'some' },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, formData: { myprop: 'X' } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect(getSelectedOptionValue(select!)).toEqual('none');
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+    });
+
+    it('should render a select for single value enum options without a type', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { type: 'string', enum: ['1'] },
+          { type: 'string', enum: ['2'] },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      const option = [...select!.options].find((o) => o.text === '2');
+      await user.selectOptions(select!, option!);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '2' }), 'root');
+    });
+
+    it('should render a select for a nested oneOf of consts selected through a $ref option', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: {
+            oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/some' }, { $ref: '#/$defs/mylist' }],
+          },
+        },
+        $defs: {
+          some: { title: 'some', const: 'some' },
+          mylist: { oneOf: [{ const: 'foo' }, { const: 'bar' }] },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: { myprop: 'foo' } });
+
+      expect(node.querySelector('#root_myprop__oneof_select')).toHaveValue('2');
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect(getSelectedOptionValue(select!)).toEqual('foo');
+
+      await user.selectOptions(select!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { myprop: 'bar' } }),
+        'root_myprop',
+      );
+    });
+
+    it('should preserve the value types of consts with mixed types', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', const: 'a' },
+          { title: 'One', const: 1 },
+          { title: 'Nothing', const: null },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+
+      await user.selectOptions(select!, '1');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+
+      await user.selectOptions(select!, '2');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }), 'root');
+    });
+
+    it.each([
+      ['null', [null, 'a', 1]],
+      ['boolean', [true, 'maybe']],
+      ['number', [1, '10']],
+    ])('should render a select of mixed type consts when the first const is %s', async (_, consts) => {
+      const schema: RJSFSchema = { oneOf: consts.map((value) => ({ const: value })) };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(select!.options).toHaveLength(consts.length + 1);
+
+      await user.selectOptions(select!, select!.options[2]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: consts[1] }), 'root');
+    });
+
+    it('should render a select of number consts that includes null', async () => {
+      const schema: RJSFSchema = { oneOf: [{ const: null }, { const: 1 }, { const: 2 }] };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+
+      await user.selectOptions(select!, select!.options[2]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+
+      await user.selectOptions(select!, select!.options[1]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }), 'root');
+    });
+
+    it('should not infer a type for object consts', () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }],
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
+    });
+  });
+
   describe('primitive type with non-select oneOf', () => {
     const ipSchema: RJSFSchema = {
       type: 'string',
