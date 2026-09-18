@@ -1118,9 +1118,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
       // Matches what this reset pass actually computed defaults with (see getStateFromProps's `isReset` handling),
-      // rather than unconditionally `false`, which previously left the flag and the formData it describes out of
-      // sync — the very next unrelated recompute would then treat itself as an initial pass too and resurrect a
-      // `ui:initialValue` the user had since cleared.
+      // keeping the flag in sync with the formData it describes — otherwise the next unrelated recompute would
+      // treat itself as an initial pass too and resurrect a `ui:initialValue` the user had since cleared.
       initialDefaultsGenerated: newState.initialDefaultsGenerated,
       customErrors: undefined,
     } satisfies Partial<FormState<T, S, F>>;

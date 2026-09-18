@@ -183,5 +183,18 @@ describe('ui:required enforcement', () => {
       await submitForm(node, user, true);
       expect(node.textContent).toContain("must have required property 'nick'");
     });
+
+    it('reports a single error, not a duplicate, for a field that is both schema-required and ui:required: true', async () => {
+      const schema: RJSFSchema = { type: 'object', required: ['nick'], properties: { nick: { type: 'string' } } };
+      const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+      const { node, onError } = createFormComponent({ schema, uiSchema, formData: {} });
+      await submitForm(node, user, true);
+      expect(onError).toHaveBeenCalled();
+      const errors = onError.mock.calls[0][0];
+      expect(errors).toHaveLength(1);
+      // AJV's own required error (the one that survives, since the ui:required walk defers to it) reports the
+      // property without ui:required's leading-dot convention.
+      expect(errors[0].property).toBe('nick');
+    });
   });
 });

@@ -42,6 +42,13 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
+  it('does not duplicate a schema-required error when the same field is also ui:required: true', () => {
+    const schema: RJSFSchema = { type: 'object', required: ['nick'], properties: { nick: { type: 'string' } } };
+    const uiSchema: UiSchema = { nick: { 'ui:required': true } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
   it('does not check ui:required at the root path itself', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     // 'ui:required' isn't a real uiSchema key at the root, but even if present it must not be checked at path []
@@ -207,6 +214,33 @@ describe('getUiRequiredErrorSchema()', () => {
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.home.zip');
+  });
+
+  it('memoizes the ui:required pre-scan for a repeated, unchanged uiSchema reference', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    let scans = 0;
+    const uiSchema: UiSchema = {
+      get nick() {
+        scans += 1;
+        return { 'ui:widget': 'textarea' };
+      },
+    };
+    getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    expect(scans).toBe(1);
+    // A second call against the very same uiSchema object (the common case across `liveValidate: 'onChange'`
+    // keystrokes, where only formData changes) must not re-scan it.
+    getUiRequiredErrorSchema(testValidator, schema, uiSchema, { nick: 'x' });
+    expect(scans).toBe(1);
+    // A genuinely different uiSchema object is still scanned, proving the assertions above aren't just trivially
+    // satisfied by the scan never running at all.
+    const otherUiSchema: UiSchema = {
+      get nick() {
+        scans += 1;
+        return { 'ui:widget': 'textarea' };
+      },
+    };
+    getUiRequiredErrorSchema(testValidator, schema, otherUiSchema, {});
+    expect(scans).toBe(2);
   });
 
   it('never resolves a descendant node when ui:definitions is present but nothing declares ui:required', () => {
@@ -678,22 +712,29 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errors[0].property).toBe('.people.0.name');
     });
 
-    it('falls back to no uiSchema when the function form of uiSchema.items throws', () => {
+    it('falls back to no uiSchema and logs when the function form of uiSchema.items throws', () => {
+      const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(() => {});
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
           people: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
         },
       };
+      const error = new Error('boom');
       const uiSchema: UiSchema = {
         people: {
           items: () => {
-            throw new Error('boom');
+            throw error;
           },
         },
       };
       const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}] });
       expect(toErrorList(errorSchema)).toEqual([]);
+      expect(consoleErrorStub).toHaveBeenCalledWith(
+        'Error executing dynamic uiSchema.items function for item at index 0:',
+        error,
+      );
+      consoleErrorStub.mockRestore();
     });
   });
 });

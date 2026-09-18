@@ -126,7 +126,9 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
   if (typeof uiSchema.items === 'function') {
     try {
       return uiSchema.items(item as never, idx, formContext) as UiSchema<T, S, F>;
-    } catch {
+    } catch (e) {
+      // oxlint-disable-next-line no-console
+      console.error(`Error executing dynamic uiSchema.items function for item at index ${idx}:`, e);
       return undefined;
     }
   }
@@ -160,9 +162,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
   const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
-  if (path.length > 0 && fieldUiRequired === true && formData === undefined) {
+  if (path.length > 0 && fieldUiRequired === true && formData === undefined && !required) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
-    // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text.
+    // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
+    // when the field is already in its parent's schema `required` list: AJV already raises this exact message for
+    // it, so adding it again here would just duplicate the entry in `errorSchema` and the flat error list.
     builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
   }
   // Children can only carry ui:required through their own uiSchema entry or a ui:definitions fragment
@@ -251,6 +255,49 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
   });
 }
 
+/** Sentinel used as the inner cache key in `mightHaveUiRequiredCache` for an `undefined` `uiSchemaDefinitions`, since
+ * a `WeakMap` key must be an object.
+ */
+const NO_DEFINITIONS = {};
+
+/** Caches the result of scanning a given `uiSchema`/`uiSchemaDefinitions` pair for `ui:required`, keyed by object
+ * identity. `getUiRequiredErrorSchema()` runs on every `validate()` call — every keystroke under
+ * `liveValidate: 'onChange'` — but `uiSchema` (and the `uiSchemaDefinitions` derived from it) stay the same object
+ * across those calls far more often than not, so re-walking the whole tree each time to answer a question whose
+ * answer can't have changed is wasted work.
+ */
+const mightHaveUiRequiredCache = new WeakMap<object, WeakMap<object, boolean>>();
+
+/** Returns whether `uiSchema`/`uiSchemaDefinitions` might declare `ui:required` anywhere, memoized by the object
+ * identity of both so repeated calls with the same, unchanged `uiSchema` (the common case across live-validation
+ * passes) skip the scan entirely. Falls back to scanning uncached when `uiSchema` isn't an object, since there's no
+ * key to cache against and the scan is already O(1) in that case.
+ */
+function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined,
+): boolean {
+  const scan = () =>
+    hasUiRequiredOption<T, S, F>(uiSchema) ||
+    (uiSchemaDefinitions !== undefined &&
+      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<T, S, F>(fragment)));
+  if (!isObject(uiSchema)) {
+    return scan();
+  }
+  let byDefinitions = mightHaveUiRequiredCache.get(uiSchema);
+  if (!byDefinitions) {
+    byDefinitions = new WeakMap();
+    mightHaveUiRequiredCache.set(uiSchema, byDefinitions);
+  }
+  const definitionsKey: object = (uiSchemaDefinitions as object | undefined) ?? NO_DEFINITIONS;
+  let cached = byDefinitions.get(definitionsKey);
+  if (cached === undefined) {
+    cached = scan();
+    byDefinitions.set(definitionsKey, cached);
+  }
+  return cached;
+}
+
 /** Walks the `schema` (resolved node by node against `formData`, exactly as `SchemaField` does while rendering) and
  * the `uiSchema` (resolved through `ui:definitions` the same way), returning an `ErrorSchema` holding a required
  * error for every field marked `ui:required: true` whose value is missing. The schema handed to the validator is left
@@ -272,10 +319,7 @@ export default function getUiRequiredErrorSchema<
 ): ErrorSchema<T> {
   const builder = new ErrorSchemaBuilder<T>();
   const hasDefinitions = uiSchemaDefinitions && Object.keys(uiSchemaDefinitions).length > 0;
-  const mightHaveUiRequired =
-    hasUiRequiredOption<T, S, F>(uiSchema) ||
-    (uiSchemaDefinitions !== undefined &&
-      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<T, S, F>(fragment)));
+  const mightHaveUiRequired = computeMightHaveUiRequired<T, S, F>(uiSchema, uiSchemaDefinitions);
   if (!mightHaveUiRequired) {
     return builder.ErrorSchema;
   }
