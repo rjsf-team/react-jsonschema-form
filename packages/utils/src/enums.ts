@@ -80,11 +80,11 @@ export const TranslatableString = {
   InvalidObjectField: 'Invalid "%1" object field configuration: %2.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField: 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField. */
+  /** Unsupported field schema, where %1 will be replaced by the field id as provided by UnsupportedField. */
   UnsupportedFieldWithId: 'Unsupported field schema for field %1.',
   /** Unsupported field schema, where %1 will be replaced by the reason string as provided by UnsupportedField. */
   UnsupportedFieldWithReason: 'Unsupported field schema: %1.',
-  /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
+  /** Unsupported field schema, where %1 and %2 will be replaced by the field id and reason strings,
    * respectively, as provided by UnsupportedField.
    */
   UnsupportedFieldWithIdAndReason: 'Unsupported field schema for field %1: %2.',

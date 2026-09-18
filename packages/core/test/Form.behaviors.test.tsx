@@ -1,6 +1,6 @@
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
+import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -1049,7 +1049,10 @@ describe('Calling onChange right after updating a Form with props formData', () 
         return;
       }
       changed = true;
-      latestProps.current.onChange('test', [latestProps.current.formData.length]);
+      latestProps.current.onChange(
+        'test',
+        toFieldPath(latestProps.current.formData.length, latestProps.current.fieldPath),
+      );
     });
     return <ArrayField {...fieldProps} />;
   };
@@ -1515,7 +1518,8 @@ describe('setFieldValue()', () => {
       expect.objectContaining({
         formData: 'populated value',
       }),
-      'root_',
+      // `setFieldValue('')` addresses the root, so the change is reported against the root id
+      'root',
     );
 
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');
@@ -1651,6 +1655,60 @@ describe('setFieldValue()', () => {
     // screen.debug();
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
+  });
+  it("gives a property named the empty string an id of its own, not its parent's", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { obj: { type: 'object', properties: { '': { type: 'string' } } } },
+    };
+
+    const { node } = createFormComponent({ schema });
+    const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
+
+    expect(node.querySelector('input#root_obj_')).toBeInTheDocument();
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+  it('keeps a root-level property named the empty string apart from the form itself', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { '': { type: 'string' }, other: { type: 'string' } },
+    };
+    const { node, onChange } = createFormComponent({ schema, formData: { other: 'kept' } });
+
+    const input = node.querySelector('input#root_');
+    expect(input).toBeInTheDocument();
+    await user.type(input!, 'x');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { '': 'x', other: 'kept' } }),
+      'root_',
+    );
+  });
+  it('Sets a field whose property name is the empty string', () => {
+    const ref = createRef<Form>();
+    const props: NoValFormProps = {
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'object',
+            properties: { '': { type: 'object', properties: { bar: { type: 'string' } } } },
+          },
+        },
+      },
+      formData: {},
+      ref,
+    };
+    const { onChange } = createFormComponent(props);
+
+    act(() => {
+      ref.current!.setFieldValue(['foo', '', 'bar'], 'populated value');
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { foo: { '': { bar: 'populated value' } } } }),
+      'root_foo__bar',
+    );
   });
 });
 
@@ -1936,6 +1994,27 @@ describe('optionalDataControls', () => {
     expect(addObjectControlNode).not.toEqual(null);
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
+  });
+  it('gives the controls of an object that is itself a oneOf a distinct id from those of the selected option', () => {
+    const oneOfObjectSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: {
+          type: 'object',
+          properties: { shared: { type: 'string' } },
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema: oneOfObjectSchema, uiSchema: objectOnUiSchema });
+    const ids = [...node.querySelectorAll('[id]')].map((element) => element.id);
+
+    expect(new Set(ids).size).toEqual(ids.length);
+    expect(ids).toContain(objectControlAddId);
+    expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
   });
 });
 

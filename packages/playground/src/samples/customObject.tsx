@@ -12,14 +12,14 @@ import type { Sample } from './Sample.ts';
 function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldTemplateProps<T, S, F>,
 ) {
-  const { registry, properties, title, description, uiSchema, required, schema, fieldPathId } = props;
+  const { registry, properties, title, description, uiSchema, required, schema, id } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
   return (
     <div>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
