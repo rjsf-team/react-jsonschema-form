@@ -26,6 +26,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `ata-validator` from `^1.7.1` to `^1.23.0`, picking up the corrected error shape for `unevaluatedProperties` (the error now carries `params.unevaluatedProperty`), the removal of a quadratic in `additionalProperties: false` schemas with many properties, a fix for a hang on truncated JSON input, and enforced strict-mode schema checks ([#5293](https://github.com/rjsf-team/react-jsonschema-form/pull/5293))
 
+## Dev / docs / playground
+
+- Added `oneOf`/`anyOf` fields with constant options and no `type` (including mixed-type constants and a `oneOf` nested behind a `$ref`) to the playground's `One Of` and `Any Of` samples, and matching form snapshot tests for every theme, for [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
+
 # 6.10.1
 
 ## @rjsf/core

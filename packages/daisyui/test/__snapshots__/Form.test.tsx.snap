@@ -3520,6 +3520,432 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-undefined"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                >
+                  <label
+                    class="label"
+                    for="root_region"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      region
+                    </span>
+                  </label>
+                  <div
+                    class="p-4 border rounded-sm shadow-sm"
+                  >
+                    <div
+                      class="mb-4"
+                    >
+                      <div
+                        class="form-control w-full"
+                      >
+                        <div
+                          class="dropdown w-full"
+                        >
+                          <div
+                            class="btn btn-outline w-full text-left flex justify-between items-center "
+                            role="button"
+                            tabindex="0"
+                          >
+                            <span
+                              class="truncate"
+                            >
+                              Europe
+                            </span>
+                            <span
+                              class="ml-2"
+                            >
+                              ▼
+                            </span>
+                          </div>
+                          <ul
+                            class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            role="listbox"
+                          >
+                            <li
+                              aria-selected="false"
+                              class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                              data-value="0"
+                              role="option"
+                              tabindex="0"
+                            >
+                              <div
+                                class="flex items-center gap-2"
+                              >
+                                <span>
+                                  None
+                                </span>
+                              </div>
+                            </li>
+                            <li
+                              aria-selected="true"
+                              class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                              data-value="1"
+                              role="option"
+                              tabindex="0"
+                            >
+                              <div
+                                class="flex items-center gap-2"
+                              >
+                                <span>
+                                  Europe
+                                </span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-grow rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                      >
+                        <label
+                          class="label"
+                          for="root_region"
+                        >
+                          <span
+                            class="label-text font-medium"
+                          >
+                            Europe
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                Germany
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    France
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="true"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    Germany
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div
+                          class="rjsf-field-error-template text-red-600"
+                        >
+                          <ul
+                            class="list-disc list-inside"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Once
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Never
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Once
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="2"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Unlimited
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Bar
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Foo
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Bar
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form

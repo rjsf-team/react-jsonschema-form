@@ -2448,6 +2448,176 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <div
+          class="rjsf-field rjsf-field-undefined"
+        >
+          <div
+            style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+          >
+            <label
+              for="root_region"
+            >
+              region 
+            </label>
+            <fieldset
+              class="p-fieldset p-component"
+              data-pc-name="fieldset"
+              data-pc-section="root"
+              id="pr_id_161"
+            >
+              <div
+                aria-labelledby="pr_id_161_header"
+                class="p-toggleable-content"
+                data-pc-section="toggleablecontent"
+                id="pr_id_161_content"
+                role="region"
+              >
+                <div
+                  class="p-fieldset-content"
+                  data-pc-section="content"
+                >
+                  <div
+                    style="margin-bottom: 1rem;"
+                  >
+                    <select
+                      aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                      id="root_region__oneof_select"
+                      name="root_region__oneof_select"
+                      options="[object Object],[object Object]"
+                    />
+                  </div>
+                  <div
+                    class="rjsf-field rjsf-field-string"
+                  >
+                    <div
+                      style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+                    >
+                      <label
+                        for="root_region"
+                      >
+                        Europe 
+                      </label>
+                      <select
+                        aria-describedby="root_region__error root_region__description root_region__help"
+                        id="root_region"
+                        name="root_region"
+                        options="[object Object],[object Object]"
+                        placeholder=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <select
+          aria-describedby="root__error root__description root__help"
+          id="root"
+          name="root"
+          options="[object Object],[object Object],[object Object]"
+          placeholder=""
+        />
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"
+      >
+        <select
+          aria-describedby="root__error root__description root__help"
+          id="root"
+          name="root"
+          options="[object Object],[object Object]"
+          placeholder=""
+        />
+      </div>
+    </div>
+    <button
+      aria-label="Submit"
+      class="p-button p-component"
+      data-pc-name="button"
+      data-pc-section="root"
+      type="submit"
+    >
+      <span
+        class="p-button-label p-c"
+        data-pc-section="label"
+      >
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form

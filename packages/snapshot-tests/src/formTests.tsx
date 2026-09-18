@@ -1319,4 +1319,46 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
     expect(asFragment()).toMatchSnapshot();
   });
+  test('select widget from oneOf constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: 'foo', title: 'Foo' },
+        { const: 'bar', title: 'Bar' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData='bar' validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from anyOf constants of mixed types without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [
+        { const: false, title: 'Never' },
+        { const: 1, title: 'Once' },
+        { const: 'unlimited', title: 'Unlimited' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={1} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a nested oneOf of constants without a type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: {
+          oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }],
+        },
+      },
+      $defs: {
+        europe: {
+          title: 'Europe',
+          oneOf: [
+            { const: 'FR', title: 'France' },
+            { const: 'DE', title: 'Germany' },
+          ],
+        },
+      },
+    };
+    const { asFragment } = render(<Form schema={schema} formData={{ region: 'DE' }} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

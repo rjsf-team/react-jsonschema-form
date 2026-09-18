@@ -1735,6 +1735,183 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-undefined"
+        >
+          <label
+            class="control-label"
+            for="root_region"
+          >
+            region
+          </label>
+          <div
+            class="panel panel-default panel-body"
+          >
+            <div
+              class="form-group"
+            >
+              <select
+                aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                class="form-control"
+                id="root_region__oneof_select"
+                name="root_region__oneof_select"
+              >
+                <option
+                  value="0"
+                >
+                  None
+                </option>
+                <option
+                  value="1"
+                >
+                  Europe
+                </option>
+              </select>
+            </div>
+            <div
+              class="form-group rjsf-field rjsf-field-string"
+            >
+              <label
+                class="control-label"
+                for="root_region"
+              >
+                Europe
+              </label>
+              <select
+                aria-describedby="root_region__error root_region__description root_region__help"
+                class="form-control"
+                id="root_region"
+                name="root_region"
+              >
+                <option
+                  value=""
+                />
+                <option
+                  value="0"
+                >
+                  France
+                </option>
+                <option
+                  value="1"
+                >
+                  Germany
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="0"
+        >
+          Never
+        </option>
+        <option
+          value="1"
+        >
+          Once
+        </option>
+        <option
+          value="2"
+        >
+          Unlimited
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="0"
+        >
+          Foo
+        </option>
+        <option
+          value="1"
+        >
+          Bar
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form
