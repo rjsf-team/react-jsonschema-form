@@ -25,6 +25,49 @@ export interface PlaygroundProps {
   validators: Record<string, ValidatorType>;
 }
 
+const DARK_THEMES: Record<string, Partial<Record<string, string>>> = {
+  default: {
+    cerulean: 'darkly',
+    cosmo: 'darkly',
+    flatly: 'darkly',
+    journal: 'darkly',
+    lumen: 'darkly',
+    paper: 'darkly',
+    readable: 'darkly',
+    sandstone: 'darkly',
+    simplex: 'darkly',
+    spacelab: 'darkly',
+    united: 'darkly',
+    yeti: 'darkly',
+    'solarized-light': 'solarized-dark',
+  },
+  primereact: {
+    'arya-blue': 'arya-blue',
+    'arya-green': 'arya-green',
+    'arya-orange': 'arya-orange',
+    'arya-purple': 'arya-purple',
+    'bootstrap4-light-blue': 'bootstrap4-dark-blue',
+    'bootstrap4-light-purple': 'bootstrap4-dark-purple',
+    'fluent-light': 'fluent-light',
+    'lara-light-amber': 'lara-dark-amber',
+    'lara-light-blue': 'lara-dark-blue',
+    'lara-light-cyan': 'lara-dark-cyan',
+    'lara-light-green': 'lara-dark-green',
+    'lara-light-indigo': 'lara-dark-indigo',
+    'lara-light-pink': 'lara-dark-pink',
+    'lara-light-purple': 'lara-dark-purple',
+    'lara-light-teal': 'lara-dark-teal',
+    'md-light-deeppurple': 'md-dark-deeppurple',
+    'md-light-indigo': 'md-dark-indigo',
+    'mdc-light-deeppurple': 'mdc-dark-deeppurple',
+    'mdc-light-indigo': 'mdc-dark-indigo',
+    'soho-light': 'soho-dark',
+    'tailwind-light': 'tailwind-light',
+    'viva-light': 'viva-dark',
+  },
+  'daisy-ui': {},
+};
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
@@ -40,6 +83,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
   const [showForm, setShowForm] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>({
     showErrorList: 'top',
     validate: false,
@@ -72,6 +116,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       }
     },
     [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
+  );
+
+  const onDarkModeToggle = useCallback(
+    ({ formData: newFormData }: IChangeEvent) => {
+      setDarkMode(!!newFormData);
+    },
+    [setDarkMode],
   );
 
   const load = useCallback(
@@ -222,6 +273,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
           setExtraErrors={setExtraErrors}
           setShareURL={setShareURL}
           hasUiSchemaGenerator={!!uiSchemaGenerator}
+          darkMode={darkMode}
+          onDarkModeToggle={onDarkModeToggle}
         />
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
