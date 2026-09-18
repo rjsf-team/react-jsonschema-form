@@ -741,20 +741,25 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
     // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
     // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
-    return validationDataMerge<T>(
-      schemaValidation,
-      schemaUtils.getUiRequiredErrorSchema(
-        uiSchema,
-        formData,
-        undefined,
-        uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
-        // Matches the registry's own normalization (see `buildRegistry()` in Theme.ts), so a function-form
-        // `uiSchema.items` sees the same `formContext` here as it does while rendering, instead of `undefined` when
-        // the prop is unset.
-        this.props.formContext ?? ({} as F),
-      ),
+    const uiRequiredErrorSchema = schemaUtils.getUiRequiredErrorSchema(
+      uiSchema,
+      formData,
+      undefined,
+      uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+      // Matches the registry's own normalization (see `buildRegistry()` in Theme.ts), so a function-form
+      // `uiSchema.items` sees the same `formContext` here as it does while rendering, instead of `undefined` when
+      // the prop is unset.
+      this.props.formContext ?? ({} as F),
     );
-  }
+    if (Object.keys(uiRequiredErrorSchema).length === 0) {
+      // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
+      // has message-less errors (e.g. from a `transformErrors` that clears `message`), its own `errorSchema` can have
+      // fewer keys than its `errors` list (`toErrorSchema()` only adds entries with a truthy message), so merging in
+      // `{}` would silently drop those entries from `errors` instead of returning `schemaValidation` unchanged.
+      return schemaValidation;
+    }
+    return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
+  };
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {

@@ -736,11 +736,11 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
  * @param idx - The index of the item within the array
  * @returns - The uiSchema to use for the item at `idx`
  */
-export function getItemUiSchemaForIndex<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(schema: S, uiSchema: UiSchema<T, S, F> | undefined, idx: number): UiSchema<T, S, F> | undefined {
+function getItemUiSchemaForIndex<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  schema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  idx: number,
+): UiSchema<T, S, F> | undefined {
   if (isFixedItems(schema) && idx >= (schema.items as S[]).length) {
     return uiSchema?.additionalItems as UiSchema<T, S, F> | undefined;
   }

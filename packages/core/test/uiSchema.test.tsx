@@ -2979,6 +2979,21 @@ describe('uiSchema', () => {
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
+    it('does not warn when ui:required is false alongside a schema.default', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string', default: 'US' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
     it('does not warn when ui:required is false on a field the schema does not require', () => {
       const schema: RJSFSchema = {
         type: 'object',

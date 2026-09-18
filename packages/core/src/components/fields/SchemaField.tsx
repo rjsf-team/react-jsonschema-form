@@ -178,6 +178,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     // silence a warning about the field staying genuinely empty.
     fieldInitialValue === undefined &&
     fieldEmptyValue === undefined &&
+    // schema.default (the resolved schema, after retrieveSchema()) guarantees a value just as well as ui:initialValue
+    // or ui:emptyValue would, so it must also silence the warning.
+    schema.default === undefined &&
     !hasWarnedMisconfiguredRequired.current
   ) {
     hasWarnedMisconfiguredRequired.current = true;

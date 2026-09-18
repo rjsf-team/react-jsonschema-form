@@ -13,6 +13,7 @@ import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import isFixedItems from '../isFixedItems.ts';
+import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
@@ -182,14 +183,22 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ONE_OF_KEY in schema || ANY_OF_KEY in schema,
   );
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  // Plain object/array Optional Data Controls hide their real fields (rendering only the "Add" control) whenever
+  // `!isFormDataAvailable(formData)` — also true for `null` and `{}`, not just `undefined` — matching ObjectField's
+  // and ArrayField's own `hasFormData` gate exactly. `anyOf`/`oneOf`-typed nodes are different: MultiSchemaField
+  // always renders the selected branch's own fields unconditionally (there's no `hasFormData` gate on
+  // `optionsSchemaField`), so `{}` there isn't "hidden" the way it is for a plain object/array — only a genuinely
+  // absent (`undefined`) value is.
+  const isXxxOf = ONE_OF_KEY in schema || ANY_OF_KEY in schema;
+  const optedOut = isXxxOf ? formData === undefined : !isFormDataAvailable(formData);
   if (
     path.length > 0 &&
-    formData === undefined &&
+    optedOut &&
     !effectiveRequired &&
     isOptionalDataControlType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)
   ) {
-    // Matches ObjectField/MultiSchemaField's Optional Data Controls: this node isn't rendered at all until the user
-    // opts in, so a `ui:required` field beneath it isn't visible for the user to fill in or correct either.
+    // This node isn't rendered (or its own fields aren't) until the user opts in, so a `ui:required` field beneath it
+    // isn't visible for the user to fill in or correct either.
     return;
   }
   const { schema: retrieved, uiSchema: branchUiSchema } = resolveSelectedBranch<T, S, F>(

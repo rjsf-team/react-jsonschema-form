@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { ErrorSchema, FormValidation, RJSFSchema } from '@rjsf/utils';
+import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -1274,6 +1274,24 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           }),
           'root_End',
         );
+      });
+    });
+    describe('validationDataMerge no-op when getUiRequiredErrorSchema finds nothing', () => {
+      it('does not discard a message-less validator error merged with an empty ui:required result', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['name'],
+          properties: { name: { type: 'string' } },
+        };
+        // Strips the message from AJV's own error so toErrorSchema() (which only adds entries with a truthy
+        // `message`) produces an empty `errorSchema`, while `errors` (the flat list) still carries the entry. With no
+        // ui:required anywhere in the uiSchema, getUiRequiredErrorSchema() also returns `{}` — an empty-but-truthy
+        // object that must not be treated the same as "nothing to merge".
+        const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
+        const { node, onError } = createFormComponent({ schema, formData: {}, transformErrors });
+        await submitForm(node, user, true);
+        expect(onError).toHaveBeenCalled();
+        expect(onError.mock.calls[0][0]).toHaveLength(1);
       });
     });
   });

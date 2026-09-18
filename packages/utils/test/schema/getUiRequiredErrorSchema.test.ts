@@ -661,6 +661,30 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errors[0].property).toBe('.thing.aField');
     });
 
+    it.each([{}, null])(
+      'does not fire for a field inside a plain object Optional Data Control whose own value is %j, matching ObjectField hiding its real fields in that case too',
+      (thingValue) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: { type: 'object', properties: { aField: { type: 'string' } } },
+          },
+        };
+        const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+        const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
+        const errorSchema = getUiRequiredErrorSchema(
+          testValidator,
+          schema,
+          uiSchema,
+          { thing: thingValue },
+          undefined,
+          undefined,
+          globalUiOptions,
+        );
+        expect(toErrorList(errorSchema)).toEqual([]);
+      },
+    );
+
     it('still fires for an absent Optional-Data-Control-eligible field that is itself ui:required', () => {
       const schema: RJSFSchema = {
         type: 'object',
