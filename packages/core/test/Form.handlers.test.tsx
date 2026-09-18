@@ -466,6 +466,46 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
       expect(lastFormData == null).toBe(true);
     });
+    it('should apply a schema derived from the changed formData when it adds a property with a default', async () => {
+      const getSchema = (formData?: { trigger?: string }): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          trigger: { type: 'string', title: 'Trigger' },
+          ...(formData?.trigger === 'show' ? { extra: { type: 'string', title: 'Extra', default: 'preset' } } : {}),
+        },
+      });
+      let currentFormData: { trigger?: string } = {};
+
+      const { node, rerender } = createFormComponent({
+        schema: getSchema(currentFormData),
+        formData: currentFormData,
+        onChange: (event: IChangeEvent) => {
+          currentFormData = event.formData;
+        },
+      });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_trigger')!, 'show');
+      rerender({ schema: getSchema(currentFormData), formData: currentFormData });
+
+      expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
+    });
+    it('should apply a schema change that adds a property with a default after a change to an uncontrolled form', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { trigger: { type: 'string', title: 'Trigger' } },
+      };
+      const { node, rerender } = createFormComponent({ schema });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_trigger')!, 'x');
+      rerender({
+        schema: {
+          ...schema,
+          properties: { ...schema.properties, extra: { type: 'string', title: 'Extra', default: 'preset' } },
+        },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
+    });
     it('Should modify anyOf definition references when the defaults are set.', async () => {
       const schema: RJSFSchema = {
         definitions: {

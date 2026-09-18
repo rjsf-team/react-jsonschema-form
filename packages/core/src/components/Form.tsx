@@ -328,6 +328,11 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   prevExtraErrors?: ErrorSchema<T>;
 }
 
+/** The value `getSnapshotBeforeUpdate` hands to `componentDidUpdate` */
+type FormSnapshot<T, S extends StrictRJSFSchema, F extends FormContextType> =
+  | { nextState: FormState<T, S, F>; shouldUpdate: boolean; isEchoOfState: boolean }
+  | { shouldUpdate: false };
+
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
@@ -394,11 +399,6 @@ export default class Form<
   /** The list of pending changes
    */
   pendingChanges: PendingChange<T>[] = [];
-
-  /** Flag to track when we're processing a user-initiated field change.
-   * This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-   */
-  private isProcessingUserChange = false;
 
   /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
    * state before render, ensuring the updated errors are visible immediately in a single render cycle.
@@ -475,10 +475,7 @@ export default class Form<
    * @returns Either an object containing the next state and a flag indicating that an update should occur, or an object
    *        with a flag indicating that an update is not necessary.
    */
-  getSnapshotBeforeUpdate(
-    prevProps: FormProps<T, S, F>,
-    prevState: FormState<T, S, F>,
-  ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
+  getSnapshotBeforeUpdate(prevProps: FormProps<T, S, F>, prevState: FormState<T, S, F>): FormSnapshot<T, S, F> {
     if (!deepEquals(this.props, prevProps)) {
       // Compare the previous props formData against the current props formData
       const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
@@ -507,7 +504,9 @@ export default class Form<
         !isStateDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
-      return { nextState, shouldUpdate };
+      // The parent handing back the `formData` the form just emitted through `onChange`, against the same schema
+      const isEchoOfState = !isStateDataChanged && !isSchemaChanged;
+      return { nextState, shouldUpdate, isEchoOfState };
     }
     return { shouldUpdate: false };
   }
@@ -524,22 +523,14 @@ export default class Form<
    * @param prevState - The previous state of the component before the update.
    * @param snapshot - The value returned from `getSnapshotBeforeUpdate`.
    */
-  componentDidUpdate(
-    _: FormProps<T, S, F>,
-    prevState: FormState<T, S, F>,
-    snapshot: { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false },
-  ) {
+  componentDidUpdate(_: FormProps<T, S, F>, prevState: FormState<T, S, F>, snapshot: FormSnapshot<T, S, F>) {
     if (snapshot.shouldUpdate) {
-      const { nextState } = snapshot;
-
-      // Prevent oneOf/anyOf option switches from reverting when getStateFromProps
-      // re-evaluates and produces stale formData.
+      const { nextState, isEchoOfState } = snapshot;
       const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
-      const wasProcessingUserChange = this.isProcessingUserChange;
-      this.isProcessingUserChange = false;
 
-      if (wasProcessingUserChange && nextStateDiffersFromProps) {
-        // Skip - the user's option switch is already applied via processPendingChange
+      if (isEchoOfState && nextStateDiffersFromProps) {
+        // Re-deriving defaults from echoed data can undo what `processPendingChange` resolved, such as a switch to a
+        // oneOf/anyOf option whose data the root `default` would otherwise replace, so keep the state as it is
         return;
       }
 
@@ -971,9 +962,6 @@ export default class Form<
     if (this.pendingChanges.length === 0) {
       return;
     }
-    // Mark that we're processing a user-initiated change.
-    // This prevents componentDidUpdate from reverting oneOf/anyOf option switches.
-    this.isProcessingUserChange = true;
     const { newValue, path, id } = this.pendingChanges[0];
     const { newErrorSchema } = this.pendingChanges[0];
     // oxlint-disable-next-line typescript/no-deprecated
