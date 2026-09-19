@@ -320,11 +320,10 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         rerender({
           ...formProps,
           onError,
-          // A numeric-looking string: it satisfies the number field's native `pattern` (so the browser
-          // lets the form submit), but is still a `string`, not a `number`, so AJV's own type check is
-          // what has to catch it.
-          formData: '123',
+          formData: 'yo',
           schema: { type: 'number' },
+          // The number field's native `pattern` would block submitting 'yo' before AJV's type check ran
+          noHtml5Validate: true,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
