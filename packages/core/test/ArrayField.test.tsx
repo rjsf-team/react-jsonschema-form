@@ -3819,5 +3819,16 @@ describe('ArrayField', () => {
       expect(endKeys).toHaveLength(1);
       expect(endKeys[0]).not.toEqual(startKeys[0]);
     });
+
+    it('should regenerate every row key when the replacement is longer', () => {
+      const { node, rerender } = createFormComponent({ schema, formData: ['foo'], templates });
+      const startKeys = rowKeys(node);
+
+      rerender({ schema, formData: ['foo', 'bar'], templates });
+
+      const endKeys = rowKeys(node);
+      expect(endKeys).toHaveLength(2);
+      expect(endKeys).not.toContain(startKeys[0]);
+    });
   });
 });
