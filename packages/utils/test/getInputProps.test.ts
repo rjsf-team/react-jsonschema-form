@@ -2,7 +2,8 @@ import type { RJSFSchema, UIOptionsType } from '../src/index.ts';
 import { getInputProps } from '../src/index.ts';
 
 const EXPONENT = '([eE][+\\-]?[0-9]+)?';
-const NUMBER_PATTERN = `-?[0-9]*[.]?[0-9]*${EXPONENT}`;
+const NUMBER_PATTERN = `[+\\-]?([0-9]+[.]?[0-9]*|[.][0-9]+)${EXPONENT}`;
+const INTEGER_PATTERN = `[+\\-]?[0-9]+${EXPONENT}`;
 
 describe('getInputProps', () => {
   afterEach(() => {
@@ -57,16 +58,38 @@ describe('getInputProps', () => {
     expect(getInputProps(schema)).toEqual({
       type: 'text',
       inputMode: 'decimal',
-      pattern: `-?[0-9]*[.,]?[0-9]*${EXPONENT}`,
+      pattern: `[+\\-]?([0-9]+[.,]?[0-9]*|[.,][0-9]+)${EXPONENT}`,
     });
   });
-  it('returns type=number when schema has number type and an explicit inputType overrides the locale', () => {
+  it('returns type=number and step=any when schema has number type and an explicit inputType overrides the locale', () => {
     vi.stubGlobal('navigator', { languages: ['pl'] });
     const schema: RJSFSchema = {
       type: 'number',
     };
     const options: UIOptionsType = { inputType: 'number' };
+    expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number', step: 'any' });
+  });
+  it('keeps the multipleOf as the step for a number with an explicit inputType of number', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+      multipleOf: 0.5,
+    };
+    const options: UIOptionsType = { inputType: 'number' };
+    expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number', step: 0.5 });
+  });
+  it('does not default step=any for an integer with an explicit inputType of number', () => {
+    const schema: RJSFSchema = {
+      type: 'integer',
+    };
+    const options: UIOptionsType = { inputType: 'number' };
     expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number' });
+  });
+  it('does not default step=any for an explicit inputType of number when not a plain native input', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    const options: UIOptionsType = { inputType: 'number' };
+    expect(getInputProps(schema, undefined, options, false)).toEqual({ type: 'number' });
   });
   it('keeps step, min and max for an explicit inputType of number', () => {
     const schema: RJSFSchema = {
@@ -83,7 +106,7 @@ describe('getInputProps', () => {
     const schema: RJSFSchema = {
       type: 'integer',
     };
-    expect(getInputProps(schema)).toEqual({ type: 'text', inputMode: 'numeric', pattern: `-?[0-9]*${EXPONENT}` });
+    expect(getInputProps(schema)).toEqual({ type: 'text', inputMode: 'numeric', pattern: INTEGER_PATTERN });
   });
   it('returns type=number when schema has number type and we are not auto-defaulting', () => {
     const schema: RJSFSchema = {
@@ -128,7 +151,7 @@ describe('getInputProps', () => {
       pattern: NUMBER_PATTERN,
     });
   });
-  it('returns no leading minus in the pattern when schema has a non-negative integer minimum', () => {
+  it('still allows a leading sign in the pattern when the schema has a non-negative minimum', () => {
     const schema: RJSFSchema = {
       type: 'integer',
       minimum: 0,
@@ -136,18 +159,7 @@ describe('getInputProps', () => {
     expect(getInputProps(schema)).toEqual({
       type: 'text',
       inputMode: 'numeric',
-      pattern: `[0-9]*${EXPONENT}`,
-    });
-  });
-  it('allows a leading minus in the pattern when the schema has a negative minimum', () => {
-    const schema: RJSFSchema = {
-      type: 'integer',
-      minimum: -10,
-    };
-    expect(getInputProps(schema)).toEqual({
-      type: 'text',
-      inputMode: 'numeric',
-      pattern: `-?[0-9]*${EXPONENT}`,
+      pattern: INTEGER_PATTERN,
     });
   });
   describe('numeric pattern', () => {
@@ -156,33 +168,37 @@ describe('getInputProps', () => {
 
     it('compiles under the `v` flag and accepts every string JavaScript renders for a number', () => {
       const pattern = getInputProps({ type: 'number' }).pattern!;
-      ['0', '1.5', '-2', '.5', '', '1e-7', '1.5e-9', '-1e21', '1e+21', '123456789012345680000'].forEach((value) => {
-        expect(matches(pattern, value)).toBe(true);
-      });
+      ['0', '1.5', '-2', '+1', '.5', '1.', '1e-7', '1.5e-9', '-1e21', '1e+21', '123456789012345680000'].forEach(
+        (value) => {
+          expect(matches(pattern, value)).toBe(true);
+        },
+      );
       [String(0.0000001), String(1e21), String(-1.5e-9)].forEach((value) => {
         expect(matches(pattern, value)).toBe(true);
       });
     });
-    it('rejects a non-numeric string for a number', () => {
+    it('rejects a string that is not a number for a number', () => {
       const pattern = getInputProps({ type: 'number' }).pattern!;
-      ['yo', '1,5', '1e', '1e--2', '1.2.3', '12a'].forEach((value) => {
+      ['-', '.', '-.', '+', 'e5', '.e5', 'yo', '1,5', '1e', '1e--2', '1.2.3', '12a'].forEach((value) => {
         expect(matches(pattern, value)).toBe(false);
       });
     });
     it('accepts a "." and the locale separator for a number in a locale whose separator is not "."', () => {
       vi.stubGlobal('navigator', { languages: ['pl'] });
       const pattern = getInputProps({ type: 'number' }).pattern!;
-      ['1.5', '1,5', '1,5e-9'].forEach((value) => {
+      ['1.5', '1,5', ',5', '1,5e-9'].forEach((value) => {
         expect(matches(pattern, value)).toBe(true);
       });
-      expect(matches(pattern, '1;5')).toBe(false);
+      ['1;5', ','].forEach((value) => {
+        expect(matches(pattern, value)).toBe(false);
+      });
     });
     it('compiles under the `v` flag and accepts the string JavaScript renders for a large integer', () => {
       const pattern = getInputProps({ type: 'integer' }).pattern!;
-      [String(1e21), '-42', '7'].forEach((value) => {
+      [String(1e21), '-42', '+7', '7'].forEach((value) => {
         expect(matches(pattern, value)).toBe(true);
       });
-      ['1.5', 'yo'].forEach((value) => {
+      ['-', '1.5', 'yo'].forEach((value) => {
         expect(matches(pattern, value)).toBe(false);
       });
     });

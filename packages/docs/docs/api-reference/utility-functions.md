@@ -590,7 +590,7 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 - schema: S - The schema for the field provided by the widget
 - [defaultType]: string | undefined - The default type, if any, for the field provided by the widget
 - [options={}]: UIOptionsType&lt;T, S, F> - The UI Options for the field provided by the widget
-- [autoDefaultStepAny=true]: boolean - Determines whether a number or integer field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`; pass false for a theme with its own numeric widget
+- [plainNativeInput=true]: boolean - Whether the theme renders a plain native `<input>`. When true, a number or integer field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`, and an explicit `inputType` of `number` gets `step="any"` for a `number` field; pass false for a theme with its own numeric widget
 
 #### Returns
 

@@ -85,16 +85,17 @@ export default function BaseInputTemplate<
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
+  // Attributes `getInputProps()` has nothing to say about are left out, and a caller's `slotProps.htmlInput` is spread
+  // after them, so neither an `undefined` nor a derived value can override an attribute the caller set by hand
+  const derivedHtmlInputProps = Object.fromEntries(
+    Object.entries({ step, min, max, accept, inputMode, pattern, autoCapitalize }).filter(
+      ([, attribute]) => attribute !== undefined,
+    ),
+  );
   const htmlInputProps = {
+    ...derivedHtmlInputProps,
     ...slotProps?.htmlInput,
     ...muiSlotProps?.htmlInput,
-    step,
-    min,
-    max,
-    accept,
-    ...(inputMode === undefined ? {} : { inputMode }),
-    ...(pattern === undefined ? {} : { pattern }),
-    ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

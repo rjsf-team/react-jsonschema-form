@@ -56,6 +56,57 @@ describe('MUI Theme-Specific Props', () => {
     expect(input).toHaveAttribute('inputmode', 'tel');
   });
 
+  it('should let a caller override the derived pattern, inputMode and step of a numeric field through slotProps.htmlInput', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        price: { type: 'number', multipleOf: 0.01 },
+      },
+    };
+    const uiSchema: UiSchema = {
+      price: {
+        'ui:options': {
+          mui: {
+            slotProps: { htmlInput: { pattern: '[0-9]*[.]?[0-9]{0,2}', inputMode: 'tel', step: 5 } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_price');
+    expect(input).toHaveAttribute('pattern', '[0-9]*[.]?[0-9]{0,2}');
+    expect(input).toHaveAttribute('inputmode', 'tel');
+    expect(input).toHaveAttribute('step', '5');
+  });
+
+  it('should let a caller set step, min and max through slotProps.htmlInput when the schema derives none', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      foo: {
+        'ui:options': {
+          inputType: 'number',
+          mui: {
+            slotProps: { htmlInput: { step: 5, min: 0, max: 100 } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('step', '5');
+    expect(input).toHaveAttribute('min', '0');
+    expect(input).toHaveAttribute('max', '100');
+  });
+
   it('should apply sx props via FieldTemplate', () => {
     const schema: RJSFSchema = {
       type: 'object',
