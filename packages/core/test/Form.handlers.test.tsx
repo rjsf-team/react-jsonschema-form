@@ -1,6 +1,7 @@
 import { createRef, useEffect } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -465,6 +466,141 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       // Verify formData is null or undefined (both valid for null option)
       const lastFormData = onChangeCalls[onChangeCalls.length - 1].event.formData;
       expect(lastFormData == null).toBe(true);
+    });
+    it('should apply a schema derived from the changed formData when it adds a property with a default', async () => {
+      const getSchema = (formData?: { trigger?: string }): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          trigger: { type: 'string', title: 'Trigger' },
+          ...(formData?.trigger === 'show' ? { extra: { type: 'string', title: 'Extra', default: 'preset' } } : {}),
+        },
+      });
+      let currentFormData: { trigger?: string } = {};
+
+      const { node, rerender } = createFormComponent({
+        schema: getSchema(currentFormData),
+        formData: currentFormData,
+        onChange: (event: IChangeEvent) => {
+          currentFormData = event.formData;
+        },
+      });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_trigger')!, 'show');
+      rerender({ schema: getSchema(currentFormData), formData: currentFormData });
+
+      expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
+    });
+    it('should apply a schema change that adds a property with a default after a change to an uncontrolled form', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { trigger: { type: 'string', title: 'Trigger' } },
+      };
+      const { node, rerender } = createFormComponent({ schema });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_trigger')!, 'x');
+      rerender({
+        schema: {
+          ...schema,
+          properties: { ...schema.properties, extra: { type: 'string', title: 'Extra', default: 'preset' } },
+        },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
+    });
+    it('should keep a switch to a null oneOf option in an uncontrolled form when an unrelated prop changes', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'Advanced Configuration',
+            type: 'object',
+            properties: { types: { const: 'advanced', title: 'Types' }, content: { type: 'string', title: 'Content' } },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced', content: 'placeholder' },
+      };
+      const experimental_defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
+      const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+      rerender({ schema, experimental_defaultFormStateBehavior, uiSchema: { 'ui:title': 'Changed' } });
+
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      expect(node.querySelector('#root_content')).not.toBeInTheDocument();
+    });
+    it('should apply the defaults of a changed experimental_defaultFormStateBehavior to echoed formData', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { nested: { type: 'object', properties: { foo: { type: 'string', default: 'bar' } } } },
+      };
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: {},
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+      });
+      expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('');
+
+      rerender({
+        schema,
+        formData: {},
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('bar');
+    });
+    describe('should keep a switch to a null oneOf option when the echo recreates an identity-compared prop', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          {
+            type: 'object',
+            properties: { types: { const: 'advanced' }, content: { type: 'string' } },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced', content: 'placeholder' },
+      };
+      const experimental_defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
+
+      it('validator', async () => {
+        let currentFormData: unknown;
+        const { node, rerender } = createFormComponent({
+          schema,
+          experimental_defaultFormStateBehavior,
+          onChange: (event: IChangeEvent) => {
+            currentFormData = event.formData;
+          },
+        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+        rerender({ schema, formData: currentFormData, experimental_defaultFormStateBehavior }, customizeValidator());
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      });
+      it('experimental_customMergeAllOf', async () => {
+        let currentFormData: unknown;
+        const { node, rerender } = createFormComponent({
+          schema,
+          experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf: (allOfSchema: RJSFSchema) => allOfSchema,
+          onChange: (event: IChangeEvent) => {
+            currentFormData = event.formData;
+          },
+        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+        rerender({
+          schema,
+          formData: currentFormData,
+          experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf: (allOfSchema: RJSFSchema) => allOfSchema,
+        });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      });
     });
     it('Should modify anyOf definition references when the defaults are set.', async () => {
       const schema: RJSFSchema = {
