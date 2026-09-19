@@ -2140,6 +2140,681 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="rjsf-field rjsf-field-undefined"
+        >
+          <div
+            class="grouped equal width fields"
+          >
+            <div>
+              <div>
+                <div
+                  class="field"
+                >
+                  <label
+                    for="root_region__oneof_select"
+                  >
+                    region
+                  </label>
+                  <div
+                    aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                    aria-disabled="false"
+                    aria-expanded="false"
+                    aria-multiselectable="false"
+                    class="ui fluid selection scrolling dropdown"
+                    id="root_region__oneof_select"
+                    inverted="false"
+                    name="root_region__oneof_select"
+                    role="listbox"
+                    tabindex="0"
+                  >
+                    <div
+                      aria-atomic="true"
+                      aria-live="polite"
+                      class="divider text"
+                      role="alert"
+                    >
+                      Europe
+                    </div>
+                    <i
+                      aria-hidden="true"
+                      class="dropdown icon"
+                    />
+                    <div
+                      class="menu transition"
+                    >
+                      <div
+                        aria-checked="false"
+                        aria-disabled="false"
+                        aria-selected="false"
+                        class="item"
+                        role="option"
+                        style="pointer-events: all;"
+                      >
+                        <span
+                          class="text"
+                        >
+                          None
+                        </span>
+                      </div>
+                      <div
+                        aria-checked="true"
+                        aria-disabled="false"
+                        aria-selected="true"
+                        class="active selected item"
+                        role="option"
+                        style="pointer-events: all;"
+                      >
+                        <span
+                          class="text"
+                        >
+                          Europe
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="grouped equal width fields"
+                >
+                  <div
+                    class="field"
+                  >
+                    <label
+                      for="root_region"
+                    >
+                      Europe
+                    </label>
+                    <div
+                      aria-describedby="root_region__error root_region__description root_region__help"
+                      aria-disabled="false"
+                      aria-expanded="false"
+                      aria-multiselectable="false"
+                      class="ui fluid selection scrolling dropdown"
+                      id="root_region"
+                      inverted="false"
+                      name="root_region"
+                      role="listbox"
+                      tabindex="0"
+                    >
+                      <div
+                        aria-atomic="true"
+                        aria-live="polite"
+                        class="divider text"
+                        role="alert"
+                      >
+                        Germany
+                      </div>
+                      <i
+                        aria-hidden="true"
+                        class="dropdown icon"
+                      />
+                      <div
+                        class="menu transition"
+                      >
+                        <div
+                          aria-checked="false"
+                          aria-selected="false"
+                          class="item"
+                          role="option"
+                          style="pointer-events: all;"
+                        >
+                          <span
+                            class="text"
+                          />
+                        </div>
+                        <div
+                          aria-checked="false"
+                          aria-disabled="false"
+                          aria-selected="false"
+                          class="item"
+                          role="option"
+                          style="pointer-events: all;"
+                        >
+                          <span
+                            class="text"
+                          >
+                            France
+                          </span>
+                        </div>
+                        <div
+                          aria-checked="true"
+                          aria-disabled="false"
+                          aria-selected="true"
+                          class="active selected item"
+                          role="option"
+                          style="pointer-events: all;"
+                        >
+                          <span
+                            class="text"
+                          >
+                            Germany
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              Subscribed
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Subscribed
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              Once
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Never
+                </span>
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Once
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Unlimited
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              Unknown
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Unknown
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Yes
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  No
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              Bar
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Foo
+                </span>
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Bar
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="ui form rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="grouped equal width fields"
+      >
+        <div
+          class="field"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-multiselectable="false"
+            class="ui fluid selection scrolling dropdown"
+            id="root"
+            inverted="false"
+            name="root"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              No
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                />
+              </div>
+              <div
+                aria-checked="false"
+                aria-disabled="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Yes
+                </span>
+              </div>
+              <div
+                aria-checked="true"
+                aria-disabled="false"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  No
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ui primary button"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`semantic-ui specific tests > field with special semantic options 1`] = `
 <DocumentFragment>
   <form

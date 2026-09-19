@@ -2631,6 +2631,372 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
+                <div>
+                  <label
+                    class="form-label"
+                    for="root_region"
+                  >
+                    region
+                  </label>
+                  <div
+                    class="card"
+                    style="margin-bottom: 1rem;"
+                  >
+                    <div
+                      class="card-body"
+                    >
+                      <select
+                        aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                        class="form-select"
+                        id="root_region__oneof_select"
+                        name="root_region__oneof_select"
+                      >
+                        <option
+                          id="None"
+                          value="0"
+                        >
+                          None
+                        </option>
+                        <option
+                          id="Europe"
+                          value="1"
+                        >
+                          Europe
+                        </option>
+                      </select>
+                    </div>
+                    <div
+                      class="card-body"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            class="form-label"
+                            for="root_region"
+                          >
+                            Europe
+                          </label>
+                          <select
+                            aria-describedby="root_region__error root_region__description root_region__help"
+                            class="form-select"
+                            id="root_region"
+                            name="root_region"
+                          >
+                            <option
+                              value=""
+                            />
+                            <option
+                              id="France"
+                              value="0"
+                            >
+                              France
+                            </option>
+                            <option
+                              id="Germany"
+                              value="1"
+                            >
+                              Germany
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Subscribed"
+            value="0"
+          >
+            Subscribed
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Never"
+            value="0"
+          >
+            Never
+          </option>
+          <option
+            id="Once"
+            value="1"
+          >
+            Once
+          </option>
+          <option
+            id="Unlimited"
+            value="2"
+          >
+            Unlimited
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Unknown"
+            value="0"
+          >
+            Unknown
+          </option>
+          <option
+            id="Yes"
+            value="1"
+          >
+            Yes
+          </option>
+          <option
+            id="No"
+            value="2"
+          >
+            No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Foo"
+            value="0"
+          >
+            Foo
+          </option>
+          <option
+            id="Bar"
+            value="1"
+          >
+            Bar
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Yes"
+            value="0"
+          >
+            Yes
+          </option>
+          <option
+            id="No"
+            value="1"
+          >
+            No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form

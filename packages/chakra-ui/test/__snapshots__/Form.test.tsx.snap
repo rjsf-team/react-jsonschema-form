@@ -9001,6 +9001,4338 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-5 {
+  margin-bottom: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    min-width: 0;
+    word-wrap: break-word;
+    border-radius: var(--chakra-radii-l3);
+    color: var(--chakra-colors-fg);
+    text-align: start;
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --card-padding: var(--chakra-spacing-6);
+  }
+}
+
+.emotion-6 {
+  padding-bottom: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-6 {
+    padding: var(--card-padding);
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-8 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-13:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-13:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-16 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-17 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-18 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-19 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-19:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-19:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-19:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-19:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-19:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-19:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-19:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-19:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-19:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-19:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-20 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-20[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-20 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-21 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-46 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-47 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-47:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-47:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-47 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-47:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-47:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rc9:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
+                <fieldset
+                  aria-labelledby="fieldset:::rca:::legend"
+                  class="fieldset__root emotion-0"
+                  data-part="root"
+                  data-scope="fieldset"
+                >
+                  <div
+                    class="fieldset__content emotion-1"
+                  >
+                    <div
+                      class="chakra-card__root emotion-5"
+                    >
+                      <div
+                        class="chakra-card__body emotion-6"
+                      >
+                        <div
+                          class="emotion-7"
+                        >
+                          <div
+                            class="chakra-field__root emotion-8"
+                            data-part="root"
+                            data-scope="field"
+                            id="field:::rcb:"
+                            role="group"
+                          >
+                            <label
+                              class="chakra-field__label emotion-9"
+                              data-part="label"
+                              data-scope="field"
+                              for=":rcb:"
+                              id="field:::rcb:::label"
+                            >
+                              region
+                            </label>
+                            <div
+                              aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                              class="chakra-select__root emotion-10"
+                              data-part="root"
+                              data-scope="select"
+                              dir="ltr"
+                              id="select:root_region__oneof_select"
+                            >
+                              <select
+                                aria-hidden="true"
+                                aria-labelledby="field:::rcb:::label"
+                                id=":rcb:"
+                                name="root_region__oneof_select"
+                                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                tabindex="-1"
+                              >
+                                <option
+                                  value="0"
+                                >
+                                  None
+                                </option>
+                                <option
+                                  selected=""
+                                  value="1"
+                                >
+                                  Europe
+                                </option>
+                              </select>
+                              <div
+                                class="chakra-select__control emotion-11"
+                                data-part="control"
+                                data-scope="select"
+                                data-state="closed"
+                                dir="ltr"
+                                id="select:root_region__oneof_select:control"
+                              >
+                                <div
+                                  class="chakra-select__control emotion-11"
+                                  data-part="control"
+                                  data-scope="select"
+                                  data-state="closed"
+                                  dir="ltr"
+                                  id="select:root_region__oneof_select:control"
+                                >
+                                  <button
+                                    aria-controls="select:root_region__oneof_select:content"
+                                    aria-expanded="false"
+                                    aria-haspopup="listbox"
+                                    aria-invalid="false"
+                                    aria-labelledby="field:::rcb:::label"
+                                    aria-required="false"
+                                    class="chakra-select__trigger emotion-13"
+                                    data-part="trigger"
+                                    data-scope="select"
+                                    data-state="closed"
+                                    dir="ltr"
+                                    id="select:root_region__oneof_select:trigger"
+                                    role="combobox"
+                                    type="button"
+                                  >
+                                    <span
+                                      class="chakra-select__valueText emotion-14"
+                                      data-part="value-text"
+                                      data-scope="select"
+                                      dir="ltr"
+                                    >
+                                      Europe
+                                    </span>
+                                  </button>
+                                  <div
+                                    class="chakra-select__indicatorGroup emotion-15"
+                                  >
+                                    <div
+                                      aria-hidden="true"
+                                      class="chakra-select__indicator emotion-16"
+                                      data-part="indicator"
+                                      data-scope="select"
+                                      data-state="closed"
+                                      dir="ltr"
+                                    >
+                                      <svg
+                                        class="emotion-17"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          d="m6 9 6 6 6-6"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="chakra-select__positioner emotion-18"
+                                data-part="positioner"
+                                data-scope="select"
+                                dir="ltr"
+                                id="select:root_region__oneof_select:positioner"
+                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                              >
+                                <div
+                                  aria-labelledby="field:::rcb:::label"
+                                  class="chakra-select__content emotion-19"
+                                  data-part="content"
+                                  data-scope="select"
+                                  data-state="closed"
+                                  dir="ltr"
+                                  hidden=""
+                                  id="select:root_region__oneof_select:content"
+                                  role="listbox"
+                                  tabindex="0"
+                                >
+                                  <div
+                                    aria-selected="false"
+                                    class="chakra-select__item emotion-20"
+                                    data-part="item"
+                                    data-scope="select"
+                                    data-state="unchecked"
+                                    data-value="0"
+                                    dir="ltr"
+                                    id="select:root_region__oneof_select:option:0"
+                                    role="option"
+                                  >
+                                    None
+                                    <div
+                                      aria-hidden="true"
+                                      class="chakra-select__itemIndicator emotion-21"
+                                      data-part="item-indicator"
+                                      data-scope="select"
+                                      data-state="unchecked"
+                                      hidden=""
+                                    >
+                                      <svg
+                                        class="emotion-17"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          d="M20 6 9 17l-5-5"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                  <div
+                                    aria-selected="true"
+                                    class="chakra-select__item emotion-20"
+                                    data-part="item"
+                                    data-scope="select"
+                                    data-state="checked"
+                                    data-value="1"
+                                    dir="ltr"
+                                    id="select:root_region__oneof_select:option:1"
+                                    role="option"
+                                  >
+                                    Europe
+                                    <div
+                                      aria-hidden="true"
+                                      class="chakra-select__itemIndicator emotion-21"
+                                      data-part="item-indicator"
+                                      data-scope="select"
+                                      data-state="checked"
+                                    >
+                                      <svg
+                                        class="emotion-17"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          d="M20 6 9 17l-5-5"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="rjsf-field rjsf-field-string"
+                        >
+                          <fieldset
+                            aria-labelledby="fieldset:::rcd:::legend"
+                            class="fieldset__root emotion-0"
+                            data-part="root"
+                            data-scope="fieldset"
+                          >
+                            <div
+                              class="fieldset__content emotion-1"
+                            >
+                              <div
+                                class="chakra-field__root emotion-8"
+                                data-part="root"
+                                data-scope="field"
+                                id="field:::rce:"
+                                role="group"
+                              >
+                                <label
+                                  class="chakra-field__label emotion-9"
+                                  data-part="label"
+                                  data-scope="field"
+                                  for=":rce:"
+                                  id="field:::rce:::label"
+                                >
+                                  Europe
+                                </label>
+                                <div
+                                  aria-describedby="root_region__error root_region__description root_region__help"
+                                  class="chakra-select__root emotion-10"
+                                  data-part="root"
+                                  data-scope="select"
+                                  dir="ltr"
+                                  id="select:root_region"
+                                >
+                                  <select
+                                    aria-hidden="true"
+                                    aria-labelledby="field:::rce:::label"
+                                    id=":rce:"
+                                    name="root_region"
+                                    style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                                    tabindex="-1"
+                                  >
+                                    <option
+                                      value="0"
+                                    >
+                                      France
+                                    </option>
+                                    <option
+                                      selected=""
+                                      value="1"
+                                    >
+                                      Germany
+                                    </option>
+                                  </select>
+                                  <div
+                                    class="chakra-select__control emotion-11"
+                                    data-part="control"
+                                    data-scope="select"
+                                    data-state="closed"
+                                    dir="ltr"
+                                    id="select:root_region:control"
+                                  >
+                                    <div
+                                      class="chakra-select__control emotion-11"
+                                      data-part="control"
+                                      data-scope="select"
+                                      data-state="closed"
+                                      dir="ltr"
+                                      id="select:root_region:control"
+                                    >
+                                      <button
+                                        aria-controls="select:root_region:content"
+                                        aria-expanded="false"
+                                        aria-haspopup="listbox"
+                                        aria-invalid="false"
+                                        aria-labelledby="field:::rce:::label"
+                                        aria-required="false"
+                                        class="chakra-select__trigger emotion-13"
+                                        data-part="trigger"
+                                        data-scope="select"
+                                        data-state="closed"
+                                        dir="ltr"
+                                        id="select:root_region:trigger"
+                                        role="combobox"
+                                        type="button"
+                                      >
+                                        <span
+                                          class="chakra-select__valueText emotion-14"
+                                          data-part="value-text"
+                                          data-scope="select"
+                                          dir="ltr"
+                                        >
+                                          Germany
+                                        </span>
+                                      </button>
+                                      <div
+                                        class="chakra-select__indicatorGroup emotion-15"
+                                      >
+                                        <div
+                                          aria-hidden="true"
+                                          class="chakra-select__indicator emotion-16"
+                                          data-part="indicator"
+                                          data-scope="select"
+                                          data-state="closed"
+                                          dir="ltr"
+                                        >
+                                          <svg
+                                            class="emotion-17"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="m6 9 6 6 6-6"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="chakra-select__positioner emotion-18"
+                                    data-part="positioner"
+                                    data-scope="select"
+                                    dir="ltr"
+                                    id="select:root_region:positioner"
+                                    style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                  >
+                                    <div
+                                      aria-labelledby="field:::rce:::label"
+                                      class="chakra-select__content emotion-19"
+                                      data-part="content"
+                                      data-scope="select"
+                                      data-state="closed"
+                                      dir="ltr"
+                                      hidden=""
+                                      id="select:root_region:content"
+                                      role="listbox"
+                                      tabindex="0"
+                                    >
+                                      <div
+                                        aria-selected="false"
+                                        class="chakra-select__item emotion-20"
+                                        data-part="item"
+                                        data-scope="select"
+                                        data-state="unchecked"
+                                        data-value="0"
+                                        dir="ltr"
+                                        id="select:root_region:option:0"
+                                        role="option"
+                                      >
+                                        France
+                                        <div
+                                          aria-hidden="true"
+                                          class="chakra-select__itemIndicator emotion-21"
+                                          data-part="item-indicator"
+                                          data-scope="select"
+                                          data-state="unchecked"
+                                          hidden=""
+                                        >
+                                          <svg
+                                            class="emotion-17"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M20 6 9 17l-5-5"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                      <div
+                                        aria-selected="true"
+                                        class="chakra-select__item emotion-20"
+                                        data-part="item"
+                                        data-scope="select"
+                                        data-state="checked"
+                                        data-value="1"
+                                        dir="ltr"
+                                        id="select:root_region:option:1"
+                                        role="option"
+                                      >
+                                        Germany
+                                        <div
+                                          aria-hidden="true"
+                                          class="chakra-select__itemIndicator emotion-21"
+                                          data-part="item-indicator"
+                                          data-scope="select"
+                                          data-state="checked"
+                                        >
+                                          <svg
+                                            class="emotion-17"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M20 6 9 17l-5-5"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-46"
+    >
+      <button
+        class="chakra-button emotion-47"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-9 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-10 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-11 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-12 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-13[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-13 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-16 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rcj:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::rck:"
+            role="group"
+          >
+            <div
+              aria-describedby="root__error root__description root__help"
+              class="chakra-select__root emotion-3"
+              data-part="root"
+              data-scope="select"
+              dir="ltr"
+              id="select:root"
+            >
+              <select
+                aria-hidden="true"
+                aria-labelledby="field:::rck:::label"
+                id=":rck:"
+                name="root"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                tabindex="-1"
+              >
+                <option
+                  selected=""
+                  value="0"
+                >
+                  Subscribed
+                </option>
+              </select>
+              <div
+                class="chakra-select__control emotion-4"
+                data-part="control"
+                data-scope="select"
+                data-state="closed"
+                dir="ltr"
+                id="select:root:control"
+              >
+                <div
+                  class="chakra-select__control emotion-4"
+                  data-part="control"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  id="select:root:control"
+                >
+                  <button
+                    aria-controls="select:root:content"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-invalid="false"
+                    aria-labelledby="field:::rck:::label"
+                    aria-required="false"
+                    class="chakra-select__trigger emotion-6"
+                    data-part="trigger"
+                    data-scope="select"
+                    data-state="closed"
+                    dir="ltr"
+                    id="select:root:trigger"
+                    role="combobox"
+                    type="button"
+                  >
+                    <span
+                      class="chakra-select__valueText emotion-7"
+                      data-part="value-text"
+                      data-scope="select"
+                      dir="ltr"
+                    >
+                      Subscribed
+                    </span>
+                  </button>
+                  <div
+                    class="chakra-select__indicatorGroup emotion-8"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__indicator emotion-9"
+                      data-part="indicator"
+                      data-scope="select"
+                      data-state="closed"
+                      dir="ltr"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-select__positioner emotion-11"
+                data-part="positioner"
+                data-scope="select"
+                dir="ltr"
+                id="select:root:positioner"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+              >
+                <div
+                  aria-labelledby="field:::rck:::label"
+                  class="chakra-select__content emotion-12"
+                  data-part="content"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  hidden=""
+                  id="select:root:content"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-selected="true"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="checked"
+                    data-value="0"
+                    dir="ltr"
+                    id="select:root:option:0"
+                    role="option"
+                  >
+                    Subscribed
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="checked"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-16"
+    >
+      <button
+        class="chakra-button emotion-17"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-9 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-10 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-11 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-12 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-13[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-13 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-22 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-23 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-23 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rc6:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::rc7:"
+            role="group"
+          >
+            <div
+              aria-describedby="root__error root__description root__help"
+              class="chakra-select__root emotion-3"
+              data-part="root"
+              data-scope="select"
+              dir="ltr"
+              id="select:root"
+            >
+              <select
+                aria-hidden="true"
+                aria-labelledby="field:::rc7:::label"
+                id=":rc7:"
+                name="root"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                tabindex="-1"
+              >
+                <option
+                  value="0"
+                >
+                  Never
+                </option>
+                <option
+                  selected=""
+                  value="1"
+                >
+                  Once
+                </option>
+                <option
+                  value="2"
+                >
+                  Unlimited
+                </option>
+              </select>
+              <div
+                class="chakra-select__control emotion-4"
+                data-part="control"
+                data-scope="select"
+                data-state="closed"
+                dir="ltr"
+                id="select:root:control"
+              >
+                <div
+                  class="chakra-select__control emotion-4"
+                  data-part="control"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  id="select:root:control"
+                >
+                  <button
+                    aria-controls="select:root:content"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-invalid="false"
+                    aria-labelledby="field:::rc7:::label"
+                    aria-required="false"
+                    class="chakra-select__trigger emotion-6"
+                    data-part="trigger"
+                    data-scope="select"
+                    data-state="closed"
+                    dir="ltr"
+                    id="select:root:trigger"
+                    role="combobox"
+                    type="button"
+                  >
+                    <span
+                      class="chakra-select__valueText emotion-7"
+                      data-part="value-text"
+                      data-scope="select"
+                      dir="ltr"
+                    >
+                      Once
+                    </span>
+                  </button>
+                  <div
+                    class="chakra-select__indicatorGroup emotion-8"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__indicator emotion-9"
+                      data-part="indicator"
+                      data-scope="select"
+                      data-state="closed"
+                      dir="ltr"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-select__positioner emotion-11"
+                data-part="positioner"
+                data-scope="select"
+                dir="ltr"
+                id="select:root:positioner"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+              >
+                <div
+                  aria-labelledby="field:::rc7:::label"
+                  class="chakra-select__content emotion-12"
+                  data-part="content"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  hidden=""
+                  id="select:root:content"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="0"
+                    dir="ltr"
+                    id="select:root:option:0"
+                    role="option"
+                  >
+                    Never
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="true"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="checked"
+                    data-value="1"
+                    dir="ltr"
+                    id="select:root:option:1"
+                    role="option"
+                  >
+                    Once
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="checked"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="2"
+                    dir="ltr"
+                    id="select:root:option:2"
+                    role="option"
+                  >
+                    Unlimited
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-22"
+    >
+      <button
+        class="chakra-button emotion-23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-9 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-10 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-11 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-12 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-13[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-13 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-22 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-23 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-23 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rcg:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::rch:"
+            role="group"
+          >
+            <div
+              aria-describedby="root__error root__description root__help"
+              class="chakra-select__root emotion-3"
+              data-part="root"
+              data-scope="select"
+              dir="ltr"
+              id="select:root"
+            >
+              <select
+                aria-hidden="true"
+                aria-labelledby="field:::rch:::label"
+                id=":rch:"
+                name="root"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                tabindex="-1"
+              >
+                <option
+                  selected=""
+                  value="0"
+                >
+                  Unknown
+                </option>
+                <option
+                  value="1"
+                >
+                  Yes
+                </option>
+                <option
+                  value="2"
+                >
+                  No
+                </option>
+              </select>
+              <div
+                class="chakra-select__control emotion-4"
+                data-part="control"
+                data-scope="select"
+                data-state="closed"
+                dir="ltr"
+                id="select:root:control"
+              >
+                <div
+                  class="chakra-select__control emotion-4"
+                  data-part="control"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  id="select:root:control"
+                >
+                  <button
+                    aria-controls="select:root:content"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-invalid="false"
+                    aria-labelledby="field:::rch:::label"
+                    aria-required="false"
+                    class="chakra-select__trigger emotion-6"
+                    data-part="trigger"
+                    data-scope="select"
+                    data-state="closed"
+                    dir="ltr"
+                    id="select:root:trigger"
+                    role="combobox"
+                    type="button"
+                  >
+                    <span
+                      class="chakra-select__valueText emotion-7"
+                      data-part="value-text"
+                      data-scope="select"
+                      dir="ltr"
+                    >
+                      Unknown
+                    </span>
+                  </button>
+                  <div
+                    class="chakra-select__indicatorGroup emotion-8"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__indicator emotion-9"
+                      data-part="indicator"
+                      data-scope="select"
+                      data-state="closed"
+                      dir="ltr"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-select__positioner emotion-11"
+                data-part="positioner"
+                data-scope="select"
+                dir="ltr"
+                id="select:root:positioner"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+              >
+                <div
+                  aria-labelledby="field:::rch:::label"
+                  class="chakra-select__content emotion-12"
+                  data-part="content"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  hidden=""
+                  id="select:root:content"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-selected="true"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="checked"
+                    data-value="0"
+                    dir="ltr"
+                    id="select:root:option:0"
+                    role="option"
+                  >
+                    Unknown
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="checked"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="1"
+                    dir="ltr"
+                    id="select:root:option:1"
+                    role="option"
+                  >
+                    Yes
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="2"
+                    dir="ltr"
+                    id="select:root:option:2"
+                    role="option"
+                  >
+                    No
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-22"
+    >
+      <button
+        class="chakra-button emotion-23"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-9 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-10 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-11 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-12 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-13[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-13 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-19 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rc3:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::rc4:"
+            role="group"
+          >
+            <div
+              aria-describedby="root__error root__description root__help"
+              class="chakra-select__root emotion-3"
+              data-part="root"
+              data-scope="select"
+              dir="ltr"
+              id="select:root"
+            >
+              <select
+                aria-hidden="true"
+                aria-labelledby="field:::rc4:::label"
+                id=":rc4:"
+                name="root"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                tabindex="-1"
+              >
+                <option
+                  value="0"
+                >
+                  Foo
+                </option>
+                <option
+                  selected=""
+                  value="1"
+                >
+                  Bar
+                </option>
+              </select>
+              <div
+                class="chakra-select__control emotion-4"
+                data-part="control"
+                data-scope="select"
+                data-state="closed"
+                dir="ltr"
+                id="select:root:control"
+              >
+                <div
+                  class="chakra-select__control emotion-4"
+                  data-part="control"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  id="select:root:control"
+                >
+                  <button
+                    aria-controls="select:root:content"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-invalid="false"
+                    aria-labelledby="field:::rc4:::label"
+                    aria-required="false"
+                    class="chakra-select__trigger emotion-6"
+                    data-part="trigger"
+                    data-scope="select"
+                    data-state="closed"
+                    dir="ltr"
+                    id="select:root:trigger"
+                    role="combobox"
+                    type="button"
+                  >
+                    <span
+                      class="chakra-select__valueText emotion-7"
+                      data-part="value-text"
+                      data-scope="select"
+                      dir="ltr"
+                    >
+                      Bar
+                    </span>
+                  </button>
+                  <div
+                    class="chakra-select__indicatorGroup emotion-8"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__indicator emotion-9"
+                      data-part="indicator"
+                      data-scope="select"
+                      data-state="closed"
+                      dir="ltr"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-select__positioner emotion-11"
+                data-part="positioner"
+                data-scope="select"
+                dir="ltr"
+                id="select:root:positioner"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+              >
+                <div
+                  aria-labelledby="field:::rc4:::label"
+                  class="chakra-select__content emotion-12"
+                  data-part="content"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  hidden=""
+                  id="select:root:content"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="0"
+                    dir="ltr"
+                    id="select:root:option:0"
+                    role="option"
+                  >
+                    Foo
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="true"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="checked"
+                    data-value="1"
+                    dir="ltr"
+                    id="select:root:option:1"
+                    role="option"
+                  >
+                    Bar
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="checked"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-19"
+    >
+      <button
+        class="chakra-button emotion-20"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+  position: relative;
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-3 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: var(--chakra-spacing-1\\.5);
+    width: var(--chakra-sizes-full);
+    --select-trigger-height: var(--chakra-sizes-10);
+    --select-trigger-padding-x: var(--chakra-spacing-3);
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    width: var(--chakra-sizes-full);
+    min-height: var(--select-trigger-height);
+    --input-height: var(--select-trigger-height);
+    padding-inline: var(--select-trigger-padding-x);
+    border-radius: var(--chakra-radii-l2);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: start;
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+    --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
+    color: var(--mix-color, var(--chakra-colors-fg-muted));
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    border-color: var(--chakra-colors-border-emphasized);
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-wrap: wrap;
+    max-width: 80%;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-1);
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    padding-inline: var(--select-trigger-padding-x);
+    pointer-events: none;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    color: var(--chakra-colors-fg-muted);
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    color: var(--chakra-colors-fg-subtle);
+  }
+
+  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    color: var(--chakra-colors-fg-error);
+  }
+
+  .emotion-9 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+.emotion-10 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-11 {
+  min-width: 100%!important;
+  z-index: 2!important;
+  top: calc(100% + 5px)!important;
+}
+
+@layer recipes {
+  .emotion-12 {
+    background: var(--chakra-colors-bg-panel);
+    --bg-currentcolor: var(--chakra-colors-bg-panel);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    --select-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--select-z-index) + var(--layer-index, 0));
+    border-radius: var(--chakra-radii-l2);
+    outline: 0;
+    max-height: var(--chakra-sizes-96);
+    overflow-y: auto;
+    box-shadow: var(--chakra-shadows-md);
+    padding: var(--chakra-spacing-1);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+    -webkit-animation-name: slide-from-bottom,fade-in;
+    animation-name: slide-from-bottom,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+    -webkit-animation-name: slide-from-top,fade-in;
+    animation-name: slide-from-top,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+    -webkit-animation-name: slide-from-right,fade-in;
+    animation-name: slide-from-right,fade-in;
+  }
+
+  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+    -webkit-animation-name: slide-from-left,fade-in;
+    animation-name: slide-from-left,fade-in;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-duration: var(--chakra-durations-fastest);
+    animation-duration: var(--chakra-durations-fastest);
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+    -webkit-animation-name: slide-to-bottom,fade-out;
+    animation-name: slide-to-bottom,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+    -webkit-animation-name: slide-to-top,fade-out;
+    animation-name: slide-to-top,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+    -webkit-animation-name: slide-to-right,fade-out;
+    animation-name: slide-to-right,fade-out;
+  }
+
+  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+    -webkit-animation-name: slide-to-left,fade-out;
+    animation-name: slide-to-left,fade-out;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: var(--chakra-spacing-2);
+    cursor: var(--chakra-cursor-option);
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: start;
+    border-radius: var(--chakra-radii-l1);
+    padding-block: var(--chakra-spacing-1\\.5);
+    padding-inline: var(--chakra-spacing-2);
+  }
+
+  .emotion-13[data-highlighted] {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
+    background: var(--mix-background, var(--chakra-colors-bg-emphasized));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .emotion-13 :where(svg) {
+    width: var(--chakra-sizes-4);
+    height: var(--chakra-sizes-4);
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-19 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <fieldset
+        aria-labelledby="fieldset:::rcm:::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::rcn:"
+            role="group"
+          >
+            <div
+              aria-describedby="root__error root__description root__help"
+              class="chakra-select__root emotion-3"
+              data-part="root"
+              data-scope="select"
+              dir="ltr"
+              id="select:root"
+            >
+              <select
+                aria-hidden="true"
+                aria-labelledby="field:::rcn:::label"
+                id=":rcn:"
+                name="root"
+                style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
+                tabindex="-1"
+              >
+                <option
+                  value="0"
+                >
+                  Yes
+                </option>
+                <option
+                  selected=""
+                  value="1"
+                >
+                  No
+                </option>
+              </select>
+              <div
+                class="chakra-select__control emotion-4"
+                data-part="control"
+                data-scope="select"
+                data-state="closed"
+                dir="ltr"
+                id="select:root:control"
+              >
+                <div
+                  class="chakra-select__control emotion-4"
+                  data-part="control"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  id="select:root:control"
+                >
+                  <button
+                    aria-controls="select:root:content"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-invalid="false"
+                    aria-labelledby="field:::rcn:::label"
+                    aria-required="false"
+                    class="chakra-select__trigger emotion-6"
+                    data-part="trigger"
+                    data-scope="select"
+                    data-state="closed"
+                    dir="ltr"
+                    id="select:root:trigger"
+                    role="combobox"
+                    type="button"
+                  >
+                    <span
+                      class="chakra-select__valueText emotion-7"
+                      data-part="value-text"
+                      data-scope="select"
+                      dir="ltr"
+                    >
+                      No
+                    </span>
+                  </button>
+                  <div
+                    class="chakra-select__indicatorGroup emotion-8"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__indicator emotion-9"
+                      data-part="indicator"
+                      data-scope="select"
+                      data-state="closed"
+                      dir="ltr"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m6 9 6 6 6-6"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-select__positioner emotion-11"
+                data-part="positioner"
+                data-scope="select"
+                dir="ltr"
+                id="select:root:positioner"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+              >
+                <div
+                  aria-labelledby="field:::rcn:::label"
+                  class="chakra-select__content emotion-12"
+                  data-part="content"
+                  data-scope="select"
+                  data-state="closed"
+                  dir="ltr"
+                  hidden=""
+                  id="select:root:content"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-selected="false"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="unchecked"
+                    data-value="0"
+                    dir="ltr"
+                    id="select:root:option:0"
+                    role="option"
+                  >
+                    Yes
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="unchecked"
+                      hidden=""
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div
+                    aria-selected="true"
+                    class="chakra-select__item emotion-13"
+                    data-part="item"
+                    data-scope="select"
+                    data-state="checked"
+                    data-value="1"
+                    dir="ltr"
+                    id="select:root:option:1"
+                    role="option"
+                  >
+                    No
+                    <div
+                      aria-hidden="true"
+                      class="chakra-select__itemIndicator emotion-14"
+                      data-part="item-indicator"
+                      data-scope="select"
+                      data-state="checked"
+                    >
+                      <svg
+                        class="emotion-10"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M20 6 9 17l-5-5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-19"
+    >
+      <button
+        class="chakra-button emotion-20"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   @layer recipes {
