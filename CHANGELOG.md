@@ -25,6 +25,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
 - Fixed `liveValidate: 'onBlur'` validating whenever the form derived state from new props, rather than only when a field was left, so replacing the form data from outside showed the errors before any blur; the same conflation also merged every `extraErrors` entry in twice on that path
 - Fixed live validation dropping every `extraErrors` entry when the form derived state from new props, so a server-supplied error disappeared as soon as a controlled parent replaced the form data
+- Fixed `extraErrors` and `customErrors` being merged into the errors a second time whenever the form derived state from new props under `liveValidate: 'onChange'` without re-validating, so a re-render changing only `className` duplicated every server-supplied error
+- Fixed a changed `validator`, `customMergeAllOf` or `defaultFormStateBehavior` leaving the previously retrieved schema in state, so live validation and sanitization kept running against a schema the old settings had resolved
 
 ## @rjsf/mantine
 
@@ -44,6 +46,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Upgraded `@x0k/json-schema-merge` to `^1.0.6`, which now preserves Symbol-keyed properties (e.g. `Symbol(__rjsf_ref)`) when merging `allOf` schemas and no longer collapses distinct `allOf.contains` branches into one over-constrained schema; removed the corresponding Symbol-preservation and `contains`-extraction workarounds from `retrieveSchemaInternal()`, fixing ([#5146](https://github.com/rjsf-team/react-jsonschema-form/issues/5146))
 - Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
 - Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
+- Fixed `replaceEqualDeep()` reading an inherited member of the previous value for a JSON-sourced `__proto__` or `constructor` key, which handed `Object.prototype` back as shared form data
 
 ## Dev / docs / playground
 

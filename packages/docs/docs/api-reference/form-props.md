@@ -56,6 +56,8 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
+
 ## defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
@@ -649,6 +651,8 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 ## transformErrors
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
+
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
 ## translateString
 
