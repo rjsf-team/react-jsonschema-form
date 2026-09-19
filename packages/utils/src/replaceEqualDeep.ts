@@ -84,8 +84,11 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
     let sameAsPrev = true;
     let copy: Record<string, unknown> | undefined;
     for (const key of nextKeys) {
-      const value = shareUnchanged(prev[key], next[key], walked);
-      sameAsPrev &&= Object.hasOwn(prev, key) && Object.is(value, prev[key]);
+      // Only an own `prev` member is a previous value; `prev[key]` for a JSON-sourced `__proto__` or `constructor` key
+      // would read the inherited member and hand `Object.prototype` itself back as shared data
+      const hasPrev = Object.hasOwn(prev, key);
+      const value = shareUnchanged(hasPrev ? prev[key] : undefined, next[key], walked);
+      sameAsPrev &&= hasPrev && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
         // Spread keeps a JSON-sourced own `__proto__` key an own key, so the assignment below never reaches the setter
         copy ??= { ...next };

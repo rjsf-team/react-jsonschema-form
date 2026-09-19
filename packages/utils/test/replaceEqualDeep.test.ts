@@ -129,6 +129,14 @@ describe('replaceEqualDeep()', () => {
     expect(bareResult.same).toBe(bare.same);
   });
 
+  it('never reads an inherited member of prev as a previous value', () => {
+    const next = JSON.parse('{"a": 1, "__proto__": {}, "constructor": {}}');
+    const result = replaceEqualDeep({ a: 2 }, next);
+    expect(Object.getOwnPropertyDescriptor(result, '__proto__')!.value).not.toBe(Object.prototype);
+    expect(result.constructor).not.toBe(Object.prototype.constructor);
+    expect(result).toBe(next);
+  });
+
   it('does not treat two different forwardRef components as the same one', () => {
     const first = forwardRef(() => null);
     const second = forwardRef(() => null);
