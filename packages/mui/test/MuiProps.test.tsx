@@ -32,6 +32,30 @@ describe('MUI Theme-Specific Props', () => {
     // Or we can check the class name if we want to be very specific, but existence of placeholder is enough to show mui props worked as placeholder is a TextField prop.
   });
 
+  it('should keep a pattern and inputMode a caller sets on a non-numeric field through slotProps.htmlInput', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      foo: {
+        'ui:options': {
+          mui: {
+            slotProps: { htmlInput: { pattern: '[A-Za-z]+', inputMode: 'tel' } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('pattern', '[A-Za-z]+');
+    expect(input).toHaveAttribute('inputmode', 'tel');
+  });
+
   it('should apply sx props via FieldTemplate', () => {
     const schema: RJSFSchema = {
       type: 'object',

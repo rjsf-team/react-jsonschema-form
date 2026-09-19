@@ -183,6 +183,10 @@ export interface InputPropsType {
   min?: number | string;
   /** Specifies the maximum value for an <input> element; accepts a number for numeric inputs or a string for date/time inputs */
   max?: number | string;
+  /** Specifies the virtual keyboard to display for an <input> element, used in place of `type="number"` */
+  inputMode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+  /** Specifies a regular expression the <input> element's value is checked against, used in place of `type="number"` */
+  pattern?: string;
   /** Specifies the `autoComplete` value for an <input> element */
   autoComplete?: HTMLInputElement['autocomplete'];
   /** Specifies the `autoCapitalize` value for an <input> element */

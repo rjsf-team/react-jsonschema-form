@@ -600,11 +600,12 @@ exports[`array fields > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root_1"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value=""
                           />
                         </div>
@@ -873,10 +874,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                       class="form-control"
                                       id="root_0_value"
+                                      inputmode="decimal"
                                       name="root[0][value]"
+                                      pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                                       placeholder=""
-                                      step="any"
-                                      type="number"
+                                      type="text"
                                       value="10"
                                     />
                                   </div>
@@ -1025,10 +1027,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                       class="form-control"
                                       id="root_1_value"
+                                      inputmode="decimal"
                                       name="root[1][value]"
+                                      pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                                       placeholder=""
-                                      step="any"
-                                      type="number"
+                                      type="text"
                                       value="20"
                                     />
                                   </div>
@@ -1581,11 +1584,12 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root[1]"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value="42"
                           />
                         </div>
@@ -2503,10 +2507,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                       class="form-control"
                                       id="root_0_value"
+                                      inputmode="decimal"
                                       name="root.0.value"
+                                      pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                                       placeholder=""
-                                      step="any"
-                                      type="number"
+                                      type="text"
                                       value="10"
                                     />
                                   </div>
@@ -2655,10 +2660,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                       class="form-control"
                                       id="root_1_value"
+                                      inputmode="decimal"
                                       name="root.1.value"
+                                      pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                                       placeholder=""
-                                      step="any"
-                                      type="number"
+                                      type="text"
                                       value="20"
                                     />
                                   </div>
@@ -3735,11 +3741,12 @@ exports[`with title and description > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root_1"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value=""
                           />
                           <small
@@ -4432,11 +4439,12 @@ exports[`with title and description from both > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root_1"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value=""
                           />
                           <small
@@ -5129,11 +5137,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root_1"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value=""
                           />
                           <small
@@ -5688,11 +5697,12 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
+                            inputmode="decimal"
                             name="root_1"
+                            pattern="-?[0-9]*[.]?[0-9]*([eE][+\\-]?[0-9]+)?"
                             placeholder=""
                             required=""
-                            step="any"
-                            type="number"
+                            type="text"
                             value=""
                           />
                         </div>

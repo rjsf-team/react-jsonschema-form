@@ -1613,7 +1613,7 @@ describe('anyOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
 
       const $select = node.querySelector('select');
@@ -1644,7 +1644,7 @@ describe('anyOf', () => {
 
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
       expect(inputs).toHaveLength(0);
 
       const $select = node.querySelector('select');

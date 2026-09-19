@@ -322,6 +322,8 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
           onError,
           formData: 'yo',
           schema: { type: 'number' },
+          // The number field's native `pattern` would block submitting 'yo' before AJV's type check ran
+          noHtml5Validate: true,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([

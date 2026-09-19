@@ -53,7 +53,7 @@ export default function BaseInputTemplate<
   };
 
   let inputValue;
-  if (inputProps.type === 'number' || inputProps.type === 'integer') {
+  if (schema.type === 'number' || schema.type === 'integer') {
     inputValue = value || value === 0 ? value : '';
   } else {
     inputValue = value == null ? '' : value;

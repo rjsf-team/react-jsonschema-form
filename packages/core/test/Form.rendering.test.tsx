@@ -104,8 +104,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.selectOptions(select, options[1]);
       expect(options[1]).toHaveTextContent('number');
       expect(options[1].selected).toBe(true);
-      expect(node.querySelector<HTMLInputElement>('input[type=number]')).toBeInTheDocument();
-      expect(node.querySelector<HTMLInputElement>('input[type=number]')).toHaveAttribute('value', '123456');
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveAttribute('value', '123456');
 
       // Verify formData was casted to number
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: 123456 }, 'root_unknownProperty');
