@@ -1193,6 +1193,23 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 - RangeSpecType: A range specification from the schema
 
+### replaceEqualDeep&lt;T>()
+
+Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the `prev` instance, so consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
+When the whole value is unchanged, `prev` itself is returned.
+Sharing happens for plain objects and arrays; equal-valued `Date`s and React elements of the same type, key and props retain the previous instance; any other object type is treated as opaque and `next` is kept.
+Neither argument is mutated: when a container is only partially unchanged, a new container holding the retained children is returned.
+This is structural sharing, as TanStack Query's `replaceEqualDeep` does for fetch results. `Form` applies it to the state it builds for a change, and `SchemaUtils.retrieveSchema()` to a recomputed schema.
+
+#### Parameters
+
+- prev: unknown - The previous value whose references should be retained where possible
+- next: T - The newly computed value
+
+#### Returns
+
+- T: `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged subtree with `prev`
+
 ### replaceStringParameters()
 
 Potentially substitutes all replaceable parameters with the associated value(s) from the `params` if available.
@@ -1304,35 +1321,6 @@ setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an arr
 setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 ```
-
-### shallowEquals()
-
-Implements a shallow equals comparison that uses `Object.is()` for comparing values.
-This function compares objects by checking if all keys and their values are equal using `Object.is()`.
-
-#### Parameters
-
-- a: any - The first element to compare
-- b: any - The second element to compare
-
-#### Returns
-
-- boolean: True if the `a` and `b` are shallow equal, false otherwise
-
-### shouldRender()
-
-Determines whether the given `component` should be rerendered by comparing its current set of props and state against the next set.
-If either of those two sets are not the same, then the component should be rerendered.
-
-#### Parameters
-
-- component: React.Component - A React component being checked
-- nextProps: any - The next set of props against which to check
-- nextState: any - The next set of state against which to check
-
-#### Returns
-
-- True if boolean: the component should be re-rendered, false otherwise
 
 ### shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 

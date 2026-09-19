@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
@@ -133,6 +134,104 @@ describe('Live validation onBlur', () => {
       'root',
     );
     expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
+  });
+
+  it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
+    function InlineCallbackParent() {
+      const [value, setValue] = useState<string | undefined>(undefined);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={value}
+          onChange={(event) => setValue(event.formData)}
+          // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
+          // every keystroke
+          transformErrors={(errors) => errors}
+        />
+      );
+    }
+    const { container } = render(<InlineCallbackParent />);
+
+    await user.type(container.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+    await user.tab();
+
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  describe('when the data is replaced from outside the form', () => {
+    const objectSchema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+    };
+
+    function ReplacingParent({
+      extraErrors,
+      formRef,
+      liveValidate = 'onBlur',
+    }: Pick<FormProps, 'extraErrors' | 'liveValidate'> & { formRef?: Ref<Form> }) {
+      const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
+      return (
+        <>
+          <button type='button' onClick={() => setValue({ name: 'short', other: 'zzz' })}>
+            replace
+          </button>
+          <Form
+            ref={formRef}
+            schema={objectSchema}
+            validator={validator}
+            liveValidate={liveValidate}
+            extraErrors={extraErrors}
+            formData={value}
+            onChange={(event) => setValue(event.formData)}
+          />
+        </>
+      );
+    }
+
+    it('does not validate: the errors still wait for a blur', async () => {
+      const { container } = render(<ReplacingParent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+      await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+      await user.tab();
+
+      expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+    });
+
+    it('carries each extraError over exactly once', async () => {
+      const formRef = createRef<Form>();
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(<ReplacingParent extraErrors={extraErrors} formRef={formRef} />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(formRef.current!.state.errors).toEqual([
+        expect.objectContaining({ property: '.name', message: 'from the server' }),
+      ]);
+    });
+
+    it('keeps the extraErrors alongside the schema errors under onChange', async () => {
+      const formRef = createRef<Form>();
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(
+        <ReplacingParent liveValidate='onChange' extraErrors={extraErrors} formRef={formRef} />,
+      );
+
+      await user.click(container.querySelector('button')!);
+
+      expect(formRef.current!.state.errors).toEqual([
+        expect.objectContaining({ property: '.name', message: 'must NOT have fewer than 8 characters' }),
+        expect.objectContaining({ property: '.name', message: 'from the server' }),
+      ]);
+    });
   });
 });
 
@@ -1080,8 +1179,12 @@ describe('Calling onChange right after updating a Form with props formData', () 
 
     await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-    expect(node.querySelector('#root_0')).toBeInTheDocument();
-    expect(node.querySelector('#root_1')).toHaveAttribute('value', 'test');
+    // Both near-simultaneous changes must survive; which lands first depends on render timing, so assert order-free
+    const values = [
+      node.querySelector('#root_0')!.getAttribute('value'),
+      node.querySelector('#root_1')!.getAttribute('value'),
+    ].sort();
+    expect(values).toEqual(['', 'test']);
   });
 });
 

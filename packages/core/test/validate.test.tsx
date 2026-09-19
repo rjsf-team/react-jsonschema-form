@@ -5,6 +5,7 @@ import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json'
 import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -184,6 +185,24 @@ describe('Validation', () => {
           }),
           'root',
         );
+      });
+
+      it('re-validates a controlled form when the customValidate prop changes', () => {
+        const schema: RJSFSchema = { type: 'string' };
+        function rejectEverything(_: FormProps['formData'], errors: FormValidation) {
+          errors.addError('Invalid');
+          return errors;
+        }
+        function acceptEverything(_: FormProps['formData'], errors: FormValidation) {
+          return errors;
+        }
+        const props: NoValFormProps = { schema, formData: 'a', liveValidate: 'onChange' };
+        const { node, rerender } = createFormComponent({ ...props, customValidate: acceptEverything });
+        expect(node.textContent).not.toContain('Invalid');
+
+        rerender({ ...props, customValidate: rejectEverything });
+
+        expect(node.textContent).toContain('Invalid');
       });
 
       it('should submit form on valid data', async () => {

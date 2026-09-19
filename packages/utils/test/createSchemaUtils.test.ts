@@ -114,5 +114,28 @@ describe('createSchemaUtils()', () => {
       });
     });
   });
+  describe('retrieveSchema() identity retention', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+
+    it('returns the same instance for a repeated call with the same inputs', () => {
+      const utils = createSchemaUtils(testValidator, rootSchema);
+      const first = utils.retrieveSchema(schema, {});
+      expect(utils.retrieveSchema(schema, {})).toBe(first);
+    });
+
+    it('retains the previous instance when a recomputation is deeply equal', () => {
+      const utils = createSchemaUtils(testValidator, rootSchema);
+      const first = utils.retrieveSchema(schema, {});
+      expect(utils.retrieveSchema(schema, { foo: 'bar' })).toBe(first);
+    });
+
+    it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {
+      const utils = createSchemaUtils(testValidator, rootSchema);
+      const first = utils.retrieveSchema(true as unknown as RJSFSchema, {});
+      expect(first).toEqual({});
+      expect(utils.retrieveSchema(true as unknown as RJSFSchema, {})).not.toBe(first);
+    });
+  });
+
   // NOTE: the rest of the functions are tested in the tests defined in the `schema` directory
 });

@@ -1,4 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
+import { useMemo } from 'react';
 import type {
   FieldProps,
   FieldPath,
@@ -661,7 +662,10 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
   const { fields } = registry;
   const { SchemaField, LayoutMultiSchemaField } = fields;
 
-  const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
+  const uiComponentProps = useMemo(
+    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
+    [registry, gridSchema],
+  );
   const { name, UIComponent, uiProps } = uiComponentProps;
   const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = getSchemaDetailsForField<T, S, F>(
     registry,
@@ -670,6 +674,11 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     formData,
     parentFieldPath,
   );
+  // Memoized so the cell's `SchemaField` keeps its uiSchema reference while nothing it is built from changed
+  const { fieldUiSchema, uiReadonly } = useMemo(
+    () => computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly),
+    [name, uiProps, uiSchema, isReadonly, readonly],
+  );
 
   if (uiComponentProps.rendered) {
     return uiComponentProps.rendered;
@@ -677,12 +686,6 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
 
   if (schema) {
     const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
-    // Call this function to get the appropriate UISchema, which will always have its `readonly` state matching the
-    // `uiReadonly` flag that it returns. This is done since the `SchemaField` will always defer to the `readonly`
-    // state in the uiSchema over anything in the props or schema. Because we are implementing the "readonly" state of
-    // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
-    // when it is needed
-    const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
     // SchemaField resolves `ui:required` itself from the `uiSchema` prop we're already passing it below (and uses
     // the raw schema-derived `isRequired` as its own fallback, plus to detect a misconfigured `ui:required: false`),
     // so only `LayoutMultiSchemaField` -- which has no such override logic of its own -- needs the effective value

@@ -41,7 +41,6 @@ function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   props: FormProps<T, S, F>,
 ): GlobalFormOptions {
   const {
-    experimental_componentUpdateStrategy,
     idSeparator = DEFAULT_ID_SEPARATOR,
     idPrefix = DEFAULT_ID_PREFIX,
     nameGenerator,
@@ -51,7 +50,6 @@ function getGlobalFormOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     idPrefix,
     idSeparator,
     useFallbackUiForUnsupportedType,
-    ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
     ...(nameGenerator !== undefined && { nameGenerator }),
   };
 }

@@ -88,6 +88,7 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
+import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
@@ -95,9 +96,6 @@ import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
-import shallowEquals from './shallowEquals.ts';
-import type { ComponentUpdateStrategy } from './shouldRender.ts';
-import shouldRender from './shouldRender.ts';
 import shouldRenderOptionalField from './shouldRenderOptionalField.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
@@ -122,7 +120,6 @@ export * from './parser/index.ts';
 export * from './schema/index.ts';
 
 export type {
-  ComponentUpdateStrategy,
   DateElementFormat,
   DateElementProp,
   DateElementProps,
@@ -214,6 +211,7 @@ export {
   padTimeSeconds,
   parseDateString,
   rangeSpec,
+  replaceEqualDeep,
   replaceStringParameters,
   resolveDefaultWidget,
   resolveUiSchema,
@@ -222,8 +220,6 @@ export {
   setByPath,
   SelectedOptionDescription,
   selectOptionUiSchema,
-  shallowEquals,
-  shouldRender,
   shouldRenderOptionalField,
   sortedJSONStringify,
   titleId,
