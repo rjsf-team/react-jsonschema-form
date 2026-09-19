@@ -1,6 +1,7 @@
 import { createRef, useEffect } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -548,6 +549,58 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       });
 
       expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('bar');
+    });
+    describe('should keep a switch to a null oneOf option when the echo recreates an identity-compared prop', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          {
+            type: 'object',
+            properties: { types: { const: 'advanced' }, content: { type: 'string' } },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced', content: 'placeholder' },
+      };
+      const experimental_defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
+
+      it('validator', async () => {
+        let currentFormData: unknown;
+        const { node, rerender } = createFormComponent({
+          schema,
+          experimental_defaultFormStateBehavior,
+          onChange: (event: IChangeEvent) => {
+            currentFormData = event.formData;
+          },
+        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+        rerender({ schema, formData: currentFormData, experimental_defaultFormStateBehavior }, customizeValidator());
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      });
+      it('experimental_customMergeAllOf', async () => {
+        let currentFormData: unknown;
+        const { node, rerender } = createFormComponent({
+          schema,
+          experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf: (allOfSchema: RJSFSchema) => allOfSchema,
+          onChange: (event: IChangeEvent) => {
+            currentFormData = event.formData;
+          },
+        });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+        rerender({
+          schema,
+          formData: currentFormData,
+          experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf: (allOfSchema: RJSFSchema) => allOfSchema,
+        });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      });
     });
     it('Should modify anyOf definition references when the defaults are set.', async () => {
       const schema: RJSFSchema = {

@@ -505,8 +505,12 @@ export default class Form<
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       // The parent handing back the `formData` the form just emitted through `onChange`, with nothing that feeds the
-      // defaults changed; any change to the schema, validator or defaults behavior rebuilds `schemaUtils`
-      const isEchoOfState = !isStateDataChanged && nextState.schemaUtils === this.state.schemaUtils;
+      // defaults changed. `validator` and `experimental_customMergeAllOf` are left out because they are compared by
+      // reference, and parents commonly create them inline on every render
+      const isEchoOfState =
+        !isStateDataChanged &&
+        !isSchemaChanged &&
+        deepEquals(prevProps.experimental_defaultFormStateBehavior, this.props.experimental_defaultFormStateBehavior);
       return { nextState, shouldUpdate, isEchoOfState };
     }
     return { shouldUpdate: false };
