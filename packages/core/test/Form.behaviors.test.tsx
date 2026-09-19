@@ -134,6 +134,33 @@ describe('Live validation onBlur', () => {
     );
     expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
   });
+
+  it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
+    function InlineCallbackParent() {
+      const [value, setValue] = useState<string | undefined>(undefined);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={value}
+          onChange={(event) => setValue(event.formData)}
+          // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
+          // every keystroke
+          transformErrors={(errors) => errors}
+        />
+      );
+    }
+    const { container } = render(<InlineCallbackParent />);
+
+    await user.type(container.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+    await user.tab();
+
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
 });
 
 describe('omitExtraData and live omit onBlur', () => {

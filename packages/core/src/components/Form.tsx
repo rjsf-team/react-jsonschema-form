@@ -473,8 +473,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
         // not, so the walk that produces them is left for `getStateFromProps` to ask for
         () => getChangedFields(formData, prevProps.formData, true),
-        // Live validation is skipped only when neither the data nor anything that could take part in it changed
-        !isStateDataChanged && !isIdentityPropChanged,
+        // Live validation is skipped only when neither the data nor anything that could take part in it changed.
+        // A changed identity prop counts only in `onChange` mode: `onBlur` owes its errors to the blur, not to the
+        // parent handing over a fresh callback
+        !isStateDataChanged && !(isIdentityPropChanged && this.props.liveValidate === 'onChange'),
       ),
     });
     const shouldUpdate = nextState !== prevState;
@@ -515,8 +517,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       if (nextStateDiffersFromProps && nextState.formData !== prevState.formData && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
+      // `getStateFromProps()` sets neither `customErrors` nor `prevExtraErrors`, so `nextState` carries the values
+      // `prevState` held before this update; `getDerivedStateFromProps()` or a batched `setState()` may already have
+      // replaced them, and writing the old ones back would undo that
       // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
-      this.setState(nextState);
+      this.setState((current) => ({
+        ...nextState,
+        customErrors: current.customErrors,
+        prevExtraErrors: current.prevExtraErrors,
+      }));
     }
   }
 
@@ -998,7 +1007,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
       // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
       if (plainLeafWasCleared && formData) {
-        setByPath(formData, path, undefined);
+        // `getStateFromProps()` resolved the schema against this object and cached that resolution by its identity,
+        // so the clear has to land on a new object for the schema to be resolved again against the cleared data
+        formData = setByPath((Array.isArray(formData) ? [...formData] : { ...formData }) as T, path, undefined);
       }
     }
 
