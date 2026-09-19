@@ -670,7 +670,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         schemaUtils,
         state.errorSchema,
         formData,
-        undefined,
+        props.extraErrors,
         state.customErrors,
         retrievedSchema,
         // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.

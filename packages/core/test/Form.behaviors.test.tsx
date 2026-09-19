@@ -169,7 +169,11 @@ describe('Live validation onBlur', () => {
       properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
     };
 
-    function ReplacingParent({ extraErrors, formRef }: Pick<FormProps, 'extraErrors'> & { formRef?: Ref<Form> }) {
+    function ReplacingParent({
+      extraErrors,
+      formRef,
+      liveValidate = 'onBlur',
+    }: Pick<FormProps, 'extraErrors' | 'liveValidate'> & { formRef?: Ref<Form> }) {
       const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
       return (
         <>
@@ -180,7 +184,7 @@ describe('Live validation onBlur', () => {
             ref={formRef}
             schema={objectSchema}
             validator={validator}
-            liveValidate='onBlur'
+            liveValidate={liveValidate}
             extraErrors={extraErrors}
             formData={value}
             onChange={(event) => setValue(event.formData)}
@@ -210,6 +214,21 @@ describe('Live validation onBlur', () => {
       await user.click(container.querySelector('button')!);
 
       expect(formRef.current!.state.errors).toEqual([
+        expect.objectContaining({ property: '.name', message: 'from the server' }),
+      ]);
+    });
+
+    it('keeps the extraErrors alongside the schema errors under onChange', async () => {
+      const formRef = createRef<Form>();
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(
+        <ReplacingParent liveValidate='onChange' extraErrors={extraErrors} formRef={formRef} />,
+      );
+
+      await user.click(container.querySelector('button')!);
+
+      expect(formRef.current!.state.errors).toEqual([
+        expect.objectContaining({ property: '.name', message: 'must NOT have fewer than 8 characters' }),
         expect.objectContaining({ property: '.name', message: 'from the server' }),
       ]);
     });

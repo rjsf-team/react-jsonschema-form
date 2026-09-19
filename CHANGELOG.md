@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
 - Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
 - Fixed `liveValidate: 'onBlur'` validating whenever the form derived state from new props, rather than only when a field was left, so replacing the form data from outside showed the errors before any blur; the same conflation also merged every `extraErrors` entry in twice on that path
+- Fixed live validation dropping every `extraErrors` entry when the form derived state from new props, so a server-supplied error disappeared as soon as a controlled parent replaced the form data
 
 ## @rjsf/mantine
 
