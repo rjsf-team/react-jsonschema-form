@@ -333,6 +333,18 @@ const IDENTITY_PROP_KEYS = [
   'nameGenerator',
 ] as const satisfies readonly (keyof FormProps)[];
 
+/** The identity props that take part in validation. Only a change to one of these re-validates unchanged data: a
+ * fresh `formContext` or `widgets` has nothing to say about the data's validity, and validating on it would show
+ * errors on fields the user never touched whenever the parent re-renders.
+ */
+const VALIDATION_PROP_KEYS: ReadonlySet<(typeof IDENTITY_PROP_KEYS)[number]> = new Set([
+  'schema',
+  'validator',
+  'customMergeAllOf',
+  'customValidate',
+  'transformErrors',
+]);
+
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends PureComponent<FormProps<T, S, F>, FormState<T, S, F>>
@@ -444,10 +456,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
     // `replaceEqualDeep()` hands back `prev` exactly when the values are deep-equal with functions by identity
     let isIdentityPropChanged = false;
+    let isValidationPropChanged = false;
     let isSchemaChanged = false;
     for (const key of IDENTITY_PROP_KEYS) {
       if (replaceEqualDeep(prevProps[key], this.props[key]) !== prevProps[key]) {
         isIdentityPropChanged = true;
+        isValidationPropChanged ||= VALIDATION_PROP_KEYS.has(key);
         isSchemaChanged ||= key === 'schema';
       }
     }
@@ -459,12 +473,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const formData = replaceEqualDeep(this.state.formData, this.props.formData);
     const isStateDataChanged = formData !== this.state.formData;
     // An accepting parent hands the proposal back as a prop; without sharing, the rebuilt state would re-render every
-    // field
-    // Spread over `prevState` so the keys it alone carries, such as `prevExtraErrors`, do not stop `replaceEqualDeep()`
-    // from returning `prevState` itself when nothing changed
-    const nextState = replaceEqualDeep(prevState, {
-      ...prevState,
-      ...this.getStateFromProps(
+    // field. Only the derived keys are shared and later committed, so `customErrors` and `prevExtraErrors`, which
+    // `getStateFromProps()` never sets, are left to whatever React holds for them
+    const nextState = replaceEqualDeep(
+      prevState,
+      this.getStateFromProps(
         this.props,
         formData,
         // The retrieved schema in state matches the state's data, so it only holds while both are unchanged
@@ -473,13 +486,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
         // not, so the walk that produces them is left for `getStateFromProps` to ask for
         () => getChangedFields(formData, prevProps.formData, true),
-        // Live validation is skipped only when neither the data nor anything that could take part in it changed.
-        // A changed identity prop counts only in `onChange` mode: `onBlur` owes its errors to the blur, not to the
-        // parent handing over a fresh callback
-        !isStateDataChanged && !(isIdentityPropChanged && this.props.liveValidate === 'onChange'),
+        // Live validation is skipped only when neither the data nor anything that takes part in validating it
+        // changed. A changed validation prop counts only in `onChange` mode: `onBlur` owes its errors to the blur, not
+        // to the parent handing over a fresh callback
+        !isStateDataChanged && !(isValidationPropChanged && this.props.liveValidate === 'onChange'),
       ),
-    });
-    const shouldUpdate = nextState !== prevState;
+    );
+    const shouldUpdate = Object.entries(nextState).some(
+      ([key, value]) => value !== prevState[key as keyof FormState<T, S, F>],
+    );
     return { nextState, shouldUpdate };
   }
 
@@ -517,15 +532,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       if (nextStateDiffersFromProps && nextState.formData !== prevState.formData && this.props.onChange) {
         this.props.onChange(toIChangeEvent(nextState));
       }
-      // `getStateFromProps()` sets neither `customErrors` nor `prevExtraErrors`, so `nextState` carries the values
-      // `prevState` held before this update; `getDerivedStateFromProps()` or a batched `setState()` may already have
-      // replaced them, and writing the old ones back would undo that
       // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
-      this.setState((current) => ({
-        ...nextState,
-        customErrors: current.customErrors,
-        prevExtraErrors: current.prevExtraErrors,
-      }));
+      this.setSharedState(nextState);
     }
   }
 
@@ -566,11 +574,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate === 'onChange';
     let { schemaUtils, hasNestedConditionalSchema } = state;
+    // The retrieved schema in state was resolved by the previous `schemaUtils`; a changed validator,
+    // `customMergeAllOf` or `defaultFormStateBehavior` can resolve the same schema and data differently
+    let reusableRetrievedSchema = retrievedSchema;
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(validator, schema, defaultFormStateBehavior, customMergeAllOf)
     ) {
       schemaUtils = createSchemaUtils<T, S, F>(validator, schema, defaultFormStateBehavior, customMergeAllOf);
+      reusableRetrievedSchema = undefined;
       // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved
       // schema (only the schema's own top-level `dependencies`/`if` get resolved into it), so comparing
       // `computedRetrievedSchema` to `state.retrievedSchema` below can't detect it (#5250). `hasNestedConditionalSchema`
@@ -610,7 +622,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       // Kept reference-equal to the current one when unchanged, so the validator's compiled-schema cache hits
       computedRetrievedSchema = replaceEqualDeep(
         state.retrievedSchema,
-        retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
+        reusableRetrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
       );
       if (
         shouldSanitize &&
@@ -645,18 +657,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       }
-      // `extraErrors` and `customErrors` are merged in below, so the base has to be the validator's own result.
-      // `state.errors` already carries them, and is only safe to reuse when live validation has just produced it,
-      // which is the `'onChange'` pass that asked to be skipped
-      if (props.liveValidate !== 'onChange') {
-        return {
-          errors: state.schemaValidationErrors || [],
-          errorSchema: state.schemaValidationErrorSchema || {},
-        };
-      }
+      // `extraErrors` and `customErrors` are merged in below, so the base has to be the validator's own result;
+      // `state.errors` already carries them and would merge each in a second time
       return {
-        errors: state.errors || [],
-        errorSchema: state.errorSchema || {},
+        errors: state.schemaValidationErrors || [],
+        errorSchema: state.schemaValidationErrorSchema || {},
       };
     };
 
@@ -668,14 +673,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       const liveValidation = this.liveValidate(
         rootSchema,
         schemaUtils,
-        state.errorSchema,
         formData,
         props.extraErrors,
         state.customErrors,
-        retrievedSchema,
-        // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
-        // Else in the case where it hasn't changed,
-        retrievedSchema !== undefined,
+        reusableRetrievedSchema,
       );
       errors = liveValidation.errors;
       errorSchema = liveValidation.errorSchema;
@@ -850,27 +851,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   private liveValidate(
     rootSchema: S,
     schemaUtils: SchemaUtilsType<T, S, F>,
-    originalErrorSchema: ErrorSchema<T>,
     formData?: T,
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder<T>,
     retrievedSchema?: S,
-    mergeIntoOriginalErrorSchema = false,
   ) {
     const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
-    const { errors } = schemaValidation;
-    let { errorSchema } = schemaValidation;
-    // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
-    if (mergeIntoOriginalErrorSchema) {
-      errorSchema = mergeObjects(
-        originalErrorSchema,
-        schemaValidation.errorSchema,
-        'preventDuplicates',
-      ) as ErrorSchema<T>;
-    }
-    const schemaValidationErrors = errors;
-    const schemaValidationErrorSchema = errorSchema;
-    const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, extraErrors, customErrors);
+    const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
+    const mergedErrors = Form.mergeErrors<T>(schemaValidation, extraErrors, customErrors);
     return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
@@ -1012,8 +1000,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
       // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
       if (plainLeafWasCleared && formData) {
-        // `getStateFromProps()` resolved the schema against this object and cached that resolution by its identity,
-        // so the clear has to land on a new object for the schema to be resolved again against the cleared data
+        // `replaceEqualDeep()` may have handed this object straight back from the committed state, so the clear lands
+        // on a copy rather than in place
         formData = setByPath((Array.isArray(formData) ? [...formData] : { ...formData }) as T, path, undefined);
       }
     }
@@ -1067,7 +1055,6 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       const liveValidation = this.liveValidate(
         schema,
         schemaUtils,
-        mergeBaseErrorSchema,
         newFormData,
         extraErrors,
         customErrors,
@@ -1171,11 +1158,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         state = { formData: newFormData };
       }
       if (liveValidate === 'onBlur') {
-        const { schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = this.state;
+        const { schema, schemaUtils, customErrors, retrievedSchema } = this.state;
         const liveValidation = this.liveValidate(
           schema,
           schemaUtils,
-          errorSchema,
           newFormData,
           extraErrors,
           customErrors,

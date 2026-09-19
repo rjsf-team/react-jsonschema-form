@@ -1179,12 +1179,122 @@ describe('Calling onChange right after updating a Form with props formData', () 
 
     await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-    // Both near-simultaneous changes must survive; which lands first depends on render timing, so assert order-free
-    const values = [
-      node.querySelector('#root_0')!.getAttribute('value'),
-      node.querySelector('#root_1')!.getAttribute('value'),
-    ].sort();
-    expect(values).toEqual(['', 'test']);
+    expect(node.querySelector('#root_0')).toBeInTheDocument();
+    expect(node.querySelector('#root_1')).toHaveAttribute('value', 'test');
+  });
+});
+
+describe('Deriving state from changed props', () => {
+  const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 8 } } };
+  const identity: FormProps['transformErrors'] = (errors) => errors;
+  const alsoIdentity: FormProps['transformErrors'] = (errors) => errors;
+
+  type ParentProps = Partial<Pick<FormProps, 'extraErrors' | 'transformErrors' | 'customValidate' | 'className'>> & {
+    formContext?: FormProps['formContext'];
+  };
+
+  function Parent({ steps }: { steps: ParentProps[] }) {
+    const [step, setStep] = useState(0);
+    const [formData, setFormData] = useState({ name: 'short' });
+    return (
+      <>
+        <button type='button' onClick={() => setStep(step + 1)}>
+          next
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onChange'
+          formData={formData}
+          onChange={(event) => setFormData(event.formData)}
+          {...steps[step]}
+        />
+      </>
+    );
+  }
+
+  it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
+    const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+  });
+
+  it('re-validates unchanged data when a prop that takes part in validation changes', async () => {
+    const { container } = render(<Parent steps={[{ transformErrors: identity }, { transformErrors: alsoIdentity }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  it('clears extraErrors the parent drops after a re-validation of unchanged data', async () => {
+    const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+    const { container } = render(
+      <Parent
+        steps={[
+          { extraErrors, transformErrors: identity },
+          { extraErrors, transformErrors: alsoIdentity },
+          { transformErrors: alsoIdentity },
+        ]}
+      />,
+    );
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
+
+    await user.click(container.querySelector('button')!);
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(2);
+    await user.click(container.querySelector('button')!);
+
+    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    expect(messages).toEqual(['must NOT have fewer than 8 characters']);
+  });
+
+  it('carries each extraError over exactly once when a non-validation prop changes', async () => {
+    const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+    const { container } = render(<Parent steps={[{ extraErrors }, { extraErrors, className: 'x' }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    expect(messages).toEqual(['from the server']);
+  });
+
+  it('re-resolves the retrieved schema when customMergeAllOf changes', async () => {
+    const allOfSchema: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        { properties: { a: { type: 'string', title: 'A1' } } },
+        { properties: { a: { type: 'string', title: 'A2' } } },
+      ],
+    };
+    const firstWins: FormProps['customMergeAllOf'] = (s) => s.allOf![0] as RJSFSchema;
+    const lastWins: FormProps['customMergeAllOf'] = (s) => s.allOf![1] as RJSFSchema;
+    const formRef = createRef<Form>();
+    function MergeParent() {
+      const [merge, setMerge] = useState(() => firstWins);
+      return (
+        <>
+          <button type='button' onClick={() => setMerge(() => lastWins)}>
+            swap
+          </button>
+          <Form
+            ref={formRef}
+            schema={allOfSchema}
+            validator={validator}
+            formData={{ a: 'x' }}
+            customMergeAllOf={merge}
+          />
+        </>
+      );
+    }
+    const { container } = render(<MergeParent />);
+    expect(container.querySelector('label')).toHaveTextContent('A1');
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector('label')).toHaveTextContent('A2');
+    expect(formRef.current!.state.retrievedSchema.properties!.a).toHaveProperty('title', 'A2');
   });
 });
 
