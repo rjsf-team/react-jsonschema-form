@@ -98,4 +98,20 @@ describe('NativeSelectWidget', () => {
     expect(directOptions).toHaveLength(2);
     expect(directOptions[1]).toHaveTextContent('qux');
   });
+  test('select field disables options listed in enumDisabled, grouped or not', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      enum: ['foo', 'bar', 'baz'],
+    };
+    const uiSchema: UiSchema = {
+      'ui:widget': 'NativeSelectWidget',
+      'ui:enumDisabled': ['bar', 'baz'],
+      'ui:options': { optgroups: { 'Group A': ['foo', 'bar'] } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('option', { name: 'foo' })).toBeEnabled();
+    expect(screen.getByRole('option', { name: 'bar' })).toBeDisabled();
+    expect(screen.getByRole('option', { name: 'baz' })).toBeDisabled();
+  });
 });

@@ -101,4 +101,58 @@ describe('SelectWidget', () => {
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
+
+  test('marks enumDisabled options as disabled and ignores clicks on them', () => {
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          onChange,
+          options: {
+            enumOptions,
+            enumDisabled: ['bar'],
+            optgroups: { 'Group A': ['foo', 'bar'] },
+          },
+        })}
+      />,
+    );
+
+    const bar = screen.getByRole('option', { name: 'Bar' });
+    expect(bar).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('option', { name: 'Foo' })).not.toHaveAttribute('aria-disabled');
+    fireEvent.click(bar);
+    fireEvent.keyDown(bar, { key: 'Enter' });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('renders object examples by their display value when there is no enum', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          schema: { type: 'object', examples: [{ name: 'Alpha' }, { name: 'Beta' }] },
+          options: {},
+        })}
+      />,
+    );
+
+    expect(screen.getByRole('option', { name: 'Alpha' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Beta' })).toBeInTheDocument();
+  });
+
+  test('renders falsy primitive examples by their string form when there is no enum', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          schema: { type: 'number', examples: [0, 1] },
+          options: {},
+        })}
+      />,
+    );
+
+    expect(screen.getByRole('option', { name: '0' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '1' })).toBeInTheDocument();
+  });
 });

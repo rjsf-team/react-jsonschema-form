@@ -17,18 +17,19 @@ const isPrimitive = (value: unknown) => value === null || typeof value !== 'obje
  * When `optgroups` isn't provided, returns the same flat list of options, just tagged, so callers can use one
  * rendering code path whether or not grouping is in effect.
  *
- * When `optgroups` is provided, returns one `EnumOptionsGroupType` per non-empty key, in key order, with that
- * group's options in the order they were listed in its value array. Enum values not claimed by any group are
+ * When `optgroups` is provided, returns one `EnumOptionsGroupType` per non-empty key, in the object's property order,
+ * with that group's options in the order they were listed in its value array. Enum values not claimed by any group are
  * appended afterward, in their original relative order. Group values that don't match any (remaining) enum option
  * are skipped, and a group left with no options after that is omitted entirely, so no group renders as an empty
  * heading. If multiple options share the same `value` (e.g. `oneOf` branches with a duplicate discriminator), each
  * `optgroups` reference to that value claims the next not-yet-claimed option with it, by index, rather than
- * collapsing them into a single option.
+ * collapsing them into a single option. JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys,
+ * in ascending numeric order, regardless of the order they were written in, so those groups come first.
  *
  * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
  * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
  * JSON often stringify them. Object and array enum values only match the very same object, so a JSON-authored
- * uiSchema can't group them. `enumDisabled` values are matched to options the same way.
+ * uiSchema can't group them. `enumDisabled` values match strictly, as they do in every other enum widget.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -43,15 +44,10 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   if (!Array.isArray(enumOptions)) {
     return [];
   }
-  const disabledValues: unknown[] = Array.isArray(enumDisabled) ? enumDisabled : [];
-  const disabledStrings = new Set(disabledValues.filter(isPrimitive).map(String));
-  const isDisabled = (value: unknown) =>
-    isPrimitive(value) ? disabledStrings.has(String(value)) : disabledValues.includes(value);
-
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
     index,
-    disabled: isDisabled(option.value),
+    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
   }));
   if (!optgroups || typeof optgroups !== 'object') {
     return indexed;

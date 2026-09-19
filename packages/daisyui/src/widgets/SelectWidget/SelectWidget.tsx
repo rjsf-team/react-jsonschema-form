@@ -51,12 +51,12 @@ export default function SelectWidget<
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, emptyValue: optEmptyVal, optgroups } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   const getDisplayValue = (val: any) => {
-    if (!val) {
+    if (val === undefined || val === null) {
       return '';
     }
     if (typeof val === 'object') {
@@ -129,7 +129,7 @@ export default function SelectWidget<
   const optionsList: EnumOptionsType<S>[] =
     enumOptions ||
     (Array.isArray(schema.examples)
-      ? schema.examples.map((example) => ({ value: example, label: String(example) }))
+      ? schema.examples.map((example) => ({ value: example, label: getDisplayValue(example) }))
       : []);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -141,13 +141,16 @@ export default function SelectWidget<
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role='option'
         aria-selected={selectedValues.includes(encodedValue)}
-        tabIndex={0}
-        className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
+        aria-disabled={option.disabled || undefined}
+        tabIndex={option.disabled ? -1 : 0}
+        className={`px-4 py-2 ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-base-200 cursor-pointer'} ${
           selectedValues.includes(encodedValue) ? 'bg-primary/10' : ''
         }`}
-        onClick={handleOptionClick}
+        onClick={option.disabled ? undefined : handleOptionClick}
         onKeyDown={(e) =>
-          (e.key === 'Enter' || e.key === ' ') && handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
+          !option.disabled &&
+          (e.key === 'Enter' || e.key === ' ') &&
+          handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
         }
         data-value={option.index}
       >
@@ -190,7 +193,7 @@ export default function SelectWidget<
           role='listbox'
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >
-          {groupEnumOptions<S>(optionsList, optgroups).map((item) =>
+          {groupEnumOptions<S>(optionsList, optgroups, enumDisabled).map((item) =>
             isEnumOptionsGroup<S>(item) ? (
               <li key={`optgroup-${item.label}`} role='presentation'>
                 <ul role='group' aria-label={item.label}>

@@ -76,7 +76,7 @@ export default function NativeSelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
-      <option key={option.index} value={String(option.index)}>
+      <option key={option.index} value={String(option.index)} disabled={option.disabled}>
         {option.label}
       </option>
     );

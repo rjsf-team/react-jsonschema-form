@@ -9,31 +9,7 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
-
-/**
- * Represents an item in the fancy multi-select dropdown
- */
-export interface FancySelectItem {
-  /** The value of the item */
-  value: any;
-  /** The display label for the item */
-  label: string;
-  /** The index position of the item */
-  index: number;
-  /** Whether the item is disabled */
-  disabled?: boolean;
-}
-
-/**
- * Represents a labeled section (an `<optgroup>` equivalent) of items in the dropdown. A section without a `label`
- * renders as a plain, unheaded group, used for options that aren't part of any `ui:options.optgroups` group.
- */
-export interface FancySelectSection {
-  /** The section's heading, omitted for an unlabeled group */
-  label?: string;
-  /** The items belonging to this section */
-  items: FancySelectItem[];
-}
+import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
  * Props interface for the FancyMultiSelect component

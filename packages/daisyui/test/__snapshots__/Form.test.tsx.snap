@@ -12514,11 +12514,12 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-disabled="true"
                 aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                class="px-4 py-2 opacity-50 cursor-not-allowed "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
@@ -13054,11 +13055,12 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-disabled="true"
                 aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                class="px-4 py-2 opacity-50 cursor-not-allowed "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
@@ -13592,11 +13594,12 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                     </div>
                   </li>
                   <li
+                    aria-disabled="true"
                     aria-selected="false"
-                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    class="px-4 py-2 opacity-50 cursor-not-allowed "
                     data-value="1"
                     role="option"
-                    tabindex="0"
+                    tabindex="-1"
                   >
                     <div
                       class="flex items-center gap-2"

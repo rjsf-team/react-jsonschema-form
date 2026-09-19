@@ -747,6 +747,8 @@ To group a `select`-backed widget's options into labeled sections (rendered as `
 
 A value in a group matches the enum entry it is equal to. Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`. Object and array enum values can't be grouped from a JSON-authored uiSchema, since a value only matches that very same object. Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
 
+Groups render in the object's property order. JavaScript always places integer-like keys (such as `'2024'`) first, in ascending numeric order, ahead of every other key no matter where they were written. So `{ Newest: [...], '2024': [...], '2023': [...] }` renders as `2023`, `2024`, `Newest`. To keep numeric labels in the order you wrote them, make them non-integer strings (for example `'Year 2024'`).
+
 ```tsx
 import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

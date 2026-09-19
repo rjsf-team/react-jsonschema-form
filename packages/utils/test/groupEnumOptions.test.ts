@@ -29,23 +29,24 @@ describe('groupEnumOptions', () => {
   });
 
   describe('enumDisabled matching', () => {
-    it('matches primitive enumDisabled values by their string form', () => {
-      const numericOptions: EnumOptionsType[] = [
-        { value: 1, label: '1' },
-        { value: 2, label: '2' },
-      ];
-      const result = groupEnumOptions(numericOptions, undefined, ['1']);
-      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([true, false]);
-    });
-    it('matches object enumDisabled values only by reference, and never by string form', () => {
-      const two = { id: 2 };
+    it('matches enumDisabled values strictly, so a mixed-type enum only disables the listed type', () => {
       const mixedOptions: EnumOptionsType[] = [
+        { value: 1, label: 'number' },
+        { value: '1', label: 'string' },
+      ];
+      const result = groupEnumOptions(mixedOptions, { Numbers: [1] }, [1]);
+      const [group, ungrouped] = result;
+      expect(isEnumOptionsGroup(group) && group.options.map((o) => [o.value, o.disabled])).toEqual([[1, true]]);
+      expect(!isEnumOptionsGroup(ungrouped) && [ungrouped.value, ungrouped.disabled]).toEqual(['1', false]);
+    });
+    it('matches object enumDisabled values only by reference', () => {
+      const two = { id: 2 };
+      const objectOptions: EnumOptionsType[] = [
         { value: { id: 1 }, label: 'One' },
         { value: two, label: 'Two' },
-        { value: 'x', label: 'X' },
       ];
-      const result = groupEnumOptions(mixedOptions, undefined, [{ id: 1 }, two, '[object Object]'] as any);
-      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([false, true, false]);
+      const result = groupEnumOptions(objectOptions, undefined, [{ id: 1 }, two] as any);
+      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([false, true]);
     });
   });
 
@@ -61,6 +62,14 @@ describe('groupEnumOptions', () => {
         expect(result[1].label).toBe('Group B');
         expect(result[1].options.map((o) => o.value)).toEqual(['baz']);
       }
+    });
+    it('orders integer-like group labels ahead of other labels, following JavaScript property order', () => {
+      const result = groupEnumOptions(options, { Newest: ['foo', 'bar'], '2024': ['baz'], '2023': ['qux'] });
+      expect(result.map((item) => (isEnumOptionsGroup(item) ? item.label : undefined))).toEqual([
+        '2023',
+        '2024',
+        'Newest',
+      ]);
     });
     it('appends options not claimed by any group after the groups, preserving relative order', () => {
       const result = groupEnumOptions(options, { 'Group A': ['baz'] });
