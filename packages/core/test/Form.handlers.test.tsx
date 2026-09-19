@@ -2,9 +2,10 @@ import { createRef, useEffect } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import type Form from '../src/index.ts';
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
@@ -507,7 +508,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_extra')).toHaveValue('preset');
     });
-    it('should keep a switch to a null oneOf option in an uncontrolled form when an unrelated prop changes', async () => {
+    describe('should keep a switch to a null oneOf option while applying an unrelated prop change', () => {
       const schema: RJSFSchema = {
         type: 'object',
         oneOf: [
@@ -522,13 +523,120 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         default: { types: 'advanced', content: 'placeholder' },
       };
       const experimental_defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
-      const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior });
+      const uiSchema: UiSchema = { 'ui:disabled': true };
 
-      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
-      rerender({ schema, experimental_defaultFormStateBehavior, uiSchema: { 'ui:title': 'Changed' } });
+      it('uncontrolled', async () => {
+        const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior });
 
-      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
-      expect(node.querySelector('#root_content')).not.toBeInTheDocument();
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+        rerender({ schema, experimental_defaultFormStateBehavior, uiSchema });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toBeDisabled();
+        expect(node.querySelector('#root_content')).not.toBeInTheDocument();
+      });
+      it('controlled', async () => {
+        let currentFormData: unknown;
+        const onChange = (event: IChangeEvent) => {
+          currentFormData = event.formData;
+        };
+        const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior, onChange });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+        rerender({ schema, formData: currentFormData, experimental_defaultFormStateBehavior, onChange });
+        rerender({ schema, formData: currentFormData, experimental_defaultFormStateBehavior, onChange, uiSchema });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toBeDisabled();
+      });
+      it('controlled, with the parent storing the emitted undefined as null', async () => {
+        let currentFormData: unknown;
+        const onChange = (event: IChangeEvent) => {
+          currentFormData = event.formData ?? null;
+        };
+        const { node, rerender } = createFormComponent({ schema, experimental_defaultFormStateBehavior, onChange });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+        rerender({ schema, formData: currentFormData, experimental_defaultFormStateBehavior, onChange });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+        expect(node.querySelector('#root_content')).not.toBeInTheDocument();
+      });
+      it('uncontrolled, nested with sibling data', async () => {
+        const nestedSchema: RJSFSchema = {
+          type: 'object',
+          properties: { other: { type: 'string', title: 'Other' }, cfg: schema },
+        };
+        const { node, rerender } = createFormComponent({ schema: nestedSchema, experimental_defaultFormStateBehavior });
+
+        await user.type(node.querySelector<HTMLInputElement>('#root_other')!, 'x');
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')!, '1');
+        rerender({ schema: nestedSchema, experimental_defaultFormStateBehavior, uiSchema: { cfg: uiSchema } });
+
+        expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toHaveValue('1');
+        expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toBeDisabled();
+        expect(node.querySelector('#root_cfg_content')).not.toBeInTheDocument();
+        expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('x');
+      });
+      it('controlled, with liveValidate and the parent storing the emitted undefined as null', async () => {
+        const invalidDefaultSchema: RJSFSchema = {
+          ...schema,
+          oneOf: [
+            {
+              type: 'object',
+              properties: { types: { const: 'advanced' }, content: { type: 'string', minLength: 50 } },
+              required: ['types'],
+            },
+            { title: 'No Configuration', type: 'null' },
+          ],
+        };
+        let currentFormData: unknown;
+        const onChange = (event: IChangeEvent) => {
+          currentFormData = event.formData ?? null;
+        };
+        const ref = createRef<Form>();
+        const props = {
+          schema: invalidDefaultSchema,
+          experimental_defaultFormStateBehavior,
+          liveValidate: true,
+          onChange,
+          ref,
+        };
+        const { node, rerender } = createFormComponent(props);
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+        const errorsBeforeReply = ref.current!.state.errors;
+        rerender({ ...props, formData: currentFormData });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+        expect(ref.current!.state.errors).toEqual(errorsBeforeReply);
+      });
+    });
+    it('should keep a form value set in the same render as an unrelated prop change', async () => {
+      const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const ref = createRef<Form>();
+      const { node, rerender } = createFormComponent({ schema, ref });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'a');
+      act(() => {
+        ref.current!.setFieldValue('name', 'x');
+        rerender({ schema, ref, disabled: true });
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('x');
+    });
+    it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
+      const ref = createRef<Form>();
+      const { rerender } = createFormComponent({ schema, ref });
+      act(() => {
+        ref.current!.validateForm();
+      });
+      expect(ref.current!.state.errors).toHaveLength(1);
+
+      rerender({ schema, ref, noValidate: true });
+
+      expect(ref.current!.state.errors).toHaveLength(0);
     });
     it('should apply the defaults of a changed experimental_defaultFormStateBehavior to echoed formData', () => {
       const schema: RJSFSchema = {

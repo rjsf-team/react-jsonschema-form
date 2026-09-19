@@ -504,11 +504,17 @@ export default class Form<
         !isStateDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
-      // The parent handing back the `formData` the form just emitted through `onChange`, with nothing that feeds the
-      // defaults changed. `validator` and `experimental_customMergeAllOf` are left out because they are compared by
-      // reference, and parents commonly create them inline on every render
+      // `getStateFromProps` re-derives an uncontrolled form from its own state, and a parent may store the `undefined`
+      // that a switch to a root `null` option emits as `null`, so both count as handing back the form's own data
+      const isOwnFormData =
+        !isStateDataChanged ||
+        this.props.formData === undefined ||
+        (this.props.formData === null && this.state.formData === undefined);
+      // The parent handing back the form's own data with nothing that feeds the defaults changed. `validator` and
+      // `experimental_customMergeAllOf` are left out because they are compared by reference, and parents commonly
+      // create them inline on every render
       const isEchoOfState =
-        !isStateDataChanged &&
+        isOwnFormData &&
         !isSchemaChanged &&
         deepEquals(prevProps.experimental_defaultFormStateBehavior, this.props.experimental_defaultFormStateBehavior);
       return { nextState, shouldUpdate, isEchoOfState };
@@ -535,7 +541,22 @@ export default class Form<
 
       if (isEchoOfState && nextStateDiffersFromProps) {
         // Re-deriving defaults from echoed data can undo what `processPendingChange` resolved, such as a switch to a
-        // oneOf/anyOf option whose data the root `default` would otherwise replace, so keep the state as it is
+        // oneOf/anyOf option whose data the root `default` would otherwise replace, so that data is kept while the
+        // rest of the recomputed state (`uiSchema`, `registry`, `schemaUtils`) is still applied. It comes from
+        // `this.state` rather than `prevState` so a state update batched into this render, like `setFieldValue()`, is
+        // not undone. When `nextState` may have live validated the re-derived data, the errors of the kept data come
+        // along too, otherwise `nextState` holds the current errors adjusted for `noValidate` and `extraErrors`
+        const { formData, retrievedSchema, errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } =
+          this.state;
+        // oxlint-disable-next-line typescript/no-deprecated
+        const mayHaveLiveValidated = this.props.liveValidate && !this.props.noValidate;
+        // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
+        this.setState({
+          ...nextState,
+          formData,
+          retrievedSchema,
+          ...(mayHaveLiveValidated && { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema }),
+        });
         return;
       }
 
