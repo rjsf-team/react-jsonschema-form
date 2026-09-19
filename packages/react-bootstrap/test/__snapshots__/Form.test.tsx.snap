@@ -2948,6 +2948,55 @@ exports[`select widget from oneOf constants without a type 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Yes"
+            value="0"
+          >
+            Yes
+          </option>
+          <option
+            id="No"
+            value="1"
+          >
+            No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form

@@ -2065,16 +2065,47 @@ describe('oneOf', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: consts[0] }), 'root');
     });
 
-    it('should render a checkbox for boolean consts of exactly true and false', () => {
+    it('should render a select with the titles of boolean consts of exactly true and false', async () => {
       const schema: RJSFSchema = {
         oneOf: [
           { title: 'Yes', const: true },
           { title: 'No', const: false },
         ],
       };
-      const { node } = createFormComponent({ schema });
+      const { node, onChange } = createFormComponent({ schema });
 
-      expect(node.querySelector('input#root[type=checkbox]')).toBeInTheDocument();
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect([...select!.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+
+      await user.selectOptions(select!, select!.options[2]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    it('should not infer a type or write form data for an empty oneOf', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
+      const { node, onChange } = createFormComponent({ schema, formData: {} });
+
+      expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['0', 0, 'input#root_myprop'],
+      ['false', false, 'input#root_myprop[type=checkbox]'],
+      ['an empty string', '', 'input#root_myprop[type=text]'],
+    ])('should render a falsy const of %s selected through a $ref option', (_, value, selector) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { myprop: { oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/falsy' }] } },
+        $defs: { falsy: { title: 'falsy', const: value } },
+      };
+      const { node } = createFormComponent({ schema, formData: { myprop: value } });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector(selector)).toBeInTheDocument();
     });
 
     it('should not infer a type for object consts', () => {

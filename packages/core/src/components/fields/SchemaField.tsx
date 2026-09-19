@@ -64,7 +64,12 @@ function inferSelectType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): S {
   const options = schema[ONE_OF_KEY] ?? schema[ANY_OF_KEY];
-  if (getSchemaType<S>(schema) !== undefined || !Array.isArray(options) || !schemaUtils.isSelect(schema)) {
+  if (
+    getSchemaType<S>(schema) !== undefined ||
+    !Array.isArray(options) ||
+    options.length === 0 ||
+    !schemaUtils.isSelect(schema)
+  ) {
     return schema;
   }
   const values = new Set(options.map((option) => toConstant<S>(option as S)));
@@ -76,10 +81,9 @@ function inferSelectType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   if (nonNullTypes.length === 0) {
     return { ...schema, type: 'null' };
   }
-  // BooleanField's default checkbox can only emit `true` or `false`, so any other set of boolean constants (e.g. with a
-  // `null` option, or only `true`) would leave options unreachable or write a value no option allows
-  const isTrueAndFalse = values.size === 2 && values.has(true) && values.has(false);
-  if (nonNullTypes.length === 1 && (nonNullTypes[0] !== 'boolean' || isTrueAndFalse)) {
+  // Booleans are excluded because BooleanField's default checkbox drops the option titles, and can only emit `true` or
+  // `false`, so any other set of boolean constants would leave options unreachable or write a value no option allows
+  if (nonNullTypes.length === 1 && nonNullTypes[0] !== 'boolean') {
     return { ...schema, type: nonNullTypes[0] };
   }
   // Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), but the select

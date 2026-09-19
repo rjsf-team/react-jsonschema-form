@@ -38,6 +38,22 @@ const cases: { schema: object; expected: string | undefined }[] = [
     expected: 'number',
   },
   {
+    schema: { const: 0 },
+    expected: 'number',
+  },
+  {
+    schema: { const: false },
+    expected: 'boolean',
+  },
+  {
+    schema: { const: '' },
+    expected: 'string',
+  },
+  {
+    schema: { const: null },
+    expected: 'null',
+  },
+  {
     schema: { type: ['string', 'null'] },
     expected: 'string',
   },

@@ -1379,4 +1379,14 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} formData validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
+  test('select widget from oneOf true and false constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={false} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

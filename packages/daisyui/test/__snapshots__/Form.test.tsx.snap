@@ -4144,6 +4144,105 @@ exports[`select widget from oneOf constants without a type 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                No
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Yes
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    No
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <form
