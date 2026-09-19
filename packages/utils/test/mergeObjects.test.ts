@@ -111,5 +111,14 @@ describe('mergeObjects()', () => {
     it('should replace an array on the left with the object on the right', () => {
       expect(mergeObjects({ a: [1] }, { a: { b: 1 } })).toEqual({ a: { b: 1 } });
     });
+
+    it('keeps a JSON-sourced __proto__ or constructor key as own data without touching any prototype', () => {
+      const obj2 = JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"c": 1}}');
+      const result = mergeObjects({ a: 1 }, obj2);
+      expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+      expect(Object.getOwnPropertyDescriptor(result, '__proto__')!.value).toEqual({ polluted: true });
+      expect(Object.getOwnPropertyDescriptor(result, 'constructor')!.value).toEqual({ c: 1 });
+      expect(({} as { polluted?: boolean }).polluted).toBeUndefined();
+    });
   });
 });

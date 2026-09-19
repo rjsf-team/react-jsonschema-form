@@ -47,6 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
 - Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
 - Fixed `replaceEqualDeep()` reading an inherited member of the previous value for a JSON-sourced `__proto__` or `constructor` key, which handed `Object.prototype` back as shared form data
+- Fixed `mergeObjects()` reading an inherited member of the first object for a JSON-sourced `__proto__` or `constructor` key, and assigning a merged `__proto__` key through the setter, which replaced the result's prototype with the merged value
 
 ## Dev / docs / playground
 
