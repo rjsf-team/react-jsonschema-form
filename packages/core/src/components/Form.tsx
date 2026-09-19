@@ -689,7 +689,10 @@ export default class Form<
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     // oxlint-disable-next-line typescript/no-deprecated
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    // `'onBlur'` owns its validation pass in `onBlur()`; deriving state must not run one for it, or the errors show
+    // up before the field the user is editing has been left
+    // oxlint-disable-next-line typescript/no-deprecated
+    const mustValidate = edit && !props.noValidate && (liveValidate === true || liveValidate === 'onChange');
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -781,15 +784,11 @@ export default class Form<
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       }
-      if (!props.liveValidate) {
-        return {
-          errors: state.schemaValidationErrors || [],
-          errorSchema: state.schemaValidationErrorSchema || {},
-        };
-      }
+      // `extraErrors` and `customErrors` are merged in below, so the base has to be the validator's own result;
+      // `state.errors` already carries them and would merge each in a second time
       return {
-        errors: state.errors || [],
-        errorSchema: state.errorSchema || {},
+        errors: state.schemaValidationErrors || [],
+        errorSchema: state.schemaValidationErrorSchema || {},
       };
     };
 
@@ -803,7 +802,7 @@ export default class Form<
         schemaUtils,
         state.errorSchema,
         formData,
-        undefined,
+        props.extraErrors,
         state.customErrors,
         retrievedSchema,
         // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
