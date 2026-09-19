@@ -129,6 +129,32 @@ describe('createSchemaUtils()', () => {
       expect(utils.retrieveSchema(schema, { foo: 'bar' })).toBe(first);
     });
 
+    it('re-resolves against form data that was mutated in place', () => {
+      const conditional: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string' } },
+        dependencies: { k: { properties: { extra: { type: 'string' } } } },
+      };
+      const utils = createSchemaUtils(testValidator, rootSchema);
+      const data: { k?: string } = {};
+      expect(utils.retrieveSchema(conditional, data).properties).not.toHaveProperty('extra');
+      data.k = 'a';
+      expect(utils.retrieveSchema(conditional, data).properties).toHaveProperty('extra');
+    });
+
+    it('keeps a stable result per resolveAnyOfOrOneOfRefs value when callers alternate', () => {
+      const withRefs: RJSFSchema = {
+        definitions: { s: { type: 'string' } },
+        oneOf: [{ $ref: '#/definitions/s' }, { type: 'number' }],
+      };
+      const utils = createSchemaUtils(testValidator, withRefs);
+      const plain = utils.retrieveSchema(withRefs, {});
+      const resolved = utils.retrieveSchema(withRefs, {}, true);
+      expect(resolved).not.toEqual(plain);
+      expect(utils.retrieveSchema(withRefs, {})).toBe(plain);
+      expect(utils.retrieveSchema(withRefs, {}, true)).toBe(resolved);
+    });
+
     it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {
       const utils = createSchemaUtils(testValidator, rootSchema);
       const first = utils.retrieveSchema(true as unknown as RJSFSchema, {});

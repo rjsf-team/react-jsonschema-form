@@ -48,20 +48,13 @@ class SchemaUtils<
   validator: ValidatorType<T, S, F>;
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
-  /** The last `retrieveSchema()` call per input schema: unchanged inputs skip resolution, changed ones share every
-   * unchanged subtree with the previous result, so consumers comparing by reference see an unchanged schema as such.
-   *
-   * Both inputs are matched by identity, which makes this correct only while a caller treats the data it passes as
-   * frozen from that point on. Mutating a `rawFormData` object after handing it here leaves the entry keyed to data
-   * it no longer describes, and structural sharing makes that easy to do by accident: `replaceEqualDeep()` returns
-   * the value it was given when nothing could be shared back, so the object a caller just resolved a schema against
-   * can be the very object that becomes the committed form data. Change data by building a new object, never in
-   * place.
+  /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
+   * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
+   * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
+   * refs yields a differently shaped result, so it gets a slot of its own rather than evicting the plain one.
    */
-  private lastRetrievedSchemas = new WeakMap<
-    object,
-    { rawFormData?: T; resolveAnyOfOrOneOfRefs?: boolean; result: S }
-  >();
+  private lastRetrievedSchemas = new WeakMap<object, S>();
+  private lastRetrievedSchemasWithRefs = new WeakMap<object, S>();
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
@@ -343,16 +336,9 @@ class SchemaUtils<
     // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
     // `WeakMap` refuses it as a key
     const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
-    const cached = cacheKey && this.lastRetrievedSchemas.get(cacheKey);
-    if (
-      cached &&
-      Object.is(cached.rawFormData, rawFormData) &&
-      cached.resolveAnyOfOrOneOfRefs === resolveAnyOfOrOneOfRefs
-    ) {
-      return cached.result;
-    }
+    const cache = resolveAnyOfOrOneOfRefs ? this.lastRetrievedSchemasWithRefs : this.lastRetrievedSchemas;
     const result = replaceEqualDeep(
-      cached?.result,
+      cacheKey && cache.get(cacheKey),
       retrieveSchema<T, S, F>(
         this.validator,
         schema,
@@ -363,7 +349,7 @@ class SchemaUtils<
       ),
     );
     if (cacheKey) {
-      this.lastRetrievedSchemas.set(cacheKey, { rawFormData, resolveAnyOfOrOneOfRefs, result });
+      cache.set(cacheKey, result);
     }
     return result;
   }
