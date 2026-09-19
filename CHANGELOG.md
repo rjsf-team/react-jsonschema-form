@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed a `oneOf`/`anyOf` whose options are all constants (`const` or single-value `enum`) rendering as an unsupported field when the schema omits `type`, including one nested behind another `oneOf`/`anyOf` option. `SchemaField` now infers the `type` from the primitive constant values so the select renders, using `string` when the constants mix types so option order can't route them to a field that coerces or drops values, fixing [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
+- Fixed a `oneOf`/`anyOf` whose options are all constants (`const` or single-value `enum`) rendering as an unsupported field when the schema omits `type`, including one nested behind another `oneOf`/`anyOf` option. `SchemaField` now infers the `type` from the primitive constant values so the select renders, using `string` (a select) when the constants mix types, or are booleans other than exactly `true` and `false`, so they aren't routed to a field that coerces or drops values, fixing [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
 
 ## @rjsf/validator-ata
 
@@ -28,7 +28,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Added `oneOf`/`anyOf` fields with constant options and no `type` (including mixed-type constants and a `oneOf` nested behind a `$ref`) to the playground's `One Of` and `Any Of` samples, and matching form snapshot tests for every theme, for [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
+- Added `oneOf`/`anyOf` fields with constant options and no `type` (including mixed-type constants, boolean constants with a `null` option and a `oneOf` nested behind a `$ref`) to the playground's `One Of` and `Any Of` samples, and matching form snapshot tests for every theme, for [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666)
 
 # 6.10.1
 

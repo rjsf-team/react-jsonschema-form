@@ -1825,6 +1825,42 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="0"
+        >
+          Subscribed
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from anyOf constants of mixed types without a type 1`] = `
 <DocumentFragment>
   <form
@@ -1856,6 +1892,52 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           value="2"
         >
           Unlimited
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="0"
+        >
+          Unknown
+        </option>
+        <option
+          value="1"
+        >
+          Yes
+        </option>
+        <option
+          value="2"
+        >
+          No
         </option>
       </select>
     </div>

@@ -1361,4 +1361,22 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} formData={{ region: 'DE' }} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
+  test('select widget from oneOf boolean constants with a null option without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: null, title: 'Unknown' },
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={null} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a single anyOf boolean constant without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [{ const: true, title: 'Subscribed' }],
+    };
+    const { asFragment } = render(<Form schema={schema} formData validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

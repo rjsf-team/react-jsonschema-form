@@ -24,6 +24,14 @@ const oneOf: Sample = {
           { title: 'Unlimited', const: 'unlimited' },
         ],
       },
+      answer: {
+        title: 'Answer (boolean constants with a null option)',
+        oneOf: [
+          { title: 'Unknown', const: null },
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      },
     },
     $defs: {
       europe: {

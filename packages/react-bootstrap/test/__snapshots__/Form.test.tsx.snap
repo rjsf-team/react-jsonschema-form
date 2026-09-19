@@ -2746,6 +2746,49 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Subscribed"
+            value="0"
+          >
+            Subscribed
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from anyOf constants of mixed types without a type 1`] = `
 <DocumentFragment>
   <form
@@ -2785,6 +2828,61 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             value="2"
           >
             Unlimited
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            id="Unknown"
+            value="0"
+          >
+            Unknown
+          </option>
+          <option
+            id="Yes"
+            value="1"
+          >
+            Yes
+          </option>
+          <option
+            id="No"
+            value="2"
+          >
+            No
           </option>
         </select>
       </div>

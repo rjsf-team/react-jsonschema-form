@@ -67,7 +67,8 @@ function inferSelectType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   if (getSchemaType<S>(schema) !== undefined || !Array.isArray(options) || !schemaUtils.isSelect(schema)) {
     return schema;
   }
-  const types = [...new Set(options.map((option) => guessType(toConstant<S>(option as S))))];
+  const values = new Set(options.map((option) => toConstant<S>(option as S)));
+  const types = [...new Set([...values].map(guessType))];
   if (!types.every((type) => PRIMITIVE_TYPES.includes(type))) {
     return schema;
   }
@@ -75,9 +76,15 @@ function inferSelectType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   if (nonNullTypes.length === 0) {
     return { ...schema, type: 'null' };
   }
+  // BooleanField's default checkbox can only emit `true` or `false`, so any other set of boolean constants (e.g. with a
+  // `null` option, or only `true`) would leave options unreachable or write a value no option allows
+  const isTrueAndFalse = values.size === 2 && values.has(true) && values.has(false);
+  if (nonNullTypes.length === 1 && (nonNullTypes[0] !== 'boolean' || isTrueAndFalse)) {
+    return { ...schema, type: nonNullTypes[0] };
+  }
   // Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), but the select
   // widget maps each option back to its original constant, so `string` can represent any mix
-  return { ...schema, type: nonNullTypes.length === 1 ? nonNullTypes[0] : 'string' };
+  return { ...schema, type: 'string' };
 }
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the

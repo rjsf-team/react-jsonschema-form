@@ -2047,6 +2047,36 @@ describe('oneOf', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }), 'root');
     });
 
+    it.each([
+      ['null, true and false', [null, true, false]],
+      ['null and true', [null, true]],
+      ['only true', [true]],
+    ])('should render a select of boolean consts with %s', async (_, consts) => {
+      const schema: RJSFSchema = { oneOf: consts.map((value) => ({ const: value })) };
+      const { node, onChange } = createFormComponent({ schema });
+
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(select!.options).toHaveLength(consts.length + 1);
+
+      await user.selectOptions(select!, select!.options[1]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: consts[0] }), 'root');
+    });
+
+    it('should render a checkbox for boolean consts of exactly true and false', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root[type=checkbox]')).toBeInTheDocument();
+    });
+
     it('should not infer a type for object consts', () => {
       const schema: RJSFSchema = {
         oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }],

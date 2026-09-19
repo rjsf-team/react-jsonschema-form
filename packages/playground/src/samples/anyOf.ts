@@ -23,6 +23,13 @@ const anyOf: Sample = {
           { title: 'Phone', type: 'string', enum: ['phone'] },
         ],
       },
+      subscribed: {
+        title: 'Subscribed (a single boolean constant with a null option)',
+        anyOf: [
+          { title: 'Not answered', const: null },
+          { title: 'Subscribed', const: true },
+        ],
+      },
       items: {
         type: 'array',
         items: {
