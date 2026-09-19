@@ -3787,4 +3787,48 @@ describe('ArrayField', () => {
       expectToHaveBeenCalledWithFormData(onSubmit, { arrayList: [{ name: 'John' }] }, true);
     });
   });
+
+  describe('External formData replacement', () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+    const templates = {
+      ArrayFieldTemplate: ExposedArrayKeyTemplate,
+      ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+    };
+    const rowKeys = (node: Element) =>
+      Array.from(node.querySelectorAll('.rjsf-array-item')).map((row) => row.getAttribute(ArrayKeyDataAttr));
+
+    it('should keep the row keys and render the new items when the length is unchanged', () => {
+      const { node, rerender } = createFormComponent({ schema, formData: ['foo', 'bar'], templates });
+      const startKeys = rowKeys(node);
+      expect(startKeys).toHaveLength(2);
+
+      rerender({ schema, formData: ['baz', 'qux'], templates });
+
+      expect(rowKeys(node)).toEqual(startKeys);
+      expect(node.querySelector<HTMLInputElement>('#root_0')).toHaveValue('baz');
+      expect(node.querySelector<HTMLInputElement>('#root_1')).toHaveValue('qux');
+    });
+
+    it('should regenerate every row key when the length changes', () => {
+      const { node, rerender } = createFormComponent({ schema, formData: ['foo', 'bar'], templates });
+      const startKeys = rowKeys(node);
+
+      rerender({ schema, formData: ['foo'], templates });
+
+      const endKeys = rowKeys(node);
+      expect(endKeys).toHaveLength(1);
+      expect(endKeys[0]).not.toEqual(startKeys[0]);
+    });
+
+    it('should regenerate every row key when the replacement is longer', () => {
+      const { node, rerender } = createFormComponent({ schema, formData: ['foo'], templates });
+      const startKeys = rowKeys(node);
+
+      rerender({ schema, formData: ['foo', 'bar'], templates });
+
+      const endKeys = rowKeys(node);
+      expect(endKeys).toHaveLength(2);
+      expect(endKeys).not.toContain(startKeys[0]);
+    });
+  });
 });
