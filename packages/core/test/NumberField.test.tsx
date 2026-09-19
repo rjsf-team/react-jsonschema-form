@@ -15,70 +15,51 @@ const user = userEvent.setup();
 
 describe('NumberField', () => {
   describe('Number widget', () => {
-    it('should use step to represent the multipleOf keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          multipleOf: 5,
-        },
+    describe('with a native number input (ui:options.inputType is number)', () => {
+      const uiSchema: UiSchema = { 'ui:options': { inputType: 'number' } };
+
+      it('should use step to represent the multipleOf keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', multipleOf: 5 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('step', '5');
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('step', '5');
+      it('should use min to represent the minimum keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', minimum: 0 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('min', '0');
+      });
+
+      it('should use max to represent the maximum keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', maximum: 100 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('max', '100');
+      });
     });
 
-    it('should use min to represent the minimum keyword', () => {
+    it('should not put step, min or max, which only a native number input honors, on the default text input', () => {
       const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          minimum: 0,
-        },
+        schema: { type: 'integer', multipleOf: 5, minimum: 0, maximum: 100 },
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('min', '0');
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).not.toHaveAttribute('step');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
     });
 
-    it('should use max to represent the maximum keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          maximum: 100,
-        },
-      });
+    it.each([
+      ['a very small number', 'number', 0.0000001, '1e-7'],
+      ['a very large number', 'number', 1e21, '1e+21'],
+      ['a small negative number with a fraction', 'number', -1.5e-9, '-1.5e-9'],
+      ['a very large integer', 'integer', 1e21, '1e+21'],
+    ])('should let the browser accept %s that JavaScript renders with an exponent', (_, type, formData, rendered) => {
+      const { node } = createFormComponent({ schema: { type: type as 'number' | 'integer' }, formData });
 
-      expect(node.querySelector('input')).toHaveAttribute('max', '100');
-    });
-
-    it('should use step to represent the multipleOf keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          multipleOf: 5,
-        },
-      });
-
-      expect(node.querySelector('input')).toHaveAttribute('step', '5');
-    });
-
-    it('should use min to represent the minimum keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          minimum: 0,
-        },
-      });
-
-      expect(node.querySelector('input')).toHaveAttribute('min', '0');
-    });
-
-    it('should use max to represent the maximum keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          maximum: 100,
-        },
-      });
-
-      expect(node.querySelector('input')).toHaveAttribute('max', '100');
+      const input = node.querySelector('input')!;
+      expect(input).toHaveValue(rendered);
+      expect(input.checkValidity()).toBe(true);
     });
 
     it('should handle the allowClearTextInputs clear button the same as an empty string change event, not storing "" in a number slot', async () => {
@@ -841,6 +822,30 @@ describe('NumberField', () => {
 
       expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
       expect(receivedValue).toBe(2.3);
+    });
+
+    it('should let the browser accept the "." formatted value a custom widget renders through BaseInputTemplate', () => {
+      const CustomWidget = ({ registry, ...props }: WidgetProps) => (
+        <registry.templates.BaseInputTemplate {...props} registry={registry} />
+      );
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:widget': 'custom',
+        },
+        widgets: {
+          custom: CustomWidget,
+        },
+        formData: 2.3,
+      });
+
+      // NumberField only comma-formats the value for the built-in text widget, so this input keeps "2.3"
+      const input = node.querySelector('input')!;
+      expect(input).toHaveValue('2.3');
+      expect(input.checkValidity()).toBe(true);
     });
   });
 });

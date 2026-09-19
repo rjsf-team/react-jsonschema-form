@@ -92,8 +92,8 @@ export default function BaseInputTemplate<
     min,
     max,
     accept,
-    inputMode,
-    pattern,
+    ...(inputMode === undefined ? {} : { inputMode }),
+    ...(pattern === undefined ? {} : { pattern }),
     ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
