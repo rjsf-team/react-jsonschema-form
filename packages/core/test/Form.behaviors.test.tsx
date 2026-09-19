@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
@@ -160,6 +161,58 @@ describe('Live validation onBlur', () => {
     await user.tab();
 
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  describe('when the data is replaced from outside the form', () => {
+    const objectSchema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+    };
+
+    function ReplacingParent({ extraErrors, formRef }: Pick<FormProps, 'extraErrors'> & { formRef?: Ref<Form> }) {
+      const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
+      return (
+        <>
+          <button type='button' onClick={() => setValue({ name: 'short', other: 'zzz' })}>
+            replace
+          </button>
+          <Form
+            ref={formRef}
+            schema={objectSchema}
+            validator={validator}
+            liveValidate='onBlur'
+            extraErrors={extraErrors}
+            formData={value}
+            onChange={(event) => setValue(event.formData)}
+          />
+        </>
+      );
+    }
+
+    it('does not validate: the errors still wait for a blur', async () => {
+      const { container } = render(<ReplacingParent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+      await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+      await user.tab();
+
+      expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+    });
+
+    it('carries each extraError over exactly once', async () => {
+      const formRef = createRef<Form>();
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(<ReplacingParent extraErrors={extraErrors} formRef={formRef} />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(formRef.current!.state.errors).toEqual([
+        expect.objectContaining({ property: '.name', message: 'from the server' }),
+      ]);
+    });
   });
 });
 

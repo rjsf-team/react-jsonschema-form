@@ -561,8 +561,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const { schema, validator, uiSchema = {}, liveValidate, defaultFormStateBehavior, customMergeAllOf } = props;
     const isUncontrolled = props.formData === undefined;
     const edit = inputFormData !== undefined;
+    // `'onBlur'` owns its validation pass in `onBlur()`; deriving state must not run one for it, or the errors show
+    // up before the field the user is editing has been left
     // oxlint-disable-next-line typescript/no-deprecated
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate === 'onChange';
     let { schemaUtils, hasNestedConditionalSchema } = state;
     if (
       !schemaUtils ||
@@ -643,7 +645,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       }
-      if (!props.liveValidate) {
+      // `extraErrors` and `customErrors` are merged in below, so the base has to be the validator's own result.
+      // `state.errors` already carries them, and is only safe to reuse when live validation has just produced it,
+      // which is the `'onChange'` pass that asked to be skipped
+      if (props.liveValidate !== 'onChange') {
         return {
           errors: state.schemaValidationErrors || [],
           errorSchema: state.schemaValidationErrorSchema || {},

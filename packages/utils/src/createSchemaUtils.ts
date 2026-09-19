@@ -49,7 +49,14 @@ class SchemaUtils<
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
   /** The last `retrieveSchema()` call per input schema: unchanged inputs skip resolution, changed ones share every
-   * unchanged subtree with the previous result, so consumers comparing by reference see an unchanged schema as such
+   * unchanged subtree with the previous result, so consumers comparing by reference see an unchanged schema as such.
+   *
+   * Both inputs are matched by identity, which makes this correct only while a caller treats the data it passes as
+   * frozen from that point on. Mutating a `rawFormData` object after handing it here leaves the entry keyed to data
+   * it no longer describes, and structural sharing makes that easy to do by accident: `replaceEqualDeep()` returns
+   * the value it was given when nothing could be shared back, so the object a caller just resolved a schema against
+   * can be the very object that becomes the committed form data. Change data by building a new object, never in
+   * place.
    */
   private lastRetrievedSchemas = new WeakMap<
     object,
