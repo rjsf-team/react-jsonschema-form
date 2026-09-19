@@ -52059,6 +52059,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               id="root"
               name="root"
               placeholder=""
+              step="any"
               type="number"
               value=""
             />

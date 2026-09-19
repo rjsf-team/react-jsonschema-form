@@ -13824,6 +13824,7 @@ exports[`single fields > up/down field 1`] = `
             id="root"
             name="root"
             placeholder=""
+            step="any"
             type="number"
             value=""
           />

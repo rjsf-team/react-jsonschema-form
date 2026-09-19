@@ -32,8 +32,9 @@ function getNumericPattern(isInteger: boolean) {
  * @param [defaultType] - The default type, if any, for the field provided by the widget
  * @param [options={}] - The UI Options for the field provided by the widget
  * @param [plainNativeInput=true] - Whether the theme renders a plain native `<input>`. When true, a number or integer
- *   field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`, and an explicit
- *   `inputType` of `number` gets `step="any"` for a `number` field; pass false for a theme with its own numeric widget
+ *   field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`, and a `number`
+ *   field that resolves to a native `number` input (via `inputType` or a `defaultType` of `number`) gets `step="any"`;
+ *   pass false for a theme with its own numeric widget
  * @returns - The extracted `InputPropsType` object
  */
 export default function getInputProps<
@@ -54,15 +55,6 @@ export default function getInputProps<
   // If options.inputType is set use that as the input type
   if (options.inputType) {
     inputProps.type = options.inputType;
-    // Without a `step`, a native number input treats a decimal as a step mismatch and blocks submit
-    if (
-      plainNativeInput &&
-      options.inputType === 'number' &&
-      schema.type === 'number' &&
-      inputProps.step === undefined
-    ) {
-      inputProps.step = 'any';
-    }
   } else if (!defaultType && (schema.type === 'number' || schema.type === 'integer')) {
     if (plainNativeInput) {
       // A native <input type="number"> is inconsistently keyboard-filtered across browsers, silently
@@ -94,6 +86,12 @@ export default function getInputProps<
       // while typing, so fall back to a text input in locales that use one.
       inputProps.type = getDecimalSeparator() === '.' ? 'number' : 'text';
     }
+  }
+
+  // Without a `step`, a native number input treats a decimal as a step mismatch and blocks submit. Checking the resolved
+  // type covers every way of getting one: `ui:options.inputType`, a widget's `defaultType` (`updown`), or the fallback
+  if (plainNativeInput && inputProps.type === 'number' && schema.type === 'number' && inputProps.step === undefined) {
+    inputProps.step = 'any';
   }
 
   // For date/time input types, propagate formatMinimum/formatMaximum to min/max

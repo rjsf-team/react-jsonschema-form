@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
+import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
 import Form from '../src/index.ts';
 
 describe('MUI Theme-Specific Props', () => {
@@ -105,6 +106,27 @@ describe('MUI Theme-Specific Props', () => {
     expect(input).toHaveAttribute('step', '5');
     expect(input).toHaveAttribute('min', '0');
     expect(input).toHaveAttribute('max', '100');
+  });
+
+  it('should accept the input-only attributes a caller documents for slotProps.htmlInput', () => {
+    // A type-level check: `pnpm run typecheck` fails here if `htmlInput` stops accepting these attributes
+    const muiOptions: BaseInputTemplateMuiProps = {
+      slotProps: { htmlInput: { pattern: '[0-9]*', inputMode: 'numeric', step: 5, min: 0, max: 100, accept: '.pdf' } },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'integer' },
+      },
+    };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: muiOptions } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('pattern', '[0-9]*');
+    expect(input).toHaveAttribute('inputmode', 'numeric');
+    expect(input).toHaveAttribute('step', '5');
   });
 
   it('should apply sx props via FieldTemplate', () => {

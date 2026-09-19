@@ -23,8 +23,9 @@ import { getMuiProps } from '../util.ts';
 export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
-    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
-    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element, including the `<input>`-only
+     * attributes such as `pattern`, `step`, `min`, `max` and `accept`. */
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -85,15 +86,15 @@ export default function BaseInputTemplate<
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
-  // Attributes `getInputProps()` has nothing to say about are left out, and a caller's `slotProps.htmlInput` is spread
-  // after them, so neither an `undefined` nor a derived value can override an attribute the caller set by hand
-  const derivedHtmlInputProps = Object.fromEntries(
-    Object.entries({ step, min, max, accept, inputMode, pattern, autoCapitalize }).filter(
-      ([, attribute]) => attribute !== undefined,
-    ),
-  );
+  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them
   const htmlInputProps = {
-    ...derivedHtmlInputProps,
+    step,
+    min,
+    max,
+    accept,
+    inputMode,
+    pattern,
+    autoCapitalize,
     ...slotProps?.htmlInput,
     ...muiSlotProps?.htmlInput,
     ...(schema.examples ? { list: examplesId(id) } : undefined),

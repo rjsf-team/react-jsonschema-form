@@ -7428,6 +7428,7 @@ exports[`single fields > up/down field 1`] = `
         label=""
         name="root"
         placeholder=""
+        step="any"
         type="number"
         value=""
       />

@@ -269,6 +269,80 @@ describe('NumberField', () => {
         expect($input).toHaveValue('.00');
       });
 
+      describe('signed values', () => {
+        const signedTests = [
+          { input: '-0.5', output: -0.5, display: '-0.5' },
+          { input: '-1.50', output: -1.5, display: '-1.50' },
+          { input: '+5', output: 5, display: '+5' },
+          { input: '-.5', output: -0.5, display: '-0.5' },
+          { input: '+.5', output: 0.5, display: '0.5' },
+          { input: '-.', output: -0, display: '-.' },
+        ];
+
+        signedTests.forEach(({ input, output, display }) => {
+          it(`should keep the sign of an input value of ${input}`, async () => {
+            const { node, onChange } = createFormComponent({
+              schema: {
+                type: 'number',
+              },
+              uiSchema,
+            });
+
+            const $input = node.querySelector('input');
+
+            await user.type($input!, input);
+
+            expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+            expect($input).toHaveValue(display);
+          });
+        });
+
+        const staleTests = [
+          { typed: '-', formData: 7, display: '7' },
+          { typed: '+', formData: 7, display: '7' },
+          { typed: '-5', formData: 5, display: '5' },
+          { typed: '-0.5', formData: 0.5, display: '0.5' },
+          { typed: '5', formData: -5, display: '-5' },
+          { typed: '+5', formData: -5, display: '-5' },
+          { typed: '-0', formData: 5, display: '5' },
+        ];
+
+        staleTests.forEach(({ typed, formData, display }) => {
+          it(`should show a formData of ${formData} set from outside instead of the typed ${typed}`, async () => {
+            const schema: RJSFSchema = {
+              type: 'number',
+            };
+            const { rerender, node } = createFormComponent({
+              ref: createRef(),
+              schema,
+              uiSchema,
+            });
+
+            const $input = node.querySelector('input')!;
+            await user.type($input, typed);
+
+            rerender({ schema, formData });
+
+            expect($input).toHaveValue(display);
+          });
+        });
+
+        it('should keep the minus sign of a negative zero on an integer', async () => {
+          const { node } = createFormComponent({
+            schema: {
+              type: 'integer',
+            },
+            uiSchema,
+          });
+
+          const $input = node.querySelector('input');
+
+          await user.type($input!, '-0');
+
+          expect($input).toHaveValue('-0');
+        });
+      });
+
       it('should update input values correctly when formData prop changes', () => {
         const schema: RJSFSchema = {
           type: 'number',
@@ -731,6 +805,25 @@ describe('NumberField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, 0.05, 'root');
       expect($input).toHaveValue('0,05');
+    });
+
+    it('should keep the sign of a negative value beginning with a comma', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '-,05');
+
+      expectToHaveBeenCalledWithFormData(onChange, -0.05, 'root');
+      expect($input).toHaveValue('-0,05');
     });
 
     it('should not format select widget options with comma (keep dot)', () => {

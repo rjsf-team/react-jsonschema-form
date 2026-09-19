@@ -69,6 +69,34 @@ describe('getInputProps', () => {
     const options: UIOptionsType = { inputType: 'number' };
     expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number', step: 'any' });
   });
+  it('returns step=any when schema has number type and the widget supplies a defaultType of number', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    expect(getInputProps(schema, 'number')).toEqual({ type: 'number', step: 'any' });
+  });
+  it('keeps the multipleOf as the step for a number when the widget supplies a defaultType of number', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+      multipleOf: 0.01,
+    };
+    expect(getInputProps(schema, 'number')).toEqual({ type: 'number', step: 0.01 });
+  });
+  it('does not default step=any for an integer when the widget supplies a defaultType of number', () => {
+    const schema: RJSFSchema = {
+      type: 'integer',
+    };
+    expect(getInputProps(schema, 'number')).toEqual({ type: 'number' });
+  });
+  it('does not default step=any when the widget supplies a defaultType of number and it is not a plain native input', () => {
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    expect(getInputProps(schema, 'number', undefined, false)).toEqual({ type: 'number' });
+  });
+  it('does not default step=any for a string schema with a defaultType of number', () => {
+    expect(getInputProps({ type: 'string' }, 'number')).toEqual({ type: 'number' });
+  });
   it('keeps the multipleOf as the step for a number with an explicit inputType of number', () => {
     const schema: RJSFSchema = {
       type: 'number',
