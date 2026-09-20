@@ -1,12 +1,4 @@
-import type {
-  FieldPathList,
-  FormContextType,
-  RJSFSchema,
-  RJSFValidationError,
-  SchemaUtilsType,
-  StrictRJSFSchema,
-  ValidationData,
-} from '@rjsf/utils';
+import type { FieldPathList, RJSFValidationError, ValidationData } from '@rjsf/utils';
 
 /** The imperative surface a `Form` exposes through its `ref`. It is the supported alternative to holding a ref to the
  * `Form` class instance, whose `state` and lifecycle are internals rather than API. A `Form` will be either
@@ -15,7 +7,7 @@ import type {
  *
  * Only the members listed here are supported. Everything else on the class instance may change without notice.
  */
-export interface FormHandle<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+export interface FormHandle<T = any> {
   /** Returns the form data the `Form` currently renders. It is the read path for a self-owned form, whose data is not
    * otherwise reachable between `onChange` calls (autosave, route guards, a submit button outside the form).
    *
@@ -44,13 +36,10 @@ export interface FormHandle<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
    * @returns - True if the form is valid, false otherwise.
    */
   validateFormWithFormData(formData?: T): boolean;
-  /** Runs the validator over `formData` against `schema` and returns the raw errors without touching form state */
-  validate(
-    formData: T | undefined,
-    schema?: S,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>,
-    retrievedSchema?: S,
-  ): ValidationData<T>;
+  /** Runs the validator over `formData` against the form's schema and returns the raw errors without touching form
+   * state
+   */
+  validate(formData: T | undefined): ValidationData<T>;
   /** Moves focus to the field the given error belongs to */
   focusOnError(error: RJSFValidationError): void;
 }

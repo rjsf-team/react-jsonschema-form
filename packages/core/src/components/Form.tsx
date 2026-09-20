@@ -1083,7 +1083,7 @@ function applySubmit<T, S extends StrictRJSFSchema, F extends FormContextType>(
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends PureComponent<FormProps<T, S, F>, FormState<T, S, F>>
-  implements FormHandle<T, S, F>
+  implements FormHandle<T>
 {
   /** The ref used to hold the rendered form element. `tagName` can swap `<form>` for another element, so the
    * form-only members are reached behind an `instanceof` narrowing rather than assumed present.
@@ -1263,28 +1263,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
   }
 
-  /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
-   * `schemaUtils` in the state), returning the results.
+  /** Validates the `formData` against the form's schema, returning the results.
    *
    * @param formData - The new form data to validate
-   * @param schema - The schema used to validate against
-   * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
-   * @param [retrievedSchema] - An optionally retrieved schema for per
    */
-  validate = (
-    formData: T | undefined,
-    schema = this.state.schema,
-    altSchemaUtils?: SchemaUtilsType<T, S, F>,
-    retrievedSchema?: S,
-  ): ValidationData<T> =>
-    // `FormHandle.validate()` may validate against another schema or validator than the one on display; everything
-    // else about the context, the registry included, stays what rendering uses
-    validateFormData(
-      this.props,
-      { ...this.state, schema, schemaUtils: altSchemaUtils ?? this.state.schemaUtils },
-      formData,
-      retrievedSchema,
-    );
+  validate = (formData: T | undefined): ValidationData<T> => validateFormData(this.props, this.state, formData);
 
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {
