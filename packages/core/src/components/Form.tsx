@@ -863,6 +863,129 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return replaceEqualDeep(current, { ...current, ...next });
 }
 
+/** The state after `reset()`: the data is re-derived from `formData`/`initialFormData` the way an initial render does
+ * it, and every error, including the custom ones fields raised, is cleared. The render context is left as it is.
+ *
+ * @param current - The state being reset
+ * @param props - The current props
+ * @returns - The reset state, sharing every unchanged subtree with `current`
+ */
+function applyReset<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+): FormState<T, S, F> {
+  const { formData: propsFormData, initialFormData } = props;
+  const { formData, initialDefaultsGenerated } = deriveFormState(
+    current,
+    propsFormData ?? (initialFormData === undefined ? IS_RESET : initialFormData),
+    { skipLiveValidate: true, isReset: true },
+    props,
+  );
+  return replaceEqualDeep(current, {
+    ...current,
+    formData,
+    errorSchema: {},
+    errors: [],
+    schemaValidationErrors: [],
+    schemaValidationErrorSchema: {},
+    // Matches what this reset pass actually computed defaults with (see deriveFormState's `isReset` handling), keeping
+    // the flag in sync with the formData it describes — otherwise the next unrelated recompute would treat itself as
+    // an initial pass too and resurrect a `ui:initialValue` the user had since cleared.
+    initialDefaultsGenerated,
+    customErrors: undefined,
+  });
+}
+
+/** The state after a field is blurred: the data with extra data omitted when `liveOmit` is `'onBlur'`, validated when
+ * `liveValidate` is. `current` itself when neither applies.
+ *
+ * @param current - The state at the blur
+ * @param props - The current props
+ * @returns - The next state, sharing every unchanged subtree with `current`
+ */
+function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+): FormState<T, S, F> {
+  const { omitExtraData, liveOmit, liveValidate } = props;
+  const { schema, schemaUtils, customErrors, retrievedSchema } = current;
+  let { formData } = current;
+  let next: Partial<FormState<T, S, F>> = {};
+  if (omitExtraData === true && liveOmit === 'onBlur') {
+    formData = schemaUtils.omitExtraData(schema, formData);
+    next = { formData };
+  }
+  if (liveValidate === 'onBlur') {
+    next = { formData, ...runLiveValidation(props, schemaUtils, schema, formData, customErrors, retrievedSchema) };
+  }
+  return replaceEqualDeep(current, { ...current, ...next });
+}
+
+/** Validates `formData` for a submission or `validateForm()`: whether the errors block, the merged errors to report,
+ * and the state that displays them, which is `current` itself when the displayed errors do not change.
+ *
+ * @param current - The state being validated
+ * @param props - The current props
+ * @param formData - The data to validate
+ * @returns - The blocking flag, the errors to report and the next state
+ */
+function applyValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+  formData: T | undefined,
+): { hasError: boolean; errors: RJSFValidationError[]; next: FormState<T, S, F> } {
+  const { extraErrors, extraErrorsAreWarnings } = props;
+  const { errors: prevErrors, customErrors, schema, schemaUtils } = current;
+  const schemaValidation = validateFormData(props, schemaUtils, schema, formData);
+  // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings.
+  const { errors, errorSchema } = mergeErrors<T>(schemaValidation, extraErrors, customErrors);
+  // extraErrors also block unless extraErrorsAreWarnings is set, in which case they are informational only.
+  const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
+  // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
+  // like schema errors, always block regardless of extraErrorsAreWarnings.
+  const hasCustomErrors = !!customErrors && toErrorList(customErrors.ErrorSchema).length > 0;
+  const hasError = schemaValidation.errors.length > 0 || hasBlockingExtraErrors || hasCustomErrors;
+  let next = current;
+  if (hasError) {
+    next = {
+      ...current,
+      errors,
+      errorSchema,
+      schemaValidationErrors: schemaValidation.errors,
+      schemaValidationErrorSchema: schemaValidation.errorSchema,
+    };
+  } else if (errors.length > 0) {
+    // Non-blocking extraErrors are present — update display state without triggering onError.
+    next = { ...current, errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
+  } else if (prevErrors.length > 0) {
+    next = { ...current, errors: [], errorSchema: {}, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
+  }
+  return { hasError, errors, next: replaceEqualDeep(current, next) };
+}
+
+/** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display
+ *
+ * @param current - The state at the submission
+ * @param props - The current props
+ * @param formData - The submitted data
+ * @returns - The next state, sharing every unchanged subtree with `current`
+ */
+function applySubmit<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+  formData: T | undefined,
+): FormState<T, S, F> {
+  const { extraErrors } = props;
+  return replaceEqualDeep(current, {
+    ...current,
+    formData,
+    errors: extraErrors ? toErrorList(extraErrors) : [],
+    errorSchema: extraErrors || {},
+    schemaValidationErrors: [],
+    schemaValidationErrorSchema: {},
+  });
+}
+
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends PureComponent<FormProps<T, S, F>, FormState<T, S, F>>
@@ -1177,29 +1300,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    *
    */
   reset = () => {
-    const { formData: propsFormData, initialFormData, onChange } = this.props;
-    const newState = deriveFormState(
-      this.state,
-      propsFormData ?? (initialFormData === undefined ? IS_RESET : initialFormData),
-      { skipLiveValidate: true, isReset: true },
-      this.props,
-    );
-    const newFormData = newState.formData;
-    this.setSharedState(
-      {
-        formData: newFormData,
-        errorSchema: {},
-        errors: [],
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-        // Matches what this reset pass actually computed defaults with (see deriveFormState's `isReset` handling),
-        // keeping the flag in sync with the formData it describes — otherwise the next unrelated recompute would
-        // treat itself as an initial pass too and resurrect a `ui:initialValue` the user had since cleared.
-        initialDefaultsGenerated: newState.initialDefaultsGenerated,
-        customErrors: undefined,
-      },
-      () => onChange?.(toIChangeEvent(this.state)),
-    );
+    const { onChange } = this.props;
+    this.setSharedState(applyReset(this.state, this.props), () => onChange?.(toIChangeEvent(this.state)));
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
@@ -1216,32 +1318,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
       const { onChange } = this.props;
-      const { formData } = this.state;
-      let newFormData: T | undefined = formData;
-      let state: Partial<FormState<T, S, F>> = { formData: newFormData };
-      if (omitExtraData === true && liveOmit === 'onBlur') {
-        newFormData = this.omitFormExtraData(formData);
-        state = { formData: newFormData };
-      }
-      if (liveValidate === 'onBlur') {
-        const { schema, schemaUtils, customErrors, retrievedSchema } = this.state;
-        const liveValidation = runLiveValidation(
-          this.props,
-          schemaUtils,
-          schema,
-          newFormData,
-          customErrors,
-          retrievedSchema,
-        );
-        state = { formData: newFormData, ...liveValidation, customErrors };
-      }
       const committed = this.state;
-      this.setSharedState(state as FormState<T, S, F>, () => {
-        // `schemaValidationErrors` and `schemaValidationErrorSchema` are left out since they aren't IChangeEvent props
-        const hasChanges = Object.keys(state).some(
-          (key) =>
-            !key.startsWith('schemaValidation') &&
-            committed[key as keyof FormState<T, S, F>] !== this.state[key as keyof FormState<T, S, F>],
+      this.setSharedState(applyBlur(committed, this.props), () => {
+        // Only the `IChangeEvent` members count; the validator's own results are not among them
+        const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some(
+          (key) => committed[key] !== this.state[key],
         );
         if (onChange && hasChanges) {
           onChange(toIChangeEvent(this.state), id);
@@ -1279,7 +1360,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     event.persist();
     // oxlint-disable-next-line typescript/no-deprecated
-    const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
+    const { omitExtraData, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
 
     if (omitExtraData === true) {
@@ -1287,24 +1368,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
 
     if (noValidate || this.validateFormWithFormData(newFormData)) {
-      // There are no errors generated through schema validation.
-      // Check for user provided errors and update state accordingly.
-      const errorSchema = extraErrors || {};
-      const errors = extraErrors ? toErrorList(extraErrors) : [];
-      this.setSharedState(
-        {
-          formData: newFormData,
-          errors,
-          errorSchema,
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
-        },
-        () => {
-          if (onSubmit) {
-            onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
-          }
-        },
-      );
+      // There are no errors generated through schema validation, so only the user-provided ones are shown
+      this.setSharedState(applySubmit(this.state, this.props, newFormData), () => {
+        if (onSubmit) {
+          onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
+        }
+      });
     }
   };
 
@@ -1358,17 +1427,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * @returns - True if the form is valid, false otherwise.
    */
   validateFormWithFormData = (formData?: T): boolean => {
-    const { extraErrors, extraErrorsAreWarnings, focusOnFirstError, onError } = this.props;
-    const { errors: prevErrors, customErrors } = this.state;
-    const schemaValidation = this.validate(formData);
-    // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings.
-    const { errors, errorSchema } = mergeErrors<T>(schemaValidation, extraErrors, customErrors);
-    // extraErrors also block unless extraErrorsAreWarnings is set, in which case they are informational only.
-    const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
-    // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
-    // like schema errors, always block regardless of extraErrorsAreWarnings.
-    const hasCustomErrors = !!customErrors && toErrorList(customErrors.ErrorSchema).length > 0;
-    const hasError = schemaValidation.errors.length > 0 || hasBlockingExtraErrors || hasCustomErrors;
+    const { focusOnFirstError, onError } = this.props;
+    const { hasError, errors, next } = applyValidation(this.state, this.props, formData);
     if (hasError) {
       if (focusOnFirstError) {
         if (typeof focusOnFirstError === 'function') {
@@ -1377,37 +1437,16 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
           this.focusOnError(errors[0]);
         }
       }
-      this.setSharedState(
-        {
-          errors,
-          errorSchema,
-          schemaValidationErrors: schemaValidation.errors,
-          schemaValidationErrorSchema: schemaValidation.errorSchema,
-        },
-        () => {
-          if (onError) {
-            onError(errors);
-          } else {
-            // oxlint-disable-next-line no-console
-            console.error('Form validation failed', errors);
-          }
-        },
-      );
-    } else if (errors.length > 0) {
-      // Non-blocking extraErrors are present — update display state without triggering onError.
-      this.setSharedState({
-        errors,
-        errorSchema,
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
+      this.setSharedState(next, () => {
+        if (onError) {
+          onError(errors);
+        } else {
+          // oxlint-disable-next-line no-console
+          console.error('Form validation failed', errors);
+        }
       });
-    } else if (prevErrors.length > 0) {
-      this.setSharedState({
-        errors: [],
-        errorSchema: {},
-        schemaValidationErrors: [],
-        schemaValidationErrorSchema: {},
-      });
+    } else if (next !== this.state) {
+      this.setSharedState(next);
     }
     return !hasError;
   };
