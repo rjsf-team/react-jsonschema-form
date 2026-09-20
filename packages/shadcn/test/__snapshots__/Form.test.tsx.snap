@@ -3438,8 +3438,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_24_"
-                            id="radix-_r_23_"
+                            for="radix-_r_2a_"
+                            id="radix-_r_29_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
@@ -3502,8 +3502,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           >
                             <label
                               cmdk-label=""
-                              for="radix-_r_27_"
-                              id="radix-_r_26_"
+                              for="radix-_r_2d_"
+                              id="radix-_r_2c_"
                               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                             />
                             <button
@@ -3591,8 +3591,8 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           >
             <label
               cmdk-label=""
-              for="radix-_r_2d_"
-              id="radix-_r_2c_"
+              for="radix-_r_2j_"
+              id="radix-_r_2i_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -3672,8 +3672,8 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           >
             <label
               cmdk-label=""
-              for="radix-_r_21_"
-              id="radix-_r_20_"
+              for="radix-_r_27_"
+              id="radix-_r_26_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -3753,8 +3753,8 @@ exports[`select widget from oneOf boolean constants with a null option without a
           >
             <label
               cmdk-label=""
-              for="radix-_r_2a_"
-              id="radix-_r_29_"
+              for="radix-_r_2g_"
+              id="radix-_r_2f_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -3834,8 +3834,8 @@ exports[`select widget from oneOf constants without a type 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_1u_"
-              id="radix-_r_1t_"
+              for="radix-_r_24_"
+              id="radix-_r_23_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -3915,8 +3915,8 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           >
             <label
               cmdk-label=""
-              for="radix-_r_2g_"
-              id="radix-_r_2f_"
+              for="radix-_r_2m_"
+              id="radix-_r_2l_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
@@ -14141,8 +14141,8 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_2j_"
-                        id="radix-_r_2i_"
+                        for="radix-_r_2p_"
+                        id="radix-_r_2o_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button

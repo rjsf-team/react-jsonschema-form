@@ -10029,7 +10029,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_cd_::legend"
+        aria-labelledby="fieldset::_r_cn_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10045,7 +10045,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                 class="rjsf-field rjsf-field-undefined"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_ce_::legend"
+                  aria-labelledby="fieldset::_r_co_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -10066,15 +10066,15 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="chakra-field__root emotion-8"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_cf_"
+                            id="field::_r_cp_"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-9"
                               data-part="label"
                               data-scope="field"
-                              for="_r_cf_"
-                              id="field::_r_cf_::label"
+                              for="_r_cp_"
+                              id="field::_r_cp_::label"
                             >
                               region
                             </label>
@@ -10088,8 +10088,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_cf_::label"
-                                id="_r_cf_"
+                                aria-labelledby="field::_r_cp_::label"
+                                id="_r_cp_"
                                 name="root_region__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -10127,7 +10127,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
-                                    aria-labelledby="field::_r_cf_::label"
+                                    aria-labelledby="field::_r_cp_::label"
                                     aria-required="false"
                                     class="chakra-select__trigger emotion-13"
                                     data-part="trigger"
@@ -10179,7 +10179,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_cf_::label"
+                                  aria-labelledby="field::_r_cp_::label"
                                   class="chakra-select__content emotion-19"
                                   data-part="content"
                                   data-scope="select"
@@ -10258,7 +10258,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset::_r_ch_::legend"
+                            aria-labelledby="fieldset::_r_cr_::legend"
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -10270,15 +10270,15 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 class="chakra-field__root emotion-8"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_ci_"
+                                id="field::_r_cs_"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-9"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_ci_"
-                                  id="field::_r_ci_::label"
+                                  for="_r_cs_"
+                                  id="field::_r_cs_::label"
                                 >
                                   Europe
                                 </label>
@@ -10292,8 +10292,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 >
                                   <select
                                     aria-hidden="true"
-                                    aria-labelledby="field::_r_ci_::label"
-                                    id="_r_ci_"
+                                    aria-labelledby="field::_r_cs_::label"
+                                    id="_r_cs_"
                                     name="root_region"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     tabindex="-1"
@@ -10331,7 +10331,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         aria-invalid="false"
-                                        aria-labelledby="field::_r_ci_::label"
+                                        aria-labelledby="field::_r_cs_::label"
                                         aria-required="false"
                                         class="chakra-select__trigger emotion-13"
                                         data-part="trigger"
@@ -10383,7 +10383,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                   >
                                     <div
-                                      aria-labelledby="field::_r_ci_::label"
+                                      aria-labelledby="field::_r_cs_::label"
                                       class="chakra-select__content emotion-19"
                                       data-part="content"
                                       data-scope="select"
@@ -10938,7 +10938,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
       class="rjsf-field rjsf-field-boolean"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_cn_::legend"
+        aria-labelledby="fieldset::_r_d1_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10950,7 +10950,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_co_"
+            id="field::_r_d2_"
             role="group"
           >
             <div
@@ -10963,8 +10963,8 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_co_::label"
-                id="_r_co_"
+                aria-labelledby="field::_r_d2_::label"
+                id="_r_d2_"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -10997,7 +10997,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
-                    aria-labelledby="field::_r_co_::label"
+                    aria-labelledby="field::_r_d2_::label"
                     aria-required="false"
                     class="chakra-select__trigger emotion-6"
                     data-part="trigger"
@@ -11049,7 +11049,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_co_::label"
+                  aria-labelledby="field::_r_d2_::label"
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -11564,7 +11564,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
       class="rjsf-field rjsf-field-string"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_ca_::legend"
+        aria-labelledby="fieldset::_r_ck_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11576,7 +11576,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cb_"
+            id="field::_r_cl_"
             role="group"
           >
             <div
@@ -11589,8 +11589,8 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_cb_::label"
-                id="_r_cb_"
+                aria-labelledby="field::_r_cl_::label"
+                id="_r_cl_"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -11633,7 +11633,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
-                    aria-labelledby="field::_r_cb_::label"
+                    aria-labelledby="field::_r_cl_::label"
                     aria-required="false"
                     class="chakra-select__trigger emotion-6"
                     data-part="trigger"
@@ -11685,7 +11685,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_cb_::label"
+                  aria-labelledby="field::_r_cl_::label"
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -12260,7 +12260,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
       class="rjsf-field rjsf-field-boolean"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_ck_::legend"
+        aria-labelledby="fieldset::_r_cu_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12272,7 +12272,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cl_"
+            id="field::_r_cv_"
             role="group"
           >
             <div
@@ -12285,8 +12285,8 @@ exports[`select widget from oneOf boolean constants with a null option without a
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_cl_::label"
-                id="_r_cl_"
+                aria-labelledby="field::_r_cv_::label"
+                id="_r_cv_"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -12329,7 +12329,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
-                    aria-labelledby="field::_r_cl_::label"
+                    aria-labelledby="field::_r_cv_::label"
                     aria-required="false"
                     class="chakra-select__trigger emotion-6"
                     data-part="trigger"
@@ -12381,7 +12381,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_cl_::label"
+                  aria-labelledby="field::_r_cv_::label"
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -12956,7 +12956,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
       class="rjsf-field rjsf-field-string"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_c7_::legend"
+        aria-labelledby="fieldset::_r_ch_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12968,7 +12968,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_c8_"
+            id="field::_r_ci_"
             role="group"
           >
             <div
@@ -12981,8 +12981,8 @@ exports[`select widget from oneOf constants without a type 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_c8_::label"
-                id="_r_c8_"
+                aria-labelledby="field::_r_ci_::label"
+                id="_r_ci_"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -13020,7 +13020,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
-                    aria-labelledby="field::_r_c8_::label"
+                    aria-labelledby="field::_r_ci_::label"
                     aria-required="false"
                     class="chakra-select__trigger emotion-6"
                     data-part="trigger"
@@ -13072,7 +13072,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_c8_::label"
+                  aria-labelledby="field::_r_ci_::label"
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -13617,7 +13617,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
       class="rjsf-field rjsf-field-boolean"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_cq_::legend"
+        aria-labelledby="fieldset::_r_d4_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13629,7 +13629,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cr_"
+            id="field::_r_d5_"
             role="group"
           >
             <div
@@ -13642,8 +13642,8 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_cr_::label"
-                id="_r_cr_"
+                aria-labelledby="field::_r_d5_::label"
+                id="_r_d5_"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -13681,7 +13681,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
-                    aria-labelledby="field::_r_cr_::label"
+                    aria-labelledby="field::_r_d5_::label"
                     aria-required="false"
                     class="chakra-select__trigger emotion-6"
                     data-part="trigger"
@@ -13733,7 +13733,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_cr_::label"
+                  aria-labelledby="field::_r_d5_::label"
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -49145,7 +49145,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_ct_::legend"
+        aria-labelledby="fieldset::_r_d7_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -49161,7 +49161,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                 class="rjsf-field rjsf-field-boolean"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_cu_::legend"
+                  aria-labelledby="fieldset::_r_d8_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -49173,15 +49173,15 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_cv_"
+                      id="field::_r_d9_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_cv_"
-                        id="field::_r_cv_::label"
+                        for="_r_d9_"
+                        id="field::_r_d9_::label"
                       >
                         My Answer
                       </label>
@@ -49195,8 +49195,8 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field::_r_cv_::label"
-                          id="_r_cv_"
+                          aria-labelledby="field::_r_d9_::label"
+                          id="_r_d9_"
                           name="root_answer"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
@@ -49234,7 +49234,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
-                              aria-labelledby="field::_r_cv_::label"
+                              aria-labelledby="field::_r_d9_::label"
                               aria-required="false"
                               class="chakra-select__trigger emotion-10"
                               data-part="trigger"
@@ -49286,7 +49286,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field::_r_cv_::label"
+                            aria-labelledby="field::_r_d9_::label"
                             class="chakra-select__content emotion-16"
                             data-part="content"
                             data-scope="select"

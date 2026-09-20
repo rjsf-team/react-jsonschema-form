@@ -4429,10 +4429,10 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1uj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_20d_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1uj_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_20d_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -4539,7 +4539,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_1v7_"
+                                id="_r_211_"
                                 role="option"
                                 value="0"
                               >
@@ -4553,7 +4553,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_1v9_"
+                                id="_r_213_"
                                 role="option"
                                 value="1"
                               >
@@ -4699,7 +4699,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   aria-selected="false"
                                   class="m_92253aa5 mantine-Select-option m_390b5f4"
                                   data-combobox-option="true"
-                                  id="_r_1vr_"
+                                  id="_r_21l_"
                                   role="option"
                                   value="0"
                                 >
@@ -4713,7 +4713,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   data-checked="true"
                                   data-combobox-active="true"
                                   data-combobox-option="true"
-                                  id="_r_1vt_"
+                                  id="_r_21n_"
                                   role="option"
                                   value="1"
                                 >
@@ -4896,7 +4896,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_217_"
+                      id="_r_231_"
                       role="option"
                       value="0"
                     >
@@ -5072,7 +5072,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_1ua_"
+                      id="_r_204_"
                       role="option"
                       value="0"
                     >
@@ -5086,7 +5086,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_1uc_"
+                      id="_r_206_"
                       role="option"
                       value="1"
                     >
@@ -5112,7 +5112,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_1ue_"
+                      id="_r_208_"
                       role="option"
                       value="2"
                     >
@@ -5275,7 +5275,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_20g_"
+                      id="_r_22a_"
                       role="option"
                       value="0"
                     >
@@ -5301,7 +5301,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_20i_"
+                      id="_r_22c_"
                       role="option"
                       value="1"
                     >
@@ -5313,7 +5313,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_20k_"
+                      id="_r_22e_"
                       role="option"
                       value="2"
                     >
@@ -5475,7 +5475,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_1tl_"
+                      id="_r_1vf_"
                       role="option"
                       value="0"
                     >
@@ -5489,7 +5489,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_1tn_"
+                      id="_r_1vh_"
                       role="option"
                       value="1"
                     >
@@ -5664,7 +5664,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_21q_"
+                      id="_r_23k_"
                       role="option"
                       value="0"
                     >
@@ -5678,7 +5678,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_21s_"
+                      id="_r_23m_"
                       role="option"
                       value="1"
                     >
@@ -19579,10 +19579,10 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_221_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_23r_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_221_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_23r_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -19687,7 +19687,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                               data-checked="true"
                               data-combobox-active="true"
                               data-combobox-option="true"
-                              id="_r_22k_"
+                              id="_r_24e_"
                               role="option"
                               value="0"
                             >
@@ -19713,7 +19713,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_22m_"
+                              id="_r_24g_"
                               role="option"
                               value="1"
                             >
