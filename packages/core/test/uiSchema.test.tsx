@@ -3194,8 +3194,8 @@ describe('uiSchema', () => {
         country: { 'ui:initialValue': 'US' },
       };
       const formRef = createFormRef();
-      // Passing initialFormData means reset() derives the state from that data directly rather than the
-      // IS_RESET sentinel, which is what previously caused this case to be missed.
+      // Passing initialFormData means reset() derives the state from that data rather than from nothing, which is
+      // what previously caused this case to be missed.
       const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
       const { node } = createFormComponent(props);
       const input = node.querySelector<HTMLInputElement>('input')!;
