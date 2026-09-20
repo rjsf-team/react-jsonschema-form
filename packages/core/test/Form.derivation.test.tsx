@@ -47,6 +47,22 @@ describe('state derivation', () => {
     expect(node.querySelector('.error-detail')).toHaveTextContent('custom');
   });
 
+  it('a parent-driven data change validates against the root schema, not the resolved one', () => {
+    // A resolved schema has had the root's `if`/`then` folded into it and no longer reports the `then` miss, so
+    // deriving state from new props must keep validating the root schema the way submit and `validateForm()` do.
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { c: { type: 'string' }, d: { type: 'number' } },
+      if: { properties: { c: { const: 'yes' } }, required: ['c'] },
+      then: { required: ['d'], properties: { d: { minimum: 100 } } },
+    };
+    const props = { schema: conditional, liveValidate: 'onChange' as const, showErrorList: 'top' as const };
+    const { node, rerender } = createFormComponent({ ...props, formData: { c: 'no', d: 1 } });
+    rerender({ ...props, formData: { c: 'yes', d: 1 } });
+
+    expect(node.querySelector('.panel-danger.errors')).toHaveTextContent('must match "then" schema');
+  });
+
   it('a changed idPrefix rebuilds the registry, so the fields render with the new ids', () => {
     const { node, rerender } = createFormComponent({ schema });
     expect(node.querySelector('#root_a')).not.toBeNull();

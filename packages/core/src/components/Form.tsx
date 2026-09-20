@@ -384,15 +384,22 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
  * @param props - The current props
  * @param formData - The data the resolved schema is for
  * @param prev - The previous context, or the state holding one, whose references are retained where possible
+ * @param [resolved] - The schema utilities for `props`, when the caller has already resolved them; resolving is a
+ *          deep schema comparison and, when it rebuilds, a `createSchemaUtils()` plus a whole-schema walk, so a
+ *          caller that needs them itself must not make this resolve a second, divergent set
  * @returns - The render context for the inputs
  */
 function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   formData: T | undefined,
   prev: RenderContext<T, S, F> | undefined,
+  resolved: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> = resolveSchemaUtils(
+    props,
+    prev,
+  ),
 ): RenderContext<T, S, F> {
   const { uiSchema = {} } = props;
-  const { schemaUtils, hasNestedConditionalSchema } = resolveSchemaUtils(props, prev);
+  const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   return replaceEqualDeep(prev, {
     schemaUtils,
@@ -515,6 +522,10 @@ interface DeriveOptions {
   getFormDataChangedFields?: () => string[];
   /** Skip live validation, because the caller runs it itself or this pass must not show errors yet */
   skipLiveValidate?: boolean;
+  /** `inputFormData` is the data `current` already holds, so the schema `current` resolved for it still describes
+   * it and live validation may run against that instead of the root schema
+   */
+  isDataUnchanged?: boolean;
   /** Attempt to sanitize the data for a retrieved schema that changed */
   shouldSanitize?: boolean;
   /** This pass originated from `reset()` and computes defaults the same way an initial render does, even though the
@@ -545,6 +556,7 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     isSchemaChanged = false,
     getFormDataChangedFields = () => [],
     skipLiveValidate = false,
+    isDataUnchanged = false,
     shouldSanitize = false,
     isReset = false,
   } = options;
@@ -555,7 +567,10 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // up before the field the user is editing has been left
   // oxlint-disable-next-line typescript/no-deprecated
   const mustValidate = edit && !props.noValidate && liveValidate === 'onChange';
-  const { schemaUtils } = resolveSchemaUtils(props, current);
+  const resolved = resolveSchemaUtils(props, current);
+  const { schemaUtils } = resolved;
+  // `resolveSchemaUtils()` hands `current` straight back when nothing the utilities were built from changed
+  const areSchemaUtilsReused = resolved === current;
   const rootSchema = schemaUtils.getRootSchema();
 
   // An uncontrolled form with no new data keeps its own; a reset starts from nothing
@@ -584,7 +599,7 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     );
     // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
     const formHash = shouldSanitize ? hashObject({ formData }) : '';
-    renderContext = deriveRenderContext(props, formData, current);
+    renderContext = deriveRenderContext(props, formData, current, resolved);
     const { retrievedSchema } = renderContext;
     if (
       shouldSanitize &&
@@ -639,7 +654,10 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
       rootSchema,
       formData,
       current?.customErrors,
-      renderContext.retrievedSchema,
+      // The root schema is the full constraint set. A resolved schema has had the root's `if`, `dependencies` and
+      // `$ref`s folded into it, so validating it drops the errors those keywords report (`must match "then" schema`,
+      // the `oneOf` miss), and only the schema `current` already resolved for this very data may stand in for it.
+      isDataUnchanged && !isSchemaChanged && areSchemaUtilsReused ? renderContext.retrievedSchema : undefined,
     );
     errors = liveValidation.errors;
     errorSchema = liveValidation.errorSchema;
@@ -837,8 +855,14 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
   let clearedCustomError = false;
-  if (!newErrorSchema && customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
-    // If we have custom errors and the path has an error, then we need to clear it
+  // `clearErrors()` leaves an empty `__errors` behind, which is still a truthy read, so the length is what says
+  // whether there is anything left to clear; without it every later change at this path would clone the builder
+  // and rebuild the displayed errors again
+  if (
+    !newErrorSchema &&
+    customErrors &&
+    getByPath<string[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY], []).length > 0
+  ) {
     customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema).clearErrors(path);
     clearedCustomError = true;
   }
@@ -851,8 +875,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const mergedErrors = mergeErrors<T>({ errorSchema: mergeBaseErrorSchema, errors }, extraErrors, customErrors);
     next = { ...next, ...mergedErrors };
   } else if (clearedCustomError) {
-    // The displayed errors are rebuilt from the validator's own result so the cleared one leaves both the field and
-    // the error list; the committed `errorSchema` used to alias the builder's and lose the entry by mutation
+    // The displayed errors are rebuilt from the validator's own result, so the cleared error leaves both the field
+    // and the error list
     const mergedErrors = mergeErrors<T>(
       { errorSchema: schemaValidationErrorSchema, errors: current.schemaValidationErrors },
       extraErrors,
@@ -1124,6 +1148,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
           // Only the error clearing needs the path of each changed field, and it runs only when live validation does
           // not, so the walk that produces them is left for `deriveFormState` to ask for
           getFormDataChangedFields: () => getChangedFields(formData, prevProps.formData, true),
+          isDataUnchanged: !isStateDataChanged,
           // Live validation is skipped only when neither the data nor anything that takes part in validating it
           // changed. A changed validation prop counts only in `onChange` mode: `onBlur` owes its errors to the blur,
           // not to the parent handing over a fresh callback
