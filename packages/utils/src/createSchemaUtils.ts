@@ -1,6 +1,7 @@
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
+import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
@@ -47,6 +48,13 @@ class SchemaUtils<
   validator: ValidatorType<T, S, F>;
   defaultFormStateBehavior: DefaultFormStateBehavior;
   customMergeAllOf?: CustomMergeAllOf<S>;
+  /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
+   * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
+   * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
+   * refs yields a differently shaped result, so it gets a slot of its own rather than evicting the plain one.
+   */
+  private lastRetrievedSchemas = new WeakMap<object, S>();
+  private lastRetrievedSchemasWithRefs = new WeakMap<object, S>();
 
   /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
    *
@@ -325,14 +333,25 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    return retrieveSchema<T, S, F>(
-      this.validator,
-      schema,
-      this.rootSchema,
-      rawFormData,
-      this.customMergeAllOf,
-      resolveAnyOfOrOneOfRefs,
+    // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
+    // `WeakMap` refuses it as a key
+    const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
+    const cache = resolveAnyOfOrOneOfRefs ? this.lastRetrievedSchemasWithRefs : this.lastRetrievedSchemas;
+    const result = replaceEqualDeep(
+      cacheKey && cache.get(cacheKey),
+      retrieveSchema<T, S, F>(
+        this.validator,
+        schema,
+        this.rootSchema,
+        rawFormData,
+        this.customMergeAllOf,
+        resolveAnyOfOrOneOfRefs,
+      ),
     );
+    if (cacheKey) {
+      cache.set(cacheKey, result);
+    }
+    return result;
   }
 
   /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via

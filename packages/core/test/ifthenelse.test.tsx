@@ -1,6 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { userEvent } from '@testing-library/user-event';
 
 import { createFormComponent } from './testUtils.tsx';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -293,5 +296,23 @@ describe('conditional items', () => {
 
     // The "otherKey" field exists as an additional property
     expect(node.querySelector('div.form-additional input[label=otherKey]')).not.toBeNull();
+  });
+
+  it('re-resolves the conditional branch when a field with a default is cleared', async () => {
+    const conditionalOnPresence: RJSFSchema = {
+      type: 'object',
+      properties: {
+        a: { type: 'string', default: 'x' },
+      },
+      if: { required: ['a'] },
+      then: { properties: { b: { type: 'string' } } },
+    };
+    const { node } = createFormComponent({ schema: conditionalOnPresence });
+
+    expect(node.querySelector('#root_b')).not.toBeNull();
+
+    await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
+
+    expect(node.querySelector('#root_b')).toBeNull();
   });
 });

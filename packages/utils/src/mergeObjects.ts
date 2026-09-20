@@ -17,10 +17,14 @@ export default function mergeObjects(
 ) {
   return Object.keys(obj2).reduce(
     (acc, key) => {
-      const left: unknown = obj1[key],
+      // Only an own member of `obj1` takes part: a JSON-sourced `__proto__` or `constructor` key would otherwise
+      // read the inherited member and merge into a copy of `Object.prototype`
+      const hasLeft = Object.hasOwn(obj1, key);
+      const left: unknown = hasLeft ? obj1[key] : undefined,
         right: unknown = obj2[key];
-      if (key in obj1 && isObject(right)) {
-        acc[key] = mergeObjects(isObject(left) ? left : {}, right, concatArrays);
+      let merged = right;
+      if (hasLeft && isObject(right)) {
+        merged = mergeObjects(isObject(left) ? left : {}, right, concatArrays);
       } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
         let toMerge = right;
         if (concatArrays === 'preventDuplicates') {
@@ -31,9 +35,13 @@ export default function mergeObjects(
             return result;
           }, []);
         }
-        acc[key] = left.concat(toMerge);
+        merged = left.concat(toMerge);
+      }
+      if (key === '__proto__') {
+        // A plain assignment here would reach the setter and swap the result's prototype for `merged`
+        Object.defineProperty(acc, key, { value: merged, enumerable: true, writable: true, configurable: true });
       } else {
-        acc[key] = right;
+        acc[key] = merged;
       }
       return acc;
     },
