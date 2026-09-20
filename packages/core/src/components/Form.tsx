@@ -618,10 +618,15 @@ export default class Form<
       const { nextState, isEchoOfState } = snapshot;
       const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
 
-      if (this.lastReportedFormData && this.props.formData !== undefined) {
-        // The parent has passed data of its own now, either its reply to the report or something that replaces it.
-        // A reply is remembered in the spelling the parent gave it, so that it keeps counting as the form's own data
-        // however it was reshaped, while everything else leaves the form holding data it never reported
+      // A parent passing `formData` has had its say, whether that is its reply to the report or data that replaces it,
+      // while one that passes none has not replied at all and may still be about to. The two are told apart by the
+      // presence of the prop rather than its value, since a parent storing an emitted `undefined` passes it back as
+      // `undefined`, and reading that as silence would leave the reshape tolerance open for good. A controlled parent
+      // spelling `formData={undefined}` on a render before it stores its reply looks exactly the same from here, so it
+      // is taken at its word too and its reply arrives as data the form never reported. A reply is remembered in the
+      // spelling the parent gave it, so that it keeps counting as the form's own data however it was reshaped, while
+      // everything else leaves the form holding data it never reported
+      if (this.lastReportedFormData && 'formData' in this.props) {
         this.lastReportedFormData = isEchoOfState ? { formData: this.props.formData, awaitingReply: false } : undefined;
       }
       if (isEchoOfState && nextStateDiffersFromProps) {

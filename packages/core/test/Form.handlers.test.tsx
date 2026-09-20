@@ -727,6 +727,36 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toHaveValue('0');
     });
+    it('should apply a formData prop change made after the parent replied with the reported undefined', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'Advanced Configuration',
+            type: 'object',
+            properties: { types: { const: 'advanced' } },
+            required: ['types'],
+          },
+          { title: 'No Configuration', type: 'null' },
+        ],
+        default: { types: 'advanced' },
+      };
+      let currentFormData: unknown;
+      const props = {
+        schema,
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' } as const,
+        onChange: (event: IChangeEvent) => {
+          currentFormData = event.formData;
+        },
+      };
+      const { node, rerender } = createFormComponent(props);
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+      rerender({ ...props, formData: currentFormData });
+      rerender({ ...props, formData: {} });
+
+      expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('0');
+    });
     it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
       const ref = createRef<Form>();
