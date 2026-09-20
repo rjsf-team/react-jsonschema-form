@@ -1,6 +1,13 @@
 import type { Ref } from 'react';
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
-import type { ErrorSchema, Experimental_DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  Experimental_DefaultFormStateBehavior,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -141,6 +148,34 @@ describe('Live validation onBlur', () => {
       type: 'object',
       properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
     };
+    const serverErrors = { name: { __errors: ['from the server'] } } as unknown as ErrorSchema;
+    // Reference-stable so that re-rendering the parent is a change to `className` and nothing else
+    const shortName = { name: 'short' };
+
+    /** A parent that holds the data still and restyles the form, so a render is a non-data prop change */
+    function RestylingParent({
+      extraErrors,
+      formRef,
+      liveValidate = 'onChange',
+    }: Pick<FormProps, 'extraErrors' | 'liveValidate'> & { formRef?: Ref<Form> }) {
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form
+            ref={formRef}
+            schema={objectSchema}
+            validator={validator}
+            liveValidate={liveValidate}
+            extraErrors={extraErrors}
+            formData={shortName}
+            className={className}
+          />
+        </>
+      );
+    }
 
     function ReplacingParent({
       extraErrors,
@@ -179,60 +214,213 @@ describe('Live validation onBlur', () => {
       expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
     });
 
-    it('carries each extraError over exactly once', async () => {
+    it.each([
+      ['onBlur', ['from the server']],
+      ['onChange', ['must NOT have fewer than 8 characters', 'from the server']],
+    ] as const)('carries each extraError over exactly once under %s', async (liveValidate, expected) => {
       const formRef = createRef<Form>();
-      const extraErrors = { name: { __errors: ['from the server'] } } as unknown as ErrorSchema;
-      const { container } = render(<ReplacingParent extraErrors={extraErrors} formRef={formRef} />);
-
-      await user.click(container.querySelector('button')!);
-
-      expect(formRef.current!.state.errors).toEqual([
-        expect.objectContaining({ property: '.name', message: 'from the server' }),
-      ]);
-    });
-
-    it('keeps the extraErrors alongside the schema errors under onChange', async () => {
-      const formRef = createRef<Form>();
-      const extraErrors = { name: { __errors: ['from the server'] } } as unknown as ErrorSchema;
       const { container } = render(
-        <ReplacingParent liveValidate='onChange' extraErrors={extraErrors} formRef={formRef} />,
+        <ReplacingParent liveValidate={liveValidate} extraErrors={serverErrors} formRef={formRef} />,
       );
 
       await user.click(container.querySelector('button')!);
 
-      expect(formRef.current!.state.errors).toEqual([
-        expect.objectContaining({ property: '.name', message: 'must NOT have fewer than 8 characters' }),
-        expect.objectContaining({ property: '.name', message: 'from the server' }),
-      ]);
+      expect(formRef.current!.state.errors.map((error) => error.message)).toEqual(expected);
     });
 
     it('carries each extraError over exactly once when a prop other than the data changes', async () => {
-      const extraErrors = { name: { __errors: ['from the server'] } } as unknown as ErrorSchema;
-      function ClassNameParent() {
-        const [className, setClassName] = useState<string | undefined>(undefined);
-        return (
-          <>
-            <button type='button' onClick={() => setClassName('x')}>
-              restyle
-            </button>
-            <Form
-              schema={objectSchema}
-              validator={validator}
-              liveValidate='onChange'
-              extraErrors={extraErrors}
-              formData={{ name: 'short' }}
-              className={className}
-            />
-          </>
-        );
-      }
-      const { container } = render(<ClassNameParent />);
+      const { container } = render(<RestylingParent extraErrors={serverErrors} />);
 
       await user.click(container.querySelector('button')!);
 
       const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
       expect(messages).toEqual(['from the server']);
     });
+  });
+});
+
+describe('Error state consistency when deriving from new props', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+  };
+  const relaxedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string' }, other: { type: 'string' } },
+  };
+  const serverErrors = { name: { __errors: ['from the server'] } } as unknown as ErrorSchema;
+  const otherServerErrors = { other: { __errors: ['from the server'] } } as unknown as ErrorSchema;
+  const shortName = { name: 'short' };
+  /** Raises a custom error on every keystroke, the way a widget validating as the user types does */
+  const errorRaisingWidgets = {
+    TextWidget: ({ id, value, onChange, onBlur }: WidgetProps) => (
+      <input
+        id={id}
+        type='text'
+        value={value ?? ''}
+        onChange={(event) =>
+          onChange(event.target.value, { __errors: [`custom:${event.target.value}`] } as unknown as ErrorSchema)
+        }
+        onBlur={(event) => onBlur(id, event.target.value)}
+      />
+    ),
+  };
+
+  function messagesIn(container: HTMLElement) {
+    return [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+  }
+
+  /** A parent that never follows `onChange`, so the form's own data diverges from the `formData` prop as soon as the
+   * user types and a later prop change derives state through the `mergeIntoOriginalErrorSchema` path
+   */
+  function IgnoringParent({ formRef }: { formRef: Ref<Form> }) {
+    const [className, setClassName] = useState<string | undefined>(undefined);
+    return (
+      <>
+        <button type='button' onClick={() => setClassName('x')}>
+          restyle
+        </button>
+        <Form
+          ref={formRef}
+          schema={schema}
+          validator={validator}
+          liveValidate='onChange'
+          extraErrors={serverErrors}
+          formData={shortName}
+          className={className}
+        />
+      </>
+    );
+  }
+
+  /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
+  function EchoingParent({
+    formRef,
+    liveValidate,
+    extraErrors,
+    widgets,
+  }: Pick<FormProps, 'liveValidate' | 'extraErrors' | 'widgets'> & { formRef: Ref<Form> }) {
+    const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
+    return (
+      <Form
+        ref={formRef}
+        schema={schema}
+        validator={validator}
+        liveValidate={liveValidate}
+        extraErrors={extraErrors}
+        widgets={widgets}
+        formData={value}
+        onChange={(event) => setValue(event.formData)}
+      />
+    );
+  }
+
+  it('does not duplicate an extraError once the form data has diverged from the prop', async () => {
+    const formRef = createRef<Form>();
+    const { container } = render(<IgnoringParent formRef={formRef} />);
+
+    // The parent keeps handing back `shortName`, so this keystroke leaves `state.formData` ahead of the prop
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
+    await user.click(container.querySelector('button')!);
+
+    const expected = ['must NOT have fewer than 8 characters', 'from the server'];
+    expect(messagesIn(container)).toEqual(expected);
+    expect(formRef.current!.state.errorSchema.name!.__errors).toEqual(expected);
+    expect(formRef.current!.state.errors.map((error) => error.message)).toEqual(expected);
+  });
+
+  it('drops the stored validator errors when the schema stops producing them under onBlur', async () => {
+    const formRef = createRef<Form>();
+    function SchemaSwappingParent() {
+      const [current, setCurrent] = useState(schema);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setCurrent(relaxedSchema)}>
+            relax
+          </button>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form
+            ref={formRef}
+            schema={current}
+            validator={validator}
+            liveValidate='onBlur'
+            formData={shortName}
+            className={className}
+          />
+        </>
+      );
+    }
+    const { container } = render(<SchemaSwappingParent />);
+    const buttons = container.querySelectorAll('button');
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
+
+    await user.click(buttons[0]);
+    expect(messagesIn(container)).toEqual([]);
+
+    // The schema no longer has the rule, so no later prop change may bring its error back
+    await user.click(buttons[1]);
+    expect(messagesIn(container)).toEqual([]);
+    expect(formRef.current!.state.errors).toEqual([]);
+  });
+
+  it('keeps a custom error raised on a path that already carries a validator error', async () => {
+    const formRef = createRef<Form>();
+    const { container } = render(
+      <EchoingParent formRef={formRef} liveValidate='onBlur' widgets={errorRaisingWidgets} />,
+    );
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(messagesIn(container)).toContain('custom:shorty');
+  });
+
+  it('keeps the inline errors and the error list in agreement while typing under onBlur', async () => {
+    const formRef = createRef<Form>();
+    const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    // Whatever the field shows, `state.errors` is what the `ErrorList` and the `onChange` payload carry
+    expect(formRef.current!.state.errors.map((error) => error.message)).toEqual(
+      expect.arrayContaining([expect.stringContaining('must NOT have fewer than 8 characters')]),
+    );
+    expect(messagesIn(container)).toContain('must NOT have fewer than 8 characters');
+  });
+
+  it('lists a server error once when a field raises a custom error with live validation off', async () => {
+    const formRef = createRef<Form>();
+    // Uncontrolled, so nothing re-derives state from props afterwards and the merge below is the last word
+    const { container } = render(
+      <Form
+        ref={formRef}
+        schema={schema}
+        validator={validator}
+        extraErrors={otherServerErrors}
+        widgets={errorRaisingWidgets}
+        initialFormData={shortName}
+      />,
+    );
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(formRef.current!.state.errors.filter((error) => error.message === 'from the server')).toHaveLength(1);
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(formRef.current!.state.errors.filter((error) => error.message === 'from the server')).toHaveLength(1);
   });
 });
 

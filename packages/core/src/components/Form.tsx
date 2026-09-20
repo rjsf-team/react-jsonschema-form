@@ -404,6 +404,18 @@ function withoutAbsentValues(data: unknown): unknown {
   return normalize(data, true);
 }
 
+/** Determines whether `liveValidate` asks for a validation pass on every change. `'onBlur'` owns its pass in
+ * `onBlur()`, so the other paths must not run one for it, or the errors show up before the field the user is
+ * editing has been left. Every site that needs the distinction reads it from here: the bug fixed alongside this
+ * helper came from two of them spelling the same predicate differently.
+ *
+ * @param liveValidate - The `liveValidate` prop
+ * @returns - True when a change is enough to validate, false for `'onBlur'` and for live validation being off
+ */
+function isLiveOnChange(liveValidate: FormProps['liveValidate']): boolean {
+  return liveValidate === true || liveValidate === 'onChange';
+}
+
 /** The definition of a pending change that will be processed in the `onChange` handler
  */
 interface PendingChange<T> {
@@ -579,8 +591,9 @@ export default class Form<
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
-        // not, so the walk that produces them is left for `getStateFromProps` to ask for
-        () => getChangedFields(this.props.formData, prevProps.formData, true),
+        // not, so the walk that produces them is left for `getStateFromProps` to ask for. Unchanged data has no
+        // changed fields, so the walk is skipped outright in that case
+        () => (isFormDataChanged ? getChangedFields(this.props.formData, prevProps.formData, true) : []),
         // Skip live validation for this request if no form data has changed from the last state
         !isStateDataChanged,
       );
@@ -688,11 +701,10 @@ export default class Form<
     const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    // oxlint-disable-next-line typescript/no-deprecated
     // `'onBlur'` owns its validation pass in `onBlur()`; deriving state must not run one for it, or the errors show
     // up before the field the user is editing has been left
     // oxlint-disable-next-line typescript/no-deprecated
-    const mustValidate = edit && !props.noValidate && (liveValidate === true || liveValidate === 'onChange');
+    const mustValidate = edit && !props.noValidate && isLiveOnChange(liveValidate);
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -800,7 +812,10 @@ export default class Form<
       const liveValidation = this.liveValidate(
         rootSchema,
         schemaUtils,
-        state.errorSchema,
+        // The base for the merge below is the validator's own result. `state.errorSchema` already carries
+        // `extraErrors` and `customErrors`, so merging into it would enter each of them a second time and store the
+        // doubled result as `schemaValidationErrorSchema`, where it would survive the errors being cleared
+        (state.schemaValidationErrorSchema || {}) as ErrorSchema<S>,
         formData,
         props.extraErrors,
         state.customErrors,
@@ -817,8 +832,16 @@ export default class Form<
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
-      // We only update the error schema for changed fields if mustValidate is false
-      if (!mustValidate) {
+      // The stored validator result is what the next derivation builds on, so a reset has to reach it as well.
+      // Without this, a `'onBlur'` form, which no longer re-validates on a schema change, brings the old schema's
+      // errors back on the next props change. In every other case these are the values it just read.
+      schemaValidationErrors = currentErrors.errors;
+      schemaValidationErrorSchema = currentErrors.errorSchema;
+      // We only update the error schema for changed fields if mustValidate is false. `'onBlur'` is excluded
+      // although its `mustValidate` is now false: the clearing prunes `errorSchema` but not `errors`, so running it
+      // here would drop a field's inline error on the first keystroke while the `ErrorList` and the `onChange`
+      // payload kept it. An `'onBlur'` form holds its errors until the field is left, as it did before.
+      if (!mustValidate && liveValidate !== 'onBlur') {
         const formDataChangedFields = getFormDataChangedFields();
         if (formDataChangedFields.length > 0) {
           // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
@@ -1081,11 +1104,19 @@ export default class Form<
     const { newErrorSchema } = this.pendingChanges[0];
     // oxlint-disable-next-line typescript/no-deprecated
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = this.props;
-    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
+    const {
+      formData: oldFormData,
+      schemaUtils,
+      schema,
+      fieldPathId,
+      schemaValidationErrorSchema,
+      schemaValidationErrors,
+    } = this.state;
     let { customErrors, retrievedSchema } = this.state;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
+    // `state.errors` is the matching list and needs the same treatment; see the merge below.
     let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
     const rootPathId = fieldPathId.path[0] || '';
 
@@ -1167,7 +1198,7 @@ export default class Form<
       }
     }
 
-    const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
+    const mustValidate = !noValidate && isLiveOnChange(liveValidate);
     let state: Partial<FormState<T, S, F>> = { formData, retrievedSchema };
     let newFormData = formData;
 
@@ -1225,13 +1256,24 @@ export default class Form<
       );
       state = { ...state, formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
-      // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
+      // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors. The list is the validator's
+      // own for the same reason the schema above is: `state.errors` already carries `extraErrors`/`customErrors` and
+      // would list each of them a second time
       const mergedErrors = Form.mergeErrors<T>(
-        { errorSchema: mergeBaseErrorSchema, errors },
+        { errorSchema: mergeBaseErrorSchema, errors: schemaValidationErrors },
         extraErrors,
         customErrors,
       );
-      state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
+      // A `newErrorSchema` landing on a path that already had a validator error was written into
+      // `mergeBaseErrorSchema` rather than into `customErrors`, so the stored base has to carry it too. Otherwise the
+      // next derivation rebuilds from a base that never saw it and the field loses the error until the next keystroke
+      state = {
+        ...state,
+        formData: newFormData,
+        ...mergedErrors,
+        schemaValidationErrorSchema: mergeBaseErrorSchema,
+        customErrors,
+      };
     }
 
     this.setState(state as FormState<T, S, F>, () => {
