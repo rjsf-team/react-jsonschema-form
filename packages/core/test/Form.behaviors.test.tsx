@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { createRef, useEffect, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
@@ -14,7 +13,9 @@ import {
   createComponent,
   createFormComponent,
   delayPromise,
+  errorListMessages,
   expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
@@ -39,16 +40,11 @@ describe('Error paths that collide with prototype keys', () => {
         constructor: constructorFieldSchema,
       },
     };
-    const formRef = createRef<Form>();
-    const { node } = createFormComponent({ ref: formRef, schema, formData: { constructor: 'ab' } });
+    const { node } = createFormComponent({ schema, formData: { constructor: 'ab' } });
 
     await submitForm(node, user);
 
-    expect(node.querySelectorAll('.error-detail')).toHaveLength(1);
-    expect(node.querySelector('.error-detail')).toHaveTextContent('must NOT have fewer than 5 characters');
-    expect(formRef.current!.state.errorSchema).toEqual({
-      constructor: { __errors: ['must NOT have fewer than 5 characters'] },
-    });
+    expect(fieldErrorsById(node)).toEqual({ root_constructor: ['must NOT have fewer than 5 characters'] });
     // No actual prototype pollution occurred while building the error schema.
     expect(({} as { __errors?: string[] }).__errors).toBeUndefined();
   });
@@ -171,9 +167,8 @@ describe('Live validation onBlur', () => {
 
     function ReplacingParent({
       extraErrors,
-      formRef,
       liveValidate = 'onBlur',
-    }: Pick<FormProps, 'extraErrors' | 'liveValidate'> & { formRef?: Ref<Form> }) {
+    }: Pick<FormProps, 'extraErrors' | 'liveValidate'>) {
       const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
       return (
         <>
@@ -181,7 +176,6 @@ describe('Live validation onBlur', () => {
             replace
           </button>
           <Form
-            ref={formRef}
             schema={objectSchema}
             validator={validator}
             liveValidate={liveValidate}
@@ -207,29 +201,23 @@ describe('Live validation onBlur', () => {
     });
 
     it('carries each extraError over exactly once', async () => {
-      const formRef = createRef<Form>();
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
-      const { container } = render(<ReplacingParent extraErrors={extraErrors} formRef={formRef} />);
+      const { container } = render(<ReplacingParent extraErrors={extraErrors} />);
 
       await user.click(container.querySelector('button')!);
 
-      expect(formRef.current!.state.errors).toEqual([
-        expect.objectContaining({ property: '.name', message: 'from the server' }),
-      ]);
+      expect(errorListMessages(container)).toEqual(['.name from the server']);
     });
 
     it('keeps the extraErrors alongside the schema errors under onChange', async () => {
-      const formRef = createRef<Form>();
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
-      const { container } = render(
-        <ReplacingParent liveValidate='onChange' extraErrors={extraErrors} formRef={formRef} />,
-      );
+      const { container } = render(<ReplacingParent liveValidate='onChange' extraErrors={extraErrors} />);
 
       await user.click(container.querySelector('button')!);
 
-      expect(formRef.current!.state.errors).toEqual([
-        expect.objectContaining({ property: '.name', message: 'must NOT have fewer than 8 characters' }),
-        expect.objectContaining({ property: '.name', message: 'from the server' }),
+      expect(errorListMessages(container)).toEqual([
+        '.name must NOT have fewer than 8 characters',
+        '.name from the server',
       ]);
     });
   });
@@ -318,67 +306,6 @@ describe('omitExtraData and live omit onBlur', () => {
 });
 
 describe('Form omitExtraData and liveOmit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const liveOmit = 'onChange';
-    const ref = createRef<Form>();
-
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      initialFormData: formData,
-      omitExtraData,
-      liveOmit,
-    });
-
-    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).toHaveBeenCalled();
-  });
-
-  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      initialFormData: formData,
-      omitExtraData,
-    });
-
-    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).not.toHaveBeenCalled();
-  });
-
   it('should not omit data on change with omitExtraData=false and liveOmit unset', async () => {
     const omitExtraData = false;
     const liveOmit = undefined;
@@ -694,34 +621,6 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: '',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-    });
-
-    const theSpy = vi.spyOn(ref.current!.state.schemaUtils, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await submitForm(node, user);
-
-    expect(theSpy).toHaveBeenCalledTimes(1);
-  });
-
   it('Should call validateFormWithFormData with the current formData if omitExtraData is false', async () => {
     const omitExtraData = false;
     const schema: RJSFSchema = {
@@ -951,25 +850,24 @@ describe('Async errors', () => {
       },
     };
 
-    const formRef = createRef<Form>();
     const props: NoValFormProps = {
-      ref: formRef,
       schema,
       noValidate: true,
     };
 
-    const { rerender } = createFormComponent({
+    const { node, rerender } = createFormComponent({
       ...props,
       extraErrors,
     });
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['foo'] });
 
     rerender({
       ...props,
       extraErrors: {},
     });
 
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('should reset when props extraErrors changes and liveValidate is unset', () => {
@@ -986,24 +884,23 @@ describe('Async errors', () => {
       },
     };
 
-    const formRef = createRef<Form>();
     const props: NoValFormProps = {
-      ref: formRef,
       schema,
       liveValidate: undefined,
     };
-    const { rerender } = createFormComponent({
+    const { node, rerender } = createFormComponent({
       ...props,
       extraErrors,
     });
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['foo'] });
 
     rerender({
       ...props,
       extraErrors: {},
     });
 
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('should reset when schema changes', async () => {
@@ -1015,9 +912,7 @@ describe('Async errors', () => {
       required: ['foo'],
     };
 
-    const formRef = createRef<Form>();
-    const { rerender, node } = createFormComponent({
-      ref: formRef,
+    const { rerender, node, onError } = createFormComponent({
       schema,
     });
 
@@ -1026,8 +921,8 @@ describe('Async errors', () => {
     // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
     await submitForm(node, user, true);
 
-    expect(formRef.current!.state.errorSchema).toEqual({ foo: { __errors: ["must have required property 'foo'"] } });
-    expect(formRef.current!.state.errors).toEqual([
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ["must have required property 'foo'"] });
+    expect(onError).toHaveBeenLastCalledWith([
       {
         message: "must have required property 'foo'",
         property: 'foo',
@@ -1043,7 +938,6 @@ describe('Async errors', () => {
 
     // Changing schema to reset errors state.
     rerender({
-      ref: formRef,
       schema: {
         type: 'object',
         properties: {
@@ -1051,8 +945,8 @@ describe('Async errors', () => {
         },
       },
     });
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('should display extraErrors on first async set with array field and controlled formData', async () => {
@@ -1072,8 +966,6 @@ describe('Async errors', () => {
       },
     };
 
-    const formRef = createRef<Form>();
-
     function Wrapper() {
       const [formData, setFormData] = useState<Record<string, unknown>>({ values: [] });
       const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
@@ -1090,7 +982,6 @@ describe('Async errors', () => {
 
       return (
         <Form
-          ref={formRef}
           schema={schema}
           validator={validator}
           formData={formData}
@@ -1116,12 +1007,8 @@ describe('Async errors', () => {
     await actWrappedDelayPromise();
 
     // The extra errors should be displayed on the FIRST submit
-    expect(formRef.current!.state.errors.length).toBeGreaterThan(0);
-    expect(formRef.current!.state.errorSchema).toEqual(
-      expect.objectContaining({
-        __errors: ['Root error'],
-      }),
-    );
+    expect(errorListMessages(form)).toEqual(['. Root error', '.values.0 ERROR MESSAGE']);
+    expect(fieldErrorsById(form)).toEqual(expect.objectContaining({ root_values_0: ['ERROR MESSAGE'] }));
   });
 });
 
@@ -1294,7 +1181,6 @@ describe('Deriving state from changed props', () => {
     await user.click(container.querySelector('button')!);
 
     expect(container.querySelector('label')).toHaveTextContent('A2');
-    expect(formRef.current!.state.retrievedSchema.properties!.a).toHaveProperty('title', 'A2');
   });
 });
 
@@ -1336,16 +1222,14 @@ describe('Calling reset from ref object', () => {
     // A value that satisfies the number field's native `pattern` (so the browser lets the form submit)
     // but violates the schema's `minimum`, so RJSF's own validation is what produces the error.
     await user.type(node.querySelector<HTMLInputElement>('input')!, '5');
-    expect(formRef.current!.state.errors).toHaveLength(0);
+    expect(errorListMessages(node)).toHaveLength(0);
     await submitForm(node, user);
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(node.querySelector('.errors')).toBeInTheDocument();
+    expect(errorListMessages(node)).toHaveLength(1);
     act(() => {
       formRef.current!.reset();
     });
-    expect(node.querySelector('.errors')).not.toBeInTheDocument();
+    expect(errorListMessages(node)).toHaveLength(0);
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', '');
-    expect(formRef.current!.state.errors).toHaveLength(0);
   });
 
   it('Reset button test with default value', async () => {
@@ -1546,17 +1430,16 @@ describe('validateForm()', () => {
       extraErrors,
       extraErrorsAreWarnings: true,
     };
-    const { onError } = createFormComponent(props);
+    const { node, onError } = createFormComponent(props);
 
     act(() => {
       // Should return true (non-blocking)
       expect(formRef.current!.validateForm()).toBe(true);
     });
 
-    // extraErrors should remain visible in state
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(formRef.current!.state.errors[0].message).toBe('async error for foo');
-    expect(formRef.current!.state.errorSchema).toEqual(extraErrors);
+    // extraErrors should remain visible
+    expect(errorListMessages(node)).toEqual(['.foo async error for foo']);
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['async error for foo'] });
     // onError should NOT be called for non-blocking errors
     expect(onError).not.toHaveBeenCalled();
   });
@@ -1580,16 +1463,15 @@ describe('validateForm()', () => {
       formData: { foo: 'valid' },
       extraErrors,
     };
-    const { onError } = createFormComponent(props);
+    const { node, onError } = createFormComponent(props);
 
     act(() => {
       // Should return false (non-blocking)
       expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Merged errors should be in state
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(formRef.current!.state.errors[0].message).toBe('blocking async error');
+    // Merged errors should be displayed
+    expect(errorListMessages(node)).toEqual(['.foo blocking async error']);
     // onError SHOULD be called
     expect(onError).toHaveBeenCalledWith(
       expect.arrayContaining([expect.objectContaining({ message: 'blocking async error' })]),
@@ -1617,17 +1499,15 @@ describe('validateForm()', () => {
       extraErrors,
       extraErrorsAreWarnings: true,
     };
-    createFormComponent(props);
+    const { node } = createFormComponent(props);
 
     act(() => {
       // Schema error blocks submission → false
       expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Both schema error and extra error should be in state
-    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
-    expect(errorMessages).toContain("must have required property 'foo'");
-    expect(errorMessages).toContain('async error for foo');
+    // Both schema error and extra error should be displayed
+    expect(errorListMessages(node)).toEqual(["must have required property 'foo'", '.foo async error for foo']);
   });
 
   it('Should block submission and keep a customError raised by a widget in state', async () => {
@@ -1668,8 +1548,7 @@ describe('validateForm()', () => {
       expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
-    expect(errorMessages).toContain('custom widget error');
+    expect(errorListMessages(node)).toEqual(['.foo custom widget error']);
     expect(onError).toHaveBeenCalledWith(
       expect.arrayContaining([expect.objectContaining({ message: 'custom widget error' })]),
     );
@@ -1694,23 +1573,23 @@ describe('validateForm()', () => {
       formData: { foo: 'valid' },
       extraErrors,
     };
-    const { rerender } = createFormComponent(props);
+    const { node, rerender } = createFormComponent(props);
 
-    // First call: extraErrors should appear in state
+    // First call: extraErrors should be displayed
     act(() => {
       formRef.current!.validateForm();
     });
-    expect(formRef.current!.state.errors).toHaveLength(1);
+    expect(errorListMessages(node)).toHaveLength(1);
 
     // Rerender without extraErrors
     rerender({ ...props, extraErrors: undefined });
 
-    // Second call: no extraErrors, no schema errors → state should be cleared
+    // Second call: no extraErrors, no schema errors → nothing displayed
     act(() => {
       formRef.current!.validateForm();
     });
-    expect(formRef.current!.state.errors).toHaveLength(0);
-    expect(formRef.current!.state.errorSchema).toEqual({});
+    expect(errorListMessages(node)).toHaveLength(0);
+    expect(fieldErrorsById(node)).toEqual({});
   });
 });
 

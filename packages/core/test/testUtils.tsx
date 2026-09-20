@@ -149,6 +149,23 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
   }
 }
 
+/** The field-level error messages the `FieldErrorTemplate` renders, keyed by the id of the field each list sits under.
+ * With the DOM as the witness, a test asserts what the user sees rather than the `Form` instance's state, which a
+ * function-component `Form` does not expose.
+ */
+export function fieldErrorsById(node: ParentNode): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+  for (const list of node.querySelectorAll('ul.error-detail')) {
+    result[list.id.replace(/__error$/, '')] = Array.from(list.querySelectorAll('li'), (item) => item.textContent ?? '');
+  }
+  return result;
+}
+
+/** The messages the top or bottom `ErrorList` renders, in order */
+export function errorListMessages(node: ParentNode): string[] {
+  return Array.from(node.querySelectorAll('.panel.errors li'), (item) => item.textContent ?? '');
+}
+
 export async function submitForm(node: Element, user: UserEvent, forceFireEvent = false) {
   const submitButton = node.querySelector('[type="submit"]');
   if (submitButton && !forceFireEvent) {
