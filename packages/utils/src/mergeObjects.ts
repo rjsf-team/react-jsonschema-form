@@ -37,8 +37,12 @@ export default function mergeObjects(
         }
         merged = left.concat(toMerge);
       }
-      // A plain assignment to `__proto__` would reach the setter and swap the result's prototype for `merged`
-      Object.defineProperty(acc, key, { value: merged, enumerable: true, writable: true, configurable: true });
+      if (key === '__proto__') {
+        // A plain assignment here would reach the setter and swap the result's prototype for `merged`
+        Object.defineProperty(acc, key, { value: merged, enumerable: true, writable: true, configurable: true });
+      } else {
+        acc[key] = merged;
+      }
       return acc;
     },
     { ...obj1 },
