@@ -2483,6 +2483,49 @@ describe('clearing a field with a schema default does not re-apply the default (
   });
 });
 
+// The data the form reports for a cleared field holds the key with an `undefined` value, which `omitExtraData` strips,
+// so these live outside `describeRepeated`, where that key is what the parent's later prop change removes
+describe('a parent dropping data the form reported as absent', () => {
+  it('re-applies the default of a key the parent removed after replying', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { keep: { type: 'string' }, defaulted: { type: 'string', default: 'preset' } },
+    };
+    let currentFormData: unknown;
+    const props = {
+      schema,
+      onChange: (event: IChangeEvent) => {
+        currentFormData = event.formData;
+      },
+    };
+    const { node, rerender } = createFormComponent({ ...props, formData: { keep: 'a', defaulted: 'typed' } });
+
+    await user.clear(node.querySelector<HTMLInputElement>('#root_defaulted')!);
+    rerender({ ...props, formData: currentFormData });
+    rerender({ ...props, formData: { keep: 'a' } });
+
+    expect(node.querySelector<HTMLInputElement>('#root_defaulted')).toHaveValue('preset');
+  });
+
+  it('re-applies the defaults when the parent empties the data after replying', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'preset' } } };
+    let currentFormData: unknown;
+    const props = {
+      schema,
+      onChange: (event: IChangeEvent) => {
+        currentFormData = event.formData;
+      },
+    };
+    const { node, rerender } = createFormComponent({ ...props, formData: { name: 'typed' } });
+
+    await user.clear(node.querySelector<HTMLInputElement>('#root_name')!);
+    rerender({ ...props, formData: currentFormData });
+    rerender({ ...props, formData: {} });
+
+    expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('preset');
+  });
+});
+
 describe('dependency defaults in controlled forms', () => {
   const triggersSchema: RJSFSchema = {
     type: 'array',

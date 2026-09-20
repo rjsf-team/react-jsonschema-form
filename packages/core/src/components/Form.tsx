@@ -373,30 +373,35 @@ function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 
 /** Rewrites every spelling of an absent value in `data` to a single one, so that two values that differ only in how
- * they say nothing is there compare as equal. `null` and an object whose every value is absent both become
- * `undefined`, and keys holding an absent value are dropped
+ * they say nothing is there compare as equal. A key holding `undefined` is dropped, since a parent that round trips the
+ * data through JSON drops it too. At the root, `null` and an empty object also become `undefined`, because a parent
+ * replying to an emitted `undefined` commonly coalesces it to `null` or spreads it into an object. Deeper down those
+ * two keep their meaning, where asking for an empty object or a `null` is asking for a value rather than repeating that
+ * there is none
  *
  * @param data - The value to rewrite
- * @returns - The value with every absent value spelled as `undefined`
+ * @returns - The value with every absent value spelled the same way
  */
 function withoutAbsentValues(data: unknown): unknown {
-  if (data === null) {
-    return undefined;
+  function normalize(value: unknown, isRoot: boolean): unknown {
+    if (isRoot && value === null) {
+      return undefined;
+    }
+    if (Array.isArray(value)) {
+      return value.map((item) => normalize(item, false));
+    }
+    if (isObject(value)) {
+      const present = Object.entries(value).reduce((acc: Record<string, unknown>, [key, entry]) => {
+        if (entry !== undefined) {
+          acc[key] = normalize(entry, false);
+        }
+        return acc;
+      }, {});
+      return isRoot && Object.keys(present).length === 0 ? undefined : present;
+    }
+    return value;
   }
-  if (Array.isArray(data)) {
-    return data.map(withoutAbsentValues);
-  }
-  if (isObject(data)) {
-    const present = Object.entries(data).reduce((acc: Record<string, unknown>, [key, value]) => {
-      const normalized = withoutAbsentValues(value);
-      if (normalized !== undefined) {
-        acc[key] = normalized;
-      }
-      return acc;
-    }, {});
-    return Object.keys(present).length > 0 ? present : undefined;
-  }
-  return data;
+  return normalize(data, true);
 }
 
 /** The definition of a pending change that will be processed in the `onChange` handler
@@ -429,10 +434,11 @@ export default class Form<
 
   /** The `formData` last handed to `onChange`, wrapped so that never having reported a change is distinguishable from
    * having reported `undefined`. A parent that stores what it receives is holding the form's own data even when it
-   * reshaped it on the way in, which `isReportedFormData` recognizes. It is dropped once the parent supplies data of
-   * its own, since from then on the form no longer holds what it reported
+   * reshaped it on the way in, which `isReportedFormData` recognizes while `awaitingReply` says the parent has yet to
+   * pass anything back. It is dropped once the parent supplies data of its own, since from then on the form no longer
+   * holds what it reported
    */
-  private lastReportedFormData?: { formData: T | undefined };
+  private lastReportedFormData?: { formData: T | undefined; awaitingReply: boolean };
 
   /** When the `extraErrors` prop changes, re-merges `schemaValidationErrors` + `extraErrors` + `customErrors` into
    * state before render, ensuring the updated errors are visible immediately in a single render cycle.
@@ -495,16 +501,23 @@ export default class Form<
    * Determines whether `formData` handed back by the parent is the data the form last reported through `onChange`.
    * Parents routinely reshape what they receive before storing it, by spreading it into a new object, keeping
    * `undefined` as `null` or round-tripping it through JSON, all of which only change how an absent value is spelled,
-   * so the two are compared with every spelling of absence normalized away.
+   * so until the reply arrives the two are compared with every spelling of absence normalized away. Once it has
+   * arrived, `lastReportedFormData` holds the spelling the parent chose, and only that exact data is still the form's
+   * own: a later prop change that merely resembles the report is the parent asking for something else, such as
+   * dropping a key so its `default` comes back
    *
    * @param formData - The `formData` the parent is currently passing
-   * @returns - True when the form reported a change and `formData` is that data, ignoring how absent values are spelled
+   * @returns - True when `formData` is the data the form reported, in the parent's spelling of it
    */
   private isReportedFormData(formData: T | undefined | null) {
     if (!this.lastReportedFormData) {
       return false;
     }
-    return deepEquals(withoutAbsentValues(formData), withoutAbsentValues(this.lastReportedFormData.formData));
+    const { formData: reportedFormData, awaitingReply } = this.lastReportedFormData;
+    if (!awaitingReply) {
+      return deepEquals(formData, reportedFormData);
+    }
+    return deepEquals(withoutAbsentValues(formData), withoutAbsentValues(reportedFormData));
   }
 
   /**
@@ -518,7 +531,7 @@ export default class Form<
   private reportChange(changeEvent: IChangeEvent<T, S, F>, ...id: [id?: string]) {
     const { onChange } = this.props;
     if (onChange) {
-      this.lastReportedFormData = { formData: changeEvent.formData };
+      this.lastReportedFormData = { formData: changeEvent.formData, awaitingReply: true };
       // Spread, so that a report with no field behind it still calls `onChange` with the one argument it has always
       // been called with
       onChange(changeEvent, ...id);
@@ -605,6 +618,12 @@ export default class Form<
       const { nextState, isEchoOfState } = snapshot;
       const nextStateDiffersFromProps = !deepEquals(nextState.formData, this.props.formData);
 
+      if (this.lastReportedFormData && this.props.formData !== undefined) {
+        // The parent has passed data of its own now, either its reply to the report or something that replaces it.
+        // A reply is remembered in the spelling the parent gave it, so that it keeps counting as the form's own data
+        // however it was reshaped, while everything else leaves the form holding data it never reported
+        this.lastReportedFormData = isEchoOfState ? { formData: this.props.formData, awaitingReply: false } : undefined;
+      }
       if (isEchoOfState && nextStateDiffersFromProps) {
         // Re-deriving defaults from echoed data can undo what `processPendingChange` resolved, such as a switch to a
         // oneOf/anyOf option whose data the root `default` would otherwise replace, so that data is kept while the
@@ -626,11 +645,6 @@ export default class Form<
         return;
       }
 
-      // The parent is supplying data of its own, so what the form last reported no longer describes the data it
-      // holds and a later prop change that happens to match that report is a real change rather than a reply
-      if (!isEchoOfState) {
-        this.lastReportedFormData = undefined;
-      }
       if (nextStateDiffersFromProps && !deepEquals(nextState.formData, prevState.formData)) {
         this.reportChange(toIChangeEvent(nextState));
       }

@@ -696,6 +696,37 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('A');
     });
+    it('should apply a formData prop change that fills a subsection the form reported as absent', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          other: { type: 'string', title: 'Other' },
+          cfg: {
+            type: 'object',
+            oneOf: [
+              { title: 'Advanced Configuration', type: 'object', properties: { types: { const: 'advanced' } } },
+              { title: 'No Configuration', type: 'null' },
+            ],
+            default: { types: 'advanced' },
+          },
+        },
+      };
+      let currentFormData: unknown;
+      const props = {
+        schema,
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' } as const,
+        onChange: (event: IChangeEvent) => {
+          currentFormData = event.formData;
+        },
+      };
+      const { node, rerender } = createFormComponent({ ...props, formData: { other: 'A' } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')!, '1');
+      rerender({ ...props, formData: currentFormData });
+      rerender({ ...props, formData: { other: 'A', cfg: {} } });
+
+      expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toHaveValue('0');
+    });
     it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
       const ref = createRef<Form>();
