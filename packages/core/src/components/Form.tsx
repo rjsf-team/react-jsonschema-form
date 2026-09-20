@@ -691,14 +691,20 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base
     // has to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and
     // `state.errors` already carries them, which would merge each in a second time
-    const currentErrors: ValidationData<T> =
-      // oxlint-disable-next-line typescript/no-deprecated
-      props.noValidate || isSchemaChanged
-        ? { errors: [], errorSchema: {} }
-        : {
-            errors: current?.schemaValidationErrors || [],
-            errorSchema: current?.schemaValidationErrorSchema || {},
-          };
+    // oxlint-disable-next-line typescript/no-deprecated
+    const isErrorStateReset = props.noValidate || isSchemaChanged;
+    const currentErrors: ValidationData<T> = isErrorStateReset
+      ? { errors: [], errorSchema: {} }
+      : {
+          errors: current?.schemaValidationErrors || [],
+          errorSchema: current?.schemaValidationErrorSchema || {},
+        };
+    if (isErrorStateReset) {
+      // The validator's own results describe the schema that is gone; leaving them behind would let the next
+      // `extraErrors` change re-merge them back onto the display through `getDerivedStateFromProps()`
+      schemaValidationErrors = currentErrors.errors;
+      schemaValidationErrorSchema = currentErrors.errorSchema;
+    }
     errors = currentErrors.errors;
     errorSchema = currentErrors.errorSchema;
     // We only update the error schema for changed fields if mustValidate is false
@@ -746,7 +752,7 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 }
 
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
- * data, which is then run through `deriveFormState()` for any missing defaults and, when the resolved schema changed,
+ * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
  * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
  * a form field. The change's `newErrorSchema`, if any, either updates an existing validation error at its path or
  * becomes a custom error; then the data is validated if required. Reads nothing but its arguments and performs no
@@ -770,7 +776,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const path = fieldPathToList(fieldPath);
   // oxlint-disable-next-line typescript/no-deprecated
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
-  const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema, errors, registry } = current;
+  const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema, registry } = current;
   let { customErrors, retrievedSchema } = current;
   // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
   // pattern in deriveFormState/getDerivedStateFromProps and avoids the duplication that
@@ -781,7 +787,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
   // When switching from null to an object option in oneOf, MultiSchemaField sends
   // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
-  // In this case, pass undefined to deriveFormState to trigger fresh default computation.
+  // In this case, pass undefined to deriveFormData to trigger fresh default computation.
   // Only do this when the previous formData was null/undefined (switching FROM null).
   const hasOnlyUndefinedValues =
     isObject(formData) &&
@@ -792,9 +798,9 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
   if (isObject(formData) || Array.isArray(formData)) {
     // Tracks if the user cleared a plain (non-oneOf/anyOf) leaf field.
-    // The key is removed twice: once before deriveFormState so inputForDefaults
+    // The key is removed twice: once before deriveFormData so inputForDefaults
     // reflects an empty field for conditional schema resolution, and once after so
-    // the user's clear overrides any schema default deriveFormState re-applied (#5125)
+    // the user's clear overrides any schema default deriveFormData re-applied (#5125)
     // and AJV never receives { key: undefined } for type:"string" fields (#4518).
     let plainLeafWasCleared = false;
 
@@ -847,9 +853,9 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
     // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
     if (plainLeafWasCleared && formData) {
-      // `replaceEqualDeep()` may have handed this object straight back from the committed state, so the clear lands
-      // on a copy rather than in place
-      formData = setByPath((Array.isArray(formData) ? [...formData] : { ...formData }) as T, path, undefined);
+      // `replaceEqualDeep()` may have handed back subtrees of the committed data, and `setByPath()` writes through
+      // every container along the path, so the clear lands on a clone; sharing is restored for what it did not touch
+      formData = replaceEqualDeep(formData, setByPath(structuredClone(formData), path, undefined));
     }
   }
 
@@ -914,8 +920,14 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     );
     next = { ...next, ...liveValidation };
   } else if (!noValidate && newErrorSchema) {
-    // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-    const mergedErrors = mergeErrors<T>({ errorSchema: mergeBaseErrorSchema, errors }, extraErrors, customErrors);
+    // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors. The base list is the
+    // validator's own, matching `mergeBaseErrorSchema`: `current.errors` already carries `extraErrors` and
+    // `customErrors`, so merging them onto it appends each of them a second time on every change (#5041)
+    const mergedErrors = mergeErrors<T>(
+      { errorSchema: mergeBaseErrorSchema, errors: current.schemaValidationErrors },
+      extraErrors,
+      customErrors,
+    );
     next = { ...next, ...mergedErrors };
   } else if (clearedCustomError) {
     // The displayed errors are rebuilt from the validator's own result, so the cleared error leaves both the field

@@ -2577,6 +2577,38 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     expect(nameErrors).toHaveLength(1);
     expect(nameErrors[0]).toBe('Name is required');
   });
+
+  it('should not accumulate duplicate extraErrors in the error list when a field raises a custom error', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['bar'],
+      properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+    };
+    function RaisingField({ formData, onChange, fieldPath }: FieldProps) {
+      return (
+        <input
+          type='text'
+          value={formData ?? ''}
+          onChange={(event) => onChange(event.target.value, fieldPath, { __errors: ['custom!'] })}
+        />
+      );
+    }
+    const formRef = createRef<Form>();
+    const { node } = createFormComponent({
+      ref: formRef,
+      schema,
+      fields: { StringField: RaisingField },
+      extraErrors: { foo: { __errors: ['extra!'] } } as ErrorSchema,
+    });
+    // A submit puts a real validation error into `schemaValidationErrorSchema`, which is the base the custom-error
+    // path re-merges onto
+    await submitForm(node, user);
+
+    await user.type(node.querySelectorAll<HTMLInputElement>('input[type=text]')[0], 'abc');
+
+    const { errors } = formRef.current!.state;
+    expect(errors.filter(({ message }) => message === 'extra!')).toHaveLength(1);
+  });
 });
 
 describe('patternProperties with fixed properties (#4518)', () => {
