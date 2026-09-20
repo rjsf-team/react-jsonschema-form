@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type {
   RJSFSchema,
   FieldProps,
@@ -14,9 +13,8 @@ import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import type Form from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const user = userEvent.setup();
@@ -1076,7 +1074,7 @@ describe('ObjectField', () => {
           },
         },
       };
-      const formRef = createRef<Form>();
+      const formRef = createFormRef();
       const { node, onChange } = createFormComponent({
         ref: formRef,
         schema: nestedSchema,

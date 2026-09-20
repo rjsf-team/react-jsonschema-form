@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react';
-import { createRef } from 'react';
 import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -10,7 +9,7 @@ import type { MockInstance } from 'vitest';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import Form from '../src/index.ts';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -3171,7 +3170,7 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         country: { 'ui:initialValue': 'US' },
       };
-      const formRef = createRef<Form>();
+      const formRef = createFormRef();
       const props: NoValFormProps = { ref: formRef, schema, uiSchema };
       const { node } = createFormComponent(props);
       const input = node.querySelector<HTMLInputElement>('input')!;
@@ -3194,7 +3193,7 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         country: { 'ui:initialValue': 'US' },
       };
-      const formRef = createRef<Form>();
+      const formRef = createFormRef();
       // Passing initialFormData means reset() calls getStateFromProps with that data directly rather than the
       // IS_RESET sentinel, which is what previously caused this case to be missed.
       const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
@@ -3220,7 +3219,7 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         country: { 'ui:initialValue': 'US' },
       };
-      const formRef = createRef<Form>();
+      const formRef = createFormRef();
       const props: NoValFormProps = { ref: formRef, schema, uiSchema, initialFormData: {} };
       const { node } = createFormComponent(props);
       const countryInput = node.querySelector<HTMLInputElement>('#root_country')!;

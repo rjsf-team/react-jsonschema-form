@@ -5,8 +5,13 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import type Form from '../src/index.ts';
-import { AcceptingParent, expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormRef,
+  describeRepeated,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -137,7 +142,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
             required: ['foo.bar', 'baz'],
           };
-          const formRef = createRef<Form>();
+          const formRef = createFormRef();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -179,7 +184,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
               },
             },
           };
-          const formRef = createRef<Form>();
+          const formRef = createFormRef();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -1050,7 +1055,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
-        const formRef = createRef<Form>();
+        const formRef = createFormRef();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {

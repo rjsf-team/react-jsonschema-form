@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -12,6 +12,13 @@ import type { FormProps } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
+
+/** A ref for a `Form`, typed the way TSX requires for a class element. The one place the tests name that type, so the
+ * function-component `Form` changes it to `RefObject<FormHandle>` here and nowhere else.
+ */
+export function createFormRef() {
+  return createRef<Form>();
+}
 
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;

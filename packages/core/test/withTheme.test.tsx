@@ -1,11 +1,10 @@
-import { Component, createRef } from 'react';
+import { Component } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import type { FormProps, ThemeProps } from '../src/index.ts';
-import type Form from '../src/index.ts';
 import { withTheme } from '../src/index.ts';
-import { createComponent } from './testUtils.tsx';
+import { createComponent, createFormRef } from './testUtils.tsx';
 
 function WrapperClassComponent(props: ThemeProps) {
   return class extends Component<FormProps> {
@@ -308,7 +307,7 @@ describe('withTheme', () => {
   });
 
   it('should forward the ref', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const schema: RJSFSchema = {};
     const uiSchema = {};
 

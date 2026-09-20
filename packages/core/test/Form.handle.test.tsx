@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type { RJSFSchema, RJSFValidationError, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, fireEvent, render } from '@testing-library/react';
@@ -6,7 +5,7 @@ import { expectTypeOf } from 'vitest';
 
 import type { FormHandle } from '../src/index.ts';
 import Form, { withTheme } from '../src/index.ts';
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, createFormRef } from './testUtils.tsx';
 
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
 
@@ -14,7 +13,7 @@ const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string
  * and consuming code narrows to the handle so nothing outside it is relied upon.
  */
 function mountWithHandle(props: Parameters<typeof createFormComponent>[0]) {
-  const ref = createRef<Form>();
+  const ref = createFormRef();
   const result = createFormComponent({ ...props, ref });
   const handle: FormHandle = ref.current!;
   return { ...result, handle };
@@ -80,7 +79,7 @@ describe('FormHandle', () => {
     });
 
     it('submits without an onSubmit handler', () => {
-      const ref = createRef<Form>();
+      const ref = createFormRef();
       render(<Form ref={ref} schema={requiredSchema} validator={validator} initialFormData={{ name: 'a' }} />);
       const handle: FormHandle = ref.current!;
 
@@ -189,7 +188,7 @@ describe('FormHandle', () => {
   });
 
   it('is reachable through a themed form', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const ThemedForm = withTheme({});
     render(<ThemedForm ref={ref} schema={schema} validator={validator} initialFormData={{ name: 'themed' }} />);
     const handle: FormHandle = ref.current!;
