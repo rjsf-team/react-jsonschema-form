@@ -157,7 +157,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           <ChakraSelect.Content>
             {groupedOptions.map((option) =>
               isEnumOptionsGroup<S>(option) ? (
-                <ChakraSelect.ItemGroup key={option.label}>
+                <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>
                   <ChakraSelect.ItemGroupLabel>{option.label}</ChakraSelect.ItemGroupLabel>
                   {option.options.map(renderItem)}
                 </ChakraSelect.ItemGroup>

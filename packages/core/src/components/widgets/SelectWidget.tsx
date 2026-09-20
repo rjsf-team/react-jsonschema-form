@@ -118,7 +118,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
           isEnumOptionsGroup<S>(item) ? (
-            <optgroup key={item.label} label={item.label}>
+            <optgroup key={`optgroup-${item.label}`} label={item.label}>
               {item.options.map(renderOption)}
             </optgroup>
           ) : (

@@ -82,6 +82,27 @@ describe('SelectWidget', () => {
     expect(groupAOptions[1]).toBeDisabled();
   });
 
+  test('does not collide a group label with an option index key', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          readonly: false,
+          options: {
+            enumOptions,
+            // '0' is also the index key of the first ungrouped option
+            optgroups: { '0': ['bar'] },
+          },
+        })}
+      />,
+    );
+
+    expect(container.querySelectorAll('optgroup')).toHaveLength(1);
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    consoleError.mockRestore();
+  });
+
   test('fires onChange with the correct value for a grouped option', () => {
     const onChange = vi.fn();
     const { container } = render(

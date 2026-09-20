@@ -1,6 +1,7 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import Form from './WrappedForm.tsx';
 
@@ -113,5 +114,23 @@ describe('NativeSelectWidget', () => {
     expect(screen.getByRole('option', { name: 'foo' })).toBeEnabled();
     expect(screen.getByRole('option', { name: 'bar' })).toBeDisabled();
     expect(screen.getByRole('option', { name: 'baz' })).toBeDisabled();
+  });
+
+  test('does not collide a group label with an option index key', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const schema: RJSFSchema = {
+      type: 'string',
+      enum: ['foo', 'bar'],
+    };
+    const uiSchema: UiSchema = {
+      'ui:widget': 'NativeSelectWidget',
+      // '0' is also the index key of the first ungrouped option
+      'ui:options': { optgroups: { '0': ['bar'] } },
+    };
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelectorAll('optgroup')).toHaveLength(1);
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    consoleError.mockRestore();
   });
 });

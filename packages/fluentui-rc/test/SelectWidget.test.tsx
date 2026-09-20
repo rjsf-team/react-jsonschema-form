@@ -61,6 +61,28 @@ describe('SelectWidget', () => {
     expect(screen.getAllByRole('option')).toHaveLength(5);
   });
 
+  test('does not collide a group label with an option index key', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          options: {
+            enumOptions,
+            // '0' is also the index key of the first ungrouped option
+            optgroups: { '0': ['bar'] },
+          },
+        })}
+      />,
+    );
+
+    await screen.findByRole('combobox');
+    fireEvent.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('group', { name: '0' })).toBeInTheDocument();
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    consoleError.mockRestore();
+  });
+
   test('selecting a grouped option fires onChange with the correct value', async () => {
     const onChange = vi.fn();
     render(

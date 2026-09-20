@@ -795,6 +795,29 @@ describe('StringField', () => {
       consoleError.mockRestore();
     });
 
+    it('should not collide a group label with an option index key', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['alpha', 'beta'],
+        },
+        uiSchema: {
+          'ui:options': {
+            // '0' is also the index key of the first ungrouped option under the default 'indexed' format
+            optgroups: { '0': ['beta'] },
+          },
+        },
+      });
+
+      expect(node.querySelectorAll('optgroup')).toHaveLength(1);
+      expect(Array.from(node.querySelectorAll('option')).map((option) => option.textContent)).toEqual(
+        expect.arrayContaining(['alpha', 'beta']),
+      );
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
     it('should reflect the change event for a grouped option', async () => {
       const { node, onChange } = createFormComponent({
         schema: {

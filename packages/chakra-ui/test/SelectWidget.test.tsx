@@ -1,6 +1,7 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import Form from './WrappedForm.tsx';
 
@@ -44,6 +45,20 @@ describe('SelectWidget optgroups', () => {
 
     const options = container.querySelectorAll('[role="option"]');
     expect(Array.from(options).map((option) => option.textContent)).toEqual(['baz', 'qux', 'foo', 'bar']);
+  });
+
+  test('does not collide a group label with an option value key', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const uiSchema: UiSchema = {
+      // '0' is also the value key of the first ungrouped option under the default 'indexed' format
+      'ui:options': { optgroups: { '0': ['bar'] } },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelectorAll('[role="option"]')).toHaveLength(4);
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    consoleError.mockRestore();
   });
 
   test('skips options that encode to an empty value when optionValueFormat is realValue', () => {
