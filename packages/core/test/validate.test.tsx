@@ -421,6 +421,14 @@ describe('Validation', () => {
             },
           ]);
         });
+
+        it('renders the error list after the fields when showErrorList is bottom', async () => {
+          const { node: bottomNode } = createFormComponent({ schema, formData: {}, showErrorList: 'bottom' });
+          await submitForm(bottomNode, user, true);
+
+          expect(bottomNode.firstElementChild).not.toHaveClass('errors');
+          expect(bottomNode.lastElementChild).toHaveClass('errors');
+        });
       });
     });
 

@@ -22,6 +22,7 @@ export interface FormComponentResult {
   onError: Mock;
   onSubmit: Mock;
   rerender: RerenderType;
+  unmount: () => void;
 }
 export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
@@ -108,7 +109,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   const onChange = vi.fn();
   const onError = vi.fn();
   const onSubmit = vi.fn();
-  const { container, rerender } = render(
+  const { container, rerender, unmount } = render(
     <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
   );
 
@@ -122,7 +123,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
     throw new Error('node is not defined');
   }
 
-  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction };
+  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount };
 }
 
 export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
