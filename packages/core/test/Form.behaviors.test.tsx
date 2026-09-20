@@ -133,6 +133,26 @@ describe('Live validation onBlur', () => {
     expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
   });
 
+  it('does not occur when noValidate is set', async () => {
+    const onBlur = vi.fn();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+      noValidate: true,
+    });
+    const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
+    await user.type(element, 'short');
+    const changeCallCount = onChange.mock.calls.length;
+
+    await user.tab();
+
+    expect(onBlur).toHaveBeenLastCalledWith('root', 'short');
+    // `noValidate` turns validation off everywhere else, so the blur produces no errors and no state update
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
+  });
+
   it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
     function InlineCallbackParent() {
       const [value, setValue] = useState<string | undefined>(undefined);

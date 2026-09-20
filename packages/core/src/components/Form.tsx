@@ -526,6 +526,11 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * changed, so it is the very schema the committed state is already rendering
    */
   isRetrievedSchemaReused: boolean;
+  /** `current` already holds these schema utilities. When it does not, a caller committing `retrievedSchema` has to
+   * commit the render context derived from `resolved` too, or state ends up holding a schema resolved by utilities
+   * it does not itself hold.
+   */
+  areSchemaUtilsReused: boolean;
 }
 
 /** How one data pass differs from the default, which just fills in the missing defaults */
@@ -559,8 +564,10 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const isUncontrolled = props.formData === undefined;
   const resolved = resolveSchemaUtils(props, current);
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
-  // `resolveSchemaUtils()` hands `current` straight back when nothing the utilities were built from changed
-  const areSchemaUtilsReused = resolved === current;
+  // Compared through `schemaUtils` rather than by the identity of `resolved` itself, which holds only because
+  // `resolveSchemaUtils()` hands `current` straight back: narrowing it to a copy would silently make this false
+  // forever, and with it every reuse below
+  const areSchemaUtilsReused = resolved.schemaUtils === current?.schemaUtils;
   const rootSchema = schemaUtils.getRootSchema();
 
   // An uncontrolled form with no new data keeps its own; a reset starts from nothing
@@ -619,7 +626,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     }
   } while (wasSanitized);
 
-  return { formData, retrievedSchema, resolved, isRetrievedSchemaReused };
+  return { formData, retrievedSchema, resolved, isRetrievedSchemaReused, areSchemaUtilsReused };
 }
 
 /** How one state derivation differs from the default, which validates the data it derives */
@@ -776,8 +783,12 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const path = fieldPathToList(fieldPath);
   // oxlint-disable-next-line typescript/no-deprecated
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
-  const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema, registry } = current;
+  const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema } = current;
   let { customErrors, retrievedSchema } = current;
+  // A prop the schema utilities are built from can change and reach a queued change before `getSnapshotBeforeUpdate()`
+  // re-derives state. The derivation below rebuilds them when that happens, and the context they resolved the data
+  // with is committed alongside it, so state never holds a `retrievedSchema` resolved by utilities it does not hold.
+  let context: RenderContext<T, S, F> = current;
   // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
   // pattern in deriveFormState/getDerivedStateFromProps and avoids the duplication that
   // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -841,11 +852,14 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
       !Array.isArray(newValue) &&
       !disabled &&
       !readonly;
-    // Only the data is derived here: the render context is unchanged by a change to the data alone, and the errors
+    // Only the data is derived here: a change to the data alone leaves the render context as it is, and the errors
     // are reconciled below
     const derived = deriveFormData(current, inputForDefaults, { shouldSanitize }, props);
     formData = derived.formData;
     retrievedSchema = derived.retrievedSchema;
+    if (!derived.areSchemaUtilsReused) {
+      context = deriveRenderContext(props, derived.retrievedSchema, current, derived.resolved);
+    }
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
     // state (#5125 regression: without this, clearing a second field re-applies the
@@ -863,7 +877,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let newFormData = formData;
 
   if (omitExtraData === true && liveOmit === 'onChange') {
-    newFormData = schemaUtils.omitExtraData(schema, formData);
+    newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
   }
 
   if (newErrorSchema) {
@@ -911,10 +925,10 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (mustValidate && !deferLiveValidate) {
     const liveValidation = runLiveValidation(
       props,
-      schemaUtils,
-      schema,
+      context.schemaUtils,
+      context.schema,
       newFormData,
-      registry,
+      context.registry,
       customErrors,
       retrievedSchema,
     );
@@ -939,7 +953,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     );
     next = { ...next, ...mergedErrors };
   }
-  return { ...current, ...next };
+  return { ...current, ...context, ...next };
 }
 
 /** The state after `reset()`: the data is re-derived from `formData`/`initialFormData` the way an initial render does
@@ -954,7 +968,7 @@ function applyReset<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
   const { formData: propsFormData, initialFormData } = props;
-  const { formData, retrievedSchema } = deriveFormData(
+  const { formData, retrievedSchema, resolved, areSchemaUtilsReused } = deriveFormData(
     current,
     propsFormData ?? initialFormData,
     { isReset: true },
@@ -962,6 +976,8 @@ function applyReset<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
   return {
     ...current,
+    // See `applyChange()`: utilities rebuilt by the pass bring their render context with them
+    ...(areSchemaUtilsReused ? undefined : deriveRenderContext(props, retrievedSchema, current, resolved)),
     formData,
     retrievedSchema,
     errorSchema: {},
@@ -986,14 +1002,15 @@ function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { omitExtraData, liveOmit, liveValidate } = props;
+  // oxlint-disable-next-line typescript/no-deprecated
+  const { omitExtraData, liveOmit, liveValidate, noValidate } = props;
   const { schema, schemaUtils, customErrors, retrievedSchema, registry } = current;
   const formData =
     omitExtraData === true && liveOmit === 'onBlur'
       ? schemaUtils.omitExtraData(schema, current.formData)
       : current.formData;
   const validation =
-    liveValidate === 'onBlur'
+    liveValidate === 'onBlur' && !noValidate
       ? runLiveValidation(props, schemaUtils, schema, formData, registry, customErrors, retrievedSchema)
       : undefined;
   return { ...current, formData, ...validation };
