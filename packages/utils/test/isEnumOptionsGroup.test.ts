@@ -10,4 +10,8 @@ describe('isEnumOptionsGroup', () => {
     const option: IndexedEnumOptionType = { value: 'foo', label: 'Foo', index: 0, disabled: false };
     expect(isEnumOptionsGroup(option)).toBe(false);
   });
+  it('returns false for an option carrying a non-array options value, which a caller can put on enumOptions', () => {
+    const option = { value: 'foo', label: 'Foo', index: 0, disabled: false, options: 'nope' };
+    expect(isEnumOptionsGroup(option as unknown as IndexedEnumOptionType)).toBe(false);
+  });
 });

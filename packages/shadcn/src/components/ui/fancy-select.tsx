@@ -32,6 +32,12 @@ export interface FancySelectSection {
   items: FancySelectItem[];
 }
 
+/** The React key for the unheaded section. `toSections()` emits at most one of them, always last, so a constant key
+ * keeps it mounted as earlier sections come and go - an index would shift, remounting the group and discarding
+ * cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can collide with it.
+ */
+export const UNGROUPED_SECTION_KEY = 'ungrouped';
+
 /**
  * Props interface for the FancySelect component
  */
@@ -176,8 +182,11 @@ export function FancySelect({
           >
             {sections ? (
               <CommandList className='h-full overflow-auto'>
-                {sections.map((section, sectionIndex) => (
-                  <CommandGroup key={section.label ?? `ungrouped-${sectionIndex}`} heading={section.label}>
+                {sections.map((section) => (
+                  <CommandGroup
+                    key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
+                    heading={section.label}
+                  >
                     {section.items.map(renderItem)}
                   </CommandGroup>
                 ))}

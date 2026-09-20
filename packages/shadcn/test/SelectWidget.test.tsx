@@ -203,6 +203,37 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
   });
 
+  test('does not collide a group label with the unheaded section key', async () => {
+    const user = userEvent.setup();
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          rawErrors: [],
+          value: undefined,
+          options: {
+            enumOptions: [
+              { label: 'Foo', value: 'foo' },
+              { label: 'Bar', value: 'bar' },
+            ],
+            // A label chosen to collide with the key the unheaded section used to be given
+            optgroups: { 'ungrouped-1': ['foo'] },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('button'));
+
+    expect(screen.getByRole('group', { name: 'ungrouped-1' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    consoleError.mockRestore();
+  });
+
   test('selecting a grouped option fires onValueChange with the correct index', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();

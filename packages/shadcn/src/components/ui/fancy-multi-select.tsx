@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
+import { UNGROUPED_SECTION_KEY } from './fancy-select.tsx';
 import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
@@ -224,8 +225,11 @@ export function FancyMultiSelect({
           <div className='absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
             {selectableSections ? (
               <CommandList className='h-full overflow-auto'>
-                {selectableSections.map((section, sectionIndex) => (
-                  <CommandGroup key={section.label ?? `ungrouped-${sectionIndex}`} heading={section.label}>
+                {selectableSections.map((section) => (
+                  <CommandGroup
+                    key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
+                    heading={section.label}
+                  >
                     {section.items.map(renderItem)}
                   </CommandGroup>
                 ))}
