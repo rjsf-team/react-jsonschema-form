@@ -749,6 +749,8 @@ A value in a group matches the enum entry it is equal to. Primitive values also 
 
 Groups render in the object's property order. JavaScript always places integer-like keys (such as `'2024'`) first, in ascending numeric order, ahead of every other key no matter where they were written. So `{ Newest: [...], '2024': [...], '2023': [...] }` renders as `2023`, `2024`, `Newest`. To keep numeric labels in the order you wrote them, make them non-integer strings (for example `'Year 2024'`).
 
+Each theme groups with whatever primitive its UI library provides, so the accessible semantics vary slightly. The one caveat worth knowing is `@rjsf/mui`: MUI's `Select` clones every child of its list with `role="option"` and offers no group primitive, so group labels are rendered as `ListSubheader`s marked `aria-disabled` — announced, but not offered as selectable choices.
+
 ```tsx
 import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

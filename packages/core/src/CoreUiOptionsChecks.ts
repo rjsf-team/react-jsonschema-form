@@ -67,6 +67,7 @@ export type CoreUiOptionsChecks =
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
+        optgroups?: Record<string, EnumValue[]>;
       }
     >
   | UiOptionsCheck<
@@ -92,6 +93,7 @@ export type CoreUiOptionsChecks =
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
+        optgroups?: Record<string, EnumValue[]>;
       }
     >
   | UiOptionsCheck<
@@ -105,6 +107,7 @@ export type CoreUiOptionsChecks =
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
+        optgroups?: Record<string, EnumValue[]>;
       }
     >
   | UiOptionsCheck<
@@ -133,6 +136,7 @@ export type CoreUiOptionsChecks =
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
         enumOrder?: EnumValue[];
+        optgroups?: Record<string, EnumValue[]>;
       }
     >
   | UiOptionsCheck<

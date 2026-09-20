@@ -34,7 +34,7 @@ describe('SelectWidget optgroups', () => {
     expect(screen.getByRole('option', { name: 'qux' })).toBeInTheDocument();
   });
 
-  it('hides group headings from assistive tech instead of exposing them as selectable options', () => {
+  it('announces group headings, marked as not selectable', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
         optgroups: {
@@ -48,10 +48,29 @@ describe('SelectWidget optgroups', () => {
 
     fireEvent.mouseDown(screen.getByRole('combobox'));
 
-    expect(screen.getByText('Group A')).toHaveAttribute('aria-hidden', 'true');
-    expect(screen.getByText('Group B')).toHaveAttribute('aria-hidden', 'true');
-    expect(screen.queryByRole('option', { name: 'Group A' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('option', { name: 'Group B' })).not.toBeInTheDocument();
+    // MUI clones every child of `Select` with `role='option'`, so the headings can't be exposed as groups; they are
+    // marked `aria-disabled` instead, so they're announced but not offered as choices
+    expect(screen.getByText('Group A')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText('Group B')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('option', { name: 'Group A' })).toBeInTheDocument();
+  });
+
+  it('does not change the form data when a group heading is clicked', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+        },
+      },
+    };
+    const onChange = vi.fn();
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} onChange={onChange} />);
+
+    fireEvent.mouseDown(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByText('Group A'));
+
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('renders ungrouped options after the optgroups', () => {

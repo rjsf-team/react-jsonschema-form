@@ -21,10 +21,12 @@ const isPrimitive = (value: unknown) => value === null || typeof value !== 'obje
  * with that group's options in the order they were listed in its value array. Enum values not claimed by any group are
  * appended afterward, in their original relative order. Group values that don't match any (remaining) enum option
  * are skipped, and a group left with no options after that is omitted entirely, so no group renders as an empty
- * heading. If multiple options share the same `value` (e.g. `oneOf` branches with a duplicate discriminator), each
- * `optgroups` reference to that value claims the next not-yet-claimed option with it, by index, rather than
- * collapsing them into a single option. JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys,
- * in ascending numeric order, regardless of the order they were written in, so those groups come first.
+ * heading. A group whose value isn't an array at all (a hand-authored `{ 'Group A': 'foo' }`) is ignored the same
+ * way, rather than throwing during render. If multiple options share the same `value` (e.g. `oneOf` branches with a
+ * duplicate discriminator), each `optgroups` reference to that value claims the next not-yet-claimed option with it,
+ * by index, rather than collapsing them into a single option. JavaScript orders integer-like keys (e.g. `'2024'`)
+ * ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups
+ * come first.
  *
  * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
  * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
@@ -78,7 +80,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
 
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
     .map(([label, values]) => {
-      const options = values.flatMap((value) => {
+      const options = (Array.isArray(values) ? values : []).flatMap((value) => {
         const option = findOption(value);
         if (option) {
           claimedIndices.add(option.index);

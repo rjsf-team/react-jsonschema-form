@@ -140,7 +140,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>
           isEnumOptionsGroup<S>(item)
             ? [
-                <ListSubheader key={`optgroup-${item.label}`} aria-hidden>
+                // MUI's `SelectInput` clones every direct child with `role='option'` and has no group primitive, so a
+                // heading can't be exposed as a `role='group'` label the way a native `<optgroup>` is. `aria-disabled`
+                // is the closest available: the label is still announced, but not as something selectable (clicking it
+                // is already a no-op, since `handleItemClick` bails on the missing `tabindex`).
+                <ListSubheader key={`optgroup-${item.label}`} aria-disabled>
                   {item.label}
                 </ListSubheader>,
                 ...item.options.map(renderOption),

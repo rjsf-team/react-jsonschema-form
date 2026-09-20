@@ -1,5 +1,5 @@
 import { groupEnumOptions, isEnumOptionsGroup } from '../src/index.ts';
-import type { EnumOptionsType } from '../src/index.ts';
+import type { EnumOptionsType, EnumValue } from '../src/index.ts';
 
 const options: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
@@ -113,6 +113,16 @@ describe('groupEnumOptions', () => {
       const result = groupEnumOptions(options, { Empty: [], 'Group A': ['foo'] });
       expect(result).toHaveLength(4);
       expect(isEnumOptionsGroup(result[0]) && result[0].label).toBe('Group A');
+    });
+    it('ignores a group whose value is not an array instead of throwing', () => {
+      const malformed = { 'Group A': 'foo', 'Group B': null, 'Group C': 3 } as unknown as Record<string, EnumValue[]>;
+      const result = groupEnumOptions(options, malformed);
+      expect(result).toEqual([
+        { value: 'foo', label: 'Foo', index: 0, disabled: false },
+        { value: 'bar', label: 'Bar', index: 1, disabled: false },
+        { value: 'baz', label: 'Baz', index: 2, disabled: false },
+        { value: 'qux', label: 'Qux', index: 3, disabled: false },
+      ]);
     });
     it('returns an empty array when enumOptions is not an array, even with optgroups provided', () => {
       expect(groupEnumOptions(undefined, { 'Group A': ['foo'] })).toEqual([]);
