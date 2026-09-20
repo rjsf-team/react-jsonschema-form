@@ -414,8 +414,8 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
  */
 function mergeErrors<T>(
   schemaValidation: ValidationData<T>,
-  extraErrors?: FormProps['extraErrors'],
-  customErrors?: ErrorSchemaBuilder,
+  extraErrors?: ErrorSchema<T>,
+  customErrors?: ErrorSchemaBuilder<T>,
 ): ValidationData<T> {
   let { errorSchema, errors } = schemaValidation;
   if (extraErrors) {
@@ -437,18 +437,19 @@ function mergeErrors<T>(
  * @param props - The props holding `customValidate`, `transformErrors` and `uiSchema`
  * @param schemaUtils - The schemaUtils whose validator runs
  * @param schema - The schema used to validate against
+ * @param context - The render context to validate with: its `schemaUtils` runs the validator, its `schema` is the
+ *          constraint set, and `ui:required` is read with the `formContext` and `globalUiOptions` its registry
+ *          normalized, so the three can never be mismatched by a caller
  * @param formData - The form data to validate
- * @param registry - The registry rendering sees, whose `formContext` and `globalUiOptions` `ui:required` is read with
- * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of `schema`
+ * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
  */
 function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
+  context: RenderContext<T, S, F>,
   formData: T | undefined,
-  registry: Registry<T, S, F>,
   retrievedSchema?: S,
 ): ValidationData<T> {
+  const { schemaUtils, schema, registry } = context;
   const { customValidate, transformErrors, uiSchema } = props;
   // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
   // Otherwise validate against the original schema so AJV sees the full constraint set.
@@ -486,10 +487,8 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
  *
  *
  * @param props - The current props
- * @param schemaUtils - The `SchemaUtilsType` whose validator runs
- * @param rootSchema - The root schema
+ * @param context - The render context to validate with; see `validateFormData()`
  * @param formData - The form data to validate
- * @param registry - The registry rendering sees
  * @param [customErrors] - The customErrors from custom components
  * @param [retrievedSchema] - The schema resolved for the branch `formData` selects, when it still describes it; the
  *          root schema is the full constraint set, so a resolved schema, which has had the root's `if`,
@@ -501,16 +500,14 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  rootSchema: S,
+  context: RenderContext<T, S, F>,
   formData: T | undefined,
-  registry: Registry<T, S, F>,
   customErrors?: ErrorSchemaBuilder<T>,
   retrievedSchema?: S,
 ) {
-  const schemaValidation = validateFormData(props, schemaUtils, rootSchema, formData, registry, retrievedSchema);
+  const schemaValidation = validateFormData(props, context, formData, retrievedSchema);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
-  const mergedErrors = mergeErrors<T>(schemaValidation, props.extraErrors, customErrors);
+  const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
 }
 
@@ -518,19 +515,16 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
 interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The data after defaults and, when asked for, sanitization */
   formData: T;
-  /** The schema resolved for `formData` */
-  retrievedSchema: S;
-  /** The schema utilities `retrievedSchema` was resolved with, for deriving the render context from the same ones */
-  resolved: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'>;
-  /** `retrievedSchema` came straight from `current`: neither the data nor anything the utilities resolve it with
-   * changed, so it is the very schema the committed state is already rendering
+  /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it. It
+   * is `current`'s own context whenever nothing it is built from changed, so committing it always is free; handing
+   * it back rather than the parts is what keeps state from holding a `retrievedSchema` resolved by utilities it
+   * does not also hold.
+   */
+  context: RenderContext<T, S, F>;
+  /** `context.retrievedSchema` came straight from `current`: neither the data nor anything the utilities resolve it
+   * with changed, so it is the very schema the committed state is already rendering
    */
   isRetrievedSchemaReused: boolean;
-  /** `current` already holds these schema utilities. When it does not, a caller committing `retrievedSchema` has to
-   * commit the render context derived from `resolved` too, or state ends up holding a schema resolved by utilities
-   * it does not itself hold.
-   */
-  areSchemaUtilsReused: boolean;
 }
 
 /** How one data pass differs from the default, which just fills in the missing defaults */
@@ -626,7 +620,12 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     }
   } while (wasSanitized);
 
-  return { formData, retrievedSchema, resolved, isRetrievedSchemaReused, areSchemaUtilsReused };
+  // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
+  // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
+  // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
+  // reference the fields hold.
+  const context = deriveRenderContext(props, retrievedSchema, current, resolved);
+  return { formData, context, isRetrievedSchemaReused };
 }
 
 /** How one state derivation differs from the default, which validates the data it derives */
@@ -644,7 +643,7 @@ interface DeriveOptions {
 /** Derives a whole `FormState` from `current` and `inputFormData`: the data is settled by `deriveFormData()`, the
  * render context is derived for the result, then the errors are reconciled, either by validating the data or by
  * carrying the committed validation results forward. This serves construction and the prop-driven update; the
- * handlers that own their own validation go through `deriveFormData()` and keep the context they already have.
+ * handlers that own their own validation go through `deriveFormData()` and reconcile the errors themselves.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The new or current data for the `Form`
@@ -665,13 +664,11 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // up before the field the user is editing has been left
   // oxlint-disable-next-line typescript/no-deprecated
   const mustValidate = edit && !props.noValidate && liveValidate === 'onChange';
-  const { formData, retrievedSchema, resolved, isRetrievedSchemaReused } = deriveFormData(
-    current,
-    inputFormData,
-    {},
-    props,
-  );
-  const renderContext = deriveRenderContext(props, retrievedSchema, current, resolved);
+  const {
+    formData,
+    context: renderContext,
+    isRetrievedSchemaReused,
+  } = deriveFormData(current, inputFormData, {}, props);
 
   let errors: RJSFValidationError[];
   let errorSchema: ErrorSchema<T> | undefined;
@@ -681,14 +678,12 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   if (mustValidate && !skipLiveValidate) {
     const liveValidation = runLiveValidation(
       props,
-      renderContext.schemaUtils,
-      renderContext.schema,
+      renderContext,
       formData,
-      renderContext.registry,
       current?.customErrors,
       // Only the schema the committed state is already rendering still provably describes this data; one this pass
       // resolved does not, since the prop change that triggered it may be the schema itself
-      isRetrievedSchemaReused ? retrievedSchema : undefined,
+      isRetrievedSchemaReused ? renderContext.retrievedSchema : undefined,
     );
     errors = liveValidation.errors;
     errorSchema = liveValidation.errorSchema;
@@ -741,7 +736,7 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
         errorSchema = schemaValidationErrorSchema;
       }
     }
-    const mergedErrors = mergeErrors<T>({ errorSchema, errors }, props.extraErrors, current?.customErrors);
+    const mergedErrors = mergeErrors({ errorSchema, errors }, props.extraErrors, current?.customErrors);
     errors = mergedErrors.errors;
     errorSchema = mergedErrors.errorSchema;
   }
@@ -756,6 +751,31 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     schemaValidationErrorSchema: schemaValidationErrorSchema ?? {},
     initialDefaultsGenerated: true,
   };
+}
+
+/** Returns `data` with every container along `path` shallow-copied, leaving the copies ready for a write at that
+ * path that must not touch the original. Subtrees off the path keep the reference the fields already hold, so
+ * nothing has to walk the data afterwards to restore the sharing a deep clone would have destroyed. Stops early,
+ * returning `data` itself, when the path runs off the end of what is actually there.
+ *
+ * @param data - The data to copy along `path`
+ * @param path - The path whose containers are copied
+ * @returns - The copied data, or `data` when `path` does not lead anywhere
+ */
+function copyAlongPath<T>(data: T, path: FieldPathList): T {
+  const copyOf = (container: object) => (Array.isArray(container) ? [...container] : { ...container });
+  const root = copyOf(data as object) as Record<PropertyKey, unknown>;
+  let container = root;
+  for (const segment of path.slice(0, -1)) {
+    const child = container[segment];
+    if (!isObject(child) && !Array.isArray(child)) {
+      return data;
+    }
+    const copy = copyOf(child as object) as Record<PropertyKey, unknown>;
+    container[segment] = copy;
+    container = copy;
+  }
+  return root as T;
 }
 
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
@@ -783,11 +803,11 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const path = fieldPathToList(fieldPath);
   // oxlint-disable-next-line typescript/no-deprecated
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
-  const { formData: oldFormData, schemaUtils, schema, schemaValidationErrorSchema } = current;
-  let { customErrors, retrievedSchema } = current;
+  const { formData: oldFormData, schemaValidationErrorSchema } = current;
+  let { customErrors } = current;
   // A prop the schema utilities are built from can change and reach a queued change before `getSnapshotBeforeUpdate()`
-  // re-derives state. The derivation below rebuilds them when that happens, and the context they resolved the data
-  // with is committed alongside it, so state never holds a `retrievedSchema` resolved by utilities it does not hold.
+  // re-derives state, so the derivation below may hand back a context rebuilt from the new props. Committing whatever
+  // it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
   // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
   // pattern in deriveFormState/getDerivedStateFromProps and avoids the duplication that
@@ -828,7 +848,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
           // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
           valueForPath = null;
         } else {
-          const { field: leaf } = schemaUtils.findFieldInSchema(schema, path, oldFormData);
+          const { field: leaf } = current.schemaUtils.findFieldInSchema(current.schema, path, oldFormData);
           const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
           // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
           // re-apply a branch default when the user clears the widget.
@@ -846,20 +866,16 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
     }
     const shouldSanitize =
-      retrievedSchema !== undefined &&
+      current.retrievedSchema !== undefined &&
       !isRootPath &&
       !isObject(newValue) &&
       !Array.isArray(newValue) &&
       !disabled &&
       !readonly;
-    // Only the data is derived here: a change to the data alone leaves the render context as it is, and the errors
-    // are reconciled below
+    // Only the data and its context are derived here; the errors are reconciled below
     const derived = deriveFormData(current, inputForDefaults, { shouldSanitize }, props);
     formData = derived.formData;
-    retrievedSchema = derived.retrievedSchema;
-    if (!derived.areSchemaUtilsReused) {
-      context = deriveRenderContext(props, derived.retrievedSchema, current, derived.resolved);
-    }
+    context = derived.context;
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
     // state (#5125 regression: without this, clearing a second field re-applies the
@@ -868,8 +884,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
     if (plainLeafWasCleared && formData) {
       // `replaceEqualDeep()` may have handed back subtrees of the committed data, and `setByPath()` writes through
-      // every container along the path, so the clear lands on a clone; sharing is restored for what it did not touch
-      formData = replaceEqualDeep(formData, setByPath(structuredClone(formData), path, undefined));
+      // every container along the path, so the clear lands on copies of just those containers
+      formData = setByPath(copyAlongPath(formData, path), path, undefined);
     }
   }
 
@@ -921,33 +937,17 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema).clearErrors(path);
     clearedCustomError = true;
   }
-  let next: Partial<FormState<T, S, F>> = { formData: newFormData, retrievedSchema, customErrors };
+  let next: Partial<FormState<T, S, F>> = { formData: newFormData, customErrors };
   if (mustValidate && !deferLiveValidate) {
-    const liveValidation = runLiveValidation(
-      props,
-      context.schemaUtils,
-      context.schema,
-      newFormData,
-      context.registry,
-      customErrors,
-      retrievedSchema,
-    );
+    const liveValidation = runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema);
     next = { ...next, ...liveValidation };
-  } else if (!noValidate && newErrorSchema) {
-    // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors. The base list is the
-    // validator's own, matching `mergeBaseErrorSchema`: `current.errors` already carries `extraErrors` and
-    // `customErrors`, so merging them onto it appends each of them a second time on every change (#5041)
-    const mergedErrors = mergeErrors<T>(
+  } else if ((!noValidate && newErrorSchema) || clearedCustomError) {
+    // Rebuild the display from the validator's own result: `current.errors` already carries `extraErrors` and
+    // `customErrors`, so merging them onto it appends each a second time on every change (#5041). That base is also
+    // what makes a cleared custom error leave the error list and not just the field. `mergeBaseErrorSchema` is
+    // `schemaValidationErrorSchema` unless a `newErrorSchema` above replaced an existing validation error at its path.
+    const mergedErrors = mergeErrors(
       { errorSchema: mergeBaseErrorSchema, errors: current.schemaValidationErrors },
-      extraErrors,
-      customErrors,
-    );
-    next = { ...next, ...mergedErrors };
-  } else if (clearedCustomError) {
-    // The displayed errors are rebuilt from the validator's own result, so the cleared error leaves both the field
-    // and the error list
-    const mergedErrors = mergeErrors<T>(
-      { errorSchema: schemaValidationErrorSchema, errors: current.schemaValidationErrors },
       extraErrors,
       customErrors,
     );
@@ -968,18 +968,11 @@ function applyReset<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
   const { formData: propsFormData, initialFormData } = props;
-  const { formData, retrievedSchema, resolved, areSchemaUtilsReused } = deriveFormData(
-    current,
-    propsFormData ?? initialFormData,
-    { isReset: true },
-    props,
-  );
+  const { formData, context } = deriveFormData(current, propsFormData ?? initialFormData, { isReset: true }, props);
   return {
     ...current,
-    // See `applyChange()`: utilities rebuilt by the pass bring their render context with them
-    ...(areSchemaUtilsReused ? undefined : deriveRenderContext(props, retrievedSchema, current, resolved)),
+    ...context,
     formData,
-    retrievedSchema,
     errorSchema: {},
     errors: [],
     schemaValidationErrors: [],
@@ -1004,14 +997,14 @@ function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): FormState<T, S, F> {
   // oxlint-disable-next-line typescript/no-deprecated
   const { omitExtraData, liveOmit, liveValidate, noValidate } = props;
-  const { schema, schemaUtils, customErrors, retrievedSchema, registry } = current;
+  const { schema, schemaUtils, customErrors, retrievedSchema } = current;
   const formData =
     omitExtraData === true && liveOmit === 'onBlur'
       ? schemaUtils.omitExtraData(schema, current.formData)
       : current.formData;
   const validation =
     liveValidate === 'onBlur' && !noValidate
-      ? runLiveValidation(props, schemaUtils, schema, formData, registry, customErrors, retrievedSchema)
+      ? runLiveValidation(props, current, formData, customErrors, retrievedSchema)
       : undefined;
   return { ...current, formData, ...validation };
 }
@@ -1030,10 +1023,10 @@ function applyValidation<T, S extends StrictRJSFSchema, F extends FormContextTyp
   formData: T | undefined,
 ): { hasError: boolean; next: FormState<T, S, F> } {
   const { extraErrors, extraErrorsAreWarnings } = props;
-  const { errors: prevErrors, customErrors, schema, schemaUtils, registry } = current;
-  const schemaValidation = validateFormData(props, schemaUtils, schema, formData, registry);
+  const { errors: prevErrors, customErrors } = current;
+  const schemaValidation = validateFormData(props, current, formData);
   // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings.
-  const { errors, errorSchema } = mergeErrors<T>(schemaValidation, extraErrors, customErrors);
+  const { errors, errorSchema } = mergeErrors(schemaValidation, extraErrors, customErrors);
   // extraErrors also block unless extraErrorsAreWarnings is set, in which case they are informational only.
   const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
   // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
@@ -1129,7 +1122,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       };
       return {
         prevExtraErrors: props.extraErrors,
-        ...mergeErrors<T>(baseErrors, props.extraErrors, state.customErrors),
+        ...mergeErrors(baseErrors, props.extraErrors, state.customErrors),
       };
     }
     return null;
@@ -1279,12 +1272,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
   ): ValidationData<T> =>
+    // `FormHandle.validate()` may validate against another schema or validator than the one on display; everything
+    // else about the context, the registry included, stays what rendering uses
     validateFormData(
       this.props,
-      altSchemaUtils || this.state.schemaUtils,
-      schema,
+      { ...this.state, schema, schemaUtils: altSchemaUtils ?? this.state.schemaUtils },
       formData,
-      this.state.registry,
       retrievedSchema,
     );
 
