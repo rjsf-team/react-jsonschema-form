@@ -435,11 +435,11 @@ function mergeErrors<T>(
  * results.
  *
  * @param props - The props holding `customValidate`, `transformErrors` and `uiSchema`
- * @param schemaUtils - The schemaUtils whose validator runs
- * @param schema - The schema used to validate against
  * @param context - The render context to validate with: its `schemaUtils` runs the validator, its `schema` is the
  *          constraint set, and `ui:required` is read with the `formContext` and `globalUiOptions` its registry
- *          normalized, so the three can never be mismatched by a caller
+ *          normalized, so those cannot be mismatched by a caller. Its `retrievedSchema` is deliberately NOT used:
+ *          whether the resolved schema may stand in for the root is the caller's to decide, which is what the
+ *          separate parameter below is for.
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
  */
@@ -515,10 +515,10 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
 interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The data after defaults and, when asked for, sanitization */
   formData: T;
-  /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it. It
-   * is `current`'s own context whenever nothing it is built from changed, so committing it always is free; handing
-   * it back rather than the parts is what keeps state from holding a `retrievedSchema` resolved by utilities it
-   * does not also hold.
+  /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it.
+   * Every value in it is `current`'s own whenever nothing it is built from changed, so committing it always is
+   * free; handing it back rather than the parts is what keeps state from holding a `retrievedSchema` resolved by
+   * utilities it does not also hold.
    */
   context: RenderContext<T, S, F>;
   /** `context.retrievedSchema` came straight from `current`: neither the data nor anything the utilities resolve it
@@ -545,7 +545,7 @@ interface DeriveDataOptions {
  * @param inputFormData - The new or current data for the `Form`
  * @param options - How this pass differs from the default
  * @param props - The current props
- * @returns - The settled data, its resolved schema and the utilities that resolved it
+ * @returns - The settled data and the render context carrying the schema that was resolved for it
  */
 function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
@@ -755,21 +755,25 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 
 /** Returns `data` with every container along `path` shallow-copied, leaving the copies ready for a write at that
  * path that must not touch the original. Subtrees off the path keep the reference the fields already hold, so
- * nothing has to walk the data afterwards to restore the sharing a deep clone would have destroyed. Stops early,
- * returning `data` itself, when the path runs off the end of what is actually there.
+ * nothing has to walk the data afterwards to restore the sharing a deep clone would have destroyed. Stops where
+ * the path runs off the end of what is actually there, since `setByPath()` creates the rest itself; the copies made
+ * up to that point are what keeps it from creating them inside a container the committed state still holds.
  *
  * @param data - The data to copy along `path`
  * @param path - The path whose containers are copied
- * @returns - The copied data, or `data` when `path` does not lead anywhere
+ * @returns - The copied data, or `data` itself when it holds no containers to copy
  */
 function copyAlongPath<T>(data: T, path: FieldPathList): T {
+  if (!isObject(data) && !Array.isArray(data)) {
+    return data;
+  }
   const copyOf = (container: object) => (Array.isArray(container) ? [...container] : { ...container });
   const root = copyOf(data as object) as Record<PropertyKey, unknown>;
   let container = root;
   for (const segment of path.slice(0, -1)) {
     const child = container[segment];
     if (!isObject(child) && !Array.isArray(child)) {
-      return data;
+      break;
     }
     const copy = copyOf(child as object) as Record<PropertyKey, unknown>;
     container[segment] = copy;
@@ -957,7 +961,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** The state after `reset()`: the data is re-derived from `formData`/`initialFormData` the way an initial render does
- * it, and every error, including the custom ones fields raised, is cleared. The render context is left as it is.
+ * it, and every error, including the custom ones fields raised, is cleared, and the render context the derivation
+ * resolved with is committed alongside the data.
  *
  * @param current - The state being reset
  * @param props - The current props
