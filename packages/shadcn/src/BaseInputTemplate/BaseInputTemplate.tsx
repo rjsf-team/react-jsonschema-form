@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
@@ -40,9 +40,16 @@ export default function BaseInputTemplate<
   registry,
 }: BaseInputTemplateProps<T, S, F>) {
   const { ClearButton } = registry.templates.ButtonTemplates;
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
+  // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
+  // title with it rather than describing a rule no longer in force
+  const callerPattern = extraProps && 'pattern' in extraProps ? { pattern: extraProps.pattern } : undefined;
   const inputProps = {
     ...extraProps,
-    ...getInputProps<T, S, F>(schema, type, options),
+    ...derivedInputProps,
+    ...callerPattern,
+    ...(extraProps && 'inputMode' in extraProps ? { inputMode: extraProps.inputMode } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -70,6 +77,7 @@ export default function BaseInputTemplate<
         readOnly={readonly}
         className={cn({ 'border-destructive focus-visible:ring-0': rawErrors.length > 0 }, className)}
         list={schema.examples ? examplesId(id) : undefined}
+        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || handleChange}

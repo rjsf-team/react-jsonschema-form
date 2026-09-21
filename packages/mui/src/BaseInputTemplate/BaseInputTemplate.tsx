@@ -13,7 +13,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, labelValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -24,7 +24,7 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
     /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
-    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -76,19 +76,26 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, autoCapitalize, ...rest } = getInputProps<T, S, F>(schema, type, options);
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  const { step, min, max, accept, inputMode, pattern, autoCapitalize, ...rest } = derivedInputProps;
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
+  const callerHtmlInput = { ...slotProps?.htmlInput, ...muiSlotProps?.htmlInput };
+
+  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them. The title explains
+  // the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no longer in force
   const htmlInputProps = {
-    ...slotProps?.htmlInput,
-    ...muiSlotProps?.htmlInput,
+    title: 'pattern' in callerHtmlInput ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
     step,
     min,
     max,
     accept,
-    ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
+    inputMode,
+    pattern,
+    autoCapitalize,
+    ...callerHtmlInput,
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

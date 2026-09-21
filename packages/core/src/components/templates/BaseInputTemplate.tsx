@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, getSchemaType } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
 
@@ -47,13 +47,21 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
+  // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
+  // it rather than describing a rule no longer in force
+  const callerPattern = 'pattern' in rest ? { pattern: rest.pattern } : undefined;
   const inputProps = {
     ...rest,
-    ...getInputProps<T, S, F>(schema, type, options),
+    ...derivedInputProps,
+    ...callerPattern,
+    ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
+  const schemaType = getSchemaType(schema);
   let inputValue;
-  if (inputProps.type === 'number' || inputProps.type === 'integer') {
+  if (schemaType === 'number' || schemaType === 'integer') {
     inputValue = value || value === 0 ? value : '';
   } else {
     inputValue = value == null ? '' : value;
@@ -88,6 +96,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
+        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
         onChange={onChangeOverride || handleChange}

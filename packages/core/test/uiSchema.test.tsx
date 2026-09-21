@@ -1846,7 +1846,7 @@ describe('uiSchema', () => {
 
       it('should disable a number text widget', () => {
         shouldBeDisabled(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
           },
@@ -2127,7 +2127,7 @@ describe('uiSchema', () => {
 
       it('should mark as readonly a number text widget', () => {
         shouldBeReadonly(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
           },
@@ -2418,7 +2418,7 @@ describe('uiSchema', () => {
 
       it('should mark as readonly a number text widget', () => {
         shouldBeReadonly(
-          'input[type=number]',
+          'input[inputmode=decimal]',
           {
             type: 'number',
             readOnly: true,

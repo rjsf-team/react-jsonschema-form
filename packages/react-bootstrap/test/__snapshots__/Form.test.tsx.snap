@@ -1392,10 +1392,12 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
+                    inputmode="decimal"
                     name="root[age]"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                     placeholder=""
-                    step="any"
-                    type="number"
+                    title="Enter a number"
+                    type="text"
                     value=""
                   />
                 </div>
@@ -2640,10 +2642,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
+                    inputmode="decimal"
                     name="root.age"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                     placeholder=""
-                    step="any"
-                    type="number"
+                    title="Enter a number"
+                    type="text"
                     value=""
                   />
                 </div>
@@ -4370,10 +4374,12 @@ exports[`single fields > number field 0 1`] = `
           aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
+          inputmode="decimal"
           name="root"
+          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
           placeholder=""
-          step="any"
-          type="number"
+          title="Enter a number"
+          type="text"
           value="0"
         />
       </div>
@@ -4407,10 +4413,12 @@ exports[`single fields > number field 1`] = `
           aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
+          inputmode="decimal"
           name="root"
+          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
           placeholder=""
-          step="any"
-          type="number"
+          title="Enter a number"
+          type="text"
           value=""
         />
       </div>
@@ -9597,11 +9605,13 @@ exports[`single fields > schema examples with mixed types (string examples and n
           aria-describedby="root__error root__description root__help root__examples"
           class="form-control"
           id="root"
+          inputmode="numeric"
           list="root__examples"
           name="root"
+          pattern="[+\\-]?([0-9]+[.][0-9]+[eE]\\+?[0-9]+|[0-9]+([eE]\\+?[0-9]+|[.]0*)?|[.])"
           placeholder=""
-          step="1"
-          type="number"
+          title="Enter a whole number"
+          type="text"
           value="5432"
         />
         <datalist
@@ -11231,6 +11241,7 @@ exports[`single fields > up/down field 1`] = `
           id="root"
           name="root"
           placeholder=""
+          step="any"
           type="number"
           value=""
         />

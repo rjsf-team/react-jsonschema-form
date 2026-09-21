@@ -1784,7 +1784,7 @@ describe('ArrayField', () => {
     it('should render field widgets', () => {
       const { node } = createFormComponent({ schema });
       const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[inputmode=decimal]');
       expect(strInput).toHaveAttribute('id', 'root_0');
       expect(numInput).toHaveAttribute('id', 'root_1');
     });
@@ -1792,7 +1792,7 @@ describe('ArrayField', () => {
     it('should mark non-null item widgets as required', () => {
       const { node } = createFormComponent({ schema });
       const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[inputmode=decimal]');
       expect(strInput).toBeRequired();
       expect(numInput).toBeRequired();
     });
@@ -1803,15 +1803,15 @@ describe('ArrayField', () => {
         formData: ['foo', 42],
       });
       const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[inputmode=decimal]');
       expect(strInput).toHaveValue('foo');
-      expect(numInput).toHaveValue(42);
+      expect(numInput).toHaveValue('42');
     });
 
     it('should handle change events', async () => {
       const { node, onChange } = createFormComponent({ schema });
       const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]')!;
-      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]')!;
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[inputmode=decimal]')!;
 
       await user.type(strInput, 'bar');
       await user.type(numInput, '101');

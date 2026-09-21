@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
+import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
 import Form from '../src/index.ts';
 
 describe('MUI Theme-Specific Props', () => {
@@ -30,6 +31,122 @@ describe('MUI Theme-Specific Props', () => {
     expect(input).toBeInTheDocument();
     // In MUI, variant "standard" removes the notched outline classes that "outlined" (default) has.
     // Or we can check the class name if we want to be very specific, but existence of placeholder is enough to show mui props worked as placeholder is a TextField prop.
+  });
+
+  it('should keep a pattern and inputMode a caller sets on a non-numeric field through slotProps.htmlInput', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      foo: {
+        'ui:options': {
+          mui: {
+            slotProps: { htmlInput: { pattern: '[A-Za-z]+', inputMode: 'tel' } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('pattern', '[A-Za-z]+');
+    expect(input).toHaveAttribute('inputmode', 'tel');
+  });
+
+  it('should let a caller override the derived pattern, inputMode and step of a numeric field through slotProps.htmlInput', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        price: { type: 'number', multipleOf: 0.01 },
+      },
+    };
+    const uiSchema: UiSchema = {
+      price: {
+        'ui:options': {
+          mui: {
+            slotProps: { htmlInput: { pattern: '[0-9]*[.]?[0-9]{0,2}', inputMode: 'tel', step: 5 } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_price');
+    expect(input).toHaveAttribute('pattern', '[0-9]*[.]?[0-9]{0,2}');
+    expect(input).toHaveAttribute('inputmode', 'tel');
+    expect(input).toHaveAttribute('step', '5');
+    // The title names the constraint the derived pattern imposes, so it goes when that pattern is replaced
+    expect(input).not.toHaveAttribute('title');
+  });
+
+  it('should title a numeric field whose derived pattern a caller leaves alone', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        price: { type: 'number' },
+        count: { type: 'integer' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      price: { 'ui:options': { mui: { slotProps: { htmlInput: { step: 5 } } } } },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('input#root_price')).toHaveAttribute('title', 'Enter a number');
+    expect(container.querySelector('input#root_count')).toHaveAttribute('title', 'Enter a whole number');
+  });
+
+  it('should let a caller set step, min and max through slotProps.htmlInput when the schema derives none', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      foo: {
+        'ui:options': {
+          inputType: 'number',
+          mui: {
+            slotProps: { htmlInput: { step: 5, min: 0, max: 100 } },
+          },
+        },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('step', '5');
+    expect(input).toHaveAttribute('min', '0');
+    expect(input).toHaveAttribute('max', '100');
+  });
+
+  it('should accept the input-only attributes a caller documents for slotProps.htmlInput', () => {
+    // A type-level check: `pnpm run typecheck` fails here if `htmlInput` stops accepting these attributes
+    const muiOptions: BaseInputTemplateMuiProps = {
+      slotProps: { htmlInput: { pattern: '[0-9]*', inputMode: 'numeric', step: 5, min: 0, max: 100, accept: '.pdf' } },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'integer' },
+      },
+    };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: muiOptions } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = container.querySelector('input#root_foo');
+    expect(input).toHaveAttribute('pattern', '[0-9]*');
+    expect(input).toHaveAttribute('inputmode', 'numeric');
+    expect(input).toHaveAttribute('step', '5');
   });
 
   it('should apply sx props via FieldTemplate', () => {

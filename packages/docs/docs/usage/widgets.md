@@ -139,9 +139,13 @@ Years from 2030-1980 and 2002-1900, respectively will be shown.
 - `updown`: an `input[type=number]` updown selector;
 - `range`: an `input[type=range]` slider;
 - `radio`: a radio button group with enum values. This can only be used when `enum` values are specified for this input.
-- By default, a regular `input[type=number]` element is used.
+- By default, an `input[type=text]` element with a numeric `inputmode` (`decimal` for a `number`, `numeric` for an `integer`) and a `pattern` that only accepts a number is used, so mobile browsers show a numeric keyboard without the keystroke filtering and locale decimal-separator quirks of a native number input.
 
-> Note: If JSON Schema's `minimum`, `maximum` and `multipleOf` values are defined, the `min`, `max` and `step` input attributes values will take those values.
+> Note: The `min`, `max` and `step` input attributes take the values of JSON Schema's `minimum`, `maximum` and `multipleOf` when those are defined, and a `number` with no `multipleOf` rendered as a native number input gets `step="any"` so decimals are accepted. They are dropped only for the text input a `number`/`integer` field now defaults to, where the browser ignores them: there the browser doesn't range- or step-check the value, and `minimum`, `maximum` and `multipleOf` are enforced by rjsf's validation alone. Every other input keeps them, including the native number input of the `updown` widget or `ui:options: { inputType: 'number' }`, the `range` widget's slider, which needs them to work at all, and any other `ui:options.inputType` you set.
+
+> Note: The `decimal` and `numeric` virtual keyboards have no minus key on iOS, so a field that needs negative values typed on an iPhone or iPad should use the `updown` widget or `ui:options: { inputType: 'number' }`.
+
+> Note: A native number input is exposed to assistive technology as a spin button, and its `min` and `max` are announced as the range. The default text input is exposed as a plain text box, so a range that matters to the user should also be stated in the field's `ui:description` or `ui:help`, or the field should use the `updown` widget or `inputType: 'number'`.
 
 ## Hidden widgets
 

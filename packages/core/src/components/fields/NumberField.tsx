@@ -46,9 +46,12 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       // Convert locale separator to standard '.' first
       const standardValue = typeof newValue === 'string' ? newValue.replace(separator, '.') : newValue;
 
-      // Normalize decimals that don't start with a zero character in advance so
+      // Normalize decimals that don't start with a zero character, with or without a sign, in advance so
       // that the rest of the normalization logic is simpler
-      const normalizedValue = `${standardValue}`.startsWith('.') ? `0${standardValue}` : standardValue;
+      const normalizedValue =
+        typeof standardValue === 'string'
+          ? standardValue.replace(/^([+-]?)\./, (_, sign) => `${sign}0.`)
+          : standardValue;
 
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
@@ -68,16 +71,26 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     // recognized as a pending decimal point even in locales whose separator is different.
     const canonicalLastValue = lastValue.replace(separator, '.');
 
+    // The cached text only stands in for the formData value when it spells the same number, sign included: a lone
+    // '-' or a '-5' left over from typing must not mask a formData of 7 or 5 that was set from outside. `-0` is a
+    // distinct value here because `String(-0)` is '0', so the sign is compared on its own.
+    const lastSign = /^[+-]/.exec(canonicalLastValue)?.[0] ?? '';
+    const unsignedLastValue = canonicalLastValue.slice(lastSign.length);
+    const isNegative = value < 0 || Object.is(value, -0);
+
     // Construct a regular expression that checks for a string that consists
-    // of the formData value suffixed with zero or one '.' characters and zero
+    // of the formData value's magnitude suffixed with zero or one '.' characters and zero
     // or more '0' characters. Escape the value first: its own '.' is a literal
-    // character here, not the regex "any character" wildcard.
-    const escapedValue = String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`^(${escapedValue})?\\.?0*$`);
+    // character here, not the regex "any character" wildcard. The magnitude is optional only for zero, whose pending
+    // forms ('.', '.00') spell no digits of their own; for any other value an optional magnitude would leave the
+    // trailing '.'/'0' tail able to match alone, so a leftover '0' or '.' would mask a formData set from outside.
+    const escapedValue = String(Math.abs(value)).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const magnitudePattern = value === 0 ? `(${escapedValue})?` : escapedValue;
+    const re = new RegExp(`^${magnitudePattern}\\.?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI
-    if (canonicalLastValue.match(re)) {
+    if ((lastSign === '-') === isNegative && unsignedLastValue !== '' && re.test(unsignedLastValue)) {
       value = lastValue as unknown as T;
     }
   }

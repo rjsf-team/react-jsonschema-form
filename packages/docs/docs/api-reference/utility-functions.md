@@ -590,11 +590,26 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 - schema: S - The schema for the field provided by the widget
 - [defaultType]: string | undefined - The default type, if any, for the field provided by the widget
 - [options={}]: UIOptionsType&lt;T, S, F> - The UI Options for the field provided by the widget
-- [autoDefaultStepAny=true]: boolean - Determines whether to auto-default step=any when the type is number and no step
+- [plainNativeInput=true]: boolean - Whether the theme renders a plain native `<input>`. When true, a number or integer field with no `defaultType` is rendered as a text input with a numeric `inputMode` and `pattern`, and a `number` field that resolves to a native `number` input (via `inputType` or a `defaultType` of `number`) gets `step="any"`; pass false for a theme with its own numeric widget
 
 #### Returns
 
 - InputPropsType: The extracted `InputPropsType` object
+
+### getNumericInputTitle()
+
+Builds the `title` for the `<input>` described by `inputProps`.
+A `pattern` that the value fails is reported by the browser as a bare "Please match the requested format", which says nothing on a field that now looks like a plain text box; a `title` is appended to that message, so naming the expected format makes the rejection self-explanatory.
+`getInputProps()` only sets a `pattern` for the numeric text input a `number`/`integer` field defaults to, and sets the `inputMode` that tells the two apart in the same place.
+
+#### Parameters
+
+- inputProps: InputPropsType - The `InputPropsType` returned by `getInputProps()`
+- translateString: Registry['translateString'] - The `translateString` function from the `Registry`, used to localize the title
+
+#### Returns
+
+- string | undefined: The `title` string, or undefined when the input has no `pattern` to explain
 
 ### getOptionMatchingSimpleDiscriminator()
 
