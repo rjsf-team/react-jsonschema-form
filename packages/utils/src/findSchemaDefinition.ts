@@ -1,5 +1,4 @@
 import UriResolver from 'fast-uri';
-import jsonpointer from 'jsonpointer';
 
 import {
   ALL_OF_KEY,
@@ -10,7 +9,29 @@ import {
   SCHEMA_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
+import { getByPath } from './pathUtils.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+
+/** Resolves an RFC 6901 JSON pointer against `obj`: the empty pointer is `obj` itself, every other pointer is a
+ * `/`-led list of reference tokens with `~1` and `~0` unescaped in that order. Through `getByPath()` only own
+ * properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`. A pointer without the leading `/`
+ * is not a JSON pointer, so it finds nothing too.
+ */
+function getByPointer<R>(obj: R, pointer: string): R | undefined {
+  if (pointer === '') {
+    return obj;
+  }
+  if (!pointer.startsWith('/')) {
+    return undefined;
+  }
+  return getByPath<R>(
+    obj,
+    pointer
+      .slice(1)
+      .split('/')
+      .map((token) => token.replaceAll('~1', '/').replaceAll('~0', '~')),
+  );
+}
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
@@ -107,11 +128,11 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     // Decode URI fragment representation.
     const decodedRef = decodeURIComponent(ref.substring(1));
     if (currentBaseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === currentBaseURI)) {
-      current = jsonpointer.get(rootSchema, decodedRef);
+      current = getByPointer(rootSchema, decodedRef);
     } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       current = findEmbeddedSchemaRecursive<S>(rootSchema, currentBaseURI.replace(/\/$/, ''));
       if (current !== undefined) {
-        current = jsonpointer.get(current, decodedRef);
+        current = getByPointer(current, decodedRef);
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
@@ -121,7 +142,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     if (current !== undefined) {
       currentBaseURI = current[ID_KEY];
       if (refAnchor.length > 0) {
-        current = jsonpointer.get(current, decodeURIComponent(refAnchor.join('#')));
+        current = getByPointer(current, decodeURIComponent(refAnchor.join('#')));
       }
     }
   }

@@ -249,6 +249,93 @@ describe('findSchemaDefinition()', () => {
       'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
     );
   });
+  describe('JSON pointer fragments (RFC 6901)', () => {
+    // The RFC 6901 section 5 example document, with `$id` so the bundled 2020-12 lookup paths resolve it too
+    const rfc6901 = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/rfc6901.json',
+      foo: ['bar', 'baz'],
+      '': 0,
+      'a/b': 1,
+      'c%d': 2,
+      'e^f': 3,
+      'g|h': 4,
+      'i\\j': 5,
+      'k"l': 6,
+      ' ': 7,
+      'm~n': 8,
+      '~1': 9,
+      'a/~b': 10,
+      nested: { '': { '/': 11 }, list: [{ deep: 12 }] },
+      $defs: { embedded: { $id: 'https://example.com/embedded.json', '': 13, 'a/b': 14, foo: [15] } },
+    } as unknown as RJSFSchema & { foo: string[]; $defs: { embedded: RJSFSchema } };
+    const cases: [string, unknown][] = [
+      ['#', rfc6901],
+      ['#/foo', rfc6901.foo],
+      ['#/foo/0', 'bar'],
+      ['#/foo/1', 'baz'],
+      ['#/', 0],
+      ['#/a~1b', 1],
+      // A raw `%` is not a legal fragment character (RFC 3986), so only its percent-encoded form is a valid ref
+      ['#/c%25d', 2],
+      ['#/e^f', 3],
+      ['#/e%5Ef', 3],
+      ['#/g|h', 4],
+      ['#/g%7Ch', 4],
+      ['#/i\\j', 5],
+      ['#/i%5Cj', 5],
+      ['#/k"l', 6],
+      ['#/k%22l', 6],
+      ['#/ ', 7],
+      ['#/%20', 7],
+      ['#/m~0n', 8],
+      ['#/~01', 9],
+      ['#/a~1~0b', 10],
+      ['#/nested//~1', 11],
+      ['#/nested/list/0/deep', 12],
+    ];
+    it.each(cases)('resolves %s against the root schema', (ref, expected) => {
+      expect(findSchemaDefinition(ref, rfc6901)).toBe(expected);
+    });
+    it.each(cases)('resolves %s against an explicit base URI equal to the root `$id`', (ref, expected) => {
+      expect(findSchemaDefinition(ref, rfc6901, rfc6901.$id)).toBe(expected);
+    });
+    it.each([
+      ['#', rfc6901.$defs.embedded],
+      ['#/', 13],
+      ['#/a~1b', 14],
+      ['#/foo/0', 15],
+    ])('resolves %s against the base URI of an embedded schema', (ref, expected) => {
+      expect(findSchemaDefinition(ref, rfc6901, 'https://example.com/embedded.json')).toBe(expected);
+    });
+    it.each([
+      ['https://example.com/embedded.json#', rfc6901.$defs.embedded],
+      ['embedded.json#/a~1b', 14],
+      ['/embedded.json#/a~1b', 14],
+      ['embedded.json#/foo/0', 15],
+    ])('resolves %s as a bundled ref with a pointer fragment', (ref, expected) => {
+      expect(findSchemaDefinition(ref, rfc6901)).toBe(expected);
+    });
+    it.each([
+      '#/foo/2',
+      '#/foo/-',
+      '#/foo/01',
+      '#/foo/bar',
+      '#/foo/0/0',
+      '#/nested/missing',
+      '#/a~2b',
+      '#/a~b',
+      '#foo',
+      '#foo/0',
+      '#/__proto__',
+      '#/constructor',
+      '#/constructor/prototype',
+      '#/toString',
+    ])('throws for %s, which points at nothing', (ref) => {
+      expect(() => findSchemaDefinition(ref, rfc6901)).toThrow(`Could not find a definition for ${ref}`);
+      expect(() => findSchemaDefinition(ref, rfc6901, rfc6901.$id)).toThrow(`Could not find a definition for ${ref}`);
+    });
+  });
 });
 
 describe('findSchemaDefinitionRecursive()', () => {
