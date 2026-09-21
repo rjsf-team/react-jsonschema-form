@@ -48,9 +48,15 @@ export default function BaseInputTemplate<
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
+  // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
+  // it rather than describing a rule no longer in force
+  const callerPattern = 'pattern' in rest ? { pattern: rest.pattern } : undefined;
   const inputProps = {
     ...rest,
     ...derivedInputProps,
+    ...callerPattern,
+    ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
   const schemaType = getSchemaType(schema);
@@ -90,7 +96,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
-        title={getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
         onChange={onChangeOverride || handleChange}

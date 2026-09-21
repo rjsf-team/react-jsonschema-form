@@ -1046,5 +1046,28 @@ describe('NumberField', () => {
       expect(input).toHaveValue('2.3');
       expect(input.checkValidity()).toBe(true);
     });
+
+    it('should let a custom widget keep the pattern and inputMode it passes to BaseInputTemplate', () => {
+      const CustomWidget = ({ registry, ...props }: WidgetProps) => (
+        <registry.templates.BaseInputTemplate
+          {...props}
+          registry={registry}
+          pattern='[0-9]*[.]?[0-9]{0,2}'
+          inputMode='tel'
+        />
+      );
+
+      const { node } = createFormComponent({
+        schema: { type: 'number' },
+        uiSchema: { 'ui:widget': 'custom' },
+        widgets: { custom: CustomWidget },
+      });
+
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('pattern', '[0-9]*[.]?[0-9]{0,2}');
+      expect(input).toHaveAttribute('inputmode', 'tel');
+      // The title names the constraint the derived pattern imposes, so it goes when that pattern is replaced
+      expect(input).not.toHaveAttribute('title');
+    });
   });
 });

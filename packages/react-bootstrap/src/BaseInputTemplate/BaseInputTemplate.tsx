@@ -32,9 +32,15 @@ export default function BaseInputTemplate<
 }: BaseInputTemplateProps<T, S, F>) {
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
+  // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
+  // title with it rather than describing a rule no longer in force
+  const callerPattern = extraProps && 'pattern' in extraProps ? { pattern: extraProps.pattern } : undefined;
   const inputProps = {
     ...extraProps,
     ...derivedInputProps,
+    ...callerPattern,
+    ...(extraProps && 'inputMode' in extraProps ? { inputMode: extraProps.inputMode } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -59,7 +65,7 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
-        title={getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         readOnly={readonly}
         className={rawErrors.length > 0 ? 'is-invalid' : ''}
         list={schema.examples ? examplesId(id) : undefined}
