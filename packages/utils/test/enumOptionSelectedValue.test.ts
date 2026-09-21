@@ -1,4 +1,4 @@
-import { enumOptionSelectedValue } from '../src/index.ts';
+import { enumOptionSelectedValue, enumOptionValueEncoder } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
@@ -32,12 +32,48 @@ describe('enumOptionSelectedValue', () => {
     it('returns emptyValue when index not found', () => {
       expect(enumOptionSelectedValue('nonexistent', stringOptions, false, 'indexed', '')).toBe('');
     });
+    it('selects the option carrying the emptyValue rather than treating it as no selection', () => {
+      // Widgets pick sentinels like `null` (chakra's RadioWidget) or `''` (mui's RadioWidget, shadcn's SelectWidget)
+      // that a `oneOf`/`anyOf` of constants can offer as an option of its own
+      const nullOptions: EnumOptionsType[] = [
+        { value: null, label: 'Unknown' },
+        { value: true, label: 'Yes' },
+      ];
+      expect(enumOptionSelectedValue(null, nullOptions, false, 'indexed', null)).toBe('0');
+      const emptyStringOptions: EnumOptionsType[] = [
+        { value: '', label: 'Blank' },
+        { value: 'a', label: 'A' },
+      ];
+      expect(enumOptionSelectedValue('', emptyStringOptions, false, 'indexed', '')).toBe('0');
+    });
     it('defaults to indexed when format is omitted', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false)).toBe('1');
     });
   });
 
   describe("when format is 'realValue'", () => {
+    const mixedOptions: EnumOptionsType[] = [
+      { value: 'a', label: 'A' },
+      { value: null, label: 'None' },
+      { value: { id: 1 }, label: 'Object' },
+    ];
+    it('encodes null the same way as the option value', () => {
+      expect(enumOptionSelectedValue(null, mixedOptions, false, 'realValue', '')).toBe(
+        enumOptionValueEncoder(null, 1, 'realValue'),
+      );
+    });
+    it('encodes an object value as its option index', () => {
+      expect(enumOptionSelectedValue({ id: 1 }, mixedOptions, false, 'realValue', '')).toBe('2');
+    });
+    it('returns emptyValue for an object value that matches no option', () => {
+      expect(enumOptionSelectedValue({ id: 2 }, mixedOptions, false, 'realValue', '')).toBe('');
+    });
+    it('returns an empty string, not the whole-selection emptyValue, for an unmatched object of multiple values', () => {
+      expect(enumOptionSelectedValue([{ id: 1 }, { id: 2 }], mixedOptions, true, 'realValue', [])).toEqual(['2', '']);
+    });
+    it('encodes multiple values the same way as the option values', () => {
+      expect(enumOptionSelectedValue(['a', null], mixedOptions, true, 'realValue', [])).toEqual(['a', '']);
+    });
     it('returns String(value) for a single string value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');
     });

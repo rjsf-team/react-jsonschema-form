@@ -1358,4 +1358,92 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
+  test('select widget from oneOf constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: 'foo', title: 'Foo' },
+        { const: 'bar', title: 'Bar' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData='bar' validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from anyOf constants of mixed types without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [
+        { const: false, title: 'Never' },
+        { const: 1, title: 'Once' },
+        { const: 'unlimited', title: 'Unlimited' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={1} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a nested oneOf of constants without a type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: {
+          oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }],
+        },
+      },
+      $defs: {
+        europe: {
+          title: 'Europe',
+          oneOf: [
+            { const: 'FR', title: 'France' },
+            { const: 'DE', title: 'Germany' },
+          ],
+        },
+      },
+    };
+    const { asFragment } = render(<Form schema={schema} formData={{ region: 'DE' }} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from oneOf boolean constants with a null option without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: null, title: 'Unknown' },
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={null} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a single anyOf boolean constant without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [{ const: true, title: 'Subscribed' }],
+    };
+    const { asFragment } = render(<Form schema={schema} formData validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from oneOf true and false constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={false} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  // The title is the point: a boolean rendered as a select still has to show it, even in a theme that hides the label
+  // for the checkbox that boolean fields otherwise get
+  test('titled select widget from oneOf boolean constants without a type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        answer: {
+          title: 'My Answer',
+          oneOf: [
+            { const: true, title: 'Yes' },
+            { const: false, title: 'No' },
+          ],
+        },
+      },
+    };
+    const { asFragment } = render(<Form schema={schema} formData={{ answer: true }} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
 }

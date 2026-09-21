@@ -459,6 +459,119 @@ describe('BooleanField', () => {
     expect(labels).toEqual(['Yes', 'No']);
   });
 
+  it('should support anyOf titles for radio widgets', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        anyOf: [
+          {
+            const: true,
+            title: 'Yes',
+          },
+          {
+            const: false,
+            title: 'No',
+          },
+        ],
+      },
+      formData: true,
+      uiSchema: { 'ui:widget': 'radio' },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll('.field-radio-group label'),
+      (label: Element) => label.textContent,
+    );
+    expect(labels).toEqual(['Yes', 'No']);
+  });
+
+  it('should fall back to the oneOf when the anyOf options are not all constants', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        oneOf: [
+          { const: true, title: 'Yes' },
+          { const: false, title: 'No' },
+        ],
+        anyOf: [{ title: 'A' }, { title: 'B' }],
+      },
+      formData: true,
+      uiSchema: { 'ui:widget': 'radio' },
+    });
+
+    const labels = [].map.call(
+      node.querySelectorAll('.field-radio-group label'),
+      (label: Element) => label.textContent,
+    );
+    expect(labels).toEqual(['Yes', 'No']);
+  });
+
+  it('should give an anyOf of single-value enums the same Yes/No labels as the const spelling', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'boolean', anyOf: [{ enum: [true] }, { enum: [false] }] },
+      uiSchema: { 'ui:widget': 'select' },
+    });
+
+    const select = node.querySelector<HTMLSelectElement>('select#root');
+    expect([...select!.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+  });
+
+  it('should keep honouring ui:enumNames for constant options without titles of their own', () => {
+    // Taking the `anyOf`/`oneOf` path skips `optionsList()`'s own `enumNames` handling, which only covers an `enum`
+    const uiSchema = { 'ui:widget': 'select', 'ui:enumNames': ['Affirmative', 'Negative'] };
+    const untitled = createFormComponent({
+      schema: { type: 'boolean', anyOf: [{ const: true }, { const: false }] },
+      uiSchema,
+    });
+    const titled = createFormComponent({
+      schema: {
+        type: 'boolean',
+        anyOf: [
+          { const: true, title: 'Y' },
+          { const: false, title: 'N' },
+        ],
+      },
+      uiSchema,
+    });
+    const texts = (node: Element) =>
+      [...node.querySelector<HTMLSelectElement>('select#root')!.options].map((option) => option.text);
+
+    expect(texts(untitled.node)).toEqual(['', 'Affirmative', 'Negative']);
+    // An option's own title still outranks the positional name
+    expect(texts(titled.node)).toEqual(['', 'Y', 'N']);
+  });
+
+  it('should fall back to the oneOf when the anyOf is empty', () => {
+    // Every option of an empty list is vacuously a constant, so the emptiness has to be checked on its own
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        anyOf: [],
+        oneOf: [
+          { const: true, title: 'Y' },
+          { const: false, title: 'N' },
+        ],
+      },
+      uiSchema: { 'ui:widget': 'select' },
+    });
+
+    const select = node.querySelector<HTMLSelectElement>('select#root');
+    expect([...select!.options].map((option) => option.text)).toEqual(['', 'Y', 'N']);
+  });
+
+  it('should label a null const with its value rather than sharing the false label', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        oneOf: [{ const: null }, { const: true }, { const: false }],
+      },
+      uiSchema: { 'ui:widget': 'select' },
+    });
+
+    const select = node.querySelector<HTMLSelectElement>('select#root');
+    expect([...select!.options].map((option) => option.text)).toEqual(['', 'null', 'Yes', 'No']);
+  });
+
   it('should support oneOf titles for radio widgets, overrides in uiSchema', () => {
     const { node } = createFormComponent({
       schema: {

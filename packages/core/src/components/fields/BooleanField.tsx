@@ -7,7 +7,36 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { TranslatableString, fieldPathToName, getUiOptions, getWidget, isObject, optionsList } from '@rjsf/utils';
+import {
+  ANY_OF_KEY,
+  fieldPathToName,
+  getUiOptions,
+  getWidget,
+  isConstant,
+  isObject,
+  ONE_OF_KEY,
+  optionsList,
+  toConstant,
+  TranslatableString,
+} from '@rjsf/utils';
+
+/** Returns the label a boolean constant gets when its option has no title of its own, or `undefined` for any other
+ * constant so that `optionsList()` falls back to the value itself.
+ *
+ * @param constant - The constant value of the option being labelled
+ * @param yes - The translated label for `true`
+ * @param no - The translated label for `false`
+ * @returns - The label for the constant, or `undefined` when it isn't a boolean
+ */
+function booleanConstantTitle(constant: unknown, yes: string, no: string): string | undefined {
+  if (constant === true) {
+    return yes;
+  }
+  if (constant === false) {
+    return no;
+  }
+  return undefined;
+}
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -52,15 +81,33 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  if (Array.isArray(schema.oneOf)) {
+  // `optionsList()` reads `anyOf` before `oneOf`, so the options come from the same keyword it would have picked, but
+  // only when they are constants: it maps them with `toConstant()`, which throws for anything else
+  const anyOfSchemas = schema[ANY_OF_KEY];
+  const altKey =
+    Array.isArray(anyOfSchemas) &&
+    anyOfSchemas.length > 0 &&
+    anyOfSchemas.every((option) => isObject(option) && isConstant(option))
+      ? ANY_OF_KEY
+      : ONE_OF_KEY;
+  const altSchemas = schema[altKey];
+  if (Array.isArray(altSchemas)) {
     enumOptions = optionsList<T, S, F>(
       {
-        oneOf: schema.oneOf
-          .map((option) => {
+        [altKey]: altSchemas
+          .map((option, index) => {
             if (isObject(option)) {
               return {
                 ...option,
-                title: option.title || (option.const === true ? yes : no),
+                // An option's own title wins, then `ui:enumNames` by position, which `optionsList()` applies only to
+                // an `enum` and so would otherwise be dropped by taking this path at all. Only a boolean constant
+                // gets a Yes/No label after that; `optionsList()` falls back to the value for the rest, so a `null`
+                // option reads as `null` rather than sharing `false`'s label. The constant is read the same way
+                // `optionsList()` reads it, so a single-value `enum` is labelled like the `const` spelling
+                title:
+                  option.title ||
+                  enumNames?.[index] ||
+                  booleanConstantTitle(isConstant(option) ? toConstant(option) : undefined, yes, no),
               };
             }
             return undefined;

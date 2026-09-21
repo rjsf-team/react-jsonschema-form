@@ -4397,6 +4397,1356 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="m_7485cace mantine-Container-root"
+        data-fluid="true"
+        data-strategy="block"
+        id="root"
+        style="padding: 0rem;"
+      >
+        <style
+          data-mantine-styles="inline"
+        >
+          .__m__-_r_1uj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+        </style>
+        <div
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1uj_"
+          style="margin-bottom: var(--mantine-spacing-sm);"
+        >
+          <div
+            class=""
+          >
+            <div
+              class="rjsf-field rjsf-field-undefined"
+            >
+              <div
+                class="m_6d731127 mantine-Stack-root"
+                style="--stack-gap: var(--mantine-spacing-md); --stack-align: stretch; --stack-justify: flex-start; margin-bottom: 1rem;"
+              >
+                <div
+                  class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+                  data-size="sm"
+                >
+                  <label
+                    class="m_8fdc1311 mantine-InputWrapper-label mantine-Select-label"
+                    data-size="sm"
+                    for="root_region__oneof_select"
+                    id="root_region__oneof_select-label"
+                    style="--input-label-size: var(--mantine-font-size-sm);"
+                  >
+                    region
+                  </label>
+                  <div
+                    class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+                    data-size="sm"
+                    data-variant="default"
+                    data-with-right-section="true"
+                    style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+                  >
+                    <input
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="off"
+                      class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+                      data-variant="default"
+                      id="root_region__oneof_select"
+                      role="combobox"
+                      value="Europe"
+                    />
+                    <div
+                      class="m_82577fc2 mantine-Input-section mantine-Select-section"
+                      data-position="right"
+                    >
+                      <svg
+                        class="m_2943220b mantine-ComboboxChevron-chevron"
+                        data-combobox-chevron="true"
+                        data-size="sm"
+                        fill="none"
+                        style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+                        viewBox="0 0 15 15"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+                  data-composed="true"
+                  data-position="bottom"
+                  role="presentation"
+                  style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+                >
+                  <div
+                    aria-labelledby="root_region__oneof_select-label"
+                    class="m_b2821a6e mantine-Select-options"
+                    id="mantine-i"
+                    role="listbox"
+                    style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+                  >
+                    <div
+                      class=""
+                      style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+                    >
+                      <div
+                        class=""
+                        style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                      >
+                        <div
+                          class="m_d57069b5 mantine-ScrollArea-root"
+                          data-autosize="true"
+                          style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+                        >
+                          <div
+                            class="m_c0783ff9 mantine-ScrollArea-viewport"
+                            data-offset-scrollbars="y"
+                            data-scrollarea-viewport="true"
+                            data-scrollbars="xy"
+                            style="overflow-x: scroll; overflow-y: scroll;"
+                          >
+                            <div
+                              class="m_b1336c6 mantine-ScrollArea-content"
+                            >
+                              <div
+                                aria-selected="false"
+                                class="m_92253aa5 mantine-Select-option m_390b5f4"
+                                data-combobox-option="true"
+                                id="_r_1v7_"
+                                role="option"
+                                value="0"
+                              >
+                                <span>
+                                  None
+                                </span>
+                              </div>
+                              <div
+                                aria-selected="true"
+                                class="m_92253aa5 mantine-Select-option m_390b5f4"
+                                data-checked="true"
+                                data-combobox-active="true"
+                                data-combobox-option="true"
+                                id="_r_1v9_"
+                                role="option"
+                                value="1"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="m_8ee53fc2"
+                                  fill="none"
+                                  viewBox="0 0 10 7"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                                <span>
+                                  Europe
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                            data-mantine-scrollbar="true"
+                            data-orientation="horizontal"
+                            data-state="hidden"
+                            style="position: absolute; --sa-thumb-width: 18px;"
+                          />
+                          <div
+                            class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                            data-mantine-scrollbar="true"
+                            data-orientation="vertical"
+                            data-state="hidden"
+                            style="position: absolute; --sa-thumb-height: 18px;"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <input
+                  name="root_region__oneof_select"
+                  type="hidden"
+                  value="1"
+                />
+                <div
+                  class="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+                    data-size="sm"
+                  >
+                    <label
+                      class="m_8fdc1311 mantine-InputWrapper-label mantine-Select-label"
+                      data-size="sm"
+                      for="root_region"
+                      id="root_region-label"
+                      style="--input-label-size: var(--mantine-font-size-sm);"
+                    >
+                      Europe
+                    </label>
+                    <div
+                      class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+                      data-size="sm"
+                      data-variant="default"
+                      data-with-right-section="true"
+                      style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+                    >
+                      <input
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
+                        autocomplete="off"
+                        class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+                        data-variant="default"
+                        id="root_region"
+                        placeholder=""
+                        role="combobox"
+                        value="Germany"
+                      />
+                      <div
+                        class="m_82577fc2 mantine-Input-section mantine-Select-section"
+                        data-position="right"
+                      >
+                        <svg
+                          class="m_2943220b mantine-ComboboxChevron-chevron"
+                          data-combobox-chevron="true"
+                          data-size="sm"
+                          fill="none"
+                          style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+                          viewBox="0 0 15 15"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+                    data-composed="true"
+                    data-position="bottom"
+                    role="presentation"
+                    style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+                  >
+                    <div
+                      aria-labelledby="root_region-label"
+                      class="m_b2821a6e mantine-Select-options"
+                      id="mantine-i"
+                      role="listbox"
+                      style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+                    >
+                      <div
+                        class=""
+                        style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+                      >
+                        <div
+                          class=""
+                          style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                        >
+                          <div
+                            class="m_d57069b5 mantine-ScrollArea-root"
+                            data-autosize="true"
+                            style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+                          >
+                            <div
+                              class="m_c0783ff9 mantine-ScrollArea-viewport"
+                              data-offset-scrollbars="y"
+                              data-scrollarea-viewport="true"
+                              data-scrollbars="xy"
+                              style="overflow-x: scroll; overflow-y: scroll;"
+                            >
+                              <div
+                                class="m_b1336c6 mantine-ScrollArea-content"
+                              >
+                                <div
+                                  aria-selected="false"
+                                  class="m_92253aa5 mantine-Select-option m_390b5f4"
+                                  data-combobox-option="true"
+                                  id="_r_1vr_"
+                                  role="option"
+                                  value="0"
+                                >
+                                  <span>
+                                    France
+                                  </span>
+                                </div>
+                                <div
+                                  aria-selected="true"
+                                  class="m_92253aa5 mantine-Select-option m_390b5f4"
+                                  data-checked="true"
+                                  data-combobox-active="true"
+                                  data-combobox-option="true"
+                                  id="_r_1vt_"
+                                  role="option"
+                                  value="1"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    class="m_8ee53fc2"
+                                    fill="none"
+                                    viewBox="0 0 10 7"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      clip-rule="evenodd"
+                                      d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                                      fill="currentColor"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                  <span>
+                                    Germany
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                              data-mantine-scrollbar="true"
+                              data-orientation="horizontal"
+                              data-state="hidden"
+                              style="position: absolute; --sa-thumb-width: 18px;"
+                            />
+                            <div
+                              class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                              data-mantine-scrollbar="true"
+                              data-orientation="vertical"
+                              data-state="hidden"
+                              style="position: absolute; --sa-thumb-height: 18px;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <input
+                    name="root_region"
+                    type="hidden"
+                    value="1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+          data-size="sm"
+          data-variant="default"
+          data-with-right-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+        >
+          <input
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+            data-variant="default"
+            id="root"
+            role="combobox"
+            value="Subscribed"
+          />
+          <div
+            class="m_82577fc2 mantine-Input-section mantine-Select-section"
+            data-position="right"
+          >
+            <svg
+              class="m_2943220b mantine-ComboboxChevron-chevron"
+              data-combobox-chevron="true"
+              data-size="sm"
+              fill="none"
+              style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+              viewBox="0 0 15 15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+        data-composed="true"
+        data-position="bottom"
+        role="presentation"
+        style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+      >
+        <div
+          class="m_b2821a6e mantine-Select-options"
+          id="mantine-i"
+          role="listbox"
+          style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+        >
+          <div
+            class=""
+            style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+          >
+            <div
+              class=""
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+            >
+              <div
+                class="m_d57069b5 mantine-ScrollArea-root"
+                data-autosize="true"
+                style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+              >
+                <div
+                  class="m_c0783ff9 mantine-ScrollArea-viewport"
+                  data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
+                  data-scrollbars="xy"
+                  style="overflow-x: scroll; overflow-y: scroll;"
+                >
+                  <div
+                    class="m_b1336c6 mantine-ScrollArea-content"
+                  >
+                    <div
+                      aria-selected="true"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-checked="true"
+                      data-combobox-active="true"
+                      data-combobox-option="true"
+                      id="_r_217_"
+                      role="option"
+                      value="0"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="m_8ee53fc2"
+                        fill="none"
+                        viewBox="0 0 10 7"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Subscribed
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="horizontal"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-width: 18px;"
+                />
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="vertical"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-height: 18px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input
+        name="root"
+        type="hidden"
+        value="0"
+      />
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+          data-size="sm"
+          data-variant="default"
+          data-with-right-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+        >
+          <input
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+            data-variant="default"
+            id="root"
+            placeholder=""
+            role="combobox"
+            value="Once"
+          />
+          <div
+            class="m_82577fc2 mantine-Input-section mantine-Select-section"
+            data-position="right"
+          >
+            <svg
+              class="m_2943220b mantine-ComboboxChevron-chevron"
+              data-combobox-chevron="true"
+              data-size="sm"
+              fill="none"
+              style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+              viewBox="0 0 15 15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+        data-composed="true"
+        data-position="bottom"
+        role="presentation"
+        style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+      >
+        <div
+          class="m_b2821a6e mantine-Select-options"
+          id="mantine-i"
+          role="listbox"
+          style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+        >
+          <div
+            class=""
+            style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+          >
+            <div
+              class=""
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+            >
+              <div
+                class="m_d57069b5 mantine-ScrollArea-root"
+                data-autosize="true"
+                style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+              >
+                <div
+                  class="m_c0783ff9 mantine-ScrollArea-viewport"
+                  data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
+                  data-scrollbars="xy"
+                  style="overflow-x: scroll; overflow-y: scroll;"
+                >
+                  <div
+                    class="m_b1336c6 mantine-ScrollArea-content"
+                  >
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_1ua_"
+                      role="option"
+                      value="0"
+                    >
+                      <span>
+                        Never
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="true"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-checked="true"
+                      data-combobox-active="true"
+                      data-combobox-option="true"
+                      id="_r_1uc_"
+                      role="option"
+                      value="1"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="m_8ee53fc2"
+                        fill="none"
+                        viewBox="0 0 10 7"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Once
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_1ue_"
+                      role="option"
+                      value="2"
+                    >
+                      <span>
+                        Unlimited
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="horizontal"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-width: 18px;"
+                />
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="vertical"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-height: 18px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input
+        name="root"
+        type="hidden"
+        value="1"
+      />
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+          data-size="sm"
+          data-variant="default"
+          data-with-right-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+        >
+          <input
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+            data-variant="default"
+            id="root"
+            role="combobox"
+            value="Unknown"
+          />
+          <div
+            class="m_82577fc2 mantine-Input-section mantine-Select-section"
+            data-position="right"
+          >
+            <svg
+              class="m_2943220b mantine-ComboboxChevron-chevron"
+              data-combobox-chevron="true"
+              data-size="sm"
+              fill="none"
+              style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+              viewBox="0 0 15 15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+        data-composed="true"
+        data-position="bottom"
+        role="presentation"
+        style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+      >
+        <div
+          class="m_b2821a6e mantine-Select-options"
+          id="mantine-i"
+          role="listbox"
+          style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+        >
+          <div
+            class=""
+            style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+          >
+            <div
+              class=""
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+            >
+              <div
+                class="m_d57069b5 mantine-ScrollArea-root"
+                data-autosize="true"
+                style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+              >
+                <div
+                  class="m_c0783ff9 mantine-ScrollArea-viewport"
+                  data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
+                  data-scrollbars="xy"
+                  style="overflow-x: scroll; overflow-y: scroll;"
+                >
+                  <div
+                    class="m_b1336c6 mantine-ScrollArea-content"
+                  >
+                    <div
+                      aria-selected="true"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-checked="true"
+                      data-combobox-active="true"
+                      data-combobox-option="true"
+                      id="_r_20g_"
+                      role="option"
+                      value="0"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="m_8ee53fc2"
+                        fill="none"
+                        viewBox="0 0 10 7"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Unknown
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_20i_"
+                      role="option"
+                      value="1"
+                    >
+                      <span>
+                        Yes
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_20k_"
+                      role="option"
+                      value="2"
+                    >
+                      <span>
+                        No
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="horizontal"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-width: 18px;"
+                />
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="vertical"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-height: 18px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input
+        name="root"
+        type="hidden"
+        value="0"
+      />
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+          data-size="sm"
+          data-variant="default"
+          data-with-right-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+        >
+          <input
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+            data-variant="default"
+            id="root"
+            placeholder=""
+            role="combobox"
+            value="Bar"
+          />
+          <div
+            class="m_82577fc2 mantine-Input-section mantine-Select-section"
+            data-position="right"
+          >
+            <svg
+              class="m_2943220b mantine-ComboboxChevron-chevron"
+              data-combobox-chevron="true"
+              data-size="sm"
+              fill="none"
+              style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+              viewBox="0 0 15 15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+        data-composed="true"
+        data-position="bottom"
+        role="presentation"
+        style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+      >
+        <div
+          class="m_b2821a6e mantine-Select-options"
+          id="mantine-i"
+          role="listbox"
+          style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+        >
+          <div
+            class=""
+            style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+          >
+            <div
+              class=""
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+            >
+              <div
+                class="m_d57069b5 mantine-ScrollArea-root"
+                data-autosize="true"
+                style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+              >
+                <div
+                  class="m_c0783ff9 mantine-ScrollArea-viewport"
+                  data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
+                  data-scrollbars="xy"
+                  style="overflow-x: scroll; overflow-y: scroll;"
+                >
+                  <div
+                    class="m_b1336c6 mantine-ScrollArea-content"
+                  >
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_1tl_"
+                      role="option"
+                      value="0"
+                    >
+                      <span>
+                        Foo
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="true"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-checked="true"
+                      data-combobox-active="true"
+                      data-combobox-option="true"
+                      id="_r_1tn_"
+                      role="option"
+                      value="1"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="m_8ee53fc2"
+                        fill="none"
+                        viewBox="0 0 10 7"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Bar
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="horizontal"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-width: 18px;"
+                />
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="vertical"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-height: 18px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input
+        name="root"
+        type="hidden"
+        value="1"
+      />
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+        data-size="sm"
+      >
+        <div
+          class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+          data-size="sm"
+          data-variant="default"
+          data-with-right-section="true"
+          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+        >
+          <input
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+            data-variant="default"
+            id="root"
+            role="combobox"
+            value="No"
+          />
+          <div
+            class="m_82577fc2 mantine-Input-section mantine-Select-section"
+            data-position="right"
+          >
+            <svg
+              class="m_2943220b mantine-ComboboxChevron-chevron"
+              data-combobox-chevron="true"
+              data-size="sm"
+              fill="none"
+              style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+              viewBox="0 0 15 15"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+        data-composed="true"
+        data-position="bottom"
+        role="presentation"
+        style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+      >
+        <div
+          class="m_b2821a6e mantine-Select-options"
+          id="mantine-i"
+          role="listbox"
+          style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+        >
+          <div
+            class=""
+            style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+          >
+            <div
+              class=""
+              style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+            >
+              <div
+                class="m_d57069b5 mantine-ScrollArea-root"
+                data-autosize="true"
+                style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+              >
+                <div
+                  class="m_c0783ff9 mantine-ScrollArea-viewport"
+                  data-offset-scrollbars="y"
+                  data-scrollarea-viewport="true"
+                  data-scrollbars="xy"
+                  style="overflow-x: scroll; overflow-y: scroll;"
+                >
+                  <div
+                    class="m_b1336c6 mantine-ScrollArea-content"
+                  >
+                    <div
+                      aria-selected="false"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-combobox-option="true"
+                      id="_r_21q_"
+                      role="option"
+                      value="0"
+                    >
+                      <span>
+                        Yes
+                      </span>
+                    </div>
+                    <div
+                      aria-selected="true"
+                      class="m_92253aa5 mantine-Select-option m_390b5f4"
+                      data-checked="true"
+                      data-combobox-active="true"
+                      data-combobox-option="true"
+                      id="_r_21s_"
+                      role="option"
+                      value="1"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="m_8ee53fc2"
+                        fill="none"
+                        viewBox="0 0 10 7"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        No
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="horizontal"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-width: 18px;"
+                />
+                <div
+                  class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                  data-mantine-scrollbar="true"
+                  data-orientation="vertical"
+                  data-state="hidden"
+                  style="position: absolute; --sa-thumb-height: 18px;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input
+        name="root"
+        type="hidden"
+        value="1"
+      />
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > Cyclic schema 1`] = `
 <DocumentFragment>
   <style
@@ -17729,6 +19079,231 @@ exports[`string field with autocapitalize 1`] = `
             type="text"
             value=""
           />
+        </div>
+      </div>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`titled select widget from oneOf boolean constants without a type 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="m_7485cace mantine-Container-root"
+        data-fluid="true"
+        data-strategy="block"
+        id="root"
+        style="padding: 0rem;"
+      >
+        <style
+          data-mantine-styles="inline"
+        >
+          .__m__-_r_221_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+        </style>
+        <div
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_221_"
+          style="margin-bottom: var(--mantine-spacing-sm);"
+        >
+          <div
+            class=""
+          >
+            <div
+              class="rjsf-field rjsf-field-boolean"
+            >
+              <div
+                class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
+                data-size="sm"
+              >
+                <label
+                  class="m_8fdc1311 mantine-InputWrapper-label mantine-Select-label"
+                  data-size="sm"
+                  for="root_answer"
+                  id="root_answer-label"
+                  style="--input-label-size: var(--mantine-font-size-sm);"
+                >
+                  My Answer
+                </label>
+                <div
+                  class="m_6c018570 mantine-Input-wrapper mantine-Select-wrapper"
+                  data-size="sm"
+                  data-variant="default"
+                  data-with-right-section="true"
+                  style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
+                >
+                  <input
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    autocomplete="off"
+                    class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
+                    data-variant="default"
+                    id="root_answer"
+                    role="combobox"
+                    value="Yes"
+                  />
+                  <div
+                    class="m_82577fc2 mantine-Input-section mantine-Select-section"
+                    data-position="right"
+                  >
+                    <svg
+                      class="m_2943220b mantine-ComboboxChevron-chevron"
+                      data-combobox-chevron="true"
+                      data-size="sm"
+                      fill="none"
+                      style="--combobox-chevron-size: var(--combobox-chevron-size-sm);"
+                      viewBox="0 0 15 15"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819C5.10753 6.24392 5.39245 6.24392 5.56819 6.06819L7.49999 4.13638L9.43179 6.06819C9.60753 6.24392 9.89245 6.24392 10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179L7.81819 3.18179C7.73379 3.0974 7.61933 3.04999 7.49999 3.04999C7.38064 3.04999 7.26618 3.0974 7.18179 3.18179L4.93179 5.43179ZM10.0682 9.56819C10.2439 9.39245 10.2439 9.10753 10.0682 8.93179C9.89245 8.75606 9.60753 8.75606 9.43179 8.93179L7.49999 10.8636L5.56819 8.93179C5.39245 8.75606 5.10753 8.75606 4.93179 8.93179C4.75605 9.10753 4.75605 9.39245 4.93179 9.56819L7.18179 11.8182C7.35753 11.9939 7.64245 11.9939 7.81819 11.8182L10.0682 9.56819Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="m_38a85659 mantine-Popover-dropdown m_88b62a41 mantine-Select-dropdown"
+                data-composed="true"
+                data-position="bottom"
+                role="presentation"
+                style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+              >
+                <div
+                  aria-labelledby="root_answer-label"
+                  class="m_b2821a6e mantine-Select-options"
+                  id="mantine-i"
+                  role="listbox"
+                  style="--combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
+                >
+                  <div
+                    class=""
+                    style="display: flex; overflow: hidden; max-height: calc(13.75rem * var(--mantine-scale));"
+                  >
+                    <div
+                      class=""
+                      style="display: flex; flex-direction: column; flex: 1 1 0%; overflow: hidden; min-width: 0px; min-height: 0px;"
+                    >
+                      <div
+                        class="m_d57069b5 mantine-ScrollArea-root"
+                        data-autosize="true"
+                        style="--scrollarea-scrollbar-size: var(--combobox-padding); --sa-corner-width: 0px; --sa-corner-height: 0px;"
+                      >
+                        <div
+                          class="m_c0783ff9 mantine-ScrollArea-viewport"
+                          data-offset-scrollbars="y"
+                          data-scrollarea-viewport="true"
+                          data-scrollbars="xy"
+                          style="overflow-x: scroll; overflow-y: scroll;"
+                        >
+                          <div
+                            class="m_b1336c6 mantine-ScrollArea-content"
+                          >
+                            <div
+                              aria-selected="true"
+                              class="m_92253aa5 mantine-Select-option m_390b5f4"
+                              data-checked="true"
+                              data-combobox-active="true"
+                              data-combobox-option="true"
+                              id="_r_22k_"
+                              role="option"
+                              value="0"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="m_8ee53fc2"
+                                fill="none"
+                                viewBox="0 0 10 7"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                              <span>
+                                Yes
+                              </span>
+                            </div>
+                            <div
+                              aria-selected="false"
+                              class="m_92253aa5 mantine-Select-option m_390b5f4"
+                              data-combobox-option="true"
+                              id="_r_22m_"
+                              role="option"
+                              value="1"
+                            >
+                              <span>
+                                No
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                          data-mantine-scrollbar="true"
+                          data-orientation="horizontal"
+                          data-state="hidden"
+                          style="position: absolute; --sa-thumb-width: 18px;"
+                        />
+                        <div
+                          class="m_c44ba933 mantine-ScrollArea-scrollbar"
+                          data-mantine-scrollbar="true"
+                          data-orientation="vertical"
+                          data-state="hidden"
+                          style="position: absolute; --sa-thumb-height: 18px;"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input
+                name="root_answer"
+                type="hidden"
+                value="0"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

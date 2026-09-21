@@ -18,7 +18,7 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
 ): string | string[] | undefined {
   let { type } = schema;
 
-  if (!type && schema.const) {
+  if (!type && schema.const !== undefined) {
     return guessType(schema.const);
   }
 

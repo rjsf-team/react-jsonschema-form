@@ -1,9 +1,10 @@
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
+import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
 import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** Computes the value to pass to a select element's `value` attribute.
  *
- * When `format` is `'realValue'`, converts form data values to strings.
+ * When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
  * When `format` is `'indexed'` (the default), resolves to index-based values via
  * `enumOptionsIndexForValue`. Returns `emptyValue` when the current value is empty.
  *
@@ -21,17 +22,31 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   format: OptionValueFormat = 'indexed',
   emptyValue?: any,
 ): any {
+  // A single value that equals `emptyValue` still counts as a selection when an option carries it, since widgets pick
+  // sentinels like `null` or `''` that a `oneOf`/`anyOf` of constants can legitimately offer as an option of its own
   const isEmpty =
     typeof value === 'undefined' ||
     (multiple && Array.isArray(value) && value.length < 1) ||
-    (!multiple && value === emptyValue);
+    (!multiple && value === emptyValue && enumOptionsIndexForValue<S>(value, enumOptions) === undefined);
 
   if (isEmpty) {
     return emptyValue;
   }
 
   if (format === 'realValue') {
-    return multiple ? value.map(String) : String(value);
+    // Encoded the same way as the options' values so they match, e.g. `null` is `''` rather than `'null'` on both sides
+    const encode = (item: any, noMatch: any) => {
+      // Only a non-null object is encoded as its index, so every other value skips the scan that searches for one
+      if (typeof item !== 'object' || item === null) {
+        return enumOptionValueEncoder(item, 0, format);
+      }
+      const index = enumOptionsIndexForValue<S>(item, enumOptions);
+      // An object with no matching option has no index to encode, which would otherwise render as the string `NaN`
+      return index === undefined ? noMatch : enumOptionValueEncoder(item, Number(index), format);
+    };
+    // `emptyValue` describes the whole selection, so an unmatched entry of a multiple selection uses the empty string
+    // that `enumOptionValueEncoder()` gives a single empty option instead
+    return multiple ? value.map((item: any) => encode(item, '')) : encode(value, emptyValue);
   }
 
   const indexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
