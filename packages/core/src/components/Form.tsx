@@ -521,10 +521,11 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * utilities it does not also hold.
    */
   context: RenderContext<T, S, F>;
-  /** `context.retrievedSchema` came straight from `current`: neither the data nor anything the utilities resolve it
-   * with changed, so it is the very schema the committed state is already rendering
+  /** `context.schemaUtils` is `current`'s own: nothing the schema is resolved with changed, so the resolved schema in
+   * `context` was produced for `formData` by the very utilities the committed state validates with, and may stand in
+   * for the root when validating; see `runLiveValidation()`
    */
-  isRetrievedSchemaReused: boolean;
+  areSchemaUtilsReused: boolean;
 }
 
 /** How one data pass differs from the default, which just fills in the missing defaults */
@@ -575,7 +576,6 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   let formData: T;
   let retrievedSchema: S;
-  let isRetrievedSchemaReused = false;
   let wasSanitized = false;
   const preventInfiniteSanitize: string[] = [];
   do {
@@ -589,10 +589,11 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     // for are both the ones `current.retrievedSchema` was resolved from. Otherwise the result is shared against the
     // committed schema, so rebuilt utilities handing back a deep-equal schema still compare equal by identity below
     // instead of triggering a sanitize pass.
-    isRetrievedSchemaReused = areSchemaUtilsReused && formData === current?.formData;
-    retrievedSchema = isRetrievedSchemaReused
-      ? (current as FormState<T, S, F>).retrievedSchema
-      : replaceEqualDeep(current?.retrievedSchema, schemaUtils.retrieveSchema(rootSchema, formData));
+    const isDataUnchanged = formData === current?.formData;
+    retrievedSchema =
+      areSchemaUtilsReused && current !== undefined && isDataUnchanged
+        ? current.retrievedSchema
+        : replaceEqualDeep(current?.retrievedSchema, schemaUtils.retrieveSchema(rootSchema, formData));
     if (
       shouldSanitize &&
       !preventInfiniteSanitize.includes(formHash) &&
@@ -625,7 +626,95 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
   // reference the fields hold.
   const context = deriveRenderContext(props, retrievedSchema, current, resolved);
-  return { formData, context, isRetrievedSchemaReused };
+  return { formData, context, areSchemaUtilsReused };
+}
+
+/** What reconciling the errors of a derivation needs to know */
+interface ErrorOptions<S> {
+  /** The schema changed, so the existing errors describe another schema and are dropped */
+  isSchemaChanged?: boolean;
+  /** Live validation runs for this pass; otherwise the committed validation results are carried forward */
+  mustValidate: boolean;
+  /** The schema to validate with in place of the root, when it still describes the data; see `runLiveValidation()` */
+  validationSchema?: S;
+  /** Returns the path of each `formData` field that changed; called only when live validation does not run, which is
+   * when those paths are needed to clear the fields' errors
+   */
+  getFormDataChangedFields?: () => string[];
+}
+
+/** The validation half of the state */
+type ErrorState<T> = Pick<
+  FormState<T>,
+  'errors' | 'errorSchema' | 'schemaValidationErrors' | 'schemaValidationErrorSchema'
+>;
+
+/** Reconciles the errors for a derivation, either by validating `formData` or by carrying the committed validation
+ * results forward, dropping the ones of fields that changed, and merging `extraErrors` and the custom errors onto them.
+ *
+ * @param current - The state the pass starts from; `undefined` on construction
+ * @param props - The current props
+ * @param context - The render context derived for `formData`
+ * @param formData - The data the errors are for
+ * @param options - How this pass reconciles its errors
+ * @returns - The errors to display and the validator's own results they were built from
+ */
+function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F> | undefined,
+  props: FormProps<T, S, F>,
+  context: RenderContext<T, S, F>,
+  formData: T | undefined,
+  options: ErrorOptions<S>,
+): ErrorState<T> {
+  const { isSchemaChanged = false, mustValidate, validationSchema, getFormDataChangedFields = () => [] } = options;
+  if (mustValidate) {
+    return runLiveValidation(props, context, formData, current?.customErrors, validationSchema);
+  }
+  // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base
+  // has to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and
+  // `state.errors` already carries them, which would merge each in a second time
+  // oxlint-disable-next-line typescript/no-deprecated
+  const isErrorStateReset = props.noValidate || isSchemaChanged;
+  const validation: ValidationData<T> = isErrorStateReset
+    ? { errors: [], errorSchema: {} }
+    : {
+        errors: current?.schemaValidationErrors || [],
+        errorSchema: current?.schemaValidationErrorSchema || {},
+      };
+  let schemaValidationErrorSchema = validation.errorSchema;
+  const formDataChangedFields = getFormDataChangedFields();
+  if (formDataChangedFields.length > 0) {
+    // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
+    // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
+    // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
+    // objects are forced so the numeric segment of an array item stays an object key, which is how an
+    // `ErrorSchema` addresses array items.
+    const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>((acc, path) => {
+      const pathOfField = toPath(path);
+      // Every container holding the field changed along with it, so an error of their own, such as the
+      // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
+      // fields they hold did not change and keep theirs.
+      for (let i = 1; i < pathOfField.length; i++) {
+        setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
+      }
+      return setByPath(acc, pathOfField, undefined, true);
+    }, {});
+    schemaValidationErrorSchema = mergeObjects(
+      validation.errorSchema,
+      newErrorSchema,
+      'preventDuplicates',
+    ) as ErrorSchema<T>;
+  }
+  const merged = mergeErrors(
+    { errors: validation.errors, errorSchema: schemaValidationErrorSchema },
+    props.extraErrors,
+    current?.customErrors,
+  );
+  return {
+    ...merged,
+    schemaValidationErrors: validation.errors,
+    schemaValidationErrorSchema,
+  };
 }
 
 /** How one state derivation differs from the default, which validates the data it derives */
@@ -641,9 +730,9 @@ interface DeriveOptions {
 }
 
 /** Derives a whole `FormState` from `current` and `inputFormData`: the data is settled by `deriveFormData()`, the
- * render context is derived for the result, then the errors are reconciled, either by validating the data or by
- * carrying the committed validation results forward. This serves construction and the prop-driven update; the
- * handlers that own their own validation go through `deriveFormData()` and reconcile the errors themselves.
+ * render context is derived for the result, then the errors are reconciled by `reconcileErrors()`. This serves
+ * construction and the prop-driven update; the handlers that own their own validation go through `deriveFormData()`
+ * and reconcile the errors themselves.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The new or current data for the `Form`
@@ -657,98 +746,27 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   options: DeriveOptions,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { isSchemaChanged = false, getFormDataChangedFields = () => [], skipLiveValidate = false } = options;
+  const { isSchemaChanged = false, getFormDataChangedFields, skipLiveValidate = false } = options;
   const { liveValidate } = props;
   const edit = inputFormData !== undefined;
   // `'onBlur'` owns its validation pass in `onBlur()`; deriving state must not run one for it, or the errors show
-  // up before the field the user is editing has been left
+  // up before the field the user is editing has been left. Skipping means the state already holds this pass's errors
   // oxlint-disable-next-line typescript/no-deprecated
-  const mustValidate = edit && !props.noValidate && liveValidate === 'onChange';
-  const {
-    formData,
-    context: renderContext,
-    isRetrievedSchemaReused,
-  } = deriveFormData(current, inputFormData, {}, props);
-
-  let errors: RJSFValidationError[];
-  let errorSchema: ErrorSchema<T> | undefined;
-  let schemaValidationErrors = current?.schemaValidationErrors;
-  let schemaValidationErrorSchema = current?.schemaValidationErrorSchema;
-  // If we are skipping live validate, it means that the state has already been updated with live validation errors
-  if (mustValidate && !skipLiveValidate) {
-    const liveValidation = runLiveValidation(
-      props,
-      renderContext,
-      formData,
-      current?.customErrors,
-      // Only the schema the committed state is already rendering still provably describes this data; one this pass
-      // resolved does not, since the prop change that triggered it may be the schema itself
-      isRetrievedSchemaReused ? renderContext.retrievedSchema : undefined,
-    );
-    errors = liveValidation.errors;
-    errorSchema = liveValidation.errorSchema;
-    schemaValidationErrors = liveValidation.schemaValidationErrors;
-    schemaValidationErrorSchema = liveValidation.schemaValidationErrorSchema;
-  } else {
-    // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base
-    // has to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and
-    // `state.errors` already carries them, which would merge each in a second time
-    // oxlint-disable-next-line typescript/no-deprecated
-    const isErrorStateReset = props.noValidate || isSchemaChanged;
-    const currentErrors: ValidationData<T> = isErrorStateReset
-      ? { errors: [], errorSchema: {} }
-      : {
-          errors: current?.schemaValidationErrors || [],
-          errorSchema: current?.schemaValidationErrorSchema || {},
-        };
-    if (isErrorStateReset) {
-      // The validator's own results describe the schema that is gone; leaving them behind would let the next
-      // `extraErrors` change re-merge them back onto the display through `getDerivedStateFromProps()`
-      schemaValidationErrors = currentErrors.errors;
-      schemaValidationErrorSchema = currentErrors.errorSchema;
-    }
-    errors = currentErrors.errors;
-    errorSchema = currentErrors.errorSchema;
-    // We only update the error schema for changed fields if mustValidate is false
-    if (!mustValidate) {
-      const formDataChangedFields = getFormDataChangedFields();
-      if (formDataChangedFields.length > 0) {
-        // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
-        // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
-        // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
-        // objects are forced so the numeric segment of an array item stays an object key, which is how an
-        // `ErrorSchema` addresses array items.
-        const newErrorSchema = formDataChangedFields.reduce<GenericObjectType>((acc, path) => {
-          const pathOfField = toPath(path);
-          // Every container holding the field changed along with it, so an error of their own, such as the
-          // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
-          // fields they hold did not change and keep theirs.
-          for (let i = 1; i < pathOfField.length; i++) {
-            setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
-          }
-          return setByPath(acc, pathOfField, undefined, true);
-        }, {});
-        schemaValidationErrorSchema = mergeObjects(
-          currentErrors.errorSchema,
-          newErrorSchema,
-          'preventDuplicates',
-        ) as ErrorSchema<T>;
-        errorSchema = schemaValidationErrorSchema;
-      }
-    }
-    const mergedErrors = mergeErrors({ errorSchema, errors }, props.extraErrors, current?.customErrors);
-    errors = mergedErrors.errors;
-    errorSchema = mergedErrors.errorSchema;
-  }
-
+  const mustValidate = edit && !props.noValidate && liveValidate === 'onChange' && !skipLiveValidate;
+  const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, {}, props);
+  const errors = reconcileErrors(current, props, context, formData, {
+    isSchemaChanged,
+    mustValidate,
+    // Resolved by the very utilities the committed state validates with, for this very data, so it describes the data
+    // the way an edit's resolved schema does; rebuilt utilities mean the prop change may be the schema itself
+    validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
+    getFormDataChangedFields,
+  });
   return {
-    ...renderContext,
+    ...context,
     formData,
     edit,
-    errors,
-    errorSchema,
-    schemaValidationErrors: schemaValidationErrors ?? [],
-    schemaValidationErrorSchema: schemaValidationErrorSchema ?? {},
+    ...errors,
     initialDefaultsGenerated: true,
   };
 }
@@ -809,9 +827,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
   const { formData: oldFormData, schemaValidationErrorSchema } = current;
   let { customErrors } = current;
-  // A prop the schema utilities are built from can change and reach a queued change before `getSnapshotBeforeUpdate()`
-  // re-derives state, so the derivation below may hand back a context rebuilt from the new props. Committing whatever
-  // it returns is what keeps state's resolved schema and the utilities that resolved it in step.
+  // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
+  // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
   // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
   // pattern in deriveFormState/getDerivedStateFromProps and avoids the duplication that
