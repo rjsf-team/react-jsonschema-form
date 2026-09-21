@@ -69,10 +69,6 @@ export default function getInputProps<
   const isSingleOrNullableType = !nonNullTypes || nonNullTypes.length === 1;
   const isNumericSchema = isSingleOrNullableType && (schemaType === 'number' || schemaType === 'integer');
   const isNumericText = !options.inputType && !defaultType && plainNativeInput && isNumericSchema;
-  // A theme with its own numeric widget (`plainNativeInput=false`) picks that widget by this `type`, so resolving an
-  // array `schema.type` here would route a nullable field to it. That is a change for those themes to make on their
-  // own terms, so they go on reading the type exactly as they did before
-  const usesNumericInputType = isNumericSchema && (plainNativeInput || !Array.isArray(schema.type));
 
   const inputProps: InputPropsType = {
     type: defaultType || 'text',
@@ -94,10 +90,12 @@ export default function getInputProps<
     inputProps.type = 'text';
     inputProps.inputMode = isInteger ? 'numeric' : 'decimal';
     inputProps.pattern = getNumericPattern(isInteger);
-  } else if (!defaultType && usesNumericInputType) {
+  } else if (!defaultType && isNumericSchema && !Array.isArray(schema.type)) {
+    // Only a theme with its own numeric widget (`plainNativeInput=false`) reaches this branch: it renders no native
+    // number input and so keeps the semantic type as-is, picking that widget by the `type` returned here. Resolving
+    // an array `schema.type` would route a nullable field to it, which is a change for those themes to make on their
+    // own terms, so they go on reading the type exactly as they did before
     if (schemaType === 'integer') {
-      // Themes with their own numeric widget (indicated by `plainNativeInput=false`) don't render a
-      // native number input in the first place, so they keep the semantic type as-is.
       inputProps.type = 'number';
       // Only add step if one isn't already defined
       if (inputProps.step === undefined) {
