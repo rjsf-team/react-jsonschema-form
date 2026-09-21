@@ -541,6 +541,24 @@ describe('BooleanField', () => {
     expect(texts(titled.node)).toEqual(['', 'Y', 'N']);
   });
 
+  it('should honour the record spelling of ui:enumNames for constant options, like the enum path does', () => {
+    // `optionsList()` keys the record form by value rather than by position, so the constant path has to as well
+    const uiSchema = { 'ui:widget': 'select', 'ui:enumNames': { true: 'Yep', false: 'Nope' } };
+    const constants = createFormComponent({
+      schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+      uiSchema,
+    });
+    const enumSpelling = createFormComponent({
+      schema: { type: 'boolean', enum: [true, false] },
+      uiSchema,
+    });
+    const texts = (node: Element) =>
+      [...node.querySelector<HTMLSelectElement>('select#root')!.options].map((option) => option.text);
+
+    expect(texts(constants.node)).toEqual(['', 'Yep', 'Nope']);
+    expect(texts(enumSpelling.node)).toEqual(texts(constants.node));
+  });
+
   it('should fall back to the oneOf when the anyOf is empty', () => {
     // Every option of an empty list is vacuously a constant, so the emptiness has to be checked on its own
     const { node } = createFormComponent({

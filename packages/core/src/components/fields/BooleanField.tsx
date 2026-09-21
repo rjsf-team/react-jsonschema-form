@@ -82,7 +82,9 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
   // `optionsList()` reads `anyOf` before `oneOf`, so the options come from the same keyword it would have picked, but
-  // only when they are constants: it maps them with `toConstant()`, which throws for anything else
+  // only when they are constants, since it maps them with `toConstant()`, which throws for anything else. The `oneOf`
+  // fallback is left unguarded because it is the keyword this field has always read, and guarding it would change
+  // which field renders a non-constant `oneOf` that reaches here through an `enum`
   const anyOfSchemas = schema[ANY_OF_KEY];
   const altKey =
     Array.isArray(anyOfSchemas) &&
@@ -97,17 +99,20 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         [altKey]: altSchemas
           .map((option, index) => {
             if (isObject(option)) {
+              // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const`
+              // spelling
+              const constant = isConstant(option) ? toConstant(option) : undefined;
               return {
                 ...option,
-                // An option's own title wins, then `ui:enumNames` by position, which `optionsList()` applies only to
-                // an `enum` and so would otherwise be dropped by taking this path at all. Only a boolean constant
-                // gets a Yes/No label after that; `optionsList()` falls back to the value for the rest, so a `null`
-                // option reads as `null` rather than sharing `false`'s label. The constant is read the same way
-                // `optionsList()` reads it, so a single-value `enum` is labelled like the `const` spelling
+                // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and
+                // so would otherwise be dropped by taking this path at all. Both of its spellings are honored: an
+                // array by position and a record by value. Only a boolean constant gets a Yes/No label after that;
+                // `optionsList()` falls back to the value for the rest, so a `null` option reads as `null` rather than
+                // sharing `false`'s label
                 title:
                   option.title ||
-                  enumNames?.[index] ||
-                  booleanConstantTitle(isConstant(option) ? toConstant(option) : undefined, yes, no),
+                  (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
+                  booleanConstantTitle(constant, yes, no),
               };
             }
             return undefined;
