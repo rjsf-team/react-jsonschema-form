@@ -82,9 +82,12 @@ export default function BaseInputTemplate<
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
-  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them
+  const callerHtmlInput = { ...slotProps?.htmlInput, ...muiSlotProps?.htmlInput };
+
+  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them. The title explains
+  // the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no longer in force
   const htmlInputProps = {
-    title: getNumericInputTitle(derivedInputProps, registry.translateString),
+    title: 'pattern' in callerHtmlInput ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
     step,
     min,
     max,
@@ -92,8 +95,7 @@ export default function BaseInputTemplate<
     inputMode,
     pattern,
     autoCapitalize,
-    ...slotProps?.htmlInput,
-    ...muiSlotProps?.htmlInput,
+    ...callerHtmlInput,
     ...(schema.examples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

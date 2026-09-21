@@ -80,6 +80,26 @@ describe('MUI Theme-Specific Props', () => {
     expect(input).toHaveAttribute('pattern', '[0-9]*[.]?[0-9]{0,2}');
     expect(input).toHaveAttribute('inputmode', 'tel');
     expect(input).toHaveAttribute('step', '5');
+    // The title names the constraint the derived pattern imposes, so it goes when that pattern is replaced
+    expect(input).not.toHaveAttribute('title');
+  });
+
+  it('should title a numeric field whose derived pattern a caller leaves alone', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        price: { type: 'number' },
+        count: { type: 'integer' },
+      },
+    };
+    const uiSchema: UiSchema = {
+      price: { 'ui:options': { mui: { slotProps: { htmlInput: { step: 5 } } } } },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('input#root_price')).toHaveAttribute('title', 'Enter a number');
+    expect(container.querySelector('input#root_count')).toHaveAttribute('title', 'Enter a whole number');
   });
 
   it('should let a caller set step, min and max through slotProps.htmlInput when the schema derives none', () => {
