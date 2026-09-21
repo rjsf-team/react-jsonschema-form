@@ -840,6 +840,30 @@ describe('StringField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, 'baz', 'root');
     });
+
+    it('should report a multiple select in enum order even when optgroups reorders the options', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b', 'c', 'd'] },
+        uniqueItems: true,
+      };
+      // 'd' and 'c' lead the rendered list while 'a' and 'b' trail it, so a browser reporting the selection in
+      // document order would swap the two picks below
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:widget': 'select',
+          'ui:options': { optgroups: { Zed: ['d', 'c'] } },
+        },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      const optionFor = (label: string) =>
+        Array.from(select.querySelectorAll('option')).find((option) => option.textContent === label)!;
+      await user.selectOptions(select, [optionFor('a'), optionFor('c')]);
+
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'c'], 'root');
+    });
   });
 
   describe('TextareaWidget', () => {

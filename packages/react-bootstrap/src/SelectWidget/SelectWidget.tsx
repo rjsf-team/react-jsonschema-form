@@ -5,6 +5,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -41,12 +42,20 @@ export default function SelectWidget<
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
 
+  const groupedOptions = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled);
+  const enumIndexByPosition = flattenGroupedOptions<S>(groupedOptions).map((option) => option.index);
+
+  /** A multiple select only ever reports its selection in document order, and `optgroups` is presentational, so the
+   * options are put back into enum order before they reach form data: turning a group on or off must not reorder the
+   * array a form submits.
+   */
   function getValue(event: FocusEvent | ChangeEvent | any, isMultiple?: boolean) {
     if (isMultiple) {
-      return [].slice
-        .call(event.target.options)
-        .filter((o: any) => o.selected)
-        .map((o: any) => o.value);
+      return Array.from<HTMLOptionElement>(event.target.options)
+        .map((option, position) => ({ option, position }))
+        .filter(({ option }) => option.selected)
+        .sort((a, b) => enumIndexByPosition[a.position] - enumIndexByPosition[b.position])
+        .map(({ option }) => option.value);
     }
     return event.target.value;
   }
@@ -99,7 +108,7 @@ export default function SelectWidget<
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
-        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+        {groupedOptions.map((item) =>
           isEnumOptionsGroup<S>(item) ? (
             <optgroup key={`optgroup-${item.label}`} label={item.label}>
               {item.options.map(renderOption)}

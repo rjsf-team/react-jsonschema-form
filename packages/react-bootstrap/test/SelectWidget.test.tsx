@@ -128,4 +128,33 @@ describe('SelectWidget', () => {
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
+
+  test('reports a multiple select in enum order even when optgroups reorders the options', () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: [],
+          readonly: false,
+          multiple: true,
+          onChange,
+          options: {
+            enumOptions,
+            // 'qux' and 'baz' lead the rendered list while 'foo' and 'bar' trail it, so a browser reporting the
+            // selection in document order would swap the two picks below
+            optgroups: { Zed: ['qux', 'baz'] },
+          },
+        })}
+      />,
+    );
+
+    const select = container.querySelector('select')!;
+    const optionFor = (label: string) =>
+      Array.from(select.querySelectorAll('option')).find((option) => option.textContent === label)!;
+    optionFor('Foo').selected = true;
+    optionFor('Baz').selected = true;
+    fireEvent.change(select);
+
+    expect(onChange).toHaveBeenLastCalledWith(['foo', 'baz']);
+  });
 });
