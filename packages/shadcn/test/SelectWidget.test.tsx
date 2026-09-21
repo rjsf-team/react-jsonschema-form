@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -298,5 +299,64 @@ describe('SelectWidget', () => {
 
     expect(screen.getByRole('group', { name: 'Group A' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+  });
+
+  test('multi-select: optgroups does not reorder the selected values it reports', async () => {
+    const user = userEvent.setup();
+    const seen: unknown[] = [];
+
+    function Controlled({ optgroups }: { optgroups?: Record<string, string[]> }) {
+      const [value, setValue] = useState<string[]>([]);
+      return (
+        <SelectWidget
+          {...makeWidgetMockProps({
+            autofocus: false,
+            disabled: false,
+            readonly: false,
+            multiple: true,
+            rawErrors: [],
+            value,
+            onChange: (next) => {
+              seen.push(next);
+              setValue(next as string[]);
+            },
+            options: {
+              enumOptions: [
+                { label: 'A', value: 'a' },
+                { label: 'B', value: 'b' },
+                { label: 'C', value: 'c' },
+                { label: 'D', value: 'd' },
+              ],
+              optgroups,
+            },
+          })}
+        />
+      );
+    }
+
+    const pick = async (name: string) => {
+      await user.click(screen.getByPlaceholderText('Select ...'));
+      await user.click(screen.getByRole('option', { name }));
+    };
+
+    // 'C' and 'D' are grouped, so they lead the flattened option list while 'A' and 'B' trail it. Selecting across
+    // that boundary must still report the values in the order they were picked: `optgroups` is presentational and
+    // must not reach the array written to formData.
+    const { unmount } = render(<Controlled optgroups={{ G: ['c', 'd'] }} />);
+    await pick('A');
+    await pick('C');
+    await pick('B');
+    const grouped = seen.at(-1);
+    unmount();
+
+    seen.length = 0;
+    render(<Controlled />);
+    await pick('A');
+    await pick('C');
+    await pick('B');
+    const ungrouped = seen.at(-1);
+
+    expect(ungrouped).toEqual(['a', 'c', 'b']);
+    expect(grouped).toEqual(ungrouped);
   });
 });

@@ -93,9 +93,13 @@ export default function SelectWidget<
     disabled: option.disabled,
   });
 
-  const groupedOptions = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled);
-  const items = flattenGroupedOptions<S>(groupedOptions).map(toFancyItem);
-  const sections = optgroups ? toSections<S>(groupedOptions, toFancyItem) : undefined;
+  // `optgroups` is presentational, so `items` stays in enum order: the fancy selects derive their selection by
+  // filtering `items`, and that order becomes the order of the array written to formData. Grouping is applied to
+  // `sections`, which is what the popup actually renders.
+  const items = flattenGroupedOptions<S>(groupEnumOptions<S>(enumOptions, undefined, enumDisabled)).map(toFancyItem);
+  const sections = optgroups
+    ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
+    : undefined;
 
   const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
 
