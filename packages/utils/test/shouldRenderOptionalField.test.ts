@@ -76,6 +76,13 @@ describe('getSchemaTypesForXxxOf', () => {
   test('mixed', () => {
     expect(getSchemaTypesForXxxOf(ONE_OF_SCHEMA_MIXED.oneOf as RJSFSchema[])).toEqual(['object', 'array', 'string']);
   });
+  test('a const null option reports the same type as the type null spelling of it', () => {
+    expect(getSchemaTypesForXxxOf([{ type: 'string' }, { const: null }])).toEqual(['string', 'null']);
+    expect(getSchemaTypesForXxxOf([{ type: 'string' }, { type: 'null' }])).toEqual(['string', 'null']);
+  });
+  test('only null options', () => {
+    expect(getSchemaTypesForXxxOf([{ const: null }, { type: 'null' }])).toEqual('null');
+  });
 });
 
 describe('shouldRenderOptionalField()', () => {
@@ -113,5 +120,15 @@ describe('shouldRenderOptionalField()', () => {
   test('schemaType for mixed-type oneOf IS in enableOptionalDataFieldForType returns false', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
     expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_MIXED, false)).toBe(false);
+  });
+  test('schemaType for an anyOf made nullable by a const null option returns false, like the type null spelling', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    const properties: RJSFSchema['properties'] = { a: { type: 'string' } };
+    // The optional data controls hide the option selector until there is data, and `null` is not data, so a nullable
+    // option list has to keep its selector to stay reachable once the `null` branch is chosen
+    const constNull: RJSFSchema = { anyOf: [{ type: 'object', properties }, { const: null }] };
+    const typeNull: RJSFSchema = { anyOf: [{ type: 'object', properties }, { type: 'null' }] };
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, constNull, false)).toBe(false);
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, typeNull, false)).toBe(false);
   });
 });

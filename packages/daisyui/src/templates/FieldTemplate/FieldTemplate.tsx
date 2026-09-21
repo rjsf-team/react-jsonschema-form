@@ -52,9 +52,10 @@ export default function FieldTemplate<
     ...divProps
   } = props;
 
-  // Special handling for checkboxes - they should have the label after the input
-  const isCheckbox = schema.type === 'boolean';
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  // Special handling for checkboxes - they should have the label after the input. A boolean rendered through a select
+  // (a `oneOf`/`anyOf` of boolean constants) has no label of its own, so it still needs this one
+  const isCheckbox = schema.type === 'boolean' && uiOptions.widget !== 'select';
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
