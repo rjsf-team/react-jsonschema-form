@@ -14,8 +14,8 @@ import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts
 
 /** Resolves an RFC 6901 JSON pointer against `obj`: the empty pointer is `obj` itself, every other pointer is a
  * `/`-led list of reference tokens with `~1` and `~0` unescaped in that order. Through `getByPath()` only own
- * properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`. A pointer without the leading `/`
- * is not a JSON pointer, so it finds nothing too.
+ * properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`, unless it is a genuine own data
+ * key. A pointer without the leading `/` is not a JSON pointer, so it finds nothing too.
  */
 function getByPointer<R>(obj: R, pointer: string): R | undefined {
   if (pointer === '') {
