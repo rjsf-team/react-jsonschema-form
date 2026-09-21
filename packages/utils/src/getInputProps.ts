@@ -90,11 +90,12 @@ export default function getInputProps<
     inputProps.type = 'text';
     inputProps.inputMode = isInteger ? 'numeric' : 'decimal';
     inputProps.pattern = getNumericPattern(isInteger);
-  } else if (!defaultType && isNumericSchema && !Array.isArray(schema.type)) {
+  } else if (!defaultType && isNumericSchema && typeof schema.type === 'string') {
     // Only a theme with its own numeric widget (`plainNativeInput=false`) reaches this branch: it renders no native
-    // number input and so keeps the semantic type as-is, picking that widget by the `type` returned here. Resolving
-    // an array `schema.type` would route a nullable field to it, which is a change for those themes to make on their
-    // own terms, so they go on reading the type exactly as they did before
+    // number input and so keeps the semantic type as-is, picking that widget by the `type` returned here. A type that
+    // `getSchemaType()` resolved rather than read verbatim, out of an array or inferred from a numeric `const`, would
+    // route a field to that widget which used to get a text input, and that is a change for those themes to make on
+    // their own terms, so they go on reading `schema.type` exactly as they did before
     if (schemaType === 'integer') {
       inputProps.type = 'number';
       // Only add step if one isn't already defined

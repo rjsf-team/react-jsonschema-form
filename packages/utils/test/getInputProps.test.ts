@@ -227,6 +227,19 @@ describe('getInputProps', () => {
     expect(getInputProps({ type: ['integer', 'null'] }, undefined, undefined, false)).toEqual({ type: 'text' });
     expect(getInputProps({ type: ['number', 'null'] }, undefined, undefined, false)).toEqual({ type: 'text' });
   });
+  it('leaves a schema typed only by a numeric const on the plain text input for such a theme', () => {
+    // `getSchemaType()` infers `number` from the `const`, but this branch reads `schema.type` literally, so such a
+    // field keeps the text input it has always had there: the same change for those themes to make as the case above
+    expect(getInputProps({ const: 5 }, undefined, undefined, false)).toEqual({ type: 'text' });
+  });
+  it('treats a schema typed only by a numeric const as the number it holds', () => {
+    // `SchemaField` picks its field by the same resolved type, so such a schema renders through `NumberField`
+    expect(getInputProps({ const: 5 })).toEqual({
+      type: 'text',
+      inputMode: 'decimal',
+      pattern: NUMBER_PATTERN,
+    });
+  });
   it('treats a single-entry type array like the type it holds', () => {
     // `getSchemaType()` resolves it to that entry, so `SchemaField` renders it through `NumberField` either way
     expect(getInputProps({ type: ['number'], minimum: 2 })).toEqual({
