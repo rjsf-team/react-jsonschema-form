@@ -60,6 +60,10 @@ export const TranslatableString = {
   Value: 'Value',
   /** Clear button title, used by IconButton */
   ClearButton: 'clear input',
+  /** Title of the numeric text input a `number` field renders, used by the `BaseInputTemplate` of every theme */
+  NumberInputTitle: 'Enter a number',
+  /** Title of the numeric text input an `integer` field renders, used by the `BaseInputTemplate` of every theme */
+  IntegerInputTitle: 'Enter a whole number',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType: 'Unknown field type %1',

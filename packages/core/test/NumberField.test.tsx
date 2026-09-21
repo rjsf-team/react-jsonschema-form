@@ -37,6 +37,109 @@ describe('NumberField', () => {
       });
     });
 
+    it('should render a nullable number like a number, since it renders through the same NumberField', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['number', 'null'], multipleOf: 0.5, minimum: 0, maximum: 10 },
+      });
+
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).toHaveAttribute('inputmode', 'decimal');
+      expect(input).toHaveAttribute('pattern');
+      expect(input).toHaveAttribute('title', 'Enter a number');
+      expect(input).not.toHaveAttribute('step');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
+    });
+
+    it('should render a nullable integer like an integer, since it renders through the same NumberField', () => {
+      const { node } = createFormComponent({ schema: { type: ['integer', 'null'], minimum: 0, maximum: 10 } });
+
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).toHaveAttribute('inputmode', 'numeric');
+      expect(input).toHaveAttribute('title', 'Enter a whole number');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
+    });
+
+    it('should title the default text input so the browser names the format its pattern rejects', () => {
+      const { node } = createFormComponent({ schema: { type: 'number' } });
+
+      expect(node.querySelector('input')).toHaveAttribute('title', 'Enter a number');
+    });
+
+    it('should not title a native number input, which has no pattern to explain', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'number' },
+        uiSchema: { 'ui:options': { inputType: 'number' } },
+      });
+
+      expect(node.querySelector('input')).not.toHaveAttribute('title');
+    });
+
+    const pendingSeparatorTests = [
+      { typed: '.', display: '.', output: 0 },
+      { typed: '-.', display: '-.', output: -0 },
+      { typed: '+.', display: '+.', output: 0 },
+    ];
+
+    pendingSeparatorTests.forEach(({ typed, display, output }) => {
+      it(`should leave the default text input submittable while it shows the ${typed} it reports as ${output}`, async () => {
+        const { node, onChange } = createFormComponent({ schema: { type: 'number' } });
+
+        const $input = node.querySelector('input')!;
+        await user.type($input, typed);
+
+        // The pattern has to accept every spelling the field itself produces, or native validation blocks a submit
+        // of form data rjsf considers valid — the same 0 typed as '.00' goes through
+        expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+        expect($input).toHaveValue(display);
+        expect($input.checkValidity()).toBe(true);
+      });
+    });
+
+    const integerSpellingTests = [
+      { typed: '.', output: 0 },
+      { typed: '5.', output: 5 },
+      { typed: '5.0', output: 5 },
+      { typed: '-5.', output: -5 },
+    ];
+
+    integerSpellingTests.forEach(({ typed, output }) => {
+      it(`should leave an integer field submittable while it shows the ${typed} it reports as ${output}`, async () => {
+        const { node, onChange } = createFormComponent({ schema: { type: 'integer' } });
+
+        const $input = node.querySelector('input')!;
+        await user.type($input, typed);
+
+        expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+        expect($input).toHaveValue(typed);
+        expect($input.checkValidity()).toBe(true);
+      });
+    });
+
+    it('should keep an integer field unsubmittable while it shows a fraction, which is no whole number', async () => {
+      const { node, onChange } = createFormComponent({ schema: { type: 'integer' } });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '5.5');
+
+      expectToHaveBeenCalledWithFormData(onChange, 5.5, 'root');
+      expect($input.checkValidity()).toBe(false);
+    });
+
+    it('should keep the default text input unsubmittable while it shows a lone sign, which is no number at all', async () => {
+      const { node, onChange } = createFormComponent({ schema: { type: 'number' } });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '-');
+
+      // `asNumber()` leaves this in formData as a string, so blocking the submit is the point of the pattern
+      expectToHaveBeenCalledWithFormData(onChange, '-', 'root');
+      expect($input.checkValidity()).toBe(false);
+    });
+
     it('should not put step, min or max, which only a native number input honors, on the default text input', () => {
       const { node } = createFormComponent({
         schema: { type: 'integer', multipleOf: 5, minimum: 0, maximum: 100 },
@@ -305,6 +408,10 @@ describe('NumberField', () => {
           { typed: '5', formData: -5, display: '-5' },
           { typed: '+5', formData: -5, display: '-5' },
           { typed: '-0', formData: 5, display: '5' },
+          { typed: '0', formData: 7, display: '7' },
+          { typed: '.', formData: 7, display: '7' },
+          { typed: '00', formData: 7, display: '7' },
+          { typed: '.0', formData: 7, display: '7' },
         ];
 
         staleTests.forEach(({ typed, formData, display }) => {
@@ -313,7 +420,6 @@ describe('NumberField', () => {
               type: 'number',
             };
             const { rerender, node } = createFormComponent({
-              ref: createRef(),
               schema,
               uiSchema,
             });
@@ -321,7 +427,7 @@ describe('NumberField', () => {
             const $input = node.querySelector('input')!;
             await user.type($input, typed);
 
-            rerender({ schema, formData });
+            rerender({ schema, uiSchema, formData });
 
             expect($input).toHaveValue(display);
           });

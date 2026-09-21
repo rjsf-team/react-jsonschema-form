@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function BaseInputTemplate<
@@ -31,9 +31,10 @@ export default function BaseInputTemplate<
   registry,
 }: BaseInputTemplateProps<T, S, F>) {
   const { ClearButton } = registry.templates.ButtonTemplates;
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
   const inputProps = {
     ...extraProps,
-    ...getInputProps<T, S, F>(schema, type, options),
+    ...derivedInputProps,
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -58,6 +59,7 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
+        title={getNumericInputTitle(derivedInputProps, registry.translateString)}
         readOnly={readonly}
         className={rawErrors.length > 0 ? 'is-invalid' : ''}
         list={schema.examples ? examplesId(id) : undefined}

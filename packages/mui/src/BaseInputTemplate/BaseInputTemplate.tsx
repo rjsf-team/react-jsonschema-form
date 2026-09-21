@@ -13,7 +13,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, labelValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -23,9 +23,8 @@ import { getMuiProps } from '../util.ts';
 export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
-    /** Props applied to the base native HTML `<input>` or `<textarea>` element, including the `<input>`-only
-     * attributes such as `pattern`, `step`, `min`, `max` and `accept`. */
-    htmlInput?: React.InputHTMLAttributes<HTMLInputElement> & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -77,17 +76,15 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, inputMode, pattern, autoCapitalize, ...rest } = getInputProps<T, S, F>(
-    schema,
-    type,
-    options,
-  );
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  const { step, min, max, accept, inputMode, pattern, autoCapitalize, ...rest } = derivedInputProps;
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
   // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them
   const htmlInputProps = {
+    title: getNumericInputTitle(derivedInputProps, registry.translateString),
     step,
     min,
     max,

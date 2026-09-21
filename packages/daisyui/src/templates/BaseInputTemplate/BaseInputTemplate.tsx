@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
+import { getInputProps, getNumericInputTitle, ariaDescribedByIds, examplesId } from '@rjsf/utils';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -98,6 +98,7 @@ export default function BaseInputTemplate<
             autoFocus={autofocus}
             className={className}
             multiple={isMulti}
+            title={getNumericInputTitle(inputProps, registry.translateString)}
             {...rest}
             {...htmlInputProps}
             onChange={onChangeOverride || handleChange}

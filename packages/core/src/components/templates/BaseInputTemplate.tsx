@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, getSchemaType } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
 
@@ -47,13 +47,15 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
   const inputProps = {
     ...rest,
-    ...getInputProps<T, S, F>(schema, type, options),
+    ...derivedInputProps,
   };
 
+  const schemaType = getSchemaType(schema);
   let inputValue;
-  if (schema.type === 'number' || schema.type === 'integer') {
+  if (schemaType === 'number' || schemaType === 'integer') {
     inputValue = value || value === 0 ? value : '';
   } else {
     inputValue = value == null ? '' : value;
@@ -88,6 +90,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
+        title={getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
         onChange={onChangeOverride || handleChange}

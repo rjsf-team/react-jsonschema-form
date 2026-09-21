@@ -81,9 +81,12 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     // Construct a regular expression that checks for a string that consists
     // of the formData value's magnitude suffixed with zero or one '.' characters and zero
     // or more '0' characters. Escape the value first: its own '.' is a literal
-    // character here, not the regex "any character" wildcard.
+    // character here, not the regex "any character" wildcard. The magnitude is optional only for zero, whose pending
+    // forms ('.', '.00') spell no digits of their own; for any other value an optional magnitude would leave the
+    // trailing '.'/'0' tail able to match alone, so a leftover '0' or '.' would mask a formData set from outside.
     const escapedValue = String(Math.abs(value)).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`^(${escapedValue})?\\.?0*$`);
+    const magnitudePattern = value === 0 ? `(${escapedValue})?` : escapedValue;
+    const re = new RegExp(`^${magnitudePattern}\\.?0*$`);
 
     // If the cached "lastValue" is a match, use that instead of the formData
     // value to prevent the input value from changing in the UI

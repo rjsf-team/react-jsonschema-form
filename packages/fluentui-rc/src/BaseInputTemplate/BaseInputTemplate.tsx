@@ -4,7 +4,7 @@ import type { InputProps } from '@fluentui/react-components';
 import { Input, Label, makeStyles } from '@fluentui/react-components';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, labelValue } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   input: {
@@ -79,6 +79,7 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
+        title={getNumericInputTitle(inputProps, registry.translateString)}
         {...(inputProps as InputProps)}
         input={{
           className: classes.input,

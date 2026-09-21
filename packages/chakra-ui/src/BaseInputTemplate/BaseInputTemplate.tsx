@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, labelValue, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getNumericInputTitle, labelValue, getInputProps } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -72,6 +72,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
+        title={getNumericInputTitle(inputProps, registry.translateString)}
         {...inputProps}
         list={schema.examples ? examplesId(id) : undefined}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
