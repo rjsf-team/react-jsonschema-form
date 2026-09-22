@@ -16,7 +16,7 @@ export default function Example() {
 
 ## Behavior
 
-- Implements RJSF's `ValidatorType<T, S, F>` interface.
+- Implements RJSF's `ValidatorType<S, F>` interface.
 - Normalizes `undefined` before validation: undefined object members are omitted so `required` errors surface, while undefined array entries become `null`.
 - Caches schema-bound engine instances by schema `$id` (or the RJSF schema hash) and refreshes them when the schema or root schema changes.
 - Supports `customValidate`, `transformErrors`, custom formats, duplicate `anyOf`/`oneOf` filtering, and the RJSF `color` and `data-url` formats.

@@ -18,9 +18,9 @@ The package exports `CustomValidatorOptionsType`, `CFWorkerValidationError`, `CF
 
 ## APIs
 
-### `customizeValidator<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()`
+### `customizeValidator<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()`
 
-Creates a `ValidatorType<T, S, F>` backed by `@cfworker/json-schema`.
+Creates a `ValidatorType<S, F>` backed by `@cfworker/json-schema`.
 
 #### Parameters
 
@@ -33,7 +33,7 @@ Creates a `ValidatorType<T, S, F>` backed by `@cfworker/json-schema`.
 
 #### Returns
 
-- `ValidatorType<T, S, F>`: the customized validator implementation
+- `ValidatorType<S, F>`: the customized validator implementation
 
 ```ts
 import { customizeValidator } from '@rjsf/validator-cfworker';

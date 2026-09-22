@@ -23,7 +23,7 @@ export default function withTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(themeProps: ThemeProps<T, S, F>) {
+>(themeProps: ThemeProps<T, S, F>): ThemedForm<T, S, F> {
   // ... function implementation
 }
 
@@ -39,6 +39,8 @@ export function generateTheme<
 The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
 Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
 Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
+`Form` infers `T` from the `formData` prop when one is passed, so naming it is only needed when there is no `formData` to infer from.
+The validator has no `T`: `ValidatorType<S, F>` puts the form data type on `validateFormData<T>()`, so one validator serves every form.
 
 ## Overriding generics
 
@@ -67,7 +69,7 @@ const schema: RJSFSchema = {
 
 const formData: FormData = {};
 
-const validator = customizeValidator<FormData>();
+const validator = customizeValidator();
 
 render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
 ```
@@ -98,12 +100,11 @@ const schema: MySchema = {
   },
 };
 
-const validator = customizeValidator<any, MySchema>();
+const validator = customizeValidator<MySchema>();
 
 render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 
 // Alternatively since you have the type, you could also use this
-// const validator = customizeValidator<FormData, MySchema>();
 // render((
 //  <Form<FormData, MySchema> schema={schema} validator={validator} />
 //), document.getElementById("app"));
@@ -139,7 +140,7 @@ const formContext: FormContext = {
   },
 };
 
-const validator = customizeValidator<any, RJSFSchema, FormContext>();
+const validator = customizeValidator<RJSFSchema, FormContext>();
 
 render(
   <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
@@ -182,7 +183,7 @@ const theme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(theme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
@@ -190,8 +191,8 @@ const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={va
 ## Overriding generics in other themes
 
 Since all the other themes in RJSF are extensions of `@rjsf/core`, overriding parts of these themes with custom generics is a little different.
-The exported `Theme` and `Form` from any of the themes have been created using the generic defaults, and as a result, do not take generics themselves.
-In order to override generics, special `generateForm()` and `generateTheme()` functions are exported for your use.
+The exported `Form` from any of the themes is a `ThemedForm`, generic over the form data like `Form` itself, and the exported `Theme`, `Templates` and `Widgets` keep each component's own generics, so the `withTheme()` example above works unchanged with a theme's `Theme`.
+To pin the generics up front instead, `generateForm()` and `generateTheme()` functions are exported for your use.
 
 ### Overriding a Theme
 
@@ -271,7 +272,7 @@ const myTheme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(myTheme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 // You could also do since they are effectively the same:
 // const ThemedForm = generateForm<FormData, MySchema, FormContext>(myTheme);

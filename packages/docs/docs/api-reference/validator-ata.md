@@ -1,7 +1,7 @@
 # @rjsf/validator-ata APIs
 
 `@rjsf/validator-ata` is an alternative to `@rjsf/validator-ajv8`, backed by [`ata-validator`](https://www.npmjs.com/package/ata-validator) instead of AJV.
-The public surface mirrors the AJV package, so swapping the import is enough for the form to keep working: `customizeValidator()`, `ValidatorType<T, S, F>`, custom formats, `transformErrors`, `customValidate`, and `suppressDuplicateFiltering` all behave the same.
+The public surface mirrors the AJV package, so swapping the import is enough for the form to keep working: `customizeValidator()`, `ValidatorType<S, F>`, custom formats, `transformErrors`, `customValidate`, and `suppressDuplicateFiltering` all behave the same.
 
 See the [Validation documentation](../usage/validation.md) for examples of using these APIs.
 
