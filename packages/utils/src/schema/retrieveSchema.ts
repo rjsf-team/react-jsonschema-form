@@ -473,10 +473,22 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
-/** The keywords that annotate a subschema without saying anything about the value it describes. A subschema built from
- * nothing but these leaves the property it describes free to hold any type.
+/** The keywords that annotate a subschema, or identify it, without saying anything about the value it describes. A
+ * subschema built from nothing but these leaves the property it describes free to hold any type. `readOnly` belongs
+ * here too, since the field it marks read-only locks its type selector along with its value.
  */
-const ANNOTATION_ONLY_KEYS: string[] = ['title', 'description', '$comment'];
+const ANNOTATION_ONLY_KEYS: string[] = [
+  'title',
+  'description',
+  '$comment',
+  'default',
+  'examples',
+  'readOnly',
+  'writeOnly',
+  'deprecated',
+  '$id',
+  '$schema',
+];
 
 /** Builds the stub schema for an additional property whose own schema names no type, keeping everything else that
  * schema says about the value and giving it the type of the data the property currently holds, so that it renders as a

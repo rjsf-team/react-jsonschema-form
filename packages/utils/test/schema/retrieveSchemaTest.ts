@@ -1802,6 +1802,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
+      it('has additionalProperties that only annotates or identifies the value in other ways', () => {
+        const annotations: RJSFSchema = {
+          default: '',
+          examples: ['a'],
+          readOnly: true,
+          writeOnly: false,
+          deprecated: true,
+          $id: 'https://example.com/anything',
+          $schema: 'http://json-schema.org/draft-07/schema#',
+        };
+        const schema: RJSFSchema = { additionalProperties: annotations };
+        const formData = { foo: 'a' };
+        // None of these is an assertion about the value either, so a `default` or `readOnly` alone must not cost the
+        // property the types it is free to hold
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              ...annotations,
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
       it('has additionalProperties with a ref', () => {
         const schema: RJSFSchema = {
           additionalProperties: { $ref: '#/definitions/foo' },

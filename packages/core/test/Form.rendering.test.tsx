@@ -385,6 +385,19 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(typeSelect.options)).toHaveLength(JSON_SCHEMA_TYPES.length);
     });
 
+    it('locks the type selector of an additional property its schema marks read-only', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { readOnly: true } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a' },
+      });
+
+      // `readOnly` is no constraint on the type, so every type is on offer, but changing it would change the value
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      expect(Array.from(typeSelect.options)).toHaveLength(JSON_SCHEMA_TYPES.length);
+      expect(typeSelect).toBeDisabled();
+    });
+
     it('drops a ui:widget the selected type has no widget for', async () => {
       const { node } = createFormComponent({
         schema: multiTypeSchema,
