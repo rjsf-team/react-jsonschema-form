@@ -1,3 +1,5 @@
+import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
+import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
 import canExpand from './canExpand.ts';
@@ -124,6 +126,7 @@ export * from './parser/index.ts';
 export * from './schema/index.ts';
 
 export type {
+  AdditionalPropertyKeySelectProps,
   DateElementFormat,
   DateElementProp,
   DateElementProps,
@@ -138,6 +141,7 @@ export type {
 };
 
 export {
+  AdditionalPropertyKeySelect,
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,

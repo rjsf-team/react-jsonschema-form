@@ -30,6 +30,7 @@ import options from './options.ts';
 import ordering from './ordering.ts';
 import patternProperties from './patternProperties.ts';
 import propertyDependencies from './propertyDependencies.ts';
+import propertyNames from './propertyNames.ts';
 import references from './references.ts';
 import type { Sample } from './Sample.ts';
 import schemaDependencies from './schemaDependencies.ts';
@@ -63,6 +64,7 @@ const samplesList: Record<string, Sample> = {
   'Schema dependencies': schemaDependencies,
   'Additional Properties': additionalProperties,
   'Pattern Properties': patternProperties,
+  'Property Names': propertyNames,
   'Any Of': anyOf,
   'Any Of with Custom Field': customFieldAnyOf,
   'One Of': oneOf,

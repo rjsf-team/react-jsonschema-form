@@ -34,6 +34,28 @@ These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 ## Non-Validator utility functions
 
+### AdditionalPropertyKeySelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+A component that renders the key of an `additionalProperties` property as the theme's own `SelectWidget`, limited to
+the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) allows.
+A theme's `WrapIfAdditionalTemplate` renders it in place of its free-text key input whenever the `propertyNamesEnum`
+prop it is given is defined, so each theme only has to choose where the dropdown goes.
+
+#### Props
+
+- id: string - The id to give the rendered widget
+- label: string - The computed label for the key, as a string
+- value: string - The current key of the property, which is the selected option
+- propertyNamesEnum: string[] - The key names the property is allowed to take
+- onKeyRename: (newKey: string) => void - Callback used to rename the property to the newly selected key name
+- registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
+- [autofocus]: boolean - Optional flag, if true, the widget takes focus when it mounts
+- [disabled]: boolean - Optional flag, if true, the widget is disabled
+- [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
+- [placeholder]: string - The optional placeholder for the widget
+- [readonly]: boolean - Optional flag, if true, the widget is read-only
+- [required]: boolean - Optional flag, if true, the widget is required
+
 ### allowAdditionalItems()
 
 Checks the schema to see if it is allowing additional items, by verifying that `schema.additionalItems` is an object.

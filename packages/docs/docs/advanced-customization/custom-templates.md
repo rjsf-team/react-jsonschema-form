@@ -1290,6 +1290,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `onKeyRename`: Callback used to handle the changing of an additional property key's name with the new value
 - `onKeyRenameBlur`: Callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
 - `onRemoveProperty`: Callback used to handle the removal of the additionalProperty
+- `propertyNamesEnum`: The key names this property may be renamed to, derived from the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) and narrowed to the names its siblings have not already taken; `undefined` when the parent schema does not enumerate its property names. Render the key as a dropdown of those names when it is provided, which the `AdditionalPropertyKeySelect` component from `@rjsf/utils` does using the theme's own `SelectWidget`
 
 ## ButtonTemplates
 

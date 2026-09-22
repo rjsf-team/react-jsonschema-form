@@ -29,6 +29,7 @@ export default function FieldTemplate<
   onKeyRename,
   onKeyRenameBlur,
   onRemoveProperty,
+  propertyNamesEnum,
   readonly,
   required,
   schema,
@@ -56,6 +57,7 @@ export default function FieldTemplate<
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       rawDescription={rawDescription}
       readonly={readonly}
       required={required}

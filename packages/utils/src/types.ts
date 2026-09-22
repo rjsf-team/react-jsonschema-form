@@ -729,6 +729,11 @@ export type FieldTemplateProps<
   onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
   /** Callback used to handle the removal of the additionalProperty */
   onRemoveProperty: () => void;
+  /** The key names an `additionalProperties` property is allowed to be renamed to, derived from the parent schema's
+   * `propertyNames.enum` and narrowed to the names its siblings have not already taken. Undefined when the parent
+   * schema does not constrain its property names
+   */
+  propertyNamesEnum?: string[];
 };
 
 /**
@@ -1028,6 +1033,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'onKeyRename'
     | 'onKeyRenameBlur'
     | 'onRemoveProperty'
+    | 'propertyNamesEnum'
     | 'registry'
   >;
 

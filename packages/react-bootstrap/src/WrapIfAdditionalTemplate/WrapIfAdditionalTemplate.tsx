@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 import { Col, Form, Row } from 'react-bootstrap';
 
 export default function WrapIfAdditionalTemplate<
@@ -15,7 +15,9 @@ export default function WrapIfAdditionalTemplate<
   label,
   displayLabel,
   onRemoveProperty,
+  onKeyRename,
   onKeyRenameBlur,
+  propertyNamesEnum,
   rawDescription,
   readonly,
   required,
@@ -48,16 +50,31 @@ export default function WrapIfAdditionalTemplate<
       <Col xs={5}>
         <Form.Group>
           {displayLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
-          <Form.Control
-            key={label}
-            required={required}
-            defaultValue={label}
-            disabled={disabled || readonly}
-            id={keyId}
-            name={keyId}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-          />
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              id={keyId}
+              label={keyLabel}
+              hideLabel
+              value={label}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <Form.Control
+              key={label}
+              required={required}
+              defaultValue={label}
+              disabled={disabled || readonly}
+              id={keyId}
+              name={keyId}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+            />
+          )}
         </Form.Group>
       </Col>
       <Col xs={6}>{children}</Col>

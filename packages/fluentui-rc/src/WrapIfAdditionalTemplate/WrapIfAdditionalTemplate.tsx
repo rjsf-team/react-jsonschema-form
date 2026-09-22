@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { Field, Input, makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   input: {
@@ -49,7 +49,9 @@ export default function WrapIfAdditionalTemplate<
     label,
     displayLabel,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     rawDescription,
     readonly,
     required,
@@ -85,21 +87,36 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Flex gap='gap.medium' vAlign='start' key={`${id}-key`} className={classNames} style={style}>
       <div className={classes.halfWidth}>
-        <Field label={displayLabel ? keyLabel : undefined} required={required}>
-          <Input
-            key={label}
-            required={required}
-            defaultValue={label}
-            disabled={disabled || readonly}
+        {propertyNamesEnum ? (
+          <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
-            name={`${id}-key`}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-            input={{
-              className: classes.input,
-            }}
+            label={keyLabel}
+            hideLabel={!displayLabel}
+            value={label}
+            propertyNamesEnum={propertyNamesEnum}
+            onKeyRename={onKeyRename}
+            disabled={disabled}
+            readonly={readonly}
+            required={required}
+            registry={registry}
           />
-        </Field>
+        ) : (
+          <Field label={displayLabel ? keyLabel : undefined} required={required}>
+            <Input
+              key={label}
+              required={required}
+              defaultValue={label}
+              disabled={disabled || readonly}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+              input={{
+                className: classes.input,
+              }}
+            />
+          </Field>
+        )}
       </div>
       <div className={classes.halfWidth}>{children}</div>
       <div className={hasDescription ? classes.alignCenter : classes.alignEnd}>

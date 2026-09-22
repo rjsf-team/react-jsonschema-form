@@ -112,6 +112,15 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('additionalProperties, propertyNames enum', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        propertyNames: { enum: ['foo', 'bar', 'baz'] },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('show add button and fields if additionalProperties is true and not an object', async () => {
       const schema: RJSFSchema = {
         additionalProperties: true,

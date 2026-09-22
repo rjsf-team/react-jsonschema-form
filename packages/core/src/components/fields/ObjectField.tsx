@@ -97,6 +97,8 @@ interface ObjectFieldPropertyProps<
   handleKeyRename: (oldKey: string, newKey: string) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
+  /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
+  propertyNamesEnum?: string[];
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
@@ -122,6 +124,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
     handleKeyRename,
     handleRemoveProperty,
     addedByAdditionalProperties,
+    propertyNamesEnum,
   } = props;
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
@@ -198,6 +201,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}
@@ -256,6 +260,31 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
   }, [schemaProperties]);
+  const propertyNamesEnum = useMemo(() => {
+    const { propertyNames } = schema;
+    if (!isObject(propertyNames)) {
+      return undefined;
+    }
+    // Resolved so that a `propertyNames` written as a `$ref` or an `allOf` still yields its `enum`
+    const { enum: allowedNames } = schemaUtils.retrieveSchema(propertyNames as S);
+    const names = allowedNames?.filter((allowedName): allowedName is string => typeof allowedName === 'string');
+    return names?.length ? names : undefined;
+  }, [schema, schemaUtils]);
+  /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
+   * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects.
+   */
+  const allowedPropertyNames = useMemo(() => {
+    if (!propertyNamesEnum) {
+      return undefined;
+    }
+    const takenNames = new Set(Object.keys(schemaProperties));
+    return new Map(
+      Object.keys(schemaProperties).map((property) => [
+        property,
+        propertyNamesEnum.filter((allowedName) => allowedName === property || !takenNames.has(allowedName)),
+      ]),
+    );
+  }, [propertyNamesEnum, schemaProperties]);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -293,7 +322,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       return;
     }
     const newFormData = { ...formData } as T;
-    const newKey = getAvailableKey('newKey', newFormData);
+    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so start from the first allowed name that is
+    // still free and only fall back to `newKey` once they are all taken
+    const preferredKey = propertyNamesEnum?.find((allowedName) => !hasByPath(newFormData, allowedName)) ?? 'newKey';
+    const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
@@ -345,6 +377,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     schemaUtils,
     fieldPath,
     getAvailableKey,
+    propertyNamesEnum,
     schema,
     uiSchema,
     uiSchemaDefinitions,
@@ -463,6 +496,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
+          propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}

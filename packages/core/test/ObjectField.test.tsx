@@ -2009,6 +2009,100 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
     });
   });
+
+  describe('propertyNames', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      propertyNames: { enum: ['a', 'b', 'c', 'd'] },
+    };
+
+    it('should render the additional property key as a select of the allowed names', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect(keySelect).not.toBeNull();
+      expect(node.querySelector('input#root_a-key')).toBeNull();
+      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['', 'a', 'b', 'c', 'd']);
+      expect(keySelect).toHaveDisplayValue('a');
+    });
+
+    it('should leave the names sibling properties already hold out of the select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first', c: 'second' } });
+
+      const optionsFor = (key: string) =>
+        [...node.querySelector<HTMLSelectElement>(`select#root_${key}-key`)!.options]
+          .map((option) => option.textContent)
+          .filter(Boolean);
+      expect(optionsFor('a')).toEqual(['a', 'b', 'd']);
+      expect(optionsFor('c')).toEqual(['b', 'c', 'd']);
+    });
+
+    it('should rename the property as soon as a name is selected', async () => {
+      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      await user.selectOptions(node.querySelector('select#root_a-key')!, 'd');
+
+      expectToHaveBeenCalledWithFormData(onChange, { d: 'first' }, 'root');
+    });
+
+    it('should add a new property under the first allowed name that is still free', async () => {
+      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { a: 'first', b: 'New Value' }, 'root');
+    });
+
+    it('should fall back to newKey once every allowed name is taken', async () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { a: '1', b: '2', c: '3', d: '4' },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { a: '1', b: '2', c: '3', d: '4', newKey: 'New Value' }, 'root');
+    });
+
+    it('should resolve a propertyNames given as a $ref', () => {
+      const refSchema: RJSFSchema = {
+        type: 'object',
+        definitions: { keys: { enum: ['a', 'b'] } },
+        additionalProperties: { type: 'string' },
+        propertyNames: { $ref: '#/definitions/keys' },
+      };
+      const { node } = createFormComponent({ schema: refSchema, formData: { a: 'first' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
+    });
+
+    it('should keep the text input when propertyNames carries no enum', () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, propertyNames: { maxLength: 3 } },
+        formData: { a: 'first' },
+      });
+
+      expect(node.querySelector('select#root_a-key')).toBeNull();
+      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
+    });
+
+    it('should keep the text input for a property that is declared rather than additional', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { enum: ['a', 'b'] },
+        },
+        formData: { a: 'first', b: 'second' },
+      });
+
+      expect(node.querySelector('#root_a-key')).toBeNull();
+      expect(node.querySelector('select#root_b-key')).not.toBeNull();
+    });
+  });
   describe('markdown', () => {
     const schema: RJSFSchema = {
       title: 'A list of tasks',

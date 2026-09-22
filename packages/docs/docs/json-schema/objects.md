@@ -143,6 +143,33 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Also in this case, an add button for new properties is shown by default.
 
+### Constraining key names with `propertyNames`
+
+The `propertyNames` keyword constrains the names a key may take.
+When it enumerates those names, the key is rendered as a dropdown of the allowed names instead of a free-text input, so the user can only pick a name the schema accepts.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  additionalProperties: {
+    type: 'boolean',
+  },
+  propertyNames: {
+    enum: ['darkMode', 'betaBanner', 'offlineCache'],
+  },
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+A name another key already holds is left out of the dropdown, since two properties cannot share a name, and the add button creates the new property under the first allowed name that is still free.
+The `propertyNames` schema may be a `$ref` or an `allOf`; it is resolved before its `enum` is read.
+Any other `propertyNames` schema, such as one constraining names by `pattern` or `maxLength`, leaves the free-text key input in place and is enforced by validation alone.
+
 ### `expandable` option
 
 You can turn support for `additionalProperties` and `patternProperties` off with the `expandable` option in `uiSchema`:

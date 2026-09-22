@@ -1,5 +1,5 @@
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -25,6 +25,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     rawDescription,
     registry,
     ...rest
@@ -51,15 +52,30 @@ export default function WrapIfAdditionalTemplate<
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
-          <input
-            key={label}
-            type='text'
-            className='input input-bordered'
-            id={`${id}-key`}
-            onBlur={onKeyRenameBlur}
-            defaultValue={label}
-            disabled={disabled || readonly}
-          />
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              id={`${id}-key`}
+              label={keyLabel}
+              hideLabel
+              value={label}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <input
+              key={label}
+              type='text'
+              className='input input-bordered'
+              id={`${id}-key`}
+              onBlur={onKeyRenameBlur}
+              defaultValue={label}
+              disabled={disabled || readonly}
+            />
+          )}
         </div>
         {children}
         <div className='flex self-start' style={{ marginTop: `${margin}px` }}>
