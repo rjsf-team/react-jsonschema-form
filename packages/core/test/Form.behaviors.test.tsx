@@ -1106,6 +1106,15 @@ describe('Deriving state from changed props', () => {
     );
   }
 
+  it('keeps the inline error of the field being typed in when the parent echoes the data back', async () => {
+    const { container } = render(<Parent steps={[{}]} />);
+
+    await user.type(container.querySelector('input')!, 'x');
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+    expect(errorListMessages(container)).toEqual(['.name must NOT have fewer than 8 characters']);
+  });
+
   it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
 
@@ -1314,6 +1323,27 @@ describe('Calling reset from ref object', () => {
       formRef.current!.reset();
     });
     expect(input).toHaveAttribute('value', props.initialFormData);
+  });
+});
+
+describe('Committing a handler result', () => {
+  it('keeps the errors that validateForm() queued from inside onBlur while liveOmit runs on blur', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 8 } } };
+    const formRef = createFormRef();
+    const { node } = createFormComponent({
+      ref: formRef,
+      schema,
+      formData: { name: 'short', extra: 'x' },
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+      onBlur: () => formRef.current!.validateForm(),
+    });
+
+    await user.click(node.querySelector('input')!);
+    await user.tab();
+
+    expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 8 characters']);
+    expect(fieldErrorsById(node)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
   });
 });
 

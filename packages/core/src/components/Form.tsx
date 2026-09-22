@@ -750,17 +750,20 @@ function deriveFormState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { liveValidate } = props;
   const edit = inputFormData !== undefined;
   // `'onBlur'` owns its validation pass in `onBlur()`; deriving state must not run one for it, or the errors show
-  // up before the field the user is editing has been left. Skipping means the state already holds this pass's errors
+  // up before the field the user is editing has been left
   // oxlint-disable-next-line typescript/no-deprecated
-  const mustValidate = edit && !props.noValidate && liveValidate === 'onChange' && !skipLiveValidate;
+  const isLiveValidated = edit && !props.noValidate && liveValidate === 'onChange';
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, {}, props);
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
-    mustValidate,
+    // Skipping means the state already holds this pass's errors
+    mustValidate: isLiveValidated && !skipLiveValidate,
     // Resolved by the very utilities the committed state validates with, for this very data, so it describes the data
     // the way an edit's resolved schema does; rebuilt utilities mean the prop change may be the schema itself
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
-    getFormDataChangedFields,
+    // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
+    // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are
+    getFormDataChangedFields: isLiveValidated ? undefined : getFormDataChangedFields,
   });
   return {
     ...context,
@@ -1111,14 +1114,21 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   pendingChanges: PendingChange<T>[] = [];
 
-  /** `setState` sharing every unchanged subtree of `state` with the current state, so fields' memo boundaries hold
-   * across the update. The updater form keeps it correct under batching.
+  /** Commits the keys of `next` that differ from `from`, the state the handler that produced `next` started from,
+   * sharing every unchanged subtree with the current state so fields' memo boundaries hold across the update. Only
+   * those keys go, so an update queued between the handler reading `from` and this commit, such as a `validateForm()`
+   * call from inside `onBlur`, keeps the keys the handler did not touch. The updater form keeps it correct under
+   * batching.
    */
-  private setSharedState<K extends keyof FormState<T, S, F>>(
-    state: Pick<FormState<T, S, F>, K>,
-    callback?: () => void,
-  ) {
-    this.setState((prevState) => replaceEqualDeep(prevState, state), callback);
+  private setSharedState(from: FormState<T, S, F>, next: FormState<T, S, F>, callback?: () => void) {
+    // React merges the partial itself; its `Pick` typing has no name for a key set decided at run time
+    const changed = {} as FormState<T, S, F>;
+    for (const key of Object.keys(next) as (keyof FormState<T, S, F>)[]) {
+      if (next[key] !== from[key]) {
+        Object.assign(changed, { [key]: next[key] });
+      }
+    }
+    this.setState((prevState) => replaceEqualDeep(prevState, changed), callback);
   }
 
   /** Flag to track when we're processing a user-initiated field change.
@@ -1276,7 +1286,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         this.props.onChange(toIChangeEvent(nextState));
       }
       // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
-      this.setSharedState(nextState);
+      this.setSharedState(prevState, nextState);
     }
   }
 
@@ -1360,7 +1370,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     // If there are pending changes in the queue, skip live validation since it will happen with the last change
     const next = applyChange(this.state, change, this.props, this.pendingChanges.length > 1);
     // Unchanged subtrees keep their state references, so sibling fields' memo boundaries hold across the change
-    this.setSharedState(next, () => {
+    this.setSharedState(this.state, next, () => {
       if (onChange) {
         onChange(toIChangeEvent(this.state), change.id);
       }
@@ -1383,7 +1393,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   reset = () => {
     const { onChange } = this.props;
-    this.setSharedState(applyReset(this.state, this.props), () => onChange?.(toIChangeEvent(this.state)));
+    this.setSharedState(this.state, applyReset(this.state, this.props), () => onChange?.(toIChangeEvent(this.state)));
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
@@ -1401,7 +1411,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
       const { onChange } = this.props;
       const committed = this.state;
-      this.setSharedState(applyBlur(committed, this.props), () => {
+      this.setSharedState(committed, applyBlur(committed, this.props), () => {
         // Only the `IChangeEvent` members count; the validator's own results are not among them
         const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some(
           (key) => committed[key] !== this.state[key],
@@ -1451,7 +1461,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     if (noValidate || this.validateFormWithFormData(newFormData)) {
       // There are no errors generated through schema validation, so only the user-provided ones are shown
-      this.setSharedState(applySubmit(this.state, this.props, newFormData), () => {
+      this.setSharedState(this.state, applySubmit(this.state, this.props, newFormData), () => {
         if (onSubmit) {
           onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
         }
@@ -1520,7 +1530,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
           this.focusOnError(errors[0]);
         }
       }
-      this.setSharedState(next, () => {
+      this.setSharedState(this.state, next, () => {
         if (onError) {
           onError(errors);
         } else {
@@ -1529,7 +1539,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         }
       });
     } else if (next !== this.state) {
-      this.setSharedState(next);
+      this.setSharedState(this.state, next);
     }
     return !hasError;
   };
