@@ -42,6 +42,8 @@ render(
 );
 ```
 
+A widget typed with the bare `WidgetProps` is a widget for `unknown` form data. If your `Form` names its data type (`Form<MyData>`), declare the widget generic instead — `function CustomCheckbox<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(props: WidgetProps<T, S, F>)` — and it fits every form; see [TypeScript support](typescript.md).
+
 This allows you to create a reusable customized form class with your custom fields and widgets:
 
 ```tsx
