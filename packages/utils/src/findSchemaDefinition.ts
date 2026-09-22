@@ -1,5 +1,3 @@
-import UriResolver from 'fast-uri';
-
 import {
   ALL_OF_KEY,
   ID_KEY,
@@ -33,6 +31,50 @@ function getByPointer<R>(obj: R, pointer: string): R | undefined {
   );
 }
 
+/** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none; `createSchemaUtils()`
+ * passes `'#'` for a root without `$id`, and nested `$id`s are relative URI-references (2020-12 §8.2.1). The `URL`
+ * parser only resolves against an absolute base, so relative bases are resolved against this synthetic one, which is
+ * then stripped back off; absolute bases pass through it unchanged. The scheme is deliberately not one of the `URL`
+ * spec's "special" schemes, which would additionally rewrite `\` as `/` in every path they touch.
+ */
+const SYNTHETIC_ORIGIN = 'rjsf-base://rjsf.invalid';
+const SYNTHETIC_BASE = `${SYNTHETIC_ORIGIN}/`;
+
+/** Percent-encoded unreserved characters (RFC 3986 §6.2.2.2: `ALPHA / DIGIT / "-" / "." / "_" / "~"`) */
+const ENCODED_UNRESERVED = /%(?:2[de]|5f|7e|3\d|4[1-9a-f]|5[0-9a]|6[1-9a-f]|7[0-9a])/gi;
+
+/** Resolves `ref` against `base`, returning `ref` as written for a base the parser rejects (e.g. an opaque `urn:` base
+ * with a relative-path ref), so lookups keep working instead of throwing
+ */
+function resolveUri(base: string, ref: string): string {
+  try {
+    const resolvedBase = new URL(base, SYNTHETIC_BASE);
+    // Under a synthetic base a network-path reference would only pick up the synthetic scheme, so it stays as written
+    if (resolvedBase.href.startsWith(SYNTHETIC_BASE) && ref.startsWith('//')) {
+      return ref;
+    }
+    const { href } = new URL(ref, resolvedBase);
+    if (!href.startsWith(SYNTHETIC_ORIGIN)) {
+      return href;
+    }
+    // An absolute-path reference stays rooted under every base, so the leading `/` the synthetic origin supplies stays
+    return href.slice(ref.startsWith('/') ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
+  } catch {
+    return ref;
+  }
+}
+
+/** Normalizes a URI for comparison: scheme and host case, default port, dot segments and percent-encoded unreserved
+ * characters
+ */
+function normalizeUri(uri: string): string {
+  return resolveUri('', uri).replace(ENCODED_UNRESERVED, decodeURIComponent);
+}
+
+function uriEqual(a: string, b: string): boolean {
+  return a === b || normalizeUri(a) === normalizeUri(b);
+}
+
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
  *
@@ -41,7 +83,7 @@ function getByPointer<R>(obj: R, pointer: string): R | undefined {
  * @returns - The schema matching the reference, or `undefined` if no match is found
  */
 function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(schema: S, ref: string): S | undefined {
-  if (ID_KEY in schema && UriResolver.equal(schema[ID_KEY] as string, ref)) {
+  if (typeof schema[ID_KEY] === 'string' && uriEqual(schema[ID_KEY], ref)) {
     return schema;
   }
   for (const subSchema of Object.values(schema)) {
@@ -74,7 +116,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
   let result = schema;
   // Make all other references absolute
   if (REF_KEY in result) {
-    result = { ...result, [REF_KEY]: UriResolver.resolve(currentURI, result[REF_KEY]!) };
+    result = { ...result, [REF_KEY]: resolveUri(currentURI, result[REF_KEY]!) };
   }
   // Look for references in nested subschemas
   for (const [key, subSchema] of Object.entries(result)) {
@@ -136,7 +178,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-    const resolvedRef = currentBaseURI ? UriResolver.resolve(currentBaseURI, ref) : ref;
+    const resolvedRef = currentBaseURI ? resolveUri(currentBaseURI, ref) : ref;
     const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
     current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
     if (current !== undefined) {

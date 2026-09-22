@@ -47,6 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
 - Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
 - Removed the `jsonpointer` dependency; `findSchemaDefinition()` now resolves JSON pointer fragments through `getByPath()`, so a `#/__proto__` ref finds nothing instead of `Object.prototype`, unless the schema has a genuine own `__proto__` key
+- Removed the `fast-uri` dependency; `findSchemaDefinition()` now resolves and compares `$ref`/`$id` URIs with the platform `URL` parser. Relative `$ref`s against a relative or fragment base (a root without `$id`, or a nested relative `$id`) now follow RFC 3986 resolution, so some refs that previously failed to resolve, such as `../other.json`, now do; comparison decodes every percent-encoded unreserved character (`%2E` matches `.` as well as `%7E` matching `~`); and `urn:` namespace identifiers are compared case-sensitively
 
 ## Dev / docs / playground
 

@@ -42,8 +42,7 @@
   },
   "dependencies": {
     "@x0k/json-schema-merge": "^1.0.6",
-    "fast-equals": "^6.0.0",
-    "fast-uri": "^4.1.4"
+    "fast-equals": "^6.0.0"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
