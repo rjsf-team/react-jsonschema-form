@@ -5,7 +5,13 @@ import type {
   UiSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, TranslatableString, buttonId } from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
+  TranslatableString,
+  buttonId,
+} from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -34,7 +40,9 @@ export default function WrapIfAdditionalTemplate<
     id,
     label,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     readonly,
     required,
     registry,
@@ -87,17 +95,32 @@ export default function WrapIfAdditionalTemplate<
               style={wrapperStyle}
               wrapperCol={wrapperCol}
             >
-              <Input
-                key={label}
-                className='form-control'
-                defaultValue={label}
-                disabled={disabled || (readonlyAsDisabled && readonly)}
-                id={`${id}-key`}
-                name={`${id}-key`}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                style={INPUT_STYLE}
-                type='text'
-              />
+              {propertyNamesEnum ? (
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={`${id}-key`}
+                  label={keyLabel}
+                  hideLabel
+                  value={label}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+              ) : (
+                <Input
+                  key={label}
+                  className='form-control'
+                  defaultValue={label}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  id={`${id}-key`}
+                  name={`${id}-key`}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  style={INPUT_STYLE}
+                  type='text'
+                />
+              )}
             </Form.Item>
           </div>
         </Col>

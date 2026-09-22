@@ -2054,6 +2054,17 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { a: 'first', b: 'New Value' }, 'root');
     });
 
+    it('should skip a name the schema declares as a property of its own when adding', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { ...schema, properties: { a: { type: 'string' } } },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { b: 'New Value' }, 'root');
+    });
+
     it('should fall back to newKey once every allowed name is taken', async () => {
       const { node, onChange } = createFormComponent({
         schema,
@@ -2063,6 +2074,30 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { a: '1', b: '2', c: '3', d: '4', newKey: 'New Value' }, 'root');
+    });
+
+    it('should keep the text input for a property with no name left to offer', async () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { a: '1', b: '2', c: '3', d: '4' },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expect(node.querySelector('select#root_newKey-key')).toBeNull();
+      expect(node.querySelector('input#root_newKey-key')).toHaveValue('newKey');
+    });
+
+    it('should leave the key alone when the placeholder option is selected', async () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { a: 'first' },
+      });
+
+      await user.selectOptions(node.querySelector('select#root_a-key')!, '');
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(node.querySelector('select#root_a-key')).not.toBeNull();
     });
 
     it('should resolve a propertyNames given as a $ref', () => {

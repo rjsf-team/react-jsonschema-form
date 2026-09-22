@@ -56,20 +56,24 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });
 
-  it('renames to the empty string when the selection is cleared', () => {
-    function ClearingSelectWidget({ onChange }: WidgetProps) {
+  it.each([
+    ['the empty value of a cleared selection', ''],
+    ['an undefined value', undefined],
+    ['a value outside the allowed names', 'zzz'],
+  ])('keeps the current key for %s', (_, reported) => {
+    function ReportingSelectWidget({ onChange }: WidgetProps) {
       return (
-        <button type='button' onClick={() => onChange(undefined)}>
-          clear
+        <button type='button' onClick={() => onChange(reported)}>
+          report
         </button>
       );
     }
-    const clearingRegistry = { widgets: { SelectWidget: ClearingSelectWidget } } as unknown as Registry;
-    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} registry={clearingRegistry} />);
+    const reportingRegistry = { widgets: { SelectWidget: ReportingSelectWidget } } as unknown as Registry;
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} registry={reportingRegistry} />);
 
     container.querySelector('button')!.click();
 
-    expect(baseProps.onKeyRename).toHaveBeenCalledWith('');
+    expect(baseProps.onKeyRename).not.toHaveBeenCalled();
   });
 
   it('forwards the disabled, readonly and required flags to the widget', () => {

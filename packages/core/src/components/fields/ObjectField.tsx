@@ -271,7 +271,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     return names?.length ? names : undefined;
   }, [schema, schemaUtils]);
   /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
-   * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects.
+   * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects. A property
+   * left with no name to offer — every allowed name is taken and its own is not one of them — is absent from the map,
+   * so it keeps the free-text key input rather than getting a dropdown it can pick nothing from.
    */
   const allowedPropertyNames = useMemo(() => {
     if (!propertyNamesEnum) {
@@ -279,10 +281,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     const takenNames = new Set(Object.keys(schemaProperties));
     return new Map(
-      Object.keys(schemaProperties).map((property) => [
-        property,
-        propertyNamesEnum.filter((allowedName) => allowedName === property || !takenNames.has(allowedName)),
-      ]),
+      Object.keys(schemaProperties)
+        .map((property): [string, string[]] => [
+          property,
+          propertyNamesEnum.filter((allowedName) => allowedName === property || !takenNames.has(allowedName)),
+        ])
+        .filter(([, allowedNames]) => allowedNames.length > 0),
     );
   }, [propertyNamesEnum, schemaProperties]);
 
@@ -323,8 +327,13 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     const newFormData = { ...formData } as T;
     // A `propertyNames.enum` makes the generic `newKey` an invalid name, so start from the first allowed name that is
-    // still free and only fall back to `newKey` once they are all taken
-    const preferredKey = propertyNamesEnum?.find((allowedName) => !hasByPath(newFormData, allowedName)) ?? 'newKey';
+    // still free and only fall back to `newKey` once they are all taken. A name the schema declares as a property of
+    // its own is taken too, however empty its value is: adding under it would write into that declared field instead
+    // of creating an additional property
+    const preferredKey =
+      propertyNamesEnum?.find(
+        (allowedName) => !Object.hasOwn(schemaProperties, allowedName) && !hasByPath(newFormData, allowedName),
+      ) ?? 'newKey';
     const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
@@ -379,6 +388,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     getAvailableKey,
     propertyNamesEnum,
     schema,
+    schemaProperties,
     uiSchema,
     uiSchemaDefinitions,
   ]);

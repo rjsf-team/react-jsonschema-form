@@ -4478,21 +4478,53 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                       <div
                                         class="ant-form-item-control-input-content"
                                       >
-                                        <span
-                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-ypkju9 ant-input-outlined form-control css-var-root ant-input-css-var"
+                                        <div
+                                          class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
+                                          name="root_foo-key"
                                           style="width: 100%;"
                                         >
-                                          <input
-                                            class="ant-input css-dev-only-do-not-override-ypkju9"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
-                                            type="text"
-                                            value="foo"
-                                          />
-                                          <span
-                                            class="ant-input-suffix"
-                                          />
-                                        </span>
+                                          <div
+                                            class="ant-select-content ant-select-content-has-value"
+                                            title="foo"
+                                          >
+                                            foo
+                                            <input
+                                              aria-autocomplete="list"
+                                              aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
+                                              aria-expanded="false"
+                                              aria-haspopup="listbox"
+                                              autocomplete="off"
+                                              class="ant-select-input"
+                                              id="root_foo-key"
+                                              role="combobox"
+                                              type="search"
+                                              value=""
+                                            />
+                                          </div>
+                                          <div
+                                            class="ant-select-suffix"
+                                          >
+                                            <span
+                                              aria-label="down"
+                                              class="anticon anticon-down"
+                                              role="img"
+                                            >
+                                              <svg
+                                                aria-hidden="true"
+                                                data-icon="down"
+                                                fill="currentColor"
+                                                focusable="false"
+                                                height="1em"
+                                                viewBox="64 64 896 896"
+                                                width="1em"
+                                              >
+                                                <path
+                                                  d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                                />
+                                              </svg>
+                                            </span>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>

@@ -40,8 +40,18 @@ export default function AdditionalPropertyKeySelect<
   const enumOptions = useMemo(() => optionsList<T, S, F>(schema), [schema]);
   /** A select commits its value as soon as an option is picked, so the rename happens on change rather than on blur
    * the way the free-text key input's does; waiting for a blur would leave the shown selection and the key apart.
+   * A widget renders a placeholder option whenever nothing is selected, which happens here when the current key is
+   * not one of the allowed names; picking it reports an empty value, which is not a name `propertyNames` accepts, so
+   * only a value the enum actually holds renames the key.
    */
-  const handleChange = useCallback((newKey: unknown) => onKeyRename(String(newKey ?? '')), [onKeyRename]);
+  const handleChange = useCallback(
+    (newKey: unknown) => {
+      if (typeof newKey === 'string' && propertyNamesEnum.includes(newKey)) {
+        onKeyRename(newKey);
+      }
+    },
+    [onKeyRename, propertyNamesEnum],
+  );
   const SelectWidget = getWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
 
   return (
