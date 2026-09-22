@@ -145,11 +145,15 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // Without it the first type wins, as it always has.
   // An `anyOf`/`oneOf` is left alone: the option selector already decides what the value looks like, and the check
   // below hands a schema carrying one to `XxxOfField` — with `ObjectField` alongside it for the properties shared
-  // by every option, which a `FallbackField` here would take the place of and so stop rendering
+  // by every option, which a `FallbackField` here would take the place of and so stop rendering.
+  // An `enum` or `const` is left alone too, since it pins the value itself: switching type would cast a value the user
+  // picked into one the schema rejects, and leave a select still offering values of the old type
   if (
     globalFormOptions.useFallbackUiForUnsupportedType &&
     !schema.anyOf &&
     !schema.oneOf &&
+    !schema.enum &&
+    !isConstant<S>(schema) &&
     (getUnionTypes<S>(schema) || GUESSED_TYPE_FLAG in schema)
   ) {
     componentName = 'FallbackField';

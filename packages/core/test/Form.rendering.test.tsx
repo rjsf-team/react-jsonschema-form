@@ -284,6 +284,21 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const valueSelect = node.querySelector<HTMLSelectElement>('#root_multi')!;
       expect(valueSelect.tagName).toBe('SELECT');
       expect(Array.from(valueSelect.options).map((o) => o.textContent)).toEqual(['', 'a', '1']);
+      // The enum already pins the value, so there is no type to choose: switching to `number` would cast the `'a'`
+      // the user picked into a value the schema rejects
+      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+    });
+
+    it('offers no type selector for a union pinned by a const', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { type: ['string', 'number'], const: 'a' } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
     });
 
     it('reconciles the selected type when the schema stops allowing it', async () => {
@@ -618,6 +633,279 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(
         Array.from(node.querySelectorAll<HTMLOptionElement>('select option')).find((o) => o.selected),
       ).toHaveTextContent('null');
+    });
+
+    it('renders the description and deprecation of a union once', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: { type: ['string', 'number'], description: 'DESCRIPTION', deprecated: true },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The outer field already renders them, so the value field repeating them would also repeat the description's
+      // DOM id that `aria-describedby` points at
+      expect(node.querySelectorAll('[id="root_multi__description"]')).toHaveLength(1);
+      expect(node.querySelectorAll('.field-description')).toHaveLength(1);
+    });
+
+    it('offers only the recognized types of a list that also names an unrecognized one', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['someUnsupportedType', 'string'] } },
+        } as unknown as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The unrecognized name is what sends the field to the fallback UI, which must not then offer types the schema
+      // does not allow
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['string']);
+    });
+
+    it('reconciles the selected type when a null replaces the form data', () => {
+      const props: NoValFormProps = {
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'text' },
+      };
+      const { node, rerender } = createFormComponent(props);
+
+      const selected = () =>
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
+          (o) => o.selected,
+        );
+      expect(selected()).toHaveTextContent('string');
+
+      rerender({ ...props, formData: { aKey: null } });
+
+      // An empty text input would hide the `null`, and the next keystroke would silently replace it
+      expect(selected()).toHaveTextContent('null');
+    });
+
+    it('drops a ui:widget a ui:definitions entry supplies for a type that has no such widget', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { $ref: '#/$defs/multi' } },
+          $defs: { multi: { type: ['string', 'boolean'] } },
+        } as RJSFSchema,
+        uiSchema: { 'ui:definitions': { '#/$defs/multi': { 'ui:widget': 'textarea' } } },
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: 'a string' },
+      });
+
+      expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
+
+      const select = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      // The value schema keeping the marker of the `$ref` it was resolved from would have the definition's widget
+      // merged back in below, undoing the drop and taking the whole form down with a widget `boolean` has no
+      // implementation of
+      expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'checkbox');
+    });
+
+    it('leaves a boolean empty when there is no value to cast', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['val'],
+          properties: { val: { type: ['string', 'boolean'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      // `Boolean(undefined)` is `false`, which would satisfy `required` for a field nobody has filled in
+      for (const [{ formData }] of onChange.mock.calls) {
+        expect(formData.val).toBeUndefined();
+      }
+      expect(node.querySelector<HTMLInputElement>('#root_val')).not.toBeChecked();
+    });
+
+    it('marks the value of a required field required rather than the type selector', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['val'],
+          properties: { val: { type: ['string', 'boolean'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The selector always has a type chosen, so requiring it says nothing, while its marker reads as a second
+      // required field within the one the outer label already marks
+      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeRequired();
+      expect(node.querySelector('#root_val')).toBeRequired();
+    });
+
+    it.each([
+      ['the ui:xxx spelling', { 'ui:title': 'TITLE', 'ui:description': 'DESC', 'ui:help': 'HELP' }],
+      ['the ui:options spelling', { 'ui:options': { title: 'TITLE', description: 'DESC', help: 'HELP' } }],
+    ])('renders the uiSchema title, description and help of a union once, in %s', (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } } as RJSFSchema,
+        uiSchema: { val: uiSchema } as UiSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The field around the value renders each of them, so a second copy would repeat the DOM ids that the value's
+      // `aria-describedby` points at, and label the very same input twice
+      expect(node.querySelectorAll('[id="root_val__description"]')).toHaveLength(1);
+      expect(node.querySelectorAll('[id="root_val__help"]')).toHaveLength(1);
+      expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).toEqual([
+        'TITLE',
+        'Type',
+        'Value',
+      ]);
+    });
+
+    it('leaves a boolean empty when the value it replaces is a container', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['object', 'boolean'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: {} },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      // `Boolean({})` is `true`, which would check a box the user never checked
+      for (const [{ formData }] of onChange.mock.calls) {
+        expect(formData.val).not.toBe(true);
+      }
+      expect(node.querySelector<HTMLInputElement>('#root_val')).not.toBeChecked();
+    });
+
+    it('keeps the examples of a union as suggestions for its value', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { type: ['string', 'number'], examples: ['a', 'b'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // Only the value's own input renders the examples, so the field around it has no copy of them to fall back on
+      expect(node.querySelector('#root_multi')).toHaveAttribute('list', 'root_multi__examples');
+      expect(node.querySelectorAll('#root_multi__examples option')).toHaveLength(2);
+    });
+
+    it('keeps the selected type when an input whose empty value is null is cleared', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number', 'null'] } } } as RJSFSchema,
+        uiSchema: { val: { 'ui:emptyValue': null } },
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: 'text' },
+      });
+
+      await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
+
+      // The `null` is how this input reports being empty, not a switch to the `null` type
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
+    });
+
+    it('reads the spellings of false a user types as false', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'boolean'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: ' False ' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { val: false }, 'root_val');
+    });
+
+    it.each([
+      ['a boolean', true],
+      ['blank text', '   '],
+    ])('leaves a number empty when switching from %s', async (_, value) => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['boolean', 'string', 'number'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: value },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+
+      // `Number(true)` is `1` and `Number('   ')` is `0`, neither of which the user entered
+      expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val');
+    });
+
+    it('clears the errors of the value it replaces when the type changes', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            val: { type: ['object', 'string'], properties: { nested: { type: 'string', minLength: 5 } } },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: { nested: 'x' } },
+      });
+
+      await user.click(node.querySelector('button[type=submit]')!);
+      expect(node.querySelector('#root_val_nested__error')).toBeInTheDocument();
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'string')!);
+
+      // The error belonged to a property of the object the cast replaced, so passing the field's error schema back
+      // with the new value would re-assert it against a string that has no such property
+      const [{ errorSchema }] = onChange.mock.calls.at(-1)!;
+      expect(errorSchema.val?.nested).toBeUndefined();
+    });
+
+    it('leaves a boolean empty when switching from blank text', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['val'],
+          properties: { val: { type: ['string', 'boolean'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: '   ' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      // Text a user has cleared spells neither `true` nor `false`, so reading it as a definite `false` would satisfy
+      // `required` for a field nobody has filled in
+      expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).not.toBeChecked();
+    });
+
+    it('keeps reporting message-less errors after a type change that had nothing to clear', async () => {
+      const { node, onError } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'number'] }, other: { type: 'string', minLength: 5 } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        transformErrors: (errors) => errors.map((error) => ({ ...error, message: undefined })),
+        formData: { other: 'x' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+      await user.click(node.querySelector('button[type=submit]')!);
+
+      // An empty error schema handed to a value that had no errors is stored as a custom error of the form's own,
+      // which every later validation then merges in, dropping the errors `toErrorSchema()` leaves out of its schema
+      expect(onError).toHaveBeenCalledWith([expect.objectContaining({ property: '.other' })]);
     });
 
     it('renders an unconstrained additional property as its own type when the fallback UI is off', () => {

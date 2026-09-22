@@ -10,7 +10,7 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
-`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, an empty schema, or nothing but annotations and identifiers (`title`, `description`, `$comment`, `default`, `examples`, `readOnly`, `writeOnly`, `deprecated`, `$id` and `$schema`): its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
+`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 
@@ -797,7 +797,7 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 Gets the list of types a `schema` allows when it allows more than one of them, i.e. its `type` is an array of two or more non-`null` type names.
 Type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
 A schema allowing a single type, with or without `null`, is one that [getSchemaType()](#getschematype) resolves to that type, so it is not a union and `undefined` is returned for it.
-`SchemaField` uses this to route a multi-type schema to `FallbackField` when the [useFallbackUiForUnsupportedType](./form-props.md#usefallbackuiforunsupportedtype) prop is set, and `FallbackField` uses it to offer exactly those types in its type selector.
+`SchemaField` uses this to route a multi-type schema to `FallbackField` when the [useFallbackUiForUnsupportedType](./form-props.md#usefallbackuiforunsupportedtype) prop is set.
 
 #### Parameters
 
@@ -1972,8 +1972,10 @@ potentially recursive resolution.
 
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
-The stub it creates for a property held by the `rawFormData` but described only by an `additionalProperties` with no `type`, `$ref`, `anyOf` or `oneOf` keeps everything that `additionalProperties` does say about the value — an `enum`, a `format`, a length or a range — and adds the type of the data that property holds.
-It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` constrains the property in no way at all, i.e. it is `true`, an empty schema, or nothing but the annotations and identifiers `title`, `description`, `$comment`, `default`, `examples`, `readOnly`, `writeOnly`, `deprecated`, `$id` and `$schema`.
+The stub it creates for a property held by the `rawFormData` but described only by an `additionalProperties` with no `type`, `$ref`, `anyOf` or `oneOf` keeps what that `additionalProperties` says about the value — an `enum`, a `format`, a length or a range, and annotations such as `title` or `readOnly` — and adds the type of the data that property holds.
+It leaves out the subschema keywords (`allOf`, `not`, `if`, ...), since one naming another type than the data could not be merged with the guessed type, and the identifiers (`$id`, `$anchor`, ...), since every stubbed property would otherwise share them, and it only keeps a `default` of the same type as the data.
+It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` constrains the property in no way at all, i.e. it is `true` or has no keyword asserting something about the value.
+Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`, `contentEncoding`, or one it does not recognize, leaves the property unconstrained.
 
 ### omitExtraData&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

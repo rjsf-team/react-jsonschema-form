@@ -1815,16 +1815,65 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = { additionalProperties: annotations };
         const formData = { foo: 'a' };
         // None of these is an assertion about the value either, so a `default` or `readOnly` alone must not cost the
-        // property the types it is free to hold
+        // property the types it is free to hold. The identifiers are not copied, since every stubbed sibling would
+        // otherwise share them
+        const { $id, $schema, ...copiedAnnotations } = annotations;
         expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
-              ...annotations,
+              ...copiedAnnotations,
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
               [GUESSED_TYPE_FLAG]: true,
             },
+          },
+        });
+      });
+      it('has additionalProperties with keywords that assert nothing about the value', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: {
+            $defs: { name: { type: 'string' } },
+            contentMediaType: 'text/plain',
+            contentEncoding: 'base64',
+            'x-unknown': true,
+          } as RJSFSchema,
+        };
+        const formData = { foo: 'a' };
+        // A container, a content annotation or a keyword not known at all must not lock the property's type in place
+        const stub = stubExistingAdditionalProperties(testValidator, schema, undefined, formData).properties!
+          .foo as RJSFSchema;
+        expect(GUESSED_TYPE_FLAG in stub).toBe(true);
+        expect(stub.type).toBe('string');
+      });
+      it('has additionalProperties with a default of another type than the data', () => {
+        const schema: RJSFSchema = { additionalProperties: { title: 'Anything', default: 'X' } };
+        const formData = { foo: 1, bar: 'a' };
+        // A string default would re-seed the number field with a value it cannot hold, so it is only kept for the
+        // property whose data is a string too
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { title: 'Anything', type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+            bar: {
+              title: 'Anything',
+              default: 'X',
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties constrained through subschemas', () => {
+        const schema: RJSFSchema = { additionalProperties: { allOf: [{ type: 'number' }], not: { const: 0 } } };
+        const formData = { foo: 'a' };
+        // The subschemas still constrain the property, so it is not marked as guessed, but an `allOf` naming another
+        // type than the data cannot be merged with the guessed one, so neither is copied into the stub
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
           },
         });
       });

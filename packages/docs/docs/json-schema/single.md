@@ -239,5 +239,11 @@ render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedTy
 
 Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array, or to a number from text that reads as no number at all.
 
-Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, one with an `enum` renders a select, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
+Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
+The field for an `object` type whose schema names no `properties`, `patternProperties` or `additionalProperties` takes any key/value pair, so it offers a button for adding them.
+Those keys are outside what the schema describes, so [`omitExtraData`](../api-reference/form-props.md#omitextradata) drops them, as it does for any such object whether or not its type is a union.
+Declaring `additionalProperties: true` on the schema keeps them.
+
 A schema that pairs multiple types with an `anyOf` or `oneOf` is left to that option selector, which already determines the shape of the value, so no type selector is rendered for it.
+Each option renders as the first type in the list that can hold a value, and the other types are not reachable from within an option.
+A schema that pins its value with an `enum` or `const` gets no type selector either, since switching type would only cast the chosen value into one the schema rejects.

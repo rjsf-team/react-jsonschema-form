@@ -473,43 +473,98 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
-/** The keywords that annotate a subschema, or identify it, without saying anything about the value it describes. A
- * subschema built from nothing but these leaves the property it describes free to hold any type. `readOnly` belongs
- * here too, since the field it marks read-only locks its type selector along with its value.
+/** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`
+ * subschema carrying any of them constrains the property it describes, so the property is not free to hold any type.
  */
-const ANNOTATION_ONLY_KEYS: string[] = [
-  'title',
-  'description',
-  '$comment',
-  'default',
-  'examples',
-  'readOnly',
-  'writeOnly',
-  'deprecated',
-  '$id',
-  '$schema',
+const VALUE_KEYWORDS: string[] = [
+  'enum',
+  'const',
+  'format',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'minimum',
+  'maximum',
+  'exclusiveMinimum',
+  'exclusiveMaximum',
+  'multipleOf',
+  'items',
+  'prefixItems',
+  'additionalItems',
+  'contains',
+  'minContains',
+  'maxContains',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+  'properties',
+  'patternProperties',
+  'additionalProperties',
+  'propertyNames',
+  'required',
+  'dependentRequired',
+  'minProperties',
+  'maxProperties',
 ];
 
-/** Builds the stub schema for an additional property whose own schema names no type, keeping everything else that
- * schema says about the value and giving it the type of the data the property currently holds, so that it renders as a
- * field for that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that
- * neither constrains the value the way the schema does nor offers the other types the schema might allow.
+/** The keywords that constrain a value by way of other subschemas. They assert something about the value as surely as
+ * the `VALUE_KEYWORDS` do, but they are left out of the stub: an `allOf` naming a type of its own would contradict the
+ * type the stub takes from the data and fail to merge on every render, and the validator enforces them either way.
+ */
+const SUBSCHEMA_KEYWORDS: string[] = [
+  'allOf',
+  'anyOf',
+  'oneOf',
+  'not',
+  'if',
+  'then',
+  'else',
+  'dependencies',
+  'dependentSchemas',
+  'unevaluatedItems',
+  'unevaluatedProperties',
+  '$ref',
+  '$dynamicRef',
+  '$recursiveRef',
+];
+
+/** The keywords that identify a subschema rather than describe a value. The stub is built once per property, so
+ * copying them would give every sibling property the same identifier — and an `$id` naming a registered field would
+ * route them all to it.
+ */
+const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
+
+/** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says
+ * about the value and giving it the type of the data the property currently holds, so that it renders as a field for
+ * that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that neither
+ * constrains the value the way the schema does nor offers the other types the schema might allow. The
+ * `SUBSCHEMA_KEYWORDS` and `IDENTIFIER_KEYWORDS` are not kept, and neither is a `default` of another type than the
+ * data, which would re-seed a field of the data's type with a value it cannot hold.
  *
- * The stub is marked as guessed only when the schema puts no constraint on the property at all, i.e. it is `true`, an
- * empty schema, or nothing but annotations. That marker tells the fallback UI the property is free to hold any other
- * type, so a schema that constrains the value some other way — an `enum`, a `const`, a `format`, a length or a range —
- * must not carry it, or the UI would offer types that schema rejects.
+ * The stub is marked as guessed when the schema puts no constraint on the property at all, i.e. it is `true` or has
+ * none of the `VALUE_KEYWORDS` or `SUBSCHEMA_KEYWORDS`. That marker tells the fallback UI the property is free to hold
+ * any other type, so a schema that constrains the value must not carry it, or the UI would offer types that schema
+ * rejects. Any other keyword — an annotation, an identifier, a container such as `$defs`, or one these lists do not
+ * know — leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
  *
  * @param formData - The form data held by the additional property
  * @param [subSchema] - The `additionalProperties` schema describing the property, unless it is simply `true`
  * @returns - The stub schema for the additional property
  */
-function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, subSchema?: S): S {
-  const schema = { ...subSchema, type: guessType(formData) } as S;
-  if (!subSchema || Object.keys(subSchema).every((key) => ANNOTATION_ONLY_KEYS.includes(key))) {
+function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, subSchema: S = {} as S): S {
+  const type = guessType(formData);
+  const schema: GenericObjectType = {};
+  Object.entries(subSchema).forEach(([key, value]) => {
+    const isForeignDefault = key === 'default' && guessType(value) !== type;
+    if (!SUBSCHEMA_KEYWORDS.includes(key) && !IDENTIFIER_KEYWORDS.includes(key) && !isForeignDefault) {
+      schema[key] = value;
+    }
+  });
+  schema.type = type;
+  if (!Object.keys(subSchema).some((key) => VALUE_KEYWORDS.includes(key) || SUBSCHEMA_KEYWORDS.includes(key))) {
     (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
   }
-  return schema;
+  return schema as S;
 }
 
 /** Creates new 'properties' items for each key in the `formData`
