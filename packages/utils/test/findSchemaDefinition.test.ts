@@ -391,6 +391,44 @@ describe('findSchemaDefinition()', () => {
     expect(findSchemaDefinition('#/properties/dot', resolved)).toBe(resolved.$defs!.embedded);
     expect(findSchemaDefinition('#/$defs/a/properties/b', resolved)).toBe(resolved.$defs!.b);
   });
+  it('keeps refs rooted when the root `$id` is an absolute path', () => {
+    const rootedSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: '/schemas/root.json',
+      properties: { x: { $ref: 'a.json' }, parent: { $ref: '../b.json' }, local: { $ref: '#/$defs/a' } },
+      $defs: {
+        a: { $id: '/schemas/a.json', type: 'string' },
+        b: { $id: '/b.json', type: 'number' },
+        unrooted: { $id: 'schemas/a.json', type: 'boolean' },
+      },
+    };
+    expect(findSchemaDefinition('a.json', rootedSchema)).toBe(rootedSchema.$defs!.a);
+    expect(findSchemaDefinition('../b.json', rootedSchema)).toBe(rootedSchema.$defs!.b);
+    const resolved = makeAllReferencesAbsolute(rootedSchema, rootedSchema.$id!);
+    expect(resolved.properties).toStrictEqual({
+      x: { $ref: '/schemas/a.json' },
+      parent: { $ref: '/b.json' },
+      local: { $ref: '/schemas/root.json#/$defs/a' },
+    });
+    expect(findSchemaDefinition('#/properties/x', resolved)).toBe(resolved.$defs!.a);
+    expect(findSchemaDefinition('#/properties/local', resolved)).toBe(resolved.$defs!.a);
+  });
+  it('resolves refs against a network-path `$id` without picking up a scheme', () => {
+    const networkSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        c: { $id: '//cdn.example.com/c.json', properties: { y: { $ref: 'b.json' }, z: { $ref: '#/properties/y' } } },
+        b: { $id: '//cdn.example.com/b.json', type: 'number' },
+      },
+    };
+    const resolved = makeAllReferencesAbsolute(networkSchema, '#');
+    expect((resolved.$defs!.c as RJSFSchema).properties).toStrictEqual({
+      y: { $ref: '//cdn.example.com/b.json' },
+      z: { $ref: '//cdn.example.com/c.json#/properties/y' },
+    });
+    expect(findSchemaDefinition('#/$defs/c/properties/y', resolved)).toBe(resolved.$defs!.b);
+    expect(findSchemaDefinition('b.json', networkSchema, '//cdn.example.com/c.json')).toBe(networkSchema.$defs!.b);
+  });
   it('compares refs to `$id`s after percent-encoding and dot-segment normalization', () => {
     const encodedSchema: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',

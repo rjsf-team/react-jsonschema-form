@@ -37,28 +37,31 @@ function getByPointer<R>(obj: R, pointer: string): R | undefined {
  * then stripped back off; absolute bases pass through it unchanged. The scheme is deliberately not one of the `URL`
  * spec's "special" schemes, which would additionally rewrite `\` as `/` in every path they touch.
  */
-const SYNTHETIC_ORIGIN = 'rjsf-base://rjsf.invalid';
+const SYNTHETIC_PROTOCOL = 'rjsf-base:';
+const SYNTHETIC_HOST = 'rjsf.invalid';
+const SYNTHETIC_ORIGIN = `${SYNTHETIC_PROTOCOL}//${SYNTHETIC_HOST}`;
 const SYNTHETIC_BASE = `${SYNTHETIC_ORIGIN}/`;
 
 /** Percent-encoded unreserved characters (RFC 3986 §6.2.2.2: `ALPHA / DIGIT / "-" / "." / "_" / "~"`) */
 const ENCODED_UNRESERVED = /%(?:2[de]|5f|7e|3\d|4[1-9a-f]|5[0-9a]|6[1-9a-f]|7[0-9a])/gi;
 
 /** Resolves `ref` against `base`, returning `ref` as written for a base the parser rejects (e.g. an opaque `urn:` base
- * with a relative-path ref), so lookups keep working instead of throwing
+ * with a relative-path ref), so lookups keep working instead of throwing. What the synthetic base contributed is read
+ * off the parsed result: a real scheme means the base was absolute; the synthetic scheme with another host means the
+ * base or the ref was a network-path reference, which keeps its `//host` and loses only the scheme; the synthetic host
+ * means both were paths, which stay rooted when either started with `/` and relative otherwise
  */
 function resolveUri(base: string, ref: string): string {
   try {
-    const resolvedBase = new URL(base, SYNTHETIC_BASE);
-    // Under a synthetic base a network-path reference would only pick up the synthetic scheme, so it stays as written
-    if (resolvedBase.href.startsWith(SYNTHETIC_BASE) && ref.startsWith('//')) {
-      return ref;
+    const resolved = new URL(ref, new URL(base, SYNTHETIC_BASE));
+    if (resolved.protocol !== SYNTHETIC_PROTOCOL) {
+      return resolved.href;
     }
-    const { href } = new URL(ref, resolvedBase);
-    if (!href.startsWith(SYNTHETIC_ORIGIN)) {
-      return href;
+    if (resolved.host !== SYNTHETIC_HOST) {
+      return resolved.href.slice(SYNTHETIC_PROTOCOL.length);
     }
-    // An absolute-path reference stays rooted under every base, so the leading `/` the synthetic origin supplies stays
-    return href.slice(ref.startsWith('/') ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
+    const rooted = ref.startsWith('/') || base.startsWith('/');
+    return resolved.href.slice(rooted ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
   } catch {
     return ref;
   }
