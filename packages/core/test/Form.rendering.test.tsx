@@ -484,6 +484,63 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_aKey_nested')).toHaveAttribute('value', 'value');
     });
 
+    it('keeps the reconciled type after the data that forced it is cleared', async () => {
+      const props: NoValFormProps = {
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: { a: 'nested' } },
+      };
+      const { node, rerender } = createFormComponent(props);
+
+      const selected = () =>
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_val___internal_type_selector option')).find(
+          (o) => o.selected,
+        );
+      expect(selected()).toHaveTextContent('object');
+
+      rerender({ ...props, formData: { val: 5 } });
+      expect(selected()).toHaveTextContent('number');
+      await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
+
+      // Emptying the input leaves no data to reconcile against, which must not bring back the `object` the property
+      // used to hold and swap out the number input the user is typing in
+      expect(selected()).toHaveTextContent('number');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('inputmode', 'decimal');
+    });
+
+    it('leaves a number empty when the value it replaces has no numeric form', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: 'not a number' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+
+      // Text that reads as no number at all leaves the field empty, since a `0` would satisfy `required` and
+      // `minimum` as though the user had entered it
+      expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('value', '');
+    });
+
+    it('rounds a numeric string to the integer it reads as', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'integer'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: '3.7' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'integer')!);
+
+      // Clearing a value with no numeric form must not cost the conversion of one that has it
+      expectToHaveBeenCalledWithFormData(onChange, { val: 4 }, 'root_val');
+    });
+
     it('keeps the selected type while a number is mid-edit', async () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } } as RJSFSchema,

@@ -183,13 +183,15 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
       // A value of any other shape has no text form a user would have typed: `String()` would put the literal
       // `null` or `[object Object]` into the input as though it were real data
       return (formData == null || typeof formData === 'object' ? '' : String(formData)) as T;
-    case 'number': {
-      const castedNumber = Number(formData);
-      return (Number.isNaN(castedNumber) ? 0 : castedNumber) as T;
-    }
+    case 'number':
     case 'integer': {
-      const castedNumber = Math.round(Number(formData));
-      return (Number.isNaN(castedNumber) ? 0 : castedNumber) as T;
+      const castedNumber = Number(formData);
+      // A value with no numeric form a user would have typed leaves the field empty rather than holding a `0`: unlike
+      // the empty string the `string` case falls back to, a `0` satisfies `required` and `minimum` as real input
+      if (formData == null || typeof formData === 'object' || formData === '' || Number.isNaN(castedNumber)) {
+        return undefined as T;
+      }
+      return (newType === 'integer' ? Math.round(castedNumber) : castedNumber) as T;
     }
     case 'boolean':
       // The text a boolean was cast to reads back as the boolean it spells, since `Boolean()` reads it the other way
@@ -246,6 +248,12 @@ export default function FallbackField<
     types.includes(selectedType) &&
     (formData === undefined || canShowDataAsType(selectedType, getTypeOfFormData(formData)));
   const type = isSelectionUsable ? selectedType : getInitialType(formData, types);
+  if (type !== selectedType) {
+    // Storing the type the selector is showing keeps a selection the user can no longer see from coming back: with the
+    // old one still in state, clearing the value would swap the field out for the type the data used to have. React
+    // takes a state update made while rendering as an adjustment of this component's own state and re-runs it at once
+    setSelectedType(type);
+  }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 

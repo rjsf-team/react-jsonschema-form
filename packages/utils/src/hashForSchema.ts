@@ -58,8 +58,8 @@ export function hashObject(object: unknown): string {
 
 /** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields
  * in consistent order before stringify to prevent different hash ids for the same schema.
- * Symbol-keyed properties (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY, ADDITIONAL_PROPERTY_FLAG) are
- * automatically excluded by JSON.stringify, so no special filtering is needed.
+ * The symbol-keyed properties RJSF marks schemas with are automatically excluded by
+ * JSON.stringify, so no special filtering is needed.
  *
  * @param schema - The schema for which the hash is desired
  * @returns - The string obtained from the hash of the stringified schema
