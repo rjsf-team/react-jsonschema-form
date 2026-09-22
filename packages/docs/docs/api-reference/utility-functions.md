@@ -10,7 +10,7 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
-`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or an empty schema: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it. An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
+`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, an empty schema, or nothing but annotations (`title`, `description`, `$comment`): its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it. An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
@@ -1971,7 +1971,7 @@ potentially recursive resolution.
 
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
-The stub it creates for a property held by the `rawFormData` but described only by an `additionalProperties` with no `type`, `$ref`, `anyOf` or `oneOf` is given the type of the data that property holds. It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` is `true` or an empty schema and so constrains the property in no way at all.
+The stub it creates for a property held by the `rawFormData` but described only by an `additionalProperties` with no `type`, `$ref`, `anyOf` or `oneOf` keeps everything that `additionalProperties` does say about the value — an `enum`, a `format`, a length or a range — and adds the type of the data that property holds. It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` constrains the property in no way at all, i.e. it is `true`, an empty schema, or nothing but the annotations `title`, `description` and `$comment`.
 
 ### omitExtraData&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

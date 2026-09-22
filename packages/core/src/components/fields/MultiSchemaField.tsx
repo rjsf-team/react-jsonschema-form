@@ -8,6 +8,7 @@ import {
   getSchemaType,
   getTemplate,
   getUiOptions,
+  getUnionTypes,
   getWidget,
   hashObject,
   isFormDataAvailable,
@@ -221,8 +222,11 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     // A parent allowing several types propagates the single type it is rendered as rather than the union itself,
     // since an option inheriting the whole union would read as a multi-type schema of its own and render a type
     // selector in place of the option's content. The option is one branch of a choice already being made here.
+    // A union listing `null` first propagates the first type that can hold a value instead, since propagating `null`
+    // would have the check below drop the option's value field and leave the option selector standing alone
     if (schemaType !== undefined && !('type' in option)) {
-      parentProps.type = getSchemaType<S>(schema) as S['type'];
+      const unionTypes = getUnionTypes<S>(schema);
+      parentProps.type = (unionTypes?.find((aType) => aType !== 'null') ?? getSchemaType<S>(schema)) as S['type'];
     }
     // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
     optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;

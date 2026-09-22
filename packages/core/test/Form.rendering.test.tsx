@@ -1,5 +1,6 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import { JSON_SCHEMA_TYPES } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -365,6 +366,82 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The schema constrains the value even though it names no type, so every type is not on offer for it
       expect(node.querySelector('#root_aKey___internal_type_selector')).not.toBeInTheDocument();
+      // The constraint the selector was withheld for is the one the value field enforces
+      const valueSelect = node.querySelector<HTMLSelectElement>('#root_aKey')!;
+      expect(valueSelect.tagName).toBe('SELECT');
+      expect(Array.from(valueSelect.options).map((o) => o.textContent)).toEqual(['', 'a', 'b']);
+    });
+
+    it('offers every type for an additional property its schema only annotates', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { title: 'Anything' } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a' },
+      });
+
+      // A title says nothing about the value, so the property is as free as `additionalProperties: true` leaves it
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      expect(typeSelect).toBeInTheDocument();
+      expect(Array.from(typeSelect.options)).toHaveLength(JSON_SCHEMA_TYPES.length);
+    });
+
+    it('drops a ui:widget the selected type has no widget for', async () => {
+      const { node } = createFormComponent({
+        schema: multiTypeSchema,
+        uiSchema: { multi: { 'ui:widget': 'textarea' } },
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: 'a string' },
+      });
+
+      expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
+
+      const select = () => node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'boolean')!);
+
+      // There is no `textarea` widget for `boolean`, and `getWidget()` throws rather than falling back, which would
+      // take the whole form down instead of rendering the type the user asked for
+      expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'checkbox');
+
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+
+      // The widget is only dropped for the types that cannot render it
+      expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
+    });
+
+    it('starts a union listing null first on the first type that can hold a value', () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['null', 'string', 'number'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['null', 'string', 'number']);
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
+
+      // Starting on `null` would have `NullField` write a `null` into the data for a field nobody has touched
+      for (const [{ formData }] of onChange.mock.calls) {
+        expect(formData).not.toHaveProperty('val');
+      }
+    });
+
+    it('renders the option content of a union listing null first alongside a oneOf', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            val: { type: ['null', 'string', 'number'], oneOf: [{ minLength: 1 }, { minLength: 5 }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The option inherits the first type that can hold a value, rather than a `null` that would render nothing
+      expect(node.querySelector('#root_val__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
     });
 
     it('keeps an unconstrained additional property when its type is switched to null', async () => {

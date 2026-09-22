@@ -1768,14 +1768,36 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: { enum: ['a', 'b'] },
         };
         const formData = { foo: 'a' };
-        // The stub takes the guessed type, but is NOT marked as guessed: the schema constrains the value, so the
-        // fallback UI must not offer it every other type
+        // The stub takes the guessed type and keeps the constraint, but is NOT marked as guessed: the schema
+        // constrains the value, so the fallback UI must not offer it every other type
         expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
+              enum: ['a', 'b'],
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties that only annotates the value', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { title: 'Anything', description: 'Any type at all', $comment: 'unconstrained' },
+        };
+        const formData = { foo: 'a' };
+        // Annotations say nothing about the value, so the property is still free to hold anything and the stub is
+        // marked as guessed, letting the fallback UI offer every type
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              title: 'Anything',
+              description: 'Any type at all',
+              $comment: 'unconstrained',
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });

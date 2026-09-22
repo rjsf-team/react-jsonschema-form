@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react';
-import type { FallbackFieldProps, FormContextType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type {
+  FallbackFieldProps,
+  FormContextType,
+  RegistryWidgetsType,
+  RJSFMarkedSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -7,6 +16,7 @@ import {
   getUiOptions,
   getUnionTypes,
   GUESSED_TYPE_FLAG,
+  hasWidget,
   hashObject,
   JSON_SCHEMA_TYPES,
   PATTERN_PROPERTIES_KEY,
@@ -14,6 +24,8 @@ import {
   toFieldPath,
   fieldPathToId,
   TranslatableString,
+  UI_OPTIONS_KEY,
+  UI_WIDGET_KEY,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
@@ -28,6 +40,17 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
 }
 
 /**
+ * Get the type the selection starts on when the form data gives nothing to match: the first type the schema lists,
+ * except that a leading `null` gives way to the first type that can hold a value. Starting on `null` would have
+ * `NullField` write a `null` into the form data for a field the user has not touched.
+ * @param types - The types the selection offers.
+ */
+function getDefaultType(types: JSONSchema7TypeName[]): JSONSchema7TypeName {
+  // `getFallbackTypes()` never returns a list of nothing but `null`, so there is always a non-`null` type to find
+  return types.find((aType) => aType !== 'null')!;
+}
+
+/**
  * Get the schema for the type selection component.
  * @param types - The types the selection offers.
  * @param title - The translated title for the type selection schema.
@@ -36,7 +59,7 @@ function getFallbackTypeSelectionSchema(types: JSONSchema7TypeName[], title: str
   return {
     type: 'string',
     enum: types,
-    default: types[0],
+    default: getDefaultType(types),
     title,
   };
 }
@@ -70,7 +93,7 @@ function getTypeOfFormData(formData: any): JSONSchema7TypeName {
 function getInitialType(formData: any, types: JSONSchema7TypeName[]): JSONSchema7TypeName {
   if (formData === undefined) {
     // Nothing to match, so the schema's own first type wins, which is what the selection defaults to
-    return types[0];
+    return getDefaultType(types);
   }
   const dataType = getTypeOfFormData(formData);
   if (types.includes(dataType)) {
@@ -79,7 +102,7 @@ function getInitialType(formData: any, types: JSONSchema7TypeName[]): JSONSchema
   if (dataType === 'number' && types.includes('integer')) {
     return 'integer';
   }
-  return types[0];
+  return getDefaultType(types);
 }
 
 /**
@@ -106,6 +129,35 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
     valueSchema[ADDITIONAL_PROPERTIES_KEY] = true;
   }
   return valueSchema as S;
+}
+
+/**
+ * Get the `uiSchema` the value field renders with: the caller's, with a `ui:widget` dropped when no widget implements
+ * it for the type the selector is on. A widget named for one member of a union — `textarea` for its `string` — has no
+ * implementation for the others, and `getWidget()` throws rather than falling back, which would take the whole form
+ * down as soon as another type was selected. A widget that is a component, or registered under its own name, is left
+ * alone since it is expected to handle whatever it is given.
+ * @param uiSchema - The uiSchema for the field being rendered.
+ * @param valueSchema - The schema the value field renders, with its type pinned.
+ * @param widgets - The widgets registered with the form.
+ */
+function getValueUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  valueSchema: S,
+  widgets: RegistryWidgetsType<T, S, F>,
+): UiSchema<T, S, F> | undefined {
+  const { widget } = getUiOptions<T, S, F>(uiSchema);
+  if (!widget || hasWidget<T, S, F>(valueSchema, widget, widgets)) {
+    return uiSchema;
+  }
+  const valueUiSchema = { ...uiSchema } as UiSchema<T, S, F>;
+  delete valueUiSchema[UI_WIDGET_KEY];
+  if (valueUiSchema[UI_OPTIONS_KEY]) {
+    const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
+    delete uiOptions.widget;
+    valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
+  }
+  return valueUiSchema;
 }
 
 /**
@@ -167,7 +219,7 @@ export default function FallbackField<
     onChange,
     errorSchema,
   } = props;
-  const { translateString, fields, globalFormOptions } = registry;
+  const { translateString, fields, widgets, globalFormOptions } = registry;
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() => getInitialType(formData, types));
   // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
@@ -185,6 +237,10 @@ export default function FallbackField<
   const valueSchema = useMemo(
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value)),
     [schema, type, translateString],
+  );
+  const valueUiSchema = useMemo(
+    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets),
+    [uiSchema, valueSchema, widgets],
   );
 
   const onTypeChange = (newType: T | undefined) => {
@@ -235,7 +291,7 @@ export default function FallbackField<
           required={required}
         />
       }
-      schemaField={<SchemaField {...props} schema={valueSchema} />}
+      schemaField={<SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />}
     />
   );
 }

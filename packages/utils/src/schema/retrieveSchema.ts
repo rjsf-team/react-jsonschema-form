@@ -473,21 +473,28 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
-/** Builds the stub schema for an additional property whose own schema names no type, giving it the type of the data it
- * currently holds so that it renders as a field for that data.
+/** The keywords that annotate a subschema without saying anything about the value it describes. A subschema built from
+ * nothing but these leaves the property it describes free to hold any type.
+ */
+const ANNOTATION_ONLY_KEYS: string[] = ['title', 'description', '$comment'];
+
+/** Builds the stub schema for an additional property whose own schema names no type, keeping everything else that
+ * schema says about the value and giving it the type of the data the property currently holds, so that it renders as a
+ * field for that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that
+ * neither constrains the value the way the schema does nor offers the other types the schema might allow.
  *
- * The stub is marked as guessed only when the schema puts no constraint on the property at all, i.e. it is `true` or
- * an empty schema. That marker tells the fallback UI the property is free to hold any other type, so a schema that
- * constrains the value some other way — an `enum`, a `const`, a `format`, a length or a range — must not carry it, or
- * the UI would offer types that schema rejects.
+ * The stub is marked as guessed only when the schema puts no constraint on the property at all, i.e. it is `true`, an
+ * empty schema, or nothing but annotations. That marker tells the fallback UI the property is free to hold any other
+ * type, so a schema that constrains the value some other way — an `enum`, a `const`, a `format`, a length or a range —
+ * must not carry it, or the UI would offer types that schema rejects.
  *
  * @param formData - The form data held by the additional property
- * @param isUnconstrained - Whether the `additionalProperties` schema constrains the property in no way at all
+ * @param [subSchema] - The `additionalProperties` schema describing the property, unless it is simply `true`
  * @returns - The stub schema for the additional property
  */
-function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, isUnconstrained: boolean): S {
-  const schema = { type: guessType(formData) } as S;
-  if (isUnconstrained) {
+function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, subSchema?: S): S {
+  const schema = { ...subSchema, type: guessType(formData) } as S;
+  if (!subSchema || Object.keys(subSchema).every((key) => ANNOTATION_ONLY_KEYS.includes(key))) {
     (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
   }
   return schema;
@@ -559,14 +566,11 @@ export function stubExistingAdditionalProperties<
             ...schema.additionalProperties,
           };
         } else {
-          additionalProperties = guessedTypeSchema<S>(
-            formData[key],
-            Object.keys(schema.additionalProperties!).length === 0,
-          );
+          additionalProperties = guessedTypeSchema<S>(formData[key], schema.additionalProperties as S);
         }
       } else {
         // `additionalProperties: false` is excluded above, so the boolean here is always `true`: anything goes
-        additionalProperties = guessedTypeSchema<S>(formData[key], true);
+        additionalProperties = guessedTypeSchema<S>(formData[key]);
       }
 
       // The type of our new key should match the additionalProperties value;
