@@ -10,7 +10,7 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
 In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
-`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, an empty schema, or nothing but annotations (`title`, `description`, `$comment`): its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it. An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
+`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, an empty schema, or nothing but annotations (`title`, `description`, `$comment`): its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it. An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
@@ -2042,7 +2042,8 @@ Sanitize the `data` associated with the `oldSchema` so it is considered appropri
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
-A property is considered to have changed schema when its type differs between the two, except when the old type carries the `GUESSED_TYPE_FLAG`: that type was guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
+A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
+A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 
 #### Parameters
 

@@ -444,6 +444,94 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
     });
 
+    it('renders the option content of a nullable type alongside a oneOf', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            val: { type: ['string', 'null'], oneOf: [{ pattern: '^a' }, { pattern: '^b' }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: null },
+      });
+
+      // A nullable type is not a union, so the option inherits the single type it resolves to and renders a field
+      // for it rather than the nothing a `null` type renders
+      expect(node.querySelector('#root_val__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
+    });
+
+    it('reconciles the selected type when form data of another shape replaces it', () => {
+      const props: NoValFormProps = {
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a string' },
+      };
+      const { node, rerender } = createFormComponent(props);
+
+      const selected = () =>
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
+          (o) => o.selected,
+        );
+      expect(selected()).toHaveTextContent('string');
+
+      rerender({ ...props, formData: { aKey: { nested: 'value' } } });
+
+      // Data replaced by a controlled parent never went through the selector, so the `string` selection gives way
+      // rather than leaving a text input to render the object as `[object Object]`
+      expect(selected()).toHaveTextContent('object');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey_nested')).toHaveAttribute('value', 'value');
+    });
+
+    it('keeps the selected type while a number is mid-edit', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: 'text' },
+      });
+
+      const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'number')!);
+      await user.type(node.querySelector<HTMLInputElement>('#root_val')!, '3.');
+
+      // `asNumber()` holds a trailing decimal point as the string `'3.'` until the next digit is typed, which must
+      // not read as the value becoming a string and send the selector back to `string` mid-keystroke
+      expect(Array.from(select().options).find((o) => o.selected)).toHaveTextContent('number');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('value', '3.');
+    });
+
+    it('returns a boolean to itself on a round trip through string', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['boolean', 'string'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: false },
+      });
+
+      const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+      expectToHaveBeenCalledWithFormData(onChange, { val: 'false' }, 'root_val');
+
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'boolean')!);
+
+      // `Boolean('false')` is `true`, which would have two clicks turn a `false` the user never touched into a `true`
+      expectToHaveBeenCalledWithFormData(onChange, { val: false }, 'root_val');
+    });
+
+    it('keeps focus on the type selector across a type change', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: 'text' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+
+      // Remounting the selector on every form data change would drop the keyboard focus of the user changing types
+      expect(document.activeElement).toBe(node.querySelector('#root_val___internal_type_selector'));
+    });
+
     it('keeps an unconstrained additional property when its type is switched to null', async () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: true } as RJSFSchema,

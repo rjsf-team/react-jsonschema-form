@@ -17,7 +17,6 @@ import {
   getUnionTypes,
   GUESSED_TYPE_FLAG,
   hasWidget,
-  hashObject,
   JSON_SCHEMA_TYPES,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
@@ -81,6 +80,19 @@ function getTypeOfFormData(formData: any): JSONSchema7TypeName {
   }
   // Treat everything else as a string
   return 'string';
+}
+
+/**
+ * Determines whether the field for `type` can show data of `dataType` as the value it is. Scalar types stand in for
+ * one another while a value is being edited — a `number` field holds the string `'3.'` until the user types the next
+ * digit — but a container has no scalar form and a scalar has no container form, so a `string` field handed an object
+ * shows `[object Object]` where the value should be.
+ * @param type - The type currently chosen in the type selector.
+ * @param dataType - The type of the form data being rendered.
+ */
+function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeName): boolean {
+  const isContainer = (aType: JSONSchema7TypeName) => aType === 'object' || aType === 'array';
+  return isContainer(type) || isContainer(dataType) ? type === dataType : true;
 }
 
 /**
@@ -180,7 +192,11 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
       return (Number.isNaN(castedNumber) ? 0 : castedNumber) as T;
     }
     case 'boolean':
-      return Boolean(formData) as T;
+      // The text a boolean was cast to reads back as the boolean it spells, since `Boolean()` reads it the other way
+      // round — `Boolean('false')` is `true` — which would turn a `false` into a `true` on the way back from `string`
+      return (
+        typeof formData === 'string' ? formData !== '' && formData !== 'false' && formData !== '0' : Boolean(formData)
+      ) as T;
     case 'null':
       return null as T;
     // An array or object cannot hold the data of any other type, so they start out empty
@@ -223,9 +239,13 @@ export default function FallbackField<
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() => getInitialType(formData, types));
   // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
-  // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. Without
-  // this the selector would show one type while the field below it rendered another
-  const type = types.includes(selectedType) ? selectedType : getInitialType(formData, types);
+  // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
+  // the data no longer fits gives way too, since data replaced from outside the form arrives without going through
+  // the selector. Without this the selector would show one type while the field below it rendered another
+  const isSelectionUsable =
+    types.includes(selectedType) &&
+    (formData === undefined || canShowDataAsType(selectedType, getTypeOfFormData(formData)));
+  const type = isSelectionUsable ? selectedType : getInitialType(formData, types);
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 
@@ -275,7 +295,6 @@ export default function FallbackField<
       registry={registry}
       typeSelector={
         <SchemaField
-          key={formData ? hashObject(formData) : '__empty__'}
           fieldPath={typeSelectorFieldPath}
           id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
           name={`${name}__fallback_type`}

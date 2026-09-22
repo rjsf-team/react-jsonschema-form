@@ -111,6 +111,22 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(guessedSchema('number'), guessedSchema('string'), { aKey: 42 }),
       ).toEqual({ aKey: 42 });
     });
+    it('clears the data of a property whose guessed type the new schema replaces with one of its own', () => {
+      const freeFormSchema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        properties: { aKey: { type: 'string' } },
+      };
+      (freeFormSchema.properties!.aKey as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
+      const typedSchema: RJSFSchema = {
+        type: 'object',
+        properties: { aKey: { type: 'number' } },
+      };
+
+      // The new schema requires a number of the key the old one merely happened to hold a string in, so the string
+      // is cleared rather than left sitting in a number field
+      expect(schemaUtils.sanitizeDataForNewSchema(typedSchema, freeFormSchema, { aKey: 'text' })).toEqual({});
+    });
     it('preserves explicit undefined data for a property shared by both schemas', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',
