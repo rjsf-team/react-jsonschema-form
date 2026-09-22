@@ -36,8 +36,11 @@ cd packages/core && pnpm test
 # Watch mode for a single package
 cd packages/core && pnpm run test:watch
 
-# Update snapshots
-cd packages/snapshot-tests && pnpm run test:update
+# Update snapshots (fans out to the 9 packages that own snapshots)
+pnpm run test:update
+
+# Update a single package's snapshots
+cd packages/mui && pnpm run test:update
 
 # Start the playground (interactive demo)
 cd packages/playground && pnpm start
@@ -145,5 +148,5 @@ When making a change to a widget or template, consider if the change should be g
 - Vitest, jsdom, Testing Library; shared config in `testing/vitest.base.ts`, extended per package
 - Tests resolve `@rjsf/*` imports to TypeScript source via the `@rjsf/source` export condition, so no build is needed before running them
 - `@rjsf/utils` and the validator packages enforce 100% coverage
-- Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
+- Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages, but the snapshots themselves live in each consuming package (`@rjsf/core` plus the 8 themes); that package has no `test:update` of its own. Changing a shared case or core rendering means running `pnpm run test:update` from the root, then reviewing all 9 diffs
 - Node ^22.18.0 || ^24.11.0 || >=26.0.0 required (active LTS lines only)
