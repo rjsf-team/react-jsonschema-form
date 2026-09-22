@@ -440,6 +440,36 @@ describe('Error state consistency when deriving from new props', () => {
     expect(nameMessages).toEqual(['must NOT have fewer than 8 characters']);
   });
 
+  it('lets the parent clear the extraErrors an ArrayField reorder remapped', async () => {
+    const arraySchema: RJSFSchema = {
+      type: 'object',
+      properties: { arr: { type: 'array', items: { type: 'string', minLength: 3 } } },
+    };
+    const arrayData = { arr: ['a', 'bbbb', 'cccc'] };
+    const arrayServerErrors = { arr: { 2: { __errors: ['server'] } } } as unknown as ErrorSchema;
+    const formRef = createRef<Form>();
+    let clearExtraErrors = () => {};
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(arrayServerErrors);
+      clearExtraErrors = () => setExtraErrors(undefined);
+      return (
+        <Form ref={formRef} schema={arraySchema} validator={validator} formData={arrayData} extraErrors={extraErrors} />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 3 characters', 'server']);
+
+    // The reorder raises the remapped item errors, `server` among them, which must not become part of the stored
+    // validator result
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[1]);
+    act(() => clearExtraErrors());
+
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 3 characters']);
+    expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters']);
+  });
+
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const formRef = createRef<Form>();
     const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);

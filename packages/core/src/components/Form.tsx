@@ -1256,10 +1256,14 @@ export default class Form<
           mergeBaseErrors = schemaValidationErrors
             .filter((error) => !isPathPrefix(path, errorPath(error)))
             .concat(toErrorList(newErrorSchema, path.map(String)));
-          storedValidation = {
-            schemaValidationErrors: mergeBaseErrors,
-            schemaValidationErrorSchema: mergeBaseErrorSchema,
-          };
+          // An `ArrayField` raises the item errors it remapped after a reorder, remove or copy, taken from the displayed
+          // `errorSchema`, so they carry `extraErrors`/`customErrors` that must not outlive the props supplying them
+          if (!Array.isArray(newValue)) {
+            storedValidation = {
+              schemaValidationErrors: mergeBaseErrors,
+              schemaValidationErrorSchema: mergeBaseErrorSchema,
+            };
+          }
         } else {
           // A root raise is the whole error schema remapped, the way `ArrayField` reshuffles the item errors after a
           // reorder, so it replaces what is displayed. It does not replace the stored base: that holds every field's
