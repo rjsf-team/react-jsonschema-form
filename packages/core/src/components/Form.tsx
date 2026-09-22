@@ -1286,7 +1286,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         this.props.onChange(toIChangeEvent(nextState));
       }
       // oxlint-disable-next-line react/no-did-update-set-state -- guarded to prevent infinite loop
-      this.setSharedState(prevState, nextState);
+      this.setSharedState(this.state, nextState);
     }
   }
 

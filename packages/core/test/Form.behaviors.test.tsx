@@ -1345,6 +1345,31 @@ describe('Committing a handler result', () => {
     expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 8 characters']);
     expect(fieldErrorsById(node)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
   });
+
+  it('renders the data its parent holds when a prop change lands in the same render as a blur validation', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 5 } } };
+    let parentData: { name?: string } = {};
+    function Parent() {
+      const [formData, setFormData] = useState<{ name?: string }>({});
+      parentData = formData;
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={formData}
+          onChange={(e) => setFormData(e.formData)}
+          onBlur={() => setFormData({ name: 'hello' })}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(container.querySelector('input')!, 'ab');
+    await user.tab();
+
+    expect(container.querySelector('input')).toHaveValue(parentData.name);
+  });
 });
 
 describe('validateForm()', () => {
