@@ -663,6 +663,12 @@ If you need to enable the default error display of a child in the hierarchy afte
 
 This is useful when you have a custom field or widget that utilizes either the `rawErrors` or the `errorSchema` to manipulate and/or show the error(s) for the field/widget itself.
 
+The default error display includes the theme's own error styling, such as a red outline or an invalid flag on the input, not just the error messages.
+It does not include the [error list](./form-props.md#showerrorlist) rendered for the form as a whole, which is controlled separately by `showErrorList`.
+
+Because `rawErrors` is still passed to fields and widgets while errors are hidden, a custom widget deciding whether to render an error state must combine it with `hideError` rather than read `rawErrors` alone.
+The [`getVisibleErrors()`](./utility-functions.md#getvisibleerrors) utility does exactly that.
+
 ### initialValue
 
 The `ui:initialValue` uiSchema directive pre-fills a field on initial render and after a form reset. It takes priority over `schema.default`, but never overrides form data that has already been provided. This is useful for a field, often hidden, that a particular form wants to fix to a known value without changing the underlying schema:

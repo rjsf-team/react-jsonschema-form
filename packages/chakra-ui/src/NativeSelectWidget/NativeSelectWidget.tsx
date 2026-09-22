@@ -6,6 +6,7 @@ import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  getVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   labelValue,
@@ -46,7 +47,6 @@ export default function NativeSelectWidget<
     onChange,
     onBlur,
     onFocus,
-    rawErrors = [],
     schema,
     uiSchema,
   } = props;
@@ -88,7 +88,7 @@ export default function NativeSelectWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={getVisibleErrors(props).length > 0}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

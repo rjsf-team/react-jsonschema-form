@@ -7,6 +7,7 @@ import {
   enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
+  getVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
@@ -34,6 +35,7 @@ export default function SelectWidget<
   onFocus,
   placeholder,
   rawErrors = [],
+  hideError,
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
@@ -86,7 +88,7 @@ export default function SelectWidget<
         multiple={multiple}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        className={rawErrors.length > 0 ? 'is-invalid' : ''}
+        className={getVisibleErrors({ rawErrors, hideError }).length > 0 ? 'is-invalid' : ''}
         onBlur={
           onBlur &&
           ((event: FocusEvent) => {

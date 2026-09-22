@@ -50,6 +50,8 @@ import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
+import type { VisibleErrorsProps } from './getVisibleErrors.ts';
+import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
 import groupEnumOptions from './groupEnumOptions.ts';
@@ -138,6 +140,7 @@ export type {
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
   UseTimeWidgetPropsResult,
+  VisibleErrorsProps,
   WidgetAliasFor,
 };
 
@@ -190,6 +193,7 @@ export {
   getTemplate,
   getTestIds,
   getUiOptions,
+  getVisibleErrors,
   getWidget,
   groupEnumOptions,
   guessType,

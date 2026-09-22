@@ -7506,6 +7506,108 @@ exports[`single fields > title field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="panel panel-danger errors"
+    >
+      <div
+        class="panel-heading"
+      >
+        <h3
+          class="panel-title"
+        >
+          Errors
+        </h3>
+      </div>
+      <ul
+        class="list-group"
+      >
+        <li
+          class="list-group-item text-danger"
+        >
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .comissioning must match format "year"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_marketType"
+          >
+            marketType
+          </label>
+          <select
+            aria-describedby="root_marketType__error root_marketType__description root_marketType__help"
+            class="form-control"
+            id="root_marketType"
+            name="root_marketType"
+          >
+            <option
+              value=""
+            />
+            <option
+              value="0"
+            >
+              primary
+            </option>
+            <option
+              value="1"
+            >
+              secondary
+            </option>
+          </select>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_comissioning"
+          >
+            comissioning
+          </label>
+          <input
+            aria-describedby="root_comissioning__error root_comissioning__description root_comissioning__help"
+            class="form-control"
+            id="root_comissioning"
+            label="comissioning"
+            name="root_comissioning"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > unsupported field 1`] = `
 <DocumentFragment>
   <form

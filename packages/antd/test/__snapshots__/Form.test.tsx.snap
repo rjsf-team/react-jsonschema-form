@@ -18218,6 +18218,303 @@ exports[`single fields > title field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="ant-alert ant-alert-error ant-alert-outlined ant-alert-with-description ant-alert-no-icon panel panel-danger errors css-var-root css-dev-only-do-not-override-ypkju9"
+      data-show="true"
+      role="alert"
+    >
+      <div
+        class="ant-alert-section"
+      >
+        <div
+          class="ant-alert-title"
+        >
+          Errors
+        </div>
+        <div
+          class="ant-alert-description"
+        >
+          <ul
+            style="margin: 0px; padding: 0px; list-style: none;"
+          >
+            <li
+              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: 1px solid rgba(5,5,5,0.06);"
+            >
+              <div
+                class="ant-space css-dev-only-do-not-override-ypkju9 ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
+              >
+                <div
+                  class="ant-space-item"
+                >
+                  <span
+                    aria-label="exclamation-circle"
+                    class="anticon anticon-exclamation-circle"
+                    role="img"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="exclamation-circle"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                      />
+                      <path
+                        d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  class="ant-space-item"
+                >
+                  .marketType must be equal to one of the allowed values
+                </div>
+              </div>
+            </li>
+            <li
+              style="display: flex; align-items: center; padding: 8px 16px; color: rgba(0, 0, 0, 0.88); border-block-end: none;"
+            >
+              <div
+                class="ant-space css-dev-only-do-not-override-ypkju9 ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root"
+              >
+                <div
+                  class="ant-space-item"
+                >
+                  <span
+                    aria-label="exclamation-circle"
+                    class="anticon anticon-exclamation-circle"
+                    role="img"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      data-icon="exclamation-circle"
+                      fill="currentColor"
+                      focusable="false"
+                      height="1em"
+                      viewBox="64 64 896 896"
+                      width="1em"
+                    >
+                      <path
+                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                      />
+                      <path
+                        d="M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <div
+                  class="ant-space-item"
+                >
+                  .comissioning must match format "year"
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <label
+                                class=""
+                                for="root_marketType"
+                                title="marketType"
+                              >
+                                marketType
+                              </label>
+                            </div>
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <div
+                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
+                                    name="root_marketType"
+                                    style="width: 100%;"
+                                  >
+                                    <div
+                                      class="ant-select-content"
+                                    >
+                                      <div
+                                        class="ant-select-placeholder"
+                                        style="visibility: visible;"
+                                      />
+                                      <input
+                                        aria-autocomplete="list"
+                                        aria-describedby="root_marketType__error root_marketType__description root_marketType__help"
+                                        aria-expanded="false"
+                                        aria-haspopup="listbox"
+                                        autocomplete="off"
+                                        class="ant-select-input"
+                                        id="root_marketType"
+                                        role="combobox"
+                                        type="search"
+                                        value=""
+                                      />
+                                    </div>
+                                    <div
+                                      class="ant-select-suffix"
+                                    >
+                                      <span
+                                        aria-label="down"
+                                        class="anticon anticon-down"
+                                        role="img"
+                                      >
+                                        <svg
+                                          aria-hidden="true"
+                                          data-icon="down"
+                                          fill="currentColor"
+                                          focusable="false"
+                                          height="1em"
+                                          viewBox="64 64 896 896"
+                                          width="1em"
+                                        >
+                                          <path
+                                            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                          />
+                                        </svg>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-ypkju9 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <label
+                                class=""
+                                for="root_comissioning"
+                                title="comissioning"
+                              >
+                                comissioning
+                              </label>
+                            </div>
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <span
+                                    class="ant-input-affix-wrapper css-dev-only-do-not-override-ypkju9 ant-input-outlined css-var-root ant-input-css-var"
+                                    style="width: 100%;"
+                                  >
+                                    <input
+                                      aria-describedby="root_comissioning__error root_comissioning__description root_comissioning__help"
+                                      class="ant-input css-dev-only-do-not-override-ypkju9"
+                                      id="root_comissioning"
+                                      name="root_comissioning"
+                                      placeholder=""
+                                      type="text"
+                                      value=""
+                                    />
+                                    <span
+                                      class="ant-input-suffix"
+                                    />
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > unsupported field 1`] = `
 <DocumentFragment>
   <form

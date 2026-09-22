@@ -3,7 +3,14 @@ import { useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getNumericInputTitle, labelValue, getInputProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getInputProps,
+  getNumericInputTitle,
+  getVisibleErrors,
+  labelValue,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -28,7 +35,6 @@ export default function BaseInputTemplate<
     options,
     required,
     readonly,
-    rawErrors,
     autofocus,
     placeholder,
     disabled,
@@ -59,7 +65,7 @@ export default function BaseInputTemplate<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={getVisibleErrors(props).length > 0}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

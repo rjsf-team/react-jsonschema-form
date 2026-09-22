@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, getDateTimeLocalValue, getVisibleErrors, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
@@ -64,7 +64,6 @@ export default function DateTimeInput<
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -114,7 +113,7 @@ export default function DateTimeInput<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={getVisibleErrors(props).join('\n') || undefined}
       {...options}
       aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}

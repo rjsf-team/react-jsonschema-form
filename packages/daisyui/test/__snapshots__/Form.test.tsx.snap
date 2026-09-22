@@ -15188,6 +15188,184 @@ exports[`single fields > title field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="error-list"
+    >
+      <ul
+        class="list-disc list-inside text-red-600"
+      >
+        <li>
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li>
+          .comissioning must match format "year"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_marketType"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      marketType
+                    </span>
+                  </label>
+                  <div
+                    class="form-control w-full"
+                  >
+                    <div
+                      class="dropdown w-full"
+                    >
+                      <div
+                        class="btn btn-outline w-full text-left flex justify-between items-center "
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="truncate"
+                        >
+                          marketType
+                        </span>
+                        <span
+                          class="ml-2"
+                        >
+                          ▼
+                        </span>
+                      </div>
+                      <ul
+                        class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
+                      >
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="0"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              primary
+                            </span>
+                          </div>
+                        </li>
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="1"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              secondary
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_comissioning"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      comissioning
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_comissioning"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        comissioning
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_comissioning__error root_comissioning__description root_comissioning__help"
+                        class="input input-bordered w-full"
+                        id="root_comissioning"
+                        name="root_comissioning"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > unsupported field 1`] = `
 <DocumentFragment>
   <form

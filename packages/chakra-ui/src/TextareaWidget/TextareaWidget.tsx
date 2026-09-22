@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -26,6 +26,7 @@ export default function TextareaWidget<
   options,
   required,
   rawErrors,
+  hideError,
   uiSchema,
 }: WidgetProps<T, S, F>) {
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
@@ -41,7 +42,7 @@ export default function TextareaWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={getVisibleErrors({ rawErrors, hideError }).length > 0}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

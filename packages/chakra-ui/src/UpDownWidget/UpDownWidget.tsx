@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -10,7 +10,7 @@ import { getChakra } from '../utils.ts';
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } = props;
+  const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.value);
@@ -24,7 +24,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={getVisibleErrors(props).length > 0}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

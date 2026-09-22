@@ -11324,6 +11324,139 @@ exports[`single fields > title field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="mb-4 card border-danger"
+    >
+      <div
+        class="alert-danger card-header"
+      >
+        Errors
+      </div>
+      <div
+        class="p-0 card-body"
+      >
+        <div
+          class="list-group"
+        >
+          <div
+            class="border-0 list-group-item"
+          >
+            <span>
+              .marketType must be equal to one of the allowed values
+            </span>
+          </div>
+          <div
+            class="border-0 list-group-item"
+          >
+            <span>
+              .comissioning must match format "year"
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div>
+                  <label
+                    class="form-label"
+                    for="root_marketType"
+                  >
+                    marketType
+                  </label>
+                  <select
+                    aria-describedby="root_marketType__error root_marketType__description root_marketType__help"
+                    class="form-select"
+                    id="root_marketType"
+                    name="root_marketType"
+                  >
+                    <option
+                      value=""
+                    />
+                    <option
+                      id="primary"
+                      value="0"
+                    >
+                      primary
+                    </option>
+                    <option
+                      id="secondary"
+                      value="1"
+                    >
+                      secondary
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-string"
+              >
+                <div>
+                  <label
+                    class="form-label"
+                    for="root_comissioning"
+                  >
+                    comissioning
+                  </label>
+                  <input
+                    aria-describedby="root_comissioning__error root_comissioning__description root_comissioning__help"
+                    class="form-control"
+                    id="root_comissioning"
+                    name="root_comissioning"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > unsupported field 1`] = `
 <DocumentFragment>
   <form

@@ -2,7 +2,7 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
 
@@ -27,7 +27,6 @@ export default function TextareaWidget<
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -75,7 +74,7 @@ export default function TextareaWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={getVisibleErrors(props).join('\n') || undefined}
       aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
     />

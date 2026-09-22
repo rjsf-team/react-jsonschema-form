@@ -368,7 +368,7 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { getInputProps, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
+import { getInputProps, getVisibleErrors, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -410,7 +410,10 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
-  const hasError = rawErrors.length > 0 && !hideError;
+  // `rawErrors` is still provided while `ui:hideError` is in effect, so `getVisibleErrors()` is what decides the
+  // error state a widget renders
+  const visibleErrors = getVisibleErrors(props);
+  const hasError = visibleErrors.length > 0;
 
   return (
     <CustomTextInput
@@ -422,7 +425,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
       readOnly={readonly}
       autoFocus={autofocus}
       error={hasError}
-      errors={hasError ? rawErrors : undefined}
+      errors={hasError ? visibleErrors : undefined}
       onChange={onChangeOverride || onTextChange}
       onBlur={onTextBlur}
       onFocus={onTextFocus}

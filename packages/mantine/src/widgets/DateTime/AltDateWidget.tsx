@@ -1,6 +1,13 @@
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
 import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, dateRangeOptions, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  dateRangeOptions,
+  getVisibleErrors,
+  titleId,
+  TranslatableString,
+  useAltDateWidgetProps,
+} from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -10,7 +17,7 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { id, required, disabled, readonly, label, hideLabel, rawErrors, options, registry } = props;
+  const { id, required, disabled, readonly, label, hideLabel, options, registry } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
   return (
@@ -55,12 +62,10 @@ export default function AltDateWidget<
           )}
         </Group>
       </Flex>
-      {rawErrors &&
-        rawErrors?.length > 0 &&
-        rawErrors.map((error: string, index: number) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <Input.Error key={`alt-date-widget-input-errors-${index}`}>{error}</Input.Error>
-        ))}
+      {getVisibleErrors(props).map((error: string, index: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <Input.Error key={`alt-date-widget-input-errors-${index}`}>{error}</Input.Error>
+      ))}
     </>
   );
 }

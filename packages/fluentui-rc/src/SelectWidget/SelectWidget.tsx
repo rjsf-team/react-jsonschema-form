@@ -3,10 +3,11 @@ import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   getOptionValueFormat,
+  getVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   labelValue,
@@ -40,6 +41,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   multiple = false,
   autofocus = false,
   rawErrors = [],
+  hideError,
   onChange,
   onBlur,
   onFocus,
@@ -88,7 +90,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   return (
     <Field
       label={labelValue(label, hideLabel)}
-      validationState={rawErrors.length ? 'error' : undefined}
+      validationState={getVisibleErrors({ rawErrors, hideError }).length ? 'error' : undefined}
       required={required}
     >
       <Dropdown

@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
 
@@ -36,7 +36,6 @@ export default function BaseInputTemplate<
     onBlur,
     onFocus,
     options,
-    rawErrors,
     children,
     registry,
   } = props;
@@ -88,7 +87,7 @@ export default function BaseInputTemplate<
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
-    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
+    error: getVisibleErrors(props).join('\n') || undefined,
     list: schema.examples ? examplesId(id) : undefined,
   };
 

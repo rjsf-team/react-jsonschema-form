@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
 
@@ -27,7 +27,6 @@ export default function PasswordWidget<
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -75,7 +74,7 @@ export default function PasswordWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={getVisibleErrors(props).join('\n') || undefined}
       {...themeProps}
       aria-describedby={ariaDescribedByIds(id)}
     />

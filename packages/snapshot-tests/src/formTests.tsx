@@ -790,6 +790,27 @@ export function formTests(Form: ComponentType<FormProps>) {
       expect(asFragment()).toMatchSnapshot();
     });
 
+    test('ui:hideError on a parent keeps its children out of the error state', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          marketType: { type: 'string', enum: ['primary', 'secondary'] },
+          comissioning: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        'ui:hideError': true,
+      };
+      const extraErrors = {
+        marketType: { __errors: ['must be equal to one of the allowed values'] },
+        comissioning: { __errors: ['must match format "year"'] },
+      } as ErrorSchema;
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
+    });
+
     test('Cyclic schema', async () => {
       const schema: RJSFSchema = {
         title: 'A registration form',

@@ -13,7 +13,14 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, labelValue } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getInputProps,
+  getNumericInputTitle,
+  getVisibleErrors,
+  labelValue,
+} from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -149,7 +156,7 @@ export default function BaseInputTemplate<
         }}
         {...rest}
         value={value || value === 0 ? value : ''}
-        error={rawErrors.length > 0}
+        error={getVisibleErrors(props).length > 0}
         onChange={onChangeOverride || handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
