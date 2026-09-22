@@ -5,6 +5,7 @@ import {
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getSchemaType,
   getTemplate,
   getUiOptions,
   getWidget,
@@ -217,8 +218,11 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
     // omit the type — without it, getSchemaType returns undefined and the option
     // renders as FallbackField instead of the correct widget (e.g. StringField).
+    // A parent allowing several types propagates the single type it is rendered as rather than the union itself,
+    // since an option inheriting the whole union would read as a multi-type schema of its own and render a type
+    // selector in place of the option's content. The option is one branch of a choice already being made here.
     if (schemaType !== undefined && !('type' in option)) {
-      parentProps.type = schemaType;
+      parentProps.type = getSchemaType<S>(schema) as S['type'];
     }
     // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
     optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;

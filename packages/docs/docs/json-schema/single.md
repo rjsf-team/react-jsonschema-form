@@ -193,7 +193,8 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ## Nullable types
 
-JSON Schema supports specifying multiple types in an array; however, react-jsonschema-form only supports a restricted subset of this -- nullable types, in which an element is either a given type or equal to null.
+JSON Schema supports specifying multiple types in an array.
+A nullable type, in which an element is either a given type or equal to `null`, renders as a field for that type.
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
@@ -205,3 +206,38 @@ const schema: RJSFSchema = {
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+
+## Multiple types
+
+A schema that allows more than one type has no single field that can render every one of them, so by default the first type in the list wins and the others are unreachable.
+Turning on the [`useFallbackUiForUnsupportedType`](../api-reference/form-props.md#usefallbackuiforunsupportedtype) prop renders such a field with a selector of exactly the types the schema allows, alongside the field for the type currently selected.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: ['string', 'boolean', 'null'],
+};
+
+render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+```
+
+The same selector, offering every JSON Schema type, is rendered for a property the schema puts no constraint on at all — an `additionalProperties: true` entry, or one whose schema is empty:
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  additionalProperties: true,
+};
+
+render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+```
+
+Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array.
+
+Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, one with an `enum` renders a select, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
+A schema that pairs multiple types with an `anyOf` or `oneOf` is left to that option selector, which already determines the shape of the value, so no type selector is rendered for it.

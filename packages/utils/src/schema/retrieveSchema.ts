@@ -4,6 +4,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  GUESSED_TYPE_FLAG,
   ID_KEY,
   IF_KEY,
   ITEMS_KEY,
@@ -472,6 +473,26 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
+/** Builds the stub schema for an additional property whose own schema names no type, giving it the type of the data it
+ * currently holds so that it renders as a field for that data.
+ *
+ * The stub is marked as guessed only when the schema puts no constraint on the property at all, i.e. it is `true` or
+ * an empty schema. That marker tells the fallback UI the property is free to hold any other type, so a schema that
+ * constrains the value some other way — an `enum`, a `const`, a `format`, a length or a range — must not carry it, or
+ * the UI would offer types that schema rejects.
+ *
+ * @param formData - The form data held by the additional property
+ * @param isUnconstrained - Whether the `additionalProperties` schema constrains the property in no way at all
+ * @returns - The stub schema for the additional property
+ */
+function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, isUnconstrained: boolean): S {
+  const schema = { type: guessType(formData) } as S;
+  if (isUnconstrained) {
+    (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
+  }
+  return schema;
+}
+
 /** Creates new 'properties' items for each key in the `formData`
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -538,10 +559,14 @@ export function stubExistingAdditionalProperties<
             ...schema.additionalProperties,
           };
         } else {
-          additionalProperties = { type: guessType(formData[key]) };
+          additionalProperties = guessedTypeSchema<S>(
+            formData[key],
+            Object.keys(schema.additionalProperties!).length === 0,
+          );
         }
       } else {
-        additionalProperties = { type: guessType(formData[key]) };
+        // `additionalProperties: false` is excluded above, so the boolean here is always `true`: anything goes
+        additionalProperties = guessedTypeSchema<S>(formData[key], true);
       }
 
       // The type of our new key should match the additionalProperties value;

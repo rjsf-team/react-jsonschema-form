@@ -91,42 +91,51 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       const { node, onChange } = createFormComponent({ ...props });
 
+      /** Selects the type named `newType` in the fallback type selector, verifying that it becomes the selected one */
+      const selectType = async (newType: string) => {
+        const select = node.querySelector('select')!;
+        const option = Array.from(select.options).find((anOption) => anOption.textContent === newType)!;
+        expect(option).toBeInTheDocument();
+        await user.selectOptions(select, option);
+        expect(option.selected).toBe(true);
+      };
+
       expect(node.querySelectorAll('.unsupported-field')).toHaveLength(0);
       expect(node.querySelector('select')).toBeInTheDocument();
-      let select = node.querySelector('select')!;
-      let options = node.querySelectorAll<HTMLOptionElement>('select option');
-      expect(options).toHaveLength(5);
-      expect(options[0]).toHaveTextContent('string');
+      const options = node.querySelectorAll<HTMLOptionElement>('select option');
+      expect(Array.from(options).map((option) => option.textContent)).toEqual([
+        'string',
+        'number',
+        'integer',
+        'boolean',
+        'object',
+        'array',
+        'null',
+      ]);
       expect(options[0].selected).toBe(true);
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveAttribute('value', '123456');
 
-      // Change the fallback type to 'number'
-      await user.selectOptions(select, options[1]);
-      expect(options[1]).toHaveTextContent('number');
-      expect(options[1].selected).toBe(true);
+      await selectType('number');
       expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveAttribute('value', '123456');
 
       // Verify formData was casted to number
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: 123456 }, 'root_unknownProperty');
 
-      select = node.querySelector('select')!;
-      options = node.querySelectorAll<HTMLOptionElement>('select option');
-      // Change the fallback type to 'boolean'
-      await user.selectOptions(select, options[2]);
-      expect(options[2]).toHaveTextContent('boolean');
-      expect(options[2].selected).toBe(true);
+      await selectType('integer');
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toHaveAttribute('value', '123456');
+
+      // Verify formData was casted to integer
+      expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: 123456 }, 'root_unknownProperty');
+
+      await selectType('boolean');
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeChecked();
-      // Verify formData was casted to number
+      // Verify formData was casted to boolean
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: true }, 'root_unknownProperty');
 
-      select = node.querySelector('select')!;
-      options = node.querySelectorAll<HTMLOptionElement>('select option');
-      // Change the fallback type to 'object'
-      await user.selectOptions(select, options[3]);
-      expect(options[3]).toHaveTextContent('object');
-      expect(options[3].selected).toBe(true);
+      await selectType('object');
       let addButton = node.querySelector<HTMLButtonElement>('.rjsf-object-property-expand button');
       expect(addButton).toBeInTheDocument();
       // click the add button
@@ -139,12 +148,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         'root_unknownProperty',
       );
 
-      select = node.querySelector('select')!;
-      options = node.querySelectorAll<HTMLOptionElement>('select option');
-      // Change the fallback type to 'array'
-      await user.selectOptions(select, options[4]);
-      expect(options[4]).toHaveTextContent('array');
-      expect(options[4].selected).toBe(true);
+      await selectType('array');
       addButton = node.querySelector<HTMLButtonElement>('.rjsf-array-item-add button');
       expect(addButton).toBeInTheDocument();
       // click the add button
@@ -152,6 +156,243 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // Verify formData was casted to array
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: [undefined] }, 'root_unknownProperty');
+    });
+  });
+
+  describe('Multiple types', () => {
+    const multiTypeSchema = {
+      type: 'object',
+      properties: {
+        multi: { type: ['string', 'boolean'] },
+      },
+    } as RJSFSchema;
+
+    it('renders the first type when useFallbackUiForUnsupportedType is false', () => {
+      const { node } = createFormComponent({ schema: multiTypeSchema });
+
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input[type=text]')).toBeInTheDocument();
+    });
+
+    it('renders a selector of only the allowed types when useFallbackUiForUnsupportedType is true', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: multiTypeSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: 'a string' },
+      });
+
+      const select = node.querySelector('select')!;
+      expect(Array.from(select.options).map((option) => option.textContent)).toEqual(['string', 'boolean']);
+      expect(select.options[0].selected).toBe(true);
+      expect(node.querySelector<HTMLInputElement>('input[type=text]')).toHaveAttribute('value', 'a string');
+
+      await user.selectOptions(select, select.options[1]);
+
+      expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
+      expectToHaveBeenCalledWithFormData(onChange, { multi: true }, 'root_multi');
+    });
+
+    it('starts the selector on the type the form data already has', () => {
+      const { node } = createFormComponent({
+        schema: multiTypeSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: false },
+      });
+
+      const select = node.querySelector('select')!;
+      expect(select.options[1].selected).toBe(true);
+      expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
+    });
+
+    it('renders a nullable type as its non-null type rather than a selector', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            nullable: { type: ['string', 'null'] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input[type=text]')).toBeInTheDocument();
+    });
+
+    it('renders a selector of every type for an unconstrained additional property', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: '42.6' },
+      });
+
+      const select = node.querySelector('select')!;
+      expect(Array.from(select.options).map((option) => option.textContent)).toEqual([
+        'string',
+        'number',
+        'integer',
+        'boolean',
+        'object',
+        'array',
+        'null',
+      ]);
+      expect(select.options[0].selected).toBe(true);
+
+      await user.selectOptions(select, select.options[2]);
+
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toBeInTheDocument();
+      expectToHaveBeenCalledWithFormData(onChange, { aKey: 43 }, 'root_aKey');
+      // The key of the additional property is still editable alongside the type selector
+      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+    });
+
+    it('keeps the rest of the schema when rendering the chosen type', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: {
+              type: ['object', 'string'],
+              properties: { shared: { type: 'string', title: 'SHARED' } },
+            },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The schema's own `properties` still describe the value once `object`, its first type, is what renders
+      expect(node.querySelector<HTMLInputElement>('#root_multi_shared')).toBeInTheDocument();
+
+      const select = node.querySelector('select')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'string')!);
+
+      expect(node.querySelector<HTMLInputElement>('#root_multi_shared')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'text');
+    });
+
+    it('renders a union constrained by an enum as a select over that enum', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { type: ['string', 'number'], enum: ['a', 1] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The value field is a select over the enum rather than the free-text input a bare `string` would get
+      const valueSelect = node.querySelector<HTMLSelectElement>('#root_multi')!;
+      expect(valueSelect.tagName).toBe('SELECT');
+      expect(Array.from(valueSelect.options).map((o) => o.textContent)).toEqual(['', 'a', '1']);
+    });
+
+    it('reconciles the selected type when the schema stops allowing it', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { disc: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: {
+            disc: {
+              oneOf: [
+                { properties: { disc: { const: 'a' }, val: { type: ['string', 'number'] } } },
+                { properties: { disc: { const: 'b' }, val: { type: ['boolean', 'array'] } } },
+              ],
+            },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { disc: 'a', val: 'some text' },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
+
+      const discSelect = node.querySelector<HTMLSelectElement>('#root_disc')!;
+      await user.selectOptions(discSelect, Array.from(discSelect.options).find((o) => o.textContent === 'b')!);
+
+      // The branch switch replaces the types on offer, so the `string` selection gives way rather than leaving the
+      // selector reading `boolean` while a text input renders below it
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['boolean', 'array']);
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
+      expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'checkbox');
+    });
+
+    it('clears the value rather than stringifying it when switching from null to string', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a string' },
+      });
+
+      const select = () => node.querySelector<HTMLSelectElement>('select')!;
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'null')!);
+      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+
+      // `String(null)` would put the literal text `null` into the input as though the user had typed it
+      expectToHaveBeenCalledWithFormData(onChange, { aKey: '' }, 'root_aKey');
+    });
+
+    it('leaves a union that also has a oneOf to its option selector', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          multi: {
+            type: ['object', 'string'],
+            properties: { shared: { type: 'string', title: 'SHARED' } },
+            oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+          },
+        },
+      } as RJSFSchema;
+
+      const withFallback = createFormComponent({ schema, useFallbackUiForUnsupportedType: true });
+      const withoutFallback = createFormComponent({ schema });
+
+      // The option selector already decides the shape of the value, so both render the same: the shared property,
+      // the oneOf selector, and the selected option's own property
+      for (const { node } of [withFallback, withoutFallback]) {
+        expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
+        expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+        expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
+      }
+    });
+
+    it('offers no type selector for an additional property constrained without a type', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { enum: ['a', 'b'] } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a' },
+      });
+
+      // The schema constrains the value even though it names no type, so every type is not on offer for it
+      expect(node.querySelector('#root_aKey___internal_type_selector')).not.toBeInTheDocument();
+    });
+
+    it('keeps an unconstrained additional property when its type is switched to null', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'a string' },
+      });
+
+      const select = node.querySelector('select')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'null')!);
+
+      // `null` is a value the property is allowed to hold, so it survives `omitExtraData` and the key stays editable
+      expectToHaveBeenCalledWithFormData(onChange, { aKey: null }, 'root_aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(
+        Array.from(node.querySelectorAll<HTMLOptionElement>('select option')).find((o) => o.selected),
+      ).toHaveTextContent('null');
+    });
+
+    it('renders an unconstrained additional property as its own type when the fallback UI is off', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        formData: { aKey: 42 },
+      });
+
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveAttribute('value', '42');
     });
   });
 

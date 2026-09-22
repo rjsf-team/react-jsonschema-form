@@ -3,6 +3,7 @@ import type { MockInstance } from 'vitest';
 import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
   PROPERTIES_KEY,
@@ -1685,14 +1686,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             bar: {
               type: 'number',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             foo: {
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });
@@ -1713,6 +1717,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });
@@ -1743,13 +1748,33 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             foo: {
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             bar: {
               type: 'number',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             baz: {
               type: 'boolean',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties that constrains the value without naming a type', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { enum: ['a', 'b'] },
+        };
+        const formData = { foo: 'a' };
+        // The stub takes the guessed type, but is NOT marked as guessed: the schema constrains the value, so the
+        // fallback UI must not offer it every other type
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
             },
           },
@@ -1876,6 +1901,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });

@@ -1,5 +1,5 @@
-import type { SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, sanitizeDataForNewSchema, setByPath } from '../../src/index.ts';
+import type { RJSFMarkedSchema, SchemaUtilsType, RJSFSchema } from '../../src/index.ts';
+import { createSchemaUtils, GUESSED_TYPE_FLAG, sanitizeDataForNewSchema, setByPath } from '../../src/index.ts';
 import { FIRST_ONE_OF, oneOfData, oneOfSchema, SECOND_ONE_OF } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -95,6 +95,21 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldSchema, { values: ['existing'] })).toEqual({
         values: undefined,
       });
+    });
+    it('keeps the data of a property whose type was guessed from it, even when that type changed', () => {
+      const guessedSchema = (type: RJSFSchema['type']): RJSFSchema => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          properties: { aKey: { type } },
+        };
+        (schema.properties!.aKey as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
+        return schema;
+      };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(guessedSchema('number'), guessedSchema('string'), { aKey: 42 }),
+      ).toEqual({ aKey: 42 });
     });
     it('preserves explicit undefined data for a property shared by both schemas', () => {
       const oldSchema: RJSFSchema = {

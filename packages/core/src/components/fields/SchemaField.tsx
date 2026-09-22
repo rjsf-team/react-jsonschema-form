@@ -22,6 +22,8 @@ import {
   getSchemaType,
   getTemplate,
   getUiOptions,
+  getUnionTypes,
+  GUESSED_TYPE_FLAG,
   guessType,
   hasVisibleErrors,
   isConstant,
@@ -123,7 +125,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   isSelectSchema: boolean,
 ): ComponentType<FieldProps<T, S, F>> {
   const { field } = uiOptions;
-  const { fields } = registry;
+  const { fields, globalFormOptions } = registry;
   if (typeof field === 'function') {
     return field;
   }
@@ -137,6 +139,21 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const schemaId = schema.$id;
 
   let componentName = COMPONENT_TYPES[type];
+  // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
+  // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
+  // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
+  // Without it the first type wins, as it always has.
+  // An `anyOf`/`oneOf` is left alone: the option selector already decides what the value looks like, and the check
+  // below hands a schema carrying one to `XxxOfField` — with `ObjectField` alongside it for the properties shared
+  // by every option, which a `FallbackField` here would take the place of and so stop rendering
+  if (
+    globalFormOptions.useFallbackUiForUnsupportedType &&
+    !schema.anyOf &&
+    !schema.oneOf &&
+    (getUnionTypes<S>(schema) || GUESSED_TYPE_FLAG in schema)
+  ) {
+    componentName = 'FallbackField';
+  }
   if (schemaId && schemaId in fields) {
     componentName = schemaId;
   }

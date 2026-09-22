@@ -9,7 +9,9 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 ## Constants
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there is the special `ADDITIONAL_PROPERTY_FLAG` flag that is added to a schema under certain conditions by the `retrieveSchema()` utility.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
+`GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or an empty schema: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it. An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
+There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
 
@@ -473,6 +475,19 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
+### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Flattens the list returned by `groupEnumOptions()` back into a single list of options, in the same order they appear in that list: each group's options in place of the group, followed by any standalone options.
+This is the order a widget's UI library needs when it manages its own selection or keyboard-navigation state over a flat list of items that has to stay in sync with what is actually rendered.
+
+#### Parameters
+
+- groupedOptions: GroupedEnumOptionsType&lt;S>[] - The list returned by `groupEnumOptions()`
+
+#### Returns
+
+- IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
+
 ### getByPath&lt;R = unknown>()
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
@@ -708,6 +723,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
 - type is an array with a length of 2 and one type is 'null': Returns the other type
+- type is an array allowing more than one non-'null' type: Returns the first type in the array, since no single field renders them all. Use [getUnionTypes()](#getuniontypes) to get every type such a schema allows
 
 #### Parameters
 
@@ -775,6 +791,21 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 
 - UIOptionsType&lt;T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
 
+### getUnionTypes()
+
+Gets the list of types a `schema` allows when it allows more than one of them, i.e. its `type` is an array of two or more non-`null` type names.
+Type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
+A schema allowing a single type, with or without `null`, is one that [getSchemaType()](#getschematype) resolves to that type, so it is not a union and `undefined` is returned for it.
+`SchemaField` uses this to route a multi-type schema to `FallbackField` when the [useFallbackUiForUnsupportedType](./form-props.md#usefallbackuiforunsupportedtype) prop is set, and `FallbackField` uses it to offer exactly those types in its type selector.
+
+#### Parameters
+
+- schema: S - The schema for which to get the union of types
+
+#### Returns
+
+- JSONSchema7TypeName[] | undefined: The types the `schema` allows, or `undefined` when it does not allow more than one
+
 ### getVisibleErrors()
 
 Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect.
@@ -808,6 +839,34 @@ schema type and `widget` name. If no widget component can be found an `Error` is
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (needed by [enumOptionValueEncoder()](#enumoptionvalueencoder) for the `indexed` `optionValueFormat`) and its `disabled` status (from `ui:enumDisabled`).
+Each theme's `SelectWidget` calls it and renders the result with whatever grouping primitive its own UI library provides.
+
+When no `optgroups` is given, the same flat list of options is returned, just tagged, so a widget can use one rendering path whether or not grouping is in effect.
+
+When `optgroups` is given, one group is returned per non-empty key, in the object's property order, with that group's options in the order they were listed in its value array.
+Enum values not claimed by any group are appended afterwards in their original relative order.
+The following cases are handled rather than being allowed to break a render:
+
+- A group value matching no remaining option is skipped, and a group left with no options is omitted entirely, so no group renders as an empty heading
+- A group whose value is not an array at all is ignored the same way
+- When several options share a `value`, each reference to that value claims the next not-yet-claimed option with it, by index, rather than collapsing them into one
+- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them. `ui:enumDisabled` values always match strictly, as they do in every other enum widget
+
+Note that JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups come first.
+
+#### Parameters
+
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
+- [optgroups]: Record&lt;string, EnumValue[]> - The `ui:options.optgroups` mapping of group label to the enum values it contains
+- [enumDisabled]: EnumValue[] - The `ui:enumDisabled` list of enum values that should be rendered disabled
+
+#### Returns
+
+- GroupedEnumOptionsType&lt;S>[]: The ordered list of standalone options and/or option groups to render
 
 ### hasByPath()
 
@@ -945,6 +1004,20 @@ Checks to see if the `uiSchema` contains the `widget` field and that the widget 
 #### Returns
 
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
+
+### isEnumOptionsGroup&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+A type guard that determines whether an element of the list returned by `groupEnumOptions()` is a group of options rather than a standalone option.
+It checks both that `options` is an array and that no numeric `index` is present, because `enumOptions` is caller-supplied and `groupEnumOptions()` spreads each option through untouched: an option carrying a non-array `options` value would crash the widget rendering it, and one carrying an array-valued `options` (react-select's group shape, say) would silently render as an empty group in place of the option itself.
+`groupEnumOptions()` tags every standalone option with a numeric `index` and never puts one on a group, so that tag tells the two apart no matter what the caller supplied.
+
+#### Parameters
+
+- item: GroupedEnumOptionsType&lt;S> - An element from the list returned by `groupEnumOptions()`
+
+#### Returns
+
+- boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1898,6 +1971,8 @@ potentially recursive resolution.
 
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
+The stub it creates for a property held by the `rawFormData` but described only by an `additionalProperties` with no `type`, `$ref`, `anyOf` or `oneOf` is given the type of the data that property holds. It is additionally marked with the `GUESSED_TYPE_FLAG` symbol, recording that the type was guessed rather than declared, when that `additionalProperties` is `true` or an empty schema and so constrains the property in no way at all.
+
 ### omitExtraData&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
@@ -1967,6 +2042,7 @@ Sanitize the `data` associated with the `oldSchema` so it is considered appropri
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
+A property is considered to have changed schema when its type differs between the two, except when the old type carries the `GUESSED_TYPE_FLAG`: that type was guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 
 #### Parameters
 
