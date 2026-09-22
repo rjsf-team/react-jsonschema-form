@@ -14,7 +14,7 @@ export type AdditionalPropertyKeySelectProps<
   F extends FormContextType = any,
 > = Pick<
   WidgetProps<T, S, F>,
-  'autofocus' | 'disabled' | 'hideLabel' | 'id' | 'label' | 'placeholder' | 'readonly' | 'registry' | 'required'
+  'className' | 'disabled' | 'hideLabel' | 'id' | 'label' | 'readonly' | 'registry' | 'required'
 > & {
   /** The current key of the `additionalProperties` property, which is the selected option */
   value: string;
@@ -39,22 +39,30 @@ export default function AdditionalPropertyKeySelect<
 >(props: AdditionalPropertyKeySelectProps<T, S, F>) {
   const { id, propertyNamesEnum, onKeyRename, registry, ...selectProps } = props;
   const { disabled, readonly, value } = selectProps;
-  /** A key the schema no longer allows — one `propertyNames` has since stopped enumerating, or the `newKey` the add
-   * button falls back to once every allowed name is taken — has no option of its own, which would leave the dropdown
-   * blank and the key unreadable. It gets one, disabled, so the key stays visible without becoming a name to pick.
+  /** A key the schema no longer allows — one `propertyNames` has since stopped enumerating, or one a `newKey` from
+   * before the enum was there still holds — has no option of its own, which would leave the dropdown blank and the
+   * key unreadable. It gets one, disabled, so the key stays visible without becoming a name to pick.
    */
   const allowsCurrentKey = propertyNamesEnum.includes(value);
+  /** A widget renders a blank placeholder option whenever the schema names no `default`, and the current key is always
+   * one of the options here, so without one the dropdown carries a leading blank entry that can only be picked to be
+   * rejected. Naming the key as the `default` is what takes it away; `value` is among the options either way, so
+   * `logUnsupportedDefaultForEnum()` stays quiet.
+   */
   const schema = useMemo(
     () =>
-      ({ type: 'string', enum: allowsCurrentKey ? propertyNamesEnum : [value, ...propertyNamesEnum] }) as unknown as S,
+      ({
+        type: 'string',
+        default: value,
+        enum: allowsCurrentKey ? propertyNamesEnum : [value, ...propertyNamesEnum],
+      }) as unknown as S,
     [allowsCurrentKey, propertyNamesEnum, value],
   );
   const enumOptions = useMemo(() => optionsList<T, S, F>(schema), [schema]);
   /** A select commits its value as soon as an option is picked, so the rename happens on change rather than on blur
    * the way the free-text key input's does; waiting for a blur would leave the shown selection and the key apart.
-   * A widget renders a placeholder option whenever nothing is selected, which happens here when the current key is
-   * not one of the allowed names; picking it reports an empty value, which is not a name `propertyNames` accepts, so
-   * only a value the enum actually holds renames the key. Not every theme's widget blocks input when it is disabled or
+   * Only a value the enum actually holds renames the key, since a theme whose widget clears itself some other way
+   * reports something `propertyNames` would reject. Not every theme's widget blocks input when it is disabled or
    * readonly (some only style themselves that way and still answer the keyboard), so the rename is refused here too.
    */
   const handleChange = useCallback(

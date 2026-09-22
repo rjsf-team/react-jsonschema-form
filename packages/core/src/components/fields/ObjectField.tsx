@@ -263,15 +263,17 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
   // resolution below runs once per schema rather than once per keystroke anywhere in the object
   const { propertyNames } = schema;
+  // Resolved so that a `propertyNames` written as a `$ref` or an `allOf` still yields its `enum`
+  const resolvedPropertyNames = useMemo(
+    () => (isObject(propertyNames) ? schemaUtils.retrieveSchema(propertyNames as S) : undefined),
+    [propertyNames, schemaUtils],
+  );
   const propertyNamesEnum = useMemo(() => {
-    if (!isObject(propertyNames)) {
-      return undefined;
-    }
-    // Resolved so that a `propertyNames` written as a `$ref` or an `allOf` still yields its `enum`
-    const { enum: allowedNames } = schemaUtils.retrieveSchema(propertyNames as S);
-    const names = allowedNames?.filter((allowedName): allowedName is string => typeof allowedName === 'string');
+    const names = resolvedPropertyNames?.enum?.filter(
+      (allowedName): allowedName is string => typeof allowedName === 'string',
+    );
     return names?.length ? names : undefined;
-  }, [propertyNames, schemaUtils]);
+  }, [resolvedPropertyNames]);
   /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
    * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects. A property
    * left with no name to offer — every allowed name is taken and its own is not one of them — is absent from the map,
@@ -282,8 +284,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       return undefined;
     }
     const takenNames = new Set(Object.keys(schemaProperties));
+    // Only an additional property is offered the dropdown, so a declared one has no use for a list of its own
     return new Map(
-      Object.keys(schemaProperties)
+      getAdditionalPropertyOrder<S>(schemaProperties)
         .map((property): [string, string[]] => [
           property,
           propertyNamesEnum.filter((allowedName) => allowedName === property || !takenNames.has(allowedName)),
@@ -291,6 +294,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         .filter(([, allowedNames]) => allowedNames.length > 0),
     );
   }, [propertyNamesEnum, schemaProperties]);
+  // `canExpand()` hides the add button once every allowed name is taken, and reads those names straight off the schema
+  // it is handed, so the template gets the resolved `propertyNames` rather than the `$ref` its author may have written
+  const templateSchema = useMemo(
+    () => (resolvedPropertyNames ? ({ ...schema, propertyNames: resolvedPropertyNames } as S) : schema),
+    [resolvedPropertyNames, schema],
+  );
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -328,14 +337,17 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       return;
     }
     const newFormData = { ...formData } as T;
-    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so start from the first allowed name that is
-    // still free and only fall back to `newKey` once they are all taken. A name the schema declares as a property of
-    // its own is taken too, however empty its value is: adding under it would write into that declared field instead
-    // of creating an additional property
-    const preferredKey =
-      propertyNamesEnum?.find(
-        (allowedName) => !Object.hasOwn(schemaProperties, allowedName) && !hasByPath(newFormData, allowedName),
-      ) ?? 'newKey';
+    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under the first
+    // allowed name that is still free. A name the schema declares as a property of its own is taken too, however
+    // empty its value is: adding under it would write into that declared field instead of creating an additional
+    // property. `canExpand()` hides the add button once every allowed name is taken, so getting here with none left
+    // means a custom template is offering it anyway, and adding no property beats adding one the schema forbids
+    const preferredKey = propertyNamesEnum
+      ? propertyNamesEnum.find((allowedName) => !Object.hasOwn(schemaProperties, allowedName))
+      : 'newKey';
+    if (preferredKey === undefined) {
+      return;
+    }
     const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
@@ -533,7 +545,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     id,
     uiSchema,
     errorSchema,
-    schema,
+    schema: templateSchema,
     formData,
     registry,
     optionalDataControl,

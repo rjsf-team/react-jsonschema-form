@@ -167,6 +167,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 ```
 
 A name another key already holds is left out of the dropdown, since two properties cannot share a name, and the add button creates the new property under the first allowed name that is still free.
+Once every allowed name is taken the add button is hidden, the way it is at the `maxProperties` limit, since any further property could only be added under a name the schema rejects.
 The `propertyNames` schema may be a `$ref` or an `allOf`; it is resolved before its `enum` is read.
 Any other `propertyNames` schema, such as one constraining names by `pattern` or `maxLength`, leaves the free-text key input in place and is enforced by validation alone.
 

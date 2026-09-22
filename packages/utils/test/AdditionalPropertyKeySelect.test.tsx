@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import { fireEvent, render } from '@testing-library/react';
 
-import type { AdditionalPropertyKeySelectProps, Registry, WidgetProps } from '../src/index.ts';
+import type { AdditionalPropertyKeySelectProps, Registry, RJSFSchema, WidgetProps } from '../src/index.ts';
 import { AdditionalPropertyKeySelect } from '../src/index.ts';
 
 function SelectWidget({ id, label, options, value, disabled, readonly, required, onChange }: WidgetProps) {
@@ -110,6 +110,19 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(select).toHaveValue('zzz');
     expect(select.options[0]).toBeDisabled();
     expect(select.options[1]).not.toBeDisabled();
+  });
+
+  it('names the current key as the schema default, so no widget renders a blank option beside it', () => {
+    let received: RJSFSchema | undefined;
+    function CapturingSelectWidget({ schema }: WidgetProps) {
+      received = schema;
+      return null;
+    }
+    const capturingRegistry = { widgets: { SelectWidget: CapturingSelectWidget } } as unknown as Registry;
+    render(<AdditionalPropertyKeySelect {...baseProps} registry={capturingRegistry} />);
+
+    expect(received?.default).toBe('a');
+    expect(received?.enum).toContain('a');
   });
 
   it('forwards the disabled, readonly and required flags to the widget', () => {

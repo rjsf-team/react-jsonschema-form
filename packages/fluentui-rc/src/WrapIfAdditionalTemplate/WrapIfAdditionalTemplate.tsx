@@ -8,6 +8,12 @@ const useStyles = makeStyles({
   input: {
     width: '100%',
   },
+  // `Dropdown` ships a 250px `min-width` of its own, which overflows the column the key sits in rather than shrinking
+  // to it the way the key input does
+  keySelect: {
+    width: '100%',
+    minWidth: 0,
+  },
   grow: {
     flexGrow: 1,
   },
@@ -90,6 +96,7 @@ export default function WrapIfAdditionalTemplate<
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
+            className={classes.keySelect}
             label={keyLabel}
             hideLabel={!displayLabel}
             value={label}

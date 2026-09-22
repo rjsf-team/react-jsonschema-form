@@ -1641,6 +1641,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_color"
                         type="button"
                       >
                         <span
@@ -3183,6 +3184,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_color"
                         type="button"
                       >
                         <span
@@ -3446,6 +3448,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            id="root_region__oneof_select"
                             type="button"
                           >
                             <span
@@ -3510,6 +3513,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                              id="root_region"
                               type="button"
                             >
                               <span
@@ -3599,6 +3603,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -3680,6 +3685,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -3761,6 +3767,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -3842,6 +3849,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -3923,6 +3931,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -6546,6 +6555,7 @@ exports[`single fields > optional data controls > does not show optional control
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            id="root_optionalObjectWithOneofs__oneof_select"
                             type="button"
                           >
                             <span
@@ -6692,6 +6702,7 @@ exports[`single fields > optional data controls > does not show optional control
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            id="root_optionalArrayWithAnyofs__anyof_select"
                             type="button"
                           >
                             <span
@@ -7631,6 +7642,7 @@ exports[`single fields > optional data controls > does not show optional control
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
+                            id="root_optionalObjectWithOneofs__oneof_select"
                             type="button"
                           >
                             <span
@@ -7778,6 +7790,7 @@ exports[`single fields > optional data controls > does not show optional control
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
+                            id="root_optionalArrayWithAnyofs__anyof_select"
                             type="button"
                           >
                             <span
@@ -11613,6 +11626,7 @@ exports[`single fields > select field 1`] = `
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12203,6 +12217,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12511,6 +12526,7 @@ exports[`single fields > select field single choice formData 1`] = `
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12592,6 +12608,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12671,6 +12688,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12868,6 +12886,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -12961,6 +12980,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -13046,6 +13066,7 @@ exports[`single fields > select widget with selected oneOf option description an
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
               type="button"
             >
               <span
@@ -14149,6 +14170,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_answer"
                         type="button"
                       >
                         <span

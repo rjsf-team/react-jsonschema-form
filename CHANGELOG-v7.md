@@ -74,7 +74,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `NumberField` keeps a leading sign while it is typed into the text input a `number`/`integer` field now defaults to, so `-0.5`, `-0` and `+5` are no longer rewritten to `0.5`, `0` and `5` mid-typing. A pending `-.` was rewritten to `-`, swallowing the separator rather than the sign, so `-.5` ended up as `-5`; it now reads as the `-0.5` it spells. One consequence: a `-.` left on its own resolves to `-0` where it used to leave the string `-` in `formData`, so an abandoned half-typed entry is now a submittable 0, as a lone `.` already was. A native number input never had either problem ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input. A `pattern` or `inputMode` the calling widget passes still wins over the derived one, as it did when neither was derived, and replacing the `pattern` drops the derived `title` with it rather than leaving it to describe a rule no longer in force ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`, fixing [#1813](https://github.com/rjsf-team/react-jsonschema-form/issues/1813) and [#580](https://github.com/rjsf-team/react-jsonschema-form/issues/580). Grouping only affects how the options are displayed: a multiple select still reports its values in enum order, so adding `optgroups` never changes the order of the array written to form data
-- An object whose `propertyNames` enumerates the allowed key names now renders each `additionalProperties`/`patternProperties` key as a dropdown of those names rather than a free-text input, leaving out the names its siblings already hold; the add button also creates the new property under the first allowed name that is still free. `WrapIfAdditionalTemplate` receives the names as a new `propertyNamesEnum` prop, which `SchemaField` and `FieldTemplate` pass along ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- An object whose `propertyNames` enumerates the allowed key names now renders each `additionalProperties`/`patternProperties` key as a dropdown of those names rather than a free-text input, leaving out the names its siblings already hold; the add button also creates the new property under the first allowed name that is still free, and is hidden once they are all taken rather than adding a property under a name the schema rejects. `WrapIfAdditionalTemplate` receives the names as a new `propertyNamesEnum` prop, which `SchemaField` and `FieldTemplate` pass along ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/daisyui
 
@@ -87,12 +87,14 @@ should change the heading of the (upcoming) version to include a major version b
 - `SelectWidget` now honors `ui:enumDisabled`, rendering those options with `aria-disabled` and ignoring clicks and key presses on them
 - `SelectWidget` renders a falsy option label, such as `0` or `false`, as its own text instead of leaving the row blank; only `null` and `undefined` still render as empty
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `SelectWidget` gives the element that opens its dropdown the `id` it is passed, so a label pointing at it reaches the control ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/fluentui-rc
 
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using `OptionGroup`
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `SelectWidget` adds the `className` it is passed to its `Dropdown` rather than dropping it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/mantine
 
@@ -131,6 +133,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input. A `pattern` or `inputMode` passed through `extraProps` still wins over the derived one, as it did when neither was derived, and replacing the `pattern` drops the derived `title` with it rather than leaving it to describe a rule no longer in force ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `ui:options.optgroups` support to `SelectWidget`, rendering one labeled `CommandGroup` per group in `FancySelect`/`FancyMultiSelect`. Grouping only affects how the options are displayed: the order a multi-select reports its values in is independent of the grouping, so adding, reordering or removing a group never changes the order of the array written to form data
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `SelectWidget` gives the button that opens its dropdown the `id` it is passed, so a label pointing at it reaches the control ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/utils
 
@@ -162,6 +165,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `mergeObjects()` reading an inherited member of the first object for a JSON-sourced `__proto__` or `constructor` key, and assigning a merged `__proto__` key through the setter, which replaced the result's prototype with the merged value
 - Added `groupEnumOptions()`, `isEnumOptionsGroup()` and `flattenGroupedOptions()`, plus the `optgroups` `ui:options` key, giving every theme's `SelectWidget` a single shared implementation of `<optgroup>`-style option grouping
 - Added the `AdditionalPropertyKeySelect` component, which renders an additional property's key as the theme's own `SelectWidget` over the names a schema's `propertyNames.enum` allows, and the `propertyNamesEnum` prop on `FieldTemplateProps`/`WrapIfAdditionalTemplateProps` that carries those names ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `canExpand()` returns false once every name a schema's `propertyNames.enum` allows is held by a property, the way it already does at the `maxProperties` limit ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/validator-ajv8
 

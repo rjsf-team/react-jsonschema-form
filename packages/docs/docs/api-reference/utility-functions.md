@@ -49,10 +49,9 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 - propertyNamesEnum: string[] - The key names the property is allowed to take
 - onKeyRename: (newKey: string) => void - Callback used to rename the property to the newly selected key name
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
-- [autofocus]: boolean - Optional flag, if true, the widget takes focus when it mounts
+- [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
-- [placeholder]: string - The optional placeholder for the widget
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [required]: boolean - Optional flag, if true, the widget is required
 
@@ -129,6 +128,7 @@ Return a consistent `id` for the `btn` button element
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
 The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
+A `schema.propertyNames.enum` caps the object in the same way: once every name it allows is held by a property, there is no name left for a new one to be added under, so the field can no longer expand.
 
 #### Parameters
 
@@ -138,7 +138,7 @@ The UI for the field can expand if it has additional properties, is not forced a
 
 #### Returns
 
-- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, and not at the maxProperties limit
+- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
 ### createErrorHandler&lt;T = any>()
 

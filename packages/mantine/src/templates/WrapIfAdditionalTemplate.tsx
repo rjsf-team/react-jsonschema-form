@@ -1,4 +1,4 @@
-import { Flex, Grid, TextInput } from '@mantine/core';
+import { Flex, Grid, Input, TextInput } from '@mantine/core';
 import type {
   FormContextType,
   RJSFSchema,
@@ -70,18 +70,23 @@ export default function WrapIfAdditionalTemplate<
         <Grid w='100%' align='center'>
           <Grid.Col span={6} className='form-additional'>
             {propertyNamesEnum ? (
-              <AdditionalPropertyKeySelect<T, S, F>
-                id={`${id}-key`}
-                label={keyLabel}
-                hideLabel={!displayLabel}
-                value={label}
-                propertyNamesEnum={propertyNamesEnum}
-                onKeyRename={onKeyRename}
-                disabled={disabled}
-                readonly={readonly}
-                required={required}
-                registry={registry}
-              />
+              <>
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={`${id}-key`}
+                  label={keyLabel}
+                  hideLabel={!displayLabel}
+                  value={label}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+                {/* The key input below reserves a description row so the key lines up with the value beside it; the
+                    dropdown reserves the same row, since it renders no description of its own */}
+                {!!rawDescription && <Input.Description>&nbsp;</Input.Description>}
+              </>
             ) : (
               <TextInput
                 key={label}

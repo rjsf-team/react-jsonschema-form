@@ -173,6 +173,7 @@ export default function SelectWidget<
     <div className='form-control w-full'>
       <div className='dropdown w-full'>
         <div
+          id={id}
           tabIndex={0}
           role='button'
           className={`btn btn-outline w-full text-left flex justify-between items-center ${

@@ -2023,7 +2023,7 @@ describe('ObjectField', () => {
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect(keySelect).not.toBeNull();
       expect(node.querySelector('input#root_a-key')).toBeNull();
-      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['', 'a', 'b', 'c', 'd']);
+      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b', 'c', 'd']);
       expect(keySelect).toHaveDisplayValue('a');
     });
 
@@ -2065,27 +2065,64 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { b: 'New Value' }, 'root');
     });
 
-    it('should fall back to newKey once every allowed name is taken', async () => {
+    it('should add under a free name when a key matches no pattern of a patternProperties object', async () => {
+      // `retrieveSchema()` stubs every form data key into the properties, a key matching no pattern included, which is
+      // what lets the search for a free name read the properties alone
       const { node, onChange } = createFormComponent({
-        schema,
-        formData: { a: '1', b: '2', c: '3', d: '4' },
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: { xyz: 'first' },
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expectToHaveBeenCalledWithFormData(onChange, { a: '1', b: '2', c: '3', d: '4', newKey: 'New Value' }, 'root');
+      // The object names no `additionalProperties`, so the new property has no schema to seed a value from
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: null }, 'root');
     });
 
-    it('should keep the text input for a property with no name left to offer', async () => {
+    it('should offer no add button once every allowed name is taken', () => {
       const { node } = createFormComponent({
         schema,
         formData: { a: '1', b: '2', c: '3', d: '4' },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
 
-      expect(node.querySelector('select#root_newKey-key')).toBeNull();
-      expect(node.querySelector('input#root_newKey-key')).toHaveValue('newKey');
+    it('should offer no add button once every allowed name is taken by a declared property', () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, properties: { a: {}, b: {}, c: {}, d: {} } },
+        formData: {},
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should offer no add button once every name a $ref propertyNames allows is taken', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          definitions: { keys: { enum: ['a', 'b'] } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { $ref: '#/definitions/keys' },
+        },
+        formData: { a: '1', b: '2' },
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should keep the text input for a property with no name left to offer', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
+      });
+
+      expect(node.querySelector('select#root_zzz-key')).toBeNull();
+      expect(node.querySelector('input#root_zzz-key')).toHaveValue('zzz');
     });
 
     it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
@@ -2102,16 +2139,11 @@ describe('ObjectField', () => {
       expect([...keySelect.options].find((option) => option.textContent === 'zzz')).toBeDisabled();
     });
 
-    it('should leave the key alone when the placeholder option is selected', async () => {
-      const { node, onChange } = createFormComponent({
-        schema,
-        formData: { a: 'first' },
-      });
+    it('should offer no blank placeholder option to select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
 
-      await user.selectOptions(node.querySelector('select#root_a-key')!, '');
-
-      expect(onChange).not.toHaveBeenCalled();
-      expect(node.querySelector('select#root_a-key')).not.toBeNull();
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].some((option) => option.value === '')).toBe(false);
     });
 
     it('should resolve a propertyNames given as a $ref', () => {

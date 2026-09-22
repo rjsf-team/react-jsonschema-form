@@ -286,8 +286,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_2k___control"
-                    id="field-_r_2k___label"
+                    for="field-_r_2o___control"
+                    id="field-_r_2o___label"
                   >
                     customField Key
                   </label>
@@ -295,7 +295,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_2k___label"
+                      aria-labelledby="field-_r_2o___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_customField-key"
                       name="root_customField-key"
@@ -1892,6 +1892,215 @@ exports[`object fields > additionalProperties 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > additionalProperties with a description, propertyNames enum 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+        >
+          <div
+            class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="fui-Flex rjsf-field rjsf-field-string ___4dzj7a0_1i2vj57 f22iagw f6jr5hl f1lv1r8n"
+            >
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
+                    for="field-_r_q___control"
+                    id="field-_r_q___label"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
+                  >
+                    <button
+                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
+                      aria-expanded="false"
+                      aria-labelledby="field-_r_q___label"
+                      class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      role="combobox"
+                      tabindex="0"
+                      type="button"
+                      value="foo"
+                    >
+                      foo
+                      <span
+                        class="fui-Dropdown__expandIcon ___5y6ahy0_3cm10l0 f1ewtqcl fxkbij4 ftgm304 fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          fill="currentColor"
+                          height="1em"
+                          viewBox="0 0 20 20"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                    <button
+                      aria-label="Clear selection"
+                      class="fui-Dropdown__clearButton rticfuj ___1ijk9xi_1ynmboo f1ewtqcl fxkbij4 fjseox fe5j1ua f12w6cgp f8bv1bt fvc9v3g f1h9en5y"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                        fill="currentColor"
+                        height="1em"
+                        viewBox="0 0 20 20"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="___16j0ghm_0000000 f1upxcto"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <label
+                    class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                    for="root_foo"
+                  >
+                    foo
+                  </label>
+                  <span
+                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  >
+                    <input
+                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
+                  </span>
+                  <p
+                    class="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
+                    style="margin-top: 0px; margin-bottom: 0px;"
+                  >
+                    <span
+                      class="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
+                      id="root_foo__description"
+                    >
+                      A description
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div
+                class="___1qeev60_0000000 f7nlbp4 f14t6dee f9c4gz4"
+              >
+                <button
+                  class="fui-Button r1f29ykk rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                  color="secondary"
+                  id="root_foo__remove"
+                  style="flex: 1 1 0%; padding-left: 6px; padding-right: 6px; font-weight: bold;"
+                  title="Remove"
+                  type="button"
+                >
+                  <span
+                    class="fui-Button__icon rywnvv2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 20 20"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1f29ykk rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > additionalProperties, array type 1`] = `
 <DocumentFragment>
   <form
@@ -2617,7 +2826,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     foo Key
                   </label>
                   <div
-                    class="fui-Dropdown form-control ___11d5zms_mmbwks0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
+                    class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
                       aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
@@ -2907,8 +3116,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_q___control"
-                    id="field-_r_q___label"
+                    for="field-_r_u___control"
+                    id="field-_r_u___label"
                   >
                     additionalProperty Key
                   </label>
@@ -2916,7 +3125,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_q___label"
+                      aria-labelledby="field-_r_u___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3083,8 +3292,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_12___control"
-                    id="field-_r_12___label"
+                    for="field-_r_16___control"
+                    id="field-_r_16___label"
                   >
                     foo Key
                   </label>
@@ -3092,7 +3301,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_12___label"
+                      aria-labelledby="field-_r_16___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3401,8 +3610,8 @@ exports[`object fields > with title and description > show add button and fields
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_16___control"
-                    id="field-_r_16___label"
+                    for="field-_r_1a___control"
+                    id="field-_r_1a___label"
                   >
                     additionalProperty Key
                   </label>
@@ -3410,7 +3619,7 @@ exports[`object fields > with title and description > show add button and fields
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_16___label"
+                      aria-labelledby="field-_r_1a___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3577,8 +3786,8 @@ exports[`object fields > with title and description from both > additionalProper
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1q___control"
-                    id="field-_r_1q___label"
+                    for="field-_r_1u___control"
+                    id="field-_r_1u___label"
                   >
                     foo Key
                   </label>
@@ -3586,7 +3795,7 @@ exports[`object fields > with title and description from both > additionalProper
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1q___label"
+                      aria-labelledby="field-_r_1u___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3895,8 +4104,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1e___control"
-                    id="field-_r_1e___label"
+                    for="field-_r_1i___control"
+                    id="field-_r_1i___label"
                   >
                     foo Key
                   </label>
@@ -3904,7 +4113,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1e___label"
+                      aria-labelledby="field-_r_1i___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -4213,8 +4422,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1i___control"
-                    id="field-_r_1i___label"
+                    for="field-_r_1m___control"
+                    id="field-_r_1m___label"
                   >
                     additionalProperty Key
                   </label>
@@ -4222,7 +4431,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1i___label"
+                      aria-labelledby="field-_r_1m___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
