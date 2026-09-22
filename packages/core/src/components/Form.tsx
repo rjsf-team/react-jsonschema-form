@@ -68,7 +68,7 @@ export interface FormProps<
   /** The JSON schema object for the form */
   schema: S;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
-  validator: ValidatorType<T, S, F>;
+  validator: ValidatorType<S, F>;
   /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
   children?: ReactNode;
   /** The uiSchema for the form */

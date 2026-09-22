@@ -17,36 +17,38 @@ import SubmitButton from './SubmitButton/index.tsx';
 import TitleField from './TitleField/index.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.tsx';
 
+const templates = {
+  ArrayFieldItemTemplate,
+  ArrayFieldTemplate,
+  BaseInputTemplate,
+  CyclicSchemaExpandTemplate,
+  ButtonTemplates: {
+    AddButton,
+    CopyButton,
+    MoveDownButton,
+    MoveUpButton,
+    RemoveButton,
+    SubmitButton,
+    ClearButton,
+  },
+  DescriptionFieldTemplate: DescriptionField,
+  ErrorListTemplate: ErrorList,
+  FieldErrorTemplate,
+  FieldTemplate,
+  GridTemplate,
+  MultiSchemaFieldTemplate,
+  ObjectFieldTemplate,
+  OptionalDataControlsTemplate,
+  TitleFieldTemplate: TitleField,
+  WrapIfAdditionalTemplate,
+};
+
 export function generateTemplates<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
-  return {
-    ArrayFieldItemTemplate,
-    ArrayFieldTemplate,
-    BaseInputTemplate,
-    CyclicSchemaExpandTemplate,
-    ButtonTemplates: {
-      AddButton,
-      CopyButton,
-      MoveDownButton,
-      MoveUpButton,
-      RemoveButton,
-      SubmitButton,
-      ClearButton,
-    },
-    DescriptionFieldTemplate: DescriptionField,
-    ErrorListTemplate: ErrorList,
-    FieldErrorTemplate,
-    FieldTemplate,
-    GridTemplate,
-    MultiSchemaFieldTemplate,
-    ObjectFieldTemplate,
-    OptionalDataControlsTemplate,
-    TitleFieldTemplate: TitleField,
-    WrapIfAdditionalTemplate,
-  };
+  return templates;
 }
 
-export default generateTemplates();
+export default templates;

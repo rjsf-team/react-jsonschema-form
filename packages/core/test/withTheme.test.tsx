@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { fireEvent, render } from '@testing-library/react';
 
 import type { FormProps, ThemeProps } from '../src/index.ts';
 import { withTheme } from '../src/index.ts';
@@ -304,6 +305,24 @@ describe('withTheme', () => {
       expect(node.querySelectorAll('.with-theme-button-template')).toHaveLength(0);
       expect(node.querySelectorAll('.user-button-template')).toHaveLength(1);
     });
+  });
+
+  it('infers the form data type from formData and takes the default validator', () => {
+    const ThemedForm = withTheme({});
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const seen: (string | undefined)[] = [];
+
+    const { container } = render(
+      <ThemedForm
+        schema={schema}
+        validator={validator}
+        formData={{ name: 'a' }}
+        onChange={({ formData }) => seen.push(formData?.name)}
+      />,
+    );
+    fireEvent.change(container.querySelector('#root_name') as HTMLInputElement, { target: { value: 'ab' } });
+
+    expect(seen).toEqual(['ab']);
   });
 
   it('should forward the ref', () => {

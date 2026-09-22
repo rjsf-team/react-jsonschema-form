@@ -10,8 +10,8 @@
       "ignoreBinaries": ["size-limit"],
       "ignoreDependencies": [
         // Required for nx publish
-        "@nx/js"
-      ]
+        "@nx/js",
+      ],
     },
     // src/index.ts in these themes exports `Form` both as a named export and
     // as `default` (a published alias, kept until the next major), which knip
@@ -25,10 +25,6 @@
       // next major rather than break deep imports. Treat all of src as entry
       // points until then.
       "entry": ["src/**/*.{ts,tsx}"],
-      // Widgets.tsx: its `default` is a compat alias for `generateWidgets`
-      // (same deep-import reasoning as above), which knip reports as a
-      // duplicate export.
-      "ignore": ["src/widgets/Widgets.tsx"],
     },
     "packages/react-bootstrap": {
       "ignore": ["src/index.ts"],

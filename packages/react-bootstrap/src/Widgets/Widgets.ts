@@ -7,19 +7,21 @@ import RangeWidget from '../RangeWidget/RangeWidget.tsx';
 import SelectWidget from '../SelectWidget/SelectWidget.tsx';
 import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 
+const widgets = {
+  CheckboxWidget,
+  CheckboxesWidget,
+  RadioWidget,
+  RangeWidget,
+  SelectWidget,
+  TextareaWidget,
+};
+
 export function generateWidgets<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
-  return {
-    CheckboxWidget,
-    CheckboxesWidget,
-    RadioWidget,
-    RangeWidget,
-    SelectWidget,
-    TextareaWidget,
-  };
+  return widgets;
 }
 
-export default generateWidgets();
+export default widgets;

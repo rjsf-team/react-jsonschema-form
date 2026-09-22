@@ -9,7 +9,7 @@ import RichHelp from './components/RichHelp.tsx';
 import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
 import SchemaExamples from './components/SchemaExamples.tsx';
 import type { CoreUiOptionsChecks } from './CoreUiOptionsChecks.ts';
-import type { ThemeProps } from './withTheme.tsx';
+import type { ThemedForm, ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 
 export type {
@@ -17,6 +17,7 @@ export type {
   FormProps,
   FormState,
   IChangeEvent,
+  ThemedForm,
   ThemeProps,
   RichDescriptionProps,
   RichHelpProps,

@@ -24,7 +24,7 @@ describe('daisyui entry points', () => {
     expect(theme.widgets).toBeDefined();
   });
 
-  test('generateWidgets() returns a fresh widget map', () => {
+  test('generateWidgets() returns the widget map', () => {
     const widgets = generateWidgets();
     expect(widgets.SelectWidget).toBeDefined();
     expect(widgets.toggle).toBeDefined();

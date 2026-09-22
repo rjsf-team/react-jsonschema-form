@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ReactElement } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
@@ -13,6 +13,16 @@ export type ThemeProps<
   F extends FormContextType = FormContextType,
 > = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets'>;
 
+/** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
+ * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme
+ * written for `T` serves any data assignable to it.
+ */
+export type ThemedForm<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = <TT extends T = T>(props: FormProps<TT, S, F>) => ReactElement;
+
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps`.
  *
  * Returns a plain function component, not a `forwardRef`-wrapped one. Don't pass the return value directly to
@@ -24,34 +34,29 @@ export default function withTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(themeProps: ThemeProps<T, S, F>): ComponentType<FormProps<T, S, F>> {
-  return function ThemedForm({
+>(themeProps: ThemeProps<T, S, F>): ThemedForm<T, S, F> {
+  return function ThemedForm<TT extends T = T>({
     fields: propFields,
     widgets: propWidgets,
     templates: propTemplates,
     ref,
     ...directProps
-  }: FormProps<T, S, F>) {
-    const fields = { ...themeProps?.fields, ...propFields };
-    const widgets = { ...themeProps?.widgets, ...propWidgets };
+  }: FormProps<TT, S, F>) {
+    // The theme's components were typed for `T`; they render the narrower `TT` the form is given
+    const theme = themeProps as ThemeProps<TT, S, F>;
+    const fields = { ...theme.fields, ...propFields };
+    const widgets = { ...theme.widgets, ...propWidgets };
     const templates = {
-      ...themeProps?.templates,
+      ...theme.templates,
       ...propTemplates,
       ButtonTemplates: {
-        ...themeProps?.templates?.ButtonTemplates,
+        ...theme.templates?.ButtonTemplates,
         ...propTemplates?.ButtonTemplates,
       },
     };
 
     return (
-      <Form<T, S, F>
-        {...themeProps}
-        {...directProps}
-        fields={fields}
-        widgets={widgets}
-        templates={templates}
-        ref={ref}
-      />
+      <Form<TT, S, F> {...theme} {...directProps} fields={fields} widgets={widgets} templates={templates} ref={ref} />
     );
   };
 }

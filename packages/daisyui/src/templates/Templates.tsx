@@ -28,6 +28,36 @@ import OptionalDataControlsTemplate from './OptionalDataControlsTemplate/index.t
 import TitleFieldTemplate from './TitleField/TitleField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.ts';
 
+const templates = {
+  ArrayFieldDescriptionTemplate,
+  ArrayFieldItemTemplate,
+  ArrayFieldTemplate,
+  ArrayFieldItemButtonsTemplate,
+  ArrayFieldTitleTemplate,
+  BaseInputTemplate,
+  CyclicSchemaExpandTemplate,
+  ButtonTemplates: {
+    AddButton,
+    SubmitButton,
+    CopyButton,
+    MoveDownButton,
+    MoveUpButton,
+    RemoveButton,
+    ClearButton,
+  },
+  DescriptionFieldTemplate: DescriptionField,
+  ErrorListTemplate: ErrorList,
+  FieldErrorTemplate,
+  FieldHelpTemplate,
+  FieldTemplate,
+  GridTemplate,
+  MultiSchemaFieldTemplate,
+  ObjectFieldTemplate,
+  OptionalDataControlsTemplate,
+  TitleFieldTemplate,
+  WrapIfAdditionalTemplate,
+};
+
 /** Function that generates all the template components required for the DaisyUI theme.
  *
  * This provides a complete set of styled components that implement the DaisyUI design system
@@ -47,36 +77,8 @@ export function generateTemplates<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
-  return {
-    ArrayFieldDescriptionTemplate,
-    ArrayFieldItemTemplate,
-    ArrayFieldTemplate,
-    ArrayFieldItemButtonsTemplate,
-    ArrayFieldTitleTemplate,
-    BaseInputTemplate,
-    CyclicSchemaExpandTemplate,
-    ButtonTemplates: {
-      AddButton,
-      SubmitButton,
-      CopyButton,
-      MoveDownButton,
-      MoveUpButton,
-      RemoveButton,
-      ClearButton,
-    },
-    DescriptionFieldTemplate: DescriptionField,
-    ErrorListTemplate: ErrorList,
-    FieldErrorTemplate,
-    FieldHelpTemplate,
-    FieldTemplate,
-    GridTemplate,
-    MultiSchemaFieldTemplate,
-    ObjectFieldTemplate,
-    OptionalDataControlsTemplate,
-    TitleFieldTemplate,
-    WrapIfAdditionalTemplate,
-  };
+  return templates;
 }
 
 /** Default export of all generated templates for the DaisyUI theme */
-export default generateTemplates();
+export default templates;

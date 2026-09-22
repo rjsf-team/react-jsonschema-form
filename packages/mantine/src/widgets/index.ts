@@ -11,27 +11,29 @@ import RangeWidget from './RangeWidget.tsx';
 import SelectWidget from './SelectWidget.tsx';
 import TextareaWidget from './TextareaWidget.tsx';
 
+const widgets = {
+  AltDateTimeWidget,
+  AltDateWidget,
+  CheckboxesWidget,
+  CheckboxWidget,
+  ColorWidget,
+  FileWidget,
+  DateTimeWidget,
+  DateWidget,
+  PasswordWidget,
+  RadioWidget,
+  RangeWidget,
+  SelectWidget,
+  TextareaWidget,
+  TimeWidget,
+};
+
 export function generateWidgets<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
-  return {
-    AltDateTimeWidget,
-    AltDateWidget,
-    CheckboxesWidget,
-    CheckboxWidget,
-    ColorWidget,
-    FileWidget,
-    DateTimeWidget,
-    DateWidget,
-    PasswordWidget,
-    RadioWidget,
-    RangeWidget,
-    SelectWidget,
-    TextareaWidget,
-    TimeWidget,
-  };
+  return widgets;
 }
 
-export default generateWidgets();
+export default widgets;

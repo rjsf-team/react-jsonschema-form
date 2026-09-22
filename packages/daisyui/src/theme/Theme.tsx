@@ -3,8 +3,10 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { generateTemplates } from '../templates/Templates.tsx';
-import { generateWidgets } from '../widgets/Widgets.tsx';
+import Templates from '../templates/Templates.tsx';
+import Widgets from '../widgets/Widgets.tsx';
+
+const Theme = { templates: Templates, widgets: { ...Widgets, boolean: Widgets.toggle } };
 
 /** Generates the DaisyUI theme: its templates and widgets, as overrides on the core defaults
  *
@@ -15,20 +17,8 @@ export function generateTheme<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
-  const generatedWidgets = generateWidgets<T, S, F>();
-  const templates = generateTemplates<T, S, F>();
-
-  return {
-    templates,
-    widgets: {
-      ...generatedWidgets,
-      boolean: generatedWidgets.toggle,
-    },
-  };
+  return Theme;
 }
-
-/** Default theme export with pre-generated theme components */
-const Theme = generateTheme();
 
 export default Theme;
 
