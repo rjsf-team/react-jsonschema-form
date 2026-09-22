@@ -63,7 +63,7 @@ export default function omitExtraData<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S = {} as S,
   formData?: T,

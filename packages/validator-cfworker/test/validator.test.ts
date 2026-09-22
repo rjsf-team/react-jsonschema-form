@@ -10,7 +10,7 @@ import { normalizeFormDataForValidation } from '../src/validator.ts';
 
 describe('CFWorkerValidator', () => {
   it('normalizes undefined object members so required errors surface', () => {
-    const validator = customizeValidator<{ email?: string }>();
+    const validator = customizeValidator();
     const schema: RJSFSchema = {
       type: 'object',
       required: ['email'],
@@ -82,7 +82,7 @@ describe('CFWorkerValidator', () => {
   });
 
   it('runs transformErrors and customValidate hooks', () => {
-    const validator = customizeValidator<{ value?: string }>();
+    const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', required: ['value'], properties: { value: { type: 'string' } } };
     const transform = vi.fn((errors: RJSFValidationError[]) =>
       errors.map((error) => ({ ...error, message: 'transformed' })),
@@ -91,7 +91,7 @@ describe('CFWorkerValidator', () => {
       errors.value.addError('custom');
       return errors;
     });
-    const result = validator.validateFormData({}, schema, custom, transform, {});
+    const result = validator.validateFormData<{ value?: string }>({}, schema, custom, transform, {});
     expect(transform).toHaveBeenCalled();
     expect(custom).toHaveBeenCalled();
     expect(result.errors[0].message).toBe('transformed');

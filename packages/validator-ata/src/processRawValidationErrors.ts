@@ -186,7 +186,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawErrors: RawValidationErrorsType<ValidationError>,
   formData: T | undefined,
   schema: S,

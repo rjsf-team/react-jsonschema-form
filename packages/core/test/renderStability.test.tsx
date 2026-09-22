@@ -1,5 +1,5 @@
 import { createRef, forwardRef, useState } from 'react';
-import type { ErrorSchema, FieldTemplateProps, RJSFSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -116,7 +116,7 @@ describe('render stability across sibling fields', () => {
       return (
         <Form<FormValue>
           schema={schema}
-          validator={validator as ValidatorType<FormValue>}
+          validator={validator}
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {
@@ -151,7 +151,7 @@ describe('render stability across sibling fields', () => {
           schema={schema}
           validator={validator}
           formData={initialFormData()}
-          uiSchema={{ first: { 'ui:help': <span>tick {tick >= 0 ? 'help' : ''}</span> } }}
+          uiSchema={{ first: { 'ui:help': `tick ${tick >= 0 ? 'help' : ''}` } }}
           formContext={{ label: 'stable' }}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={() => undefined}

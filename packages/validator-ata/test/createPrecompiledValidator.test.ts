@@ -8,11 +8,6 @@ import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 vi.mock('../src/precompiledValidator');
 
-interface TestType {
-  foo: string;
-  bar: boolean;
-}
-
 function loadModule(code: string) {
   const module = { exports: {} as Record<string, any> };
   // oxlint-disable-next-line no-new-func, no-implied-eval
@@ -29,7 +24,7 @@ describe('createPrecompiledValidator()', () => {
     let custom: any;
     beforeAll(() => {
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema);
+      custom = createPrecompiledValidator(validateFns, rootSchema);
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
@@ -44,7 +39,7 @@ describe('createPrecompiledValidator()', () => {
     beforeAll(() => {
       localizer = vi.fn();
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
+      custom = createPrecompiledValidator(validateFns, rootSchema, localizer);
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
@@ -57,7 +52,7 @@ describe('createPrecompiledValidator()', () => {
     let custom: any;
     beforeAll(() => {
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, undefined, 'all');
+      custom = createPrecompiledValidator(validateFns, rootSchema, undefined, 'all');
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);

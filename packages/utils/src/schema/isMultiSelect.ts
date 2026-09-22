@@ -13,7 +13,7 @@ export default function isMultiSelect<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema?: S, customMergeAllOf?: CustomMergeAllOf<S>) {
+>(validator: ValidatorType<S, F>, schema: S, rootSchema?: S, customMergeAllOf?: CustomMergeAllOf<S>) {
   if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
     return false;
   }

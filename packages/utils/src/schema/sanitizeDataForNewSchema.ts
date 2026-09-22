@@ -103,7 +103,7 @@ export default function sanitizeDataForNewSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   newSchema?: S,
   oldSchema?: S,

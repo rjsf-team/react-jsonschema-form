@@ -50,7 +50,7 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
@@ -128,7 +128,7 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
-  validator: ValidatorType<T, S, F>;
+  validator: ValidatorType<S, F>;
   rootSchema: S;
   uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
   customMergeAllOf?: CustomMergeAllOf<S>;
@@ -330,7 +330,7 @@ export default function getUiRequiredErrorSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   uiSchema: UiSchema<T, S, F> | undefined,
   formData: T | undefined,

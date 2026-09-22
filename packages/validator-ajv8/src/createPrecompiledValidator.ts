@@ -16,7 +16,6 @@ import type { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } fr
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
 export default function createPrecompiledValidator<
-  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
@@ -24,6 +23,6 @@ export default function createPrecompiledValidator<
   rootSchema: S,
   localizer?: Localizer,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-): ValidatorType<T, S, F> {
-  return new AJV8PrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
+): ValidatorType<S, F> {
+  return new AJV8PrecompiledValidator<S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
 }

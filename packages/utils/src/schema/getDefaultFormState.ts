@@ -286,11 +286,7 @@ export function computeDefaults<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  validator: ValidatorType<T, S, F>,
-  rawSchema: S,
-  inputProps: ComputeDefaultsProps<T, S, F> = {},
-): T | T[] | undefined {
+>(validator: ValidatorType<S, F>, rawSchema: S, inputProps: ComputeDefaultsProps<T, S, F> = {}): T | T[] | undefined {
   const {
     parentDefaults,
     rawFormData,
@@ -544,7 +540,7 @@ export function ensureFormDataMatchingSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   formData: T | undefined,
@@ -604,7 +600,7 @@ export function getObjectDefaults<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawSchema: S,
   {
     rawFormData,
@@ -772,7 +768,7 @@ export function getArrayDefaults<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawSchema: S,
   {
     rawFormData,
@@ -874,7 +870,7 @@ export function getArrayDefaults<
   if (
     !schema.minItems ||
     isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
-    computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
+    computeSkipPopulate<S, F>(validator, schema, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
     // we don't want undefined defaults unless it is both not required or not required as root
@@ -921,7 +917,7 @@ export function getDefaultBasedOnSchemaType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawSchema: S,
   computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
@@ -968,7 +964,7 @@ export default function getDefaultFormState<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   theSchema: S,
   formData?: T,
   rootSchema?: S,

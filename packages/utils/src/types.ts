@@ -75,12 +75,8 @@ export interface ArrayMinItems {
    * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.
    */
-  computeSkipPopulate?: <
-    T = unknown,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = FormContextType,
-  >(
-    validator: ValidatorType<T, S, F>,
+  computeSkipPopulate?: <S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+    validator: ValidatorType<S, F>,
     schema: S,
     rootSchema?: S,
   ) => boolean;
@@ -1626,15 +1622,12 @@ export interface ValidationData<T> {
 /** The interface that describes the validation functions that are provided by a Validator implementation used by the
  * schema utilities.
  */
-export interface ValidatorType<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> {
+export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType> {
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
    * the form data and a `errorHandler` function that will be used to add custom validation errors for each field. Also
    * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
-   * transform them in what ever way it chooses.
+   * transform them in what ever way it chooses. The form data type `T` is a parameter of the call rather than of the
+   * validator, since a validator checks data of any shape against a schema and one instance serves every `Form`.
    *
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
@@ -1642,7 +1635,7 @@ export interface ValidatorType<
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -1653,18 +1646,18 @@ export interface ValidatorType<
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
+   * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean;
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: T): { errors?: Result[]; validationError?: Error };
+  rawValidation<Result = any>(schema: S, formData?: unknown): { errors?: Result[]; validationError?: Error };
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */
@@ -1699,7 +1692,7 @@ export interface SchemaUtilsType<
    *
    * @returns - The `ValidatorType`
    */
-  getValidator(): ValidatorType<T, S, F>;
+  getValidator(): ValidatorType<S, F>;
   /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
    * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
    * of a new `SchemaUtilsType` with incomplete properties.
@@ -1711,7 +1704,7 @@ export interface SchemaUtilsType<
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
-    validator: ValidatorType<T, S, F>,
+    validator: ValidatorType<S, F>,
     rootSchema: S,
     defaultFormStateBehavior?: DefaultFormStateBehavior,
     customMergeAllOf?: CustomMergeAllOf<S>,

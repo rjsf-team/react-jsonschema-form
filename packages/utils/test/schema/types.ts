@@ -6,7 +6,7 @@ export interface TestValidatorParams<T = unknown> {
   errorList?: RJSFValidationError[][];
 }
 
-export interface TestValidatorType<T = unknown> extends ValidatorType<T> {
+export interface TestValidatorType extends ValidatorType {
   // oxlint-disable-next-line no-unused-vars
-  setReturnValues(params?: TestValidatorParams<T>): void;
+  setReturnValues(params?: TestValidatorParams): void;
 }

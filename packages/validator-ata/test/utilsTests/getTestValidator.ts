@@ -10,10 +10,10 @@ import { customizeValidator } from '../../src/index.ts';
  *
  * @param options
  */
-export default function getTestValidator<T = unknown>(options: CustomValidatorOptionsType): TestValidatorType<T> {
-  const validator = customizeValidator<T>(options);
+export default function getTestValidator(options: CustomValidatorOptionsType): TestValidatorType {
+  const validator = customizeValidator(options);
   return {
-    validateFormData(
+    validateFormData<T = unknown>(
       formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
@@ -21,10 +21,13 @@ export default function getTestValidator<T = unknown>(options: CustomValidatorOp
     ): ValidationData<T> {
       return validator.validateFormData(formData, schema, customValidate, transformErrors);
     },
-    isValid(schema: RJSFSchema, formData: T | undefined, rootSchema: RJSFSchema): boolean {
+    isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);
     },
-    rawValidation<Result = any>(schema: RJSFSchema, formData?: T): { errors?: Result[]; validationError?: Error } {
+    rawValidation<Result = any>(
+      schema: RJSFSchema,
+      formData?: unknown,
+    ): { errors?: Result[]; validationError?: Error } {
       return validator.rawValidation(schema, formData);
     },
     // This is intentionally a no-op as we are using the real validator here

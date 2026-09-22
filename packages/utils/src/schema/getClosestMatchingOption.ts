@@ -47,7 +47,7 @@ export function calculateIndexScore<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema?: S,
   formData?: any,
@@ -144,7 +144,7 @@ export default function getClosestMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   formData: T | undefined,
   options: S[],

@@ -51,7 +51,7 @@ export default function retrieveSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S = {} as S,
   rawFormData?: T,
@@ -102,7 +102,7 @@ export function resolveCondition<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -254,7 +254,7 @@ export function resolveSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -347,7 +347,7 @@ export function resolveReference<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -613,7 +613,7 @@ export function stubExistingAdditionalProperties<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   theSchema: S,
   rootSchema?: S,
   aFormData?: T,
@@ -719,7 +719,7 @@ export function retrieveSchemaInternal<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   rawFormData?: T,
@@ -845,7 +845,7 @@ export function resolveAnyOrOneOfSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+>(validator: ValidatorType<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
   if (Array.isArray(oneOf)) {
@@ -922,7 +922,7 @@ export function resolveDependencies<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -972,7 +972,7 @@ export function processDependencies<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   dependencies: S['dependencies'],
   resolvedSchema: S,
   rootSchema: S,
@@ -1063,7 +1063,7 @@ export function withDependentSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,
@@ -1134,7 +1134,7 @@ export function withExactlyOneSubschema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,

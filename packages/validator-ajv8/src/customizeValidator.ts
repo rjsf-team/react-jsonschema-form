@@ -12,9 +12,8 @@ import AJV8Validator from './validator.ts';
  * @returns - The custom validator implementation resulting from the set of parameters provided
  */
 export default function customizeValidator<
-  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(options: CustomValidatorOptionsType = {}, localizer?: Localizer) {
-  return new AJV8Validator<T, S, F>(options, localizer);
+  return new AJV8Validator<S, F>(options, localizer);
 }

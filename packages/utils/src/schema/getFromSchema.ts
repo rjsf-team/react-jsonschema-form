@@ -25,7 +25,7 @@ function getFromSchemaInternal<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
@@ -64,7 +64,7 @@ export default function getFromSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
@@ -72,11 +72,10 @@ export default function getFromSchema<
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T;
 export default function getFromSchema<
-  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
@@ -88,14 +87,14 @@ export default function getFromSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
   defaultValue: T | S,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T | S {
-  const result = getFromSchemaInternal(validator, rootSchema, schema, path, customMergeAllOf);
+  const result = getFromSchemaInternal<T, S, F>(validator, rootSchema, schema, path, customMergeAllOf);
   if (result === undefined) {
     return defaultValue;
   }

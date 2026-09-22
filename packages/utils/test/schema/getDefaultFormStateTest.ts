@@ -1933,7 +1933,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         describe('with empty array as formData', () => {
-          const rawFormData: never[] = [];
+          const rawFormData: unknown = [];
           const defaultFormStateBehavior: DefaultFormStateBehavior = {
             arrayMinItems: {
               mergeExtraDefaults: true,

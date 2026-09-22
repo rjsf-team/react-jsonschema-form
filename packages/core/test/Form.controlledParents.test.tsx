@@ -22,7 +22,7 @@ interface Data {
   name?: string;
   other?: string | null;
 }
-const validator = customizeValidator<Data, RJSFSchema, Data>();
+const validator = customizeValidator<RJSFSchema, Data>();
 
 describe('controlled parent harnesses', () => {
   it('an accepting parent commits each proposal and the form renders the committed value', async () => {

@@ -14,7 +14,7 @@ export default function isSelect<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema: S = {} as S, customMergeAllOf?: CustomMergeAllOf<S>) {
+>(validator: ValidatorType<S, F>, theSchema: S, rootSchema: S = {} as S, customMergeAllOf?: CustomMergeAllOf<S>) {
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, customMergeAllOf);
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {

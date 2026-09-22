@@ -19,7 +19,7 @@ export default function getFirstMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   formData: T | undefined,
   options: S[],
   rootSchema: S,
