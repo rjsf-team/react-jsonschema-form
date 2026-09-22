@@ -470,6 +470,51 @@ describe('Error state consistency when deriving from new props', () => {
     expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters']);
   });
 
+  it('lets the parent clear the extraErrors an optional object Remove sent back', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
+    };
+    const addrUiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+    const addrData = { addr: { street: 'a' } };
+    const addrServerErrors = { addr: { street: { __errors: ['server'] } } } as unknown as ErrorSchema;
+    const formRef = createRef<Form>();
+    let clearExtraErrors = () => {};
+    let restyle = () => {};
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(addrServerErrors);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      clearExtraErrors = () => setExtraErrors(undefined);
+      restyle = () => setClassName('x');
+      return (
+        <Form
+          ref={formRef}
+          schema={addrSchema}
+          uiSchema={addrUiSchema}
+          validator={validator}
+          formData={addrData}
+          extraErrors={extraErrors}
+          className={className}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters', 'server']);
+
+    // Remove hands back the displayed `errorSchema`, `server` included, which must not become part of the stored
+    // validator result
+    await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
+    act(() => clearExtraErrors());
+    act(() => restyle());
+
+    expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters']);
+    expect(formRef.current!.state.schemaValidationErrorSchema).toEqual({
+      addr: { street: { __errors: ['must NOT have fewer than 3 characters'] } },
+    });
+  });
+
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const formRef = createRef<Form>();
     const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);

@@ -427,6 +427,33 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
+/** A copy of `raised` without the messages any of `supplied` holds at the same place. A field may hand back the
+ * `errorSchema` it displays, which already carries `extraErrors`/`customErrors`, and those must not enter the stored
+ * validator result, or they outlive the props supplying them
+ *
+ * @param raised - The `ErrorSchema` a field raised
+ * @param supplied - The `ErrorSchema`s, aligned with `raised`, whose messages are left out
+ * @returns - `raised` with the supplied messages and any emptied `__errors` removed
+ */
+function withoutSuppliedErrors<T>(raised: ErrorSchema<T>, supplied: unknown[]): ErrorSchema<T> {
+  const at = (node: unknown, key: string): unknown =>
+    isObject(node) && Object.hasOwn(node, key) ? node[key] : undefined;
+  return Object.entries(raised).reduce((acc: GenericObjectType, [key, value]) => {
+    const suppliedHere = supplied.map((node) => at(node, key));
+    if (key === ERRORS_KEY && Array.isArray(value)) {
+      const kept = value.filter((message) =>
+        suppliedHere.every((messages) => !Array.isArray(messages) || !messages.includes(message)),
+      );
+      if (kept.length > 0) {
+        acc[key] = kept;
+      }
+    } else if (isObject(value)) {
+      acc[key] = withoutSuppliedErrors(value as ErrorSchema<T>, suppliedHere);
+    }
+    return acc;
+  }, {}) as ErrorSchema<T>;
+}
+
 /** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
 function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
@@ -1251,13 +1278,17 @@ export default class Form<
           // errors at and below the path are the raised ones now. Both halves are stored, so the next derivation
           // rebuilds from a base that carries the raise instead of losing it until the next keystroke
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
+          const raisedErrorSchema = withoutSuppliedErrors(newErrorSchema, [
+            getByPath(extraErrors, path),
+            getByPath(customErrors?.ErrorSchema, path),
+          ]);
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
+          setByPath(mergeBaseErrorSchema, path, raisedErrorSchema, true);
           mergeBaseErrors = schemaValidationErrors
             .filter((error) => !isPathPrefix(path, errorPath(error)))
-            .concat(toErrorList(newErrorSchema, path.map(String)));
-          // An `ArrayField` raises the item errors it remapped after a reorder, remove or copy, taken from the displayed
-          // `errorSchema`, so they carry `extraErrors`/`customErrors` that must not outlive the props supplying them
+            .concat(toErrorList(raisedErrorSchema, path.map(String)));
+          // The item errors an `ArrayField` remaps after a reorder, remove or copy come from its displayed `errorSchema`
+          // at their new indexes, where the supplied errors they carry no longer line up to be left out above
           if (!Array.isArray(newValue)) {
             storedValidation = {
               schemaValidationErrors: mergeBaseErrors,
