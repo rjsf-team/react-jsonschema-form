@@ -55,8 +55,6 @@ export default function withTheme<
       },
     };
 
-    return (
-      <Form<TT, S, F> {...theme} {...directProps} fields={fields} widgets={widgets} templates={templates} ref={ref} />
-    );
+    return <Form<TT, S, F> {...directProps} fields={fields} widgets={widgets} templates={templates} ref={ref} />;
   };
 }
