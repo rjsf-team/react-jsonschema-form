@@ -5,8 +5,13 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import type Form from '../src/index.ts';
-import { AcceptingParent, expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormRef,
+  describeRepeated,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -124,6 +129,10 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
         });
 
+        // The two tests below read `formRef.current.state`: the entry they watch is cleared by the prop update's
+        // changed-fields pass and never reaches the DOM or an event, because a field named with a dot looks its
+        // errors up by name while `toErrorSchema` nests them by path. They keep the state read until that lookup is
+        // fixed or the clearing pass has a unit seam of its own.
         it('should clear the error of a field whose name contains a dot', async () => {
           const altSchema: RJSFSchema = {
             type: 'object',
@@ -133,7 +142,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
             required: ['foo.bar', 'baz'],
           };
-          const formRef = createRef<Form>();
+          const formRef = createFormRef();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -175,7 +184,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
               },
             },
           };
-          const formRef = createRef<Form>();
+          const formRef = createFormRef();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
@@ -1046,7 +1055,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
-        const formRef = createRef<Form>();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1089,7 +1097,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           },
         };
         const { node, onChange } = createFormComponent({
-          ref: formRef,
           schema: dependentEnumSchema,
           initialFormData: { animal: 'Fish', food: 'worms', water: 'lake' },
         });
@@ -1097,16 +1104,16 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_animal')!, '0');
 
         expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cat', food: 'meat', water: undefined }, 'root_animal');
-        const { retrievedSchema } = formRef.current!.state;
-        expect(retrievedSchema.properties).toEqual(
-          expect.objectContaining({
-            food: expect.objectContaining({ enum: ['meat'] }),
-          }),
-        );
-        expect(retrievedSchema.properties).not.toHaveProperty('water');
+        // The resolved schema the fields render from has moved to the Cat branch: `food` offers only that branch's
+        // options and `water`, which only the Fish branch declares, is gone
+        const foodOptions = () =>
+          Array.from(node.querySelectorAll<HTMLOptionElement>('#root_food option'), (option) => option.textContent);
+        expect(foodOptions()).toContain('meat');
+        expect(foodOptions()).not.toContain('worms');
+        expect(node.querySelector('#root_water')).toBeNull();
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_food')!, '0');
-        expect(formRef.current!.state.retrievedSchema.properties).not.toHaveProperty('water');
+        expect(node.querySelector('#root_water')).toBeNull();
       });
 
       it('should sanitize stale enum data for a dependency nested inside an object (#5250)', async () => {

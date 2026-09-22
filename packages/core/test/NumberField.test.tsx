@@ -3,9 +3,9 @@ import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type Form from '../src/index.ts';
 import {
   createFormComponent,
+  createFormRef,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   submitForm,
@@ -476,7 +476,7 @@ describe('NumberField', () => {
           default: 1,
         };
 
-        const ref = createRef<Form>();
+        const ref = createFormRef();
 
         const { node, onChange } = createFormComponent({
           ref,

@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -13,6 +13,13 @@ import Form from '../src/index.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 
+/** A ref for a `Form`, typed the way TSX requires for a class element. The one place the tests name that type, so the
+ * function-component `Form` changes it to `RefObject<FormHandle>` here and nowhere else.
+ */
+export function createFormRef() {
+  return createRef<Form>();
+}
+
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 export interface FormComponentResult {
@@ -22,6 +29,7 @@ export interface FormComponentResult {
   onError: Mock;
   onSubmit: Mock;
   rerender: RerenderType;
+  unmount: () => void;
 }
 export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
@@ -108,7 +116,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   const onChange = vi.fn();
   const onError = vi.fn();
   const onSubmit = vi.fn();
-  const { container, rerender } = render(
+  const { container, rerender, unmount } = render(
     <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
   );
 
@@ -122,7 +130,7 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
     throw new Error('node is not defined');
   }
 
-  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction };
+  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount };
 }
 
 export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
@@ -147,6 +155,25 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
     const createFormComponentFn = (props: NoValFormProps) => createFormComponent({ ...props, ...formExtraProps });
     describe(`${title} ${JSON.stringify(formExtraProps)}`, () => fn(createFormComponentFn));
   }
+}
+
+/** The field-level error messages the `FieldErrorTemplate` renders, keyed by the id of the field each list sits under.
+ * With the DOM as the witness, a test asserts what the user sees rather than the `Form` instance's state, which a
+ * function-component `Form` does not expose.
+ */
+export function fieldErrorsById(node: ParentNode): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+  for (const list of node.querySelectorAll('ul.error-detail')) {
+    result[list.id.replace(/__error$/, '')] = Array.from(list.querySelectorAll('li'), (item) => item.textContent ?? '');
+  }
+  return result;
+}
+
+/** The messages the top or bottom `ErrorList` renders, in order. Assumes the default Bootstrap 3 `ErrorList` markup;
+ * with a custom `ErrorListTemplate` it finds no list and returns `[]`.
+ */
+export function errorListMessages(node: ParentNode): string[] {
+  return Array.from(node.querySelectorAll('.panel.errors li'), (item) => item.textContent ?? '');
 }
 
 export async function submitForm(node: Element, user: UserEvent, forceFireEvent = false) {
