@@ -38,7 +38,7 @@ export default function AdditionalPropertyKeySelect<
   F extends FormContextType = any,
 >(props: AdditionalPropertyKeySelectProps<T, S, F>) {
   const { id, propertyNamesEnum, onKeyRename, registry, ...selectProps } = props;
-  const { value } = selectProps;
+  const { disabled, readonly, value } = selectProps;
   /** A key the schema no longer allows — one `propertyNames` has since stopped enumerating, or the `newKey` the add
    * button falls back to once every allowed name is taken — has no option of its own, which would leave the dropdown
    * blank and the key unreadable. It gets one, disabled, so the key stays visible without becoming a name to pick.
@@ -54,15 +54,16 @@ export default function AdditionalPropertyKeySelect<
    * the way the free-text key input's does; waiting for a blur would leave the shown selection and the key apart.
    * A widget renders a placeholder option whenever nothing is selected, which happens here when the current key is
    * not one of the allowed names; picking it reports an empty value, which is not a name `propertyNames` accepts, so
-   * only a value the enum actually holds renames the key.
+   * only a value the enum actually holds renames the key. Not every theme's widget blocks input when it is disabled or
+   * readonly (some only style themselves that way and still answer the keyboard), so the rename is refused here too.
    */
   const handleChange = useCallback(
     (newKey: unknown) => {
-      if (typeof newKey === 'string' && propertyNamesEnum.includes(newKey)) {
+      if (!disabled && !readonly && typeof newKey === 'string' && propertyNamesEnum.includes(newKey)) {
         onKeyRename(newKey);
       }
     },
-    [onKeyRename, propertyNamesEnum],
+    [disabled, onKeyRename, propertyNamesEnum, readonly],
   );
   const SelectWidget = getWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
 

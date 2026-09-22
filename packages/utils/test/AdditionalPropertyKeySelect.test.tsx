@@ -81,6 +81,27 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(baseProps.onKeyRename).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['disabled', { disabled: true }],
+    ['readonly', { readonly: true }],
+  ])('keeps the current key when %s, even if the widget still reports a change', (_, flags) => {
+    function ReportingSelectWidget({ onChange }: WidgetProps) {
+      return (
+        <button type='button' onClick={() => onChange('b')}>
+          report
+        </button>
+      );
+    }
+    const reportingRegistry = { widgets: { SelectWidget: ReportingSelectWidget } } as unknown as Registry;
+    const { container } = render(
+      <AdditionalPropertyKeySelect {...baseProps} {...flags} registry={reportingRegistry} />,
+    );
+
+    container.querySelector('button')!.click();
+
+    expect(baseProps.onKeyRename).not.toHaveBeenCalled();
+  });
+
   it('shows a value outside the allowed names as a disabled option so the key stays readable', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} value='zzz' />);
     const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
