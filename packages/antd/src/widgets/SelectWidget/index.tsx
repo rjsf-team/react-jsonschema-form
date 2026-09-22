@@ -67,6 +67,11 @@ export default function SelectWidget<
   const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
+    // A group is offered here before its own options are, and matching one keeps every option it holds, including the
+    // ones the search rules out, so groups are rejected and left to be kept by whichever of their options match
+    if (option?.options) {
+      return false;
+    }
     if (option && typeof option.label === 'string') {
       // labels are strings in this context
       return option.label.toLowerCase().includes(input.toLowerCase());

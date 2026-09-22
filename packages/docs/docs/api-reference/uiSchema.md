@@ -766,6 +766,9 @@ Each theme groups with whatever primitive its UI library provides, so the access
 The one caveat worth knowing is `@rjsf/mui`: MUI's `Select` clones every child of its list with `role="option"` and offers no group primitive, so group labels are rendered as `ListSubheader`s marked `aria-disabled` — announced, but not offered as selectable choices.
 A consequence worth knowing when writing tests: in `@rjsf/mui`, and only there, a query like `getAllByRole('option')` counts the group labels alongside the real options.
 
+`@rjsf/antd` and `@rjsf/mantine` render a select you can type in to narrow the options, and that search matches option labels only, never group labels.
+A group whose options the search rules out disappears along with them instead of leaving its label behind.
+
 ```tsx
 import { Form } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

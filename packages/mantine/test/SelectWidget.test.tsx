@@ -100,4 +100,32 @@ describe('mantine SelectWidget optgroups', () => {
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
+
+  test('drops a group whose options the search filtered out', () => {
+    renderWidget({
+      options: {
+        enumOptions,
+        optgroups: {
+          'Group A': ['foo', 'bar'],
+          'Group B': ['baz', 'qux'],
+        },
+      },
+    });
+
+    const combobox = screen.getByRole('combobox');
+    // Mantine ignores an input change made while the input isn't focused, treating it as a browser autofill
+    combobox.focus();
+    fireEvent.click(combobox);
+    fireEvent.change(combobox, { target: { value: 'ba' } });
+
+    expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Foo' })).not.toBeInTheDocument();
+    expect(screen.getByText('Group A')).toBeInTheDocument();
+
+    fireEvent.change(combobox, { target: { value: 'qu' } });
+
+    expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
+    expect(screen.queryByText('Group A')).not.toBeInTheDocument();
+  });
 });

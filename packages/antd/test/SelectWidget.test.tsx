@@ -66,4 +66,30 @@ describe('SelectWidget optgroups', () => {
 
     expect(onChange.mock.calls[0][0]).toEqual(expect.objectContaining({ formData: 'baz' }));
   });
+
+  it('searches the options of a group rather than its label', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': {
+        optgroups: {
+          // A label chosen to contain the search text below, which none of its options do
+          Bazaar: ['foo', 'bar'],
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const combobox = screen.getByRole('combobox');
+    fireEvent.mouseDown(combobox);
+    fireEvent.change(combobox, { target: { value: 'zaa' } });
+
+    expect(screen.queryByTitle('foo')).not.toBeInTheDocument();
+    expect(screen.queryByTitle('bar')).not.toBeInTheDocument();
+
+    fireEvent.change(combobox, { target: { value: 'ba' } });
+
+    expect(screen.getByTitle('bar')).toBeInTheDocument();
+    expect(screen.getByTitle('baz')).toBeInTheDocument();
+    expect(screen.queryByTitle('foo')).not.toBeInTheDocument();
+  });
 });

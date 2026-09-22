@@ -1,6 +1,7 @@
 import type { FocusEvent } from 'react';
 import { useCallback, useMemo } from 'react';
-import { Select, MultiSelect } from '@mantine/core';
+import type { ComboboxParsedItem, OptionsFilter } from '@mantine/core';
+import { defaultOptionsFilter, MultiSelect, Select } from '@mantine/core';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
@@ -16,6 +17,12 @@ import {
 } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
+
+/** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
+ * leaves a bare heading behind, so the groups it emptied are dropped here.
+ */
+const optionsFilter: OptionsFilter = (input) =>
+  (defaultOptionsFilter(input) as ComboboxParsedItem[]).filter((item) => !('group' in item) || item.items.length > 0);
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -105,6 +112,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     required,
     error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
     searchable: true,
+    filter: optionsFilter,
     'aria-describedby': ariaDescribedByIds(id),
     comboboxProps: { withinPortal: false },
     ...themeProps,

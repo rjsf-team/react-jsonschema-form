@@ -82,6 +82,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `ui:options.optgroups` support to `SelectWidget`'s custom dropdown, rendering a labeled header row before each group's options
 - `SelectWidget` now honors `ui:enumDisabled`, rendering those options with `aria-disabled` and ignoring clicks and key presses on them
+- `SelectWidget` renders a falsy option label, such as `0` or `false`, as its own text instead of leaving the row blank; only `null` and `undefined` still render as empty
 
 ## @rjsf/fluentui-rc
 
