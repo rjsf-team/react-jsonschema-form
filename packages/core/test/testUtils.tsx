@@ -169,7 +169,9 @@ export function fieldErrorsById(node: ParentNode): Record<string, string[]> {
   return result;
 }
 
-/** The messages the top or bottom `ErrorList` renders, in order */
+/** The messages the top or bottom `ErrorList` renders, in order. Assumes the default Bootstrap 3 `ErrorList` markup;
+ * with a custom `ErrorListTemplate` it finds no list and returns `[]`.
+ */
 export function errorListMessages(node: ParentNode): string[] {
   return Array.from(node.querySelectorAll('.panel.errors li'), (item) => item.textContent ?? '');
 }

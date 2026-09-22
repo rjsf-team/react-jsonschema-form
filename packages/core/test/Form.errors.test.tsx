@@ -1055,7 +1055,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it('should sanitize stale enum data and persist the retrieved dependency schema', async () => {
-        const formRef = createFormRef();
         const dependentEnumSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1098,7 +1097,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           },
         };
         const { node, onChange } = createFormComponent({
-          ref: formRef,
           schema: dependentEnumSchema,
           initialFormData: { animal: 'Fish', food: 'worms', water: 'lake' },
         });

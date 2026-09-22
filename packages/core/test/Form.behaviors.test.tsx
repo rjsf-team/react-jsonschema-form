@@ -622,27 +622,32 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
+  // `additionalProperties: false` makes the extra field a validation error, so which data got validated is visible in
+  // whether the submission goes through
   const schema: RJSFSchema = {
     type: 'object',
     properties: {
       foo: { type: 'string' },
     },
+    additionalProperties: false,
   };
   const formData = { foo: 'bar', baz: 'baz' };
 
-  it('submits the current formData, extra fields included, if omitExtraData is false', async () => {
-    const { node, onSubmit } = createFormComponent({ schema, formData, omitExtraData: false });
+  it('validates the current formData, extra fields included, if omitExtraData is false', async () => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: false });
 
     await submitForm(node, user);
 
-    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData }), expect.anything());
+    expect(onError).toHaveBeenCalledWith([expect.objectContaining({ name: 'additionalProperties' })]);
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it('submits only the fields the schema describes if omitExtraData is true', async () => {
-    const { node, onSubmit } = createFormComponent({ schema, formData, omitExtraData: true });
+  it('validates and submits only the fields the schema describes if omitExtraData is true', async () => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: true });
 
     await submitForm(node, user);
 
+    expect(onError).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData: { foo: 'bar' } }), expect.anything());
   });
 });
@@ -1138,7 +1143,6 @@ describe('Deriving state from changed props', () => {
     };
     const firstWins: FormProps['customMergeAllOf'] = (s) => s.allOf![0] as RJSFSchema;
     const lastWins: FormProps['customMergeAllOf'] = (s) => s.allOf![1] as RJSFSchema;
-    const formRef = createFormRef();
     function MergeParent() {
       const [merge, setMerge] = useState(() => firstWins);
       return (
@@ -1146,13 +1150,7 @@ describe('Deriving state from changed props', () => {
           <button type='button' onClick={() => setMerge(() => lastWins)}>
             swap
           </button>
-          <Form
-            ref={formRef}
-            schema={allOfSchema}
-            validator={validator}
-            formData={{ a: 'x' }}
-            customMergeAllOf={merge}
-          />
+          <Form schema={allOfSchema} validator={validator} formData={{ a: 'x' }} customMergeAllOf={merge} />
         </>
       );
     }
