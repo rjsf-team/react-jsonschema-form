@@ -416,6 +416,22 @@ function isLiveOnChange(liveValidate: FormProps['liveValidate']): boolean {
   return liveValidate === true || liveValidate === 'onChange';
 }
 
+/** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
+ * them, so a numeric array index and its string form are the same segment
+ *
+ * @param prefix - The path that may lead into `path`
+ * @param path - The path being addressed
+ * @returns - True when every segment of `prefix` opens `path`
+ */
+function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
+  return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
+}
+
+/** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
+function errorPath(error: RJSFValidationError): string[] {
+  return error.property ? toPath(error.property) : [];
+}
+
 /** The definition of a pending change that will be processed in the `onChange` handler
  */
 interface PendingChange<T> {
@@ -837,11 +853,8 @@ export default class Form<
       // errors back on the next props change. In every other case these are the values it just read.
       schemaValidationErrors = currentErrors.errors;
       schemaValidationErrorSchema = currentErrors.errorSchema;
-      // We only update the error schema for changed fields if mustValidate is false. `'onBlur'` is excluded
-      // although its `mustValidate` is now false: the clearing prunes `errorSchema` but not `errors`, so running it
-      // here would drop a field's inline error on the first keystroke while the `ErrorList` and the `onChange`
-      // payload kept it. An `'onBlur'` form holds its errors until the field is left, as it did before.
-      if (!mustValidate && liveValidate !== 'onBlur') {
+      // We only update the errors for changed fields if mustValidate is false
+      if (!mustValidate) {
         const formDataChangedFields = getFormDataChangedFields();
         if (formDataChangedFields.length > 0) {
           // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
@@ -865,6 +878,19 @@ export default class Form<
             'preventDuplicates',
           ) as ErrorSchema<T>;
           errorSchema = schemaValidationErrorSchema;
+          // The list is what the `ErrorList` and the `onChange` payload carry, so it drops the same errors: the
+          // changed field's own and those below it, and the own errors of every container holding it
+          schemaValidationErrors = currentErrors.errors.filter((error) => {
+            const pathOfError = errorPath(error);
+            return (
+              pathOfError.length === 0 ||
+              !formDataChangedFields.some((path) => {
+                const pathOfField = toPath(path);
+                return isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField);
+              })
+            );
+          });
+          errors = schemaValidationErrors;
         }
       }
       const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
@@ -1118,6 +1144,10 @@ export default class Form<
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
     // `state.errors` is the matching list and needs the same treatment; see the merge below.
     let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
+    let mergeBaseErrors = schemaValidationErrors;
+    // The stored validator result, when a raise made part of it stale
+    let storedValidation: Partial<Pick<FormState<T, S, F>, 'schemaValidationErrors' | 'schemaValidationErrorSchema'>> =
+      {};
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
@@ -1215,14 +1245,27 @@ export default class Form<
         : schemaValidationErrorSchema;
       // If there is an old validation error for this path, assume we are updating it directly
       if (oldValidationError && Object.keys(oldValidationError).length > 0) {
-        // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
-        // mergeErrors below sees the user's error at this path without mutating shared state.
         if (!isRootPath) {
+          // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that mergeErrors below sees
+          // the user's error at this path without mutating shared state. The list says the same as the schema: the
+          // errors at and below the path are the raised ones now. Both halves are stored, so the next derivation
+          // rebuilds from a base that carries the raise instead of losing it until the next keystroke
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
           setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
+          mergeBaseErrors = schemaValidationErrors
+            .filter((error) => !isPathPrefix(path, errorPath(error)))
+            .concat(toErrorList(newErrorSchema, path.map(String)));
+          storedValidation = {
+            schemaValidationErrors: mergeBaseErrors,
+            schemaValidationErrorSchema: mergeBaseErrorSchema,
+          };
         } else {
+          // A root raise is the whole error schema remapped, the way `ArrayField` reshuffles the item errors after a
+          // reorder, so it replaces what is displayed. It does not replace the stored base: that holds every field's
+          // own validator errors, which the next derivation brings back
           mergeBaseErrorSchema = newErrorSchema;
+          mergeBaseErrors = toErrorList(newErrorSchema);
         }
       } else {
         if (!customErrors) {
@@ -1260,20 +1303,11 @@ export default class Form<
       // own for the same reason the schema above is: `state.errors` already carries `extraErrors`/`customErrors` and
       // would list each of them a second time
       const mergedErrors = Form.mergeErrors<T>(
-        { errorSchema: mergeBaseErrorSchema, errors: schemaValidationErrors },
+        { errorSchema: mergeBaseErrorSchema, errors: mergeBaseErrors },
         extraErrors,
         customErrors,
       );
-      // A `newErrorSchema` landing on a path that already had a validator error was written into
-      // `mergeBaseErrorSchema` rather than into `customErrors`, so the stored base has to carry it too. Otherwise the
-      // next derivation rebuilds from a base that never saw it and the field loses the error until the next keystroke
-      state = {
-        ...state,
-        formData: newFormData,
-        ...mergedErrors,
-        schemaValidationErrorSchema: mergeBaseErrorSchema,
-        customErrors,
-      };
+      state = { ...state, formData: newFormData, ...mergedErrors, ...storedValidation, customErrors };
     }
 
     this.setState(state as FormState<T, S, F>, () => {

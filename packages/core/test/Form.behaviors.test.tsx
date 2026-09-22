@@ -302,17 +302,26 @@ describe('Error state consistency when deriving from new props', () => {
   }: Pick<FormProps, 'liveValidate' | 'extraErrors' | 'widgets'> & { formRef: Ref<Form> }) {
     const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
     return (
-      <Form
-        ref={formRef}
-        schema={schema}
-        validator={validator}
-        liveValidate={liveValidate}
-        extraErrors={extraErrors}
-        widgets={widgets}
-        formData={value}
-        onChange={(event) => setValue(event.formData)}
-      />
+      <>
+        <button type='button' onClick={() => setValue({ name: 'longenoughvalue' })}>
+          replace
+        </button>
+        <Form
+          ref={formRef}
+          schema={schema}
+          validator={validator}
+          liveValidate={liveValidate}
+          extraErrors={extraErrors}
+          widgets={widgets}
+          formData={value}
+          onChange={(event) => setValue(event.formData)}
+        />
+      </>
     );
+  }
+
+  function stateMessages(formRef: { current: Form | null }) {
+    return formRef.current!.state.errors.map((error) => error.message);
   }
 
   it('does not duplicate an extraError once the form data has diverged from the prop', async () => {
@@ -371,20 +380,67 @@ describe('Error state consistency when deriving from new props', () => {
 
   it('keeps a custom error raised on a path that already carries a validator error', async () => {
     const formRef = createRef<Form>();
-    const { container } = render(
-      <EchoingParent formRef={formRef} liveValidate='onBlur' widgets={errorRaisingWidgets} />,
-    );
+    // Restyles without a click, so the field the user is typing in is not blurred, which would validate it afresh
+    let restyle = () => {};
+    function RestylingParent() {
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      restyle = () => setClassName('x');
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          widgets={errorRaisingWidgets}
+          initialFormData={shortName}
+          className={className}
+        />
+      );
+    }
+    const { container } = render(<RestylingParent />);
 
     await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
     await user.tab();
     expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
 
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    // The raise replaced the validator error at its path, so the list the `ErrorList` and the `onChange` payload
+    // carry says the same as the field does, and a re-derivation rebuilds both from a base that carries the raise
+    act(() => restyle());
 
-    expect(messagesIn(container)).toContain('custom:shorty');
+    expect(messagesIn(container)).toEqual(['custom:shorty']);
+    expect(stateMessages(formRef)).toEqual(['custom:shorty']);
   });
 
-  it('keeps the inline errors and the error list in agreement while typing under onBlur', async () => {
+  it("keeps every other field's validator error when a root-path raise replaces the root errors", async () => {
+    const formRef = createRef<Form>();
+    function RestylingUncontrolled() {
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form ref={formRef} schema={schema} validator={validator} initialFormData={shortName} className={className} />
+        </>
+      );
+    }
+    const { container } = render(<RestylingUncontrolled />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
+
+    // What a custom root `Field`, or a root-level `ArrayField` reorder, hands to `onChange`
+    act(() => {
+      formRef.current!.onChange(shortName, [], { __errors: ['root level problem'] } as unknown as ErrorSchema);
+    });
+    await user.click(container.querySelector('button')!);
+
+    const nameMessages = [...container.querySelectorAll('#root_name__error li')].map((li) => li.textContent);
+    expect(nameMessages).toEqual(['must NOT have fewer than 8 characters']);
+  });
+
+  it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const formRef = createRef<Form>();
     const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);
 
@@ -394,11 +450,24 @@ describe('Error state consistency when deriving from new props', () => {
 
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
 
-    // Whatever the field shows, `state.errors` is what the `ErrorList` and the `onChange` payload carry
-    expect(formRef.current!.state.errors.map((error) => error.message)).toEqual(
-      expect.arrayContaining([expect.stringContaining('must NOT have fewer than 8 characters')]),
-    );
-    expect(messagesIn(container)).toContain('must NOT have fewer than 8 characters');
+    // `state.errors` is what the `ErrorList` and the `onChange` payload carry, so it goes with the inline error
+    expect(messagesIn(container)).toEqual([]);
+    expect(stateMessages(formRef)).toEqual([]);
+  });
+
+  it('drops the errors of data the parent replaced under onBlur', async () => {
+    const formRef = createRef<Form>();
+    const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(messagesIn(container)).toEqual(['must NOT have fewer than 8 characters']);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector<HTMLInputElement>('#root_name')!.value).toBe('longenoughvalue');
+    expect(messagesIn(container)).toEqual([]);
+    expect(stateMessages(formRef)).toEqual([]);
   });
 
   it('lists a server error once when a field raises a custom error with live validation off', async () => {
