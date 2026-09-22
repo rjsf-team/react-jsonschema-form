@@ -260,8 +260,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
   }, [schemaProperties]);
+  // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
+  // resolution below runs once per schema rather than once per keystroke anywhere in the object
+  const { propertyNames } = schema;
   const propertyNamesEnum = useMemo(() => {
-    const { propertyNames } = schema;
     if (!isObject(propertyNames)) {
       return undefined;
     }
@@ -269,7 +271,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const { enum: allowedNames } = schemaUtils.retrieveSchema(propertyNames as S);
     const names = allowedNames?.filter((allowedName): allowedName is string => typeof allowedName === 'string');
     return names?.length ? names : undefined;
-  }, [schema, schemaUtils]);
+  }, [propertyNames, schemaUtils]);
   /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
    * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects. A property
    * left with no name to offer — every allowed name is taken and its own is not one of them — is absent from the map,

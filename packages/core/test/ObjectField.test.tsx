@@ -2088,6 +2088,20 @@ describe('ObjectField', () => {
       expect(node.querySelector('input#root_newKey-key')).toHaveValue('newKey');
     });
 
+    it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: '1', zzz: '2' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_zzz-key')!;
+      expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual([
+        'zzz',
+        'b',
+        'c',
+        'd',
+      ]);
+      expect(keySelect).toHaveDisplayValue('zzz');
+      expect([...keySelect.options].find((option) => option.textContent === 'zzz')).toBeDisabled();
+    });
+
     it('should leave the key alone when the placeholder option is selected', async () => {
       const { node, onChange } = createFormComponent({
         schema,

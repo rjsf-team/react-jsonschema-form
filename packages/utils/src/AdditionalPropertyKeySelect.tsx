@@ -18,7 +18,9 @@ export type AdditionalPropertyKeySelectProps<
 > & {
   /** The current key of the `additionalProperties` property, which is the selected option */
   value: string;
-  /** The key names the property is allowed to take, from the parent schema's `propertyNames.enum` */
+  /** The key names the property is allowed to take, from the parent schema's `propertyNames.enum`. A current `value`
+   * that is not among them is still shown, as a disabled option, so the dropdown reads back the key it is on
+   */
   propertyNamesEnum: string[];
   /** Callback used to rename the property to the newly selected key name */
   onKeyRename: (newKey: string) => void;
@@ -36,7 +38,17 @@ export default function AdditionalPropertyKeySelect<
   F extends FormContextType = any,
 >(props: AdditionalPropertyKeySelectProps<T, S, F>) {
   const { id, propertyNamesEnum, onKeyRename, registry, ...selectProps } = props;
-  const schema = useMemo(() => ({ type: 'string', enum: propertyNamesEnum }) as unknown as S, [propertyNamesEnum]);
+  const { value } = selectProps;
+  /** A key the schema no longer allows — one `propertyNames` has since stopped enumerating, or the `newKey` the add
+   * button falls back to once every allowed name is taken — has no option of its own, which would leave the dropdown
+   * blank and the key unreadable. It gets one, disabled, so the key stays visible without becoming a name to pick.
+   */
+  const allowsCurrentKey = propertyNamesEnum.includes(value);
+  const schema = useMemo(
+    () =>
+      ({ type: 'string', enum: allowsCurrentKey ? propertyNamesEnum : [value, ...propertyNamesEnum] }) as unknown as S,
+    [allowsCurrentKey, propertyNamesEnum, value],
+  );
   const enumOptions = useMemo(() => optionsList<T, S, F>(schema), [schema]);
   /** A select commits its value as soon as an option is picked, so the rename happens on change rather than on blur
    * the way the free-text key input's does; waiting for a blur would leave the shown selection and the key apart.
@@ -60,7 +72,7 @@ export default function AdditionalPropertyKeySelect<
       id={id}
       name={id}
       schema={schema}
-      options={{ enumOptions }}
+      options={{ enumOptions, enumDisabled: allowsCurrentKey ? undefined : [value] }}
       onChange={handleChange}
       onBlur={noop}
       onFocus={noop}

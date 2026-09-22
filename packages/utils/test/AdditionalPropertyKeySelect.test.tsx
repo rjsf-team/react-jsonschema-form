@@ -5,6 +5,7 @@ import type { AdditionalPropertyKeySelectProps, Registry, WidgetProps } from '..
 import { AdditionalPropertyKeySelect } from '../src/index.ts';
 
 function SelectWidget({ id, label, options, value, disabled, readonly, required, onChange }: WidgetProps) {
+  const { enumDisabled = [] } = options;
   return (
     <select
       id={id}
@@ -15,7 +16,11 @@ function SelectWidget({ id, label, options, value, disabled, readonly, required,
       onChange={(event) => onChange(event.target.value)}
     >
       {options.enumOptions?.map((option) => (
-        <option key={String(option.value)} value={String(option.value)}>
+        <option
+          key={String(option.value)}
+          value={String(option.value)}
+          disabled={enumDisabled.includes(option.value as never)}
+        >
           {option.label}
         </option>
       ))}
@@ -74,6 +79,16 @@ describe('AdditionalPropertyKeySelect', () => {
     container.querySelector('button')!.click();
 
     expect(baseProps.onKeyRename).not.toHaveBeenCalled();
+  });
+
+  it('shows a value outside the allowed names as a disabled option so the key stays readable', () => {
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} value='zzz' />);
+    const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
+
+    expect([...select.options].map((option) => option.textContent)).toEqual(['zzz', 'a', 'b']);
+    expect(select).toHaveValue('zzz');
+    expect(select.options[0]).toBeDisabled();
+    expect(select.options[1]).not.toBeDisabled();
   });
 
   it('forwards the disabled, readonly and required flags to the widget', () => {
