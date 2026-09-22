@@ -6,6 +6,8 @@ import type {
   TitleFieldProps,
   DescriptionFieldProps,
   GenericObjectType,
+  FormValidation,
+  ObjectFieldTemplateProps,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act } from '@testing-library/react';
@@ -101,6 +103,39 @@ describe('ObjectField', () => {
       });
       expect(node.querySelector('fieldset > #custom')).toHaveTextContent('my description');
     });
+
+    it.each([
+      [false, 1],
+      [true, 0],
+    ])(
+      'lets an ObjectFieldTemplate listing the errors of its properties honor ui:hideError: %s',
+      async (hideError, expectedErrors) => {
+        function ErrorListingObjectFieldTemplate({ properties, errorSchema, hideError }: ObjectFieldTemplateProps) {
+          return (
+            <div>
+              {properties.map((property) => property.content)}
+              <ul className='object-template-errors'>
+                {!hideError && errorSchema?.bar?.__errors?.map((error: string) => <li key={error}>{error}</li>)}
+              </ul>
+            </div>
+          );
+        }
+        function addPropertyError(_: any | undefined, errors: FormValidation) {
+          errors.foo?.bar?.addError('property error');
+          return errors;
+        }
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
+          uiSchema: hideError ? { 'ui:hideError': true } : {},
+          customValidate: addPropertyError,
+          templates: { ObjectFieldTemplate: ErrorListingObjectFieldTemplate },
+          showErrorList: false,
+        });
+        await submitForm(node, user);
+
+        expect(node.querySelectorAll('.object-template-errors li')).toHaveLength(expectedErrors);
+      },
+    );
 
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });

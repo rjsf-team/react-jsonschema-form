@@ -67,7 +67,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur,
     onFocus,
     errorSchema,
-    rawErrors = [],
+    rawErrors,
     registry,
     uiSchema,
     hideError,
@@ -118,7 +118,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
-        error={getVisibleErrors(props).length > 0}
+        error={getVisibleErrors({ rawErrors, hideError }).length > 0}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

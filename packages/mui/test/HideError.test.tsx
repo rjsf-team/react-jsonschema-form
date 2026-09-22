@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render } from '@testing-library/react';
@@ -6,34 +6,37 @@ import { fireEvent, render } from '@testing-library/react';
 import Form from '../src/index.ts';
 
 describe('ui:hideError', () => {
-  const schema: RJSFSchema = {
+  const oneOfSchema: RJSFSchema = {
     type: 'object',
-    properties: {
-      marketType: { type: 'string', enum: ['secondary', 'primary'] },
-    },
-    dependencies: {
-      marketType: {
-        oneOf: [
-          { properties: { marketType: { enum: ['secondary'] } } },
-          {
-            properties: {
-              marketType: { enum: ['primary'] },
-              comissioning: { type: 'string', pattern: '^[0-9]{4}$' },
-            },
-            required: ['comissioning'],
-          },
-        ],
-      },
-    },
+    properties: { userId: { oneOf: [{ type: 'number' }, { type: 'string' }] } },
   };
-  const uiSchema: UiSchema = { 'ui:hideError': true };
-  const formData = { marketType: 'primary' };
+  function addUserIdError(_: any, errors: FormValidation) {
+    errors.userId?.addError('test');
+    return errors;
+  }
 
-  it('does not put the select into the Mui error state', () => {
+  function renderOneOf(uiSchema: UiSchema) {
     const { container } = render(
-      <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />,
+      <Form
+        schema={oneOfSchema}
+        uiSchema={uiSchema}
+        formData={{ userId: 1 }}
+        customValidate={addUserIdError}
+        validator={validator}
+      />,
     );
     fireEvent.submit(container.querySelector('form')!);
+    return container;
+  }
+
+  it('puts the oneOf selector into the Mui error state when its errors are shown', () => {
+    const container = renderOneOf({});
+
+    expect(container.querySelector('input[name="root_userId__oneof_select"]')?.closest('.Mui-error')).not.toBeNull();
+  });
+
+  it('does not put the oneOf selector or the option it renders into the Mui error state', () => {
+    const container = renderOneOf({ 'ui:hideError': true });
 
     expect(container.querySelectorAll('.Mui-error')).toHaveLength(0);
   });
@@ -74,6 +77,19 @@ describe('ui:hideError', () => {
     fireEvent.submit(container.querySelector('form')!);
 
     expect(container.querySelectorAll('.Mui-error')).toHaveLength(0);
+  });
+
+  it('puts the text input into the Mui error state when its errors are shown', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'string', minLength: 10 } } }}
+        formData={{ foo: 'a' }}
+        validator={validator}
+      />,
+    );
+    fireEvent.submit(container.querySelector('form')!);
+
+    expect(container.querySelector('input#root_foo')?.closest('.Mui-error')).not.toBeNull();
   });
 
   it('does not put the text input into the Mui error state', () => {

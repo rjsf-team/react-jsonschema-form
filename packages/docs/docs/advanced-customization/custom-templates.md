@@ -411,8 +411,8 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
   // `rawErrors` is still provided while `ui:hideError` is in effect, so `getVisibleErrors()` is what decides the
-  // error state a widget renders
-  const visibleErrors = getVisibleErrors(props);
+  // error state a widget renders. Both stay destructured so that `...rest` does not spread them onto the input
+  const visibleErrors = getVisibleErrors({ rawErrors, hideError });
   const hasError = visibleErrors.length > 0;
 
   return (

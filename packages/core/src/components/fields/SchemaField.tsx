@@ -22,6 +22,7 @@ import {
   getSchemaType,
   getTemplate,
   getUiOptions,
+  getVisibleErrors,
   guessType,
   isConstant,
   isFormDataAvailable,
@@ -376,8 +377,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
+  const hasVisibleErrors = getVisibleErrors({ rawErrors: __errors, hideError }).length > 0;
   const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
-  if (!hideError && __errors && __errors.length > 0) {
+  if (hasVisibleErrors) {
     classNames.push('rjsf-field-error');
   }
   if (uiOptions.classNames) {
@@ -390,7 +392,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       id={fieldId}
       schema={schema}
       uiSchema={uiSchema}
-      hasErrors={!hideError && __errors && __errors.length > 0}
+      hasErrors={hasVisibleErrors}
       registry={registry}
     />
   );

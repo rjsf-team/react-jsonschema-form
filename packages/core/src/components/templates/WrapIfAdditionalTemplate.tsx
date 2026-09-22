@@ -1,5 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
+  getVisibleErrors,
+  TranslatableString
+} from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
 
@@ -43,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
-  if (!hideError && rawErrors && rawErrors.length > 0) {
+  if (getVisibleErrors({ rawErrors, hideError }).length > 0) {
     classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();

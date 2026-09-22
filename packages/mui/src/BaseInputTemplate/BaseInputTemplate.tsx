@@ -73,7 +73,7 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    rawErrors = [],
+    rawErrors,
     errorSchema,
     registry,
     InputLabelProps,
@@ -156,7 +156,7 @@ export default function BaseInputTemplate<
         }}
         {...rest}
         value={value || value === 0 ? value : ''}
-        error={getVisibleErrors(props).length > 0}
+        error={getVisibleErrors({ rawErrors, hideError }).length > 0}
         onChange={onChangeOverride || handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
