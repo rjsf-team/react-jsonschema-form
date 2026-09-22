@@ -1845,6 +1845,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           .foo as RJSFSchema;
         expect(GUESSED_TYPE_FLAG in stub).toBe(true);
         expect(stub.type).toBe('string');
+        // The `$ref` that would reach into a container is dropped, so copying the container into every property
+        // would hand each of them an unreachable copy for `hashForSchema()` and `deepEquals()` to walk
+        expect('$defs' in stub).toBe(false);
+        expect(stub.contentMediaType).toBe('text/plain');
+      });
+      it('has additionalProperties with containers that no stub carries a copy of', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: {
+            title: 'Anything',
+            $defs: { name: { type: 'string' } },
+            definitions: { other: { type: 'number' } },
+          } as RJSFSchema,
+        };
+        const formData = { foo: 'a', bar: 1 };
+
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { title: 'Anything', type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+            bar: { title: 'Anything', type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+          },
+        });
       });
       it('has additionalProperties with a default of another type than the data', () => {
         const schema: RJSFSchema = { additionalProperties: { title: 'Anything', default: 'X' } };

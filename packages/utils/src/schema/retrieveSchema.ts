@@ -534,12 +534,18 @@ const SUBSCHEMA_KEYWORDS: string[] = [
  */
 const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
 
+/** The keywords that hold other subschemas for a `$ref` to name rather than describe a value. The stub drops the
+ * `$ref` that would reach them, so copying them into every property would hand each one an unreachable copy that
+ * `hashForSchema()` and `deepEquals()` then walk on every render.
+ */
+const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
+
 /** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says
  * about the value and giving it the type of the data the property currently holds, so that it renders as a field for
  * that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that neither
  * constrains the value the way the schema does nor offers the other types the schema might allow. The
- * `SUBSCHEMA_KEYWORDS` and `IDENTIFIER_KEYWORDS` are not kept, and neither is a `default` of another type than the
- * data, which would re-seed a field of the data's type with a value it cannot hold.
+ * `SUBSCHEMA_KEYWORDS`, `IDENTIFIER_KEYWORDS` and `CONTAINER_KEYWORDS` are not kept, and neither is a `default` of
+ * another type than the data, which would re-seed a field of the data's type with a value it cannot hold.
  *
  * The stub is marked as guessed when the schema puts no constraint on the property at all, i.e. it is `true` or has
  * none of the `VALUE_KEYWORDS` or `SUBSCHEMA_KEYWORDS`. That marker tells the fallback UI the property is free to hold
@@ -556,7 +562,12 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: an
   const schema: GenericObjectType = {};
   Object.entries(subSchema).forEach(([key, value]) => {
     const isForeignDefault = key === 'default' && guessType(value) !== type;
-    if (!SUBSCHEMA_KEYWORDS.includes(key) && !IDENTIFIER_KEYWORDS.includes(key) && !isForeignDefault) {
+    if (
+      !SUBSCHEMA_KEYWORDS.includes(key) &&
+      !IDENTIFIER_KEYWORDS.includes(key) &&
+      !CONTAINER_KEYWORDS.includes(key) &&
+      !isForeignDefault
+    ) {
       schema[key] = value;
     }
   });

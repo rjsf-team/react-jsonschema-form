@@ -13,12 +13,14 @@ import type {
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
   getTemplate,
   getUiOptions,
   GUESSED_TYPE_FLAG,
   guessType,
   hasWidget,
   JSON_SCHEMA_TYPES,
+  ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   RJSF_REF_KEY,
@@ -135,9 +137,22 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   delete valueSchema[ADDITIONAL_PROPERTY_FLAG];
   delete valueSchema[RJSF_REF_KEY];
   FIELD_ONLY_KEYS.forEach((key) => delete valueSchema[key]);
+  const hasOptions = ANY_OF_KEY in valueSchema || ONE_OF_KEY in valueSchema;
+  // A `null` is the whole of the value it describes, so there is nothing for an option to say about it. Keeping the
+  // options would leave an option selector standing over a field that renders nothing, changing nothing below it
+  if (type === 'null') {
+    delete valueSchema[ANY_OF_KEY];
+    delete valueSchema[ONE_OF_KEY];
+  }
+  // An object the schema says nothing more about takes any key/value pair, which is what this UI is here to offer.
+  // Options are what says more about it, even when the members they describe are their own rather than the schema's:
+  // taking them for silence would stub the keys the data already holds as additional properties of the value field,
+  // rendering each of them a second time alongside the option's own, under a remove button for a described property
   const describesMembers =
-    PROPERTIES_KEY in valueSchema || ADDITIONAL_PROPERTIES_KEY in valueSchema || PATTERN_PROPERTIES_KEY in valueSchema;
-  // An object the schema says nothing more about takes any key/value pair, which is what this UI is here to offer
+    PROPERTIES_KEY in valueSchema ||
+    ADDITIONAL_PROPERTIES_KEY in valueSchema ||
+    PATTERN_PROPERTIES_KEY in valueSchema ||
+    hasOptions;
   if (type === 'object' && !describesMembers) {
     valueSchema[ADDITIONAL_PROPERTIES_KEY] = true;
   }
@@ -154,7 +169,8 @@ const FIELD_ONLY_UI_OPTIONS = ['title', 'description', 'help'] as const;
 
 /**
  * Get the `uiSchema` the value field renders with: the caller's, without what the field around the value has already
- * rendered, and with a `ui:widget` dropped when no widget implements it for the type the selector is on. A widget
+ * rendered — its label included, since the value field renders for the same `id` the outer label already points at —
+ * and with a `ui:widget` dropped when no widget implements it for the type the selector is on. A widget
  * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
  * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
  * selected. A widget that is a component, or registered under its own name, is left alone since it is expected to
@@ -162,30 +178,34 @@ const FIELD_ONLY_UI_OPTIONS = ['title', 'description', 'help'] as const;
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param valueSchema - The schema the value field renders, with its type pinned.
  * @param widgets - The widgets registered with the form.
+ * @param isLabelled - Whether the field around the value renders a label of its own.
  */
 function getValueUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   uiSchema: UiSchema<T, S, F> | undefined,
   valueSchema: S,
   widgets: RegistryWidgetsType<T, S, F>,
-): UiSchema<T, S, F> | undefined {
-  if (!uiSchema) {
-    return uiSchema;
-  }
+  isLabelled: boolean,
+): UiSchema<T, S, F> {
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
-  const valueUiSchema = { ...uiSchema };
+  const valueUiSchema = { ...(uiSchema ?? ({} as UiSchema<T, S, F>)) };
   FIELD_ONLY_UI_KEYS.forEach((key) => delete valueUiSchema[key]);
   if (!keepsWidget) {
     delete valueUiSchema[UI_WIDGET_KEY];
   }
-  if (valueUiSchema[UI_OPTIONS_KEY]) {
-    const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
-    FIELD_ONLY_UI_OPTIONS.forEach((key) => delete uiOptions[key]);
-    if (!keepsWidget) {
-      delete uiOptions.widget;
-    }
-    valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
+  const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
+  FIELD_ONLY_UI_OPTIONS.forEach((key) => delete uiOptions[key]);
+  if (!keepsWidget) {
+    delete uiOptions.widget;
   }
+  // A field around the value that labels it labels the very same control, since the value field renders for the same
+  // `id`, so a label here would be a second one pointing at it — read out as one run-on name, and both focusing the
+  // same input. One that renders no label of its own, as an `object` or `array` field does, leaves the value field's
+  // own title the only heading the value has, so it stays
+  if (isLabelled) {
+    uiOptions.label = false;
+  }
+  valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
   return valueUiSchema;
 }
 
@@ -272,7 +292,7 @@ export default function FallbackField<
     errorSchema,
     rawErrors,
   } = props;
-  const { translateString, fields, widgets, globalFormOptions } = registry;
+  const { translateString, fields, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() => getInitialType(formData, types));
@@ -303,9 +323,15 @@ export default function FallbackField<
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value)),
     [schema, type, translateString],
   );
+  // The same call the field around the value makes to decide whether it renders a label, so the value field within it
+  // drops its own exactly when there is already one pointing at the `id` they share
+  const isLabelled = useMemo(
+    () => schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+    [schemaUtils, schema, uiSchema, globalUiOptions],
+  );
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets),
-    [uiSchema, valueSchema, widgets],
+    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets, isLabelled),
+    [uiSchema, valueSchema, widgets, isLabelled],
   );
 
   // The errors raised against the old value describe a type it no longer has, so an empty error schema replaces them:

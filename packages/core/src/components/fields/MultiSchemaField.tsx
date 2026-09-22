@@ -219,9 +219,10 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
     // omit the type — without it, getSchemaType returns undefined and the option
     // renders as FallbackField instead of the correct widget (e.g. StringField).
-    // A parent allowing several types propagates the single type it is rendered as rather than the union itself,
-    // since an option inheriting the whole union would read as a multi-type schema of its own and render a type
-    // selector in place of the option's content. The option is one branch of a choice already being made here.
+    // A parent allowing several types propagates the single type it is rendered as rather than the union itself, since
+    // an option inheriting the whole union would read as a multi-type schema of its own. With the fallback UI on the
+    // type selector has already pinned the parent to one type by the time an option is built, so this is that type;
+    // with it off the first type wins, which is the one-way behavior such a schema has always had.
     // A union listing `null` first propagates the first type that can hold a value instead, since propagating `null`
     // would have the check below drop the option's value field and leave the option selector standing alone
     if (schemaType !== undefined && !('type' in option)) {

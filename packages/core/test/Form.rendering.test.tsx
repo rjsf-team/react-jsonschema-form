@@ -347,7 +347,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expectToHaveBeenCalledWithFormData(onChange, { aKey: '' }, 'root_aKey');
     });
 
-    it('leaves a union that also has a oneOf to its option selector', () => {
+    it('pairs the type selector with the option selector for a union that also has a oneOf', async () => {
       const schema = {
         type: 'object',
         properties: {
@@ -359,17 +359,197 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         },
       } as RJSFSchema;
 
-      const withFallback = createFormComponent({ schema, useFallbackUiForUnsupportedType: true });
-      const withoutFallback = createFormComponent({ schema });
+      const { node } = createFormComponent({ schema, useFallbackUiForUnsupportedType: true });
 
-      // The option selector already decides the shape of the value, so both render the same: the shared property,
-      // the oneOf selector, and the selected option's own property
-      for (const { node } of [withFallback, withoutFallback]) {
-        expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
-        expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
-        expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
-        expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
-      }
+      // The type selector wraps the option selector rather than replacing it, so the shared property, the oneOf
+      // selector and the selected option's own property all still render for `object`, the first type
+      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'string')!);
+
+      // Choosing `string` re-pins the type the options are rendered for, so the option selector stays while the
+      // properties of the `object` type give way to the input the chosen type calls for
+      expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi_shared')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'text');
+    });
+
+    it('leaves a union that also has a oneOf one-way with the fallback UI off', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: {
+              type: ['object', 'string'],
+              properties: { shared: { type: 'string', title: 'SHARED' } },
+              oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+            },
+          },
+        } as RJSFSchema,
+      });
+
+      // Without the opt-in UI the first type still wins and the others stay unreachable, exactly as in v6
+      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
+    });
+
+    it('reaches every type of a union from inside a oneOf option', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: { type: ['string', 'number'], oneOf: [{ title: 'A' }, { title: 'B' }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_multi')!, '42');
+      // The option is rendered for `string`, the type the selector is on, so the value is the text that was typed
+      expectToHaveBeenCalledWithFormData(onChange, { multi: '42' }, 'root_multi');
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'number')!);
+
+      // The other member of the union is reachable from within the option, which is what having a type selector at
+      // all is for: before it composed with the option selector, an option could only ever be the first type
+      expectToHaveBeenCalledWithFormData(onChange, { multi: 42 }, 'root_multi');
+      expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+    });
+
+    it('pairs the type selector with the option selector for a union that also has an anyOf', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: { type: ['string', 'number'], anyOf: [{ title: 'A' }, { title: 'B' }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__anyof_select')).toBeInTheDocument();
+    });
+
+    it('offers no type selector for a union whose oneOf is a select', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: { type: ['string', 'number'], oneOf: [{ const: 'a' }, { const: 1 }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // Options that are all constants pin the value the way an `enum` does, so switching type would only cast a
+      // value the user picked into one the schema rejects
+      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLSelectElement>('#root_multi')!.tagName).toBe('SELECT');
+    });
+
+    it('leaves the members of a composed option to the option rather than stubbing them', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: {
+              type: ['object', 'string'],
+              oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+            },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: { a: 'hello' } },
+      });
+
+      // The options describe the object's members even though the schema around them names no `properties` of its
+      // own, so treating that silence as "takes any key/value pair" would stub `a` as an additional property of the
+      // value field and render it a second time alongside the option's own
+      expect(node.querySelectorAll('#root_multi_a')).toHaveLength(1);
+      // ...under a key input and a remove button that would rename or delete a property the schema describes
+      expect(node.querySelector('#root_multi_a-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi_a__remove')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
+    });
+
+    it('drops the option selector when a composed union is pinned to null', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: { type: ['string', 'number', 'null'], oneOf: [{ title: 'A' }, { title: 'B' }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'null')!);
+
+      // A `null` is the whole of the value, so an option has nothing left to say about it: the selector would stand
+      // over a field that renders nothing and change nothing below it
+      expect(node.querySelector('#root_multi__oneof_select')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+    });
+
+    it('labels the value field once for the control it shares with the field around it', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            foo: { title: 'Foo', type: ['string', 'number'], oneOf: [{ title: 'A' }, { title: 'B' }] },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The value field renders for the `id` the outer label already points at, so a label of its own would be a
+      // second one naming the same input — read out as one run-on name, and both focusing it
+      expect(node.querySelectorAll('label[for="root_foo"]')).toHaveLength(1);
+      expect(node.querySelector('label[for="root_foo"]')).toHaveTextContent('Foo');
+    });
+
+    it('keeps the value field title for a type that renders no label of its own', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { title: 'Foo', type: ['object', 'string'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { foo: { k: 1 } },
+      });
+
+      // An `object` field renders no label, so its own title is the only heading the value has and must survive the
+      // rule that drops a second label
+      expect(node.querySelector('#root_foo__title')).toBeInTheDocument();
+    });
+
+    it('gives the composed selectors distinct DOM ids', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            multi: {
+              type: ['object', 'string'],
+              properties: { shared: { type: 'string', title: 'SHARED' } },
+              oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+            },
+          },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // Two fields now render the same data address — the fallback UI's value field and the option selector's — so
+      // the `XxxOf` suffix that keeps them apart has to survive being reached one level deeper than before
+      const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
+      expect(ids).toHaveLength(new Set(ids).size);
     });
 
     it('offers no type selector for an additional property constrained without a type', () => {
@@ -760,11 +940,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `aria-describedby` points at, and label the very same input twice
       expect(node.querySelectorAll('[id="root_val__description"]')).toHaveLength(1);
       expect(node.querySelectorAll('[id="root_val__help"]')).toHaveLength(1);
-      expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).toEqual([
-        'TITLE',
-        'Type',
-        'Value',
-      ]);
+      // `TITLE` names the value's own input, so the value field adds no second label pointing at the same `id`
+      expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).toEqual(['TITLE', 'Type']);
     });
 
     it('leaves a boolean empty when the value it replaces is a container', async () => {

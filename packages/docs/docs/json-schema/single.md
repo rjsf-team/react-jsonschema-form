@@ -244,6 +244,6 @@ The field for an `object` type whose schema names no `properties`, `patternPrope
 Those keys are outside what the schema describes, so [`omitExtraData`](../api-reference/form-props.md#omitextradata) drops them, as it does for any such object whether or not its type is a union.
 Declaring `additionalProperties: true` on the schema keeps them.
 
-A schema that pairs multiple types with an `anyOf` or `oneOf` is left to that option selector, which already determines the shape of the value, so no type selector is rendered for it.
-Each option renders as the first type in the list that can hold a value, and the other types are not reachable from within an option.
-A schema that pins its value with an `enum` or `const` gets no type selector either, since switching type would only cast the chosen value into one the schema rejects.
+A schema that pairs multiple types with an `anyOf` or `oneOf` renders both selectors, the type selector wrapping the option selector.
+Each option renders for whichever type is currently chosen, so every member of the union is reachable from within an option, and changing the type re-renders the option for the new one.
+A schema that pins its value with an `enum`, a `const`, or an `anyOf`/`oneOf` whose options are all constants gets no type selector, since switching type would only cast the chosen value into one the schema rejects.
