@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, getDateTimeLocalValue, labelValue, getTemplate, descriptionId } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { visibleErrorText } from '../../utils.ts';
+import { visibleErrorText, cleanupOptions } from '../../utils.ts';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -73,10 +73,19 @@ export default function DateTimeInput<
     valueFormat,
     displayFormat,
     schema,
+    registry,
+    uiSchema,
   } = props;
 
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
   const requiresOffset = !isIsoDateTime && (schema.format === 'date-time' || schema.format === 'datetime');
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options,
+  );
+  const description = options.description || schema.description;
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -117,6 +126,22 @@ export default function DateTimeInput<
       onFocus={handleFocus}
       error={visibleErrorText(props)}
       {...options}
+      descriptionProps={{
+        component: 'span',
+      }}
+      {...themeProps}
+      description={
+        !hideLabel &&
+        !!description && (
+          <DescriptionFieldTemplate
+            id={descriptionId(id)}
+            description={description}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        )
+      }
       aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
