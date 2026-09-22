@@ -12514,11 +12514,12 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-disabled="true"
                 aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                class="px-4 py-2 opacity-50 cursor-not-allowed "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
@@ -13054,11 +13055,12 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 </div>
               </li>
               <li
+                aria-disabled="true"
                 aria-selected="false"
-                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                class="px-4 py-2 opacity-50 cursor-not-allowed "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
@@ -13332,6 +13334,325 @@ exports[`single fields > select field single choice formData 1`] = `
                 >
                   <span>
                     bar
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Select...
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                role="presentation"
+              >
+                <ul
+                  aria-label="Group A"
+                  role="group"
+                >
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group A
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="0"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        foo
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="1"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        bar
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li
+                role="presentation"
+              >
+                <ul
+                  aria-label="Group B"
+                  role="group"
+                >
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group B
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="2"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        baz
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="3"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    qux
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups with enumDisabled 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <div
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="truncate"
+              >
+                Select...
+              </span>
+              <span
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </div>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                role="presentation"
+              >
+                <ul
+                  aria-label="Group A"
+                  role="group"
+                >
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group A
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="0"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        foo
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    aria-disabled="true"
+                    aria-selected="false"
+                    class="px-4 py-2 opacity-50 cursor-not-allowed "
+                    data-value="1"
+                    role="option"
+                    tabindex="-1"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        bar
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li
+                role="presentation"
+              >
+                <ul
+                  aria-label="Group B"
+                  role="group"
+                >
+                  <li
+                    aria-hidden="true"
+                    class="px-4 py-1 text-xs font-semibold uppercase opacity-60"
+                  >
+                    Group B
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="2"
+                    role="option"
+                    tabindex="0"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        baz
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="3"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    qux
                   </span>
                 </div>
               </li>

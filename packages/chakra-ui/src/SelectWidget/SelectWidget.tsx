@@ -1,19 +1,28 @@
 import type { FocusEvent } from 'react';
-import { useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
-import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GroupedEnumOptionsType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
-import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field.tsx';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.tsx';
@@ -42,7 +51,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     schema,
     uiSchema,
   } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
   const handleMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
@@ -59,25 +68,30 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
-  const displayEnumOptions = useMemo((): OptionsOrGroups<any, any> => {
-    let computedOptions: OptionsOrGroups<any, any> = [];
-    if (Array.isArray(enumOptions)) {
-      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value: enumValue, label: enumLabel } = option;
-        return {
-          label: enumLabel,
-          value: enumOptionValueEncoder(enumValue, index, optionValueFormat),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
-        };
-      });
-      if (showPlaceholderOption) {
-        (computedOptions as any[]).unshift({ value: '', label: placeholder || '' });
+
+  const toItem = useCallback(
+    (option: IndexedEnumOptionType<S>) => ({
+      label: option.label,
+      value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+      disabled: option.disabled,
+    }),
+    [optionValueFormat],
+  );
+
+  const groupedOptions = useMemo(() => {
+    // `realValue` encodes '' and null as '', which `enumOptionValueDecoder` reads as "no selection", so an option
+    // encoded that way can never be picked.
+    const isSelectable = (option: IndexedEnumOptionType<S>) =>
+      enumOptionValueEncoder(option.value, option.index, optionValueFormat) !== '';
+    return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item): GroupedEnumOptionsType<S>[] => {
+      if (!isEnumOptionsGroup<S>(item)) {
+        return isSelectable(item) ? [item] : [];
       }
-    }
-    return computedOptions;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
+      const selectableOptions = item.options.filter(isSelectable);
+      return selectableOptions.length > 0 ? [{ ...item, options: selectableOptions }] : [];
+    });
+  }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
 
   const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
@@ -89,12 +103,23 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     .flat()
     .filter((v) => v !== '') as string[];
 
-  const selectOptions = createListCollection({
-    items: displayEnumOptions.filter((item) => item.value),
-  });
+  const selectOptions = useMemo(
+    () => createListCollection({ items: flattenGroupedOptions<S>(groupedOptions).map(toItem) }),
+    [groupedOptions, toItem],
+  );
 
   const containerRef = useRef(null);
   const chakraProps = getChakra({ uiSchema });
+
+  function renderItem(option: IndexedEnumOptionType<S>) {
+    const item = toItem(option);
+    return (
+      <ChakraSelect.Item item={item} key={item.value}>
+        {item.label}
+        <ChakraSelect.ItemIndicator />
+      </ChakraSelect.Item>
+    );
+  }
 
   return (
     <Field
@@ -130,12 +155,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         </ChakraSelect.Control>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
           <ChakraSelect.Content>
-            {selectOptions.items.map((item) => (
-              <ChakraSelect.Item item={item} key={item.value}>
-                {item.label}
-                <ChakraSelect.ItemIndicator />
-              </ChakraSelect.Item>
-            ))}
+            {groupedOptions.map((option) =>
+              isEnumOptionsGroup<S>(option) ? (
+                <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>
+                  <ChakraSelect.ItemGroupLabel>{option.label}</ChakraSelect.ItemGroupLabel>
+                  {option.options.map(renderItem)}
+                </ChakraSelect.ItemGroup>
+              ) : (
+                renderItem(option)
+              ),
+            )}
           </ChakraSelect.Content>
         </ChakraSelect.Positioner>
       </SelectRoot>

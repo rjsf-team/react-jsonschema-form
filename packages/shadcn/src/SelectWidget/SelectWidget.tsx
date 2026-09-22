@@ -1,17 +1,50 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GroupedEnumOptionsType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
+import type { FancySelectItem, FancySelectSection } from '../components/ui/fancy-select.tsx';
 import { FancySelect } from '../components/ui/fancy-select.tsx';
 import { cn } from '../lib/utils.ts';
+
+/** Splits `groupedOptions` into the `FancySelectSection` list consumed by `FancySelect`/`FancyMultiSelect`: one
+ * section per `ui:options.optgroups` group, plus a trailing unheaded section for any ungrouped options.
+ */
+function toSections<S extends StrictRJSFSchema = RJSFSchema>(
+  groupedOptions: GroupedEnumOptionsType<S>[],
+  toItem: (option: IndexedEnumOptionType<S>) => FancySelectItem,
+): FancySelectSection[] {
+  const sections: FancySelectSection[] = [];
+  const ungrouped: FancySelectItem[] = [];
+  groupedOptions.forEach((item) => {
+    if (isEnumOptionsGroup<S>(item)) {
+      sections.push({ label: item.label, items: item.options.map(toItem) });
+    } else {
+      ungrouped.push(toItem(item));
+    }
+  });
+  if (ungrouped.length > 0) {
+    sections.push({ items: ungrouped });
+  }
+  return sections;
+}
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -41,7 +74,7 @@ export default function SelectWidget<
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
@@ -53,12 +86,20 @@ export default function SelectWidget<
     onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
   };
 
-  const items = (enumOptions as any)?.map(({ value: enumValue, label: enumLabel }: any, index: number) => ({
-    value: multiple ? enumValue : enumOptionValueEncoder(enumValue, index, optionValueFormat),
-    label: enumLabel,
-    index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
-  }));
+  const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
+    value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+    label: option.label,
+    index: option.index,
+    disabled: option.disabled,
+  });
+
+  // `optgroups` is presentational, so `items` stays in enum order: the fancy selects derive their current selection by
+  // filtering `items`, so that order reaches the array written to formData. Grouping is applied to `sections`, which
+  // is what the popup actually renders.
+  const items = flattenGroupedOptions<S>(groupEnumOptions<S>(enumOptions, undefined, enumDisabled)).map(toFancyItem);
+  const sections = optgroups
+    ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
+    : undefined;
 
   const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
 
@@ -67,6 +108,7 @@ export default function SelectWidget<
       {!multiple ? (
         <FancySelect
           items={items}
+          sections={sections}
           selected={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '') as string}
           onValueChange={(selectedValue) => {
             onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
@@ -88,6 +130,7 @@ export default function SelectWidget<
           multiple
           className={cnClassName}
           items={items}
+          sections={sections}
           selected={value}
           onValueChange={(values) => {
             onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));

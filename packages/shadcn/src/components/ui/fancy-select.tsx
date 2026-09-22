@@ -22,11 +22,30 @@ export interface FancySelectItem {
 }
 
 /**
+ * Represents a labeled section (an `<optgroup>` equivalent) of items in the dropdown. A section without a `label`
+ * renders as a plain, unheaded group, used for options that aren't part of any `ui:options.optgroups` group.
+ */
+export interface FancySelectSection {
+  /** The section's heading, omitted for an unlabeled group */
+  label?: string;
+  /** The items belonging to this section */
+  items: FancySelectItem[];
+}
+
+/** The React key for the unheaded section. `toSections()` emits at most one of them, always last, so a constant key
+ * keeps it mounted as earlier sections come and go - an index would shift, remounting the group and discarding
+ * cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can collide with it.
+ */
+export const UNGROUPED_SECTION_KEY = 'ungrouped';
+
+/**
  * Props interface for the FancySelect component
  */
 interface FancySelectInterface {
   /** Array of items to display in the dropdown */
   items: FancySelectItem[] | undefined;
+  /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
+  sections?: FancySelectSection[];
   /** Currently selected item value */
   selected: string;
   /** Callback function when value changes */
@@ -58,6 +77,7 @@ interface FancySelectInterface {
  */
 export function FancySelect({
   items,
+  sections,
   selected,
   onValueChange,
   autoFocus = false,
@@ -88,6 +108,36 @@ export function FancySelect({
     }
     onBlur?.(e);
   };
+
+  function renderItem(item: FancySelectItem) {
+    return (
+      <CommandItem
+        ref={item.value === selected ? selectedRef : undefined}
+        key={item.value}
+        value={String(item.value)}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onSelect={() => {
+          if (!item.disabled) {
+            onValueChange?.(item.value);
+            setOpen(false);
+          }
+        }}
+        className={cn(
+          'cursor-pointer relative flex items-center justify-between rounded-sm py-1.5 gap-2 rtl:flex-row-reverse',
+          item.value === selected && 'font-semibold',
+          item.disabled && 'opacity-50 cursor-not-allowed',
+        )}
+      >
+        <span>{item.label}</span>
+        <span className='flex h-3.5 w-3.5 items-center justify-center'>
+          {item.value === selected && <Check className='h-4 w-4' />}
+        </span>
+      </CommandItem>
+    );
+  }
 
   return (
     <Command
@@ -130,37 +180,22 @@ export function FancySelect({
             style={{ top: '0.5rem' }}
             className='absolute w-full z-10 rounded-md border bg-popover text-popover-foreground shadow-md outline-none'
           >
-            <CommandGroup className='h-full overflow-auto'>
-              <CommandList>
-                {items.map((item) => (
-                  <CommandItem
-                    ref={item.value === selected ? selectedRef : undefined}
-                    key={item.value}
-                    value={String(item.value)}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onSelect={() => {
-                      if (!item.disabled) {
-                        onValueChange?.(item.value);
-                        setOpen(false);
-                      }
-                    }}
-                    className={cn(
-                      'cursor-pointer relative flex items-center justify-between rounded-sm py-1.5 gap-2 rtl:flex-row-reverse',
-                      item.value === selected && 'font-semibold',
-                      item.disabled && 'opacity-50 cursor-not-allowed',
-                    )}
+            {sections ? (
+              <CommandList className='h-full overflow-auto'>
+                {sections.map((section) => (
+                  <CommandGroup
+                    key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
+                    heading={section.label}
                   >
-                    <span>{item.label}</span>
-                    <span className='flex h-3.5 w-3.5 items-center justify-center'>
-                      {item.value === selected && <Check className='h-4 w-4' />}
-                    </span>
-                  </CommandItem>
+                    {section.items.map(renderItem)}
+                  </CommandGroup>
                 ))}
               </CommandList>
-            </CommandGroup>
+            ) : (
+              <CommandGroup className='h-full overflow-auto'>
+                <CommandList>{items.map(renderItem)}</CommandList>
+              </CommandGroup>
+            )}
           </div>
         ) : null}
       </div>

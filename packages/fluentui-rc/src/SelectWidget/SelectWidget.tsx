@@ -1,12 +1,14 @@
 import type { OptionOnSelectData } from '@fluentui/react-combobox';
-import { Dropdown, Field, Option } from '@fluentui/react-components';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   enumOptionsIndexForValue,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -45,7 +47,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
@@ -70,6 +72,18 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <Option
+        key={option.index}
+        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        disabled={option.disabled}
+      >
+        {option.label}
+      </Option>
+    );
+  }
+
   return (
     <Field
       label={labelValue(label, hideLabel)}
@@ -91,19 +105,15 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-            return (
-              <Option
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </Option>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <OptionGroup key={`optgroup-${item.label}`} label={item.label}>
+              {item.options.map(renderOption)}
+            </OptionGroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </Dropdown>
       <SelectedOptionDescription
         id={id}

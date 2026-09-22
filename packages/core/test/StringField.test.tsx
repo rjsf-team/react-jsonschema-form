@@ -704,6 +704,166 @@ describe('StringField', () => {
       expect(options[0]).toHaveTextContent('');
       expect(options).toHaveLength(1);
     });
+
+    it('should render optgroups when ui:options.optgroups is provided', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz', 'qux'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz', 'qux'],
+            },
+          },
+        },
+      });
+
+      const optgroups = node.querySelectorAll('optgroup');
+      expect(optgroups).toHaveLength(2);
+      expect(optgroups[0]).toHaveAttribute('label', 'Group A');
+      expect(optgroups[1]).toHaveAttribute('label', 'Group B');
+      expect(optgroups[0].querySelectorAll('option')).toHaveLength(2);
+      expect(optgroups[1].querySelectorAll('option')).toHaveLength(2);
+    });
+
+    it('should render ungrouped options after the optgroups', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz', 'qux'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        },
+      });
+
+      const select = node.querySelector('select')!;
+      const optgroups = select.querySelectorAll('optgroup');
+      expect(optgroups).toHaveLength(1);
+
+      // Ungrouped options (baz, qux) render as direct children of the select, not inside an optgroup
+      const directOptions = Array.from(select.children).filter((child) => child.tagName === 'OPTION');
+      // placeholder + baz + qux = 3 direct option children
+      expect(directOptions).toHaveLength(3);
+    });
+
+    it('should disable enumDisabled options inside an optgroup', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz'],
+        },
+        uiSchema: {
+          'ui:options': {
+            enumDisabled: ['bar'],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz'],
+            },
+          },
+        },
+      });
+
+      const optgroups = node.querySelectorAll('optgroup');
+      const groupAOptions = optgroups[0].querySelectorAll('option');
+      expect(groupAOptions[0]).not.toBeDisabled();
+      expect(groupAOptions[1]).toBeDisabled();
+    });
+
+    it('should render sibling options sharing a value without duplicate key warnings', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          oneOf: [
+            { const: 'a', title: 'A1' },
+            { const: 'a', title: 'A2' },
+          ],
+        },
+      });
+
+      const options = Array.from(node.querySelectorAll('option')).map((option) => option.textContent);
+      expect(options).toEqual(expect.arrayContaining(['A1', 'A2']));
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
+    it('should not collide a group label with an option index key', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['alpha', 'beta'],
+        },
+        uiSchema: {
+          'ui:options': {
+            // '0' is also the index key of the first ungrouped option under the default 'indexed' format
+            optgroups: { '0': ['beta'] },
+          },
+        },
+      });
+
+      expect(node.querySelectorAll('optgroup')).toHaveLength(1);
+      expect(Array.from(node.querySelectorAll('option')).map((option) => option.textContent)).toEqual(
+        expect.arrayContaining(['alpha', 'beta']),
+      );
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
+    it('should reflect the change event for a grouped option', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz'],
+            },
+          },
+        },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      const groupBOption = node.querySelector<HTMLOptionElement>('optgroup[label="Group B"] option')!;
+      await user.selectOptions(select, groupBOption);
+
+      expectToHaveBeenCalledWithFormData(onChange, 'baz', 'root');
+    });
+
+    it('should report a multiple select in enum order even when optgroups reorders the options', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b', 'c', 'd'] },
+        uniqueItems: true,
+      };
+      // 'd' and 'c' lead the rendered list while 'a' and 'b' trail it, so a browser reporting the selection in
+      // document order would swap the two picks below
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:widget': 'select',
+          'ui:options': { optgroups: { Zed: ['d', 'c'] } },
+        },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      const optionFor = (label: string) =>
+        Array.from(select.querySelectorAll('option')).find((option) => option.textContent === label)!;
+      await user.selectOptions(select, [optionFor('a'), optionFor('c')]);
+
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'c'], 'root');
+    });
   });
 
   describe('TextareaWidget', () => {

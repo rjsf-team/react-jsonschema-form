@@ -1,11 +1,14 @@
 import type { ChangeEvent, FocusEvent } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
@@ -34,23 +37,44 @@ export default function SelectWidget<
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
 
+  const groupedOptions = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled);
+  const enumIndexByPosition = flattenGroupedOptions<S>(groupedOptions).map((option) => option.index);
+
+  /** A multiple select only ever reports its selection in document order, and `optgroups` is presentational, so the
+   * options are put back into enum order before they reach form data: turning a group on or off must not reorder the
+   * array a form submits.
+   */
   function getValue(event: FocusEvent | ChangeEvent | any, isMultiple?: boolean) {
     if (isMultiple) {
-      return [].slice
-        .call(event.target.options)
-        .filter((o: any) => o.selected)
-        .map((o: any) => o.value);
+      return Array.from<HTMLOptionElement>(event.target.options)
+        .map((option, position) => ({ option, position }))
+        .filter(({ option }) => option.selected)
+        .sort((a, b) => enumIndexByPosition[a.position] - enumIndexByPosition[b.position])
+        .map(({ option }) => option.value);
     }
     return event.target.value;
   }
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <option
+        key={option.index}
+        id={option.label}
+        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        disabled={option.disabled}
+      >
+        {option.label}
+      </option>
+    );
+  }
 
   return (
     <>
@@ -84,19 +108,15 @@ export default function SelectWidget<
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
-        {enumOptions?.map(({ value: enumValue, label: enumLabel }: any, i: number) => {
-          const isDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
-          return (
-            <option
-              key={String(enumValue)}
-              id={enumLabel}
-              value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-              disabled={isDisabled}
-            >
-              {enumLabel}
-            </option>
-          );
-        })}
+        {groupedOptions.map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <optgroup key={`optgroup-${item.label}`} label={item.label}>
+              {item.options.map(renderOption)}
+            </optgroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </FormSelect>
       <SelectedOptionDescription
         id={id}

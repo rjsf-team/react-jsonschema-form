@@ -741,6 +741,56 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### optgroups
+
+To group a `select`-backed widget's options into labeled sections (rendered as `<optgroup>` elements, or each theme's closest equivalent), specify the grouping via the `optgroups` key in `ui:options`.
+Keys are the group labels, values are arrays of enum values belonging to that group.
+Any enum values not listed in a group are rendered ungrouped after the groups. This is supported by every `@rjsf` theme package.
+
+A value in a group matches the enum entry it is equal to.
+Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`.
+Object and array enum values can't be grouped from a JSON-authored uiSchema, since a value only matches that very same object.
+Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
+`ui:enumDisabled`, which often sits beside `optgroups` in the same `ui:options` block, does not share that string-form fallback — it matches enum values strictly.
+So for the enum `[1, 2, 3]`, `{ enumDisabled: ['2'], optgroups: { Low: ['1', '2'] } }` groups `2` but leaves it selectable; write the enum's own value (`2`) in `enumDisabled`.
+
+Groups render in the object's property order. JavaScript always places integer-like keys (such as `'2024'`) first, in ascending numeric order, ahead of every other key no matter where they were written.
+So `{ Newest: [...], '2024': [...], '2023': [...] }` renders as `2023`, `2024`, `Newest`.
+To keep numeric labels in the order you wrote them, make them non-integer strings (for example `'Year 2024'`).
+
+Grouping is purely presentational and never changes what a form submits.
+A `multiple` select reports its selected values in whatever order it would have reported them in without `optgroups`, so adding, reordering or removing a group leaves the order of the submitted array alone.
+That underlying order is the theme's own: `@rjsf/core` and `@rjsf/react-bootstrap` render a native `<select>`, which exposes no selection order at all, so they report enum order; the themes built on a custom dropdown track the selection themselves and order it their own way.
+
+Each theme groups with whatever primitive its UI library provides, so the accessible semantics vary slightly.
+The one caveat worth knowing is `@rjsf/mui`: MUI's `Select` clones every child of its list with `role="option"` and offers no group primitive, so group labels are rendered as `ListSubheader`s marked `aria-disabled` — announced, but not offered as selectable choices.
+A consequence worth knowing when writing tests: in `@rjsf/mui`, and only there, a query like `getAllByRole('option')` counts the group labels alongside the real options.
+
+`@rjsf/antd` and `@rjsf/mantine` render a select you can type in to narrow the options, and that search matches option labels only, never group labels.
+A group whose options the search rules out disappears along with them instead of leaving its label behind.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma'],
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    optgroups: {
+      Latin: ['lorem', 'ipsum', 'dolorem'],
+      Greek: ['alpha', 'beta', 'gamma'],
+    },
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### optionValueFormat
 
 Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option values in their DOM `value` attributes. Accepts `'indexed'` (default) or `'realValue'`.

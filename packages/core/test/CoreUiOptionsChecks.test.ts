@@ -115,6 +115,29 @@ describe('CoreUiOptionsChecks', () => {
     expect(ui.agree?.['ui:emptyValue']).toBe(false);
   });
 
+  it('offers the enum options, optgroups included, on every type whose widgets read them', () => {
+    type Checked = UiSchema<
+      { pet: string; rank: number; agree: boolean; tags: string[]; home: { city: string } },
+      any,
+      any,
+      CoreUiOptionsChecks
+    >;
+
+    const ui: Checked = {
+      pet: { 'ui:options': { optgroups: { Mammals: ['cat', 'dog'], Birds: ['parrot'] } } },
+      rank: { 'ui:options': { optgroups: { Low: [1, 2] } } },
+      agree: { 'ui:options': { optgroups: { Answers: [true, false] } } },
+      tags: { 'ui:options': { optgroups: { Colors: ['red'] } } },
+    };
+    const badOnObject: Checked = {
+      // @ts-expect-error `optgroups` is an enum option; an object field never renders a select
+      home: { 'ui:options': { optgroups: { Any: ['x'] } } },
+    };
+
+    expect(ui.pet?.['ui:options']?.optgroups).toEqual({ Mammals: ['cat', 'dog'], Birds: ['parrot'] });
+    expect(badOnObject).toBeDefined();
+  });
+
   it('narrows a readonly array field and does not mistake a length-bearing object for an array', () => {
     interface Track {
       length: number;
