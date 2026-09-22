@@ -18,32 +18,34 @@ import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
 import TitleField from './TitleField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
-const templates = {
-  ArrayFieldItemTemplate,
-  ArrayFieldTemplate,
-  ArrayFieldTitleTemplate,
-  BaseInputTemplate,
-  CyclicSchemaExpandTemplate,
-  ButtonTemplates,
-  DescriptionFieldTemplate: DescriptionField,
-  ErrorListTemplate: ErrorList,
-  FieldErrorTemplate,
-  FieldTemplate,
-  FieldHelpTemplate,
-  GridTemplate,
-  ObjectFieldTemplate,
-  OptionalDataControlsTemplate,
-  TitleFieldTemplate: TitleField,
-  WrapIfAdditionalTemplate,
-  MultiSchemaFieldTemplate,
-};
+export function createTemplates() {
+  return {
+    ArrayFieldItemTemplate,
+    ArrayFieldTemplate,
+    ArrayFieldTitleTemplate,
+    BaseInputTemplate,
+    CyclicSchemaExpandTemplate,
+    ButtonTemplates,
+    DescriptionFieldTemplate: DescriptionField,
+    ErrorListTemplate: ErrorList,
+    FieldErrorTemplate,
+    FieldTemplate,
+    FieldHelpTemplate,
+    GridTemplate,
+    ObjectFieldTemplate,
+    OptionalDataControlsTemplate,
+    TitleFieldTemplate: TitleField,
+    WrapIfAdditionalTemplate,
+    MultiSchemaFieldTemplate,
+  };
+}
 
 export function generateTemplates<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
-  return templates;
+  return createTemplates();
 }
 
-export default templates;
+export default createTemplates();

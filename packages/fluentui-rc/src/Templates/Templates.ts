@@ -19,39 +19,41 @@ import SubmitButton from '../SubmitButton/index.ts';
 import TitleField from '../TitleField/index.ts';
 import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate/index.ts';
 
-const templates = {
-  ArrayFieldItemTemplate,
-  ArrayFieldTemplate,
-  BaseInputTemplate,
-  CyclicSchemaExpandTemplate,
-  ButtonTemplates: {
-    CopyButton,
-    AddButton,
-    MoveDownButton,
-    MoveUpButton,
-    RemoveButton,
-    SubmitButton,
-    ClearButton,
-  },
-  DescriptionFieldTemplate: DescriptionField,
-  ErrorListTemplate: ErrorList,
-  FieldErrorTemplate,
-  FieldHelpTemplate,
-  FieldTemplate,
-  GridTemplate,
-  MultiSchemaFieldTemplate,
-  ObjectFieldTemplate,
-  OptionalDataControlsTemplate,
-  TitleFieldTemplate: TitleField,
-  WrapIfAdditionalTemplate,
-};
+export function createTemplates() {
+  return {
+    ArrayFieldItemTemplate,
+    ArrayFieldTemplate,
+    BaseInputTemplate,
+    CyclicSchemaExpandTemplate,
+    ButtonTemplates: {
+      CopyButton,
+      AddButton,
+      MoveDownButton,
+      MoveUpButton,
+      RemoveButton,
+      SubmitButton,
+      ClearButton,
+    },
+    DescriptionFieldTemplate: DescriptionField,
+    ErrorListTemplate: ErrorList,
+    FieldErrorTemplate,
+    FieldHelpTemplate,
+    FieldTemplate,
+    GridTemplate,
+    MultiSchemaFieldTemplate,
+    ObjectFieldTemplate,
+    OptionalDataControlsTemplate,
+    TitleFieldTemplate: TitleField,
+    WrapIfAdditionalTemplate,
+  };
+}
 
 export function generateTemplates<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): Partial<TemplatesType<T, S, F>> {
-  return templates;
+  return createTemplates();
 }
 
-export default templates;
+export default createTemplates();

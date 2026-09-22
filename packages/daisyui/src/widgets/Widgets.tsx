@@ -30,28 +30,30 @@ export {
   ToggleWidget,
 };
 
-const widgets = {
-  AltDateTimeWidget,
-  AltDateWidget,
-  CheckboxesWidget,
-  CheckboxWidget,
-  DateTimeWidget,
-  DateWidget,
-  RadioWidget,
-  RangeWidget,
-  RatingWidget,
-  SelectWidget,
-  TextareaWidget,
-  TimeWidget,
-  toggle: ToggleWidget,
-};
+export function createWidgets() {
+  return {
+    AltDateTimeWidget,
+    AltDateWidget,
+    CheckboxesWidget,
+    CheckboxWidget,
+    DateTimeWidget,
+    DateWidget,
+    RadioWidget,
+    RangeWidget,
+    RatingWidget,
+    SelectWidget,
+    TextareaWidget,
+    TimeWidget,
+    toggle: ToggleWidget,
+  };
+}
 
 export function generateWidgets<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
-  return widgets;
+  return createWidgets();
 }
 
-export default widgets;
+export default createWidgets();

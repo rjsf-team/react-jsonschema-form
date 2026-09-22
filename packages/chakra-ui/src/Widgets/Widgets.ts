@@ -11,25 +11,27 @@ import SelectWidget from '../SelectWidget/SelectWidget.tsx';
 import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 import UpDownWidget from '../UpDownWidget/UpDownWidget.tsx';
 
-const widgets = {
-  AltDateTimeWidget,
-  AltDateWidget,
-  CheckboxWidget,
-  CheckboxesWidget,
-  RadioWidget,
-  RangeWidget,
-  SelectWidget,
-  NativeSelectWidget,
-  TextareaWidget,
-  UpDownWidget,
-};
+export function createWidgets() {
+  return {
+    AltDateTimeWidget,
+    AltDateWidget,
+    CheckboxWidget,
+    CheckboxesWidget,
+    RadioWidget,
+    RangeWidget,
+    SelectWidget,
+    NativeSelectWidget,
+    TextareaWidget,
+    UpDownWidget,
+  };
+}
 
 export function generateWidgets<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(): RegistryWidgetsType<T, S, F> {
-  return widgets;
+  return createWidgets();
 }
 
-export default widgets;
+export default createWidgets();
