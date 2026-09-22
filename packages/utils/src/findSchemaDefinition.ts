@@ -58,6 +58,8 @@ function resolveUri(base: string, ref: string): string {
       return resolved.href;
     }
     if (resolved.host !== SYNTHETIC_HOST) {
+      // A non-special scheme keeps its host as written, but RFC 3986 §6.2.2.1 makes the host case-insensitive
+      resolved.hostname = resolved.hostname.toLowerCase();
       return resolved.href.slice(SYNTHETIC_PROTOCOL.length);
     }
     const rooted = ref.startsWith('/') || base.startsWith('/');

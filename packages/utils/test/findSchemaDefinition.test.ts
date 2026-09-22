@@ -397,9 +397,9 @@ describe('findSchemaDefinition()', () => {
       $id: '/schemas/root.json',
       properties: { x: { $ref: 'a.json' }, parent: { $ref: '../b.json' }, local: { $ref: '#/$defs/a' } },
       $defs: {
+        unrooted: { $id: 'schemas/a.json', type: 'boolean' },
         a: { $id: '/schemas/a.json', type: 'string' },
         b: { $id: '/b.json', type: 'number' },
-        unrooted: { $id: 'schemas/a.json', type: 'boolean' },
       },
     };
     expect(findSchemaDefinition('a.json', rootedSchema)).toBe(rootedSchema.$defs!.a);
@@ -428,6 +428,7 @@ describe('findSchemaDefinition()', () => {
     });
     expect(findSchemaDefinition('#/$defs/c/properties/y', resolved)).toBe(resolved.$defs!.b);
     expect(findSchemaDefinition('b.json', networkSchema, '//cdn.example.com/c.json')).toBe(networkSchema.$defs!.b);
+    expect(findSchemaDefinition('//CDN.Example.com/b.json', networkSchema, '#')).toBe(networkSchema.$defs!.b);
   });
   it('compares refs to `$id`s after percent-encoding and dot-segment normalization', () => {
     const encodedSchema: RJSFSchema = {
