@@ -5171,6 +5171,369 @@ exports[`single fields > checkboxes widget with required field 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > errors put every widget into its error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="error-list"
+    >
+      <ul
+        class="list-disc list-inside text-red-600"
+      >
+        <li>
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li>
+          .comissioning must match format "year"
+        </li>
+        <li>
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li>
+          .tier must be equal to one of the allowed values
+        </li>
+      </ul>
+    </div>
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_marketType"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      marketType
+                    </span>
+                  </label>
+                  <div
+                    class="form-control w-full"
+                  >
+                    <div
+                      class="dropdown w-full"
+                    >
+                      <div
+                        class="btn btn-outline w-full text-left flex justify-between items-center "
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="truncate"
+                        >
+                          marketType
+                        </span>
+                        <span
+                          class="ml-2"
+                        >
+                          ▼
+                        </span>
+                      </div>
+                      <ul
+                        class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
+                      >
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="0"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              primary
+                            </span>
+                          </div>
+                        </li>
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="1"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              secondary
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be equal to one of the allowed values
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_comissioning"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      comissioning
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_comissioning"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        comissioning
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_comissioning__error root_comissioning__description root_comissioning__help"
+                        class="input input-bordered w-full"
+                        id="root_comissioning"
+                        name="root_comissioning"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "year"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-array rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-array rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_regions"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      regions
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="0"
+                          id="root_regions-north"
+                          name="root_regions"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          north
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="1"
+                          id="root_regions-south"
+                          name="root_regions"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          south
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must NOT have fewer than 1 items
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_tier"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      tier
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="0"
+                          id="root_tier-gold"
+                          name="root_tier"
+                          type="radio"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          gold
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="1"
+                          id="root_tier-silver"
+                          name="root_tier"
+                          type="radio"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          silver
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be equal to one of the allowed values
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > field with description 1`] = `
 <DocumentFragment>
   <form
@@ -15205,6 +15568,12 @@ exports[`single fields > ui:hideError on a parent keeps its children out of the 
         <li>
           .comissioning must match format "year"
         </li>
+        <li>
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li>
+          .tier must be equal to one of the allowed values
+        </li>
       </ul>
     </div>
     <div
@@ -15345,6 +15714,134 @@ exports[`single fields > ui:hideError on a parent keeps its children out of the 
                         type="text"
                         value=""
                       />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-array"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                >
+                  <label
+                    class="label"
+                    for="root_regions"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      regions
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="0"
+                          id="root_regions-north"
+                          name="root_regions"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          north
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="1"
+                          id="root_regions-south"
+                          name="root_regions"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          south
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_tier"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      tier
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="0"
+                          id="root_tier-gold"
+                          name="root_tier"
+                          type="radio"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          gold
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="1"
+                          id="root_tier-silver"
+                          name="root_tier"
+                          type="radio"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          silver
+                        </span>
+                      </label>
                     </div>
                   </div>
                 </div>

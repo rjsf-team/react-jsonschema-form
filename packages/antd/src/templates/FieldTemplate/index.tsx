@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, getVisibleErrors } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -26,6 +26,7 @@ export default function FieldTemplate<
     id,
     label,
     rawErrors,
+    hideError,
     rawDescription,
     registry,
     required,
@@ -42,6 +43,7 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const hasError = getVisibleErrors({ rawErrors, hideError }).length > 0;
 
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
@@ -72,13 +74,13 @@ export default function FieldTemplate<
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
+        help={(!!rawHelp && help) || (hasError ? errors : undefined)}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}
         required={required}
         style={wrapperStyle}
-        validateStatus={rawErrors?.length ? 'error' : undefined}
+        validateStatus={hasError ? 'error' : undefined}
         wrapperCol={wrapperCol}
         {...descriptionProps}
       >

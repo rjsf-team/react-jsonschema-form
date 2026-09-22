@@ -25,7 +25,7 @@ export default function BaseInputTemplate<
   autofocus,
   options,
   schema,
-  rawErrors = [],
+  rawErrors,
   hideError,
   children,
   extraProps,
@@ -56,7 +56,6 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
-  // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <>
       <Form.Control

@@ -34,7 +34,7 @@ export default function SelectWidget<
   onBlur,
   onFocus,
   placeholder,
-  rawErrors = [],
+  rawErrors,
   hideError,
   registry,
   uiSchema,

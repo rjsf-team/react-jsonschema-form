@@ -40,7 +40,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly,
   multiple = false,
   autofocus = false,
-  rawErrors = [],
+  rawErrors,
   hideError,
   onChange,
   onBlur,

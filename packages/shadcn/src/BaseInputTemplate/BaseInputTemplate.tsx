@@ -33,7 +33,7 @@ export default function BaseInputTemplate<
   autofocus,
   options,
   schema,
-  rawErrors = [],
+  rawErrors,
   hideError,
   children,
   extraProps,

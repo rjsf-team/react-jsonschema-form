@@ -24,23 +24,28 @@ describe('CheckboxesWidget invalid state', () => {
     );
   }
 
+  // The surrounding `FieldTemplate` marks its own fieldset invalid from the same errors, so these assert on the
+  // checkboxes themselves; anything broader passes whatever the widget does with its `invalid` flag
+  const invalidCheckboxes = (container: HTMLElement) =>
+    container.querySelectorAll('input[type="checkbox"][aria-invalid="true"]');
+
   it('is not invalid before validation has found anything wrong', () => {
     const { container } = renderForm(false);
 
-    expect(container.querySelectorAll('[data-invalid]')).toHaveLength(0);
+    expect(invalidCheckboxes(container)).toHaveLength(0);
   });
 
   it('is invalid once the field has errors', () => {
     const { container } = renderForm(false);
     fireEvent.submit(container.querySelector('form')!);
 
-    expect(container.querySelectorAll('[data-invalid]').length).toBeGreaterThan(0);
+    expect(invalidCheckboxes(container)).toHaveLength(2);
   });
 
   it('is not invalid when ui:hideError hides those errors', () => {
     const { container } = renderForm(true);
     fireEvent.submit(container.querySelector('form')!);
 
-    expect(container.querySelectorAll('[data-invalid]')).toHaveLength(0);
+    expect(invalidCheckboxes(container)).toHaveLength(0);
   });
 });

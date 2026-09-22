@@ -24,7 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `DateWidget`/`DateTimeWidget` format a `format: "iso-date-time"` value as a naive local date-time string instead of converting it to a UTC ISO string, since that format's timezone is optional. A stored value that happens to carry an offset anyway is stripped before being parsed, so it displays as the naive wall-clock time it represents instead of being converted to the browser's local zone ([#3930](https://github.com/rjsf-team/react-jsonschema-form/issues/3930))
 - **BREAKING CHANGE** Fixed `BaseInputTemplate` never calling `onChangeOverride` for a numeric field: its `InputNumber` branch was wired straight to `onChange` and reports only the parsed value, never an event. A numeric field with an `onChangeOverride` now renders the `Input` branch (still `type="number"`) so the override receives the `ChangeEvent`, as it does in every other theme
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, grouping options using rc-select's nested `options` shape
-- `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- Fixed `FieldTemplate` deriving its `help` and `validateStatus` from `rawErrors` alone, ignoring the `hideError` it is given. It was only correct because `SchemaField` blanks `rawErrors` first, so any other caller passing both got the error state under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/chakra-ui
 
@@ -39,6 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - **BREAKING CHANGE:** Fixed `BaseInputTemplate`, `CheckboxesWidget`, `NativeSelectWidget`, `SelectWidget`, `TextareaWidget` and `UpDownWidget` marking themselves `invalid` from `rawErrors` alone, so a field stayed flagged as invalid under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 - **BREAKING CHANGE:** Fixed `CheckboxesWidget` marking its inner `CheckboxGroup` `invalid` whenever the field was required and empty, which flagged it before validation had found anything wrong and could not be suppressed by `ui:hideError`. It now derives that state from the field's visible errors, the same as the surrounding `FieldsetRoot`. A required, empty field is no longer flagged until validation reports an error for it, and a field with visible errors now marks every checkbox `aria-invalid`, where a non-required one used to mark only the fieldset ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- Fixed `FieldTemplate` deriving its `Fieldset.Root` `invalid` flag from `rawErrors` alone, ignoring the `hideError` it is given ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/core
 
@@ -80,6 +81,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `ObjectField` prefers a name matching one of `patternProperties`' patterns when adding a property to an object that names no `additionalProperties`. A name matching none has no subschema of its own, so `retrieveSchema()` stubs it as the unusable `{ type: 'null' }`, where a matching name gives a field the user can fill in. It stays a preference: the schema allows every name it enumerates ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SchemaField` passes the new `keyName` prop to `FieldTemplate`, and `WrapIfAdditionalTemplate` takes an additional property's key from it rather than from the decorated `label` ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - Fixed `MultiSchemaField` never passing `hideError` to its `oneOf`/`anyOf` selector widget, and `ArrayField` never passing it to the widget rendering a multi-select array or an array of files, so those widgets kept rendering their error state under `ui:hideError`; the custom-widget array path already passed it. `ArrayField` and `ObjectField` now also set the `hideError` that `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` declare, so a custom template can tell its errors are hidden ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- **BREAKING CHANGE:** Fixed `LayoutMultiSchemaField` passing its `FieldTemplate` neither `rawErrors` nor `hideError`, so a field rendered through a layout grid showed its error messages while the label and the control around them stayed unstyled, and a custom `FieldTemplate` could not tell that errors were hidden. Those two props now follow the same contract they do from `SchemaField`, including withholding `rawErrors` while the errors are hidden. The `classNames` that carry `rjsf-field-error` are still not passed, so styling keyed off that class remains unaffected ([#5327](https://github.com/rjsf-team/react-jsonschema-form/issues/5327)) ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/daisyui
 
@@ -102,6 +104,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SelectWidget` adds the `className` it is passed to its `Dropdown` rather than dropping it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - **BREAKING CHANGE:** Fixed `SelectWidget` deriving its `validationState` from `rawErrors` alone, so the dropdown stayed in the error state under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- Fixed `FieldTemplate` deriving its `validationState` from `rawErrors` alone, ignoring the `hideError` it is given ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/mantine
 
@@ -126,6 +129,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `WrapIfAdditionalTemplate` sizes the key dropdown to its column, which the free-text key input it replaces already did through `fullWidth`; a bare mui `TextField` renders at intrinsic width ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - **BREAKING CHANGE:** Fixed `BaseInputTemplate` and `SelectWidget` deriving their `error` prop from `rawErrors` alone, so a field kept its `Mui-error` styling under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- Fixed `FieldTemplate` deriving its `FormControl` `error` from `rawErrors` alone, ignoring the `hideError` it is given ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/react-bootstrap
 
@@ -135,6 +139,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`. Grouping only affects how the options are displayed: a multiple select still reports its values in enum order, so adding `optgroups` never changes the order of the array written to form data
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - **BREAKING CHANGE:** Fixed `BaseInputTemplate` and `SelectWidget` applying `is-invalid` from `rawErrors` alone, so a field stayed outlined as invalid under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- Fixed `FieldTemplate` deriving its `text-danger` label and description styling from `rawErrors` alone, ignoring the `hideError` it is given ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/shadcn
 
@@ -146,6 +151,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SelectWidget` gives the button that opens its dropdown the `id` it is passed, so a label pointing at it reaches the control ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - **BREAKING CHANGE:** Fixed `BaseInputTemplate` and `SelectWidget` applying `border-destructive` from `rawErrors` alone, so a field stayed outlined as invalid under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
+- Fixed `FieldTemplate` deriving its `text-destructive` label and description styling from `rawErrors` alone, ignoring the `hideError` it is given ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 
 ## @rjsf/utils
 
