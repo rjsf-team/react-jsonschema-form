@@ -5107,6 +5107,7 @@ exports[`with title and description > array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5221,6 +5222,7 @@ exports[`with title and description > array icons 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5984,6 +5986,7 @@ exports[`with title and description > fixed array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6242,6 +6245,7 @@ exports[`with title and description from both > array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6356,6 +6360,7 @@ exports[`with title and description from both > array icons 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7128,6 +7133,7 @@ exports[`with title and description from both > fixed array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7386,6 +7392,7 @@ exports[`with title and description from uiSchema > array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7500,6 +7507,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -8272,6 +8280,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
         </legend>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >

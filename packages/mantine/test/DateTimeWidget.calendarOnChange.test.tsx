@@ -1,5 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import type * as MantineDates from '@mantine/dates';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -43,6 +44,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onChange: () => undefined,
     onBlur: () => undefined,
     onFocus: () => undefined,
+    registry: getTestRegistry(),
     ...props,
   } as unknown as WidgetProps;
 }

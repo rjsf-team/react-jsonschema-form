@@ -5514,6 +5514,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5776,6 +5777,7 @@ exports[`object fields > with title and description > object 1`] = `
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6000,6 +6002,7 @@ exports[`object fields > with title and description > show add button and fields
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6262,6 +6265,7 @@ exports[`object fields > with title and description from both > additionalProper
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6524,6 +6528,7 @@ exports[`object fields > with title and description from both > object 1`] = `
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -6748,6 +6753,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7010,6 +7016,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -7234,6 +7241,7 @@ exports[`object fields > with title and description from uiSchema > show add but
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >

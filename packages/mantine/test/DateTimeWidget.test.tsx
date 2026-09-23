@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -24,6 +25,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onChange: () => undefined,
     onBlur: () => undefined,
     onFocus: () => undefined,
+    registry: getTestRegistry(),
     ...props,
   } as unknown as WidgetProps;
 }
@@ -66,5 +68,14 @@ describe('DateTimeWidget', () => {
       const { container } = renderWidget({ value: 'not-a-date' });
       expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('');
     }).not.toThrow();
+  });
+
+  test('renders with description', () => {
+    const { getByText } = renderWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
   });
 });

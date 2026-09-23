@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -22,6 +23,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onChange: () => undefined,
     onBlur: () => undefined,
     onFocus: () => undefined,
+    registry: getTestRegistry(),
     ...props,
   } as unknown as WidgetProps;
 }
@@ -82,6 +84,17 @@ describe('TimeWidget', () => {
     test('still strips a timezone offset from a stored value for display', () => {
       const { container } = renderTimeWidget({ value: '13:10:30+02:00', schema });
       expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('13:10:30');
+    });
+  });
+
+  describe('renders a description', () => {
+    test('renders with description', () => {
+      const { getByText } = renderTimeWidget({
+        options: {
+          description: 'Test description',
+        },
+      });
+      expect(getByText('Test description')).toBeInTheDocument();
     });
   });
 });

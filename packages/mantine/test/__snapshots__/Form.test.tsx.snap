@@ -5786,6 +5786,7 @@ exports[`single fields > Cyclic schema 1`] = `
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-inherit="true"
           id="root__description"
           style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
         >
@@ -5823,6 +5824,7 @@ exports[`single fields > Cyclic schema 1`] = `
                 </h3>
                 <p
                   class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+                  data-inherit="true"
                   id="root_child__description"
                   style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
                 >
@@ -6059,6 +6061,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     >
       <p
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        data-inherit="true"
         id="root__description"
         style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
       >
@@ -6248,6 +6251,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
     >
       <p
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        data-inherit="true"
         id="root__description"
         style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
       >
@@ -6346,6 +6350,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
     >
       <p
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        data-inherit="true"
         id="root__description"
         style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
       >
@@ -17749,6 +17754,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
     >
       <p
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        data-inherit="true"
         id="root__description"
         style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
       >
