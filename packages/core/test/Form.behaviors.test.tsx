@@ -1370,6 +1370,33 @@ describe('Committing a handler result', () => {
 
     expect(container.querySelector('input')).toHaveValue(parentData.name);
   });
+
+  it('holds the data its parent holds when a prop change lands in the same render as a blur that omits extra data', async () => {
+    const formRef = createFormRef();
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const formData = { name: 'ab', extra: 'x' };
+    function Parent() {
+      const [disabled, setDisabled] = useState(false);
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          validator={validator}
+          formData={formData}
+          omitExtraData
+          liveOmit='onBlur'
+          disabled={disabled}
+          onBlur={() => setDisabled(true)}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('input')!);
+    await user.tab();
+
+    expect(formRef.current!.getFormData()).toEqual(formData);
+  });
 });
 
 describe('validateForm()', () => {

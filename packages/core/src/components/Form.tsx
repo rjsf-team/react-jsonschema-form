@@ -1190,8 +1190,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * output is committed to the DOM. It enables your component to capture current values (e.g., scroll position) before
    * they are potentially changed.
    *
-   * Here it checks whether any prop changed and, if so, derives the next state for
-   * `componentDidUpdate` to commit, flagging `shouldUpdate` only when that state differs from the previous one.
+   * Here it checks whether any prop changed and, if so, derives the next state for `componentDidUpdate` to commit,
+   * flagging `shouldUpdate` only when that state differs from the previous or the current one.
    *
    * @param prevProps - The previous set of props before the update.
    * @param prevState - The previous state before the update.
@@ -1245,8 +1245,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         this.props,
       ),
     );
+    // Checked against `this.state` too: a handler's commit in the same render can leave a derivation that matches
+    // `prevState` but not the state it would replace
     const shouldUpdate = Object.entries(nextState).some(
-      ([key, value]) => value !== prevState[key as keyof FormState<T, S, F>],
+      ([key, value]) =>
+        value !== prevState[key as keyof FormState<T, S, F>] || value !== this.state[key as keyof FormState<T, S, F>],
     );
     return { nextState, shouldUpdate };
   }
