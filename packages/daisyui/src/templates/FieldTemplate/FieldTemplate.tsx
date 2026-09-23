@@ -45,6 +45,7 @@ export default function FieldTemplate<
     // Destructure props we don't want to pass to div
     description,
     rawErrors,
+    errorSchema,
     rawHelp,
     rawDescription,
     hidden,

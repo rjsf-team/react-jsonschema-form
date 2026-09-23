@@ -220,7 +220,8 @@ export default function LayoutMultiSchemaField<
       registry={registry}
       displayLabel={displayLabel}
       errors={errors}
-      rawErrors={rawErrors}
+      rawErrors={hideFieldError ? undefined : rawErrors}
+      errorSchema={errorSchema}
       hideError={hideFieldError}
       onChange={onChange}
       onKeyRename={noop}

@@ -669,6 +669,8 @@ It does not include the [error list](./form-props.md#showerrorlist) rendered for
 Because `rawErrors` is still passed to fields and widgets while errors are hidden, a custom widget deciding whether to render an error state must combine it with `hideError` rather than read `rawErrors` alone.
 The [`getVisibleErrors()`](./utility-functions.md#getvisibleerrors) utility does exactly that.
 
+A `FieldTemplate` is handed the errors on the other terms: its `rawErrors` is `undefined` while they are hidden, so a template styling itself from that alone needs no change, and one rendering the errors itself reads them from `errorSchema`, which carries them whatever `hideError` says.
+
 ### initialValue
 
 The `ui:initialValue` uiSchema directive pre-fills a field on initial render and after a form reset. It takes priority over `schema.default`, but never overrides form data that has already been provided. This is useful for a field, often hidden, that a particular form wants to fix to a known value without changing the underlying schema:

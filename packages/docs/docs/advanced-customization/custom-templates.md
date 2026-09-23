@@ -119,7 +119,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -814,7 +814,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`. `rawErrors` carries every error on the field even while `ui:hideError` is in effect, so a template deciding whether to render an error state has to pair it with `hideError` through `hasVisibleErrors({ rawErrors, hideError })`.
+If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`. `rawErrors` holds only the errors the field is displaying, so it is `undefined` while [`ui:hideError`](../api-reference/uiSchema.md#hideerror) is in effect; read `errorSchema` instead to render the withheld errors your own way.
 
 The following props are passed to a custom field template component:
 
@@ -829,7 +829,8 @@ The following props are passed to a custom field template component:
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
+- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect.
+- `errorSchema`: The tree of errors for this field and its children, carrying every error whatever `hideError` says.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.
 - `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React component instead of a string.
 - `hidden`: A boolean value stating if the field should be hidden.
