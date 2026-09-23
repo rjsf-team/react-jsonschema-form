@@ -1,5 +1,6 @@
-import { formTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 
+import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 vi.mock('@mantine/hooks', async (importOriginal) => ({
@@ -8,3 +9,4 @@ vi.mock('@mantine/hooks', async (importOriginal) => ({
 }));
 
 formTests(WrappedForm);
+themeTests({ generateTemplates, generateTheme, generateWidgets });

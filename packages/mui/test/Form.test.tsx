@@ -1,12 +1,13 @@
 import { withTheme } from '@rjsf/core';
-import { formTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-import Form, { Theme } from '../src/index.ts';
+import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 formTests(Form);
+themeTests({ generateTemplates, generateTheme, generateWidgets });
 
 describe('typed form data', () => {
   interface Data {
