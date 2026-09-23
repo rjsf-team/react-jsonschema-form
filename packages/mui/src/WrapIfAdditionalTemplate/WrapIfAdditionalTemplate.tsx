@@ -50,6 +50,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    keyName,
     displayLabel,
     onKeyRename,
     onKeyRenameBlur,
@@ -95,13 +96,20 @@ export default function WrapIfAdditionalTemplate<
       {...wrapGridContainer}
       sx={computeSxProps<GridProps>({ alignItems: 'flex-start' }, wrapGridContainer)}
     >
-      <Grid size={5.5} {...wrapKeyGridItem}>
+      {/* The free-text `TextField` below sets `fullWidth` itself; the key dropdown is the theme's own `SelectWidget`,
+          which has no say in how wide this column wants it, and mui renders a bare `TextField` at intrinsic width.
+          Sizing it from the column keeps the two branches the same width */}
+      <Grid
+        size={5.5}
+        {...wrapKeyGridItem}
+        sx={computeSxProps<GridProps>({ '& > .MuiFormControl-root': { width: '100%' } }, wrapKeyGridItem)}
+      >
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
             label={keyLabel}
             hideLabel={!displayLabel}
-            value={label}
+            value={keyName}
             propertyNamesEnum={propertyNamesEnum}
             onKeyRename={onKeyRename}
             disabled={disabled}
@@ -111,11 +119,11 @@ export default function WrapIfAdditionalTemplate<
           />
         ) : (
           <TextField
-            key={label}
+            key={keyName}
             fullWidth
             required={required}
             label={displayLabel ? keyLabel : undefined}
-            defaultValue={label}
+            defaultValue={keyName}
             disabled={disabled || readonly}
             id={`${id}-key`}
             name={`${id}-key`}

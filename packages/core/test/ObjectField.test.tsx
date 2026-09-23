@@ -1208,6 +1208,23 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should not rename a deprecated key to its decorated label when the key input is blurred', async () => {
+      // `deprecatedHandling` defaults to `label`, so the property's label carries a marker its key must not pick up
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', deprecated: true } },
+        formData: { first: 'a value' },
+      });
+
+      const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
+      expect(keyInput).toHaveValue('first');
+
+      await user.click(keyInput);
+      await user.tab();
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+    });
+
     it('should preserve focus on value field after renaming key via Tab', async () => {
       const { node } = createFormComponent({
         schema,
@@ -2081,6 +2098,59 @@ describe('ObjectField', () => {
 
       // The object names no `additionalProperties`, so the new property has no schema to seed a value from
       expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: null }, 'root');
+    });
+
+    it('should prefer a name matching a pattern when a patternProperties object has none to fall back on', async () => {
+      // A name matching no pattern has no subschema of its own, so `retrieveSchema()` stubs it as `{ type: 'null' }`
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: null }, 'root');
+    });
+
+    it('should not prefer a pattern match when additionalProperties gives every name a schema', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should read the key of a deprecated property from its name rather than its decorated label', async () => {
+      // `deprecatedHandling` defaults to `label`, which appends a marker to the label an additional property takes
+      // from its key. The key the dropdown reads and renames has to stay the undecorated one
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string', deprecated: true },
+          propertyNames: { enum: ['a', 'b'] },
+        },
+        formData: { a: 'first' },
+      });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b']);
+      expect(keySelect).toHaveDisplayValue('a');
+
+      await user.selectOptions(keySelect, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { b: 'first' }, 'root');
     });
 
     it('should offer no add button once every allowed name is taken', () => {

@@ -694,11 +694,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <div
                                 class="dropdown w-full"
                               >
-                                <div
+                                <button
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
-                                  role="button"
                                   tabindex="0"
+                                  type="button"
                                 >
                                   <span
                                     class="truncate"
@@ -710,7 +710,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     ▼
                                   </span>
-                                </div>
+                                </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                                   role="listbox"
@@ -2439,11 +2439,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <div
                                 class="dropdown w-full"
                               >
-                                <div
+                                <button
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
-                                  role="button"
                                   tabindex="0"
+                                  type="button"
                                 >
                                   <span
                                     class="truncate"
@@ -2455,7 +2455,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     ▼
                                   </span>
-                                </div>
+                                </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                                   role="listbox"
@@ -4184,11 +4184,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <div
                                 class="dropdown w-full"
                               >
-                                <div
+                                <button
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
-                                  role="button"
                                   tabindex="0"
+                                  type="button"
                                 >
                                   <span
                                     class="truncate"
@@ -4200,7 +4200,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     ▼
                                   </span>
-                                </div>
+                                </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                                   role="listbox"
@@ -5929,11 +5929,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               <div
                                 class="dropdown w-full"
                               >
-                                <div
+                                <button
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
-                                  role="button"
                                   tabindex="0"
+                                  type="button"
                                 >
                                   <span
                                     class="truncate"
@@ -5945,7 +5945,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   >
                                     ▼
                                   </span>
-                                </div>
+                                </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                                   role="listbox"
@@ -7643,11 +7643,11 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="dropdown w-full"
                   >
-                    <div
+                    <button
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
-                      role="button"
                       tabindex="0"
+                      type="button"
                     >
                       <span
                         class="truncate"
@@ -7659,7 +7659,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       >
                         ▼
                       </span>
-                    </div>
+                    </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                       role="listbox"
@@ -9206,11 +9206,11 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="dropdown w-full"
                   >
-                    <div
+                    <button
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
-                      role="button"
                       tabindex="0"
+                      type="button"
                     >
                       <span
                         class="truncate"
@@ -9222,7 +9222,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       >
                         ▼
                       </span>
-                    </div>
+                    </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                       role="listbox"

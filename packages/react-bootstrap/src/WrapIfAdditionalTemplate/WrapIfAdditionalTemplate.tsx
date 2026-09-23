@@ -13,6 +13,7 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
+  keyName,
   displayLabel,
   onRemoveProperty,
   onKeyRename,
@@ -55,7 +56,7 @@ export default function WrapIfAdditionalTemplate<
               id={keyId}
               label={keyLabel}
               hideLabel
-              value={label}
+              value={keyName}
               propertyNamesEnum={propertyNamesEnum}
               onKeyRename={onKeyRename}
               disabled={disabled}
@@ -65,9 +66,9 @@ export default function WrapIfAdditionalTemplate<
             />
           ) : (
             <Form.Control
-              key={label}
+              key={keyName}
               required={required}
-              defaultValue={label}
+              defaultValue={keyName}
               disabled={disabled || readonly}
               id={keyId}
               name={keyId}

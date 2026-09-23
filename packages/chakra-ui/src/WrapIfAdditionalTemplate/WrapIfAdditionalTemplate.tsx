@@ -17,6 +17,7 @@ export default function WrapIfAdditionalTemplate<
     displayLabel,
     id,
     label,
+    keyName,
     onRemoveProperty,
     onKeyRename,
     onKeyRenameBlur,
@@ -57,7 +58,7 @@ export default function WrapIfAdditionalTemplate<
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
             label={keyLabel ?? ''}
-            value={label}
+            value={keyName}
             propertyNamesEnum={propertyNamesEnum}
             onKeyRename={onKeyRename}
             disabled={disabled}
@@ -68,8 +69,8 @@ export default function WrapIfAdditionalTemplate<
         ) : (
           <Field required={required} label={keyLabel}>
             <Input
-              key={label}
-              defaultValue={label}
+              key={keyName}
+              defaultValue={keyName}
               disabled={disabled || readonly}
               id={`${id}-key`}
               name={`${id}-key`}

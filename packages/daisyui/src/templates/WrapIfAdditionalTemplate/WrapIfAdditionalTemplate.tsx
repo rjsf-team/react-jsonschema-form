@@ -17,6 +17,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    keyName,
     displayLabel,
     readonly,
     required,
@@ -57,7 +58,7 @@ export default function WrapIfAdditionalTemplate<
               id={`${id}-key`}
               label={keyLabel}
               hideLabel
-              value={label}
+              value={keyName}
               propertyNamesEnum={propertyNamesEnum}
               onKeyRename={onKeyRename}
               disabled={disabled}
@@ -67,12 +68,12 @@ export default function WrapIfAdditionalTemplate<
             />
           ) : (
             <input
-              key={label}
+              key={keyName}
               type='text'
               className='input input-bordered'
               id={`${id}-key`}
               onBlur={onKeyRenameBlur}
-              defaultValue={label}
+              defaultValue={keyName}
               disabled={disabled || readonly}
             />
           )}

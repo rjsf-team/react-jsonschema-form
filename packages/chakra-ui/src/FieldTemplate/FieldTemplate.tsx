@@ -16,6 +16,7 @@ export default function FieldTemplate<
     displayLabel,
     hidden,
     label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -49,6 +50,7 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      keyName={keyName}
       displayLabel={displayLabel}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}

@@ -36,6 +36,7 @@ import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
@@ -147,6 +148,7 @@ export {
   asNumber,
   buttonId,
   canExpand,
+  getFreePropertyNames,
   createErrorHandler,
   createSchemaUtils,
   DateElement,

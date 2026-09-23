@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Fixed `BaseInputTemplate` never calling `onChangeOverride` for a numeric field: its `InputNumber` branch was wired straight to `onChange` and reports only the parsed value, never an event. A numeric field with an `onChangeOverride` now renders the `Input` branch (still `type="number"`) so the override receives the `ChangeEvent`, as it does in every other theme
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, grouping options using rc-select's nested `options` shape
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/chakra-ui
 
@@ -37,6 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** Removed `chakra-react-select` from `peerDependencies`; the package no longer uses it, so it no longer needs to be installed alongside `@rjsf/chakra-ui`
 - Fixed `NativeSelectWidget` ignoring `ui:enumDisabled`: it computed each option's disabled state but never applied it to the rendered `<option>`, so every listed option stayed selectable
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/core
 
@@ -75,6 +77,8 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input. A `pattern` or `inputMode` the calling widget passes still wins over the derived one, as it did when neither was derived, and replacing the `pattern` drops the derived `title` with it rather than leaving it to describe a rule no longer in force ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`, fixing [#1813](https://github.com/rjsf-team/react-jsonschema-form/issues/1813) and [#580](https://github.com/rjsf-team/react-jsonschema-form/issues/580). Grouping only affects how the options are displayed: a multiple select still reports its values in enum order, so adding `optgroups` never changes the order of the array written to form data
 - An object whose `propertyNames` enumerates the allowed key names now renders each `additionalProperties`/`patternProperties` key as a dropdown of those names rather than a free-text input, leaving out the names its siblings already hold; the add button also creates the new property under the first allowed name that is still free, and is hidden once they are all taken rather than adding a property under a name the schema rejects. `WrapIfAdditionalTemplate` receives the names as a new `propertyNamesEnum` prop, which `SchemaField` and `FieldTemplate` pass along ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `ObjectField` prefers a name matching one of `patternProperties`' patterns when adding a property to an object that names no `additionalProperties`. A name matching none has no subschema of its own, so `retrieveSchema()` stubs it as the unusable `{ type: 'null' }`, where a matching name gives a field the user can fill in. It stays a preference: the schema allows every name it enumerates ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `SchemaField` passes the new `keyName` prop to `FieldTemplate`, and `WrapIfAdditionalTemplate` takes an additional property's key from it rather than from the decorated `label` ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/daisyui
 
@@ -88,6 +92,8 @@ should change the heading of the (upcoming) version to include a major version b
 - `SelectWidget` renders a falsy option label, such as `0` or `false`, as its own text instead of leaving the row blank; only `null` and `undefined` still render as empty
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SelectWidget` gives the element that opens its dropdown the `id` it is passed, so a label pointing at it reaches the control ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `SelectWidget` opens its dropdown from a real `<button>` rather than a `<div role='button'>`. `<label for>` only associates with a labelable element, so on a `div` neither `FieldTemplate`'s label nor the key label of an additional property reached the control, whatever `id` it carried ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/fluentui-rc
 
@@ -95,6 +101,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using `OptionGroup`
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SelectWidget` adds the `className` it is passed to its `Dropdown` rather than dropping it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/mantine
 
@@ -108,6 +115,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` and `FileWidget` default their generic parameters to `T = unknown` and `F extends FormContextType = FormContextType`, and constrain `S` to `RJSFSchema`, instead of defaulting to `any`
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using its `data` prop's grouped-item shape
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/mui
 
@@ -116,7 +124,8 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` forwards the `inputMode` and `pattern` from `getInputProps()` to the native `<input>` through `slotProps.htmlInput`, so a `number`/`integer` field gets the numeric text input like `@rjsf/core`; the `getInputProps()` attributes are now applied first, so a `slotProps.htmlInput` or `ui:options.mui.slotProps.htmlInput` value always takes precedence, and `BaseInputTemplateMuiProps['slotProps']['htmlInput']` now accepts the `<input>`-only attributes such as `pattern`, `step`, `min`, `max` and `accept` ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, using `ListSubheader`
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
-
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` sizes the key dropdown to its column, which the free-text key input it replaces already did through `fullWidth`; a bare mui `TextField` renders at intrinsic width ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 ## @rjsf/react-bootstrap
 
 - Fixed `lib/index.js` being unloadable by Node: it imported `react-bootstrap/Col`-style directory subpaths and extensionless `@react-icons/all-files` paths, which only bundlers resolve. Components are now imported from `react-bootstrap` itself and icon files by their full `.js` name ([#5244](https://github.com/rjsf-team/react-jsonschema-form/pull/5244))
@@ -124,6 +133,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `BaseInputTemplate` renders a `number`/`integer` field as `<input type="text" inputMode="decimal|numeric" pattern="..." title="...">` instead of `<input type="number">`, and no longer puts `step`, `min` or `max` on it, so the rendered markup and any snapshot of a numeric field change; see the `getInputProps()` entry under `@rjsf/utils` for the reasoning and the ways back to a native number input. A `pattern` or `inputMode` passed through `extraProps` still wins over the derived one, as it did when neither was derived, and replacing the `pattern` drops the derived `title` with it rather than leaving it to describe a rule no longer in force ([#4038](https://github.com/rjsf-team/react-jsonschema-form/issues/4038))
 - Added `<optgroup>` support to `SelectWidget` via `ui:options.optgroups`. Grouping only affects how the options are displayed: a multiple select still reports its values in enum order, so adding `optgroups` never changes the order of the array written to form data
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/shadcn
 
@@ -134,6 +144,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `ui:options.optgroups` support to `SelectWidget`, rendering one labeled `CommandGroup` per group in `FancySelect`/`FancyMultiSelect`. Grouping only affects how the options are displayed: the order a multi-select reports its values in is independent of the grouping, so adding, reordering or removing a group never changes the order of the array written to form data
 - `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `SelectWidget` gives the button that opens its dropdown the `id` it is passed, so a label pointing at it reaches the control ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- `WrapIfAdditionalTemplate` takes an additional property's key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/utils
 
@@ -166,6 +177,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `groupEnumOptions()`, `isEnumOptionsGroup()` and `flattenGroupedOptions()`, plus the `optgroups` `ui:options` key, giving every theme's `SelectWidget` a single shared implementation of `<optgroup>`-style option grouping
 - Added the `AdditionalPropertyKeySelect` component, which renders an additional property's key as the theme's own `SelectWidget` over the names a schema's `propertyNames.enum` allows, and the `propertyNamesEnum` prop on `FieldTemplateProps`/`WrapIfAdditionalTemplateProps` that carries those names ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 - `canExpand()` returns false once every name a schema's `propertyNames.enum` allows is held by a property, the way it already does at the `maxProperties` limit ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- Added `getFreePropertyNames()`, returning the names a schema's `propertyNames.enum` allows that neither a property of the schema nor a key of the form data has taken. `canExpand()`, `ObjectField`'s add handler and the key dropdowns all read their free names from it, so the add button and the add handler cannot disagree about which names are left. Also exported `getMatchingPatternProperties()`, which until now was internal ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
+- Added the `keyName` prop to `FieldTemplateProps`/`WrapIfAdditionalTemplateProps`, carrying the property's own name with none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds. An `additionalProperties` key is read and renamed from it, so a `deprecated` additional property no longer shows its decorated label as an out-of-enum key, nor renames itself to it when its key input blurs ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/validator-ajv8
 

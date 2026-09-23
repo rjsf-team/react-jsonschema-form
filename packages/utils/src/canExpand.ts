@@ -1,5 +1,5 @@
+import getFreePropertyNames from './getFreePropertyNames.ts';
 import getUiOptions from './getUiOptions.ts';
-import isObject from './isObject.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
@@ -26,23 +26,10 @@ export default function canExpand<T = any, S extends StrictRJSFSchema = RJSFSche
     return expandable;
   }
   // A `propertyNames.enum` caps the object the way `maxProperties` does, one level of indirection away: once every
-  // name it allows is taken, a new property could only be added under a name the schema forbids. A name the schema
-  // declares as a property of its own is taken however empty its value is, and a name the `formData` holds is taken
-  // whether or not `retrieveSchema()` has stubbed it in among the properties. Both caps have to hold, so this one
-  // only rules expansion out; the `maxProperties` limit below still gets to rule on the names that are left
-  const { propertyNames } = schema;
-  if (isObject(propertyNames) && Array.isArray(propertyNames.enum)) {
-    const allowedNames = propertyNames.enum.filter((allowedName) => typeof allowedName === 'string');
-    if (allowedNames.length > 0) {
-      const properties = schema.properties ?? {};
-      const takenNames = isObject(formData) ? formData : {};
-      const hasNameLeft = allowedNames.some(
-        (allowedName) => !Object.hasOwn(properties, allowedName) && !Object.hasOwn(takenNames, allowedName),
-      );
-      if (!hasNameLeft) {
-        return false;
-      }
-    }
+  // name it allows is taken, a new property could only be added under a name the schema forbids. Both caps have to
+  // hold, so this one only rules expansion out; the `maxProperties` limit below still gets to rule on the names left
+  if (getFreePropertyNames<T>(schema, formData)?.length === 0) {
+    return false;
   }
   // if ui:options.expandable was not explicitly set to false, we can add
   // another property if we have not exceeded maxProperties yet

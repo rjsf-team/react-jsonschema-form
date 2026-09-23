@@ -425,6 +425,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     fieldPath,
     id: fieldId,
     label,
+    keyName: name,
     hidden,
     onChange,
     onKeyRename,

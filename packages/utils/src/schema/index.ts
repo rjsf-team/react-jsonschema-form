@@ -10,7 +10,7 @@ import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
-import retrieveSchema, { relaxOptionsForScoring } from './retrieveSchema.ts';
+import retrieveSchema, { getMatchingPatternProperties, relaxOptionsForScoring } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
 export {
@@ -21,6 +21,7 @@ export {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  getMatchingPatternProperties,
   getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,

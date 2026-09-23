@@ -98,7 +98,7 @@ export default function SelectWidget<
   );
 
   const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLDivElement>) => {
+    ({ target }: FocusEvent<HTMLButtonElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
         onBlur(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
@@ -108,7 +108,7 @@ export default function SelectWidget<
   );
 
   const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLDivElement>) => {
+    ({ target }: FocusEvent<HTMLButtonElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
         onFocus(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
@@ -172,10 +172,16 @@ export default function SelectWidget<
   return (
     <div className='form-control w-full'>
       <div className='dropdown w-full'>
-        <div
+        {/* A real `button` rather than the `div role='button'` daisyui's own markup uses: `label htmlFor` only
+            associates with a labelable element, so on a `div` the key label and the `FieldTemplate` label both point
+            at nothing. `type='button'` keeps it from submitting the form it sits in, and the explicit focus covers
+            Safari and Firefox on macOS, which by platform convention do not focus a button on click — the dropdown
+            opens on `:focus-within`, so without it the menu would not open for a mouse user there. */}
+        <button
           id={id}
+          type='button'
           tabIndex={0}
-          role='button'
+          onMouseDown={(event) => event.currentTarget.focus()}
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
@@ -188,7 +194,7 @@ export default function SelectWidget<
               : placeholder || label || 'Select...'}
           </span>
           <span className='ml-2'>▼</span>
-        </div>
+        </button>
         <ul
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'

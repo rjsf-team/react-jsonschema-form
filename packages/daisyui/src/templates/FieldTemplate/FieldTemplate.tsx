@@ -25,6 +25,7 @@ export default function FieldTemplate<
   const {
     id,
     label,
+    keyName,
     children,
     errors,
     formData,
@@ -70,6 +71,7 @@ export default function FieldTemplate<
       disabled={divProps.disabled}
       id={id}
       label={label}
+      keyName={keyName}
       displayLabel={displayLabel}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}

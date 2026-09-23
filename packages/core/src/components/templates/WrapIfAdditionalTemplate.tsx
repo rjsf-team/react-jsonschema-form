@@ -20,6 +20,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     displayLabel,
     label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -67,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
                 id={`${id}-key`}
                 label={keyLabel}
                 hideLabel
-                value={label}
+                value={keyName}
                 propertyNamesEnum={propertyNamesEnum}
                 onKeyRename={onKeyRename}
                 disabled={disabled}
@@ -77,12 +78,12 @@ export default function WrapIfAdditionalTemplate<
               />
             ) : (
               <input
-                key={label}
+                key={keyName}
                 className='form-control'
                 type='text'
                 id={`${id}-key`}
                 onBlur={onKeyRenameBlur}
-                defaultValue={label}
+                defaultValue={keyName}
               />
             )}
           </div>

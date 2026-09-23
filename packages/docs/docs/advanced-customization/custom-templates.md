@@ -820,6 +820,8 @@ The following props are passed to a custom field template component:
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
+- `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
+  The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
@@ -1282,6 +1284,8 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
+- `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
+  The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
 - `disabled`: A boolean value stating if the field is disabled.

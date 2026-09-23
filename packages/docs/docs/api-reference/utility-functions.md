@@ -603,6 +603,24 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
 
+### getFreePropertyNames&lt;T = any, S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
+A name `schema.properties` declares is taken however empty its value is, since adding under it would write into that declared property rather than create an additional one.
+A name `formData` holds is taken whether or not `retrieveSchema()` has stubbed it in among the properties.
+An `undefined` return means the schema enumerates no name at all, which is what tells "any name goes" apart from "every allowed name is taken" — the empty array.
+A `propertyNames` written as a `$ref` reads as the former, since resolving one needs a `schemaUtils` this has no access to; resolve it before calling if that matters.
+
+#### Parameters
+
+- schema: S - The schema whose `propertyNames.enum` names the property may take
+- [formData]: T | undefined - The form data whose keys count as taken alongside the schema's own properties
+- [keepName]: string | undefined - A name to count as free even when taken, the current key of a property being renamed
+
+#### Returns
+
+- string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
+
 ### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
@@ -1756,6 +1774,19 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 #### Returns
 
 - T | S: The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
+
+### getMatchingPatternProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the subset of a schema's `patternProperties` specifications whose patterns match the given `key`.
+
+#### Parameters
+
+- schema: S - The schema whose `patternProperties` are to be filtered
+- key: string - The key to match against the `patternProperties` specifications
+
+#### Returns
+
+- Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
 
 ### getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

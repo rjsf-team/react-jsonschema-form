@@ -29,6 +29,7 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     label,
+    keyName,
     displayLabel,
     rawDescription,
     required,
@@ -75,7 +76,7 @@ export default function WrapIfAdditionalTemplate<
                   id={`${id}-key`}
                   label={keyLabel}
                   hideLabel={!displayLabel}
-                  value={label}
+                  value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
                   disabled={disabled}
@@ -89,10 +90,10 @@ export default function WrapIfAdditionalTemplate<
               </>
             ) : (
               <TextInput
-                key={label}
+                key={keyName}
                 className='form-group'
                 label={displayLabel ? keyLabel : undefined}
-                defaultValue={label}
+                defaultValue={keyName}
                 required={required}
                 description={rawDescription ? '\u00A0' : undefined}
                 disabled={disabled || readonly}
