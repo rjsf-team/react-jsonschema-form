@@ -714,9 +714,6 @@ importers:
       fast-equals:
         specifier: ^6.0.0
         version: 6.0.0
-      fast-uri:
-        specifier: ^4.1.4
-        version: 4.1.4
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -7240,9 +7237,6 @@ packages:
 
   fast-uri@3.1.2:
     resolution: {integrity: sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==}
-
-  fast-uri@4.1.4:
-    resolution: {integrity: sha512-dODXrIxlS9JSdgAnhIUKOosKV1oMtU2VtVw87QRaHzyl5jxO290Ii5tEZfCfzfWNHi3jKWwBSdQj0qIyshdZdQ==}
 
   fast-wrap-ansi@0.2.0:
     resolution: {integrity: sha512-rLV8JHxTyhVmFYhBJuMujcrHqOT2cnO5Zxj37qROj23CP39GXubJRBUFF0z8KFK77Uc0SukZUf7JZhsVEQ6n8w==}
@@ -19265,8 +19259,6 @@ snapshots:
       fast-string-truncated-width: 3.0.3
 
   fast-uri@3.1.2: {}
-
-  fast-uri@4.1.4: {}
 
   fast-wrap-ansi@0.2.0:
     dependencies:

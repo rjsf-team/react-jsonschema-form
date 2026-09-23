@@ -336,6 +336,192 @@ describe('findSchemaDefinition()', () => {
       expect(() => findSchemaDefinition(ref, rfc6901, rfc6901.$id)).toThrow(`Could not find a definition for ${ref}`);
     });
   });
+  it('resolves refs against a base URI that differs from the `$id` only by case and default port', () => {
+    expect(findSchemaDefinition('#/properties/num', bundledSchema, 'HTTPS://Example.com:443/bundled.ref.json')).toBe(
+      internalSchema.properties!.num,
+    );
+  });
+  it('resolves relative refs against a relative root `$id`', () => {
+    const relativeSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'relative/schema.json',
+      $defs: {
+        embedded: { $id: 'relative/embedded.json', properties: { a: { type: 'string' } } },
+        other: { $id: 'other.json', type: 'number' },
+      },
+    };
+    expect(findSchemaDefinition('embedded.json', relativeSchema)).toBe(relativeSchema.$defs!.embedded);
+    expect(findSchemaDefinition('./embedded.json#', relativeSchema)).toBe(relativeSchema.$defs!.embedded);
+    expect(findSchemaDefinition('embedded.json#/properties/a', relativeSchema)).toBe(
+      (relativeSchema.$defs!.embedded as RJSFSchema).properties!.a,
+    );
+    expect(findSchemaDefinition('../other.json', relativeSchema)).toBe(relativeSchema.$defs!.other);
+    expect(() => findSchemaDefinition('missing.json', relativeSchema)).toThrow(
+      'Could not find a definition for missing.json',
+    );
+  });
+  it('resolves relative refs made absolute against the `#` base used for a root without `$id`', () => {
+    const schemaWithoutId: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      properties: {
+        dot: { $ref: './embedded.json' },
+        parent: { $ref: '../embedded.json' },
+        traversal: { $ref: 'a/../embedded.json' },
+        nested: { $ref: 'sub/a.json' },
+        rooted: { $ref: '/embedded.json' },
+      },
+      $defs: {
+        embedded: { $id: 'embedded.json', type: 'string' },
+        a: { $id: 'sub/a.json', properties: { b: { $ref: 'b.json' } } },
+        b: { $id: 'sub/b.json', type: 'number' },
+        rooted: { $id: '/embedded.json', type: 'boolean' },
+      },
+    };
+    const resolved = makeAllReferencesAbsolute(schemaWithoutId, '#');
+    expect(resolved.properties).toStrictEqual({
+      dot: { $ref: 'embedded.json' },
+      parent: { $ref: 'embedded.json' },
+      traversal: { $ref: 'embedded.json' },
+      nested: { $ref: 'sub/a.json' },
+      rooted: { $ref: '/embedded.json' },
+    });
+    // An absolute-path reference stays rooted, so it must not collide with the relative `embedded.json`
+    expect(findSchemaDefinition('#/properties/rooted', resolved)).toBe(resolved.$defs!.rooted);
+    expect((resolved.$defs!.a as RJSFSchema).properties).toStrictEqual({ b: { $ref: 'sub/b.json' } });
+    expect(findSchemaDefinition('#/properties/dot', resolved)).toBe(resolved.$defs!.embedded);
+    expect(findSchemaDefinition('#/$defs/a/properties/b', resolved)).toBe(resolved.$defs!.b);
+  });
+  it('keeps refs rooted when the root `$id` is an absolute path', () => {
+    const rootedSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: '/schemas/root.json',
+      properties: { x: { $ref: 'a.json' }, parent: { $ref: '../b.json' }, local: { $ref: '#/$defs/a' } },
+      $defs: {
+        unrooted: { $id: 'schemas/a.json', type: 'boolean' },
+        a: { $id: '/schemas/a.json', type: 'string' },
+        b: { $id: '/b.json', type: 'number' },
+      },
+    };
+    expect(findSchemaDefinition('a.json', rootedSchema)).toBe(rootedSchema.$defs!.a);
+    expect(findSchemaDefinition('../b.json', rootedSchema)).toBe(rootedSchema.$defs!.b);
+    const resolved = makeAllReferencesAbsolute(rootedSchema, rootedSchema.$id!);
+    expect(resolved.properties).toStrictEqual({
+      x: { $ref: '/schemas/a.json' },
+      parent: { $ref: '/b.json' },
+      local: { $ref: '/schemas/root.json#/$defs/a' },
+    });
+    expect(findSchemaDefinition('#/properties/x', resolved)).toBe(resolved.$defs!.a);
+    expect(findSchemaDefinition('#/properties/local', resolved)).toBe(resolved.$defs!.a);
+  });
+  it('resolves refs against a network-path `$id` without picking up a scheme', () => {
+    const networkSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        c: { $id: '//cdn.example.com/c.json', properties: { y: { $ref: 'b.json' }, z: { $ref: '#/properties/y' } } },
+        b: { $id: '//cdn.example.com/b.json', type: 'number' },
+      },
+    };
+    const resolved = makeAllReferencesAbsolute(networkSchema, '#');
+    expect((resolved.$defs!.c as RJSFSchema).properties).toStrictEqual({
+      y: { $ref: '//cdn.example.com/b.json' },
+      z: { $ref: '//cdn.example.com/c.json#/properties/y' },
+    });
+    expect(findSchemaDefinition('#/$defs/c/properties/y', resolved)).toBe(resolved.$defs!.b);
+    expect(findSchemaDefinition('b.json', networkSchema, '//cdn.example.com/c.json')).toBe(networkSchema.$defs!.b);
+    expect(findSchemaDefinition('//CDN.Example.com/b.json', networkSchema, '#')).toBe(networkSchema.$defs!.b);
+  });
+  it('compares the host of an absolute `$id` with a non-special scheme case-insensitively', () => {
+    const gitSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { g: { $id: 'git://HOST.example.com/b.json', type: 'number' } },
+    };
+    expect(findSchemaDefinition('git://host.example.com/b.json', gitSchema, '#')).toBe(gitSchema.$defs!.g);
+  });
+  it('compares refs to `$id`s after percent-encoding and dot-segment normalization', () => {
+    const encodedSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: {
+        tilde: { $id: 'https://example.com/~user/embedded.json', type: 'string' },
+        dotted: { $id: './relative.json', type: 'number' },
+      },
+    };
+    expect(findSchemaDefinition('%7Euser/embedded.json', encodedSchema)).toBe(encodedSchema.$defs!.tilde);
+    expect(findSchemaDefinition('relative.json', { ...encodedSchema, $id: undefined })).toBe(
+      encodedSchema.$defs!.dotted,
+    );
+  });
+  it('throws for a ref the URL parser rejects instead of crashing', () => {
+    expect(() => findSchemaDefinition('https://[invalid/embedded.json', bundledSchema)).toThrow(
+      'Could not find a definition for https://[invalid/embedded.json',
+    );
+  });
+  it('resolves refs within a bundled JSON Schema whose `$id`s are `urn:` URIs', () => {
+    const urnSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'urn:example:root',
+      $defs: {
+        embedded: {
+          $id: 'urn:example:embedded',
+          properties: { a: { type: 'string' } },
+        },
+      },
+    };
+    expect(findSchemaDefinition('urn:example:embedded', urnSchema)).toBe(urnSchema.$defs!.embedded);
+    expect(findSchemaDefinition('urn:example:embedded#/properties/a', urnSchema)).toBe(
+      (urnSchema.$defs!.embedded as RJSFSchema).properties!.a,
+    );
+    expect(findSchemaDefinition('#/properties/a', urnSchema, 'urn:example:embedded')).toBe(
+      (urnSchema.$defs!.embedded as RJSFSchema).properties!.a,
+    );
+    expect(() => findSchemaDefinition('relative.json', urnSchema)).toThrow(
+      'Could not find a definition for relative.json',
+    );
+  });
+  it('resolves refs whose `$id`s use an internationalized host name, a network-path ref or a `file:` scheme', () => {
+    const hostSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://bücher.example/schemas/root.json',
+      $defs: {
+        punycode: { $id: 'https://xn--bcher-kva.example/schemas/embedded.json', type: 'string' },
+        cdn: { $id: 'https://cdn.example.com/other.json', type: 'number' },
+        file: { $id: 'file:///schemas/local.json', type: 'boolean' },
+      },
+    };
+    expect(findSchemaDefinition('embedded.json', hostSchema)).toBe(hostSchema.$defs!.punycode);
+    expect(findSchemaDefinition('//cdn.example.com/other.json', hostSchema)).toBe(hostSchema.$defs!.cdn);
+    expect(findSchemaDefinition('file:///schemas/local.json', hostSchema)).toBe(hostSchema.$defs!.file);
+    // Under a relative base there is no scheme to resolve a network-path reference against, so it stays as written
+    const cdnSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { cdn: { $id: '//cdn.example.com/other.json', type: 'number' } },
+    };
+    expect(findSchemaDefinition('//cdn.example.com/other.json', cdnSchema, '#')).toBe(cdnSchema.$defs!.cdn);
+  });
+  it('resolves bundled refs whose JSON pointer fragment contains escaped, percent-encoded and non-ASCII characters', () => {
+    const pointerSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: {
+        embedded: {
+          $id: 'https://example.com/embedded.json',
+          properties: {
+            'a/b': { type: 'string' },
+            'a b': { type: 'number' },
+            ünïcode: { type: 'boolean' },
+          },
+        },
+      },
+    };
+    const { properties } = pointerSchema.$defs!.embedded as RJSFSchema;
+    expect(findSchemaDefinition('embedded.json#/properties/a~1b', pointerSchema)).toBe(properties!['a/b']);
+    expect(findSchemaDefinition('embedded.json#/properties/a%20b', pointerSchema)).toBe(properties!['a b']);
+    expect(findSchemaDefinition('embedded.json#/properties/a b', pointerSchema)).toBe(properties!['a b']);
+    expect(findSchemaDefinition('embedded.json#/properties/ünïcode', pointerSchema)).toBe(properties!.ünïcode);
+    expect(findSchemaDefinition('embedded.json#/properties/%C3%BCn%C3%AFcode', pointerSchema)).toBe(
+      properties!.ünïcode,
+    );
+  });
 });
 
 describe('findSchemaDefinitionRecursive()', () => {
