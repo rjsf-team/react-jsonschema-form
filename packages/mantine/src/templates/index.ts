@@ -4,7 +4,9 @@ import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
 import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
 import BaseInputTemplate from './BaseInputTemplate.tsx';
-import ButtonTemplates from './ButtonTemplates/index.ts';
+import AddButton from './ButtonTemplates/AddButton.tsx';
+import { ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates/IconButton.tsx';
+import SubmitButton from './ButtonTemplates/SubmitButton.tsx';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
 import DescriptionField from './DescriptionField.tsx';
 import ErrorList from './ErrorList.tsx';
@@ -25,7 +27,15 @@ export function createTemplates() {
     ArrayFieldTitleTemplate,
     BaseInputTemplate,
     CyclicSchemaExpandTemplate,
-    ButtonTemplates: { ...ButtonTemplates },
+    ButtonTemplates: {
+      SubmitButton,
+      AddButton,
+      CopyButton,
+      MoveDownButton,
+      MoveUpButton,
+      RemoveButton,
+      ClearButton,
+    },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
