@@ -8,7 +8,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
+import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toErrorList } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -470,50 +470,64 @@ describe('Error state consistency when deriving from new props', () => {
     expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters']);
   });
 
-  it('lets the parent clear the extraErrors an optional object Remove sent back', async () => {
-    const addrSchema: RJSFSchema = {
-      type: 'object',
-      properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
-    };
-    const addrUiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
-    const addrData = { addr: { street: 'a' } };
-    const addrServerErrors = { addr: { street: { __errors: ['server'] } } } as unknown as ErrorSchema;
-    const formRef = createRef<Form>();
-    let clearExtraErrors = () => {};
-    let restyle = () => {};
-    function Parent() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(addrServerErrors);
-      const [className, setClassName] = useState<string | undefined>(undefined);
-      clearExtraErrors = () => setExtraErrors(undefined);
-      restyle = () => setClassName('x');
-      return (
-        <Form
-          ref={formRef}
-          schema={addrSchema}
-          uiSchema={addrUiSchema}
-          validator={validator}
-          formData={addrData}
-          extraErrors={extraErrors}
-          className={className}
-        />
-      );
-    }
-    const { container } = render(<Parent />);
+  it.each([
+    {
+      name: 'a server message of its own',
+      street: { type: 'string', minLength: 3 },
+      server: 'server',
+      expected: ['must NOT have fewer than 3 characters'],
+    },
+    {
+      name: 'the message the validator reports',
+      street: { type: 'string', minLength: 3 },
+      server: 'must NOT have fewer than 3 characters',
+      expected: ['must NOT have fewer than 3 characters'],
+    },
+    { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
+  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
+    'lets the parent clear the extraErrors an optional object Remove sent back, with $name',
+    async ({ street, server, expected }) => {
+      const addrSchema: RJSFSchema = {
+        type: 'object',
+        properties: { addr: { type: 'object', properties: { street } } },
+      };
+      const addrUiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+      const addrData = { addr: { street: 'a' } };
+      const addrServerErrors = { addr: { street: { __errors: [server] } } } as unknown as ErrorSchema;
+      const formRef = createRef<Form>();
+      let clearExtraErrors = () => {};
+      let restyle = () => {};
+      function Parent() {
+        const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(addrServerErrors);
+        const [className, setClassName] = useState<string | undefined>(undefined);
+        clearExtraErrors = () => setExtraErrors(undefined);
+        restyle = () => setClassName('x');
+        return (
+          <Form
+            ref={formRef}
+            schema={addrSchema}
+            uiSchema={addrUiSchema}
+            validator={validator}
+            formData={addrData}
+            extraErrors={extraErrors}
+            className={className}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
 
-    await submitForm(container.querySelector('form')!, user);
-    expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters', 'server']);
+      await submitForm(container.querySelector('form')!, user);
+      expect(stateMessages(formRef)).toEqual([...expected, server]);
 
-    // Remove hands back the displayed `errorSchema`, `server` included, which must not become part of the stored
-    // validator result
-    await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
-    act(() => clearExtraErrors());
-    act(() => restyle());
+      // Remove hands back the displayed `errorSchema`, `server` included, which must not outlive the prop supplying it
+      await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
+      act(() => clearExtraErrors());
+      act(() => restyle());
 
-    expect(stateMessages(formRef)).toEqual(['must NOT have fewer than 3 characters']);
-    expect(formRef.current!.state.schemaValidationErrorSchema).toEqual({
-      addr: { street: { __errors: ['must NOT have fewer than 3 characters'] } },
-    });
-  });
+      expect(stateMessages(formRef)).toEqual(expected);
+      expect(toErrorList(formRef.current!.state.errorSchema).map(({ message }) => message)).toEqual(expected);
+    },
+  );
 
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const formRef = createRef<Form>();

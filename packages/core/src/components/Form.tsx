@@ -441,14 +441,26 @@ function withoutSuppliedErrors<T>(raised: ErrorSchema<T>, supplied: unknown[]): 
   return Object.entries(raised).reduce((acc: GenericObjectType, [key, value]) => {
     const suppliedHere = supplied.map((node) => at(node, key));
     if (key === ERRORS_KEY && Array.isArray(value)) {
-      const kept = value.filter((message) =>
-        suppliedHere.every((messages) => !Array.isArray(messages) || !messages.includes(message)),
-      );
+      // One copy leaves per supplied copy: `extraErrors` merges in with `concatArrays`, so when a server validating
+      // against the same schema reports the validator's own message, the raise carries it twice and one is the validator's
+      const remaining = suppliedHere.flatMap((messages) => (Array.isArray(messages) ? messages : []));
+      const kept = value.filter((message) => {
+        const found = remaining.indexOf(message);
+        if (found === -1) {
+          return true;
+        }
+        remaining.splice(found, 1);
+        return false;
+      });
       if (kept.length > 0) {
         acc[key] = kept;
       }
     } else if (isObject(value)) {
-      acc[key] = withoutSuppliedErrors(value as ErrorSchema<T>, suppliedHere);
+      const child = withoutSuppliedErrors(value as ErrorSchema<T>, suppliedHere);
+      // An emptied branch would read as a validator error still being there to the `oldValidationError` test
+      if (Object.keys(child).length > 0) {
+        acc[key] = child;
+      }
     }
     return acc;
   }, {}) as ErrorSchema<T>;
@@ -1314,7 +1326,14 @@ export default class Form<
           }
         } else {
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(customErrors.ErrorSchema, path, newErrorSchema, true);
+          // Only `extraErrors` is left out: `setByPath` replaces the node, so leaving out what `customErrors` holds
+          // there would drop an error a field re-raises
+          setByPath(
+            customErrors.ErrorSchema,
+            path,
+            withoutSuppliedErrors(newErrorSchema, [getByPath(extraErrors, path)]),
+            true,
+          );
         }
       }
     } else if (customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
