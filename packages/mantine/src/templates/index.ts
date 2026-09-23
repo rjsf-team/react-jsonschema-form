@@ -25,7 +25,7 @@ export function createTemplates() {
     ArrayFieldTitleTemplate,
     BaseInputTemplate,
     CyclicSchemaExpandTemplate,
-    ButtonTemplates,
+    ButtonTemplates: { ...ButtonTemplates },
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
