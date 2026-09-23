@@ -1,4 +1,4 @@
-import { createRef, useEffect, useRef, useState, useCallback } from 'react';
+import { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -1410,6 +1410,44 @@ describe('validateForm()', () => {
     additionalProperties: false,
   };
   const formData = { foo: 'bar', baz: 'baz' };
+
+  it('reads ui:required with the formContext of the props it validates with, before the form commits them', () => {
+    const formRef = createFormRef();
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: { type: 'object', properties: { name: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      items: (_item: unknown, _index: number, formContext?: { strict?: boolean }) =>
+        formContext?.strict ? { name: { 'ui:required': true } } : {},
+    };
+    const listData = [{}];
+    const results: boolean[] = [];
+    function Parent({ strict }: { strict: boolean }) {
+      const formContext = useMemo(() => ({ strict }), [strict]);
+      // Runs after the form's own componentDidUpdate but before the state it queues there commits
+      useLayoutEffect(() => {
+        if (strict) {
+          results.push(formRef.current!.validateForm());
+        }
+      }, [strict]);
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          formData={listData}
+          formContext={formContext}
+        />
+      );
+    }
+    const { rerender } = render(<Parent strict={false} />);
+
+    rerender(<Parent strict />);
+
+    expect(results).toEqual([false]);
+  });
 
   it('validates the current formData, extra fields included, if omitExtraData is false', () => {
     const formRef = createFormRef();

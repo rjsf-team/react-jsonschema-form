@@ -45,6 +45,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   ROOT_FIELD_PATH,
+  UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   validationDataMerge,
   ERRORS_KEY,
@@ -434,12 +435,10 @@ function mergeErrors<T>(
 /** Validates the `formData` against the `schema` using the `schemaUtils` and the validation props, returning the
  * results.
  *
- * @param props - The props holding `customValidate`, `transformErrors` and `uiSchema`
- * @param context - The render context to validate with: its `schemaUtils` runs the validator, its `schema` is the
- *          constraint set, and `ui:required` is read with the `formContext` and `globalUiOptions` its registry
- *          normalized, so those cannot be mismatched by a caller. Its `retrievedSchema` is deliberately NOT used:
- *          whether the resolved schema may stand in for the root is the caller's to decide, which is what the
- *          separate parameter below is for.
+ * @param props - The props holding `customValidate`, `transformErrors`, `uiSchema` and `formContext`
+ * @param context - The render context to validate with: its `schemaUtils` runs the validator and its `schema` is the
+ *          constraint set. Its `retrievedSchema` is deliberately NOT used: whether the resolved schema may stand in
+ *          for the root is the caller's to decide, which is what the separate parameter below is for.
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
  */
@@ -449,8 +448,8 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
   formData: T | undefined,
   retrievedSchema?: S,
 ): ValidationData<T> {
-  const { schemaUtils, schema, registry } = context;
-  const { customValidate, transformErrors, uiSchema } = props;
+  const { schemaUtils, schema } = context;
+  const { customValidate, transformErrors, uiSchema, formContext } = props;
   // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
   // Otherwise validate against the original schema so AJV sees the full constraint set.
   const validationSchema = retrievedSchema ?? schema;
@@ -463,14 +462,14 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
     .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
   // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
   // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
-  // Read off the registry rather than off the props, so a function-form `uiSchema.items` sees the same normalized
-  // `formContext` and `globalUiOptions` here as it does while rendering
+  // Read off the same props as `uiSchema`, not the context's registry, which lags the props until the form commits
+  // them; normalized as `buildRegistry()` does, so a function-form `uiSchema.items` sees what it sees while rendering
   const uiRequiredErrorSchema = schemaUtils.getUiRequiredErrorSchema(
     uiSchema,
     formData,
     undefined,
-    registry.globalUiOptions,
-    registry.formContext,
+    uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+    formContext ?? ({} as F),
   );
   if (Object.keys(uiRequiredErrorSchema).length === 0) {
     // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
