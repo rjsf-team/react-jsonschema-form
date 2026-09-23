@@ -430,6 +430,13 @@ describe('findSchemaDefinition()', () => {
     expect(findSchemaDefinition('b.json', networkSchema, '//cdn.example.com/c.json')).toBe(networkSchema.$defs!.b);
     expect(findSchemaDefinition('//CDN.Example.com/b.json', networkSchema, '#')).toBe(networkSchema.$defs!.b);
   });
+  it('compares the host of an absolute `$id` with a non-special scheme case-insensitively', () => {
+    const gitSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { g: { $id: 'git://HOST.example.com/b.json', type: 'number' } },
+    };
+    expect(findSchemaDefinition('git://host.example.com/b.json', gitSchema, '#')).toBe(gitSchema.$defs!.g);
+  });
   it('compares refs to `$id`s after percent-encoding and dot-segment normalization', () => {
     const encodedSchema: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',

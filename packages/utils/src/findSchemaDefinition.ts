@@ -55,6 +55,8 @@ function resolveUri(base: string, ref: string): string {
   try {
     const resolved = new URL(ref, new URL(base, SYNTHETIC_BASE));
     if (resolved.protocol !== SYNTHETIC_PROTOCOL) {
+      // A non-special scheme keeps its host as written, but RFC 3986 §6.2.2.1 makes the host case-insensitive
+      resolved.hostname = resolved.hostname.toLowerCase();
       return resolved.href;
     }
     if (resolved.host !== SYNTHETIC_HOST) {
