@@ -247,3 +247,9 @@ Declaring `additionalProperties: true` on the schema keeps them.
 A schema that pairs multiple types with an `anyOf` or `oneOf` renders both selectors, the type selector wrapping the option selector.
 Each option renders for whichever type is currently chosen, so every member of the union is reachable from within an option, and changing the type re-renders the option for the new one.
 A schema that pins its value with an `enum`, a `const`, or an `anyOf`/`oneOf` whose options are all constants gets no type selector, since switching type would only cast the chosen value into one the schema rejects.
+A field whose `ui:widget` is a component gets none either, the same way one with a `ui:field` does: a control written for that schema handles the types it allows, so wrapping it would pin the schema to one of them and cast the value on every switch.
+A `ui:widget` naming a widget by string renders within the selector instead, since it is a theme's control for a single type, and is dropped for a chosen type the theme has no implementation of.
+A schema with no usable type of its own — an unrecognized `type`, or an `additionalProperties` entry left unconstrained — still gets a selector, since it lists no types for such a control to handle, and the widget renders within it for whichever type is chosen.
+
+The field around the value and the field for the value share one label between them, so the schema's `title` and `description` are rendered once whichever type is chosen.
+A union that resolves to a type whose field renders no label of its own — an `object` or a `boolean` first in the list — has the value field render them.

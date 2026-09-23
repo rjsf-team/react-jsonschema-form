@@ -224,7 +224,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: true } as RJSFSchema,
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: '42.6' },
+        formData: { aKey: '42' },
       });
 
       const select = node.querySelector('select')!;
@@ -242,7 +242,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.selectOptions(select, select.options[2]);
 
       expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toBeInTheDocument();
-      expectToHaveBeenCalledWithFormData(onChange, { aKey: 43 }, 'root_aKey');
+      expectToHaveBeenCalledWithFormData(onChange, { aKey: 42 }, 'root_aKey');
       // The key of the additional property is still editable alongside the type selector
       expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
     });
@@ -528,7 +528,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // An `object` field renders no label, so its own title is the only heading the value has and must survive the
       // rule that drops a second label
-      expect(node.querySelector('#root_foo__title')).toBeInTheDocument();
+      expect(node.querySelector('#root_foo__title')).toHaveTextContent('Foo');
     });
 
     it('gives the composed selectors distinct DOM ids', () => {
@@ -550,6 +550,116 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // the `XxxOf` suffix that keeps them apart has to survive being reached one level deeper than before
       const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
       expect(ids).toHaveLength(new Set(ids).size);
+    });
+
+    it('reaches every type from an additional property whose value has been cleared', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: true } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: 'text' },
+      });
+
+      await user.clear(node.querySelector<HTMLInputElement>('#root_aKey')!);
+      const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+
+      // Clearing an additional property stores the empty string so its key survives, which must not read as a
+      // `string` the selector has to go back to and so put every other type out of reach of a cleared value
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('boolean');
+      expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+    });
+
+    it('renders the title and description of a union whose field renders no label of its own', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { title: 'TITLE', description: 'DESCRIPTION', type: ['object', 'string'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // An `object` field renders neither, and the union resolves to its first type for that decision, so the value
+      // field is the only place either of them can appear
+      expect(node.querySelector('#root_multi__title')).toHaveTextContent('TITLE');
+      expect(node).toHaveTextContent('DESCRIPTION');
+    });
+
+    it('renders the title of a union that resolves to a type with no label once', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { multi: { title: 'TITLE', type: ['boolean', 'string'] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const labels = Array.from(node.querySelectorAll('label')).map((label) => label.textContent);
+      expect(labels).toEqual(['Type', 'TITLE']);
+    });
+
+    it('names an untitled union after the property, as the field for a single type does', () => {
+      const withFallback = createFormComponent({
+        schema: { type: 'object', properties: { config: { type: ['object', 'string'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+      const withoutFallback = createFormComponent({
+        schema: { type: 'object', properties: { config: { type: 'object' } } } as RJSFSchema,
+      });
+
+      // The value field is the only place a heading can appear here, so naming its role there would rename every
+      // untitled property the moment the fallback UI is turned on
+      expect(withFallback.node.querySelector('#root_config__title')).toHaveTextContent('config');
+      expect(withoutFallback.node.querySelector('#root_config__title')).toHaveTextContent('config');
+    });
+
+    it('gives way to form data of another type that replaces an empty string', () => {
+      const schema = {
+        type: 'object',
+        properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
+      } as RJSFSchema;
+      const { node, rerender } = createFormComponent({
+        schema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: ['an item'] },
+      });
+
+      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { val: '' } });
+
+      // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
+      // any other, so the selector must follow it rather than leave the array UI standing over string data
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
+    });
+
+    it('gives way to an empty string that replaces the object of an additional property', () => {
+      const schema = { type: 'object', additionalProperties: true } as RJSFSchema;
+      const { node, rerender } = createFormComponent({
+        schema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { aKey: { a: 1 } },
+      });
+
+      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { aKey: '' } });
+
+      // An `object` selection starts out as the empty object of its own rather than the empty string a cleared value
+      // is stored as, so this one arrived from outside the form and is `string` data the selector has to follow
+      const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
+    });
+
+    it('leaves a union to a widget the caller supplied as a component', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { multi: { type: ['string', 'number'] } } } as RJSFSchema,
+        uiSchema: { multi: { 'ui:widget': () => <div id='own-widget' /> } },
+        useFallbackUiForUnsupportedType: true,
+        formData: { multi: 'a string' },
+      });
+
+      // A control written for this schema handles the union itself, so wrapping it in a selector that pins the type
+      // and casts the value on every switch would take away what it was written to do
+      expect(node.querySelector('#own-widget')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
     });
 
     it('offers no type selector for an additional property constrained without a type', () => {
@@ -735,18 +845,33 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('value', '');
     });
 
-    it('rounds a numeric string to the integer it reads as', async () => {
+    it('converts a numeric string to the integer it reads as', async () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['string', 'integer'] } } } as RJSFSchema,
         useFallbackUiForUnsupportedType: true,
-        formData: { val: '3.7' },
+        formData: { val: '4' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
       await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'integer')!);
 
-      // Clearing a value with no numeric form must not cost the conversion of one that has it
+      // Clearing a value with no integer form must not cost the conversion of one that has it
       expectToHaveBeenCalledWithFormData(onChange, { val: 4 }, 'root_val');
+    });
+
+    it('leaves an integer empty for a fractional value that has no integer form', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'integer'] } } } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: -2.5 },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'integer')!);
+
+      // Rounding would rewrite the value the user entered, and switching back would show the rounded value rather
+      // than what they had, so the number they typed is never recoverable
+      expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val');
     });
 
     it('keeps the selected type while a number is mid-edit', async () => {

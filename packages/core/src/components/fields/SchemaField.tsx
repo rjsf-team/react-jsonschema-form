@@ -125,7 +125,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>,
   isSelectSchema: boolean,
 ): { FieldComponent: ComponentType<FieldProps<T, S, F>>; rendersFallbackUi: boolean } {
-  const { field } = uiOptions;
+  const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
   if (typeof field === 'function') {
     return { FieldComponent: field, rendersFallbackUi: false };
@@ -143,15 +143,21 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
-  // Without it the first type wins, as it always has.
+  // Without it the first type the schema lists is the one rendered.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
   // of the union stays reachable from inside an option.
   // A select is left alone, since its options are constants that pin the value; an `enum` or `const` is left alone for
   // the same reason, as switching type would cast a value the user picked into one the schema rejects and leave a
-  // select still offering values of the old type
+  // select still offering values of the old type.
+  // A `ui:widget` given as a component is left alone too, for the same reason a `ui:field` is: the caller wrote a
+  // control for this very schema, unions included, so wrapping it in a type selector that pins the type and casts the
+  // value on every switch would take away what it was written to do. A widget named by string is a theme's control for
+  // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead
+  const isNamedWidget = !widget || typeof widget === 'string';
   if (
     globalFormOptions.useFallbackUiForUnsupportedType &&
+    isNamedWidget &&
     !isSelectSchema &&
     !schema.enum &&
     !isConstant<S>(schema) &&

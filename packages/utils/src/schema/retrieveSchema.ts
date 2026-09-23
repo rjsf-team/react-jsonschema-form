@@ -557,7 +557,7 @@ const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
  * @param [subSchema] - The `additionalProperties` schema describing the property, unless it is simply `true`
  * @returns - The stub schema for the additional property
  */
-function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: any, subSchema: S = {} as S): S {
+function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
   const schema: GenericObjectType = {};
   Object.entries(subSchema).forEach(([key, value]) => {

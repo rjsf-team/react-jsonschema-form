@@ -50,7 +50,7 @@ import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
-import getUnionTypes from './getUnionTypes.ts';
+import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
@@ -190,6 +190,7 @@ export {
   getOptionValueFormat,
   getSchemaType,
   getByPath,
+  getKnownTypes,
   getStaticItemsUiSchema,
   getSubmitButtonOptions,
   getTemplate,

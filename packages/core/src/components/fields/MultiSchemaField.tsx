@@ -222,7 +222,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     // A parent allowing several types propagates the single type it is rendered as rather than the union itself, since
     // an option inheriting the whole union would read as a multi-type schema of its own. With the fallback UI on the
     // type selector has already pinned the parent to one type by the time an option is built, so this is that type;
-    // with it off the first type wins, which is the one-way behavior such a schema has always had.
+    // with it off it is the first type the union lists, which is the only one such a schema reaches.
     // A union listing `null` first propagates the first type that can hold a value instead, since propagating `null`
     // would have the check below drop the option's value field and leave the option selector standing alone
     if (schemaType !== undefined && !('type' in option)) {

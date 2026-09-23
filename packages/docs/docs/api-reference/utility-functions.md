@@ -654,6 +654,20 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 - InputPropsType: The extracted `InputPropsType` object
 
+### getKnownTypes()
+
+Gets the JSON Schema types a `schema` lists, without the duplicates and the type names that are not one of `JSON_SCHEMA_TYPES`, which no field can render.
+A schema whose `type` is a single name lists nothing, since a name of its own is not a list to choose from, so an empty array is returned for it.
+[getUnionTypes()](#getuniontypes) is this list narrowed to the schemas that allow more than one type, and `FallbackField` uses the list itself to offer exactly the types a schema names, even when it names only one.
+
+#### Parameters
+
+- schema: S - The schema for which to get the listed types
+
+#### Returns
+
+- JSONSchema7TypeName[]: The JSON Schema types the `schema` lists, empty when it lists none
+
 ### getNumericInputTitle()
 
 Builds the `title` for the `<input>` described by `inputProps`.
@@ -795,7 +809,7 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 ### getUnionTypes()
 
 Gets the list of types a `schema` allows when it allows more than one of them, i.e. its `type` is an array of two or more non-`null` type names.
-Type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
+The list is the one [getKnownTypes()](#getknowntypes) returns, so type names that are not one of `JSON_SCHEMA_TYPES` are dropped, since no field can render them, as are duplicates.
 A schema allowing a single type, with or without `null`, is one that [getSchemaType()](#getschematype) resolves to that type, so it is not a union and `undefined` is returned for it.
 `SchemaField` uses this to route a multi-type schema to `FallbackField` when the [useFallbackUiForUnsupportedType](./form-props.md#usefallbackuiforunsupportedtype) prop is set.
 

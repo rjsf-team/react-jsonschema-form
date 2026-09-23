@@ -1,7 +1,34 @@
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import type { RJSFSchema } from '../src/index.ts';
-import { getUnionTypes } from '../src/index.ts';
+import { getKnownTypes, getUnionTypes } from '../src/index.ts';
+
+const knownCases: { schema: RJSFSchema; expected: JSONSchema7TypeName[] }[] = [
+  {
+    schema: { type: 'string' },
+    expected: [],
+  },
+  {
+    schema: {},
+    expected: [],
+  },
+  {
+    schema: { type: ['string'] },
+    expected: ['string'],
+  },
+  {
+    schema: { type: ['string', 'string', 'null'] },
+    expected: ['string', 'null'],
+  },
+  {
+    schema: { type: ['string', 'bogus'] as JSONSchema7TypeName[] },
+    expected: ['string'],
+  },
+  {
+    schema: { type: ['bogus'] as unknown as JSONSchema7TypeName[] },
+    expected: [],
+  },
+];
 
 const cases: { schema: RJSFSchema; expected: JSONSchema7TypeName[] | undefined }[] = [
   {
@@ -51,6 +78,15 @@ describe('getUnionTypes()', () => {
     'should return the types "%s" allowed by the schema %j',
     (expected, schema) => {
       expect(getUnionTypes(schema)).toEqual(expected);
+    },
+  );
+});
+
+describe('getKnownTypes()', () => {
+  test.each(knownCases.map((c) => [c.expected, c.schema]))(
+    'should return the types "%s" listed by the schema %j',
+    (expected, schema) => {
+      expect(getKnownTypes(schema)).toEqual(expected);
     },
   );
 });
