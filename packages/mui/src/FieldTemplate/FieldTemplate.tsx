@@ -37,9 +37,11 @@ export default function FieldTemplate<
     displayLabel,
     hidden,
     label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     readonly,
     required,
     rawErrors = [],
@@ -73,11 +75,13 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      keyName={keyName}
       displayLabel={displayLabel}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       readonly={readonly}
       required={required}
       schema={schema}

@@ -1208,6 +1208,23 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should not rename a deprecated key to its decorated label when the key input is blurred', async () => {
+      // `deprecatedHandling` defaults to `label`, so the property's label carries a marker its key must not pick up
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', deprecated: true } },
+        formData: { first: 'a value' },
+      });
+
+      const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
+      expect(keyInput).toHaveValue('first');
+
+      await user.click(keyInput);
+      await user.tab();
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+    });
+
     it('should preserve focus on value field after renaming key via Tab', async () => {
       const { node } = createFormComponent({
         schema,
@@ -2007,6 +2024,258 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { Example: { name: undefined } }, 'root_Example_name');
       expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+    });
+  });
+
+  describe('propertyNames', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      propertyNames: { enum: ['a', 'b', 'c', 'd'] },
+    };
+
+    it('should render the additional property key as a select of the allowed names', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect(keySelect).not.toBeNull();
+      expect(node.querySelector('input#root_a-key')).toBeNull();
+      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b', 'c', 'd']);
+      expect(keySelect).toHaveDisplayValue('a');
+    });
+
+    it('should leave the names sibling properties already hold out of the select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first', c: 'second' } });
+
+      const optionsFor = (key: string) =>
+        [...node.querySelector<HTMLSelectElement>(`select#root_${key}-key`)!.options]
+          .map((option) => option.textContent)
+          .filter(Boolean);
+      expect(optionsFor('a')).toEqual(['a', 'b', 'd']);
+      expect(optionsFor('c')).toEqual(['b', 'c', 'd']);
+    });
+
+    it('should rename the property as soon as a name is selected', async () => {
+      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      await user.selectOptions(node.querySelector('select#root_a-key')!, 'd');
+
+      expectToHaveBeenCalledWithFormData(onChange, { d: 'first' }, 'root');
+    });
+
+    it('should add a new property under the first allowed name that is still free', async () => {
+      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { a: 'first', b: 'New Value' }, 'root');
+    });
+
+    it('should skip a name the schema declares as a property of its own when adding', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { ...schema, properties: { a: { type: 'string' } } },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { b: 'New Value' }, 'root');
+    });
+
+    it('should add under a free name when a key matches no pattern of a patternProperties object', async () => {
+      // `retrieveSchema()` stubs every form data key into the properties, a key matching no pattern included, which is
+      // what lets the search for a free name read the properties alone
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: { xyz: 'first' },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      // The object names no `additionalProperties`, so the new property has no schema to seed a value from
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: null }, 'root');
+    });
+
+    it('should prefer a name matching a pattern when a patternProperties object has none to fall back on', async () => {
+      // A name matching no pattern has no subschema of its own, so `retrieveSchema()` stubs it as `{ type: 'null' }`
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: null }, 'root');
+    });
+
+    it('should not prefer a pattern match when additionalProperties gives every name a schema', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should read the key of a deprecated property from its name rather than its decorated label', async () => {
+      // `deprecatedHandling` defaults to `label`, which appends a marker to the label an additional property takes
+      // from its key. The key the dropdown reads and renames has to stay the undecorated one
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string', deprecated: true },
+          propertyNames: { enum: ['a', 'b'] },
+        },
+        formData: { a: 'first' },
+      });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b']);
+      expect(keySelect).toHaveDisplayValue('a');
+
+      await user.selectOptions(keySelect, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { b: 'first' }, 'root');
+    });
+
+    it('should offer no add button once every allowed name is taken', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { a: '1', b: '2', c: '3', d: '4' },
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should offer no add button when the enum allows no name at all', () => {
+      // An empty `enum` matches nothing, so no key could validate and the object has to stay as it is
+      const { node } = createFormComponent({
+        schema: { ...schema, propertyNames: { enum: [] } },
+        formData: {},
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should offer no add button once every allowed name is taken by a declared property', () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, properties: { a: {}, b: {}, c: {}, d: {} } },
+        formData: {},
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should offer no add button once every name a $ref propertyNames allows is taken', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          definitions: { keys: { enum: ['a', 'b'] } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { $ref: '#/definitions/keys' },
+        },
+        formData: { a: '1', b: '2' },
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
+    it('should keep the text input for a property with no name left to offer', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
+      });
+
+      expect(node.querySelector('select#root_zzz-key')).toBeNull();
+      expect(node.querySelector('input#root_zzz-key')).toHaveValue('zzz');
+    });
+
+    it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: '1', zzz: '2' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_zzz-key')!;
+      expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual([
+        'zzz',
+        'b',
+        'c',
+        'd',
+      ]);
+      expect(keySelect).toHaveDisplayValue('zzz');
+      expect([...keySelect.options].find((option) => option.textContent === 'zzz')).toBeDisabled();
+    });
+
+    it('should offer no blank placeholder option to select', () => {
+      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].some((option) => option.value === '')).toBe(false);
+    });
+
+    it('should resolve a propertyNames given as a $ref', () => {
+      const refSchema: RJSFSchema = {
+        type: 'object',
+        definitions: { keys: { enum: ['a', 'b'] } },
+        additionalProperties: { type: 'string' },
+        propertyNames: { $ref: '#/definitions/keys' },
+      };
+      const { node } = createFormComponent({ schema: refSchema, formData: { a: 'first' } });
+
+      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
+    });
+
+    it('should keep the text input for a propertyNames $ref that resolves to nothing', () => {
+      // Only `propertyNames` reads this `$ref`, so a schema carrying a broken one still has an object to render
+      const brokenRefSchema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        propertyNames: { $ref: '#/definitions/missing' },
+      };
+
+      const { node } = createFormComponent({ schema: brokenRefSchema, formData: { a: 'first' } });
+
+      expect(node.querySelector('select#root_a-key')).toBeNull();
+      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
+    });
+
+    it('should keep the text input when propertyNames carries no enum', () => {
+      const { node } = createFormComponent({
+        schema: { ...schema, propertyNames: { maxLength: 3 } },
+        formData: { a: 'first' },
+      });
+
+      expect(node.querySelector('select#root_a-key')).toBeNull();
+      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
+    });
+
+    it('should keep the text input for a property that is declared rather than additional', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          propertyNames: { enum: ['a', 'b'] },
+        },
+        formData: { a: 'first', b: 'second' },
+      });
+
+      expect(node.querySelector('#root_a-key')).toBeNull();
+      expect(node.querySelector('select#root_b-key')).not.toBeNull();
     });
   });
   describe('markdown', () => {

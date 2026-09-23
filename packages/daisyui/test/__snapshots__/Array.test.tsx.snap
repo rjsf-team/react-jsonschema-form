@@ -490,10 +490,11 @@ exports[`array fields > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -505,7 +506,7 @@ exports[`array fields > checkboxes 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -1942,10 +1943,11 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -1957,7 +1959,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -4517,10 +4519,11 @@ exports[`with title and description > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -4532,7 +4535,7 @@ exports[`with title and description > checkboxes 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -5384,10 +5387,11 @@ exports[`with title and description from both > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -5399,7 +5403,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -6251,10 +6255,11 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -6266,7 +6271,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -7030,10 +7035,11 @@ exports[`with title and description with global label off > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -7045,7 +7051,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"

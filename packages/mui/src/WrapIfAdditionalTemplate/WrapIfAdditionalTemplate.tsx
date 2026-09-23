@@ -9,7 +9,13 @@ import type {
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString, getUiOptions } from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
+  TranslatableString,
+  getUiOptions,
+} from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
@@ -44,9 +50,12 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    keyName,
     displayLabel,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     readonly,
     required,
     schema,
@@ -87,19 +96,41 @@ export default function WrapIfAdditionalTemplate<
       {...wrapGridContainer}
       sx={computeSxProps<GridProps>({ alignItems: 'flex-start' }, wrapGridContainer)}
     >
-      <Grid size={5.5} {...wrapKeyGridItem}>
-        <TextField
-          key={label}
-          fullWidth
-          required={required}
-          label={displayLabel ? keyLabel : undefined}
-          defaultValue={label}
-          disabled={disabled || readonly}
-          id={`${id}-key`}
-          name={`${id}-key`}
-          onBlur={!readonly ? onKeyRenameBlur : undefined}
-          type='text'
-        />
+      {/* The free-text `TextField` below sets `fullWidth` itself; the key dropdown is the theme's own `SelectWidget`,
+          which has no say in how wide this column wants it, and mui renders a bare `TextField` at intrinsic width.
+          Sizing it from the column keeps the two branches the same width */}
+      <Grid
+        size={5.5}
+        {...wrapKeyGridItem}
+        sx={computeSxProps<GridProps>({ '& > .MuiFormControl-root': { width: '100%' } }, wrapKeyGridItem)}
+      >
+        {propertyNamesEnum ? (
+          <AdditionalPropertyKeySelect<T, S, F>
+            id={`${id}-key`}
+            label={keyLabel}
+            hideLabel={!displayLabel}
+            value={keyName}
+            propertyNamesEnum={propertyNamesEnum}
+            onKeyRename={onKeyRename}
+            disabled={disabled}
+            readonly={readonly}
+            required={required}
+            registry={registry}
+          />
+        ) : (
+          <TextField
+            key={keyName}
+            fullWidth
+            required={required}
+            label={displayLabel ? keyLabel : undefined}
+            defaultValue={keyName}
+            disabled={disabled || readonly}
+            id={`${id}-key`}
+            name={`${id}-key`}
+            onBlur={!readonly ? onKeyRenameBlur : undefined}
+            type='text'
+          />
+        )}
       </Grid>
       <Grid size={5.5} {...wrapChildrenGridItem}>
         {children}

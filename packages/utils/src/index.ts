@@ -1,3 +1,5 @@
+import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
+import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
 import canExpand from './canExpand.ts';
@@ -34,6 +36,7 @@ import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
@@ -124,6 +127,7 @@ export * from './parser/index.ts';
 export * from './schema/index.ts';
 
 export type {
+  AdditionalPropertyKeySelectProps,
   DateElementFormat,
   DateElementProp,
   DateElementProps,
@@ -138,6 +142,7 @@ export type {
 };
 
 export {
+  AdditionalPropertyKeySelect,
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
@@ -170,6 +175,7 @@ export {
   getDateTimeLocalValue,
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
+  getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
   getNumericInputTitle,

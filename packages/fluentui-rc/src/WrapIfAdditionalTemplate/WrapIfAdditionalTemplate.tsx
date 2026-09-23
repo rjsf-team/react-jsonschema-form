@@ -2,11 +2,17 @@ import type { CSSProperties } from 'react';
 import { Field, Input, makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   input: {
     width: '100%',
+  },
+  // `Dropdown` ships a 250px `min-width` of its own, which overflows the column the key sits in rather than shrinking
+  // to it the way the key input does
+  keySelect: {
+    width: '100%',
+    minWidth: 0,
   },
   grow: {
     flexGrow: 1,
@@ -47,9 +53,12 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
+    keyName,
     displayLabel,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     rawDescription,
     readonly,
     required,
@@ -85,21 +94,37 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Flex gap='gap.medium' vAlign='start' key={`${id}-key`} className={classNames} style={style}>
       <div className={classes.halfWidth}>
-        <Field label={displayLabel ? keyLabel : undefined} required={required}>
-          <Input
-            key={label}
-            required={required}
-            defaultValue={label}
-            disabled={disabled || readonly}
+        {propertyNamesEnum ? (
+          <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
-            name={`${id}-key`}
-            onBlur={!readonly ? onKeyRenameBlur : undefined}
-            type='text'
-            input={{
-              className: classes.input,
-            }}
+            className={classes.keySelect}
+            label={keyLabel}
+            hideLabel={!displayLabel}
+            value={keyName}
+            propertyNamesEnum={propertyNamesEnum}
+            onKeyRename={onKeyRename}
+            disabled={disabled}
+            readonly={readonly}
+            required={required}
+            registry={registry}
           />
-        </Field>
+        ) : (
+          <Field label={displayLabel ? keyLabel : undefined} required={required}>
+            <Input
+              key={keyName}
+              required={required}
+              defaultValue={keyName}
+              disabled={disabled || readonly}
+              id={`${id}-key`}
+              name={`${id}-key`}
+              onBlur={!readonly ? onKeyRenameBlur : undefined}
+              type='text'
+              input={{
+                className: classes.input,
+              }}
+            />
+          </Field>
+        )}
       </div>
       <div className={classes.halfWidth}>{children}</div>
       <div className={hasDescription ? classes.alignCenter : classes.alignEnd}>

@@ -684,6 +684,11 @@ export type FieldTemplateProps<
   style?: StyleHTMLAttributes<any>;
   /** The computed label for this field, as a string */
   label: string;
+  /** The name of this field's property in its parent object, carrying none of the decoration `label` may have picked
+   * up — a `ui:title`, or the marker a `deprecated` schema adds. The key of an `additionalProperties` property is
+   * this rather than its `label`, so renaming one reads and writes the real key
+   */
+  keyName: string;
   /** A component instance rendering the field description, if one is defined (this will use any custom
    * `DescriptionField` defined)
    */
@@ -729,6 +734,11 @@ export type FieldTemplateProps<
   onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
   /** Callback used to handle the removal of the additionalProperty */
   onRemoveProperty: () => void;
+  /** The key names an `additionalProperties` property is allowed to be renamed to, derived from the parent schema's
+   * `propertyNames.enum` and narrowed to the names its siblings have not already taken. Undefined when the parent
+   * schema does not constrain its property names
+   */
+  propertyNamesEnum?: string[];
 };
 
 /**
@@ -1020,6 +1030,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'style'
     | 'displayLabel'
     | 'label'
+    | 'keyName'
     | 'required'
     | 'readonly'
     | 'disabled'
@@ -1028,6 +1039,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'onKeyRename'
     | 'onKeyRenameBlur'
     | 'onRemoveProperty'
+    | 'propertyNamesEnum'
     | 'registry'
   >;
 

@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
 
@@ -20,8 +20,11 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     displayLabel,
     label,
+    keyName,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     rawDescription,
     readonly,
     required,
@@ -60,14 +63,29 @@ export default function WrapIfAdditionalTemplate<
           <div className='form-group'>
             {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
             {displayLabel && rawDescription && <div>&nbsp;</div>}
-            <input
-              key={label}
-              className='form-control'
-              type='text'
-              id={`${id}-key`}
-              onBlur={onKeyRenameBlur}
-              defaultValue={label}
-            />
+            {propertyNamesEnum ? (
+              <AdditionalPropertyKeySelect<T, S, F>
+                id={`${id}-key`}
+                label={keyLabel}
+                hideLabel
+                value={keyName}
+                propertyNamesEnum={propertyNamesEnum}
+                onKeyRename={onKeyRename}
+                disabled={disabled}
+                readonly={readonly}
+                required={required}
+                registry={registry}
+              />
+            ) : (
+              <input
+                key={keyName}
+                className='form-control'
+                type='text'
+                id={`${id}-key`}
+                onBlur={onKeyRenameBlur}
+                defaultValue={keyName}
+              />
+            )}
           </div>
         </div>
         <div className='form-additional form-group col-xs-5'>{children}</div>

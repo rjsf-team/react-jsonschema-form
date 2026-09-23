@@ -42,6 +42,8 @@ export const UNGROUPED_SECTION_KEY = 'ungrouped';
  * Props interface for the FancySelect component
  */
 interface FancySelectInterface {
+  /** The id given to the button that opens the dropdown, so a label can point at it */
+  id?: string;
   /** Array of items to display in the dropdown */
   items: FancySelectItem[] | undefined;
   /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
@@ -76,6 +78,7 @@ interface FancySelectInterface {
  * @returns A React component that renders a searchable select dropdown
  */
 export function FancySelect({
+  id,
   items,
   sections,
   selected,
@@ -151,6 +154,7 @@ export function FancySelect({
       aria-placeholder={ariaPlaceholder}
     >
       <button
+        id={id}
         type='button'
         disabled={disabled}
         aria-expanded={open}

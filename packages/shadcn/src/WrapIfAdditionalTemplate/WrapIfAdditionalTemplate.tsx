@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
@@ -20,9 +20,12 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
+  keyName,
   displayLabel,
   onRemoveProperty,
+  onKeyRename,
   onKeyRenameBlur,
+  propertyNamesEnum,
   rawDescription,
   readonly,
   required,
@@ -59,17 +62,32 @@ export default function WrapIfAdditionalTemplate<
               </label>
             )}
             <div className='pl-0.5'>
-              <Input
-                key={label}
-                required={required}
-                defaultValue={label}
-                disabled={disabled || readonly}
-                id={keyId}
-                name={keyId}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                type='text'
-                className='w-full border shadow-sm'
-              />
+              {propertyNamesEnum ? (
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={keyId}
+                  label={keyLabel}
+                  hideLabel
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+              ) : (
+                <Input
+                  key={keyName}
+                  required={required}
+                  defaultValue={keyName}
+                  disabled={disabled || readonly}
+                  id={keyId}
+                  name={keyId}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  type='text'
+                  className='w-full border shadow-sm'
+                />
+              )}
             </div>
             {!!rawDescription && (
               <span className='text-xs font-medium text-muted-foreground'>

@@ -107,6 +107,7 @@ export default function SelectWidget<
     <div className='p-0.5'>
       {!multiple ? (
         <FancySelect
+          id={id}
           items={items}
           sections={sections}
           selected={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '') as string}

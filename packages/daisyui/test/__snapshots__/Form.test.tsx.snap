@@ -1665,10 +1665,11 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     <div
                       class="dropdown w-full"
                     >
-                      <div
+                      <button
                         class="btn btn-outline w-full text-left flex justify-between items-center "
-                        role="button"
+                        id="root_color"
                         tabindex="0"
+                        type="button"
                       >
                         <span
                           class="truncate"
@@ -1680,7 +1681,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         >
                           ▼
                         </span>
-                      </div>
+                      </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                         role="listbox"
@@ -3347,10 +3348,11 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     <div
                       class="dropdown w-full"
                     >
-                      <div
+                      <button
                         class="btn btn-outline w-full text-left flex justify-between items-center "
-                        role="button"
+                        id="root_color"
                         tabindex="0"
+                        type="button"
                       >
                         <span
                           class="truncate"
@@ -3362,7 +3364,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         >
                           ▼
                         </span>
-                      </div>
+                      </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                         role="listbox"
@@ -3695,10 +3697,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         <div
                           class="dropdown w-full"
                         >
-                          <div
+                          <button
                             class="btn btn-outline w-full text-left flex justify-between items-center "
-                            role="button"
+                            id="root_region__oneof_select"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="truncate"
@@ -3710,7 +3713,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               ▼
                             </span>
-                          </div>
+                          </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                             role="listbox"
@@ -3771,10 +3774,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           <div
                             class="dropdown w-full"
                           >
-                            <div
+                            <button
                               class="btn btn-outline w-full text-left flex justify-between items-center "
-                              role="button"
+                              id="root_region"
                               tabindex="0"
+                              type="button"
                             >
                               <span
                                 class="truncate"
@@ -3786,7 +3790,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               >
                                 ▼
                               </span>
-                            </div>
+                            </button>
                             <ul
                               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                               role="listbox"
@@ -3885,10 +3889,11 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -3900,7 +3905,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -3969,10 +3974,11 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -3984,7 +3990,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -4083,10 +4089,11 @@ exports[`select widget from oneOf boolean constants with a null option without a
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -4098,7 +4105,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -4197,10 +4204,11 @@ exports[`select widget from oneOf constants without a type 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -4212,7 +4220,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -4296,10 +4304,11 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -4311,7 +4320,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -7076,10 +7085,11 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="dropdown w-full"
                         >
-                          <div
+                          <button
                             class="btn btn-outline w-full text-left flex justify-between items-center "
-                            role="button"
+                            id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="truncate"
@@ -7091,7 +7101,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               ▼
                             </span>
-                          </div>
+                          </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                             role="listbox"
@@ -7274,10 +7284,11 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="dropdown w-full"
                         >
-                          <div
+                          <button
                             class="btn btn-outline w-full text-left flex justify-between items-center "
-                            role="button"
+                            id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="truncate"
@@ -7289,7 +7300,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               ▼
                             </span>
-                          </div>
+                          </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                             role="listbox"
@@ -8274,10 +8285,11 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="dropdown w-full"
                         >
-                          <div
+                          <button
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
-                            role="button"
+                            id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="truncate"
@@ -8289,7 +8301,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               ▼
                             </span>
-                          </div>
+                          </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                             role="listbox"
@@ -8472,10 +8484,11 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="dropdown w-full"
                         >
-                          <div
+                          <button
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
-                            role="button"
+                            id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="truncate"
@@ -8487,7 +8500,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               ▼
                             </span>
-                          </div>
+                          </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                             role="listbox"
@@ -12225,10 +12238,11 @@ exports[`single fields > select field 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -12240,7 +12254,7 @@ exports[`single fields > select field 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -12324,10 +12338,11 @@ exports[`single fields > select field multiple choice 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -12339,7 +12354,7 @@ exports[`single fields > select field multiple choice 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -12473,10 +12488,11 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -12488,7 +12504,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -12739,10 +12755,11 @@ exports[`single fields > select field multiple choice formData 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -12754,7 +12771,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -12890,10 +12907,11 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -12905,7 +12923,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13019,10 +13037,11 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13034,7 +13053,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13287,10 +13306,11 @@ exports[`single fields > select field single choice formData 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13302,7 +13322,7 @@ exports[`single fields > select field single choice formData 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13386,10 +13406,11 @@ exports[`single fields > select field single choice optgroups 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13401,7 +13422,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13545,10 +13566,11 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13560,7 +13582,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13792,10 +13814,11 @@ exports[`single fields > select widget with description in schema and FieldTempl
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13807,7 +13830,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -13901,10 +13924,11 @@ exports[`single fields > select widget with selected oneOf option description 1`
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -13916,7 +13940,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -14002,10 +14026,11 @@ exports[`single fields > select widget with selected oneOf option description an
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
@@ -14017,7 +14042,7 @@ exports[`single fields > select widget with selected oneOf option description an
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -15455,10 +15480,11 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                     <div
                       class="dropdown w-full"
                     >
-                      <div
+                      <button
                         class="btn btn-outline w-full text-left flex justify-between items-center "
-                        role="button"
+                        id="root_answer"
                         tabindex="0"
+                        type="button"
                       >
                         <span
                           class="truncate"
@@ -15470,7 +15496,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                         >
                           ▼
                         </span>
-                      </div>
+                      </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
                         role="listbox"

@@ -1,4 +1,4 @@
-import { Flex, Grid, TextInput } from '@mantine/core';
+import { Flex, Grid, Input, TextInput } from '@mantine/core';
 import type {
   FormContextType,
   RJSFSchema,
@@ -6,7 +6,13 @@ import type {
   UiSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
+  buttonId,
+  TranslatableString,
+} from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -23,6 +29,7 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     label,
+    keyName,
     displayLabel,
     rawDescription,
     required,
@@ -30,8 +37,10 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     schema,
     uiSchema,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     registry,
     children,
   } = props;
@@ -61,18 +70,38 @@ export default function WrapIfAdditionalTemplate<
       <Flex gap='xs' align='end' justify='center'>
         <Grid w='100%' align='center'>
           <Grid.Col span={6} className='form-additional'>
-            <TextInput
-              key={label}
-              className='form-group'
-              label={displayLabel ? keyLabel : undefined}
-              defaultValue={label}
-              required={required}
-              description={rawDescription ? '\u00A0' : undefined}
-              disabled={disabled || readonly}
-              id={`${id}-key`}
-              name={`${id}-key`}
-              onBlur={!readonly ? onKeyRenameBlur : undefined}
-            />
+            {propertyNamesEnum ? (
+              <>
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={`${id}-key`}
+                  label={keyLabel}
+                  hideLabel={!displayLabel}
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+                {/* The key input below reserves a description row so the key lines up with the value beside it; the
+                    dropdown reserves the same row, since it renders no description of its own */}
+                {!!rawDescription && <Input.Description>&nbsp;</Input.Description>}
+              </>
+            ) : (
+              <TextInput
+                key={keyName}
+                className='form-group'
+                label={displayLabel ? keyLabel : undefined}
+                defaultValue={keyName}
+                required={required}
+                description={rawDescription ? '\u00A0' : undefined}
+                disabled={disabled || readonly}
+                id={`${id}-key`}
+                name={`${id}-key`}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
+              />
+            )}
           </Grid.Col>
           <Grid.Col span={6} className='form-additional'>
             {children}

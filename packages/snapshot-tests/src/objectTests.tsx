@@ -112,6 +112,35 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('additionalProperties, propertyNames enum', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        propertyNames: { enum: ['foo', 'bar', 'baz'] },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('additionalProperties with a description, propertyNames enum', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string', description: 'A description' },
+        propertyNames: { enum: ['foo', 'bar', 'baz'] },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('deprecated additionalProperties, propertyNames enum', async () => {
+      // `deprecatedHandling` defaults to `label`, so every theme's key control has to take the key from `keyName`
+      // rather than from the decorated `label` to keep reading, and renaming, the real key
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string', deprecated: true },
+        propertyNames: { enum: ['foo', 'bar', 'baz'] },
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('show add button and fields if additionalProperties is true and not an object', async () => {
       const schema: RJSFSchema = {
         additionalProperties: true,

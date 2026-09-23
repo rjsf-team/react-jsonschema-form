@@ -34,6 +34,27 @@ These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 ## Non-Validator utility functions
 
+### AdditionalPropertyKeySelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+A component that renders the key of an `additionalProperties` property as the theme's own `SelectWidget`, limited to
+the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) allows.
+A theme's `WrapIfAdditionalTemplate` renders it in place of its free-text key input whenever the `propertyNamesEnum`
+prop it is given is defined, so each theme only has to choose where the dropdown goes.
+
+#### Props
+
+- id: string - The id to give the rendered widget
+- label: string - The computed label for the key, as a string
+- value: string - The current key of the property, which is the selected option
+- propertyNamesEnum: string[] - The key names the property is allowed to take
+- onKeyRename: (newKey: string) => void - Callback used to rename the property to the newly selected key name
+- registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
+- [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
+- [disabled]: boolean - Optional flag, if true, the widget is disabled
+- [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
+- [readonly]: boolean - Optional flag, if true, the widget is read-only
+- [required]: boolean - Optional flag, if true, the widget is required
+
 ### allowAdditionalItems()
 
 Checks the schema to see if it is allowing additional items, by verifying that `schema.additionalItems` is an object.
@@ -107,6 +128,7 @@ Return a consistent `id` for the `btn` button element
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
 The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
+A `schema.propertyNames.enum` caps the object in the same way: once every name it allows is held by a property, there is no name left for a new one to be added under, so the field can no longer expand.
 
 #### Parameters
 
@@ -116,7 +138,7 @@ The UI for the field can expand if it has additional properties, is not forced a
 
 #### Returns
 
-- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, and not at the maxProperties limit
+- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
 ### createErrorHandler&lt;T = any>()
 
@@ -580,6 +602,26 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 #### Returns
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
+
+### getFreePropertyNames&lt;T = any, S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
+A name `schema.properties` declares is taken however empty its value is, since adding under it would write into that declared property rather than create an additional one.
+A name `formData` holds is taken whether or not `retrieveSchema()` has stubbed it in among the properties.
+An entry that is not a string names nothing a property key could equal, so it is dropped rather than offered as a name no validator would accept.
+An `undefined` return means the schema enumerates nothing at all, which is what tells "any name goes" apart from "no name is left to take" — the empty array.
+An `enum` that is empty, or that lists only non-strings, allows no key whatsoever and so reads as the latter.
+A `propertyNames` written as a `$ref` reads as the former, since resolving one needs a `schemaUtils` this has no access to; resolve it before calling if that matters.
+
+#### Parameters
+
+- schema: S - The schema whose `propertyNames.enum` names the property may take
+- [formData]: T | undefined - The form data whose keys count as taken alongside the schema's own properties
+- [keepName]: string | undefined - A name to count as free even when taken, the current key of a property being renamed
+
+#### Returns
+
+- string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
 
 ### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
@@ -1734,6 +1776,19 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 #### Returns
 
 - T | S: The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
+
+### getMatchingPatternProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the subset of a schema's `patternProperties` specifications whose patterns match the given `key`.
+
+#### Parameters
+
+- schema: S - The schema whose `patternProperties` are to be filtered
+- key: string - The key to match against the `patternProperties` specifications
+
+#### Returns
+
+- Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
 
 ### getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

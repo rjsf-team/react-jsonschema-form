@@ -19,6 +19,8 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  getFreePropertyNames,
+  getMatchingPatternProperties,
   getTemplate,
   getPropertySchema,
   getUiOptions,
@@ -83,6 +85,24 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
 }
 
+/** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. Without an
+ * `additionalProperties` schema to fall back on, a name matching none of the `patternProperties` patterns has no
+ * subschema of its own and `retrieveSchema()` stubs it as the unusable `{ type: 'null' }`, so a name that does match
+ * a pattern is worth more to the user than the first one the `enum` happens to list. It stays a preference rather
+ * than a restriction: the schema allows every name it enumerates, and a field the user can still rename beats no new
+ * property at all.
+ *
+ * @param schema - The object schema the property is being added to
+ * @param freeNames - The allowed names no property and no form data key has taken
+ * @returns - The free name to add under, or undefined when none is preferable to the first
+ */
+function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(schema: S, freeNames: string[]) {
+  if (!schema.patternProperties || isObject(schema.additionalProperties)) {
+    return undefined;
+  }
+  return freeNames.find((freeName) => Object.keys(getMatchingPatternProperties<S>(schema, freeName)).length > 0);
+}
+
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
   T = any,
@@ -97,6 +117,8 @@ interface ObjectFieldPropertyProps<
   handleKeyRename: (oldKey: string, newKey: string) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
+  /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
+  propertyNamesEnum?: string[];
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
@@ -122,6 +144,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
     handleKeyRename,
     handleRemoveProperty,
     addedByAdditionalProperties,
+    propertyNamesEnum,
   } = props;
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
@@ -198,6 +221,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}
@@ -256,6 +280,51 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
   }, [schemaProperties]);
+  // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
+  // resolution below runs once per schema rather than once per keystroke anywhere in the object
+  const { propertyNames } = schema;
+  // Resolved so that a `propertyNames` written as a `$ref` or an `allOf` still yields its `enum`. Everything that
+  // reads the allowed names does so off this one schema — the dropdowns below, `onAddProperty`, and the
+  // `canExpand()` the `ObjectFieldTemplate` calls on the `schema` it is handed — so none of them can disagree with
+  // the others about which names the schema allows
+  const resolvedPropertyNames = useMemo(() => {
+    if (!isObject(propertyNames)) {
+      return undefined;
+    }
+    try {
+      return schemaUtils.retrieveSchema(propertyNames as S);
+    } catch {
+      // A `$ref` that names no definition, or one that resolves circularly, is for the validator to report: nothing
+      // else in the form reads `propertyNames`, so a throw here would take down an object that otherwise renders.
+      // The unresolved schema stands in, enumerating nothing, which is what an unconstrained object already does
+      return propertyNames as S;
+    }
+  }, [propertyNames, schemaUtils]);
+  const resolvedSchema = useMemo(
+    () => (resolvedPropertyNames ? ({ ...schema, propertyNames: resolvedPropertyNames } as S) : schema),
+    [resolvedPropertyNames, schema],
+  );
+  /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
+   * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects. A property
+   * left with no name to offer — every allowed name is taken and its own is not one of them — is absent from the map,
+   * so it keeps the free-text key input rather than getting a dropdown it can pick nothing from.
+   */
+  const allowedPropertyNames = useMemo(() => {
+    // `retrieveSchema()` stubs every key of the form data in among the properties, so the properties alone already
+    // name everything taken and the form data would add nothing but a dependency that changes on every keystroke
+    if (getFreePropertyNames<T, S>(resolvedSchema) === undefined) {
+      return undefined;
+    }
+    // Only an additional property is offered the dropdown, so a declared one has no use for a list of its own
+    return new Map(
+      getAdditionalPropertyOrder<S>(resolvedSchema.properties ?? {})
+        .map((property): [string, string[]] => [
+          property,
+          getFreePropertyNames<T, S>(resolvedSchema, undefined, property) ?? [],
+        ])
+        .filter(([, allowedNames]) => allowedNames.length > 0),
+    );
+  }, [resolvedSchema]);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -293,7 +362,16 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       return;
     }
     const newFormData = { ...formData } as T;
-    const newKey = getAvailableKey('newKey', newFormData);
+    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
+    // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
+    // with none left means a custom template is offering it anyway, and adding no property beats adding one the
+    // schema forbids
+    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
+    if (freeNames?.length === 0) {
+      return;
+    }
+    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
+    const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
@@ -346,6 +424,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     fieldPath,
     getAvailableKey,
     schema,
+    resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
   ]);
@@ -463,6 +542,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
+          propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -487,7 +567,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     id,
     uiSchema,
     errorSchema,
-    schema,
+    schema: resolvedSchema,
     formData,
     registry,
     optionalDataControl,
