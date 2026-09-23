@@ -5,10 +5,8 @@ import {
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
-  getSchemaType,
   getTemplate,
   getUiOptions,
-  getUnionTypes,
   getWidget,
   hashObject,
   isFormDataAvailable,
@@ -219,15 +217,13 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
     // omit the type — without it, getSchemaType returns undefined and the option
     // renders as FallbackField instead of the correct widget (e.g. StringField).
-    // A parent allowing several types propagates the single type it is rendered as rather than the union itself, since
-    // an option inheriting the whole union would read as a multi-type schema of its own. With the fallback UI on the
-    // type selector has already pinned the parent to one type by the time an option is built, so this is that type;
-    // with it off it is the first type the union lists, which is the only one such a schema reaches.
-    // A union listing `null` first propagates the first type that can hold a value instead, since propagating `null`
-    // would have the check below drop the option's value field and leave the option selector standing alone
+    // A parent allowing several types propagates all of them, since the option is one branch of the choice made here
+    // rather than a narrowing of what the parent accepts: a field reading `schema.type` — `getInputProps()`, which
+    // withholds the numeric `pattern` from a union precisely because the other types do not have to match it, or a
+    // caller's own option field — would otherwise be told the value is of a type the parent never pinned it to. The
+    // fallback UI does pin it, but it pins it on the schema it hands down, so the union never reaches here with it on
     if (schemaType !== undefined && !('type' in option)) {
-      const unionTypes = getUnionTypes<S>(schema);
-      parentProps.type = (unionTypes?.find((aType) => aType !== 'null') ?? getSchemaType<S>(schema)) as S['type'];
+      parentProps.type = schemaType as S['type'];
     }
     // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
     optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;

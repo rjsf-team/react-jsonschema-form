@@ -238,6 +238,7 @@ render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedTy
 ```
 
 Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array, or to a number from text that reads as no number at all.
+Text is read as a number only in the notation a number field accepts, so `0x10` and a value naming an infinity start from an empty value rather than becoming a number nobody typed.
 
 Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
 The field for an `object` type whose schema names no `properties`, `patternProperties` or `additionalProperties` takes any key/value pair, so it offers a button for adding them.
@@ -250,6 +251,7 @@ A schema that pins its value with an `enum`, a `const`, or an `anyOf`/`oneOf` wh
 A field whose `ui:widget` is a component gets none either, the same way one with a `ui:field` does: a control written for that schema handles the types it allows, so wrapping it would pin the schema to one of them and cast the value on every switch.
 A `ui:widget` naming a widget by string renders within the selector instead, since it is a theme's control for a single type, and is dropped for a chosen type the theme has no implementation of.
 A schema with no usable type of its own — an unrecognized `type`, or an `additionalProperties` entry left unconstrained — still gets a selector, since it lists no types for such a control to handle, and the widget renders within it for whichever type is chosen.
+A list naming an unrecognized type alongside a recognized one offers only the recognized ones, `null` included: a `['foo', 'null']` offers `null` and nothing else.
 
 The field around the value and the field for the value share one label between them, so the schema's `title` and `description` are rendered once whichever type is chosen.
 A union that resolves to a type whose field renders no label of its own — an `object` or a `boolean` first in the list — has the value field render them.

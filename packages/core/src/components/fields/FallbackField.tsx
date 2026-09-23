@@ -36,24 +36,26 @@ import type { JSONSchema7TypeName } from 'json-schema';
 /**
  * Get the types the type selection component offers for a schema. A schema listing its types offers exactly the ones
  * it lists that are JSON Schema types, even when only one of them is, since the unrecognized names alongside it are
- * what sent the schema here. One with no usable type at all — an unrecognized type, or an `additionalProperties` entry
- * the schema puts no constraint on — is free to hold anything, so it offers every JSON Schema type.
+ * what sent the schema here — a `['foo', 'null']` offers the `null` it names and nothing else, the way a plain
+ * `['null']` renders as the `null` it is. One with no usable type at all — an unrecognized type on its own, or an
+ * `additionalProperties` entry the schema puts no constraint on — is free to hold anything, so it offers every JSON
+ * Schema type.
  * @param schema - The schema being rendered by the fallback UI.
  */
 function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): JSONSchema7TypeName[] {
   const listedTypes = getKnownTypes<S>(schema);
-  return listedTypes.some((aType) => aType !== 'null') ? listedTypes : [...JSON_SCHEMA_TYPES];
+  return listedTypes.length > 0 ? listedTypes : [...JSON_SCHEMA_TYPES];
 }
 
 /**
  * Get the type the selection starts on when the form data gives nothing to match: the first type the schema lists,
  * except that a leading `null` gives way to the first type that can hold a value. Starting on `null` would have
- * `NullField` write a `null` into the form data for a field the user has not touched.
+ * `NullField` write a `null` into the form data for a field the user has not touched. A schema that offers nothing but
+ * `null` starts there all the same, since it is the only value that schema allows.
  * @param types - The types the selection offers.
  */
 function getDefaultType(types: JSONSchema7TypeName[]): JSONSchema7TypeName {
-  // `getFallbackTypes()` never returns a list of nothing but `null`, so there is always a non-`null` type to find
-  return types.find((aType) => aType !== 'null')!;
+  return types.find((aType) => aType !== 'null') ?? types[0];
 }
 
 /**
@@ -212,6 +214,12 @@ function getValueUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
  */
 const FALSE_SPELLINGS = ['false', '0', 'no', 'off'];
 
+/** The notation a number is written in, which is the one the number field's own input accepts. `Number()` reads more
+ * than that — hex, binary and octal, and the word `Infinity` — so text switched to a number without this check comes
+ * back as a value nobody typed: `'0x10'` as `16`, `'Infinity'` as a quantity no JSON number can hold.
+ */
+const DECIMAL_NOTATION = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+
 /**
  * Casts the given formData to the specified type.
  * @param formData - The form data to be casted.
@@ -226,15 +234,17 @@ function castToNewType<T = any>(formData: T, newType: JSONSchema7TypeName): T {
     case 'number':
     case 'integer': {
       const castedNumber = Number(formData);
-      // A value with no numeric form a user would have typed — a boolean, or text that is blank — leaves the field empty
-      // rather than holding a `0`: unlike the empty string the `string` case falls back to, a `0` satisfies `required`
-      // and `minimum` as real input
+      // A value with no numeric form a user would have typed — a boolean, or text that is blank or written in a
+      // notation the number field would not take back — leaves the field empty rather than holding a `0`: unlike the
+      // empty string the `string` case falls back to, a `0` satisfies `required` and `minimum` as real input. A value
+      // that is already a number is taken as it is, except that an infinite one is no JSON number at all:
+      // `JSON.stringify()` writes it as `null`, so it would not survive the round trip the form data makes
       if (
         formData == null ||
         typeof formData === 'object' ||
         typeof formData === 'boolean' ||
-        String(formData).trim() === '' ||
-        Number.isNaN(castedNumber)
+        !DECIMAL_NOTATION.test(String(formData).trim()) ||
+        !Number.isFinite(castedNumber)
       ) {
         return undefined as T;
       }
@@ -304,21 +314,23 @@ function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
   // the data no longer fits gives way too, since data replaced from outside the form arrives without going through
   // the selector. Without this the selector would show one type while the field below it rendered another
-  // An input whose `ui:emptyValue` is `null` reports being cleared as a `null`, which is the empty value of the type
-  // being edited rather than a switch to the `null` type, so it must not swap the input out from under the user
-  const isClearedInput = formData === null && uiOptions.emptyValue === null;
+  // Neither of the two ways a value reports being cleared says anything about the type it was cleared from, so both
+  // are read as the empty state of the type the selector is on rather than as data of the type they resemble. Both
+  // are the business of a type that empties to nothing: an `object` and an `array` start out as the empty one of
+  // their own, and a field for either never renders the widget a `ui:emptyValue` belongs to, so a value matching
+  // either convention under one of them arrived from outside the form and is data of its own type like any other
+  const emptiesToNothing = selectedType !== 'object' && selectedType !== 'array';
+  // An input reports being cleared as whatever `ui:emptyValue` names — a `null`, a `0`, a `false` — which is the empty
+  // value of the type being edited rather than a switch to that value's own type, so it must not swap the input out
+  // from under the user. Only the types that stand in for one another survive this on their own; every other one, a
+  // `false` among them, would otherwise take the selector with it the moment the user cleared the field
+  const isClearedInput =
+    emptiesToNothing && uiOptions.emptyValue !== undefined && (formData as unknown) === uiOptions.emptyValue;
   // An `additionalProperties` entry whose value is cleared holds the empty string rather than nothing, since dropping
   // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
   // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
-  // another type would put the selector back on `string` and leave the other types out of reach from a cleared value.
-  // Only such an entry stores a cleared value that way, and only for a type that empties to nothing: an `object` or an
-  // `array` starts out as the empty one of its own, so an empty string under either arrived from outside the form and
-  // is data of the `string` type like an empty string anywhere else
-  const isClearedProperty =
-    ADDITIONAL_PROPERTY_FLAG in schema &&
-    (formData as unknown) === '' &&
-    selectedType !== 'object' &&
-    selectedType !== 'array';
+  // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
+  const isClearedProperty = emptiesToNothing && ADDITIONAL_PROPERTY_FLAG in schema && (formData as unknown) === '';
   const isEmptyValue = formData === undefined || isClearedProperty;
   const isSelectionUsable =
     types.includes(selectedType) &&

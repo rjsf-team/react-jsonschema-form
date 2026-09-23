@@ -540,6 +540,16 @@ const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$sch
  */
 const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 
+/** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
+ * consulted together, and once per property key, so they are consulted as one.
+ */
+const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
+
+/** Every keyword the stub leaves out, for the reasons the three lists above give. They are only ever consulted
+ * together, and once per property key, so they are consulted as one.
+ */
+const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...IDENTIFIER_KEYWORDS, ...CONTAINER_KEYWORDS]);
+
 /** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says
  * about the value and giving it the type of the data the property currently holds, so that it renders as a field for
  * that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that neither
@@ -560,19 +570,18 @@ const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
   const schema: GenericObjectType = {};
+  let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
+    if (CONSTRAINING_KEYWORDS.has(key)) {
+      isConstrained = true;
+    }
     const isForeignDefault = key === 'default' && guessType(value) !== type;
-    if (
-      !SUBSCHEMA_KEYWORDS.includes(key) &&
-      !IDENTIFIER_KEYWORDS.includes(key) &&
-      !CONTAINER_KEYWORDS.includes(key) &&
-      !isForeignDefault
-    ) {
+    if (!EXCLUDED_STUB_KEYWORDS.has(key) && !isForeignDefault) {
       schema[key] = value;
     }
   });
   schema.type = type;
-  if (!Object.keys(subSchema).some((key) => VALUE_KEYWORDS.includes(key) || SUBSCHEMA_KEYWORDS.includes(key))) {
+  if (!isConstrained) {
     (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
   }
   return schema as S;

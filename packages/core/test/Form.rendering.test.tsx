@@ -1219,6 +1219,135 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('select')).not.toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveAttribute('value', '42');
     });
+
+    it('leaves the whole union on an option of a schema the fallback UI has not pinned', () => {
+      const seenTypes: unknown[] = [];
+      const CustomStringField = (props: { schema: RJSFSchema }) => {
+        seenTypes.push(props.schema.type);
+        return <div />;
+      };
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'null'], oneOf: [{ title: 'A' }, { title: 'B' }] } },
+        } as RJSFSchema,
+        fields: { StringField: CustomStringField },
+      });
+
+      // With the fallback UI off the option is the only place the union is rendered, so narrowing it here would tell
+      // the option's field the value is of a type nothing pinned it to
+      expect(seenTypes).toEqual([['string', 'null']]);
+    });
+
+    it('keeps an option of a union out of the numeric input the first type alone would get', () => {
+      const schema = {
+        type: 'object',
+        properties: { val: { type: ['number', 'string'], oneOf: [{ title: 'A' }, { title: 'B' }] } },
+      } as RJSFSchema;
+
+      const { node } = createFormComponent({ schema });
+
+      // `getInputProps()` withholds the numeric `pattern` from a union on purpose: text the `string` member allows
+      // would fail the browser's own validation and block the submit before the validator ever saw it
+      const input = node.querySelector<HTMLInputElement>('#root_val')!;
+      expect(input).not.toHaveAttribute('pattern');
+      expect(input).not.toHaveAttribute('inputmode');
+    });
+
+    it('offers the one type a union names alongside an unrecognized one', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['foo', 'null'] } } } as unknown as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // `null` is a type this schema really does allow, so the unrecognized name alongside it does not make the
+      // property free to hold anything: offering every type would put data the schema rejects within a click
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(select.options).map((option) => option.textContent)).toEqual(['null']);
+    });
+
+    it('clears a number cast from text written in a notation the field would not take back', async () => {
+      const schema = {
+        type: 'object',
+        properties: { val: { type: ['string', 'number'] } },
+      } as RJSFSchema;
+
+      const expectClearedOnSwitchToNumber = async (text: string) => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          useFallbackUiForUnsupportedType: true,
+          formData: { val: text },
+        });
+        const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+
+        await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+
+        expectToHaveBeenCalledWithFormData(onChange, { val: undefined }, 'root_val');
+      };
+
+      // An infinity is no JSON number — `JSON.stringify()` writes it as `null` — and `0x10` would come back as a
+      // `16` nobody typed, so both leave the field empty the way any other unreadable text does
+      await expectClearedOnSwitchToNumber('Infinity');
+      await expectClearedOnSwitchToNumber('1e999');
+      await expectClearedOnSwitchToNumber('0x10');
+    });
+
+    it('stays on the type being edited when an input clears to a ui:emptyValue of another type', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number', 'boolean'] } } } as RJSFSchema,
+        uiSchema: { val: { 'ui:options': { emptyValue: false } } },
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: 'a string' },
+      });
+
+      await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
+
+      // The value a cleared input reports is the one `ui:emptyValue` names, so reading it as a switch to its own type
+      // would swap the input out from under a user who had only emptied it
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
+    });
+
+    it('gives way to a ui:emptyValue that replaces the object of a union from outside the form', () => {
+      const schema = { type: 'object', properties: { val: { type: ['number', 'object'] } } } as RJSFSchema;
+      const uiSchema = { val: { 'ui:options': { emptyValue: 0 } } };
+      const { node, rerender } = createFormComponent({
+        schema,
+        uiSchema,
+        useFallbackUiForUnsupportedType: true,
+        formData: { val: { a: 1 } },
+      });
+
+      rerender({ schema, uiSchema, useFallbackUiForUnsupportedType: true, formData: { val: 0 } });
+
+      // An `object` field renders no widget for a `ui:emptyValue` to belong to, so this `0` is not one of its inputs
+      // reporting itself cleared: it is `number` data that arrived from outside and the selector has to follow
+      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('number');
+    });
+
+    it('hides the label of an optional data control a union renders through the fallback UI', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          val: {
+            type: ['string', 'number'],
+            title: 'TITLE',
+            anyOf: [
+              { title: 'A', type: 'string' },
+              { title: 'B', type: 'string' },
+            ],
+          },
+        },
+      } as RJSFSchema;
+      const uiSchema = { val: { 'ui:options': { enableOptionalDataFieldForType: ['string'] } } };
+
+      const { node } = createFormComponent({ schema, uiSchema, useFallbackUiForUnsupportedType: true });
+
+      // The option selector the label names is withheld until there is data, and the value field around it is already
+      // labelled `false`, so this is the one field either label could come from
+      expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).not.toContain('TITLE');
+    });
   });
 
   describe('on component creation', () => {

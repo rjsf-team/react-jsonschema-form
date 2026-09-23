@@ -352,15 +352,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
+  const rendersOptionSelector =
+    (ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !isSelectSchema;
+  // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
+  // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
+  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
+  // already labelled `false`, which leaves this the only field either label can come from
+  if (rendersOptionSelector) {
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
+    displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
+  }
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose
-  if (
-    (ANY_OF_KEY in schema || ONE_OF_KEY in schema) &&
-    !isReplacingAnyOrOneOf &&
-    !isSelectSchema &&
-    !rendersFallbackUi
-  ) {
+  if (rendersOptionSelector && !rendersFallbackUi) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
       XxxOfOptions = schema[ANY_OF_KEY].map((xxxOfSchema) =>
@@ -372,10 +377,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     }
-    // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
-    const hasFormData = isFormDataAvailable<T>(formData);
-    displayLabel = displayLabel && (!isOptionalRender || hasFormData);
     // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
     // rendering of the same data address by the `XxxOfField`
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
