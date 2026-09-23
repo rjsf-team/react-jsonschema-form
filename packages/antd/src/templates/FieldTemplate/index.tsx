@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, getVisibleErrors } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -43,7 +43,7 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = getVisibleErrors({ rawErrors, hideError }).length > 0;
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
 
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',

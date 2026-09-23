@@ -13,7 +13,7 @@ import {
   enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
-  getVisibleErrors,
+  hasVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
@@ -103,7 +103,7 @@ export default function SelectWidget<
     ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
     : undefined;
 
-  const cnClassName = cn({ 'border-destructive': getVisibleErrors({ rawErrors, hideError }).length > 0 }, className);
+  const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
   return (
     <div className='p-0.5'>

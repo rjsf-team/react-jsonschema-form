@@ -1,0 +1,3553 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`error state > errors put every widget into its error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="error-list"
+    >
+      <ul
+        class="list-disc list-inside text-red-600"
+      >
+        <li>
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li>
+          .commissioning must match format "year"
+        </li>
+        <li>
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li>
+          .tier must be equal to one of the allowed values
+        </li>
+        <li>
+          .active must be checked
+        </li>
+        <li>
+          .notes must NOT have more than 10 characters
+        </li>
+        <li>
+          .quantity must be an integer
+        </li>
+        <li>
+          .threshold must be &lt;= 10
+        </li>
+        <li>
+          .secret must NOT have fewer than 8 characters
+        </li>
+        <li>
+          .shade must match format "color"
+        </li>
+        <li>
+          .startsOn must match format "date"
+        </li>
+        <li>
+          .startsAt must match format "date-time"
+        </li>
+        <li>
+          .opensAt must match format "time"
+        </li>
+        <li>
+          .endsOn must match format "date"
+        </li>
+        <li>
+          .attachment must match format "data-url"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_marketType"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      marketType
+                    </span>
+                  </label>
+                  <div
+                    class="form-control w-full"
+                  >
+                    <div
+                      class="dropdown w-full"
+                    >
+                      <div
+                        class="btn btn-outline w-full text-left flex justify-between items-center "
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="truncate"
+                        >
+                          marketType
+                        </span>
+                        <span
+                          class="ml-2"
+                        >
+                          ▼
+                        </span>
+                      </div>
+                      <ul
+                        class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
+                      >
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="0"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              primary
+                            </span>
+                          </div>
+                        </li>
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="1"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              secondary
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be equal to one of the allowed values
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_commissioning"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      commissioning
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_commissioning"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        commissioning
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_commissioning__error root_commissioning__description root_commissioning__help"
+                        class="input input-bordered w-full"
+                        id="root_commissioning"
+                        name="root_commissioning"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "year"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-array rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-array rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_regions"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      regions
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="0"
+                          id="root_regions-north"
+                          name="root_regions"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          north
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="1"
+                          id="root_regions-south"
+                          name="root_regions"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          south
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must NOT have fewer than 1 items
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_tier"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      tier
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="0"
+                          id="root_tier-gold"
+                          name="root_tier"
+                          type="radio"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          gold
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="1"
+                          id="root_tier-silver"
+                          name="root_tier"
+                          type="radio"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          silver
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be equal to one of the allowed values
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-boolean rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-boolean rjsf-field-error"
+                >
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label cursor-pointer justify-start"
+                    >
+                      <div
+                        class="mr-2"
+                      >
+                        <input
+                          class="checkbox"
+                          id="root_active"
+                          name="root_active"
+                          type="checkbox"
+                        />
+                      </div>
+                      <span
+                        class="label-text"
+                      >
+                        active
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be checked
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_notes"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      notes
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <textarea
+                      class="textarea textarea-bordered w-full"
+                      id="root_notes"
+                      name="root_notes"
+                      rows="5"
+                    />
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must NOT have more than 10 characters
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-number rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-number rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_quantity"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      quantity
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_quantity"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        quantity
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_quantity__error root_quantity__description root_quantity__help"
+                        class="input input-bordered w-full"
+                        id="root_quantity"
+                        name="root_quantity"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be an integer
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-number rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-number rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_threshold"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      threshold
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex items-center"
+                    >
+                      <input
+                        class="range"
+                        id="root_threshold"
+                        max="10"
+                        min="0"
+                        step="1"
+                        type="range"
+                      />
+                      <span
+                        class="label-text ml-4"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must be &lt;= 10
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_secret"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      secret
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_secret"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        secret
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_secret__error root_secret__description root_secret__help"
+                        class="input input-bordered w-full"
+                        id="root_secret"
+                        name="root_secret"
+                        placeholder=""
+                        type="password"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must NOT have fewer than 8 characters
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_shade"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      shade
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_shade"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        shade
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_shade__error root_shade__description root_shade__help"
+                        class="input input-bordered w-full"
+                        id="root_shade"
+                        name="root_shade"
+                        placeholder=""
+                        type="color"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "color"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_startsOn"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      startsOn
+                    </span>
+                  </label>
+                  <div
+                    class="form-control my-4 w-full relative"
+                  >
+                    <div
+                      class="w-full"
+                    >
+                      <div
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="input input-bordered w-full flex items-center justify-between cursor-pointer "
+                        id="root_startsOn"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="text-base-content/50"
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
+                          data-icon="calendar"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
+                        >
+                          <path
+                            d="M128 0C110.3 0 96 14.3 96 32l0 32-32 0C28.7 64 0 92.7 0 128l0 48 448 0 0-48c0-35.3-28.7-64-64-64l-32 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32-128 0 0-32c0-17.7-14.3-32-32-32zM0 224L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-192-448 0z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "date"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_startsAt"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      startsAt
+                    </span>
+                  </label>
+                  <div
+                    class="form-control my-4 w-full relative"
+                  >
+                    <div
+                      class="w-full"
+                    >
+                      <div
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="input input-bordered w-full flex items-center justify-between cursor-pointer "
+                        id="root_startsAt"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="text-base-content/50"
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
+                          data-icon="calendar"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
+                        >
+                          <path
+                            d="M128 0C110.3 0 96 14.3 96 32l0 32-32 0C28.7 64 0 92.7 0 128l0 48 448 0 0-48c0-35.3-28.7-64-64-64l-32 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32-128 0 0-32c0-17.7-14.3-32-32-32zM0 224L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-192-448 0z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "date-time"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_opensAt"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      opensAt
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_opensAt"
+                      type="time"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "time"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_endsOn"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      endsOn
+                    </span>
+                  </label>
+                  <div
+                    class="space-y-3"
+                  >
+                    <div
+                      class="grid grid-cols-3 gap-2"
+                    >
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            year
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                year
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2020
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2021
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2022
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2023
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2024
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            month
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                month
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    01
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    02
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    03
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    04
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    05
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="5"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    06
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="6"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    07
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="7"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    08
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="8"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    09
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="9"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    10
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="10"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    11
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="11"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    12
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            day
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                day
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    01
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    02
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    03
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    04
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    05
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="5"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    06
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="6"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    07
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="7"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    08
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="8"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    09
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="9"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    10
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="10"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    11
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="11"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    12
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="12"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    13
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="13"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    14
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="14"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    15
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="15"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    16
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="16"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    17
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="17"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    18
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="18"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    19
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="19"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    20
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="20"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    21
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="21"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    22
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="22"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    23
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="23"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    24
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="24"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    25
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="25"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    26
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="26"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    27
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="27"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    28
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="28"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    29
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="29"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    30
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="30"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    31
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="flex justify-start space-x-2"
+                    >
+                      <button
+                        class="btn btn-sm btn-primary"
+                        type="button"
+                      >
+                        Now
+                      </button>
+                      <button
+                        class="btn btn-sm btn-secondary"
+                        type="button"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "date"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                >
+                  <label
+                    class="label"
+                    for="root_attachment"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      attachment
+                    </span>
+                  </label>
+                  <div>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_attachment"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          attachment
+                        </span>
+                      </label>
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_attachment__error root_attachment__description root_attachment__help"
+                          class="file-input"
+                          id="root_attachment"
+                          name="root_attachment"
+                          placeholder=""
+                          type="file"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      class="list-disc list-inside"
+                    >
+                      <li>
+                        must match format "data-url"
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`error state > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="error-list"
+    >
+      <ul
+        class="list-disc list-inside text-red-600"
+      >
+        <li>
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li>
+          .commissioning must match format "year"
+        </li>
+        <li>
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li>
+          .tier must be equal to one of the allowed values
+        </li>
+        <li>
+          .active must be checked
+        </li>
+        <li>
+          .notes must NOT have more than 10 characters
+        </li>
+        <li>
+          .quantity must be an integer
+        </li>
+        <li>
+          .threshold must be &lt;= 10
+        </li>
+        <li>
+          .secret must NOT have fewer than 8 characters
+        </li>
+        <li>
+          .shade must match format "color"
+        </li>
+        <li>
+          .startsOn must match format "date"
+        </li>
+        <li>
+          .startsAt must match format "date-time"
+        </li>
+        <li>
+          .opensAt must match format "time"
+        </li>
+        <li>
+          .endsOn must match format "date"
+        </li>
+        <li>
+          .attachment must match format "data-url"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-object"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_marketType"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      marketType
+                    </span>
+                  </label>
+                  <div
+                    class="form-control w-full"
+                  >
+                    <div
+                      class="dropdown w-full"
+                    >
+                      <div
+                        class="btn btn-outline w-full text-left flex justify-between items-center "
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="truncate"
+                        >
+                          marketType
+                        </span>
+                        <span
+                          class="ml-2"
+                        >
+                          ▼
+                        </span>
+                      </div>
+                      <ul
+                        class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        role="listbox"
+                      >
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="0"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              primary
+                            </span>
+                          </div>
+                        </li>
+                        <li
+                          aria-selected="false"
+                          class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                          data-value="1"
+                          role="option"
+                          tabindex="0"
+                        >
+                          <div
+                            class="flex items-center gap-2"
+                          >
+                            <span>
+                              secondary
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_commissioning"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      commissioning
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_commissioning"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        commissioning
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_commissioning__error root_commissioning__description root_commissioning__help"
+                        class="input input-bordered w-full"
+                        id="root_commissioning"
+                        name="root_commissioning"
+                        placeholder=""
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-array"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                >
+                  <label
+                    class="label"
+                    for="root_regions"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      regions
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="0"
+                          id="root_regions-north"
+                          name="root_regions"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          north
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="checkbox"
+                          data-index="1"
+                          id="root_regions-south"
+                          name="root_regions"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          south
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_tier"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      tier
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex flex-col gap-2 mt-1"
+                    >
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="0"
+                          id="root_tier-gold"
+                          name="root_tier"
+                          type="radio"
+                          value="0"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          gold
+                        </span>
+                      </label>
+                      <label
+                        class="flex items-center cursor-pointer gap-2"
+                      >
+                        <input
+                          class="radio"
+                          data-index="1"
+                          id="root_tier-silver"
+                          name="root_tier"
+                          type="radio"
+                          value="1"
+                        />
+                        <span
+                          class="label-text"
+                        >
+                          silver
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-boolean"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                >
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label cursor-pointer justify-start"
+                    >
+                      <div
+                        class="mr-2"
+                      >
+                        <input
+                          class="checkbox"
+                          id="root_active"
+                          name="root_active"
+                          type="checkbox"
+                        />
+                      </div>
+                      <span
+                        class="label-text"
+                      >
+                        active
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_notes"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      notes
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <textarea
+                      class="textarea textarea-bordered w-full"
+                      id="root_notes"
+                      name="root_notes"
+                      rows="5"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-number"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                >
+                  <label
+                    class="label"
+                    for="root_quantity"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      quantity
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_quantity"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        quantity
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_quantity__error root_quantity__description root_quantity__help"
+                        class="input input-bordered w-full"
+                        id="root_quantity"
+                        name="root_quantity"
+                        placeholder=""
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-number"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                >
+                  <label
+                    class="label"
+                    for="root_threshold"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      threshold
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <div
+                      class="flex items-center"
+                    >
+                      <input
+                        class="range"
+                        id="root_threshold"
+                        max="10"
+                        min="0"
+                        step="1"
+                        type="range"
+                      />
+                      <span
+                        class="label-text ml-4"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_secret"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      secret
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_secret"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        secret
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_secret__error root_secret__description root_secret__help"
+                        class="input input-bordered w-full"
+                        id="root_secret"
+                        name="root_secret"
+                        placeholder=""
+                        type="password"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_shade"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      shade
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <label
+                      class="label hidden"
+                      for="root_shade"
+                      style="display: none;"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        shade
+                      </span>
+                    </label>
+                    <div
+                      style="position: relative;"
+                    >
+                      <input
+                        aria-describedby="root_shade__error root_shade__description root_shade__help"
+                        class="input input-bordered w-full"
+                        id="root_shade"
+                        name="root_shade"
+                        placeholder=""
+                        type="color"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_startsOn"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      startsOn
+                    </span>
+                  </label>
+                  <div
+                    class="form-control my-4 w-full relative"
+                  >
+                    <div
+                      class="w-full"
+                    >
+                      <div
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="input input-bordered w-full flex items-center justify-between cursor-pointer "
+                        id="root_startsOn"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="text-base-content/50"
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
+                          data-icon="calendar"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
+                        >
+                          <path
+                            d="M128 0C110.3 0 96 14.3 96 32l0 32-32 0C28.7 64 0 92.7 0 128l0 48 448 0 0-48c0-35.3-28.7-64-64-64l-32 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32-128 0 0-32c0-17.7-14.3-32-32-32zM0 224L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-192-448 0z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_startsAt"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      startsAt
+                    </span>
+                  </label>
+                  <div
+                    class="form-control my-4 w-full relative"
+                  >
+                    <div
+                      class="w-full"
+                    >
+                      <div
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="input input-bordered w-full flex items-center justify-between cursor-pointer "
+                        id="root_startsAt"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="text-base-content/50"
+                        />
+                        <svg
+                          aria-hidden="true"
+                          class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
+                          data-icon="calendar"
+                          data-prefix="fas"
+                          role="img"
+                          viewBox="0 0 448 512"
+                        >
+                          <path
+                            d="M128 0C110.3 0 96 14.3 96 32l0 32-32 0C28.7 64 0 92.7 0 128l0 48 448 0 0-48c0-35.3-28.7-64-64-64l-32 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32-128 0 0-32c0-17.7-14.3-32-32-32zM0 224L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-192-448 0z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_opensAt"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      opensAt
+                    </span>
+                  </label>
+                  <div
+                    class="form-control"
+                  >
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_opensAt"
+                      type="time"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_endsOn"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      endsOn
+                    </span>
+                  </label>
+                  <div
+                    class="space-y-3"
+                  >
+                    <div
+                      class="grid grid-cols-3 gap-2"
+                    >
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            year
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                year
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2020
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2021
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2022
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2023
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    2024
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            month
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                month
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    01
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    02
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    03
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    04
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    05
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="5"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    06
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="6"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    07
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="7"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    08
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="8"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    09
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="9"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    10
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="10"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    11
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="11"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    12
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="form-control"
+                      >
+                        <label
+                          class="label"
+                        >
+                          <span
+                            class="label-text capitalize"
+                          >
+                            day
+                          </span>
+                        </label>
+                        <div
+                          class="form-control w-full"
+                        >
+                          <div
+                            class="dropdown w-full"
+                          >
+                            <div
+                              class="btn btn-outline w-full text-left flex justify-between items-center "
+                              role="button"
+                              tabindex="0"
+                            >
+                              <span
+                                class="truncate"
+                              >
+                                day
+                              </span>
+                              <span
+                                class="ml-2"
+                              >
+                                ▼
+                              </span>
+                            </div>
+                            <ul
+                              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              role="listbox"
+                            >
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="0"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    01
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="1"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    02
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="2"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    03
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="3"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    04
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="4"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    05
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="5"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    06
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="6"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    07
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="7"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    08
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="8"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    09
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="9"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    10
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="10"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    11
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="11"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    12
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="12"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    13
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="13"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    14
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="14"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    15
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="15"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    16
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="16"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    17
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="17"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    18
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="18"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    19
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="19"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    20
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="20"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    21
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="21"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    22
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="22"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    23
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="23"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    24
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="24"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    25
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="25"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    26
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="26"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    27
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="27"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    28
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="28"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    29
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="29"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    30
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                aria-selected="false"
+                                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                                data-value="30"
+                                role="option"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="flex items-center gap-2"
+                                >
+                                  <span>
+                                    31
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="flex justify-start space-x-2"
+                    >
+                      <button
+                        class="btn btn-sm btn-primary"
+                        type="button"
+                      >
+                        Now
+                      </button>
+                      <button
+                        class="btn btn-sm btn-secondary"
+                        type="button"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="flex-grow rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                >
+                  <label
+                    class="label"
+                    for="root_attachment"
+                  >
+                    <span
+                      class="label-text font-medium"
+                    >
+                      attachment
+                    </span>
+                  </label>
+                  <div>
+                    <div
+                      class="form-control"
+                    >
+                      <label
+                        class="label hidden"
+                        for="root_attachment"
+                        style="display: none;"
+                      >
+                        <span
+                          class="label-text"
+                        >
+                          attachment
+                        </span>
+                      </label>
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          aria-describedby="root_attachment__error root_attachment__description root_attachment__help"
+                          class="file-input"
+                          id="root_attachment"
+                          name="root_attachment"
+                          placeholder=""
+                          type="file"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

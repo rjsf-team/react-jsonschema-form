@@ -1,0 +1,1781 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`error state > errors put every widget into its error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="panel panel-danger errors"
+    >
+      <div
+        class="panel-heading"
+      >
+        <h3
+          class="panel-title"
+        >
+          Errors
+        </h3>
+      </div>
+      <ul
+        class="list-group"
+      >
+        <li
+          class="list-group-item text-danger"
+        >
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .commissioning must match format "year"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .tier must be equal to one of the allowed values
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .active must be checked
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .notes must NOT have more than 10 characters
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .quantity must be an integer
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .threshold must be &lt;= 10
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .secret must NOT have fewer than 8 characters
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .shade must match format "color"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .startsOn must match format "date"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .startsAt must match format "date-time"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .opensAt must match format "time"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .endsOn must match format "date"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .attachment must match format "data-url"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_marketType"
+          >
+            marketType
+          </label>
+          <select
+            aria-describedby="root_marketType__error root_marketType__description root_marketType__help"
+            class="form-control"
+            id="root_marketType"
+            name="root_marketType"
+          >
+            <option
+              value=""
+            />
+            <option
+              value="0"
+            >
+              primary
+            </option>
+            <option
+              value="1"
+            >
+              secondary
+            </option>
+          </select>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_marketType__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must be equal to one of the allowed values
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_commissioning"
+          >
+            commissioning
+          </label>
+          <input
+            aria-describedby="root_commissioning__error root_commissioning__description root_commissioning__help"
+            class="form-control"
+            id="root_commissioning"
+            label="commissioning"
+            name="root_commissioning"
+            placeholder=""
+            type="text"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_commissioning__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "year"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-array rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_regions"
+          >
+            regions
+          </label>
+          <div
+            class="checkboxes"
+            id="root_regions"
+          >
+            <div
+              class="checkbox "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_regions__error root_regions__description root_regions__help"
+                    id="root_regions-0"
+                    name="root_regions"
+                    type="checkbox"
+                    value="0"
+                  />
+                  <span>
+                    north
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div
+              class="checkbox "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_regions__error root_regions__description root_regions__help"
+                    id="root_regions-1"
+                    name="root_regions"
+                    type="checkbox"
+                    value="1"
+                  />
+                  <span>
+                    south
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_regions__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must NOT have fewer than 1 items
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_tier"
+          >
+            tier
+          </label>
+          <div
+            class="field-radio-group"
+            id="root_tier"
+            role="radiogroup"
+          >
+            <div
+              class="radio "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_tier__error root_tier__description root_tier__help"
+                    id="root_tier-0"
+                    name="root_tier"
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    gold
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div
+              class="radio "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_tier__error root_tier__description root_tier__help"
+                    id="root_tier-1"
+                    name="root_tier"
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    silver
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_tier__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must be equal to one of the allowed values
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-boolean rjsf-field-error has-error has-danger"
+        >
+          <div
+            class="checkbox "
+          >
+            <label>
+              <input
+                aria-describedby="root_active__error root_active__description root_active__help"
+                id="root_active"
+                name="root_active"
+                type="checkbox"
+              />
+              <span>
+                active
+              </span>
+            </label>
+          </div>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_active__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must be checked
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_notes"
+          >
+            notes
+          </label>
+          <textarea
+            aria-describedby="root_notes__error root_notes__description root_notes__help"
+            class="form-control"
+            id="root_notes"
+            name="root_notes"
+            placeholder=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_notes__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must NOT have more than 10 characters
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-number rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_quantity"
+          >
+            quantity
+          </label>
+          <input
+            aria-describedby="root_quantity__error root_quantity__description root_quantity__help"
+            class="form-control"
+            id="root_quantity"
+            label="quantity"
+            name="root_quantity"
+            placeholder=""
+            step="any"
+            type="number"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_quantity__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must be an integer
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-number rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_threshold"
+          >
+            threshold
+          </label>
+          <div
+            class="field-range-wrapper"
+          >
+            <input
+              aria-describedby="root_threshold__error root_threshold__description root_threshold__help"
+              class="form-control"
+              id="root_threshold"
+              label="threshold"
+              max="10"
+              min="0"
+              name="root_threshold"
+              placeholder=""
+              type="range"
+              value=""
+            />
+            <span
+              class="range-view"
+            />
+          </div>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_threshold__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must be &lt;= 10
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_secret"
+          >
+            secret
+          </label>
+          <input
+            aria-describedby="root_secret__error root_secret__description root_secret__help"
+            class="form-control"
+            id="root_secret"
+            label="secret"
+            name="root_secret"
+            placeholder=""
+            type="password"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_secret__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must NOT have fewer than 8 characters
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_shade"
+          >
+            shade
+          </label>
+          <input
+            aria-describedby="root_shade__error root_shade__description root_shade__help"
+            class="form-control"
+            id="root_shade"
+            label="shade"
+            name="root_shade"
+            placeholder=""
+            type="color"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_shade__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "color"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_startsOn"
+          >
+            startsOn
+          </label>
+          <input
+            aria-describedby="root_startsOn__error root_startsOn__description root_startsOn__help"
+            class="form-control"
+            id="root_startsOn"
+            label="startsOn"
+            name="root_startsOn"
+            placeholder=""
+            type="date"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_startsOn__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "date"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_startsAt"
+          >
+            startsAt
+          </label>
+          <input
+            aria-describedby="root_startsAt__error root_startsAt__description root_startsAt__help"
+            class="form-control"
+            id="root_startsAt"
+            label="startsAt"
+            name="root_startsAt"
+            placeholder=""
+            type="datetime-local"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_startsAt__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "date-time"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_opensAt"
+          >
+            opensAt
+          </label>
+          <input
+            aria-describedby="root_opensAt__error root_opensAt__description root_opensAt__help"
+            class="form-control"
+            id="root_opensAt"
+            label="opensAt"
+            name="root_opensAt"
+            placeholder=""
+            type="time"
+            value=""
+          />
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_opensAt__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "time"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_endsOn"
+          >
+            endsOn
+          </label>
+          <ul
+            class="list-inline"
+          >
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_year__error root_endsOn_year__description root_endsOn_year__help"
+                class="form-control"
+                id="root_endsOn_year"
+                name="root_endsOn_year"
+              >
+                <option
+                  value=""
+                >
+                  year
+                </option>
+                <option
+                  value="0"
+                >
+                  2020
+                </option>
+                <option
+                  value="1"
+                >
+                  2021
+                </option>
+                <option
+                  value="2"
+                >
+                  2022
+                </option>
+                <option
+                  value="3"
+                >
+                  2023
+                </option>
+                <option
+                  value="4"
+                >
+                  2024
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_month__error root_endsOn_month__description root_endsOn_month__help"
+                class="form-control"
+                id="root_endsOn_month"
+                name="root_endsOn_month"
+              >
+                <option
+                  value=""
+                >
+                  month
+                </option>
+                <option
+                  value="0"
+                >
+                  01
+                </option>
+                <option
+                  value="1"
+                >
+                  02
+                </option>
+                <option
+                  value="2"
+                >
+                  03
+                </option>
+                <option
+                  value="3"
+                >
+                  04
+                </option>
+                <option
+                  value="4"
+                >
+                  05
+                </option>
+                <option
+                  value="5"
+                >
+                  06
+                </option>
+                <option
+                  value="6"
+                >
+                  07
+                </option>
+                <option
+                  value="7"
+                >
+                  08
+                </option>
+                <option
+                  value="8"
+                >
+                  09
+                </option>
+                <option
+                  value="9"
+                >
+                  10
+                </option>
+                <option
+                  value="10"
+                >
+                  11
+                </option>
+                <option
+                  value="11"
+                >
+                  12
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_day__error root_endsOn_day__description root_endsOn_day__help"
+                class="form-control"
+                id="root_endsOn_day"
+                name="root_endsOn_day"
+              >
+                <option
+                  value=""
+                >
+                  day
+                </option>
+                <option
+                  value="0"
+                >
+                  01
+                </option>
+                <option
+                  value="1"
+                >
+                  02
+                </option>
+                <option
+                  value="2"
+                >
+                  03
+                </option>
+                <option
+                  value="3"
+                >
+                  04
+                </option>
+                <option
+                  value="4"
+                >
+                  05
+                </option>
+                <option
+                  value="5"
+                >
+                  06
+                </option>
+                <option
+                  value="6"
+                >
+                  07
+                </option>
+                <option
+                  value="7"
+                >
+                  08
+                </option>
+                <option
+                  value="8"
+                >
+                  09
+                </option>
+                <option
+                  value="9"
+                >
+                  10
+                </option>
+                <option
+                  value="10"
+                >
+                  11
+                </option>
+                <option
+                  value="11"
+                >
+                  12
+                </option>
+                <option
+                  value="12"
+                >
+                  13
+                </option>
+                <option
+                  value="13"
+                >
+                  14
+                </option>
+                <option
+                  value="14"
+                >
+                  15
+                </option>
+                <option
+                  value="15"
+                >
+                  16
+                </option>
+                <option
+                  value="16"
+                >
+                  17
+                </option>
+                <option
+                  value="17"
+                >
+                  18
+                </option>
+                <option
+                  value="18"
+                >
+                  19
+                </option>
+                <option
+                  value="19"
+                >
+                  20
+                </option>
+                <option
+                  value="20"
+                >
+                  21
+                </option>
+                <option
+                  value="21"
+                >
+                  22
+                </option>
+                <option
+                  value="22"
+                >
+                  23
+                </option>
+                <option
+                  value="23"
+                >
+                  24
+                </option>
+                <option
+                  value="24"
+                >
+                  25
+                </option>
+                <option
+                  value="25"
+                >
+                  26
+                </option>
+                <option
+                  value="26"
+                >
+                  27
+                </option>
+                <option
+                  value="27"
+                >
+                  28
+                </option>
+                <option
+                  value="28"
+                >
+                  29
+                </option>
+                <option
+                  value="29"
+                >
+                  30
+                </option>
+                <option
+                  value="30"
+                >
+                  31
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <button
+                class="btn btn-info btn-now"
+                type="button"
+              >
+                Now
+              </button>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <button
+                class="btn btn-warning btn-clear"
+                type="button"
+              >
+                Clear
+              </button>
+            </li>
+          </ul>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_endsOn__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "date"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
+        >
+          <label
+            class="control-label"
+            for="root_attachment"
+          >
+            attachment
+          </label>
+          <div>
+            <input
+              aria-describedby="root_attachment__error root_attachment__description root_attachment__help"
+              class="form-control"
+              id="root_attachment"
+              label="attachment"
+              name="root_attachment"
+              placeholder=""
+              type="file"
+              value=""
+            />
+          </div>
+          <div>
+            <ul
+              class="error-detail bs-callout bs-callout-info"
+              id="root_attachment__error"
+            >
+              <li
+                class="text-danger"
+              >
+                must match format "data-url"
+              </li>
+            </ul>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`error state > ui:hideError on a parent keeps its children out of the error state 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="panel panel-danger errors"
+    >
+      <div
+        class="panel-heading"
+      >
+        <h3
+          class="panel-title"
+        >
+          Errors
+        </h3>
+      </div>
+      <ul
+        class="list-group"
+      >
+        <li
+          class="list-group-item text-danger"
+        >
+          .marketType must be equal to one of the allowed values
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .commissioning must match format "year"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .regions must NOT have fewer than 1 items
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .tier must be equal to one of the allowed values
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .active must be checked
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .notes must NOT have more than 10 characters
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .quantity must be an integer
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .threshold must be &lt;= 10
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .secret must NOT have fewer than 8 characters
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .shade must match format "color"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .startsOn must match format "date"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .startsAt must match format "date-time"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .opensAt must match format "time"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .endsOn must match format "date"
+        </li>
+        <li
+          class="list-group-item text-danger"
+        >
+          .attachment must match format "data-url"
+        </li>
+      </ul>
+    </div>
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_marketType"
+          >
+            marketType
+          </label>
+          <select
+            aria-describedby="root_marketType__error root_marketType__description root_marketType__help"
+            class="form-control"
+            id="root_marketType"
+            name="root_marketType"
+          >
+            <option
+              value=""
+            />
+            <option
+              value="0"
+            >
+              primary
+            </option>
+            <option
+              value="1"
+            >
+              secondary
+            </option>
+          </select>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_commissioning"
+          >
+            commissioning
+          </label>
+          <input
+            aria-describedby="root_commissioning__error root_commissioning__description root_commissioning__help"
+            class="form-control"
+            id="root_commissioning"
+            label="commissioning"
+            name="root_commissioning"
+            placeholder=""
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-array"
+        >
+          <label
+            class="control-label"
+            for="root_regions"
+          >
+            regions
+          </label>
+          <div
+            class="checkboxes"
+            id="root_regions"
+          >
+            <div
+              class="checkbox "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_regions__error root_regions__description root_regions__help"
+                    id="root_regions-0"
+                    name="root_regions"
+                    type="checkbox"
+                    value="0"
+                  />
+                  <span>
+                    north
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div
+              class="checkbox "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_regions__error root_regions__description root_regions__help"
+                    id="root_regions-1"
+                    name="root_regions"
+                    type="checkbox"
+                    value="1"
+                  />
+                  <span>
+                    south
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_tier"
+          >
+            tier
+          </label>
+          <div
+            class="field-radio-group"
+            id="root_tier"
+            role="radiogroup"
+          >
+            <div
+              class="radio "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_tier__error root_tier__description root_tier__help"
+                    id="root_tier-0"
+                    name="root_tier"
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    gold
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div
+              class="radio "
+            >
+              <label>
+                <span>
+                  <input
+                    aria-describedby="root_tier__error root_tier__description root_tier__help"
+                    id="root_tier-1"
+                    name="root_tier"
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    silver
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-boolean"
+        >
+          <div
+            class="checkbox "
+          >
+            <label>
+              <input
+                aria-describedby="root_active__error root_active__description root_active__help"
+                id="root_active"
+                name="root_active"
+                type="checkbox"
+              />
+              <span>
+                active
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_notes"
+          >
+            notes
+          </label>
+          <textarea
+            aria-describedby="root_notes__error root_notes__description root_notes__help"
+            class="form-control"
+            id="root_notes"
+            name="root_notes"
+            placeholder=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-number"
+        >
+          <label
+            class="control-label"
+            for="root_quantity"
+          >
+            quantity
+          </label>
+          <input
+            aria-describedby="root_quantity__error root_quantity__description root_quantity__help"
+            class="form-control"
+            id="root_quantity"
+            label="quantity"
+            name="root_quantity"
+            placeholder=""
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-number"
+        >
+          <label
+            class="control-label"
+            for="root_threshold"
+          >
+            threshold
+          </label>
+          <div
+            class="field-range-wrapper"
+          >
+            <input
+              aria-describedby="root_threshold__error root_threshold__description root_threshold__help"
+              class="form-control"
+              id="root_threshold"
+              label="threshold"
+              max="10"
+              min="0"
+              name="root_threshold"
+              placeholder=""
+              type="range"
+              value=""
+            />
+            <span
+              class="range-view"
+            />
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_secret"
+          >
+            secret
+          </label>
+          <input
+            aria-describedby="root_secret__error root_secret__description root_secret__help"
+            class="form-control"
+            id="root_secret"
+            label="secret"
+            name="root_secret"
+            placeholder=""
+            type="password"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_shade"
+          >
+            shade
+          </label>
+          <input
+            aria-describedby="root_shade__error root_shade__description root_shade__help"
+            class="form-control"
+            id="root_shade"
+            label="shade"
+            name="root_shade"
+            placeholder=""
+            type="color"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_startsOn"
+          >
+            startsOn
+          </label>
+          <input
+            aria-describedby="root_startsOn__error root_startsOn__description root_startsOn__help"
+            class="form-control"
+            id="root_startsOn"
+            label="startsOn"
+            name="root_startsOn"
+            placeholder=""
+            type="date"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_startsAt"
+          >
+            startsAt
+          </label>
+          <input
+            aria-describedby="root_startsAt__error root_startsAt__description root_startsAt__help"
+            class="form-control"
+            id="root_startsAt"
+            label="startsAt"
+            name="root_startsAt"
+            placeholder=""
+            type="datetime-local"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_opensAt"
+          >
+            opensAt
+          </label>
+          <input
+            aria-describedby="root_opensAt__error root_opensAt__description root_opensAt__help"
+            class="form-control"
+            id="root_opensAt"
+            label="opensAt"
+            name="root_opensAt"
+            placeholder=""
+            type="time"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_endsOn"
+          >
+            endsOn
+          </label>
+          <ul
+            class="list-inline"
+          >
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_year__error root_endsOn_year__description root_endsOn_year__help"
+                class="form-control"
+                id="root_endsOn_year"
+                name="root_endsOn_year"
+              >
+                <option
+                  value=""
+                >
+                  year
+                </option>
+                <option
+                  value="0"
+                >
+                  2020
+                </option>
+                <option
+                  value="1"
+                >
+                  2021
+                </option>
+                <option
+                  value="2"
+                >
+                  2022
+                </option>
+                <option
+                  value="3"
+                >
+                  2023
+                </option>
+                <option
+                  value="4"
+                >
+                  2024
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_month__error root_endsOn_month__description root_endsOn_month__help"
+                class="form-control"
+                id="root_endsOn_month"
+                name="root_endsOn_month"
+              >
+                <option
+                  value=""
+                >
+                  month
+                </option>
+                <option
+                  value="0"
+                >
+                  01
+                </option>
+                <option
+                  value="1"
+                >
+                  02
+                </option>
+                <option
+                  value="2"
+                >
+                  03
+                </option>
+                <option
+                  value="3"
+                >
+                  04
+                </option>
+                <option
+                  value="4"
+                >
+                  05
+                </option>
+                <option
+                  value="5"
+                >
+                  06
+                </option>
+                <option
+                  value="6"
+                >
+                  07
+                </option>
+                <option
+                  value="7"
+                >
+                  08
+                </option>
+                <option
+                  value="8"
+                >
+                  09
+                </option>
+                <option
+                  value="9"
+                >
+                  10
+                </option>
+                <option
+                  value="10"
+                >
+                  11
+                </option>
+                <option
+                  value="11"
+                >
+                  12
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <select
+                aria-describedby="root_endsOn_day__error root_endsOn_day__description root_endsOn_day__help"
+                class="form-control"
+                id="root_endsOn_day"
+                name="root_endsOn_day"
+              >
+                <option
+                  value=""
+                >
+                  day
+                </option>
+                <option
+                  value="0"
+                >
+                  01
+                </option>
+                <option
+                  value="1"
+                >
+                  02
+                </option>
+                <option
+                  value="2"
+                >
+                  03
+                </option>
+                <option
+                  value="3"
+                >
+                  04
+                </option>
+                <option
+                  value="4"
+                >
+                  05
+                </option>
+                <option
+                  value="5"
+                >
+                  06
+                </option>
+                <option
+                  value="6"
+                >
+                  07
+                </option>
+                <option
+                  value="7"
+                >
+                  08
+                </option>
+                <option
+                  value="8"
+                >
+                  09
+                </option>
+                <option
+                  value="9"
+                >
+                  10
+                </option>
+                <option
+                  value="10"
+                >
+                  11
+                </option>
+                <option
+                  value="11"
+                >
+                  12
+                </option>
+                <option
+                  value="12"
+                >
+                  13
+                </option>
+                <option
+                  value="13"
+                >
+                  14
+                </option>
+                <option
+                  value="14"
+                >
+                  15
+                </option>
+                <option
+                  value="15"
+                >
+                  16
+                </option>
+                <option
+                  value="16"
+                >
+                  17
+                </option>
+                <option
+                  value="17"
+                >
+                  18
+                </option>
+                <option
+                  value="18"
+                >
+                  19
+                </option>
+                <option
+                  value="19"
+                >
+                  20
+                </option>
+                <option
+                  value="20"
+                >
+                  21
+                </option>
+                <option
+                  value="21"
+                >
+                  22
+                </option>
+                <option
+                  value="22"
+                >
+                  23
+                </option>
+                <option
+                  value="23"
+                >
+                  24
+                </option>
+                <option
+                  value="24"
+                >
+                  25
+                </option>
+                <option
+                  value="25"
+                >
+                  26
+                </option>
+                <option
+                  value="26"
+                >
+                  27
+                </option>
+                <option
+                  value="27"
+                >
+                  28
+                </option>
+                <option
+                  value="28"
+                >
+                  29
+                </option>
+                <option
+                  value="29"
+                >
+                  30
+                </option>
+                <option
+                  value="30"
+                >
+                  31
+                </option>
+              </select>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <button
+                class="btn btn-info btn-now"
+                type="button"
+              >
+                Now
+              </button>
+            </li>
+            <li
+              class="list-inline-item"
+            >
+              <button
+                class="btn btn-warning btn-clear"
+                type="button"
+              >
+                Clear
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <label
+            class="control-label"
+            for="root_attachment"
+          >
+            attachment
+          </label>
+          <div>
+            <input
+              aria-describedby="root_attachment__error root_attachment__description root_attachment__help"
+              class="form-control"
+              id="root_attachment"
+              label="attachment"
+              name="root_attachment"
+              placeholder=""
+              type="file"
+              value=""
+            />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;

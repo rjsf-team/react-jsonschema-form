@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -24,7 +24,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={getVisibleErrors(props).length > 0}
+      invalid={hasVisibleErrors(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

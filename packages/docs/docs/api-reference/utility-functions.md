@@ -882,6 +882,19 @@ Stringifies the schema and returns the hash of the resulting string.
 
 - string: The string obtained from the hash of the stringified schema
 
+### hasVisibleErrors()
+
+Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
+It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
+
+#### Parameters
+
+- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
+
+#### Returns
+
+- boolean: True when there are errors the component should surface, otherwise false
+
 ### hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it does, or false if it doesn't.

@@ -8,12 +8,11 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  getVisibleErrors,
   optionId,
   titleId,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -87,7 +86,7 @@ export default function CheckboxesWidget<
         onChange={handleChange}
         required={required}
         readOnly={disabled || readonly}
-        error={getVisibleErrors(props).join('\n') || undefined}
+        error={visibleErrorText(props)}
         aria-describedby={ariaDescribedByIds(id)}
         {...themeProps}
       >

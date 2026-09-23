@@ -18,7 +18,7 @@ import {
   examplesId,
   getInputProps,
   getNumericInputTitle,
-  getVisibleErrors,
+  hasVisibleErrors,
   labelValue,
 } from '@rjsf/utils';
 
@@ -156,7 +156,7 @@ export default function BaseInputTemplate<
         }}
         {...rest}
         value={value || value === 0 ? value : ''}
-        error={getVisibleErrors({ rawErrors, hideError }).length > 0}
+        error={hasVisibleErrors({ rawErrors, hideError })}
         onChange={onChangeOverride || handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

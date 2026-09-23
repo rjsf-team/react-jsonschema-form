@@ -1,4 +1,5 @@
-import type { UIOptionsType } from '@rjsf/utils';
+import type { UIOptionsType, VisibleErrorsProps } from '@rjsf/utils';
+import { getVisibleErrors } from '@rjsf/utils';
 
 const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'emptyValue',
@@ -53,6 +54,17 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'UnsupportedFieldTemplate',
   'WrapIfAdditionalTemplate',
 ];
+
+/** Builds the text for the `error` prop Mantine's inputs render, from the errors the component should surface.
+ * Mantine renders the `error` prop as text, so an empty string has to become `undefined` or the input reserves the
+ * space for a message it will never show.
+ *
+ * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
+ * @returns - The error text to render, or undefined when there is none
+ */
+export function visibleErrorText(props: VisibleErrorsProps): string | undefined {
+  return getVisibleErrors(props).join('\n') || undefined;
+}
 
 export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOptionsType> {
   const result = {} as T;

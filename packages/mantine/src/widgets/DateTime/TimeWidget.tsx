@@ -2,7 +2,9 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getVisibleErrors, labelValue, useTimeWidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, useTimeWidgetProps } from '@rjsf/utils';
+
+import { visibleErrorText } from '../../utils.ts';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
@@ -80,7 +82,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={getVisibleErrors(props).join('\n') || undefined}
+      error={visibleErrorText(props)}
       {...options}
       aria-describedby={ariaDescribedByIds(id)}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}

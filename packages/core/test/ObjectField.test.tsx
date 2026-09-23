@@ -109,7 +109,7 @@ describe('ObjectField', () => {
       [true, 0],
     ])(
       'lets an ObjectFieldTemplate listing the errors of its properties honor ui:hideError: %s',
-      async (hideError, expectedErrors) => {
+      async (hidden, expectedErrors) => {
         function ErrorListingObjectFieldTemplate({ properties, errorSchema, hideError }: ObjectFieldTemplateProps) {
           return (
             <div>
@@ -126,7 +126,7 @@ describe('ObjectField', () => {
         }
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
-          uiSchema: hideError ? { 'ui:hideError': true } : {},
+          uiSchema: hidden ? { 'ui:hideError': true } : {},
           customValidate: addPropertyError,
           templates: { ObjectFieldTemplate: ErrorListingObjectFieldTemplate },
           showErrorList: false,

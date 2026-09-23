@@ -814,7 +814,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
+If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`. `rawErrors` carries every error on the field even while `ui:hideError` is in effect, so a template deciding whether to render an error state has to pair it with `hideError` through `hasVisibleErrors({ rawErrors, hideError })`.
 
 The following props are passed to a custom field template component:
 

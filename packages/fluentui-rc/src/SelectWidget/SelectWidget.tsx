@@ -7,7 +7,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  getVisibleErrors,
+  hasVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   labelValue,
@@ -90,7 +90,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   return (
     <Field
       label={labelValue(label, hideLabel)}
-      validationState={getVisibleErrors({ rawErrors, hideError }).length ? 'error' : undefined}
+      validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
       required={required}
     >
       <Dropdown

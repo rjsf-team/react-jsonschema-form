@@ -57,6 +57,7 @@ import getWidget from './getWidget.tsx';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
+import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import {
   ariaDescribedByIds,
@@ -198,6 +199,7 @@ export {
   groupEnumOptions,
   guessType,
   hasByPath,
+  hasVisibleErrors,
   hasWidget,
   hashForSchema,
   hashObject,

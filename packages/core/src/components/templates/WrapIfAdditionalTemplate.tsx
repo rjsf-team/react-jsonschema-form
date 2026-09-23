@@ -3,7 +3,7 @@ import {
   AdditionalPropertyKeySelect,
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
-  getVisibleErrors,
+  hasVisibleErrors,
   TranslatableString
 } from '@rjsf/utils';
 
@@ -49,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
-  if (getVisibleErrors({ rawErrors, hideError }).length > 0) {
+  if (hasVisibleErrors({ rawErrors, hideError })) {
     classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();

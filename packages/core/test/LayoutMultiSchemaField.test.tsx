@@ -647,12 +647,12 @@ describe('LayoutMultiSchemaField', () => {
     const fakeFieldErrorTemplate = screen.queryByTestId(FIELD_ERROR_TEST_ID);
     expect(fakeFieldErrorTemplate).not.toBeInTheDocument();
   });
-  // `SchemaField` withholds `rawErrors` from its `FieldTemplate` when the errors are hidden, so a custom template
-  // styling itself from `rawErrors` alone stays safe; this field renders its own `FieldTemplate` and must match
+  // A `FieldTemplate` is always handed the full error list and decides what to surface from `hideError`, the same
+  // contract a widget has; this field renders its own `FieldTemplate` and must match `SchemaField`
   test.each([
     ['hands its FieldTemplate the errors it is showing', false, ['first error', 'second error']],
-    ['withholds the errors from its FieldTemplate when they are hidden', true, undefined],
-  ] satisfies [string, boolean, string[] | undefined][])('%s', (_, hideError, expectedRawErrors) => {
+    ['hands its FieldTemplate the errors it is hiding', true, []],
+  ] satisfies [string, boolean, string[]][])('%s', (_, hidden, expectedVisibleErrors) => {
     let templateProps: FieldTemplateProps | undefined;
     function RecordingFieldTemplate(props: FieldTemplateProps) {
       templateProps = props;
@@ -660,15 +660,15 @@ describe('LayoutMultiSchemaField', () => {
     }
     const props = getProps({
       errorSchema: NESTED_ERROR_SCHEMA,
-      hideError,
+      hideError: hidden,
       uiSchema: { 'ui:FieldTemplate': RecordingFieldTemplate },
     });
 
     render(<LayoutMultiSchemaField {...props} />);
 
-    expect(templateProps?.rawErrors).toEqual(expectedRawErrors);
-    expect(templateProps?.hideError).toBe(hideError);
-    expect(getVisibleErrors(templateProps!)).toEqual(expectedRawErrors ?? []);
+    expect(templateProps?.rawErrors).toEqual(['first error', 'second error']);
+    expect(templateProps?.hideError).toBe(hidden);
+    expect(getVisibleErrors(templateProps!)).toEqual(expectedVisibleErrors);
   });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
     const overrideTemplateTestId = 'override-field-template';

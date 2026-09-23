@@ -9,7 +9,6 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  getVisibleErrors,
   groupEnumOptions,
   isEnumOptionsGroup,
   labelValue,
@@ -17,7 +16,7 @@ import {
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -110,7 +109,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     placeholder,
     disabled: disabled || readonly,
     required,
-    error: getVisibleErrors(props).join('\n') || undefined,
+    error: visibleErrorText(props),
     searchable: true,
     filter: optionsFilter,
     'aria-describedby': ariaDescribedByIds(id),

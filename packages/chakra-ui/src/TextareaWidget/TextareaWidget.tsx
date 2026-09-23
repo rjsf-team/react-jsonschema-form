@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getVisibleErrors, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -42,7 +42,7 @@ export default function TextareaWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={getVisibleErrors({ rawErrors, hideError }).length > 0}
+      invalid={hasVisibleErrors({ rawErrors, hideError })}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

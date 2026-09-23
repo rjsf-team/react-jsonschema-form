@@ -1,6 +1,6 @@
 import { Fieldset } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, getVisibleErrors } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 export default function FieldTemplate<
   T = any,
@@ -34,7 +34,7 @@ export default function FieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = getVisibleErrors({ rawErrors, hideError }).length > 0;
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,

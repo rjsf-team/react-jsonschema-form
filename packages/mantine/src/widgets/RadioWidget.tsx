@@ -8,11 +8,10 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  getVisibleErrors,
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -80,7 +79,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={getVisibleErrors(props).join('\n') || undefined}
+      error={visibleErrorText(props)}
       aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
     >

@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, getVisibleErrors } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, hasVisibleErrors } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
@@ -77,7 +77,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         readOnly={readonly}
         className={cn(
-          { 'border-destructive focus-visible:ring-0': getVisibleErrors({ rawErrors, hideError }).length > 0 },
+          { 'border-destructive focus-visible:ring-0': hasVisibleErrors({ rawErrors, hideError }) },
           className,
         )}
         list={schema.examples ? examplesId(id) : undefined}

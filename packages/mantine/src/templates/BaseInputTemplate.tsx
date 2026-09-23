@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getVisibleErrors, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -87,7 +87,7 @@ export default function BaseInputTemplate<
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
-    error: getVisibleErrors(props).join('\n') || undefined,
+    error: visibleErrorText(props),
     list: schema.examples ? examplesId(id) : undefined,
   };
 

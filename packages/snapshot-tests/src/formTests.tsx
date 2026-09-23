@@ -790,50 +790,6 @@ export function formTests(Form: ComponentType<FormProps>) {
       expect(asFragment()).toMatchSnapshot();
     });
 
-    const errorStateSchema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        marketType: { type: 'string', enum: ['primary', 'secondary'] },
-        comissioning: { type: 'string' },
-        regions: { type: 'array', items: { type: 'string', enum: ['north', 'south'] }, uniqueItems: true },
-        tier: { type: 'string', enum: ['gold', 'silver'] },
-      },
-    };
-    const errorStateUiSchema: UiSchema = {
-      regions: { 'ui:widget': 'checkboxes' },
-      tier: { 'ui:widget': 'radio' },
-    };
-    const errorStateErrors = {
-      marketType: { __errors: ['must be equal to one of the allowed values'] },
-      comissioning: { __errors: ['must match format "year"'] },
-      regions: { __errors: ['must NOT have fewer than 1 items'] },
-      tier: { __errors: ['must be equal to one of the allowed values'] },
-    } as ErrorSchema;
-
-    test('errors put every widget into its error state', async () => {
-      const { asFragment } = render(
-        <Form
-          schema={errorStateSchema}
-          uiSchema={errorStateUiSchema}
-          validator={validator}
-          extraErrors={errorStateErrors}
-        />,
-      );
-      expect(asFragment()).toMatchSnapshot();
-    });
-
-    test('ui:hideError on a parent keeps its children out of the error state', async () => {
-      const { asFragment } = render(
-        <Form
-          schema={errorStateSchema}
-          uiSchema={{ ...errorStateUiSchema, 'ui:hideError': true }}
-          validator={validator}
-          extraErrors={errorStateErrors}
-        />,
-      );
-      expect(asFragment()).toMatchSnapshot();
-    });
-
     test('Cyclic schema', async () => {
       const schema: RJSFSchema = {
         title: 'A registration form',

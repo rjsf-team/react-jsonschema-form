@@ -7,7 +7,7 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  getVisibleErrors,
+  hasVisibleErrors,
   labelValue,
   optionId,
 } from '@rjsf/utils';
@@ -34,7 +34,7 @@ export default function CheckboxesWidget<
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
 
   const chakraProps = getChakra({ uiSchema });
-  const hasError = getVisibleErrors(props).length > 0;
+  const hasError = hasVisibleErrors(props);
 
   return (
     <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...(chakraProps as any)}>

@@ -8,7 +8,7 @@ import {
   examplesId,
   getInputProps,
   getNumericInputTitle,
-  getVisibleErrors,
+  hasVisibleErrors,
   labelValue,
 } from '@rjsf/utils';
 
@@ -65,7 +65,7 @@ export default function BaseInputTemplate<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={getVisibleErrors(props).length > 0}
+      invalid={hasVisibleErrors(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
