@@ -1240,7 +1240,7 @@ const schema: RJSFSchema = {
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   const {
     id,
-    label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -1260,10 +1260,8 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
 
   return (
     <div className={classNames} style={style}>
-      <label label={keyLabel} id={`${id}-key`}>
-        Custom Field Key
-      </label>
-      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={label} />
+      <label htmlFor={`${id}-key`}>Custom Field Key</label>
+      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={keyName} />
       <div>{children}</div>
       <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
     </div>

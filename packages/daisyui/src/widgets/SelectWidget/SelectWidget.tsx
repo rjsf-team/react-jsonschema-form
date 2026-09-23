@@ -176,12 +176,17 @@ export default function SelectWidget<
             associates with a labelable element, so on a `div` the key label and the `FieldTemplate` label both point
             at nothing. `type='button'` keeps it from submitting the form it sits in, and the explicit focus covers
             Safari and Firefox on macOS, which by platform convention do not focus a button on click — the dropdown
-            opens on `:focus-within`, so without it the menu would not open for a mouse user there. */}
+            opens on `:focus-within`, so without it the menu would not open for a mouse user there. Focusing without
+            suppressing the default would not survive it: the default mousedown action runs after this handler, and
+            it clears focus when the element it hits is not mouse-focusable, which is exactly what a button is there. */}
         <button
           id={id}
           type='button'
           tabIndex={0}
-          onMouseDown={(event) => event.currentTarget.focus()}
+          onMouseDown={(event) => {
+            event.preventDefault();
+            event.currentTarget.focus();
+          }}
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}

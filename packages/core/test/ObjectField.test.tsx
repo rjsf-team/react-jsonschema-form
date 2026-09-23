@@ -2162,6 +2162,16 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
     });
 
+    it('should offer no add button when the enum allows no name at all', () => {
+      // An empty `enum` matches nothing, so no key could validate and the object has to stay as it is
+      const { node } = createFormComponent({
+        schema: { ...schema, propertyNames: { enum: [] } },
+        formData: {},
+      });
+
+      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+    });
+
     it('should offer no add button once every allowed name is taken by a declared property', () => {
       const { node } = createFormComponent({
         schema: { ...schema, properties: { a: {}, b: {}, c: {}, d: {} } },
@@ -2227,6 +2237,20 @@ describe('ObjectField', () => {
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
+    });
+
+    it('should keep the text input for a propertyNames $ref that resolves to nothing', () => {
+      // Only `propertyNames` reads this `$ref`, so a schema carrying a broken one still has an object to render
+      const brokenRefSchema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        propertyNames: { $ref: '#/definitions/missing' },
+      };
+
+      const { node } = createFormComponent({ schema: brokenRefSchema, formData: { a: 'first' } });
+
+      expect(node.querySelector('select#root_a-key')).toBeNull();
+      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
     });
 
     it('should keep the text input when propertyNames carries no enum', () => {

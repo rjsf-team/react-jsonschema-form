@@ -287,10 +287,19 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   // reads the allowed names does so off this one schema — the dropdowns below, `onAddProperty`, and the
   // `canExpand()` the `ObjectFieldTemplate` calls on the `schema` it is handed — so none of them can disagree with
   // the others about which names the schema allows
-  const resolvedPropertyNames = useMemo(
-    () => (isObject(propertyNames) ? schemaUtils.retrieveSchema(propertyNames as S) : undefined),
-    [propertyNames, schemaUtils],
-  );
+  const resolvedPropertyNames = useMemo(() => {
+    if (!isObject(propertyNames)) {
+      return undefined;
+    }
+    try {
+      return schemaUtils.retrieveSchema(propertyNames as S);
+    } catch {
+      // A `$ref` that names no definition, or one that resolves circularly, is for the validator to report: nothing
+      // else in the form reads `propertyNames`, so a throw here would take down an object that otherwise renders.
+      // The unresolved schema stands in, enumerating nothing, which is what an unconstrained object already does
+      return propertyNames as S;
+    }
+  }, [propertyNames, schemaUtils]);
   const resolvedSchema = useMemo(
     () => (resolvedPropertyNames ? ({ ...schema, propertyNames: resolvedPropertyNames } as S) : schema),
     [resolvedPropertyNames, schema],
@@ -358,10 +367,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     // with none left means a custom template is offering it anyway, and adding no property beats adding one the
     // schema forbids
     const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
-    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
-    if (preferredKey === undefined) {
+    if (freeNames?.length === 0) {
       return;
     }
+    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
     const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);

@@ -13,8 +13,11 @@ describe('getFreePropertyNames()', () => {
   it('returns undefined for a propertyNames that enumerates nothing', () => {
     expect(getFreePropertyNames({ propertyNames: { pattern: '^a' } } as RJSFSchema)).toBeUndefined();
   });
-  it('returns undefined for a propertyNames whose enum holds no string', () => {
-    expect(getFreePropertyNames({ propertyNames: { enum: [1, null] } } as RJSFSchema)).toBeUndefined();
+  it('returns an empty array for an enum that allows no name at all', () => {
+    expect(getFreePropertyNames({ propertyNames: { enum: [] } } as RJSFSchema)).toEqual([]);
+  });
+  it('returns an empty array for an enum holding no string, since no key could equal one', () => {
+    expect(getFreePropertyNames({ propertyNames: { enum: [1, null] } } as RJSFSchema)).toEqual([]);
   });
   it('drops the non-string entries of a mixed enum', () => {
     expect(getFreePropertyNames({ propertyNames: { enum: ['a', 2, 'b'] } } as RJSFSchema)).toEqual(['a', 'b']);

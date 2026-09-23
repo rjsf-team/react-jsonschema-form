@@ -103,12 +103,19 @@ describe('canExpand()', () => {
     };
     expect(canExpand(schema)).toBe(true);
   });
+  it('has a propertyNames whose enum is empty', () => {
+    const schema: RJSFSchema = {
+      additionalProperties: { type: 'string' },
+      propertyNames: { enum: [] },
+    };
+    expect(canExpand(schema)).toBe(false);
+  });
   it('has a propertyNames whose enum holds no name that could be a key', () => {
     const schema: RJSFSchema = {
       additionalProperties: { type: 'string' },
       propertyNames: { enum: [1, 2] },
     };
-    expect(canExpand(schema)).toBe(true);
+    expect(canExpand(schema)).toBe(false);
   });
   it('has a boolean propertyNames', () => {
     const schema: RJSFSchema = {

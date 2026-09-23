@@ -608,7 +608,9 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
 A name `schema.properties` declares is taken however empty its value is, since adding under it would write into that declared property rather than create an additional one.
 A name `formData` holds is taken whether or not `retrieveSchema()` has stubbed it in among the properties.
-An `undefined` return means the schema enumerates no name at all, which is what tells "any name goes" apart from "every allowed name is taken" — the empty array.
+An entry that is not a string names nothing a property key could equal, so it is dropped rather than offered as a name no validator would accept.
+An `undefined` return means the schema enumerates nothing at all, which is what tells "any name goes" apart from "no name is left to take" — the empty array.
+An `enum` that is empty, or that lists only non-strings, allows no key whatsoever and so reads as the latter.
 A `propertyNames` written as a `$ref` reads as the former, since resolving one needs a `schemaUtils` this has no access to; resolve it before calling if that matters.
 
 #### Parameters
