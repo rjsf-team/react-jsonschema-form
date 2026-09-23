@@ -158,6 +158,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** Fixed `BaseInputTemplate` and every widget that renders an `error` (checkbox, checkboxes, color, date/time, file, password, radio, range, select, textarea and the alt-date widget) deriving it from `rawErrors` alone, so a field kept showing its error text and styling under `ui:hideError` ([#3684](https://github.com/rjsf-team/react-jsonschema-form/issues/3684))
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - **BREAKING CHANGE:** Removed the `lib/templates/ButtonTemplates/index.js` module and its default `buttonTemplates()` export; the button templates are reachable through `Templates.ButtonTemplates` or `generateTemplates().ButtonTemplates`
+- Fixed `DateTimeInput` and `TimeWidget` not displaying a `DescriptionFieldTemplate` when a description is included in `schema` or `options`
 
 ## @rjsf/mui
 
