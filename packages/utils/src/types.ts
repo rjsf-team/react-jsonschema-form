@@ -699,8 +699,15 @@ export type FieldTemplateProps<
   children: ReactElement;
   /** A component instance listing any encountered errors for this field */
   errors?: ReactElement;
-  /** An array of strings listing all generated error messages from encountered errors for this field */
+  /** An array of strings listing the generated error messages this field is displaying, `undefined` while
+   * `ui:hideError` is in effect, so that a template styling itself from it alone stays out of the error state.
+   * To render the withheld errors yourself, read them from `errorSchema`
+   */
   rawErrors?: string[];
+  /** The tree of errors for this field and its children, carrying every error whatever `hideError` says, for a
+   * template that renders the errors itself rather than leaving them to the `errors` component
+   */
+  errorSchema?: ErrorSchema<T>;
   /** A component instance rendering any `ui:help` uiSchema directive defined */
   help?: ReactElement;
   /** A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed
@@ -946,7 +953,10 @@ export type ArrayFieldTemplateProps<
   items: ReactElement[];
   /** A function that adds a new item to the end of the array */
   onAddClick: (event?: any) => void;
-  /** An array of strings listing all generated error messages from encountered errors for this widget */
+  /** An array of strings listing all generated error messages from encountered errors for this widget. Unlike
+   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does, so a template
+   * rendering an error state from it must pair the two through `hasVisibleErrors({ rawErrors, hideError })`
+   */
   rawErrors?: string[];
 };
 

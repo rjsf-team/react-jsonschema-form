@@ -14,6 +14,7 @@ import {
   getByPath,
   ErrorSchemaBuilder,
   getDiscriminatorFieldFromSchema,
+  getVisibleErrors,
   ONE_OF_KEY,
   optionsList,
   toFieldPath,
@@ -645,6 +646,31 @@ describe('LayoutMultiSchemaField', () => {
     // Does not render the FakeFieldErrorTemplate
     const fakeFieldErrorTemplate = screen.queryByTestId(FIELD_ERROR_TEST_ID);
     expect(fakeFieldErrorTemplate).not.toBeInTheDocument();
+  });
+  // `rawErrors` carries only what the template is showing, while `errorSchema` carries every error whatever
+  // `hideError` says; this field renders its own `FieldTemplate` and must match `SchemaField` on both
+  test.each([
+    ['hands its FieldTemplate the errors it is showing', false, ['first error', 'second error']],
+    ['withholds the errors from its FieldTemplate while they are hidden', true, []],
+  ] satisfies [string, boolean, string[]][])('%s', (_, hidden, expectedVisibleErrors) => {
+    let templateProps: FieldTemplateProps | undefined;
+    function RecordingFieldTemplate(props: FieldTemplateProps) {
+      templateProps = props;
+      return <FakeFieldTemplate {...props} />;
+    }
+    const props = getProps({
+      errorSchema: NESTED_ERROR_SCHEMA,
+      hideError: hidden,
+      uiSchema: { 'ui:FieldTemplate': RecordingFieldTemplate },
+    });
+
+    render(<LayoutMultiSchemaField {...props} />);
+
+    expect(templateProps?.rawErrors).toEqual(hidden ? undefined : ['first error', 'second error']);
+    expect(templateProps?.hideError).toBe(hidden);
+    expect(getVisibleErrors(templateProps!)).toEqual(expectedVisibleErrors);
+    // The hidden errors remain reachable, so a template rendering them itself is not cut off by the directive
+    expect(templateProps?.errorSchema).toEqual(NESTED_ERROR_SCHEMA);
   });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
     const overrideTemplateTestId = 'override-field-template';

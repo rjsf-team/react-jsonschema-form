@@ -14,6 +14,7 @@ import {
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
+  hasVisibleErrors,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -69,7 +70,8 @@ export default function SelectWidget<
   onBlur,
   onFocus,
   placeholder,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   className,
   registry,
   uiSchema,
@@ -101,7 +103,7 @@ export default function SelectWidget<
     ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
     : undefined;
 
-  const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
+  const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
   return (
     <div className='p-0.5'>

@@ -775,6 +775,19 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 
 - UIOptionsType&lt;T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
 
+### getVisibleErrors()
+
+Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect.
+Components rendering an error state (a red outline, an invalid flag, inline error text) must derive it from this rather than from `rawErrors` directly, since `rawErrors` is deliberately still provided while errors are hidden so that custom widgets can render them their own way.
+
+#### Parameters
+
+- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
+
+#### Returns
+
+- string[]: The errors to display, or an empty array when there are none or they are being hidden
+
 ### getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
@@ -868,6 +881,19 @@ Stringifies the schema and returns the hash of the resulting string.
 #### Returns
 
 - string: The string obtained from the hash of the stringified schema
+
+### hasVisibleErrors()
+
+Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
+It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
+
+#### Parameters
+
+- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
+
+#### Returns
+
+- boolean: True when there are errors the component should surface, otherwise false
 
 ### hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

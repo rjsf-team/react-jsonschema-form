@@ -173,6 +173,7 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     onFocus,
     registry,
     rawErrors,
+    hideError,
     name,
     onSelectChange,
     htmlName,
@@ -207,6 +208,7 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       value={items}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       required={required}
       label={label}
       hideLabel={!displayLabel}
@@ -292,6 +294,7 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     registry,
     formData: items = [],
     rawErrors,
+    hideError,
     onSelectChange,
     htmlName,
   } = props;
@@ -319,6 +322,7 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       value={items}
       disabled={disabled}
       readonly={readonly}
+      hideError={hideError}
       required={required}
       registry={registry}
       autofocus={autofocus}
@@ -637,10 +641,12 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     uiSchema,
     onAddClick: handleAddItem,
     readonly,
+    hideError,
     required,
     schema,
     title: fieldTitle,
     formData,
+    errorSchema,
     rawErrors,
     registry,
     optionalDataControl,
@@ -767,6 +773,7 @@ function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     }),
     onAddClick: handleAddItem,
     readonly,
+    hideError,
     required,
     registry,
     schema,

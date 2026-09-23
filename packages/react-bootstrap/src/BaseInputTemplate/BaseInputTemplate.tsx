@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, hasVisibleErrors } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function BaseInputTemplate<
@@ -25,7 +25,8 @@ export default function BaseInputTemplate<
   autofocus,
   options,
   schema,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   children,
   extraProps,
   registry,
@@ -55,7 +56,6 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
-  // const classNames = [rawErrors.length > 0 ? "is-invalid" : "", type === 'file' ? 'custom-file-label': ""]
   return (
     <>
       <Form.Control
@@ -67,7 +67,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         readOnly={readonly}
-        className={rawErrors.length > 0 ? 'is-invalid' : ''}
+        className={hasVisibleErrors({ rawErrors, hideError }) ? 'is-invalid' : ''}
         list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}

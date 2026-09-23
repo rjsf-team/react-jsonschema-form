@@ -1,6 +1,6 @@
 import { Fieldset } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 export default function FieldTemplate<
   T = any,
@@ -24,7 +24,8 @@ export default function FieldTemplate<
     readonly,
     registry,
     required,
-    rawErrors = [],
+    rawErrors,
+    hideError,
     errors,
     help,
     description,
@@ -33,6 +34,7 @@ export default function FieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -63,7 +65,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Fieldset.Root disabled={disabled} invalid={rawErrors && rawErrors.length > 0}>
+      <Fieldset.Root disabled={disabled} invalid={hasError}>
         {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>

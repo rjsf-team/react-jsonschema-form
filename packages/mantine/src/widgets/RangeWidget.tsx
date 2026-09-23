@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Slider, Input } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
+import { ariaDescribedByIds, getVisibleErrors, rangeSpec, titleId } from '@rjsf/utils';
 
 import { cleanupOptions } from '../utils.ts';
 
@@ -23,7 +23,6 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -78,12 +77,10 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         {...themeProps}
         aria-describedby={ariaDescribedByIds(id)}
       />
-      {rawErrors &&
-        rawErrors?.length > 0 &&
-        rawErrors.map((error: string, index: number) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <Input.Error key={`range-widget-input-errors-${index}`}>{error}</Input.Error>
-        ))}
+      {getVisibleErrors(props).map((error: string, index: number) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <Input.Error key={`range-widget-input-errors-${index}`}>{error}</Input.Error>
+      ))}
     </>
   );
 }

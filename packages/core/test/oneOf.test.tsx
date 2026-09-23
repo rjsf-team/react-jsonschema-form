@@ -1719,6 +1719,27 @@ describe('oneOf', () => {
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).toHaveLength(0);
     });
+
+    it('should tell the oneOf selector widget that its errors are hidden', async () => {
+      let selectorProps: WidgetProps | undefined;
+      function RecordingSelectWidget(props: WidgetProps) {
+        if (props.name?.endsWith('__oneof_select')) {
+          selectorProps = props;
+        }
+        return <SelectWidget {...props} />;
+      }
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:hideError': true },
+        customValidate,
+        widgets: { SelectWidget: RecordingSelectWidget },
+      });
+
+      await submitForm(node, user);
+
+      expect(selectorProps?.hideError).toBe(true);
+    });
   });
 
   describe('OpenAPI discriminator support', () => {

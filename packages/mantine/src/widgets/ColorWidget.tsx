@@ -2,9 +2,9 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
@@ -24,7 +24,6 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -71,7 +70,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={visibleErrorText(props)}
       {...themeProps}
       aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}

@@ -564,6 +564,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     readonly,
     disabled,
     required,
+    hideError,
     id,
     uiSchema,
     errorSchema,

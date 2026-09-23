@@ -2,7 +2,9 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { descriptionId, getTemplate, labelValue, ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+
+import { visibleErrorText } from '../utils.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -26,7 +28,6 @@ export default function CheckboxWidget<
     label,
     hideLabel,
     schema,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -101,7 +102,7 @@ export default function CheckboxWidget<
         onChange={handleCheckboxChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+        error={visibleErrorText(props)}
         aria-describedby={ariaDescribedByIds(id)}
       />
     </>

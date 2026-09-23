@@ -7,8 +7,9 @@ import {
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
-  optionId,
+  hasVisibleErrors,
   labelValue,
+  optionId,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -19,22 +20,8 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    disabled,
-    options,
-    value,
-    readonly,
-    onChange,
-    onBlur,
-    onFocus,
-    required,
-    label,
-    rawErrors = [],
-    hideLabel,
-    uiSchema,
-  } = props;
+  const { id, htmlName, disabled, options, value, readonly, onChange, onBlur, onFocus, label, hideLabel, uiSchema } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
@@ -47,14 +34,10 @@ export default function CheckboxesWidget<
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
 
   const chakraProps = getChakra({ uiSchema });
+  const hasError = hasVisibleErrors(props);
 
   return (
-    <FieldsetRoot
-      mb={1}
-      disabled={disabled || readonly}
-      invalid={rawErrors && rawErrors.length > 0}
-      {...(chakraProps as any)}
-    >
+    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...(chakraProps as any)}>
       {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         onValueChange={(option) =>
@@ -63,7 +46,7 @@ export default function CheckboxesWidget<
         value={selectValue}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
-        invalid={required && value.length === 0}
+        invalid={hasError}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&

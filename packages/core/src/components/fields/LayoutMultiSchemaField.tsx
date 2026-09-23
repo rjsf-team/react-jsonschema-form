@@ -26,6 +26,7 @@ import {
   getTemplate,
   getPropertySchema,
   getUiOptions,
+  getVisibleErrors,
   getWidget,
   noop,
 } from '@rjsf/utils';
@@ -199,9 +200,10 @@ export default function LayoutMultiSchemaField<
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
+  const visibleErrors = getVisibleErrors({ rawErrors, hideError: hideFieldError });
   const errors =
-    !hideFieldError && rawErrors.length > 0 ? (
-      <FieldErrorTemplate id={id} schema={schema} errors={rawErrors} registry={registry} />
+    visibleErrors.length > 0 ? (
+      <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
     ) : undefined;
 
   return (
@@ -218,6 +220,9 @@ export default function LayoutMultiSchemaField<
       registry={registry}
       displayLabel={displayLabel}
       errors={errors}
+      rawErrors={hideFieldError ? undefined : rawErrors}
+      errorSchema={errorSchema}
+      hideError={hideFieldError}
       onChange={onChange}
       onKeyRename={noop}
       onKeyRenameBlur={noop}

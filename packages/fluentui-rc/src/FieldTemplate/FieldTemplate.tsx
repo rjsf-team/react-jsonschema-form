@@ -1,6 +1,6 @@
 import { Field, Text } from '@fluentui/react-components';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -28,7 +28,8 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors = [],
+    rawErrors,
+    hideError,
     errors,
     help,
     description,
@@ -38,6 +39,7 @@ export default function FieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -68,7 +70,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Field validationState={rawErrors.length ? 'error' : undefined} required={required}>
+      <Field validationState={hasError ? 'error' : undefined} required={required}>
         {children}
         {displayLabel && rawDescription && !isCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>

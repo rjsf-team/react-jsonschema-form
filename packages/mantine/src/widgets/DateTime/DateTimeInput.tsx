@@ -6,6 +6,8 @@ import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/uti
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
+import { visibleErrorText } from '../../utils.ts';
+
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
 
@@ -64,7 +66,6 @@ export default function DateTimeInput<
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -114,7 +115,7 @@ export default function DateTimeInput<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={visibleErrorText(props)}
       {...options}
       aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}

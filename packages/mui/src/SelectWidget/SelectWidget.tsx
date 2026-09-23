@@ -20,6 +20,7 @@ import {
   enumOptionValueEncoder,
   getOptionValueFormat,
   groupEnumOptions,
+  hasVisibleErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
@@ -66,7 +67,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur,
     onFocus,
     errorSchema,
-    rawErrors = [],
+    rawErrors,
     registry,
     uiSchema,
     hideError,
@@ -117,7 +118,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
-        error={rawErrors.length > 0}
+        error={hasVisibleErrors({ rawErrors, hideError })}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

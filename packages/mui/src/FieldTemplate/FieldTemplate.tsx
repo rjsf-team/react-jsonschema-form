@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -44,7 +44,8 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors = [],
+    rawErrors,
+    hideError,
     errors,
     help,
     description,
@@ -54,6 +55,7 @@ export default function FieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -90,7 +92,7 @@ export default function FieldTemplate<
     >
       <FormControl
         fullWidth
-        error={!!rawErrors.length}
+        error={hasError}
         required={required}
         {...muiSlotProps?.fieldFormControl}
         sx={otherMuiProps.sx}

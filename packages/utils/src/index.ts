@@ -50,11 +50,14 @@ import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
+import type { VisibleErrorsProps } from './getVisibleErrors.ts';
+import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
+import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import {
   ariaDescribedByIds,
@@ -138,6 +141,7 @@ export type {
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
   UseTimeWidgetPropsResult,
+  VisibleErrorsProps,
   WidgetAliasFor,
 };
 
@@ -190,10 +194,12 @@ export {
   getTemplate,
   getTestIds,
   getUiOptions,
+  getVisibleErrors,
   getWidget,
   groupEnumOptions,
   guessType,
   hasByPath,
+  hasVisibleErrors,
   hasWidget,
   hashForSchema,
   hashObject,

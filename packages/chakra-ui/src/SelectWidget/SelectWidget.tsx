@@ -18,6 +18,7 @@ import {
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
+  hasVisibleErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
@@ -47,7 +48,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onChange,
     onBlur,
     onFocus,
-    rawErrors = [],
     schema,
     uiSchema,
   } = props;
@@ -128,7 +128,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={hasVisibleErrors(props)}
       label={labelValue(label, hideLabel || !label)}
       position='relative'
       {...chakraProps}

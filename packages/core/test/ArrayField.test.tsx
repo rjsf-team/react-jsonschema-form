@@ -13,7 +13,7 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { getVisibleErrors, noop } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import ArrayField from '../src/components/fields/ArrayField.tsx';
@@ -2790,6 +2790,85 @@ describe('ArrayField', () => {
 
       const inputsNoError = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputsNoError).toHaveLength(0);
+    });
+    describe('ArrayFieldTemplate', () => {
+      function ErrorListingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+        return (
+          <div>
+            {props.items}
+            <ul className='array-template-errors'>
+              {getVisibleErrors(props).map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      function addArrayError(_: any | undefined, errors: FormValidation) {
+        errors.foo?.addError('array error');
+        return errors;
+      }
+
+      it.each([
+        ['a list', { type: 'array', items: { type: 'string' } }],
+        ['a fixed items list', { type: 'array', items: [{ type: 'string' }] }],
+      ] satisfies [string, RJSFSchema][])('renders the array errors of %s when they are not hidden', async (_, foo) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { foo } },
+          formData: { foo: ['a'] },
+          customValidate: addArrayError,
+          templates: { ArrayFieldTemplate: ErrorListingArrayFieldTemplate },
+          showErrorList: false,
+        });
+        await submitForm(node, user);
+
+        expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(1);
+      });
+
+      it.each([
+        ['a list', { type: 'array', items: { type: 'string' } }],
+        ['a fixed items list', { type: 'array', items: [{ type: 'string' }] }],
+      ] satisfies [string, RJSFSchema][])('hides the array errors of %s under ui:hideError', async (_, foo) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { foo } },
+          uiSchema: { 'ui:hideError': true },
+          formData: { foo: ['a'] },
+          customValidate: addArrayError,
+          templates: { ArrayFieldTemplate: ErrorListingArrayFieldTemplate },
+          showErrorList: false,
+        });
+        await submitForm(node, user);
+
+        expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(0);
+      });
+
+      // `errorSchema` is what a template renders the errors `ui:hideError` withholds from, so it has to arrive for
+      // both array shapes, not just the fixed one
+      it.each([
+        ['a list', { type: 'array', items: { type: 'string' } }],
+        ['a fixed items list', { type: 'array', items: [{ type: 'string' }] }],
+      ] satisfies [string, RJSFSchema][])('hands the errorSchema of %s to its template', async (_, foo) => {
+        let templateProps: ArrayFieldTemplateProps | undefined;
+        function RecordingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+          templateProps = props;
+          return <div>{props.items}</div>;
+        }
+        function addItemError(_formData: any | undefined, errors: FormValidation) {
+          errors.foo?.[0]?.addError('item error');
+          return errors;
+        }
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { foo } },
+          uiSchema: { 'ui:hideError': true },
+          formData: { foo: ['a'] },
+          customValidate: addItemError,
+          templates: { ArrayFieldTemplate: RecordingArrayFieldTemplate },
+          showErrorList: false,
+        });
+        await submitForm(node, user);
+
+        expect(templateProps?.errorSchema?.[0]?.__errors).toEqual(['item error']);
+      });
     });
   });
   describe('FormContext gets passed', () => {

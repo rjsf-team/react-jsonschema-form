@@ -31,6 +31,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     errorSchema,
     formData,
     fieldPath,
+    hideError,
     id,
     onBlur,
     onChange,
@@ -249,6 +250,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         onFocus={onFocus}
         disabled={disabled || enumOptions.length === 0}
         multiple={false}
+        hideError={hideError}
         rawErrors={rawErrors}
         errorSchema={fieldErrorSchema}
         value={selectedOption >= 0 ? selectedOption : undefined}

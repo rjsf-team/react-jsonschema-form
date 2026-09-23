@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, hasVisibleErrors } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
@@ -33,7 +33,8 @@ export default function BaseInputTemplate<
   autofocus,
   options,
   schema,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   children,
   extraProps,
   className,
@@ -75,7 +76,10 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive focus-visible:ring-0': rawErrors.length > 0 }, className)}
+        className={cn(
+          { 'border-destructive focus-visible:ring-0': hasVisibleErrors({ rawErrors, hideError }) },
+          className,
+        )}
         list={schema.examples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}

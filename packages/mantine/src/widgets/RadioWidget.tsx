@@ -4,14 +4,14 @@ import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, visibleErrorText } from '../utils.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -31,7 +31,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -80,7 +79,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={visibleErrorText(props)}
       aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
     >

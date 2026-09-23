@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
@@ -10,7 +10,8 @@ export default function FieldTemplate<
   id,
   children,
   displayLabel,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   errors,
   help,
   description,
@@ -32,6 +33,7 @@ export default function FieldTemplate<
   registry,
 }: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -64,14 +66,14 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && !isCheckbox && (
-          <Form.Label htmlFor={id} className={rawErrors.length > 0 ? 'text-danger' : ''}>
+          <Form.Label htmlFor={id} className={hasError ? 'text-danger' : ''}>
             {label}
             {required ? '*' : null}
           </Form.Label>
         )}
         {children}
         {displayLabel && rawDescription && !isCheckbox && (
-          <Form.Text className={rawErrors.length > 0 ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
+          <Form.Text className={hasError ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
         )}
         {errors}
         {help}

@@ -206,7 +206,8 @@ The following props are passed to custom widget components:
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. It carries them whatever `hideError` says, so that a widget can render them its own way; derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone.
+- `hideError`: A boolean value stating if the widget is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive.
 - `registry`: A [registry](#the-registry-object) object (read next).
 
 ### Custom component registration
@@ -388,7 +389,8 @@ A field component will always be passed the following props:
 - `readonly`: A boolean value stating if the field is read-only;
 - `autofocus`: A boolean value stating if the field should autofocus;
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
-- `rawErrors`: `An array of strings listing all generated error messages from encountered errors for this field
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone
+- `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
 - `onChange`: The field change event handler; called with the updated field value, the optional change path for the value (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;

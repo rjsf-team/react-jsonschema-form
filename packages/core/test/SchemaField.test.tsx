@@ -6,6 +6,7 @@ import type {
   FormValidation,
   FieldErrorProps,
   FieldHelpProps,
+  FieldTemplateProps,
   WidgetProps,
 } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
@@ -711,6 +712,32 @@ describe('SchemaField', () => {
           const matches = node.querySelectorAll('.custom-text-widget');
           expect(matches).toHaveLength(1);
           expect(matches[0]).toHaveTextContent('test');
+        });
+
+        it('should withhold rawErrors from a custom FieldTemplate while leaving them in its errorSchema', async () => {
+          const customFieldTemplate = ({ children, rawErrors, errorSchema }: FieldTemplateProps) => (
+            <div>
+              {children}
+              <div className='raw-errors'>{rawErrors}</div>
+              <div className='schema-errors'>{errorSchema?.__errors}</div>
+            </div>
+          );
+          const { node } = createFormComponent({
+            schema,
+            uiSchema: hideUiSchema,
+            customValidate,
+            templates: { FieldTemplate: customFieldTemplate },
+          });
+
+          await submitForm(node, user);
+
+          // A template styling itself from `rawErrors` alone stays out of the error state under `ui:hideError`
+          const rawErrorNodes = [...node.querySelectorAll('.raw-errors')];
+          expect(rawErrorNodes.length).toBeGreaterThan(0);
+          rawErrorNodes.forEach((rawErrorNode) => expect(rawErrorNode).toBeEmptyDOMElement());
+          // while one rendering the errors itself can still reach them
+          const schemaErrors = [...node.querySelectorAll('.schema-errors')].map(({ textContent }) => textContent);
+          expect(schemaErrors).toContain('test');
         });
       });
     });
