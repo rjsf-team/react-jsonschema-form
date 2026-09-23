@@ -646,6 +646,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     schema,
     title: fieldTitle,
     formData,
+    errorSchema,
     rawErrors,
     registry,
     optionalDataControl,

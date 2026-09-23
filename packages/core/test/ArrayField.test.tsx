@@ -2841,6 +2841,34 @@ describe('ArrayField', () => {
 
         expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(0);
       });
+
+      // `errorSchema` is what a template renders the errors `ui:hideError` withholds from, so it has to arrive for
+      // both array shapes, not just the fixed one
+      it.each([
+        ['a list', { type: 'array', items: { type: 'string' } }],
+        ['a fixed items list', { type: 'array', items: [{ type: 'string' }] }],
+      ] satisfies [string, RJSFSchema][])('hands the errorSchema of %s to its template', async (_, foo) => {
+        let templateProps: ArrayFieldTemplateProps | undefined;
+        function RecordingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+          templateProps = props;
+          return <div>{props.items}</div>;
+        }
+        function addItemError(_formData: any | undefined, errors: FormValidation) {
+          errors.foo?.[0]?.addError('item error');
+          return errors;
+        }
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { foo } },
+          uiSchema: { 'ui:hideError': true },
+          formData: { foo: ['a'] },
+          customValidate: addItemError,
+          templates: { ArrayFieldTemplate: RecordingArrayFieldTemplate },
+          showErrorList: false,
+        });
+        await submitForm(node, user);
+
+        expect(templateProps?.errorSchema?.[0]?.__errors).toEqual(['item error']);
+      });
     });
   });
   describe('FormContext gets passed', () => {
