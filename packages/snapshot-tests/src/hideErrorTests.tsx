@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import { generateWidgets } from '@rjsf/core';
 import type { ErrorSchema, RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 
 /** The schema each widget needs in order to be the one that renders. Keyed by the name a widget is registered
  * under, which is also what `ui:widget` resolves against, so a theme adding a widget only has to add an entry here,
@@ -42,8 +42,10 @@ const WIDGET_FIXTURES: Record<string, RJSFSchema> = {
  */
 function normalize(markup: string) {
   // The lookbehind keeps `:r…:` from matching inside an id a theme builds with the same separator, such as chakra's
-  // `select:root:control`, which would blank a chunk of both renderings and hide any real difference within it
-  return markup.replace(/(?<![a-z0-9])(?::r[0-9a-z]+:|«r[0-9a-z]+»|_r_[0-9a-z]+_)/g, 'generatedId');
+  // `select:root:control` or the `:radio:` that follows a generated id in `radio-group:_r_1p_:radio:control:0`,
+  // which would blank a chunk of both renderings and hide any real difference within it. `_` is excluded along with
+  // the alphanumerics because a generated id ends in one, and no theme's own id starts a segment that way
+  return markup.replace(/(?<![a-z0-9_])(?::r[0-9a-z]+:|«r[0-9a-z]+»|_r_[0-9a-z]+_)/g, 'generatedId');
 }
 
 /** Runs the same form twice under `ui:hideError`, once with an error on the field and once without, and returns
@@ -77,8 +79,12 @@ function renderBothWays(Form: ComponentType<FormProps>, widgetName: string, fixt
       extraErrors={{ field: { __errors: ['a hidden error'] } } as ErrorSchema}
     />,
   );
+  const erroredMarkup = errored.container.innerHTML;
+  // The two renderings use the same field ids, so the first is unmounted before the second goes up: a theme wiring
+  // itself together through `document.getElementById` would otherwise reach into the other form's DOM
+  cleanup();
   const clean = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} showErrorList={false} />);
-  return [normalize(errored.container.innerHTML), normalize(clean.container.innerHTML)];
+  return [normalize(erroredMarkup), normalize(clean.container.innerHTML)];
 }
 
 /** Pins the `ui:hideError` contract for every widget a theme can render, rather than for the handful a fixture

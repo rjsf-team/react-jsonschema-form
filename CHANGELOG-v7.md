@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `DateWidget`/`DateTimeWidget` format a `format: "iso-date-time"` value as a naive local date-time string instead of converting it to a UTC ISO string, since that format's timezone is optional. A stored value that happens to carry an offset anyway is stripped before being parsed, so it displays as the naive wall-clock time it represents instead of being converted to the browser's local zone ([#3930](https://github.com/rjsf-team/react-jsonschema-form/issues/3930))
 - **BREAKING CHANGE** Fixed `BaseInputTemplate` never calling `onChangeOverride` for a numeric field: its `InputNumber` branch was wired straight to `onChange` and reports only the parsed value, never an event. A numeric field with an `onChangeOverride` now renders the `Input` branch (still `type="number"`) so the override receives the `ChangeEvent`, as it does in every other theme
 - Added `<optgroup>`-equivalent support to `SelectWidget` via `ui:options.optgroups`, grouping options using rc-select's nested `options` shape
+- `WrapIfAdditionalTemplate` renders an additional property's key as a `SelectWidget` of the names the parent schema's `propertyNames.enum` allows, instead of a free-text input, and takes the key from the new `keyName` prop rather than from the decorated `label`, so a `deprecated` additional property no longer offers its decoration as a key name, nor renames itself to it ([#4682](https://github.com/rjsf-team/react-jsonschema-form/issues/4682))
 
 ## @rjsf/chakra-ui
 

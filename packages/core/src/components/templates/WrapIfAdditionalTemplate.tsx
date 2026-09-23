@@ -4,7 +4,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
   hasVisibleErrors,
-  TranslatableString
+  TranslatableString,
 } from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
