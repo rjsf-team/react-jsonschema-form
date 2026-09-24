@@ -1,15 +1,18 @@
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import isPlainObject from '../isPlainObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   Experimental_CustomMergeAllOf,
+  Experimental_DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
 } from '../types.ts';
+import getDefaultFormState from './getDefaultFormState.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
@@ -36,18 +39,58 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   return values.length > 0 ? values : undefined;
 }
 
+/** Strips `undefined`-valued keys so a value still matching its schema isn't treated as stale. `deepEquals` counts
+ * such a key as a difference, and this function writes them itself when it clears data, so `{ a: 1, b: undefined }`
+ * would otherwise compare unequal to the `{ a: 1 }` that a `default` or `const` spells out.
+ */
+function stripUndefinedValues(value: any): any {
+  if (Array.isArray(value)) {
+    return value.map(stripUndefinedValues);
+  }
+  if (!isPlainObject(value)) {
+    return value;
+  }
+  return Object.entries(value).reduce((acc: GenericObjectType, [key, entry]) => {
+    if (entry !== undefined) {
+      acc[key] = stripUndefinedValues(entry);
+    }
+    return acc;
+  }, {});
+}
+
+/** Compares `a` and `b` for deep equality, disregarding any `undefined`-valued keys either one carries. */
+function sameIgnoringUndefined(a: any, b: any) {
+  return deepEquals(a, b) || deepEquals(stripUndefinedValues(a), stripUndefinedValues(b));
+}
+
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
   const enumValues = enumValuesForSchema(schema);
-  if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
+  if (!enumValues || enumValues.some((value) => sameIgnoringUndefined(value, formValue))) {
     return NO_VALUE;
   }
 
   const defaultValue = getByPath(schema, DEFAULT_KEY, NO_VALUE);
-  if (defaultValue !== NO_VALUE && enumValues.some((value) => deepEquals(value, defaultValue))) {
+  if (defaultValue !== NO_VALUE && enumValues.some((value) => sameIgnoringUndefined(value, defaultValue))) {
     return defaultValue;
   }
 
   return enumValues.length === 1 ? enumValues[0] : undefined;
+}
+
+interface ConstraintCheckOptions<S extends StrictRJSFSchema = RJSFSchema> {
+  /** True when the key is absent from the old schema, so a `default` initializes it rather than replacing a value */
+  isNewProperty?: boolean;
+  /** True when the key holds a value at all, which is what makes an enum-like constraint worth checking */
+  checkEnum?: boolean;
+  /** True when a value the constraints leave alone is recursed into rather than kept as is — an object, or an array
+   * holding array data. Only a constraint that genuinely changed replaces such a value outright, so that a `const`
+   * or enum neither schema touched cannot clear or substitute data the recursive sanitize would have preserved. A
+   * scalar gets no such gate, since a dependency can narrow its enum without the property's own schema changing
+   * (#5250)
+   */
+  isStructural?: boolean;
+  /** Computes what the form would actually hold for a schema, used to recognize and build structural defaults */
+  computeDefault?: (schema: S) => any;
 }
 
 /** Determines the value, if any, that should replace `formValue` outright because the `default`, `const` or enum-like
@@ -58,17 +101,31 @@ function replacementForChangedConstraint<S extends StrictRJSFSchema = RJSFSchema
   newSchema: S,
   oldSchema: S,
   formValue: any,
-  isNewProperty: boolean,
-  hasValue: boolean,
+  { isNewProperty = false, checkEnum = false, isStructural = false, computeDefault }: ConstraintCheckOptions<S>,
 ) {
   let replacement: any = NO_VALUE;
 
-  const newDefault = getByPath(newSchema, DEFAULT_KEY, NO_VALUE);
+  const newDefault = getByPath<any>(newSchema, DEFAULT_KEY, NO_VALUE);
   const oldDefault = getByPath(oldSchema, DEFAULT_KEY, NO_VALUE);
-  if (newDefault !== NO_VALUE && !deepEquals(newDefault, formValue)) {
-    if ((isNewProperty && formValue === undefined) || deepEquals(oldDefault, formValue)) {
-      // Initialize a newly entered property or replace an old default with the new default.
-      replacement = newDefault;
+  // Both replacements require the two defaults to genuinely differ. The swap below could not fire without that
+  // anyway, but the `readOnly` clear could, and a value differing from a `default` neither schema touched is what a
+  // server or the user put in the field rather than a default gone stale
+  if (newDefault !== NO_VALUE && !deepEquals(oldDefault, newDefault) && !sameIgnoringUndefined(newDefault, formValue)) {
+    // What the form holds for an object or array is the *computed* default, since `getDefaultFormState` merges each
+    // child's own default into the parent's, so the literal `default` keyword alone rarely matches it (#4476). That
+    // walk is only worth taking once the cheaper comparisons have failed to explain the value
+    const isStaleDefault =
+      (isNewProperty && formValue === undefined) ||
+      sameIgnoringUndefined(oldDefault, formValue) ||
+      (computeDefault !== undefined && sameIgnoringUndefined(computeDefault(oldSchema), formValue));
+    if (isStaleDefault) {
+      // Initialize a newly entered property or replace an old default with the new default. The computed default
+      // supplements rather than supplants the declared one: it contributes the children's own defaults, but
+      // `getDefaultFormState` emits only the keys the schema declares, so on its own it would drop whatever the
+      // `default` spells out beyond them — everything, for an object with no `properties` at all
+      const newComputed = computeDefault?.(newSchema);
+      replacement =
+        isPlainObject(newDefault) && isPlainObject(newComputed) ? { ...newDefault, ...newComputed } : newDefault;
     } else if (newSchema.readOnly === true) {
       // If the new schema has the default set to read-only, treat it like a const and remove the value
       replacement = undefined;
@@ -77,12 +134,16 @@ function replacementForChangedConstraint<S extends StrictRJSFSchema = RJSFSchema
 
   const newConst = getByPath(newSchema, CONST_KEY, NO_VALUE);
   const oldConst = getByPath(oldSchema, CONST_KEY, NO_VALUE);
-  if (newConst !== NO_VALUE && !deepEquals(newConst, formValue)) {
+  if (
+    newConst !== NO_VALUE &&
+    !(isStructural && deepEquals(oldConst, newConst)) &&
+    !sameIgnoringUndefined(newConst, formValue)
+  ) {
     // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
-    replacement = deepEquals(oldConst, formValue) ? newConst : undefined;
+    replacement = sameIgnoringUndefined(oldConst, formValue) ? newConst : undefined;
   }
 
-  if (hasValue) {
+  if (checkEnum && !(isStructural && deepEquals(enumValuesForSchema(oldSchema), enumValuesForSchema(newSchema)))) {
     const enumReplacement = replacementForInvalidEnumValue(newSchema, formValue);
     if (enumReplacement !== NO_VALUE) {
       replacement = enumReplacement;
@@ -120,6 +181,8 @@ function replacementForChangedConstraint<S extends StrictRJSFSchema = RJSFSchema
  *             - Otherwise, the replacement is undefined
  *         - If the form value is no longer one of the values the new schema's `enum`, `oneOf` or `anyOf` allows, the
  *           replacement is the new `default` when that is allowed, the sole allowed value, or undefined
+ *         - The `const` and enum-like checks are skipped for an object or array value whose constraint is identical
+ *           in both schemas, since such a value is recursed into rather than replaced
  *       - If there is a replacement, store it in `removeOldSchemaData[key]`
  *       - Otherwise, if type of the key in the new schema is `object` (or `array` with array data):
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
@@ -141,6 +204,8 @@ function replacementForChangedConstraint<S extends StrictRJSFSchema = RJSFSchema
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [experimental_defaultFormStateBehavior] - Optional configuration controlling how defaults are computed, used
+ *      when comparing an object or array value against the default the old schema would have produced for it
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -155,6 +220,7 @@ export default function sanitizeDataForNewSchema<
   oldSchema?: S,
   data: any = {},
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
 ): T {
   // By default, we will clear the form data
   let newFormData;
@@ -205,16 +271,28 @@ export default function sanitizeDataForNewSchema<
         // A `default`, `const` or enum-like constraint that changed between the two schemas makes the current value
         // stale whatever its type: an object or array still holding the old schema's default is as stale as a scalar
         // one, so it is replaced outright rather than recursed into (#4476)
-        const replacement = replacementForChangedConstraint<S>(
-          newKeyedSchema,
-          oldKeyedSchema,
-          formValue,
+        const isStructural =
+          newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue));
+        const replacement = replacementForChangedConstraint<S>(newKeyedSchema, oldKeyedSchema, formValue, {
           isNewProperty,
-          hasByPath(data, key),
-        );
+          checkEnum: hasByPath(data, key),
+          isStructural,
+          computeDefault: isStructural
+            ? (schema: S) =>
+                getDefaultFormState<T, S, F>(
+                  validator,
+                  schema,
+                  undefined,
+                  rootSchema,
+                  false,
+                  experimental_defaultFormStateBehavior,
+                  experimental_customMergeAllOf,
+                )
+            : undefined,
+        });
         if (replacement !== NO_VALUE) {
           removeOldSchemaData[key] = replacement;
-        } else if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
+        } else if (isStructural) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
             validator,
@@ -223,6 +301,7 @@ export default function sanitizeDataForNewSchema<
             isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
             experimental_customMergeAllOf,
+            experimental_defaultFormStateBehavior,
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -292,14 +371,37 @@ export default function sanitizeDataForNewSchema<
                   aValue,
                   experimental_customMergeAllOf,
                 );
-            const itemValue = sanitizeDataForNewSchema<T, S, F>(
-              validator,
-              rootSchema,
-              newItemSchema,
-              oldItemSchema,
-              aValue,
-              experimental_customMergeAllOf,
-            );
+            // A `default` on `items` goes stale exactly as one on the array property does, so each element is
+            // checked against the item schemas before being recursed into (#4476). The enum check is skipped: an
+            // element the new schema disallows is dropped by the filtering below rather than replaced, so running it
+            // here would substitute the sole allowed value and fabricate a duplicate
+            const itemReplacement = replacementForChangedConstraint<S>(newItemSchema, oldItemSchema, aValue, {
+              isStructural: true,
+              computeDefault: (schema: S) =>
+                getDefaultFormState<T, S, F>(
+                  validator,
+                  schema,
+                  undefined,
+                  rootSchema,
+                  false,
+                  experimental_defaultFormStateBehavior,
+                  experimental_customMergeAllOf,
+                ),
+            });
+            // A cleared element would be dropped from the array rather than emptied, shrinking it silently, so only
+            // a real replacement is taken here and anything else falls through to the recursion as before
+            const itemValue =
+              itemReplacement !== NO_VALUE && itemReplacement !== undefined
+                ? itemReplacement
+                : sanitizeDataForNewSchema<T, S, F>(
+                    validator,
+                    rootSchema,
+                    newItemSchema,
+                    oldItemSchema,
+                    aValue,
+                    experimental_customMergeAllOf,
+                    experimental_defaultFormStateBehavior,
+                  );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
             }

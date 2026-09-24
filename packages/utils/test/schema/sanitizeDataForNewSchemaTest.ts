@@ -17,6 +17,36 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         values: { type: 'array', default: [], items: { type: 'string', enum: ['a', 'b'] } },
       },
     };
+    // Shared by the #4476 tests, whose two options differ only in the defaults their nested structures carry
+    const runnerSchema = (name: string, ratio: number, readOnly?: boolean): RJSFSchema => ({
+      type: 'object',
+      ...(readOnly === undefined ? {} : { readOnly }),
+      properties: {
+        name: { type: 'string' },
+        ratio: { type: 'number' },
+      },
+      default: { name, ratio },
+    });
+    const runnersSchema = (name: string, ratio: number): RJSFSchema => ({
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          ratio: { type: 'number' },
+        },
+      },
+      default: [{ name, ratio }],
+    });
+    const numbersSchema = (value: number): RJSFSchema => ({
+      type: 'array',
+      items: { type: 'number' },
+      default: [value],
+    });
+    const propertyOf = (key: string, schema: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { [key]: schema },
+    });
     let schemaUtils: SchemaUtilsType;
     beforeAll(() => {
       schemaUtils = createSchemaUtils(testValidator, oneOfSchema);
@@ -873,126 +903,252 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, formData)).toEqual(formData);
     });
     it("replaces an object property still holding the old schema's default with the new default (#4476)", () => {
-      const runnerSchema = (name: string, ratio: number): RJSFSchema => ({
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          ratio: { type: 'number' },
-        },
-        default: { name, ratio },
-      });
-      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', 1) } };
-      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', 2) } };
-
       expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'test1-runner-1', ratio: 1 } }),
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', runnerSchema('test2-runner-1', 2)),
+          propertyOf('runner', runnerSchema('test1-runner-1', 1)),
+          { runner: { name: 'test1-runner-1', ratio: 1 } },
+        ),
       ).toEqual({ runner: { name: 'test2-runner-1', ratio: 2 } });
     });
     it("keeps an object property the user changed away from the old schema's default (#4476)", () => {
-      const runnerSchema = (name: string, ratio: number): RJSFSchema => ({
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          ratio: { type: 'number' },
-        },
-        default: { name, ratio },
-      });
-      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', 1) } };
-      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', 2) } };
-
       expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'my-runner', ratio: 7 } }),
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', runnerSchema('test2-runner-1', 2)),
+          propertyOf('runner', runnerSchema('test1-runner-1', 1)),
+          { runner: { name: 'my-runner', ratio: 7 } },
+        ),
       ).toEqual({ runner: { name: 'my-runner', ratio: 7 } });
     });
+    it('keeps an object property whose default is unchanged between the two schemas (#4476)', () => {
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', runnerSchema('runner-1', 1)),
+          propertyOf('runner', runnerSchema('runner-1', 1)),
+          { runner: { name: 'runner-1', ratio: 1 } },
+        ),
+      ).toEqual({ runner: { name: 'runner-1', ratio: 1 } });
+    });
     it("replaces an array property still holding the old schema's default with the new default (#4476)", () => {
-      const oldSchema: RJSFSchema = {
-        type: 'object',
-        properties: { arr: { type: 'array', items: { type: 'number' }, default: [1] } },
-      };
-      const newSchema: RJSFSchema = {
-        type: 'object',
-        properties: { arr: { type: 'array', items: { type: 'number' }, default: [2] } },
-      };
-
-      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { arr: [1] })).toEqual({ arr: [2] });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('arr', numbersSchema(2)), propertyOf('arr', numbersSchema(1)), {
+          arr: [1],
+        }),
+      ).toEqual({ arr: [2] });
     });
     it("keeps an array property the user changed away from the old schema's default (#4476)", () => {
-      const oldSchema: RJSFSchema = {
-        type: 'object',
-        properties: { arr: { type: 'array', items: { type: 'number' }, default: [1] } },
-      };
-      const newSchema: RJSFSchema = {
-        type: 'object',
-        properties: { arr: { type: 'array', items: { type: 'number' }, default: [2] } },
-      };
-
-      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { arr: [5, 6] })).toEqual({ arr: [5, 6] });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('arr', numbersSchema(2)), propertyOf('arr', numbersSchema(1)), {
+          arr: [5, 6],
+        }),
+      ).toEqual({ arr: [5, 6] });
     });
     it("replaces an array-of-objects property still holding the old schema's default with the new default (#4476)", () => {
-      const runnersSchema = (name: string, ratio: number): RJSFSchema => ({
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runners', runnersSchema('test2-runner-1', 2)),
+          propertyOf('runners', runnersSchema('test1-runner-1', 1)),
+          { runners: [{ name: 'test1-runner-1', ratio: 1 }] },
+        ),
+      ).toEqual({ runners: [{ name: 'test2-runner-1', ratio: 2 }] });
+    });
+    it('clears a readOnly object property the user changed away from a default the new schema alters (#4476)', () => {
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', runnerSchema('test2-runner-1', 2, true)),
+          propertyOf('runner', runnerSchema('test1-runner-1', 1, false)),
+          { runner: { name: 'my-runner', ratio: 7 } },
+        ),
+      ).toEqual({ runner: undefined });
+    });
+    it("initializes a newly defined object property from the new schema's default (#4476)", () => {
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', runnerSchema('test2-runner-1', 2)),
+          oldDisjointSchema,
+          {
+            idCode: undefined,
+          },
+        ),
+      ).toEqual({ idCode: undefined, runner: { name: 'test2-runner-1', ratio: 2 } });
+    });
+    it('keeps a readOnly property whose schema the option switch left untouched (#4476)', () => {
+      // The value differs from the schema's `default`, but nothing about the property changed, so it is the server's
+      // data rather than a stale default and must survive the switch
+      const tags: RJSFSchema = { type: 'array', readOnly: true, items: { type: 'string' }, default: [] };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { tags, a: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { tags, b: { type: 'string' } } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { tags: ['x'], a: 'q' })).toEqual({
+        tags: ['x'],
+        a: undefined,
+      });
+    });
+    it('keeps an object value carrying an undefined key that the const it changed to already matches (#4476)', () => {
+      // Sanitizing writes `undefined` for the keys it clears, so a value that already satisfies the new `const`
+      // arrives here carrying keys the `const` does not spell out and must not be counted as stale for them
+      const constOf = (a: number): RJSFSchema =>
+        ({ type: 'object', const: { a }, properties: { a: { type: 'number' } } }) as RJSFSchema;
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('c', constOf(2)), propertyOf('c', constOf(1)), {
+          c: { a: 2, b: undefined },
+        }),
+      ).toEqual({ c: { a: 2, b: undefined } });
+    });
+    it("replaces an object default the form computed from a child's own default (#4476)", () => {
+      // `getDefaultFormState` merges each child default into the parent's, so the data the form holds is
+      // `{ name, ratio }` even though the schema's `default` only spells out `name`
+      const withChildDefault = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: {
+          name: { type: 'string' },
+          ratio: { type: 'number', default: 0 },
+        },
+      });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', withChildDefault('t2')),
+          propertyOf('runner', withChildDefault('t1')),
+          { runner: { name: 't1', ratio: 0 } },
+        ),
+      ).toEqual({ runner: { name: 't2', ratio: 0 } });
+    });
+    it('replaces a stale default that sits on the items of an array of objects (#4476)', () => {
+      const itemsWithDefault = (name: string): RJSFSchema => ({
         type: 'array',
         items: {
           type: 'object',
-          properties: {
-            name: { type: 'string' },
-            ratio: { type: 'number' },
-          },
+          properties: { name: { type: 'string' } },
+          default: { name },
         },
-        default: [{ name, ratio }],
       });
-      const oldSchema: RJSFSchema = { type: 'object', properties: { runners: runnersSchema('test1-runner-1', 1) } };
-      const newSchema: RJSFSchema = { type: 'object', properties: { runners: runnersSchema('test2-runner-1', 2) } };
 
       expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runners: [{ name: 'test1-runner-1', ratio: 1 }] }),
-      ).toEqual({ runners: [{ name: 'test2-runner-1', ratio: 2 }] });
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runners', itemsWithDefault('t2')),
+          propertyOf('runners', itemsWithDefault('t1')),
+          { runners: [{ name: 't1' }] },
+        ),
+      ).toEqual({ runners: [{ name: 't2' }] });
     });
-    it('keeps an object property whose default is unchanged between the two schemas (#4476)', () => {
-      const runnerSchema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          ratio: { type: 'number' },
-        },
-        default: { name: 'runner-1', ratio: 1 },
-      };
-      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema } };
-      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema } };
+    it('keeps an object value with an undefined key that the enum it narrowed to still allows (#4476)', () => {
+      const enumOf = (values: unknown[]): RJSFSchema =>
+        ({ type: 'object', enum: values, properties: { a: { type: 'number' }, b: { type: 'number' } } }) as RJSFSchema;
 
       expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'runner-1', ratio: 1 } }),
-      ).toEqual({ runner: { name: 'runner-1', ratio: 1 } });
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('e', enumOf([{ a: 2 }, { a: 3 }])),
+          propertyOf('e', enumOf([{ a: 1 }, { a: 2 }])),
+          { e: { a: 2, b: undefined } },
+        ),
+      ).toEqual({ e: { a: 2, b: undefined } });
     });
-    it("clears a readOnly object property the user changed away from the old schema's default (#4476)", () => {
-      const runnerSchema = (name: string, readOnly: boolean): RJSFSchema => ({
+    it('keeps the elements of an array whose items schema would clear rather than replace them (#4476)', () => {
+      // A cleared element would be dropped from the array rather than emptied, so the user's own entries would
+      // silently disappear; they fall through to the recursion instead
+      const items = (name: string, readOnly: boolean): RJSFSchema =>
+        ({
+          type: 'object',
+          readOnly,
+          properties: { name: { type: 'string' } },
+          default: { name },
+        }) as RJSFSchema;
+      const oldSchema: RJSFSchema = { type: 'object', properties: { r: { type: 'array', items: items('t1', false) } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { r: { type: 'array', items: items('t2', true) } } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { r: [{ name: 'mine' }, { name: 'other' }] }),
+      ).toEqual({ r: [{ name: 'mine' }, { name: 'other' }] });
+    });
+    it('does not substitute the sole allowed value for an element a narrowed items enum rejects (#4476)', () => {
+      const arrayOf = (values: unknown[]): RJSFSchema =>
+        ({
+          type: 'array',
+          items: { type: 'object', enum: values, properties: { a: { type: 'number' } } },
+        }) as RJSFSchema;
+      const oldSchema: RJSFSchema = { type: 'object', properties: { r: arrayOf([{ a: 1 }, { a: 2 }]) } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { r: arrayOf([{ a: 1 }]) } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { r: [{ a: 1 }, { a: 2 }] })).toEqual({
+        r: [{ a: 1 }, { a: 2 }],
+      });
+    });
+    it('keeps the keys of a replacing default that the schema declares no property for (#4476)', () => {
+      // `getDefaultFormState` emits only declared properties, so it alone would reduce the first default to
+      // `{ name }` and the second, whose schema has no `properties` at all, to `{}`
+      const withExtra = (name: string): RJSFSchema => ({
         type: 'object',
-        readOnly,
         properties: { name: { type: 'string' } },
-        default: { name },
+        default: { name, extra: 'keep' },
       });
-      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', false) } };
-      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', true) } };
+      const bare = (name: string): RJSFSchema => ({ type: 'object', default: { name } });
 
-      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'my-runner' } })).toEqual({
-        runner: undefined,
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('runner', withExtra('t2')),
+          propertyOf('runner', withExtra('t1')),
+          {
+            runner: { name: 't1', extra: 'keep' },
+          },
+        ),
+      ).toEqual({ runner: { name: 't2', extra: 'keep' } });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('runner', bare('t2')), propertyOf('runner', bare('t1')), {
+          runner: { name: 't1' },
+        }),
+      ).toEqual({ runner: { name: 't2' } });
+    });
+    it('keeps an object property whose value violates a const the option switch left untouched (#4476)', () => {
+      const c = { type: 'object', const: { a: 1 }, properties: { a: { type: 'number' } } } as RJSFSchema;
+      const oldSchema: RJSFSchema = { type: 'object', properties: { c, x: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { c, y: { type: 'string' } } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { c: { a: 2 }, x: 'q' })).toEqual({
+        c: { a: 2 },
+        x: undefined,
       });
     });
-    it("initializes a newly defined object property from the new schema's default (#4476)", () => {
-      const newSchema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          runner: {
-            type: 'object',
-            properties: { name: { type: 'string' } },
-            default: { name: 'test2-runner-1' },
-          },
-        },
-      };
+    it('replaces an object property whose const differs between the two schemas (#4476)', () => {
+      const constOf = (a: number): RJSFSchema =>
+        ({ type: 'object', const: { a }, properties: { a: { type: 'number' } } }) as RJSFSchema;
 
-      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldDisjointSchema, { idCode: undefined })).toEqual({
-        idCode: undefined,
-        runner: { name: 'test2-runner-1' },
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('c', constOf(2)), propertyOf('c', constOf(1)), {
+          c: { a: 1 },
+        }),
+      ).toEqual({ c: { a: 2 } });
+    });
+    it('keeps an object property that an unchanged sole enum value would otherwise substitute (#4476)', () => {
+      // Only the first option contributes an enum-like value, so the other option's data would be replaced by it
+      const k = {
+        type: 'object',
+        oneOf: [{ const: { a: 1 } }, { title: 'other', properties: { b: { type: 'string' } } }],
+        properties: { a: { type: 'number' }, b: { type: 'string' } },
+      } as RJSFSchema;
+      const oldSchema: RJSFSchema = { type: 'object', properties: { k, x: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { k, y: { type: 'string' } } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { k: { b: 'hello' }, x: 'q' })).toEqual({
+        k: { b: 'hello' },
+        x: undefined,
       });
+    });
+    it('replaces an object property whose enum differs between the two schemas (#4476)', () => {
+      const enumOf = (values: unknown[]): RJSFSchema =>
+        ({ type: 'object', enum: values, properties: { a: { type: 'number' } } }) as RJSFSchema;
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          propertyOf('e', enumOf([{ a: 9 }])),
+          propertyOf('e', enumOf([{ a: 1 }, { a: 2 }])),
+          {
+            e: { a: 1 },
+          },
+        ),
+      ).toEqual({ e: { a: 9 } });
     });
     it('returns empty object when the old schema is of type string and the new contains "property" field', () => {
       const oldSchema: RJSFSchema = { type: 'string' };
