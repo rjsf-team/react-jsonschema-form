@@ -1,4 +1,4 @@
-import { createRef, useEffect, useRef, useState, useCallback } from 'react';
+import { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -131,6 +131,26 @@ describe('Live validation onBlur', () => {
       'root',
     );
     expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
+  });
+
+  it('does not occur when noValidate is set', async () => {
+    const onBlur = vi.fn();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+      noValidate: true,
+    });
+    const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
+    await user.type(element, 'short');
+    const changeCallCount = onChange.mock.calls.length;
+
+    await user.tab();
+
+    expect(onBlur).toHaveBeenLastCalledWith('root', 'short');
+    // `noValidate` turns validation off everywhere else, so the blur produces no errors and no state update
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
   });
 
   it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
@@ -1086,6 +1106,15 @@ describe('Deriving state from changed props', () => {
     );
   }
 
+  it('keeps the inline error of the field being typed in when the parent echoes the data back', async () => {
+    const { container } = render(<Parent steps={[{}]} />);
+
+    await user.type(container.querySelector('input')!, 'x');
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+    expect(errorListMessages(container)).toEqual(['.name must NOT have fewer than 8 characters']);
+  });
+
   it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
 
@@ -1297,6 +1326,89 @@ describe('Calling reset from ref object', () => {
   });
 });
 
+describe('Committing a handler result', () => {
+  it('keeps the errors that validateForm() queued from inside onBlur while liveOmit runs on blur', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 8 } } };
+    const formRef = createFormRef();
+    const { node } = createFormComponent({
+      ref: formRef,
+      schema,
+      formData: { name: 'short', extra: 'x' },
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+      onBlur: () => formRef.current!.validateForm(),
+    });
+
+    await user.click(node.querySelector('input')!);
+    await user.tab();
+
+    expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 8 characters']);
+    expect(fieldErrorsById(node)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+  });
+
+  it('renders the data its parent holds when a prop change lands in the same render as a blur validation', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 5 } } };
+    let parentData: { name?: string } = {};
+    const onBlur = vi.fn();
+    function Parent() {
+      const [formData, setFormData] = useState<{ name?: string }>({});
+      parentData = formData;
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={formData}
+          onChange={(e) => setFormData(e.formData)}
+          onBlur={() => {
+            onBlur();
+            setFormData({ name: 'hello' });
+          }}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(container.querySelector('input')!, 'ab');
+    await user.tab();
+
+    // The blur's own `onChange` hands the parent `ab` after its `hello`, as on `v7`; what this pins is that the form
+    // renders the value the parent ends up holding rather than the `hello` it saw in between
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(parentData.name).toBe('ab');
+    expect(container.querySelector('input')).toHaveValue('ab');
+  });
+
+  it('keeps an edit when the parent re-renders in the same event, before it has been told of the edit', async () => {
+    const renderedValues: unknown[] = [];
+    function RecordingWidget(props: WidgetProps) {
+      renderedValues.push(props.value);
+      return <input value={props.value ?? ''} onChange={(event) => props.onChange(event.target.value)} />;
+    }
+    function Parent() {
+      const [formData, setFormData] = useState<string | undefined>('');
+      const [changeCount, setChangeCount] = useState(0);
+      return (
+        <div onChange={() => setChangeCount((count) => count + 1)}>
+          <Form
+            schema={{ type: 'string' }}
+            validator={validator}
+            formData={formData}
+            className={`changes-${changeCount}`}
+            widgets={{ TextWidget: RecordingWidget }}
+            onChange={(e) => setFormData(e.formData)}
+          />
+        </div>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(container.querySelector('input')!, 'x');
+
+    expect(renderedValues.filter((value, i) => value !== renderedValues[i - 1])).toEqual(['', 'x']);
+  });
+});
+
 describe('validateForm()', () => {
   // `additionalProperties: false` makes the extra field a validation error, so what got validated is visible in
   // whether the call passes
@@ -1308,6 +1420,44 @@ describe('validateForm()', () => {
     additionalProperties: false,
   };
   const formData = { foo: 'bar', baz: 'baz' };
+
+  it('reads ui:required with the formContext of the props it validates with, before the form commits them', () => {
+    const formRef = createFormRef();
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: { type: 'object', properties: { name: { type: 'string' } } },
+    };
+    const uiSchema: UiSchema = {
+      items: (_item: unknown, _index: number, formContext?: { strict?: boolean }) =>
+        formContext?.strict ? { name: { 'ui:required': true } } : {},
+    };
+    const listData = [{}];
+    const results: boolean[] = [];
+    function Parent({ strict }: { strict: boolean }) {
+      const formContext = useMemo(() => ({ strict }), [strict]);
+      // Runs after the form's own componentDidUpdate but before the state it queues there commits
+      useLayoutEffect(() => {
+        if (strict) {
+          results.push(formRef.current!.validateForm());
+        }
+      }, [strict]);
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          formData={listData}
+          formContext={formContext}
+        />
+      );
+    }
+    const { rerender } = render(<Parent strict={false} />);
+
+    rerender(<Parent strict />);
+
+    expect(results).toEqual([false]);
+  });
 
   it('validates the current formData, extra fields included, if omitExtraData is false', () => {
     const formRef = createFormRef();
@@ -2576,6 +2726,38 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     const nameErrors = (state.errorSchema as ErrorSchema<{ name?: string }>).name?.__errors ?? [];
     expect(nameErrors).toHaveLength(1);
     expect(nameErrors[0]).toBe('Name is required');
+  });
+
+  it('should not accumulate duplicate extraErrors in the error list when a field raises a custom error', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['bar'],
+      properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+    };
+    function RaisingField({ formData, onChange, fieldPath }: FieldProps) {
+      return (
+        <input
+          type='text'
+          value={formData ?? ''}
+          onChange={(event) => onChange(event.target.value, fieldPath, { __errors: ['custom!'] })}
+        />
+      );
+    }
+    const formRef = createRef<Form>();
+    const { node } = createFormComponent({
+      ref: formRef,
+      schema,
+      fields: { StringField: RaisingField },
+      extraErrors: { foo: { __errors: ['extra!'] } } as ErrorSchema,
+    });
+    // A submit puts a real validation error into `schemaValidationErrorSchema`, which is the base the custom-error
+    // path re-merges onto
+    await submitForm(node, user);
+
+    await user.type(node.querySelectorAll<HTMLInputElement>('input[type=text]')[0], 'abc');
+
+    const { errors } = formRef.current!.state;
+    expect(errors.filter(({ message }) => message === 'extra!')).toHaveLength(1);
   });
 });
 

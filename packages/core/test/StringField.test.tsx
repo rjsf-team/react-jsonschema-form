@@ -403,6 +403,25 @@ describe('StringField', () => {
       expect(errorMessages).toHaveLength(0);
     });
 
+    it('should clear an error from the error list as well as the field', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        fields: {
+          StringField: StringFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
+      await user.type(inputs[0] as HTMLElement, 'hello');
+
+      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(1);
+
+      await user.clear(inputs[0] as HTMLElement);
+      await user.type(inputs[0] as HTMLElement, 'test');
+
+      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(0);
+    });
+
     it('raise an error and check if the error is displayed using custom text widget', async () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
