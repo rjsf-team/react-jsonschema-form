@@ -368,7 +368,6 @@ render(
 );
 ```
 
-
 ## experimental_customMergeAllOf
 
 The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.

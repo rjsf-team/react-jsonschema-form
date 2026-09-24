@@ -852,9 +852,10 @@ export function getDefaultBasedOnSchemaType<
       // present in the submitted data, and false is the natural zero-value.
       // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
       // unanswered boolean as a distinct state and rely on `required` to flag it.
-      const { requiredBooleanDefault = 'populateFalse' } =
-        computeDefaultsProps.experimental_defaultFormStateBehavior ?? {};
-      if (requiredBooleanDefault === 'populateFalse' && computeDefaultsProps.required && defaults === undefined) {
+      // Only the exact opt-out value skips, so an unrecognized value keeps the
+      // historical behavior, like the other flags in this file.
+      const requiredBooleanDefault = computeDefaultsProps.experimental_defaultFormStateBehavior?.requiredBooleanDefault;
+      if (requiredBooleanDefault !== 'skip' && computeDefaultsProps.required && defaults === undefined) {
         return false as unknown as T;
       }
       return undefined;

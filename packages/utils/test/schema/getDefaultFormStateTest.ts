@@ -566,9 +566,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
-      describe('required boolean properties with requiredBooleanDefault set to skip', () => {
+      describe('required boolean properties and the requiredBooleanDefault flag', () => {
         const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
           requiredBooleanDefault: 'skip',
+        };
+        const requiredBooleanSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            agree: { type: 'boolean' },
+          },
+          required: ['agree'],
         };
 
         it('leaves a required boolean undefined when no default is given', () => {
@@ -659,7 +666,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ agree: false });
         });
 
-        it('returns undefined from getDefaultBasedOnSchemaType for a required boolean', () => {
+        it('returns undefined from getDefaultBasedOnSchemaType for a required boolean when skip is set', () => {
           const schema: RJSFSchema = { type: 'boolean' };
           expect(
             getDefaultBasedOnSchemaType(testValidator, schema, {
@@ -668,6 +675,45 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               experimental_defaultFormStateBehavior,
             }),
           ).toBeUndefined();
+        });
+
+        it('populates false when the flag is omitted', () => {
+          expect(
+            getDefaultFormState(testValidator, requiredBooleanSchema, undefined, requiredBooleanSchema, false, {}),
+          ).toEqual({
+            agree: false,
+          });
+        });
+
+        it('populates false for an unrecognized string value instead of silently skipping', () => {
+          // An untyped JS consumer or a deserialized setting can hand in a value the type does not admit
+          const misspelled = {
+            requiredBooleanDefault: 'populatefalse',
+          } as unknown as Experimental_DefaultFormStateBehavior;
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              misspelled,
+            ),
+          ).toEqual({ agree: false });
+        });
+
+        it('populates false for a non-string value instead of silently skipping', () => {
+          const wrongType = { requiredBooleanDefault: true } as unknown as Experimental_DefaultFormStateBehavior;
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              wrongType,
+            ),
+          ).toEqual({ agree: false });
         });
       });
 
