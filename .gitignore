@@ -148,4 +148,5 @@ out/
 
 .nx/cache
 .nx/workspace-data
-.claude/
+.claude/*
+!.claude/skills/
