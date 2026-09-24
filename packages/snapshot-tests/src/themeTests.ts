@@ -7,17 +7,20 @@ export interface ThemeGenerators {
   generateTheme: () => ThemeProps;
 }
 
-/** Checks every nested map structurally, so a theme that adds another nested map beside `ButtonTemplates` is covered
- * without this suite having to list it. `memo()`/`forwardRef()` components are objects too, marked by `$$typeof`.
+/** Recurses into every nested map, so a theme that adds one beside `ButtonTemplates`, or inside it, is covered without
+ * this suite having to list it. `memo()`/`forwardRef()` components are objects too, marked by `$$typeof`; those have to
+ * be the same instance on every call, or every form using them would remount.
  */
-function expectFreshMaps(first: object | undefined, second: object | undefined) {
-  if (first === undefined && second === undefined) {
-    return;
-  }
-  expect(first).not.toBe(second);
-  for (const [key, value] of Object.entries(first ?? {})) {
-    if (value !== null && typeof value === 'object' && !('$$typeof' in value)) {
-      expect(value, key).not.toBe((second as Record<string, unknown>)[key]);
+function expectFreshMaps(first: object, second: object, key = 'result') {
+  expect(first, key).not.toBe(second);
+  for (const [childKey, value] of Object.entries(first)) {
+    if (value !== null && typeof value === 'object') {
+      const other = (second as Record<string, object>)[childKey];
+      if ('$$typeof' in value) {
+        expect(value, childKey).toBe(other);
+      } else {
+        expectFreshMaps(value, other, childKey);
+      }
     }
   }
 }
@@ -34,12 +37,7 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
       expectFreshMaps(generateWidgets(), generateWidgets());
     });
     test('generateTheme() returns fresh maps on every call', () => {
-      const first = generateTheme();
-      const second = generateTheme();
-      expectFreshMaps(first, second);
-      expectFreshMaps(first.templates, second.templates);
-      expectFreshMaps(first.widgets, second.widgets);
-      expectFreshMaps(first.fields, second.fields);
+      expectFreshMaps(generateTheme(), generateTheme());
     });
   });
 }
