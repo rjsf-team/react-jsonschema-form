@@ -42,7 +42,8 @@ describe('DateTimeWidget', () => {
     const { container } = renderWidget({ onChange });
 
     const input = container.querySelector<HTMLInputElement>('input#root')!;
-    await user.type(input, '2024-01-01 10:30:00');
+    await user.click(input);
+    await user.paste('2024-01-01 10:30:00');
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2024-01-01T\d{2}:\d{2}:00(?:\.\d{3})?Z$/));
   });
@@ -53,7 +54,8 @@ describe('DateTimeWidget', () => {
       const { container } = renderWidget({ onChange, schema: { type: 'string', format: 'iso-date-time' } });
 
       const input = container.querySelector<HTMLInputElement>('input#root')!;
-      await user.type(input, '2024-01-01T10:30:00');
+      await user.click(input);
+      await user.paste('2024-01-01T10:30:00');
 
       expect(onChange).toHaveBeenCalledWith('2024-01-01T10:30:00');
     });

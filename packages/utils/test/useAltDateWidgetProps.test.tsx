@@ -96,8 +96,10 @@ const TIME_PROPS = {
 
 describe('useAltDateWidgetProps()', () => {
   beforeEach(() => {
-    // Only Date is faked: faking the timer functions as well stalls user-event's internal waits, so every
-    // interaction would hang until the test times out.
+    // Only Date is faked. Faking the timer functions as well hangs every interaction: @testing-library/react's
+    // asyncWrapper drains the microtask queue with a setTimeout(resolve, 0) after each user-event call and only
+    // pumps the clock when a global `jest` exists, which Vitest doesn't define, so that timeout never fires.
+    // The wait isn't user-event's own, which is why neither `advanceTimers` nor `delay: null` helps.
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(MOCKED_DATE);
     user = userEvent.setup();

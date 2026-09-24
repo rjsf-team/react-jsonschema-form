@@ -989,10 +989,9 @@ describe('uiSchema', () => {
           },
         });
 
-        // fireEvent.change is used instead of user.paste() because jsdom does not process paste
-        // events on color inputs — they have no editable text field in the DOM model and ignore
-        // clipboard events entirely. user.type() also fails because jsdom's sanitization algorithm
-        // rejects each intermediate character as an invalid color string.
+        // fireEvent.change is used because user-event cannot edit a color input at all: `color` is absent
+        // from its editableInputTypes list, so neither paste() nor type() reaches the value — both are
+        // silent no-ops that would leave this assertion testing nothing rather than failing.
         act(() => {
           fireEvent.change(node.querySelector('[type=color]')!, {
             target: {

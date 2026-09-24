@@ -90,7 +90,9 @@ describe('mantine BaseInputTemplate', () => {
       registry: getTestRegistry(numberSchema),
       onChange,
     });
-    await user.type(container.querySelector('input')!, '42');
+    const input = container.querySelector('input')!;
+    await user.click(input);
+    await user.paste('42');
 
     expect(onChange).toHaveBeenCalledWith(42);
   });

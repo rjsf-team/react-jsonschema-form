@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -125,10 +125,8 @@ describe('SelectWidget', () => {
     expect(bar).toHaveAttribute('aria-disabled', 'true');
     expect(screen.getByRole('option', { name: 'Foo' })).not.toHaveAttribute('aria-disabled');
     await user.click(bar);
-    // fireEvent.keyDown is used because a disabled option renders tabIndex={-1}, so no real user can put
-    // keyboard focus on it; this drives the option's own onKeyDown guard directly rather than pretending
-    // the key press is reachable
-    fireEvent.keyDown(bar, { key: 'Enter' });
+    expect(bar).toHaveFocus();
+    await user.keyboard('{Enter}');
     expect(onChange).not.toHaveBeenCalled();
   });
 
