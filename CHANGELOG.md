@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `requiredBooleanDefault` option, and updated `getDefaultFormState()` to honor it: `skip` turns off the `false` populated for a required boolean with no `default` (introduced in 6.9.0 by [#5170](https://github.com/rjsf-team/react-jsonschema-form/pull/5170)), so a form that models an unanswered boolean as its own state can keep it `undefined` and let `required` report it. The default, `populateFalse`, keeps the 6.9.0+ behavior
+- Fixed `sanitizeDataForNewSchema()` leaving an `object` or `array` property holding the old subschema's `default` when switching between `oneOf`/`anyOf` options. The `default`/`const`/enum comparison that replaces a stale value only ran for scalar properties; object and array ones were recursed into instead, so a nested object, array or array of objects kept the previous option's default, fixing [#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)
 
 ## @rjsf/validator-ata
 

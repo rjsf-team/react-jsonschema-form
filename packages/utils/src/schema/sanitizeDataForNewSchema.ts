@@ -50,6 +50,48 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
   return enumValues.length === 1 ? enumValues[0] : undefined;
 }
 
+/** Determines the value, if any, that should replace `formValue` outright because the `default`, `const` or enum-like
+ * constraint the key carries differs between `oldSchema` and `newSchema`. Returns `NO_VALUE` when nothing about those
+ * constraints makes the current value stale, leaving the caller free to keep or recursively sanitize it instead.
+ */
+function replacementForChangedConstraint<S extends StrictRJSFSchema = RJSFSchema>(
+  newSchema: S,
+  oldSchema: S,
+  formValue: any,
+  isNewProperty: boolean,
+  hasValue: boolean,
+) {
+  let replacement: any = NO_VALUE;
+
+  const newDefault = getByPath(newSchema, DEFAULT_KEY, NO_VALUE);
+  const oldDefault = getByPath(oldSchema, DEFAULT_KEY, NO_VALUE);
+  if (newDefault !== NO_VALUE && !deepEquals(newDefault, formValue)) {
+    if ((isNewProperty && formValue === undefined) || deepEquals(oldDefault, formValue)) {
+      // Initialize a newly entered property or replace an old default with the new default.
+      replacement = newDefault;
+    } else if (newSchema.readOnly === true) {
+      // If the new schema has the default set to read-only, treat it like a const and remove the value
+      replacement = undefined;
+    }
+  }
+
+  const newConst = getByPath(newSchema, CONST_KEY, NO_VALUE);
+  const oldConst = getByPath(oldSchema, CONST_KEY, NO_VALUE);
+  if (newConst !== NO_VALUE && !deepEquals(newConst, formValue)) {
+    // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
+    replacement = deepEquals(oldConst, formValue) ? newConst : undefined;
+  }
+
+  if (hasValue) {
+    const enumReplacement = replacementForInvalidEnumValue(newSchema, formValue);
+    if (enumReplacement !== NO_VALUE) {
+      replacement = enumReplacement;
+    }
+  }
+
+  return replacement;
+}
+
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
  * of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the old schema
@@ -64,19 +106,23 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *     - Retrieve the schema for any refs within each `oldKeySchema` and/or `newKeySchema`
  *     - Get the types of the old and new keyed schemas and if the old doesn't exist or the old & new are the same then:
  *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
- *       - If type of the key in the new schema is `object`:
- *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
- *       - Otherwise, check for default or const values:
+ *       - Whatever the type, check the `default`, `const` and enum-like constraints for a value that replaces the
+ *         form value outright, so that two schemas differing only by those values are properly selected:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
  *             - If the key is new and its form value is undefined, or the old `default` matches the form value, then:
- *               - Replace `removeOldSchemaData[key]` with the new `default`
- *               - Otherwise, if the new schema is `readOnly` then replace `removeOldSchemaData[key]` with undefined
+ *               - The replacement is the new `default`
+ *               - Otherwise, if the new schema is `readOnly` then the replacement is undefined
  *         - Get the old and new `const` values from the schema and check:
  *           - If the new `const` value does not match the form value:
  *           - If the old `const` value DOES match the form value, then:
- *             - Replace `removeOldSchemaData[key]` with the new `const`
- *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
+ *             - The replacement is the new `const`
+ *             - Otherwise, the replacement is undefined
+ *         - If the form value is no longer one of the values the new schema's `enum`, `oneOf` or `anyOf` allows, the
+ *           replacement is the new `default` when that is allowed, the sole allowed value, or undefined
+ *       - If there is a replacement, store it in `removeOldSchemaData[key]`
+ *       - Otherwise, if type of the key in the new schema is `object` (or `array` with array data):
+ *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the new and old schema types are array and the `data` is an array then:
@@ -156,8 +202,19 @@ export default function sanitizeDataForNewSchema<
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }
-        // If it is an object, we'll recurse and store the resulting sanitized data for the key
-        if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
+        // A `default`, `const` or enum-like constraint that changed between the two schemas makes the current value
+        // stale whatever its type: an object or array still holding the old schema's default is as stale as a scalar
+        // one, so it is replaced outright rather than recursed into (#4476)
+        const replacement = replacementForChangedConstraint<S>(
+          newKeyedSchema,
+          oldKeyedSchema,
+          formValue,
+          isNewProperty,
+          hasByPath(data, key),
+        );
+        if (replacement !== NO_VALUE) {
+          removeOldSchemaData[key] = replacement;
+        } else if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
             validator,
@@ -170,35 +227,6 @@ export default function sanitizeDataForNewSchema<
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
-          }
-        } else {
-          // Ok, the non-object types match, let's make sure that a default or a const of a different value is replaced
-          // with the new default or const. This allows the case where two schemas differ that only by the default/const
-          // value to be properly selected
-          const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
-            if ((isNewProperty && formValue === undefined) || oldOptionDefault === formValue) {
-              // Initialize a newly entered property or replace an old default with the new default.
-              removeOldSchemaData[key] = newOptionDefault;
-            } else if (newKeyedSchema.readOnly === true) {
-              // If the new schema has the default set to read-only, treat it like a const and remove the value
-              removeOldSchemaData[key] = undefined;
-            }
-          }
-
-          const newOptionConst = getByPath(newKeyedSchema, CONST_KEY, NO_VALUE);
-          const oldOptionConst = getByPath(oldKeyedSchema, CONST_KEY, NO_VALUE);
-          if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
-            // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
-            removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
-          }
-
-          if (hasByPath(data, key)) {
-            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
-            if (enumReplacement !== NO_VALUE) {
-              removeOldSchemaData[key] = enumReplacement;
-            }
           }
         }
       }

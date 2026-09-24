@@ -872,6 +872,128 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const formData = { foo: '1' };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, formData)).toEqual(formData);
     });
+    it("replaces an object property still holding the old schema's default with the new default (#4476)", () => {
+      const runnerSchema = (name: string, ratio: number): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          ratio: { type: 'number' },
+        },
+        default: { name, ratio },
+      });
+      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', 1) } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', 2) } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'test1-runner-1', ratio: 1 } }),
+      ).toEqual({ runner: { name: 'test2-runner-1', ratio: 2 } });
+    });
+    it("keeps an object property the user changed away from the old schema's default (#4476)", () => {
+      const runnerSchema = (name: string, ratio: number): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          ratio: { type: 'number' },
+        },
+        default: { name, ratio },
+      });
+      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', 1) } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', 2) } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'my-runner', ratio: 7 } }),
+      ).toEqual({ runner: { name: 'my-runner', ratio: 7 } });
+    });
+    it("replaces an array property still holding the old schema's default with the new default (#4476)", () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { arr: { type: 'array', items: { type: 'number' }, default: [1] } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { arr: { type: 'array', items: { type: 'number' }, default: [2] } },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { arr: [1] })).toEqual({ arr: [2] });
+    });
+    it("keeps an array property the user changed away from the old schema's default (#4476)", () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { arr: { type: 'array', items: { type: 'number' }, default: [1] } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { arr: { type: 'array', items: { type: 'number' }, default: [2] } },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { arr: [5, 6] })).toEqual({ arr: [5, 6] });
+    });
+    it("replaces an array-of-objects property still holding the old schema's default with the new default (#4476)", () => {
+      const runnersSchema = (name: string, ratio: number): RJSFSchema => ({
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            ratio: { type: 'number' },
+          },
+        },
+        default: [{ name, ratio }],
+      });
+      const oldSchema: RJSFSchema = { type: 'object', properties: { runners: runnersSchema('test1-runner-1', 1) } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { runners: runnersSchema('test2-runner-1', 2) } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runners: [{ name: 'test1-runner-1', ratio: 1 }] }),
+      ).toEqual({ runners: [{ name: 'test2-runner-1', ratio: 2 }] });
+    });
+    it('keeps an object property whose default is unchanged between the two schemas (#4476)', () => {
+      const runnerSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          ratio: { type: 'number' },
+        },
+        default: { name: 'runner-1', ratio: 1 },
+      };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'runner-1', ratio: 1 } }),
+      ).toEqual({ runner: { name: 'runner-1', ratio: 1 } });
+    });
+    it("clears a readOnly object property the user changed away from the old schema's default (#4476)", () => {
+      const runnerSchema = (name: string, readOnly: boolean): RJSFSchema => ({
+        type: 'object',
+        readOnly,
+        properties: { name: { type: 'string' } },
+        default: { name },
+      });
+      const oldSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test1-runner-1', false) } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { runner: runnerSchema('test2-runner-1', true) } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 'my-runner' } })).toEqual({
+        runner: undefined,
+      });
+    });
+    it("initializes a newly defined object property from the new schema's default (#4476)", () => {
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          runner: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+            default: { name: 'test2-runner-1' },
+          },
+        },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldDisjointSchema, { idCode: undefined })).toEqual({
+        idCode: undefined,
+        runner: { name: 'test2-runner-1' },
+      });
+    });
     it('returns empty object when the old schema is of type string and the new contains "property" field', () => {
       const oldSchema: RJSFSchema = { type: 'string' };
       const newSchema: RJSFSchema = {
