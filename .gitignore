@@ -150,3 +150,5 @@ out/
 .nx/workspace-data
 .claude/*
 !.claude/skills/
+.claude/skills/*
+!.claude/skills/rjsf-testing/
