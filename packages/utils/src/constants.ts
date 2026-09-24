@@ -1,8 +1,10 @@
+import type { JSONSchema7TypeName } from 'json-schema';
+
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
- * `RJSF_REF_KEY`, and `RJSF_REF_CYCLE_KEY` Symbols that are added to a schema under certain conditions by the
- * `retrieveSchema()` utility. Using Symbols keeps these internal markers invisible to JSON serialisation and
- * JSON Schema validators (AJV, ATA, etc.), which only enumerate string-keyed properties.
+ * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, and `RJSF_REF_CYCLE_KEY` Symbols that are added to a schema under certain
+ * conditions by the `retrieveSchema()` utility. Using Symbols keeps these internal markers invisible to JSON
+ * serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate string-keyed properties.
  */
 export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
@@ -15,6 +17,7 @@ export const DEPENDENCIES_KEY = 'dependencies';
 export const ELSE_KEY = 'else';
 export const ENUM_KEY = 'enum';
 export const ERRORS_KEY = '__errors';
+export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
@@ -57,3 +60,15 @@ export const UI_DEFINITIONS_KEY = 'ui:definitions';
  */
 export const JSON_SCHEMA_DRAFT_2019_09 = 'https://json-schema.org/draft/2019-09/schema';
 export const JSON_SCHEMA_DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
+
+/** Every type name JSON Schema defines, in the order the fallback UI offers them for a schema that allows any type
+ */
+export const JSON_SCHEMA_TYPES = [
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'object',
+  'array',
+  'null',
+] as const satisfies JSONSchema7TypeName[];

@@ -7,8 +7,8 @@ function isReactElement(thing: unknown): thing is { $$typeof: unknown; type: unk
 }
 
 /** Whether `prev` and `next` carry the same own enumerable symbol keys with identical values. RJSF marks schemas with
- * symbols (`ADDITIONAL_PROPERTY_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`), which `Object.keys()` cannot see, so
- * without this two schemas differing only in a marker would be treated as the same one.
+ * symbols, which `Object.keys()` cannot see, so without this two schemas differing only in a marker would be treated
+ * as the same one.
  */
 function sameOwnSymbols(prev: object, next: object): boolean {
   const prevSymbols = Object.getOwnPropertySymbols(prev);

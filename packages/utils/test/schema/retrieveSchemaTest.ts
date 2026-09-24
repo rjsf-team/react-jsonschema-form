@@ -3,6 +3,7 @@ import type { MockInstance } from 'vitest';
 import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
   PROPERTIES_KEY,
@@ -1685,14 +1686,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             bar: {
               type: 'number',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             foo: {
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });
@@ -1713,6 +1717,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });
@@ -1743,15 +1748,154 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             foo: {
               type: 'string',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             bar: {
               type: 'number',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
+          },
+        });
+      });
+      it('has additionalProperties that constrains the value without naming a type', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { enum: ['a', 'b'] },
+        };
+        const formData = { foo: 'a' };
+        // The stub takes the guessed type and keeps the constraint, but is NOT marked as guessed: the schema
+        // constrains the value, so the fallback UI must not offer it every other type
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              enum: ['a', 'b'],
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties that only annotates the value', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { title: 'Anything', description: 'Any type at all', $comment: 'unconstrained' },
+        };
+        const formData = { foo: 'a' };
+        // Annotations say nothing about the value, so the property is still free to hold anything and the stub is
+        // marked as guessed, letting the fallback UI offer every type
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              title: 'Anything',
+              description: 'Any type at all',
+              $comment: 'unconstrained',
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties that only annotates or identifies the value in other ways', () => {
+        const annotations: RJSFSchema = {
+          default: '',
+          examples: ['a'],
+          readOnly: true,
+          writeOnly: false,
+          deprecated: true,
+          $id: 'https://example.com/anything',
+          $schema: 'http://json-schema.org/draft-07/schema#',
+        };
+        const schema: RJSFSchema = { additionalProperties: annotations };
+        const formData = { foo: 'a' };
+        // None of these is an assertion about the value either, so a `default` or `readOnly` alone must not cost the
+        // property the types it is free to hold. The identifiers are not copied, since every stubbed sibling would
+        // otherwise share them
+        const { $id, $schema, ...copiedAnnotations } = annotations;
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              ...copiedAnnotations,
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties with keywords that assert nothing about the value', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: {
+            $defs: { name: { type: 'string' } },
+            contentMediaType: 'text/plain',
+            contentEncoding: 'base64',
+            'x-unknown': true,
+          } as RJSFSchema,
+        };
+        const formData = { foo: 'a' };
+        // A container, a content annotation or a keyword not known at all must not lock the property's type in place
+        const stub = stubExistingAdditionalProperties(testValidator, schema, undefined, formData).properties!
+          .foo as RJSFSchema;
+        expect(GUESSED_TYPE_FLAG in stub).toBe(true);
+        expect(stub.type).toBe('string');
+        // The `$ref` that would reach into a container is dropped, so copying the container into every property
+        // would hand each of them an unreachable copy for `hashForSchema()` and `deepEquals()` to walk
+        expect('$defs' in stub).toBe(false);
+        expect(stub.contentMediaType).toBe('text/plain');
+      });
+      it('has additionalProperties with containers that no stub carries a copy of', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: {
+            title: 'Anything',
+            $defs: { name: { type: 'string' } },
+            definitions: { other: { type: 'number' } },
+          } as RJSFSchema,
+        };
+        const formData = { foo: 'a', bar: 1 };
+
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { title: 'Anything', type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+            bar: { title: 'Anything', type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+          },
+        });
+      });
+      it('has additionalProperties with a default of another type than the data', () => {
+        const schema: RJSFSchema = { additionalProperties: { title: 'Anything', default: 'X' } };
+        const formData = { foo: 1, bar: 'a' };
+        // A string default would re-seed the number field with a value it cannot hold, so it is only kept for the
+        // property whose data is a string too
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { title: 'Anything', type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+            bar: {
+              title: 'Anything',
+              default: 'X',
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has additionalProperties constrained through subschemas', () => {
+        const schema: RJSFSchema = { additionalProperties: { allOf: [{ type: 'number' }], not: { const: 0 } } };
+        const formData = { foo: 'a' };
+        // The subschemas still constrain the property, so it is not marked as guessed, but an `allOf` naming another
+        // type than the data cannot be merged with the guessed one, so neither is copied into the stub
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
           },
         });
       });
@@ -1876,6 +2020,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             baz: {
               type: 'boolean',
               [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
             },
           },
         });

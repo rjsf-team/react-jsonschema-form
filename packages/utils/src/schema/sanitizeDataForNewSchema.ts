@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
@@ -147,8 +147,13 @@ export default function sanitizeDataForNewSchema<
       const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
         ? oldKeyedSchema
         : retrieveSchema<T, S, F>(validator, newRawKeyedSchema, rootSchema, formValue, customMergeAllOf);
-      // Now get types and see if they are the same
-      const oldSchemaTypeForKey = oldKeyedSchema.type;
+      // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
+      // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
+      // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
+      // holds while both sides are free to hold anything — once the new schema names a type of its own, it is that
+      // type the data has to satisfy, so data of the type the old side merely happened to hold is still cleared
+      const isUnconstrainedOnBothSides = GUESSED_TYPE_FLAG in oldKeyedSchema && GUESSED_TYPE_FLAG in newKeyedSchema;
+      const oldSchemaTypeForKey = isUnconstrainedOnBothSides ? undefined : oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {

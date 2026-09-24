@@ -22,6 +22,8 @@ import {
   getSchemaType,
   getTemplate,
   getUiOptions,
+  getUnionTypes,
+  GUESSED_TYPE_FLAG,
   guessType,
   hasVisibleErrors,
   isConstant,
@@ -114,21 +116,22 @@ function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { 
  * @param uiOptions - The UI Options that may affect the component decision
  * @param registry - The registry from which fields and templates are obtained
  * @param isSelectSchema - Whether the `schema` is a `oneOf`/`anyOf` that represents a select
- * @returns - The `Field` component that is used to render the actual field data
+ * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
+ *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
  */
 function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
   isSelectSchema: boolean,
-): ComponentType<FieldProps<T, S, F>> {
-  const { field } = uiOptions;
-  const { fields } = registry;
+): { FieldComponent: ComponentType<FieldProps<T, S, F>>; rendersFallbackUi: boolean } {
+  const { field, widget } = uiOptions;
+  const { fields, globalFormOptions } = registry;
   if (typeof field === 'function') {
-    return field;
+    return { FieldComponent: field, rendersFallbackUi: false };
   }
   if (typeof field === 'string' && field in fields) {
-    return fields[field] as ComponentType<FieldProps<T, S, F>>;
+    return { FieldComponent: fields[field] as ComponentType<FieldProps<T, S, F>>, rendersFallbackUi: false };
   }
 
   const schemaType = getSchemaType(schema);
@@ -137,9 +140,38 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const schemaId = schema.$id;
 
   let componentName = COMPONENT_TYPES[type];
+  // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
+  // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
+  // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
+  // Without it the first type the schema lists is the one rendered.
+  // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
+  // options along, so the option selector renders within the type selector rather than instead of it, and every member
+  // of the union stays reachable from inside an option.
+  // A select is left alone, since its options are constants that pin the value; an `enum` or `const` is left alone for
+  // the same reason, as switching type would cast a value the user picked into one the schema rejects and leave a
+  // select still offering values of the old type.
+  // A `ui:widget` given as a component is left alone too, for the same reason a `ui:field` is: the caller wrote a
+  // control for this very schema, unions included, so wrapping it in a type selector that pins the type and casts the
+  // value on every switch would take away what it was written to do. A widget named by string is a theme's control for
+  // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead.
+  // A schema with no type of its own still gets the selector whatever the widget is, the way an unrecognized `type`
+  // already does: it lists no types for such a control to handle, so the widget renders within it for the chosen one
+  const hasGuessedType = GUESSED_TYPE_FLAG in schema;
+  const isNamedWidget = !widget || typeof widget === 'string';
+  if (
+    globalFormOptions.useFallbackUiForUnsupportedType &&
+    (isNamedWidget || hasGuessedType) &&
+    !isSelectSchema &&
+    !schema.enum &&
+    !isConstant<S>(schema) &&
+    (getUnionTypes<S>(schema) || hasGuessedType)
+  ) {
+    componentName = 'FallbackField';
+  }
   if (schemaId && schemaId in fields) {
     componentName = schemaId;
   }
+  const rendersFallbackUi = componentName === 'FallbackField';
 
   // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
   // let the MultiSchemaField component handle the form display entirely.
@@ -147,11 +179,16 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // level) alongside the XxxOfField option selector.
   // All other field types — including primitives and arrays — have no shared renderable
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
-  if ((schema.anyOf || schema.oneOf) && !isSelectSchema && componentName !== 'ObjectField') {
-    return () => null;
+  // FallbackField is excluded alongside ObjectField: it renders the option selector within its own value field, for
+  // the type currently chosen, so returning nothing here would drop the type selector and the options with it.
+  if ((schema.anyOf || schema.oneOf) && !isSelectSchema && componentName !== 'ObjectField' && !rendersFallbackUi) {
+    return { FieldComponent: () => null, rendersFallbackUi: false };
   }
 
-  return componentName in fields ? fields[componentName] : fields.FallbackField;
+  return {
+    FieldComponent: componentName in fields ? fields[componentName] : fields.FallbackField,
+    rendersFallbackUi,
+  };
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -263,7 +300,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // `isSelect()` resolves the schema on every call, so compute it once, and only for the `oneOf`/`anyOf` it applies to
   const isSelectSchema = (ANY_OF_KEY in schema || ONE_OF_KEY in schema) && schemaUtils.isSelect(schema);
 
-  const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, registry, isSelectSchema);
+  const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(schema, uiOptions, registry, isSelectSchema);
 
   const isDeprecated = Boolean(schema.deprecated);
   const deprecatedHandling = isDeprecated ? (uiOptions.deprecatedHandling ?? 'label') : undefined;
@@ -318,7 +355,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
-  if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !isSelectSchema) {
+  const rendersOptionSelector =
+    (ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !isSelectSchema;
+  // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
+  // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
+  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
+  // already labelled `false`, which leaves this the only field either label can come from
+  if (rendersOptionSelector) {
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
+    displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
+  }
+  // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
+  // so rendering them here as well would show the same option selector twice — once for the union and once for the
+  // type in effect — and only the inner one would follow the type the user chose
+  if (rendersOptionSelector && !rendersFallbackUi) {
     if (schema[ANY_OF_KEY]) {
       XxxOfField = _AnyOfField;
       XxxOfOptions = schema[ANY_OF_KEY].map((xxxOfSchema) =>
@@ -330,10 +380,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
       );
     }
-    // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
-    const hasFormData = isFormDataAvailable<T>(formData);
-    displayLabel = displayLabel && (!isOptionalRender || hasFormData);
     // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
     // rendering of the same data address by the `XxxOfField`
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);

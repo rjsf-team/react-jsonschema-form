@@ -687,7 +687,10 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## useFallbackUiForUnsupportedType
 
-If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error. The fallback UI will display a widget that allows the user to select a JSON Schema primitive type, and a field containing the form data that matches the selected type. Set to false by default.
+If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error.
+The fallback UI will display a widget that allows the user to select a JSON Schema type, and a field containing the form data that matches the selected type.
+It is also what renders a schema that allows [multiple types](../json-schema/single.md#multiple-types), offering exactly those types, and a property the schema puts no constraint on, such as an `additionalProperties: true` entry, offering every type.
+Set to false by default.
 
 ## validator
 

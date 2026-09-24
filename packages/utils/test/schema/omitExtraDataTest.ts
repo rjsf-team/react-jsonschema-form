@@ -525,6 +525,38 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
     });
 
+    describe('null values', () => {
+      it('keeps a null wherever the schema describes the property holding it', () => {
+        // `null` is a value a schema can describe, so it is data rather than an extra key. Each of these
+        // properties is described, so each keeps its null: a typed one, one the schema leaves untyped, one
+        // allowing several types, and an `additionalProperties` entry the schema puts no constraint on.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            typed: { type: 'null' },
+            untyped: {},
+            multiType: { type: ['string', 'null'] },
+            items: { type: 'array', items: { type: 'null' } },
+          },
+          additionalProperties: true,
+        };
+        const formData = { typed: null, untyped: null, multiType: null, items: [null, null], extra: null };
+
+        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+      });
+      it('drops a null held by a key the schema does not describe', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { described: { type: 'null' } },
+          additionalProperties: false,
+        };
+
+        expect(omitExtraData(testValidator, schema, schema, { described: null, extra: null })).toEqual({
+          described: null,
+        });
+      });
+    });
+
     describe('arrays inside optional objects', () => {
       it('prunes the containing optional object when its only field is an empty array', () => {
         // items=[] is treated as empty, so obj (whose only schema-filtered value is []) is pruned.
