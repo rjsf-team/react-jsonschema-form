@@ -3,6 +3,7 @@ import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import Templates from '../src/templates/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget.tsx';
 
 const schema: RJSFSchema = { type: 'string', enum: ['foo', 'bar', 'baz', 'qux'] };
@@ -12,7 +13,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     id: 'root',
     name: 'root',
     schema,
-    registry: getTestRegistry(schema),
+    registry: getTestRegistry(schema, {}, Templates, {}),
     options: {},
     label: 'Select',
     value: undefined,
@@ -136,5 +137,34 @@ describe('mantine SelectWidget optgroups', () => {
 
     expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
     expect(screen.queryByText('Group A')).not.toBeInTheDocument();
+  });
+
+  test('renders with description from options', () => {
+    const { getByText } = renderWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const { getByText } = renderWidget({
+      schema: {
+        type: 'string',
+        description: 'Test description from schema',
+      },
+    });
+    expect(getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const { queryByText } = renderWidget({
+      hideLabel: true,
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(queryByText('Test description')).not.toBeInTheDocument();
   });
 });
