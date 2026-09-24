@@ -515,6 +515,30 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - Array of props for DateElement
 
+### getFieldLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Computes the label text for a field, using the first defined value in the following precedence order:
+
+1. `ui:title` from the `uiSchema` (or global UI options)
+2. `title` from the `schema`
+3. `title` passed to the field by its parent (i.e. the generated `${arrayTitle}-${index + 1}` title for array items)
+4. `name` of the field
+
+Nullish coalescing (`??`) is used, so an explicitly empty string title (i.e. `'ui:title': ''`) is respected rather than falling through to the next value, which allows a label to be intentionally blanked out.
+
+#### Parameters
+
+- options: GetFieldLabelOptions&lt;T, S, F> - The options used to compute the label, containing:
+  - schema: S - The schema of the field, from which the `title` is read
+  - [uiSchema]: UiSchema&lt;T, S, F> | undefined - The uiSchema of the field, from which the `ui:title` is read
+  - [title]: string | undefined - The `title` passed down to the field by its parent
+  - name: string - The name of the field, used as the final fallback
+  - [globalUiOptions]: GlobalUISchemaOptions | undefined - The global UI options, passed through to `getUiOptions()`
+
+#### Returns
+
+- string: The label text for the field
+
 ### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.

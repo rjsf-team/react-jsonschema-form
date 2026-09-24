@@ -13689,7 +13689,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_0"
                               id="root_0-label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -13718,7 +13718,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-1 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -13854,7 +13854,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_1"
                               id="root_1-label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -13883,7 +13883,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-2 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -15254,7 +15254,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_0"
                               id="root_0-label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -15283,7 +15283,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-1 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -15338,7 +15338,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_1"
                               id="root_1-label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -15368,7 +15368,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-2 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>

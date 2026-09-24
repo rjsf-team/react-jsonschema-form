@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getWidget, getUiOptions, isObject, optionsList, TranslatableString } from '@rjsf/utils';
+import { getFieldLabel, getWidget, getUiOptions, isObject, optionsList, TranslatableString } from '@rjsf/utils';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -35,11 +35,10 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     onBlur,
     rawErrors,
   } = props;
-  const { title: schemaTitle } = schema;
   const { widgets, translateString, globalUiOptions } = registry;
   const {
     widget = 'checkbox',
-    title: uiTitle,
+    title: _uiTitle,
     // Unlike the other fields, don't use `getDisplayLabel()` since it always returns false for the boolean type
     label: displayLabel = true,
     enumNames,
@@ -49,7 +48,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
-  const label = uiTitle ?? schemaTitle ?? title ?? name;
+  const label = getFieldLabel<T, S, F>({ schema, uiSchema, title, name, globalUiOptions });
   if (Array.isArray(schema.oneOf)) {
     enumOptions = optionsList<T, S, F>(
       {

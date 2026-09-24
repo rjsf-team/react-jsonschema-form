@@ -9749,7 +9749,7 @@ exports[`with title and description > array icons 1`] = `
                               for=":r12:"
                               id="field:::r12:::label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -9949,7 +9949,7 @@ exports[`with title and description > array icons 1`] = `
                               for=":r14:"
                               id="field:::r14:::label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -11310,7 +11310,7 @@ exports[`with title and description > fixed array 1`] = `
                               for=":rq:"
                               id="field:::rq:::label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -11383,7 +11383,7 @@ exports[`with title and description > fixed array 1`] = `
                               for=":rs:"
                               id="field:::rs:::label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
