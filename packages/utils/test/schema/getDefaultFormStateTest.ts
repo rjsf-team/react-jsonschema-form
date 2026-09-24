@@ -566,6 +566,143 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('required boolean properties and the requiredBooleanDefault flag', () => {
+        const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+          requiredBooleanDefault: 'skip',
+        };
+        const requiredBooleanSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            agree: { type: 'boolean' },
+          },
+          required: ['agree'],
+        };
+
+        it('leaves a required boolean undefined when no default is given', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({});
+        });
+
+        it('leaves a required nullable boolean undefined when no default is given', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: ['boolean', 'null'] },
+            },
+            required: ['agree'],
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, undefined, schema, false, experimental_defaultFormStateBehavior),
+          ).toEqual({});
+        });
+
+        it('still applies an explicit schema default for a required boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              agree: { type: 'boolean', default: true },
+            },
+            required: ['agree'],
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, undefined, schema, false, experimental_defaultFormStateBehavior),
+          ).toEqual({ agree: true });
+        });
+
+        it('still applies a parent default for a required boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { agree: false },
+            properties: {
+              agree: { type: 'boolean' },
+            },
+            required: ['agree'],
+          };
+          expect(
+            getDefaultFormState(testValidator, schema, undefined, schema, false, experimental_defaultFormStateBehavior),
+          ).toEqual({ agree: false });
+        });
+
+        it('preserves existing formData false for a required boolean', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              { agree: false },
+              requiredBooleanSchema,
+              false,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({ agree: false });
+        });
+
+        it('populates false again when the flag is populateFalse', () => {
+          expect(
+            getDefaultFormState(testValidator, requiredBooleanSchema, undefined, requiredBooleanSchema, false, {
+              requiredBooleanDefault: 'populateFalse',
+            }),
+          ).toEqual({ agree: false });
+        });
+
+        it('returns undefined from getDefaultBasedOnSchemaType for a required boolean when skip is set', () => {
+          const schema: RJSFSchema = { type: 'boolean' };
+          expect(
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              required: true,
+              experimental_defaultFormStateBehavior,
+            }),
+          ).toBeUndefined();
+        });
+
+        it('populates false when the flag is omitted', () => {
+          expect(
+            getDefaultFormState(testValidator, requiredBooleanSchema, undefined, requiredBooleanSchema, false, {}),
+          ).toEqual({
+            agree: false,
+          });
+        });
+
+        it('populates false for an unrecognized string value instead of silently skipping', () => {
+          // An untyped JS consumer or a deserialized setting can hand in a value the type does not admit
+          const misspelled = {
+            requiredBooleanDefault: 'populatefalse',
+          } as unknown as Experimental_DefaultFormStateBehavior;
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              misspelled,
+            ),
+          ).toEqual({ agree: false });
+        });
+
+        it('populates false for a non-string value instead of silently skipping', () => {
+          const wrongType = { requiredBooleanDefault: true } as unknown as Experimental_DefaultFormStateBehavior;
+          expect(
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              wrongType,
+            ),
+          ).toEqual({ agree: false });
+        });
+      });
+
       describe('an object with an additionalProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',
