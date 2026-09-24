@@ -9,6 +9,8 @@ import {
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
+import { descriptionField } from '../../utils.ts';
+
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
@@ -20,12 +22,18 @@ export default function AltDateWidget<
   const { id, required, disabled, readonly, label, hideLabel, options, registry } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const descriptionElements = descriptionField(props);
   return (
     <>
       {!hideLabel && !!label && (
         <Input.Label id={titleId(id)} required={required}>
           {label}
         </Input.Label>
+      )}
+      {descriptionElements && (
+        <Input.Description id={ariaDescribedByIds(id)} {...descriptionElements.descriptionProps}>
+          {descriptionElements.description}
+        </Input.Description>
       )}
       <Flex gap='xs' align='center' wrap='nowrap'>
         {elements.map((elemProps, i) => {

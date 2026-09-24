@@ -16,7 +16,7 @@ import {
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-import { cleanupOptions, visibleErrorText } from '../utils.ts';
+import { cleanupOptions, visibleErrorText, descriptionField } from '../utils.ts';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -117,6 +117,7 @@ export default function SelectWidget<
     'aria-describedby': ariaDescribedByIds(id),
     comboboxProps: { withinPortal: false },
     ...themeProps,
+    ...descriptionField(props),
   };
 
   return (

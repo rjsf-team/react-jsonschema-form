@@ -1,5 +1,13 @@
-import type { UIOptionsType, VisibleErrorsProps } from '@rjsf/utils';
-import { getVisibleErrors } from '@rjsf/utils';
+import { createElement } from 'react';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UIOptionsType,
+  VisibleErrorsProps,
+  WidgetProps,
+} from '@rjsf/utils';
+import { descriptionId, getTemplate, getVisibleErrors } from '@rjsf/utils';
 
 const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'emptyValue',
@@ -74,4 +82,42 @@ export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOp
     }
   }
   return result as Omit<T, keyof UIOptionsType>;
+}
+
+/**
+ * A HOC implementation for rendering the `DescriptionFieldTemplate` component for rendering
+ * the description field across different widgets and templates along with an override for
+ * `descriptionProps` to prevent invalid markup.
+ *
+ * @param widgetProps - The props of the widget, from which the description and hideLabel are derived
+ * @returns - An object to spread on the props of the component that should render the description field
+ *
+ */
+export function descriptionField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  widgetProps: WidgetProps<T, S, F>,
+) {
+  const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
+  const description = options.description || schema.description;
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options,
+  );
+
+  return {
+    description:
+      !hideLabel && !!description
+        ? createElement(DescriptionFieldTemplate, {
+            ...widgetProps,
+            id: descriptionId(id),
+            description,
+            schema,
+            uiSchema,
+            registry,
+          })
+        : undefined,
+    descriptionProps: {
+      component: 'div' as const,
+    },
+  };
 }

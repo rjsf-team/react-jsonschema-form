@@ -4,7 +4,7 @@ import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, ariaDescribedByIds, useTimeWidgetProps, getTemplate, descriptionId } from '@rjsf/utils';
 
-import { cleanupOptions, visibleErrorText } from '../../utils.ts';
+import { cleanupOptions, visibleErrorText, descriptionField } from '../../utils.ts';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
@@ -36,19 +36,10 @@ export default function TimeWidget<
     onChange,
     onBlur,
     onFocus,
-    registry,
-    schema,
-    uiSchema,
   } = props;
 
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
   const emptyValue = options.emptyValue || '';
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
-  const description = options.description || schema.description;
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
@@ -96,22 +87,8 @@ export default function TimeWidget<
       onFocus={handleFocus}
       error={visibleErrorText(props)}
       {...options}
-      descriptionProps={{
-        component: 'span',
-      }}
       {...themeProps}
-      description={
-        !hideLabel &&
-        !!description && (
-          <DescriptionFieldTemplate
-            id={descriptionId(id)}
-            description={description}
-            schema={schema}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        )
-      }
+      {...descriptionField(props)}
       aria-describedby={ariaDescribedByIds(id)}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
