@@ -1291,7 +1291,7 @@ type UIOptionsBaseType<
     /** We know that for placeholder, it will be a string, if it is provided */
     placeholder?: string;
     /** Used to add text next to a field to guide the end user in filling it in */
-    help?: string;
+    help?: string | ReactElement;
     /** Flag, if set to `true`, will mark the field as automatically focused on a text input or textarea input */
     autofocus?: boolean;
     /** Use to mark the field as supporting auto complete on a text input or textarea input */
@@ -1460,7 +1460,7 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
   UIOptionsTemplateOverrides<T, S, F>
 > &
   GlobalUISchemaOptionsKeys & {
-    help?: string;
+    help?: string | ReactElement;
     title?: string;
     description?: string;
     classNames?: string;

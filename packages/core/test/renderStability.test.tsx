@@ -151,7 +151,7 @@ describe('render stability across sibling fields', () => {
           schema={schema}
           validator={validator}
           formData={initialFormData()}
-          uiSchema={{ first: { 'ui:help': `tick ${tick >= 0 ? 'help' : ''}` } }}
+          uiSchema={{ first: { 'ui:help': <span>tick {tick >= 0 ? 'help' : ''}</span> } }}
           formContext={{ label: 'stable' }}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={() => undefined}
