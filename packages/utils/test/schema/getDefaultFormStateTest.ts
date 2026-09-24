@@ -579,15 +579,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
 
         it('leaves a required boolean undefined when no default is given', () => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            properties: {
-              agree: { type: 'boolean' },
-            },
-            required: ['agree'],
-          };
           expect(
-            getDefaultFormState(testValidator, schema, undefined, schema, false, experimental_defaultFormStateBehavior),
+            getDefaultFormState(
+              testValidator,
+              requiredBooleanSchema,
+              undefined,
+              requiredBooleanSchema,
+              false,
+              experimental_defaultFormStateBehavior,
+            ),
           ).toEqual({});
         });
 
@@ -632,19 +632,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('preserves existing formData false for a required boolean', () => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            properties: {
-              agree: { type: 'boolean' },
-            },
-            required: ['agree'],
-          };
           expect(
             getDefaultFormState(
               testValidator,
-              schema,
+              requiredBooleanSchema,
               { agree: false },
-              schema,
+              requiredBooleanSchema,
               false,
               experimental_defaultFormStateBehavior,
             ),
@@ -652,15 +645,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('populates false again when the flag is populateFalse', () => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            properties: {
-              agree: { type: 'boolean' },
-            },
-            required: ['agree'],
-          };
           expect(
-            getDefaultFormState(testValidator, schema, undefined, schema, false, {
+            getDefaultFormState(testValidator, requiredBooleanSchema, undefined, requiredBooleanSchema, false, {
               requiredBooleanDefault: 'populateFalse',
             }),
           ).toEqual({ agree: false });
