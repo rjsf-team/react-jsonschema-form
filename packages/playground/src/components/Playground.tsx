@@ -75,6 +75,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
   const [showForm, setShowForm] = useState(false);
+  // Bumped on every load, so a loaded sample always mounts a new form: ownership is decided at mount
+  const [formKey, setFormKey] = useState(0);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>({
     showErrorList: 'top',
     validate: false,
@@ -163,14 +165,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
           loadedSchema,
           theLiveSettings.defaultFormStateBehavior,
         );
-        seededFormData = schemaUtils.getDefaultFormState(loadedSchema, loadedFormData);
+        seededFormData = schemaUtils.getDefaultFormState(loadedSchema, loadedFormData, false, false, theUiSchema);
       } catch (error) {
         // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given
         console.error(error);
       }
 
-      // force resetting form component instance
-      setShowForm(false);
+      setFormKey((key) => key + 1);
       setSchema(loadedSchema);
       setUiSchema(theUiSchema);
       setFormData(seededFormData);
@@ -277,6 +278,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               subtheme={subtheme || 'light'}
             >
               <FormComponent
+                key={formKey}
                 {...otherFormProps}
                 {...liveSettings}
                 liveValidate={toLiveSetting(liveSettings.liveValidate)}
