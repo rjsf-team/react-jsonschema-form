@@ -57,7 +57,7 @@ import {
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormHandle } from './FormHandle.ts';
-import type { IChangeEvent } from './IChangeEvent.ts';
+import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
  * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
@@ -332,7 +332,7 @@ function toIChangeEvent<
     schema,
     uiSchema,
     schemaUtils,
-    formData,
+    formData: formData as EventFormData<T>,
     errors,
     errorSchema,
     ...(status !== undefined && { status }),
@@ -1668,7 +1668,7 @@ export default class Form<
   /** Returns the form data currently rendered, see `FormHandle.getFormData()`: the `formData` prop of a parent-owned
    * form, the committed data of a self-owned one.
    */
-  getFormData = (): T | undefined => this.state.formData;
+  getFormData = (): EventFormData<T> => this.state.formData as EventFormData<T>;
 
   /** Resets the form, queued behind any change in flight. A self-owned form re-derives its data from
    * `initialFormData` and the schema the way an initial render does, clears every error and tells `onChange`. A

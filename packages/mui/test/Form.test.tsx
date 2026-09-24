@@ -23,7 +23,7 @@ describe('typed form data', () => {
         schema={schema}
         validator={validator}
         formData={data}
-        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<Data | undefined>()}
+        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<Data>()}
       />,
     );
     expect(container.querySelector<HTMLInputElement>('#root_name')?.value).toBe('a');

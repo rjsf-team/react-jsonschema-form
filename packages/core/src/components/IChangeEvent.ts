@@ -8,6 +8,12 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 
+/** The form data a change, a submit or `FormHandle.getFormData()` hands back. An object or array root is never
+ * replaced by `undefined` (a change below the root writes into it, and defaults are computed from an object), so its
+ * type is `T` itself; a scalar root is `undefined` whenever its field is cleared.
+ */
+export type EventFormData<T> = T extends object ? T : T | undefined;
+
 /** The event handed to `onChange` and `onSubmit`. It is declared on its own rather than as a `Pick` of `FormState`
  * because it is the public contract while `FormState` is an implementation detail: the state's layout is free to change
  * as long as `toIChangeEvent()` in `Form.tsx`, the only place an event is built, still produces this shape.
@@ -28,7 +34,7 @@ export interface IChangeEvent<
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
   readonly schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
-  readonly formData?: T;
+  readonly formData: EventFormData<T>;
   /** The current list of errors for the form, includes `extraErrors` */
   readonly errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */

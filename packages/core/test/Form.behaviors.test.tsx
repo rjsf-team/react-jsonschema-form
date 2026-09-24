@@ -202,7 +202,7 @@ describe('Live validation onBlur', () => {
             liveValidate={liveValidate}
             extraErrors={extraErrors}
             formData={value}
-            onChange={(event) => setValue(event.formData as typeof value)}
+            onChange={(event) => setValue(event.formData)}
           />
         </>
       );

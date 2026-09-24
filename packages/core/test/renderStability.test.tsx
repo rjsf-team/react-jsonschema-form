@@ -112,9 +112,9 @@ describe('render stability across sibling fields', () => {
   it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
     const seen: IChangeEvent<FormValue>[] = [];
     function Parent() {
-      const [formData, setFormData] = useState<FormValue | undefined>(initialFormData);
+      const [formData, setFormData] = useState(initialFormData);
       return (
-        <Form<FormValue>
+        <Form
           schema={schema}
           validator={validator}
           formData={formData}

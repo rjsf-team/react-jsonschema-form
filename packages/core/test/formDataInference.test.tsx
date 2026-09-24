@@ -45,7 +45,7 @@ describe('form data inference', () => {
         transformErrors={transformErrors}
         widgets={{ BareWidget }}
         onSubmit={onSubmit}
-        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<MyData | undefined>()}
+        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<MyData>()}
       />,
     );
     expect(container.querySelector('#root_name')).not.toBeNull();
