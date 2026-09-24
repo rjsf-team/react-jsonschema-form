@@ -832,9 +832,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
-  // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
-  // pattern in deriveFormState/getDerivedStateFromProps and avoids the duplication that
-  // happened when state.errorSchema (already containing merged extraErrors) was passed in.
+  // Use the un-merged AJV-only schema as the base for re-merging extraErrors, as deriveFormState does:
+  // state.errorSchema already carries them, so merging onto it would add each a second time.
   let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
   const isRootPath = path.length === 0;
   let formData = isRootPath ? newValue : structuredClone(oldFormData);
@@ -1244,11 +1243,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
         this.props,
       ),
     );
-    // Checked against `this.state` too: a handler's commit in the same render can leave a derivation that matches
-    // `prevState` but not the state it would replace
+    // Compared with `prevState` alone: when a handler's commit lands in the same render as the prop change, the parent
+    // has not yet been told about it, so snapping to the prop here would revert an edit the parent is about to accept
     const shouldUpdate = Object.entries(nextState).some(
-      ([key, value]) =>
-        value !== prevState[key as keyof FormState<T, S, F>] || value !== this.state[key as keyof FormState<T, S, F>],
+      ([key, value]) => value !== prevState[key as keyof FormState<T, S, F>],
     );
     return { nextState, shouldUpdate };
   }

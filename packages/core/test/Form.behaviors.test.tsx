@@ -1379,31 +1379,33 @@ describe('Committing a handler result', () => {
     expect(container.querySelector('input')).toHaveValue('ab');
   });
 
-  it('holds the data its parent holds when a prop change lands in the same render as a blur that omits extra data', async () => {
-    const formRef = createFormRef();
-    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
-    const formData = { name: 'ab', extra: 'x' };
+  it('keeps an edit when the parent re-renders in the same event, before it has been told of the edit', async () => {
+    const renderedValues: unknown[] = [];
+    function RecordingWidget(props: WidgetProps) {
+      renderedValues.push(props.value);
+      return <input value={props.value ?? ''} onChange={(event) => props.onChange(event.target.value)} />;
+    }
     function Parent() {
-      const [disabled, setDisabled] = useState(false);
+      const [formData, setFormData] = useState<string | undefined>('');
+      const [changeCount, setChangeCount] = useState(0);
       return (
-        <Form
-          ref={formRef}
-          schema={schema}
-          validator={validator}
-          formData={formData}
-          omitExtraData
-          liveOmit='onBlur'
-          disabled={disabled}
-          onBlur={() => setDisabled(true)}
-        />
+        <div onChange={() => setChangeCount((count) => count + 1)}>
+          <Form
+            schema={{ type: 'string' }}
+            validator={validator}
+            formData={formData}
+            className={`changes-${changeCount}`}
+            widgets={{ TextWidget: RecordingWidget }}
+            onChange={(e) => setFormData(e.formData)}
+          />
+        </div>
       );
     }
     const { container } = render(<Parent />);
 
-    await user.click(container.querySelector('input')!);
-    await user.tab();
+    await user.type(container.querySelector('input')!, 'x');
 
-    expect(formRef.current!.getFormData()).toEqual(formData);
+    expect(renderedValues.filter((value, i) => value !== renderedValues[i - 1])).toEqual(['', 'x']);
   });
 });
 
