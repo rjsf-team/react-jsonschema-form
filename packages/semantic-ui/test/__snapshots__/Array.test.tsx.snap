@@ -2533,7 +2533,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             for="root_0"
                           >
-                            Test field-1
+                            Test item
                           </label>
                           <div
                             class="ui fluid input"
@@ -2633,7 +2633,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             for="root_1"
                           >
-                            Test field-2
+                            Test item
                           </label>
                           <div
                             class="ui fluid input"
@@ -2893,7 +2893,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             for="root_0"
                           >
-                            Test field-1
+                            Test item
                           </label>
                           <div
                             class="ui fluid input"
@@ -2942,7 +2942,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             for="root_1"
                           >
-                            Test field-2
+                            Test item
                           </label>
                           <div
                             class="ui fluid input"

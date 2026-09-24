@@ -22,6 +22,8 @@ import type { DateElementFormat, DateElementProp } from './getDateElementProps.t
 import getDateElementProps from './getDateElementProps.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import type { GetFieldLabelOptions } from './getFieldLabel.ts';
+import getFieldLabel from './getFieldLabel.ts';
 import getInputProps from './getInputProps.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
@@ -109,6 +111,7 @@ export type {
   DateElementProp,
   DateElementProps,
   FileInfoType,
+  GetFieldLabelOptions,
   ObjectPath,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
@@ -145,6 +148,7 @@ export {
   getDateElementProps,
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
+  getFieldLabel,
   getInputProps,
   getOptionMatchingSimpleDiscriminator,
   getPropertySchema,

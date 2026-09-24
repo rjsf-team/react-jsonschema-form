@@ -19,6 +19,7 @@ import {
   ANY_OF_KEY,
   deepEquals,
   descriptionId,
+  getFieldLabel,
   getSchemaType,
   getTemplate,
   getUiOptions,
@@ -242,7 +243,14 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     label =
       ADDITIONAL_PROPERTY_FLAG in schema
         ? name
-        : uiOptions.title || props.schema.title || schema.title || props.title || name;
+        : getFieldLabel<T, S, F>({
+            // Prefer the title on the unresolved schema (i.e. alongside a `$ref`) over the one on the resolved schema
+            schema: { ...schema, title: props.schema.title ?? schema.title },
+            uiSchema,
+            title: props.title,
+            name,
+            globalUiOptions,
+          });
   }
 
   if (deprecatedHandling === 'label') {

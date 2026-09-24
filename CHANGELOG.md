@@ -16,11 +16,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.10.2
+# 6.11.0
 
 ## @rjsf/core
 
 - Fixed a `schema` prop change being silently dropped when it adds a property with a `default`, either as the parent's reply to `onChange` or at any point after a change to an uncontrolled form. The guard that keeps a oneOf/anyOf option switch from reverting now only applies when the form re-derives its own `formData` (an uncontrolled form, or a parent holding what `onChange` emitted, including when it reshaped the emitted value by spreading it, storing `undefined` as `null` or round-tripping it through JSON) with the same `schema` and `experimental_defaultFormStateBehavior`, and it keeps only that `formData` rather than dropping the rest of the prop update, fixing [#5294](https://github.com/rjsf-team/react-jsonschema-form/issues/5294)
+- Updated `SchemaField`, `StringField`, `BooleanField` and `ArrayField` to compute their label using a new `getFieldLabel()` utility. This sets a consistent precedence of `ui:title`, `schema.title`, parent-provided `title`, then `name`. This fixes array item widgets receiving the generated `label` (i.e. `My array-1`) instead of the item schema's `title`, which was visible in themes that render the widget `label`. This aligns `StringField` with the order established in [#4002](https://github.com/rjsf-team/react-jsonschema-form/pull/4002) and corrects the order introduced in [#4859](https://github.com/rjsf-team/react-jsonschema-form/pull/4859), while untitled array items still receive the indexed title.
+
+## @rjsf/utils
+
+- Added new `getFieldLabel()` utility that computes the label text for a field using the precedence `ui:title` ?? `schema.title` ?? parent-provided `title` ?? `name`
 
 ## @rjsf/validator-ata
 

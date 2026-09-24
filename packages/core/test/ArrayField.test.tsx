@@ -2434,6 +2434,73 @@ describe('ArrayField', () => {
         expect(node.querySelector('#title-Array-1')).toBeNull();
       });
 
+      it('Should pass the item schema title as the `label` to widgets of string items', () => {
+        const TextWidget = (props: WidgetProps) => <div className='widget-label'>{props.label}</div>;
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: {
+              title: 'Custom array of strings',
+              type: 'array',
+              items: { type: 'string', title: 'hey' },
+            },
+          },
+        };
+
+        const { node } = createFormComponent({ schema, formData: { foo: [null] }, widgets: { TextWidget } });
+
+        expect(node.querySelector('.widget-label')).toHaveTextContent(/^hey$/);
+      });
+
+      it('Should pass the item schema title as the `label` to widgets of number items', () => {
+        const TextWidget = (props: WidgetProps) => <div className='widget-label'>{props.label}</div>;
+        const schema: RJSFSchema = {
+          type: 'array',
+          title: 'Array',
+          items: { type: 'number', title: 'Number item' },
+        };
+
+        const { node } = createFormComponent({ schema, formData: [1], widgets: { TextWidget } });
+
+        expect(node.querySelector('.widget-label')).toHaveTextContent(/^Number item$/);
+      });
+
+      it('Should pass the indexed title as the `label` to widgets of untitled string items', () => {
+        const TextWidget = (props: WidgetProps) => <div className='widget-label'>{props.label}</div>;
+        const schema: RJSFSchema = {
+          type: 'array',
+          title: 'Array',
+          items: { type: 'string' },
+        };
+
+        const { node } = createFormComponent({ schema, formData: ['a', 'b'], widgets: { TextWidget } });
+
+        const labels = Array.from(node.querySelectorAll('.widget-label')).map((el) => el.textContent);
+        expect(labels).toEqual(['Array-1', 'Array-2']);
+      });
+
+      it('Should pass the indexed title as the `label` to multiselect widgets of untitled array items', () => {
+        const CheckboxesWidget = (props: WidgetProps) => <div className='widget-label'>{props.label}</div>;
+        const schema: RJSFSchema = {
+          type: 'array',
+          title: 'Array',
+          items: {
+            type: 'array',
+            items: { type: 'string', enum: ['foo', 'bar'] },
+            uniqueItems: true,
+          },
+        };
+
+        const { node } = createFormComponent({
+          schema,
+          formData: [[]],
+          uiSchema: { items: { 'ui:widget': 'checkboxes' } },
+          widgets: { CheckboxesWidget },
+        });
+
+        expect(node.querySelector('.widget-label')).toHaveTextContent(/^Array-1$/);
+      });
+
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
         async ({ itemSchema, itemUiSchema }) => {

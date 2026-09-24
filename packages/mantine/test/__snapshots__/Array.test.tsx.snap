@@ -5267,7 +5267,7 @@ exports[`with title and description > array icons 1`] = `
                       id="root_0-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -5487,7 +5487,7 @@ exports[`with title and description > array icons 1`] = `
                       id="root_1-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6029,7 +6029,7 @@ exports[`with title and description > fixed array 1`] = `
                       id="root_0-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6096,7 +6096,7 @@ exports[`with title and description > fixed array 1`] = `
                       id="root_1-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-NumberInput-required"

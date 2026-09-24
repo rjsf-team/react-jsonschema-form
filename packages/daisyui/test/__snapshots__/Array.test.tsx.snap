@@ -4124,7 +4124,7 @@ exports[`with title and description > array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-1
+                          Test item
                         </span>
                       </label>
                       <div
@@ -4290,7 +4290,7 @@ exports[`with title and description > array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-2
+                          Test item
                         </span>
                       </label>
                       <div
@@ -4688,7 +4688,7 @@ exports[`with title and description > fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-1
+                          Test item
                         </span>
                       </label>
                       <div
@@ -4761,7 +4761,7 @@ exports[`with title and description > fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-2
+                          Test item
                         </span>
                       </label>
                       <div
@@ -6676,7 +6676,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-1
+                          Test item
                         </span>
                       </label>
                       <div
@@ -6817,7 +6817,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-2
+                          Test item
                         </span>
                       </label>
                       <div
@@ -7156,7 +7156,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-1
+                          Test item
                         </span>
                       </label>
                       <div
@@ -7204,7 +7204,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         <span
                           class="label-text"
                         >
-                          Test field-2
+                          Test item
                         </span>
                       </label>
                       <div

@@ -3438,7 +3438,7 @@ exports[`with title and description > array icons 1`] = `
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_0"
                   >
-                    Test field-1
+                    Test item
                     <span
                       aria-hidden="true"
                       class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -3601,7 +3601,7 @@ exports[`with title and description > array icons 1`] = `
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_1"
                   >
-                    Test field-2
+                    Test item
                     <span
                       aria-hidden="true"
                       class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -3930,7 +3930,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_0"
                   >
-                    Test field-1
+                    Test item
                     <span
                       aria-hidden="true"
                       class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
@@ -3983,7 +3983,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_1"
                   >
-                    Test field-2
+                    Test item
                     <span
                       aria-hidden="true"
                       class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
