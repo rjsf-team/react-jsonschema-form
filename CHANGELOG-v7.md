@@ -109,6 +109,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed an additional property disappearing when the parent declined its rename, and one the parent added after mount not rendering
 - Fixed a field edit being dropped when the form data root is `null` or `undefined`; it now creates the object or array the field lives in
 - **BREAKING CHANGE:** Removed `edit` from `IChangeEvent`. With ownership decided at mount it only restated the props passed to the form (whether `formData` is defined, or whether `initialFormData` was passed); check your own props instead
+- A submit, programmatic or not, is queued behind any change, `setFieldValue()`, blur or reset still in flight, so `setFieldValue(path, value); submit()` submits the new value
 
 ## @rjsf/daisyui
 

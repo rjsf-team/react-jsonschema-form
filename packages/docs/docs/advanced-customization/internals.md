@@ -105,6 +105,7 @@ It reads committed data, so an edit or `setFieldValue()` in the same tick is vis
 
 You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
+It is queued behind any change, `setFieldValue()` or reset still in flight, so `setFieldValue('title', 'Draft'); submit();` submits the new title. `validateForm()` returns its result immediately instead, so it validates the data React has already committed.
 
 ```tsx
 import { createRef } from 'react';
