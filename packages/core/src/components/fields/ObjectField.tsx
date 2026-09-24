@@ -273,13 +273,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
-  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(() =>
-    getAdditionalPropertyOrder<S>(schemaProperties),
-  );
+  const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
+  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
   const definedPropertyOrder = useMemo(() => {
-    const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
+    const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
-  }, [schemaProperties]);
+  }, [schemaProperties, schemaAdditionalProperties]);
   // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
   // resolution below runs once per schema rather than once per keystroke anywhere in the object
   const { propertyNames } = schema;
@@ -493,7 +492,15 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       const currentAdditionalProperties = additionalPropertyOrder.filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
-      orderedProperties = orderProperties([...definedPropertyOrder, ...currentAdditionalProperties], uiOptions.order);
+      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
+      // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
+      // whose order is known
+      const orderedSet = new Set(additionalPropertyOrder);
+      const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
+      orderedProperties = orderProperties(
+        [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
+        uiOptions.order,
+      );
     } catch (err) {
       return (
         <div>

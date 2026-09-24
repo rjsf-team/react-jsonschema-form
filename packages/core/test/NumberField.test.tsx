@@ -169,7 +169,7 @@ describe('NumberField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'number' },
         uiSchema: { 'ui:allowClearTextInputs': true },
-        formData: 3,
+        initialFormData: 3,
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -272,7 +272,7 @@ describe('NumberField', () => {
           },
           uiSchema,
           onFocus,
-          formData: 2,
+          initialFormData: 2,
         });
 
         const input = node.querySelector('input')!;
@@ -287,7 +287,7 @@ describe('NumberField', () => {
             type: 'number',
           },
           uiSchema,
-          formData: 2,
+          initialFormData: 2,
         });
 
         expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2');
@@ -419,9 +419,11 @@ describe('NumberField', () => {
             const schema: RJSFSchema = {
               type: 'number',
             };
+            // Ownership is decided at mount, so a value set from outside later is only taken by a form mounted with one
             const { rerender, node } = createFormComponent({
               schema,
               uiSchema,
+              formData: null,
             });
 
             const $input = node.querySelector('input')!;
@@ -604,7 +606,7 @@ describe('NumberField', () => {
     });
 
     it('should assign a default value', () => {
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: {
           type: 'number',
           enum: [1, 2],
@@ -614,7 +616,7 @@ describe('NumberField', () => {
       });
 
       // No id on initial onChange
-      expectToHaveBeenCalledWithFormData(onChange, 1);
+      expect(getFormData()).toBe(1);
     });
 
     it('should handle a change event', async () => {
@@ -638,7 +640,7 @@ describe('NumberField', () => {
           type: 'number',
           enum: [1, 2],
         },
-        formData: 2,
+        initialFormData: 2,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, 2, true);
@@ -772,7 +774,7 @@ describe('NumberField', () => {
             inputType: 'number',
           },
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       // getInputProps() gives the explicit inputType priority over the locale detection, so
@@ -879,6 +881,7 @@ describe('NumberField', () => {
         ref: createRef(),
         schema,
         uiSchema,
+        formData: null,
       });
 
       const $input = node.querySelector('input')!;
@@ -938,7 +941,7 @@ describe('NumberField', () => {
           type: 'number',
           enum: [2.3, 4.5],
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const $select = node.querySelector<HTMLSelectElement>('select')!;
@@ -954,7 +957,7 @@ describe('NumberField', () => {
         uiSchema: {
           'ui:widget': 'radio',
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const inputs = node.querySelectorAll<HTMLInputElement>('input[type="radio"]');
@@ -970,7 +973,7 @@ describe('NumberField', () => {
         uiSchema: {
           'ui:widget': 'hidden',
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const input = node.querySelector<HTMLInputElement>('input[type="hidden"]')!;
@@ -994,7 +997,7 @@ describe('NumberField', () => {
         widgets: {
           custom: CustomWidget,
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       expect(node.querySelector('#custom-widget')).toBeInTheDocument();
@@ -1016,7 +1019,7 @@ describe('NumberField', () => {
         widgets: {
           'custom-format': CustomFormatWidget,
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();

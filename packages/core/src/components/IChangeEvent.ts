@@ -25,8 +25,6 @@ export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   readonly schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
   readonly formData?: T;
-  /** Flag indicating whether the form is in edit mode, true when `formData` is passed to the form, otherwise false */
-  readonly edit: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
   readonly errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */

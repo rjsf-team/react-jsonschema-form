@@ -1,3 +1,4 @@
+import type { RefObject } from 'react';
 import { createRef, useState, useCallback } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -45,8 +46,8 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       required: ['shipping_address'],
     };
     it('Errors when shipping address is not filled out, billing address is not needed', async () => {
-      const { node, onChange, onError } = createFormComponent({ schema });
-      expectToHaveBeenCalledWithFormData(onChange, { shipping_address: {} });
+      const { node, onError, getFormData } = createFormComponent({ schema });
+      expect(getFormData()).toEqual({ shipping_address: {} });
       // forceFireEvent=true: clicking the submit button focuses it, blurring the
       // currently focused field and firing onChange which may mutate formData before
       // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
@@ -158,10 +159,12 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     let rerender: RerenderType;
     let onChangeProp: Mock;
     let formProps: NoValFormProps;
+    let ref: RefObject<Form | null>;
 
     beforeEach(() => {
+      ref = createRef<Form>();
       formProps = {
-        ref: createRef(),
+        ref,
         schema: {
           type: 'string',
           default: 'foobar',
@@ -181,19 +184,10 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         }),
       );
 
-      it('should call onChange', () => {
-        expect(onChangeProp).toHaveBeenCalledTimes(1);
-        expect(onChangeProp).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            edit: true,
-            errorSchema: {},
-            errors: [],
-            formData: 'foobar',
-            schema: formProps.schema,
-            uiSchema: {},
-            schemaUtils: expect.any(Object),
-          }),
-        );
+      it('should render the null value and not call onChange', () => {
+        // Null is the parent's value, not a request for the default; the parent seeds defaults itself
+        expect(onChangeProp).not.toHaveBeenCalled();
+        expect(ref.current!.getFormData()).toBeNull();
       });
     });
 
@@ -249,14 +243,9 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         }),
       );
 
-      it('should call onChange', () => {
-        expect(onChangeProp).toHaveBeenCalledTimes(1);
-        expect(onChangeProp).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            schema: newSchema,
-            formData: 'the new default',
-          }),
-        );
+      it('should render the null value and not call onChange', () => {
+        expect(onChangeProp).not.toHaveBeenCalled();
+        expect(ref.current!.getFormData()).toBeNull();
       });
     });
 
@@ -300,6 +289,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         schema: { type: 'string' },
+        formData: 'initial',
       };
 
       it('should call submit handler with new formData prop value', async () => {
@@ -345,6 +335,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         const formProps: Omit<FormProps, 'validator'> = {
           ref: createRef(),
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
+          formData: {},
         };
         const { onSubmit, node, rerender } = createFormComponent(formProps);
 
@@ -367,7 +358,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
             type: 'string',
           },
         };
-        const { node, onSubmit, rerender } = createFormComponent({ ref: createRef(), schema });
+        const { node, onSubmit, rerender } = createFormComponent({ ref: createRef(), schema, formData: [] });
 
         rerender({
           schema,

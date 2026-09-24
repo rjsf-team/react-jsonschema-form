@@ -1708,7 +1708,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
   };
 
   const Container = (containerProps: FormProps) => {
-    const [state, setState] = useState<Pick<FormProps, 'formData'>>({});
+    const [state, setState] = useState<Pick<FormProps, 'formData'>>({ formData: [] });
     const onChange = useCallback(({ formData }: IChangeEvent) => {
       setState({ formData });
     }, []);
@@ -2362,7 +2362,7 @@ describe('setFieldValue()', () => {
       schema: {
         type: 'string',
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { onChange, node } = createFormComponent(props);
@@ -2387,7 +2387,7 @@ describe('setFieldValue()', () => {
       schema: {
         type: 'string',
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { onChange, node } = createFormComponent(props);
@@ -2423,7 +2423,7 @@ describe('setFieldValue()', () => {
         },
         required: ['foo'],
       },
-      formData: {},
+      initialFormData: {},
       ref,
       liveValidate: 'onChange',
     };
@@ -2477,7 +2477,7 @@ describe('setFieldValue()', () => {
         },
         required: ['foo'],
       },
-      formData: {},
+      initialFormData: {},
       ref,
       liveValidate: 'onChange',
     };
@@ -2553,7 +2553,7 @@ describe('setFieldValue()', () => {
           },
         },
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { onChange } = createFormComponent(props);
@@ -3179,7 +3179,9 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that Form resets without initial data when it is controlled', async () => {
+  it('show that a controlled Form keeps rendering the parent value when the parent does not accept edits', async () => {
+    // The parent owns `formData` and never hands a proposal back, so the edit is proposed but never rendered; before
+    // the ownership switch the form kept its own copy and showed the edit until `disabled` changed
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -3187,7 +3189,7 @@ describe('initialFormData feature to prevent form reset', () => {
     await user.clear(input);
     await user.type(input, 'new value');
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', 'new value');
+    expect(input).toHaveAttribute('value', data.name);
 
     await submitForm(container.querySelector('form')!, user);
 
@@ -3717,13 +3719,13 @@ describe('enum-based array values do not update when dependencies change (#1357 
         },
       },
     };
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema,
       initialFormData: { select_item: 'item1' },
       defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
     });
 
-    expectToHaveBeenCalledWithFormData(onChange, {
+    expect(getFormData()).toEqual({
       select_item: 'item1',
       item_detail: ['item_detail1', 'item_detail2'],
     });

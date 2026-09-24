@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, RefObject } from 'react';
 import { createRef, useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
@@ -20,6 +20,10 @@ export function createFormRef() {
   return createRef<Form>();
 }
 
+export function input(container: HTMLElement, id: string) {
+  return container.querySelector<HTMLInputElement>(`#${id}`)!;
+}
+
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 export interface FormComponentResult {
@@ -30,6 +34,8 @@ export interface FormComponentResult {
   onSubmit: Mock;
   rerender: RerenderType;
   unmount: () => void;
+  /** The data the form renders, read through its handle; the way to check the defaults a seed was filled with */
+  getFormData: () => unknown;
 }
 export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
@@ -116,21 +122,25 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   const onChange = vi.fn();
   const onError = vi.fn();
   const onSubmit = vi.fn();
+  const ref = theProps.ref ?? createFormRef();
   const { container, rerender, unmount } = render(
-    <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
+    <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} ref={ref} />,
   );
 
   const rerenderFunction: RerenderType = (newProps: NoValFormProps, v: ValidatorType = validator) => {
     // For Form components, ensure validator is always passed
     const propsWithValidator: FormProps = { ...newProps, validator: v };
-    return rerender(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} />);
+    return rerender(
+      <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} ref={ref} />,
+    );
   };
   const node = container.firstElementChild;
   if (!node) {
     throw new Error('node is not defined');
   }
+  const getFormData = () => (ref as RefObject<Form | null>).current?.getFormData();
 
-  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount };
+  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount, getFormData };
 }
 
 export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {

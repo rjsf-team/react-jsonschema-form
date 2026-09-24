@@ -80,21 +80,35 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     prevFormDataRef.current = formData;
     prevFieldIdRef.current = id;
 
-    if (!deepEquals(formData, prevFormData) && id === prevFieldId) {
-      if (skipNextOptionRecalculation.current) {
-        skipNextOptionRecalculation.current = false;
+    if (id !== prevFieldId) {
+      return;
+    }
+    const isFormDataChanged = !deepEquals(formData, prevFormData);
+    if (skipNextOptionRecalculation.current) {
+      skipNextOptionRecalculation.current = false;
+      if (isFormDataChanged) {
         return;
       }
-      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-      const matchingOption = schemaUtils.getClosestMatchingOption(
-        formData,
-        retrievedOptions,
-        selectedOption,
-        discriminator,
-      );
-      if (matchingOption !== selectedOption) {
-        setSelectedOption(matchingOption);
+      // The option switch was proposed but the data did not follow it, which is what a parent declining the proposal
+      // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
+      // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
+      // describes it
+      const chosen = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+      if (chosen && schemaUtils.getValidator().isValid(chosen, formData, registry.rootSchema)) {
+        return;
       }
+    } else if (!isFormDataChanged) {
+      return;
+    }
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+    const matchingOption = schemaUtils.getClosestMatchingOption(
+      formData,
+      retrievedOptions,
+      selectedOption,
+      discriminator,
+    );
+    if (matchingOption !== selectedOption) {
+      setSelectedOption(matchingOption);
     }
   });
 

@@ -369,7 +369,7 @@ describe('BooleanField', () => {
       schema: {
         type: 'boolean',
       },
-      formData: true,
+      initialFormData: true,
     });
 
     expect(node.querySelector('.rjsf-field input')).toHaveAttribute('checked', '');
@@ -391,7 +391,7 @@ describe('BooleanField', () => {
       schema: {
         type: 'boolean',
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 
@@ -408,7 +408,7 @@ describe('BooleanField', () => {
         type: 'boolean',
         enum: [false, true],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 
@@ -422,7 +422,7 @@ describe('BooleanField', () => {
   it('should support ui:enumNames for radio widgets', () => {
     const { node } = createFormComponent({
       schema: { type: 'boolean' },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio', 'ui:enumNames': ['Yes', 'No'] },
     });
 
@@ -448,7 +448,7 @@ describe('BooleanField', () => {
           },
         ],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 
@@ -605,7 +605,7 @@ describe('BooleanField', () => {
           },
         ],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio', oneOf: [{ 'ui:title': 'Si!' }, { 'ui:title': 'No!' }] },
     });
 
@@ -631,7 +631,7 @@ describe('BooleanField', () => {
           },
         ],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 
@@ -645,7 +645,7 @@ describe('BooleanField', () => {
   it('should support inline radio widgets', () => {
     const { node } = createFormComponent({
       schema: { type: 'boolean' },
-      formData: true,
+      initialFormData: true,
       uiSchema: {
         'ui:widget': 'radio',
         'ui:options': {
@@ -697,7 +697,7 @@ describe('BooleanField', () => {
   it('should support ui:enumNames for select, with overrides in uiSchema', () => {
     const { node } = createFormComponent({
       schema: { type: 'boolean' },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Si!', 'No!'] },
     });
 
@@ -892,13 +892,13 @@ describe('BooleanField', () => {
     });
 
     it('should assign a default value', () => {
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: {
           enum: [true, false],
           default: true,
         },
       });
-      expectToHaveBeenCalledWithFormData(onChange, true);
+      expect(getFormData()).toBe(true);
     });
 
     it('should handle a change event', async () => {

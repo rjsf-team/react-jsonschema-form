@@ -24,7 +24,7 @@ describe('Validation', () => {
 
         const { node, onError, onSubmit } = createFormComponent({
           schema,
-          formData: 13,
+          initialFormData: 13,
         });
 
         await submitForm(node, user, true);
@@ -52,7 +52,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: undefined,
             },
           });
@@ -102,7 +102,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: '123456789',
             },
           });
@@ -148,7 +148,7 @@ describe('Validation', () => {
         const { onError, node } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
 
         await submitForm(node, user);
@@ -169,7 +169,7 @@ describe('Validation', () => {
         const { onChange, node } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
           liveValidate: 'onChange',
         });
 
@@ -219,7 +219,7 @@ describe('Validation', () => {
 
         const { node } = createFormComponent({
           schema,
-          formData,
+          initialFormData: formData,
           customValidate,
           onSubmit,
         });
@@ -244,7 +244,7 @@ describe('Validation', () => {
 
         const { node } = createFormComponent({
           schema,
-          formData,
+          initialFormData: formData,
           customValidate,
           onSubmit,
           onError,
@@ -278,7 +278,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
@@ -328,7 +328,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
 
         await submitForm(node, user);
@@ -361,7 +361,7 @@ describe('Validation', () => {
         const { node, onError } = createFormComponent({
           schema,
           customValidate,
-          formData,
+          initialFormData: formData,
         });
         await submitForm(node, user);
         expect(onError).toHaveBeenLastCalledWith([
@@ -390,7 +390,7 @@ describe('Validation', () => {
         beforeEach(async () => {
           const compInfo = createFormComponent({
             schema,
-            formData: {
+            initialFormData: {
               foo: undefined,
             },
             showErrorList: false,
@@ -467,7 +467,7 @@ describe('Validation', () => {
           schema,
           uiSchema,
           liveValidate: 'onChange',
-          formData,
+          initialFormData: formData,
           templates: { ErrorListTemplate: CustomErrorList },
           formContext: { className: 'foo' },
         });
@@ -516,7 +516,7 @@ describe('Validation', () => {
         const withMetaSchema = createFormComponent(
           {
             schema,
-            formData,
+            initialFormData: formData,
             liveValidate: 'onChange',
           },
           validator,

@@ -28,14 +28,14 @@ describe('NullField', () => {
     });
 
     it('should assign a default value', () => {
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: {
           type: 'null',
           default: null,
         },
       });
 
-      expectToHaveBeenCalledWithFormData(onChange, null);
+      expect(getFormData()).toBe(null);
     });
 
     it('should not overwrite existing data', async () => {

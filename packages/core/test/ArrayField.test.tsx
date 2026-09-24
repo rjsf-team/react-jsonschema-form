@@ -245,7 +245,7 @@ describe('ArrayField', () => {
     it('should contain no field in the list when nested array formData is explicitly null', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { foo: null },
+        initialFormData: { foo: null },
       });
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(0);
     });
@@ -265,14 +265,14 @@ describe('ArrayField', () => {
     it('should contain no field in the list when nested array formData is explicitly null', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { foo: null },
+        initialFormData: { foo: null },
       });
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(0);
     });
     it('should contain a field in the list when nested array formData is a single item', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { foo: ['test'] },
+        initialFormData: { foo: ['test'] },
       });
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
@@ -374,7 +374,7 @@ describe('ArrayField', () => {
             'ui:placeholder': 'Placeholder...',
           },
         },
-        formData: ['foo', 'barr'],
+        initialFormData: ['foo', 'barr'],
       });
 
       expect(node.querySelectorAll("input[placeholder='Placeholder...']")).toHaveLength(2);
@@ -395,7 +395,7 @@ describe('ArrayField', () => {
         templates: {
           ArrayFieldItemTemplate: ParentUiSchemaItemTemplate,
         },
-        formData: ['foo'],
+        initialFormData: ['foo'],
       });
 
       const item = node.querySelector('.custom-item');
@@ -416,7 +416,7 @@ describe('ArrayField', () => {
         templates: {
           ArrayFieldTemplate: CustomComponent,
         },
-        formData: [1],
+        initialFormData: [1],
         liveValidate: 'onChange',
       });
 
@@ -485,7 +485,7 @@ describe('ArrayField', () => {
     it('should not provide an add button if length equals maxItems', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
 
       expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
@@ -494,7 +494,7 @@ describe('ArrayField', () => {
     it('should provide an add button if length is lesser than maxItems', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
-        formData: ['foo'],
+        initialFormData: ['foo'],
       });
 
       expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
@@ -503,7 +503,7 @@ describe('ArrayField', () => {
     it('should retain existing row keys/ids when adding new row', async () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
-        formData: ['foo'],
+        initialFormData: ['foo'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
@@ -528,7 +528,7 @@ describe('ArrayField', () => {
     it('should not provide an add button if addable is explicitly false regardless maxItems value', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
-        formData: ['foo'],
+        initialFormData: ['foo'],
         uiSchema: {
           'ui:options': {
             addable: false,
@@ -542,7 +542,7 @@ describe('ArrayField', () => {
     it('should ignore addable value if maxItems constraint is not satisfied', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: {
           'ui:options': {
             addable: true,
@@ -564,7 +564,7 @@ describe('ArrayField', () => {
     it('should fill an array field with data', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
@@ -574,7 +574,7 @@ describe('ArrayField', () => {
     });
 
     it("shouldn't have reorder buttons when list length <= 1", () => {
-      const { node } = createFormComponent({ schema, formData: ['foo'] });
+      const { node } = createFormComponent({ schema, initialFormData: ['foo'] });
 
       expect(node.querySelector('.rjsf-array-item-move-up')).toBeNull();
       expect(node.querySelector('.rjsf-array-item-move-down')).toBeNull();
@@ -583,7 +583,7 @@ describe('ArrayField', () => {
     it('should have reorder buttons when list length >= 2', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
 
       expect(node.querySelector('.rjsf-array-item-move-up')).not.toBeNull();
@@ -593,7 +593,7 @@ describe('ArrayField', () => {
     it('should move down a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
       });
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
 
@@ -609,7 +609,7 @@ describe('ArrayField', () => {
     it('should move up a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
       });
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
@@ -625,7 +625,7 @@ describe('ArrayField', () => {
     it('should retain row keys/ids when moving down', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
@@ -653,7 +653,7 @@ describe('ArrayField', () => {
     it('should retain row keys/ids when moving up', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
@@ -681,7 +681,7 @@ describe('ArrayField', () => {
     it('should disable move buttons on the ends of the list', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
@@ -695,7 +695,7 @@ describe('ArrayField', () => {
     it('should not show move up/down buttons if global orderable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { orderable: false } },
       });
       const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
@@ -708,7 +708,7 @@ describe('ArrayField', () => {
     it('should not show move up/down buttons if orderable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { orderable: false } },
       });
       const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
@@ -721,7 +721,7 @@ describe('ArrayField', () => {
     it('should not show move up/down buttons if ui:orderable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:orderable': false },
       });
       const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
@@ -734,7 +734,7 @@ describe('ArrayField', () => {
     it('should remove a field from the list', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
       const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
@@ -748,7 +748,7 @@ describe('ArrayField', () => {
     it('should delete item from list and correct indices', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
       });
       const deleteBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
@@ -767,7 +767,7 @@ describe('ArrayField', () => {
     it('should retain row keys/ids of remaining rows when a row is removed', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
@@ -787,7 +787,7 @@ describe('ArrayField', () => {
     it('should not show remove button if global removable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { removable: false } },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-remove');
@@ -798,7 +798,7 @@ describe('ArrayField', () => {
     it('should not show remove button if removable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { removable: false } },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-remove');
@@ -809,7 +809,7 @@ describe('ArrayField', () => {
     it('should not show remove button if ui:removable is false', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:removable': false },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-remove');
@@ -824,7 +824,7 @@ describe('ArrayField', () => {
           ...schema,
           items: { ...(schema.items as GenericObjectType), minLength: 4 },
         },
-        formData: ['foo', 'bar!'],
+        initialFormData: ['foo', 'bar!'],
       });
 
       try {
@@ -845,7 +845,7 @@ describe('ArrayField', () => {
     it('should not show copy button by default', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
       const dropBtn = node.querySelector('.rjsf-array-item-copy');
 
@@ -855,7 +855,7 @@ describe('ArrayField', () => {
     it('should show copy button if global options copyable is true', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { copyable: true } },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-copy');
@@ -866,7 +866,7 @@ describe('ArrayField', () => {
     it('should show copy button if copyable is true', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { copyable: true } },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-copy');
@@ -877,7 +877,7 @@ describe('ArrayField', () => {
     it('should show copy button if ui:copyable is true', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:copyable': true },
       });
       const dropBtn = node.querySelector('.rjsf-array-item-copy');
@@ -888,7 +888,7 @@ describe('ArrayField', () => {
     it('should copy a field in the list just below the item clicked', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         uiSchema: { 'ui:copyable': true },
       });
       const copyBtns = node.querySelectorAll('.rjsf-array-item-copy');
@@ -911,7 +911,7 @@ describe('ArrayField', () => {
       const { node, onChange, onError } = createFormComponent({
         liveValidate: 'onChange',
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       await user.clear(node.querySelector('#root_1')!);
@@ -957,7 +957,7 @@ describe('ArrayField', () => {
     it('should render the input widgets with the expected ids', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
 
       const inputs = node.querySelectorAll('input[type=text]');
@@ -983,7 +983,7 @@ describe('ArrayField', () => {
       };
       const { node } = createFormComponent({
         schema: complexSchema,
-        formData: {
+        initialFormData: {
           foo: [
             { bar: 'bar1', baz: 'baz1' },
             { bar: 'bar2', baz: 'baz2' },
@@ -1024,7 +1024,7 @@ describe('ArrayField', () => {
       };
       const form = createFormComponent({
         schema: complexSchema,
-        formData: {},
+        initialFormData: {},
       });
       const inputs = form.node.querySelectorAll('input[type=text]');
       expect(inputs[0]).toHaveValue('Default name');
@@ -1125,7 +1125,7 @@ describe('ArrayField', () => {
       let form = createFormComponent({
         schema,
         uiSchema,
-        formData: {},
+        initialFormData: {},
         liveValidate: 'onChange',
         noValidate: true,
       });
@@ -1136,7 +1136,7 @@ describe('ArrayField', () => {
       form = createFormComponent({
         schema,
         uiSchema,
-        formData: {},
+        initialFormData: {},
         liveValidate: 'onChange',
         noValidate: false,
       });
@@ -1183,7 +1183,7 @@ describe('ArrayField', () => {
       };
       const form = createFormComponent({
         schema: complexSchema,
-        formData: { foo: [] },
+        initialFormData: { foo: [] },
       });
       const inputs = form.node.querySelectorAll('input[type=text]');
       expect(inputs).toHaveLength(0);
@@ -1262,7 +1262,7 @@ describe('ArrayField', () => {
 
       it('should handle a focus event', async () => {
         const onFocus = vi.fn();
-        const { node } = createFormComponent({ schema, onFocus, formData: ['foo', 'bar'] });
+        const { node } = createFormComponent({ schema, onFocus, initialFormData: ['foo', 'bar'] });
 
         const select = node.querySelector<HTMLSelectElement>('.rjsf-field select')!;
         await user.click(select);
@@ -1273,7 +1273,7 @@ describe('ArrayField', () => {
       it('should fill field with data', () => {
         const { node } = createFormComponent({
           schema,
-          formData: ['foo', 'bar'],
+          initialFormData: ['foo', 'bar'],
         });
 
         const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field select option');
@@ -1295,7 +1295,7 @@ describe('ArrayField', () => {
           widgets: {
             SelectWidget: CustomComponent,
           },
-          formData: ['foo', 'foo'],
+          initialFormData: ['foo', 'foo'],
           liveValidate: 'onChange',
         });
         // trigger the errors by submitting the form since initial render no longer shows them
@@ -1412,7 +1412,7 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: 'foo',
+          initialFormData: 'foo',
         });
 
         let labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node: HTMLInputElement) => node.checked);
@@ -1429,7 +1429,7 @@ describe('ArrayField', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: ['foo', 'fuzz'],
+          initialFormData: ['foo', 'fuzz'],
         });
 
         const labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node: HTMLInputElement) => node.checked);
@@ -1474,7 +1474,7 @@ describe('ArrayField', () => {
             CheckboxesWidget: CustomComponent,
           },
           uiSchema,
-          formData: [],
+          initialFormData: [],
           liveValidate: 'onChange',
         });
 
@@ -1577,7 +1577,7 @@ describe('ArrayField', () => {
     it('should fill field with data', () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           'data:text/plain;name=file1.txt;base64,dGVzdDE=',
           'data:image/png;name=file2.png;base64,ZmFrZXBuZw==',
         ],
@@ -1610,7 +1610,7 @@ describe('ArrayField', () => {
             'ui:options': { accept: '.pdf' },
           },
         },
-        formData: [
+        initialFormData: [
           'data:text/plain;name=file1.pdf;base64,dGVzdDE=',
           'data:image/png;name=file2.pdf;base64,ZmFrZXBuZw==',
         ],
@@ -1635,7 +1635,7 @@ describe('ArrayField', () => {
         widgets: {
           FileWidget: CustomComponent,
         },
-        formData: [],
+        initialFormData: [],
         liveValidate: 'onChange',
       });
 
@@ -1676,7 +1676,7 @@ describe('ArrayField', () => {
     it('should render two lists of inputs inside of a list', () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           [1, 2],
           [3, 4],
         ],
@@ -1719,7 +1719,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema,
         templates: { ArrayFieldTemplate: CustomTemplate, ArrayFieldItemTemplate: CustomItem },
-        formData: [[]],
+        initialFormData: [[]],
         liveValidate: 'onChange',
       });
 
@@ -1800,7 +1800,7 @@ describe('ArrayField', () => {
     it('should fill fields with data', () => {
       const { node } = createFormComponent({
         schema,
-        formData: ['foo', 42],
+        initialFormData: ['foo', 42],
       });
       const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
       const numInput = node.querySelector('fieldset .rjsf-field-number input[inputmode=decimal]');
@@ -1822,7 +1822,7 @@ describe('ArrayField', () => {
     it('should generate additional fields and fill data', () => {
       const { node } = createFormComponent({
         schema: schemaAdditional,
-        formData: [1, 2, 'bar'],
+        initialFormData: [1, 2, 'bar'],
       });
       const addInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
       expect(addInput).toHaveAttribute('id', 'root_2');
@@ -1837,7 +1837,7 @@ describe('ArrayField', () => {
             'ui:title': 'Custom title',
           },
         },
-        formData: [1, 2, 'bar'],
+        initialFormData: [1, 2, 'bar'],
       });
       const label = node.querySelector('fieldset .rjsf-field-string label.control-label');
       expect(label).toHaveTextContent('Custom title*');
@@ -1937,7 +1937,7 @@ describe('ArrayField', () => {
             'ui:widget': 'textarea',
           },
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
       expect(node.querySelectorAll('textarea')).toHaveLength(2);
     });
@@ -1955,7 +1955,7 @@ describe('ArrayField', () => {
             },
           ],
         },
-        formData: ['foo', 'bar', 'baz'],
+        initialFormData: ['foo', 'bar', 'baz'],
       });
       expect(node.querySelectorAll('input')).toHaveLength(2);
       await submitForm(node, user);
@@ -1980,6 +1980,7 @@ describe('ArrayField', () => {
         };
         const { node, onChange, rerender } = createFormComponent({
           schema,
+          formData: [],
           templates,
         });
 
@@ -1999,7 +2000,7 @@ describe('ArrayField', () => {
       it('should add a field when clicking add button', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
-          formData: [1, 2, 'foo'],
+          initialFormData: [1, 2, 'foo'],
           templates: {
             ArrayFieldTemplate: ExposedArrayKeyTemplate,
             ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
@@ -2018,7 +2019,7 @@ describe('ArrayField', () => {
       it('should retain existing row keys/ids when adding additional items', async () => {
         const { node } = createFormComponent({
           schema: schemaAdditional,
-          formData: [1, 2, 'foo'],
+          initialFormData: [1, 2, 'foo'],
           templates: {
             ArrayFieldTemplate: ExposedArrayKeyTemplate,
             ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
@@ -2056,7 +2057,7 @@ describe('ArrayField', () => {
       it('should change the state when changing input value', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
-          formData: [1, 2, 'foo'],
+          initialFormData: [1, 2, 'foo'],
           templates: {
             ArrayFieldTemplate: ExposedArrayKeyTemplate,
             ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
@@ -2079,7 +2080,7 @@ describe('ArrayField', () => {
       it('should remove array items when clicking remove buttons', async () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
-          formData: [1, 2, 'foo'],
+          initialFormData: [1, 2, 'foo'],
           templates: {
             ArrayFieldTemplate: ExposedArrayKeyTemplate,
             ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
@@ -2145,7 +2146,7 @@ describe('ArrayField', () => {
         uiSchema: {
           'ui:widget': 'CustomSelect',
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         widgets: {
           CustomSelect: CustomSelectComponent,
         },
@@ -2177,7 +2178,7 @@ describe('ArrayField', () => {
             },
           },
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
       });
 
       expect(node.querySelector('#custom-ui-option-value')).toHaveTextContent('foo');
@@ -2198,7 +2199,7 @@ describe('ArrayField', () => {
           'ui:widget': 'CustomWidget',
           'ui:placeholder': 'Pick some',
         },
-        formData: ['foo'],
+        initialFormData: ['foo'],
       });
 
       expect(node.querySelector('#custom-placeholder')).toHaveTextContent('Pick some');
@@ -2224,7 +2225,7 @@ describe('ArrayField', () => {
         uiSchema: {
           'ui:widget': 'CustomSelect',
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         widgets: {
           CustomSelect: CustomSelectComponent,
         },
@@ -2720,7 +2721,7 @@ describe('ArrayField', () => {
       };
       const { node } = createFormComponent({
         schema: complexSchema,
-        formData: {
+        initialFormData: {
           foo: [
             { bar: 'bar1', baz: 'baz1' },
             { bar: 'bar2', baz: 'baz2' },
@@ -2762,7 +2763,7 @@ describe('ArrayField', () => {
     it('should render nested error decorated input widgets with the expected ids', async () => {
       const { node } = createFormComponent({
         schema: complexSchema,
-        formData: {
+        initialFormData: {
           foo: [{ bar: 'bar1' }, { bar: 'bar2' }],
         },
         customValidate,
@@ -2780,7 +2781,7 @@ describe('ArrayField', () => {
         uiSchema: {
           'ui:hideError': true,
         },
-        formData: {
+        initialFormData: {
           foo: [{ bar: 'bar1' }, { bar: 'bar2' }],
         },
         customValidate,
@@ -2982,7 +2983,7 @@ describe('ArrayField', () => {
     it('swaps errors when swapping elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         templates,
       });
 
@@ -3014,7 +3015,7 @@ describe('ArrayField', () => {
     it('leaves errors when removing higher elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         templates,
       });
 
@@ -3046,7 +3047,7 @@ describe('ArrayField', () => {
     it('removes errors when removing elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         templates,
       });
 
@@ -3073,7 +3074,7 @@ describe('ArrayField', () => {
       const threeItemFormData = [{}, { text: 'y' }, {}];
       const { node, onChange } = createFormComponent({
         schema,
-        formData: threeItemFormData,
+        initialFormData: threeItemFormData,
         templates,
       });
 
@@ -3101,7 +3102,7 @@ describe('ArrayField', () => {
     it('leaves errors in place when inserting elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         templates,
       });
 
@@ -3133,7 +3134,7 @@ describe('ArrayField', () => {
     it('moves errors when inserting elements', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: [{ text: 'y' }, {}],
+        initialFormData: [{ text: 'y' }, {}],
         templates,
       });
 
@@ -3166,7 +3167,7 @@ describe('ArrayField', () => {
       const { node, onChange } = createFormComponent({
         schema,
         uiSchema,
-        formData,
+        initialFormData: formData,
         templates,
       });
 
@@ -3199,7 +3200,7 @@ describe('ArrayField', () => {
       const { node, onChange } = createFormComponent({
         schema,
         uiSchema,
-        formData: [{ text: 'y' }, {}],
+        initialFormData: [{ text: 'y' }, {}],
         templates,
       });
 
@@ -3253,7 +3254,7 @@ describe('ArrayField', () => {
     it('raise an error and check if the error is displayed', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3277,7 +3278,7 @@ describe('ArrayField', () => {
     it('should not raise an error if value is correct', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3299,7 +3300,7 @@ describe('ArrayField', () => {
     it('should clear an error if value is entered correctly', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3329,7 +3330,7 @@ describe('ArrayField', () => {
     it('raise an error and check if the error is displayed using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3353,7 +3354,7 @@ describe('ArrayField', () => {
     it('should not raise an error if value is correct using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3375,7 +3376,7 @@ describe('ArrayField', () => {
     it('should clear an error if value is entered correctly using custom text widget', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: [
+        initialFormData: [
           {
             text: 'y',
           },
@@ -3494,7 +3495,7 @@ describe('ArrayField', () => {
 
       const formContext = { testContext: 'value' };
 
-      createFormComponent({ schema, uiSchema, formData, formContext });
+      createFormComponent({ schema, uiSchema, initialFormData: formData, formContext });
 
       // Should be called twice (once for each array item)
       expect(dynamicUiSchemaFunction).toHaveBeenCalledTimes(2);
@@ -3762,7 +3763,7 @@ describe('ArrayField', () => {
 
       const formData = [{ name: 'First' }];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Initial render should call function once
       expect(callCount).toEqual(1);
@@ -3856,7 +3857,7 @@ describe('ArrayField', () => {
     it('should not save null when clearing an optional number field and submitting', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
-        formData: { arrayList: [{ name: 'John', age: 25 }] },
+        initialFormData: { arrayList: [{ name: 'John', age: 25 }] },
       });
 
       const ageInput = node.querySelector<HTMLInputElement>('#root_arrayList_0_age')!;

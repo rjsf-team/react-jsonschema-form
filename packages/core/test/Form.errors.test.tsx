@@ -529,7 +529,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           type: 'string',
           minLength: 8,
         },
-        formData: 'short',
+        initialFormData: 'short',
       };
 
       it('should reflect the contextualized error in state', async () => {
@@ -572,7 +572,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           minLength: 8,
           pattern: 'd+',
         },
-        formData: 'short',
+        initialFormData: 'short',
       };
 
       it('should reflect the contextualized error in state', async () => {
@@ -634,7 +634,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const formProps: Omit<FormProps, 'validator'> = {
         schema,
         liveValidate: 'onChange',
-        formData: {
+        initialFormData: {
           level1: {
             level2: 'short',
           },
@@ -684,7 +684,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const formProps: Omit<FormProps, 'validator'> = {
         schema,
         liveValidate: 'onChange',
-        formData: ['good', 'ba', 'good'],
+        initialFormData: ['good', 'ba', 'good'],
       };
 
       it('should contextualize the error for array indices', async () => {
@@ -749,7 +749,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it('should contextualize the error for nested array indices', async () => {
         const { node, onError } = createFormComponent({
           ...formProps,
-          formData: {
+          initialFormData: {
             level1: ['good', 'bad', 'good', 'bad'],
           },
         });
@@ -824,7 +824,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         ],
       };
 
-      const formProps: Omit<FormProps, 'validator'> = { schema, formData, liveValidate: 'onChange' };
+      const formProps: Omit<FormProps, 'validator'> = { schema, initialFormData: formData, liveValidate: 'onChange' };
 
       it('should contextualize the error for nested array indices, focusing on first error', async () => {
         const { node, onError } = createFormComponent({
@@ -909,7 +909,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const formProps: Omit<FormProps, 'validator'> = {
         schema,
         liveValidate: 'onChange',
-        formData: [{ foo: 'good' }, { foo: 'ba' }, { foo: 'good' }],
+        initialFormData: [{ foo: 'good' }, { foo: 'ba' }, { foo: 'good' }],
       };
 
       it('should contextualize the error for array nested items', async () => {
