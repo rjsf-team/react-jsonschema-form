@@ -1085,7 +1085,8 @@ describe('StringField', () => {
         });
 
         const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
-        fireEvent.change(dateNode, { target: { value: '2016-04-05T14:01' } });
+        await user.click(dateNode);
+        await user.paste('2016-04-05T14:01');
         await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, '2016-04-05T14:01:00', true);
@@ -1267,6 +1268,9 @@ describe('StringField', () => {
 
       const newTime = '11:10:12';
       const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      // fireEvent.change is used instead of user.click() + user.paste() because a seconds-precision value does
+      // not survive the paste: jsdom sanitizes it against the input's minute-granularity step and lands on an
+      // unrelated time ('11:10:12' becomes '11:59:00'), which is the precision this test exists to check
       fireEvent.change(input, { target: { value: newTime } });
 
       expect(input).toHaveValue(newTime);
@@ -1281,7 +1285,8 @@ describe('StringField', () => {
       });
 
       const input = node.querySelector<HTMLInputElement>('[type=time]')!;
-      fireEvent.change(input, { target: { value: '11:10' } });
+      await user.click(input);
+      await user.paste('11:10');
       await submitForm(node, user);
 
       const [[submission]] = onSubmit.mock.calls;
@@ -1447,7 +1452,8 @@ describe('StringField', () => {
         });
 
         const input = node.querySelector<HTMLInputElement>('[type=time]')!;
-        fireEvent.change(input, { target: { value: '11:10' } });
+        await user.click(input);
+        await user.paste('11:10');
         await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, '11:10:00', true);
@@ -2589,6 +2595,8 @@ describe('StringField', () => {
         formData: 'data:text/plain;name=file1.txt;base64,x=',
       });
 
+      // fireEvent.change is used instead of user.upload() because this clears the selection rather than making
+      // one, and user.upload() has no way to express an empty file list
       fireEvent.change(node.querySelector('[type=file]')!, { target: { files: [] } });
 
       expect(onChange).not.toHaveBeenCalled();

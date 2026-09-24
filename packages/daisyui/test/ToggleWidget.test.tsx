@@ -1,7 +1,10 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('ToggleWidget', () => {
   test('renders correctly', () => {
@@ -31,7 +34,7 @@ describe('ToggleWidget', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  test('calls onChange when toggled', () => {
+  test('calls onChange when toggled', async () => {
     const onChange = vi.fn();
     const { getByRole } = render(
       <ToggleWidget
@@ -43,7 +46,7 @@ describe('ToggleWidget', () => {
     );
 
     const toggle = getByRole('checkbox');
-    fireEvent.click(toggle);
+    await user.click(toggle);
 
     expect(onChange).toHaveBeenCalledWith(true);
   });

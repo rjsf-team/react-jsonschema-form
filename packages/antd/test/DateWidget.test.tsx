@@ -1,7 +1,10 @@
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import DateWidget from '../src/widgets/DateWidget/index.tsx';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = { type: 'string', format: 'iso-date-time' };
 
@@ -27,28 +30,26 @@ function makeProps(overrides: Partial<WidgetProps> = {}): WidgetProps {
 }
 
 describe('DateWidget with schema.format = iso-date-time', () => {
-  test('formats a picked date-time as a naive local string without a timezone offset', () => {
+  test('formats a picked date-time as a naive local string without a timezone offset', async () => {
     const onChange = vi.fn();
     const { container } = render(<DateWidget {...makeProps({ onChange })} showTime />);
 
     const input = container.querySelector('input')!;
-    fireEvent.change(input, { target: { value: '2016-04-05 14:01:30' } });
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    await user.type(input, '2016-04-05 14:01:30{Enter}');
 
     expect(onChange).toHaveBeenCalledWith('2016-04-05T14:01:30');
   });
 });
 
 describe('DateWidget with schema.format = date-time', () => {
-  test('still formats a picked date-time as a UTC ISO string with a timezone offset', () => {
+  test('still formats a picked date-time as a UTC ISO string with a timezone offset', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <DateWidget {...makeProps({ onChange, schema: { type: 'string', format: 'date-time' } })} showTime />,
     );
 
     const input = container.querySelector('input')!;
-    fireEvent.change(input, { target: { value: '2016-04-05 14:01:30' } });
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    await user.type(input, '2016-04-05 14:01:30{Enter}');
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-05T\d{2}:\d{2}:30\.\d{3}Z$/));
   });

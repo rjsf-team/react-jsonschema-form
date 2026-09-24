@@ -1,8 +1,11 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 const FILE_STR = 'data:text/plain;name=file1.txt;base64,';
 const uiSchema: UiSchema = { 'ui:options': { clearable: true, clearButtonProps: { 'aria-label': 'Clear' } } };
@@ -18,24 +21,24 @@ describe('FileWidget', () => {
     expect(screen.queryByLabelText('Clear')).toBeNull();
   });
 
-  test('clearing a single file input reports an undefined value', () => {
+  test('clearing a single file input reports an undefined value', async () => {
     const schema: RJSFSchema = { type: 'string', format: 'data-url' };
     const onChange = vi.fn();
     render(<Form schema={schema} uiSchema={uiSchema} formData={FILE_STR} validator={validator} onChange={onChange} />);
 
-    fireEvent.click(screen.getByLabelText('Clear'));
+    await user.click(screen.getByLabelText('Clear'));
 
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: undefined }), 'root');
   });
 
-  test('clearing a multiple file input reports an empty list', () => {
+  test('clearing a multiple file input reports an empty list', async () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
     const onChange = vi.fn();
     render(
       <Form schema={schema} uiSchema={uiSchema} formData={[FILE_STR]} validator={validator} onChange={onChange} />,
     );
 
-    fireEvent.click(screen.getByLabelText('Clear'));
+    await user.click(screen.getByLabelText('Clear'));
 
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
   });

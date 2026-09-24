@@ -1,11 +1,14 @@
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 
+const user = userEvent.setup();
+
 describe('BaseInputTemplate', () => {
-  test('calls `onChangeOverride` with the change event for a numeric field', () => {
+  test('calls `onChangeOverride` with the change event for a numeric field', async () => {
     const schema: RJSFSchema = { type: 'number' };
     const onChange = vi.fn();
     const onChangeOverride = vi.fn();
@@ -18,7 +21,8 @@ describe('BaseInputTemplate', () => {
       <Form schema={schema} validator={validator} onChange={onChange} widgets={{ TextWidget: CustomWidget }} />,
     );
     const input = container.querySelector('input')!;
-    fireEvent.change(input, { target: { value: '42' } });
+    await user.click(input);
+    await user.paste('42');
 
     expect(onChangeOverride).toHaveBeenCalledTimes(1);
     expect(onChangeOverride.mock.calls[0][0].target.value).toBe('42');

@@ -1,7 +1,8 @@
 import { MantineProvider } from '@mantine/core';
 import type * as MantineDates from '@mantine/dates';
 import type { WidgetProps } from '@rjsf/utils';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 // `DateInput`'s `onChange` passes a plain `YYYY-MM-DD` string (Mantine's `DateStringValue`) for the primary
 // calendar-click and preset interactions, not a `Date`; only the typed-input path (exercised in
@@ -22,6 +23,8 @@ vi.mock('@mantine/dates', async (importOriginal) => {
 });
 
 const { default: DateTimeWidget } = await import('../src/widgets/DateTime/DateTimeWidget.tsx');
+
+const user = userEvent.setup();
 
 function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
   return {
@@ -45,7 +48,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
 }
 
 describe('DateTimeWidget calendar-click onChange', () => {
-  test('commits a value with a timezone offset when the calendar passes a date string for format=date-time', () => {
+  test('commits a value with a timezone offset when the calendar passes a date string for format=date-time', async () => {
     const onChange = vi.fn();
     const { getByText } = render(
       <MantineProvider>
@@ -53,7 +56,7 @@ describe('DateTimeWidget calendar-click onChange', () => {
       </MantineProvider>,
     );
 
-    fireEvent.click(getByText('pick date'));
+    await user.click(getByText('pick date'));
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2024-01-1[45]T\d{2}:\d{2}:00(?:\.\d{3})?Z$/));
   });

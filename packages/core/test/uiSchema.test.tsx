@@ -3007,7 +3007,7 @@ describe('uiSchema', () => {
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
-    it('does not honor required set via ui:globalOptions', () => {
+    it('does not honor required set via ui:globalOptions', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3019,11 +3019,11 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    it('does not honor required set via ui:globalOptions when rendered via LayoutGridField', () => {
+    it('does not honor required set via ui:globalOptions when rendered via LayoutGridField', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3039,11 +3039,11 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    it('does not honor required set via the grid config uiProps for a cell', () => {
+    it('does not honor required set via the grid config uiProps for a cell', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3058,7 +3058,7 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
@@ -3233,7 +3233,7 @@ describe('uiSchema', () => {
       expect(countryInput).toHaveValue('');
     });
 
-    it('extends ui:emptyValue to apply on initial render, not just on widget clear', () => {
+    it('extends ui:emptyValue to apply on initial render, not just on widget clear', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3244,7 +3244,7 @@ describe('uiSchema', () => {
         name: { 'ui:emptyValue': 'unnamed' },
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, { name: 'unnamed' }, true);
     });
 

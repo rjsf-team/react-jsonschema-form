@@ -1,8 +1,11 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import SelectWidget from '../src/widgets/SelectWidget/SelectWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('SelectWidget', () => {
   const enumOptions = [
@@ -79,7 +82,7 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Qux' })).toBeInTheDocument();
   });
 
-  test('selecting a grouped option fires onChange with the correct value', () => {
+  test('selecting a grouped option fires onChange with the correct value', async () => {
     const onChange = vi.fn();
     render(
       <SelectWidget
@@ -97,12 +100,12 @@ describe('SelectWidget', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('option', { name: 'Baz' }));
+    await user.click(screen.getByRole('option', { name: 'Baz' }));
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
 
-  test('marks enumDisabled options as disabled and ignores clicks on them', () => {
+  test('marks enumDisabled options as disabled and ignores clicks on them', async () => {
     const onChange = vi.fn();
     render(
       <SelectWidget
@@ -121,7 +124,10 @@ describe('SelectWidget', () => {
     const bar = screen.getByRole('option', { name: 'Bar' });
     expect(bar).toHaveAttribute('aria-disabled', 'true');
     expect(screen.getByRole('option', { name: 'Foo' })).not.toHaveAttribute('aria-disabled');
-    fireEvent.click(bar);
+    await user.click(bar);
+    // fireEvent.keyDown is used because a disabled option renders tabIndex={-1}, so no real user can put
+    // keyboard focus on it; this drives the option's own onKeyDown guard directly rather than pretending
+    // the key press is reachable
     fireEvent.keyDown(bar, { key: 'Enter' });
     expect(onChange).not.toHaveBeenCalled();
   });

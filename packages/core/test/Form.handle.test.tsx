@@ -1,6 +1,7 @@
 import type { RJSFSchema, RJSFValidationError, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { expectTypeOf } from 'vitest';
 
 import type { FormHandle } from '../src/index.ts';
@@ -19,6 +20,8 @@ function mountWithHandle(props: Parameters<typeof createFormComponent>[0]) {
   return { ...result, handle };
 }
 
+const user = userEvent.setup();
+
 describe('FormHandle', () => {
   describe('getFormData()', () => {
     it('returns the seed of an uncontrolled form', () => {
@@ -27,10 +30,12 @@ describe('FormHandle', () => {
       expect(handle.getFormData()).toEqual({ name: 'seed' });
     });
 
-    it('reflects an edit committed by an uncontrolled form', () => {
+    it('reflects an edit committed by an uncontrolled form', async () => {
       const { node, handle } = mountWithHandle({ schema, initialFormData: { name: 'seed' } });
 
-      fireEvent.change(node.querySelector('input')!, { target: { value: 'edited' } });
+      const input = node.querySelector('input')!;
+      await user.clear(input);
+      await user.type(input, 'edited');
 
       expect(handle.getFormData()).toEqual({ name: 'edited' });
     });

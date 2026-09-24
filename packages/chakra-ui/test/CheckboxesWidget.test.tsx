@@ -1,8 +1,11 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 describe('CheckboxesWidget invalid state', () => {
   const schema: RJSFSchema = {
@@ -35,16 +38,16 @@ describe('CheckboxesWidget invalid state', () => {
     expect(invalidCheckboxes(container)).toHaveLength(0);
   });
 
-  it('is invalid once the field has errors', () => {
+  it('is invalid once the field has errors', async () => {
     const { container } = renderForm(false);
-    fireEvent.submit(container.querySelector('form')!);
+    await user.click(container.querySelector('[type="submit"]')!);
 
     expect(invalidCheckboxes(container)).toHaveLength(2);
   });
 
-  it('is not invalid when ui:hideError hides those errors', () => {
+  it('is not invalid when ui:hideError hides those errors', async () => {
     const { container } = renderForm(true);
-    fireEvent.submit(container.querySelector('form')!);
+    await user.click(container.querySelector('[type="submit"]')!);
 
     expect(invalidCheckboxes(container)).toHaveLength(0);
   });
