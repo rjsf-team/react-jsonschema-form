@@ -749,7 +749,7 @@ export type FieldTemplateProps<
   /** A component instance rendering any `ui:help` uiSchema directive defined */
   help?: ReactElement;
   /** A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed
-   * `ui:help` is a React component instead of a string
+   * `ui:help` is a React element instead of a string
    */
   rawHelp?: string;
   /** A boolean value stating if the field should be hidden */
@@ -1422,12 +1422,18 @@ type UnionToMergedKeys<U> = {
  */
 type DeclaresKey<Then, K extends PropertyKey> = string extends keyof Then ? false : K extends keyof Then ? true : false;
 
+/** @internal Whether a `Checks` member written for `When` applies to form-data type `T`: when any member of a union
+ * `T` matches, or when `T` is unknown, since data of an unknown type could be any of them (as it could when `T`
+ * defaulted to `any`).
+ */
+type ChecksApply<T, When> = unknown extends T ? true : true extends (T extends When ? true : false) ? true : false;
+
 /** @internal The union of `then.widget` names valid for form-data type `T`, drawn from `Checks`. */
 type WidgetsFor<T, Checks> =
   Checks extends UiOptionsCheck<infer When, infer Then>
     ? DeclaresKey<Then, 'widget'> extends true
       ? Then extends { widget?: infer W }
-        ? T extends When
+        ? ChecksApply<T, When> extends true
           ? W
           : never
         : never
@@ -1439,7 +1445,7 @@ type FieldsFor<T, Checks> =
   Checks extends UiOptionsCheck<infer When, infer Then>
     ? DeclaresKey<Then, 'field'> extends true
       ? Then extends { field?: infer Fl }
-        ? T extends When
+        ? ChecksApply<T, When> extends true
           ? Fl
           : never
         : never
@@ -1451,7 +1457,7 @@ type FieldsFor<T, Checks> =
  */
 type RawOptsFor<T, Checks> = UnionToMergedKeys<
   Checks extends UiOptionsCheck<infer When, infer Then>
-    ? T extends When
+    ? ChecksApply<T, When> extends true
       ? Omit<Then, 'widget' | 'field'>
       : never
     : never

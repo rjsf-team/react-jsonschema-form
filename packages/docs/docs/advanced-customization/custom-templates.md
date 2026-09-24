@@ -832,7 +832,7 @@ The following props are passed to a custom field template component:
 - `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect.
 - `errorSchema`: The tree of errors for this field and its children, carrying every error whatever `hideError` says.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.
-- `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React component instead of a string.
+- `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React element instead of a string.
 - `hidden`: A boolean value stating if the field should be hidden.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.

@@ -1146,7 +1146,7 @@ const uiSchema: MyUiSchema<{ active: boolean }> = {
 
 ### Known gaps
 
-- With no form-data type (`T` defaulting to `any`), a closed `UiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
+- With no form-data type (`T` defaulting to `unknown`), a closed `UiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`, every one of them, since data of an unknown type could match any `when`. The nested keys of such a `UiSchema` are not narrowed at all. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
 - A field whose form-data shape includes an index signature (e.g. from `additionalProperties`/`patternProperties`) only gets type-checking for its explicitly-declared keys; dynamic keys are type-checked but without narrowing beyond the index signature's value type.
 
 ### Applying it to an inline uiSchema with `satisfies`

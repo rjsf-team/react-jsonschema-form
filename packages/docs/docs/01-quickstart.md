@@ -148,7 +148,7 @@ import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const App = () => {
-  const [formData, setFormData] = React.useState(null);
+  const [formData, setFormData] = React.useState<string>();
   return (
     <Form
       schema={{ type: 'string' }}

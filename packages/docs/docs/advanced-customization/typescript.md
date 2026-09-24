@@ -232,7 +232,7 @@ import React from 'react';
 import { WidgetProps } from '@rjsf/utils';
 import { ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { generateTheme } from '@rjsf/mui';
+import { Templates, generateTheme } from '@rjsf/mui';
 
 interface FormData {
   foo?: string;
@@ -255,7 +255,7 @@ interface FormContext {
 
 const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
-const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
+const OldBaseInputTemplate = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps<FormData, MySchema, FormContext>) {
