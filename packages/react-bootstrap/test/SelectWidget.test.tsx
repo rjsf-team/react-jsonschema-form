@@ -1,8 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('SelectWidget', () => {
   const enumOptions = [
@@ -103,7 +106,7 @@ describe('SelectWidget', () => {
     consoleError.mockRestore();
   });
 
-  test('fires onChange with the correct value for a grouped option', () => {
+  test('fires onChange with the correct value for a grouped option', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <SelectWidget
@@ -124,7 +127,7 @@ describe('SelectWidget', () => {
 
     const select = container.querySelector('select')!;
     const bazOption = container.querySelector<HTMLOptionElement>('optgroup[label="Group B"] option')!;
-    fireEvent.change(select, { target: { value: bazOption.value } });
+    await user.selectOptions(select, bazOption.value);
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
@@ -151,6 +154,10 @@ describe('SelectWidget', () => {
     const select = container.querySelector('select')!;
     const optionFor = (label: string) =>
       Array.from(select.querySelectorAll('option')).find((option) => option.textContent === label)!;
+    // fireEvent.change is used instead of user.selectOptions() because the widget is rendered with a fixed
+    // `value` that never updates, so each click user-event makes would be reverted by the re-render and only
+    // the last pick would survive. Selecting both options up front reports them in a single change, which is
+    // what a browser does for a multiple select.
     optionFor('Foo').selected = true;
     optionFor('Baz').selected = true;
     fireEvent.change(select);

@@ -56,6 +56,11 @@ describe('mantine SelectWidget optgroups', () => {
       },
     });
 
+    // fireEvent.click is used instead of user.click() because jsdom lays every element out at zero size; once
+    // that reaches floating-ui's `hide()` middleware (which Mantine's Combobox dropdown always applies), it
+    // marks the dropdown `referenceHidden` and sets `display: none`, and `getByRole` then can't find the
+    // (still-present) options. That recomputation runs asynchronously, so a synchronous `fireEvent.click`
+    // beats it, but any `await` — which `user-event` requires for every interaction — gives it time to run.
     fireEvent.click(screen.getByRole('combobox'));
 
     expect(screen.getByText('Group A')).toBeInTheDocument();
@@ -76,6 +81,7 @@ describe('mantine SelectWidget optgroups', () => {
       },
     });
 
+    // See the fireEvent.click comment above.
     fireEvent.click(screen.getByRole('combobox'));
 
     expect(screen.getByRole('option', { name: 'Foo' })).not.toHaveAttribute('data-combobox-disabled');
@@ -95,6 +101,7 @@ describe('mantine SelectWidget optgroups', () => {
       },
     });
 
+    // See the fireEvent.click comment above.
     fireEvent.click(screen.getByRole('combobox'));
     fireEvent.click(screen.getByRole('option', { name: 'Baz' }));
 
@@ -113,7 +120,9 @@ describe('mantine SelectWidget optgroups', () => {
     });
 
     const combobox = screen.getByRole('combobox');
-    // Mantine ignores an input change made while the input isn't focused, treating it as a browser autofill
+    // Mantine ignores an input change made while the input isn't focused, treating it as a browser autofill.
+    // These stay on fireEvent for the same reason as the fireEvent.click comment above: an awaited
+    // user-event interaction gives floating-ui's async `hide()` recomputation time to close the dropdown.
     combobox.focus();
     fireEvent.click(combobox);
     fireEvent.change(combobox, { target: { value: 'ba' } });

@@ -69,7 +69,6 @@
     "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.6",
     "@types/json-schema": "^7.0.15",
     "ajv": "^8.20.0",
     "markdown-to-jsx": "^9.8.2"

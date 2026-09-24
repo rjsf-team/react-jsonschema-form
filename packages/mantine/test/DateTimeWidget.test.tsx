@@ -1,8 +1,11 @@
 import { MantineProvider } from '@mantine/core';
 import type { WidgetProps } from '@rjsf/utils';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import DateTimeWidget from '../src/widgets/DateTime/DateTimeWidget.tsx';
+
+const user = userEvent.setup();
 
 function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
   return {
@@ -34,25 +37,25 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
 }
 
 describe('DateTimeWidget', () => {
-  test('commits a value with a timezone offset for format=date-time', () => {
+  test('commits a value with a timezone offset for format=date-time', async () => {
     const onChange = vi.fn();
     const { container } = renderWidget({ onChange });
 
-    fireEvent.change(container.querySelector<HTMLInputElement>('input#root')!, {
-      target: { value: '2024-01-01 10:30:00' },
-    });
+    const input = container.querySelector<HTMLInputElement>('input#root')!;
+    await user.click(input);
+    await user.paste('2024-01-01 10:30:00');
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2024-01-01T\d{2}:\d{2}:00(?:\.\d{3})?Z$/));
   });
 
   describe('with schema.format = iso-date-time', () => {
-    test('commits a naive value with a "T" separator, matching the other themes, without a timezone offset', () => {
+    test('commits a naive value with a "T" separator, matching the other themes, without a timezone offset', async () => {
       const onChange = vi.fn();
       const { container } = renderWidget({ onChange, schema: { type: 'string', format: 'iso-date-time' } });
 
-      fireEvent.change(container.querySelector<HTMLInputElement>('input#root')!, {
-        target: { value: '2024-01-01T10:30:00' },
-      });
+      const input = container.querySelector<HTMLInputElement>('input#root')!;
+      await user.click(input);
+      await user.paste('2024-01-01T10:30:00');
 
       expect(onChange).toHaveBeenCalledWith('2024-01-01T10:30:00');
     });

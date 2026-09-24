@@ -1,9 +1,12 @@
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import SelectWidget from '../src/SelectWidget/SelectWidget.tsx';
+
+const user = userEvent.setup();
 
 const mockSchema: RJSFSchema = { type: 'string' };
 
@@ -54,7 +57,7 @@ describe('SelectWidget', () => {
     );
 
     await screen.findByRole('combobox');
-    fireEvent.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('combobox'));
 
     expect(screen.getByRole('group', { name: 'Group A' })).toBeInTheDocument();
     // The placeholder option plus the 4 enum options (2 grouped, 2 ungrouped)
@@ -76,7 +79,7 @@ describe('SelectWidget', () => {
     );
 
     await screen.findByRole('combobox');
-    fireEvent.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('combobox'));
 
     expect(screen.getByRole('group', { name: '0' })).toBeInTheDocument();
     expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
@@ -101,8 +104,8 @@ describe('SelectWidget', () => {
     );
 
     await screen.findByRole('combobox');
-    fireEvent.click(screen.getByRole('combobox'));
-    fireEvent.click(screen.getByRole('option', { name: 'Baz' }));
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'Baz' }));
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });

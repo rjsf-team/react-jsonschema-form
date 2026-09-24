@@ -1,9 +1,12 @@
 import { formTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
+
+const user = userEvent.setup();
 
 formTests(Form);
 
@@ -42,7 +45,7 @@ describe('antd specific tests', () => {
     expect(container.querySelector('input#root_age')).toHaveAttribute('required');
   });
 
-  test('clearing an optional integer field removes the value instead of setting null', () => {
+  test('clearing an optional integer field removes the value instead of setting null', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -57,8 +60,8 @@ describe('antd specific tests', () => {
     const { container } = render(<Form schema={schema} validator={validator} onChange={onChange} />);
     const input = container.querySelector('input#root_age') as HTMLInputElement;
 
-    fireEvent.change(input, { target: { value: '1' } });
-    fireEvent.change(input, { target: { value: '' } });
+    await user.type(input, '1');
+    await user.clear(input);
 
     const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
     expect(lastCall.formData).toEqual({});

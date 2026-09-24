@@ -1,7 +1,10 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import TimeWidget from '../src/widgets/TimeWidget/TimeWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('TimeWidget', () => {
   test('strips a timezone offset from the value for display', () => {
@@ -9,20 +12,21 @@ describe('TimeWidget', () => {
     expect(container.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
   });
 
-  test('appends the local timezone offset and pads seconds when the value is changed', () => {
+  test('appends the local timezone offset and pads seconds when the value is changed', async () => {
     const onChange = vi.fn();
     const { container } = render(<TimeWidget {...makeWidgetMockProps({ value: '', onChange })} />);
 
-    fireEvent.change(container.querySelector<HTMLInputElement>('[type=time]')!, { target: { value: '11:10' } });
+    await user.click(container.querySelector<HTMLInputElement>('[type=time]')!);
+    await user.paste('11:10');
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^11:10:00(?:Z|[+-]\d{2}:\d{2})$/));
   });
 
-  test('calls onChange with an empty string when cleared', () => {
+  test('calls onChange with an empty string when cleared', async () => {
     const onChange = vi.fn();
     const { container } = render(<TimeWidget {...makeWidgetMockProps({ value: '11:10:00Z', onChange })} />);
 
-    fireEvent.change(container.querySelector<HTMLInputElement>('[type=time]')!, { target: { value: '' } });
+    await user.clear(container.querySelector<HTMLInputElement>('[type=time]')!);
 
     expect(onChange).toHaveBeenCalledWith('');
   });
@@ -30,11 +34,12 @@ describe('TimeWidget', () => {
   describe('with schema.format = iso-time', () => {
     const schema = { type: 'string' as const, format: 'iso-time' };
 
-    test('pads seconds but does not add a timezone offset when the value is changed', () => {
+    test('pads seconds but does not add a timezone offset when the value is changed', async () => {
       const onChange = vi.fn();
       const { container } = render(<TimeWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
-      fireEvent.change(container.querySelector<HTMLInputElement>('[type=time]')!, { target: { value: '11:10' } });
+      await user.click(container.querySelector<HTMLInputElement>('[type=time]')!);
+      await user.paste('11:10');
 
       expect(onChange).toHaveBeenCalledWith('11:10:00');
     });

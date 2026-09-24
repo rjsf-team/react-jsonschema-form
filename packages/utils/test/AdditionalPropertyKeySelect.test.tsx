@@ -1,5 +1,6 @@
 /** @vitest-environment jsdom */
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import type { AdditionalPropertyKeySelectProps, Registry, RJSFSchema, WidgetProps } from '../src/index.ts';
 import { AdditionalPropertyKeySelect } from '../src/index.ts';
@@ -28,6 +29,8 @@ function SelectWidget({ id, label, options, value, disabled, readonly, required,
   );
 }
 
+const user = userEvent.setup();
+
 const registry = { widgets: { SelectWidget } } as unknown as Registry;
 
 const baseProps: AdditionalPropertyKeySelectProps = {
@@ -53,10 +56,10 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(select).toHaveValue('a');
   });
 
-  it('renames the key to the selected name', () => {
+  it('renames the key to the selected name', async () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
 
-    fireEvent.change(container.querySelector('#root_a-key')!, { target: { value: 'b' } });
+    await user.selectOptions(container.querySelector('#root_a-key')!, 'b');
 
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });

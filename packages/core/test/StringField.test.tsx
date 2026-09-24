@@ -1085,7 +1085,8 @@ describe('StringField', () => {
         });
 
         const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
-        fireEvent.change(dateNode, { target: { value: '2016-04-05T14:01' } });
+        await user.click(dateNode);
+        await user.paste('2016-04-05T14:01');
         await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, '2016-04-05T14:01:00', true);
@@ -1267,6 +1268,10 @@ describe('StringField', () => {
 
       const newTime = '11:10:12';
       const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      // fireEvent.change is used instead of user.click() + user.paste() because user-event cannot enter a
+      // seconds-precision time at all: every edit to a type=time input goes through its buildTimeValue, which
+      // strips non-digits and rebuilds the value as HH:MM with minutes capped at 59, so '11:10:12' lands on
+      // '11:59' — and the step=1 this schema's multipleOf produces renders that as '11:59:00'
       fireEvent.change(input, { target: { value: newTime } });
 
       expect(input).toHaveValue(newTime);
@@ -1281,7 +1286,8 @@ describe('StringField', () => {
       });
 
       const input = node.querySelector<HTMLInputElement>('[type=time]')!;
-      fireEvent.change(input, { target: { value: '11:10' } });
+      await user.click(input);
+      await user.paste('11:10');
       await submitForm(node, user);
 
       const [[submission]] = onSubmit.mock.calls;
@@ -1447,7 +1453,8 @@ describe('StringField', () => {
         });
 
         const input = node.querySelector<HTMLInputElement>('[type=time]')!;
-        fireEvent.change(input, { target: { value: '11:10' } });
+        await user.click(input);
+        await user.paste('11:10');
         await submitForm(node, user);
 
         expectToHaveBeenCalledWithFormData(onSubmit, '11:10:00', true);
@@ -2437,8 +2444,9 @@ describe('StringField', () => {
 
       const newColor = '#654321';
 
-      // fireEvent.change is used instead of user.type() because jsdom enforces the HTML spec sanitization algorithm
-      // for color inputs, rejecting each intermediate value as an invalid string and resetting it to ''.
+      // fireEvent.change is used because user-event cannot edit a color input at all: `color` is absent from its
+      // editableInputTypes list, so click() + paste() is a silent no-op that would leave this assertion testing
+      // nothing rather than failing.
       act(() => {
         fireEvent.change(node.querySelector('[type=color]')!, {
           target: { value: newColor },
@@ -2589,6 +2597,8 @@ describe('StringField', () => {
         formData: 'data:text/plain;name=file1.txt;base64,x=',
       });
 
+      // fireEvent.change is used instead of user.upload() because this clears the selection rather than making
+      // one, and user.upload() has no way to express an empty file list
       fireEvent.change(node.querySelector('[type=file]')!, { target: { files: [] } });
 
       expect(onChange).not.toHaveBeenCalled();

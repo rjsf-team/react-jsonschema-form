@@ -989,10 +989,9 @@ describe('uiSchema', () => {
           },
         });
 
-        // fireEvent.change is used instead of user.paste() because jsdom does not process paste
-        // events on color inputs — they have no editable text field in the DOM model and ignore
-        // clipboard events entirely. user.type() also fails because jsdom's sanitization algorithm
-        // rejects each intermediate character as an invalid color string.
+        // fireEvent.change is used because user-event cannot edit a color input at all: `color` is absent
+        // from its editableInputTypes list, so neither paste() nor type() reaches the value — both are
+        // silent no-ops that would leave this assertion testing nothing rather than failing.
         act(() => {
           fireEvent.change(node.querySelector('[type=color]')!, {
             target: {
@@ -3007,7 +3006,7 @@ describe('uiSchema', () => {
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
-    it('does not honor required set via ui:globalOptions', () => {
+    it('does not honor required set via ui:globalOptions', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3019,11 +3018,11 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    it('does not honor required set via ui:globalOptions when rendered via LayoutGridField', () => {
+    it('does not honor required set via ui:globalOptions when rendered via LayoutGridField', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3039,11 +3038,11 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    it('does not honor required set via the grid config uiProps for a cell', () => {
+    it('does not honor required set via the grid config uiProps for a cell', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3058,7 +3057,7 @@ describe('uiSchema', () => {
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
 
@@ -3233,7 +3232,7 @@ describe('uiSchema', () => {
       expect(countryInput).toHaveValue('');
     });
 
-    it('extends ui:emptyValue to apply on initial render, not just on widget clear', () => {
+    it('extends ui:emptyValue to apply on initial render, not just on widget clear', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -3244,7 +3243,7 @@ describe('uiSchema', () => {
         name: { 'ui:emptyValue': 'unnamed' },
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
-      fireEvent.submit(node);
+      await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, { name: 'unnamed' }, true);
     });
 
