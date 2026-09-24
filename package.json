@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
-    "lint": "nx run-many --target=lint",
+    "lint": "nx run-many --parallel=2 --target=lint",
     "typecheck": "tsc --build --builders 4 --checkers 1",
     "knip": "knip",
     "cs-check": "nx run-many --target=cs-check",
