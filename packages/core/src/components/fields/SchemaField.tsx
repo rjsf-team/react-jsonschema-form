@@ -153,15 +153,18 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // A `ui:widget` given as a component is left alone too, for the same reason a `ui:field` is: the caller wrote a
   // control for this very schema, unions included, so wrapping it in a type selector that pins the type and casts the
   // value on every switch would take away what it was written to do. A widget named by string is a theme's control for
-  // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead
+  // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead.
+  // A schema with no type of its own still gets the selector whatever the widget is, the way an unrecognized `type`
+  // already does: it lists no types for such a control to handle, so the widget renders within it for the chosen one
+  const hasGuessedType = GUESSED_TYPE_FLAG in schema;
   const isNamedWidget = !widget || typeof widget === 'string';
   if (
     globalFormOptions.useFallbackUiForUnsupportedType &&
-    isNamedWidget &&
+    (isNamedWidget || hasGuessedType) &&
     !isSelectSchema &&
     !schema.enum &&
     !isConstant<S>(schema) &&
-    (getUnionTypes<S>(schema) || GUESSED_TYPE_FLAG in schema)
+    (getUnionTypes<S>(schema) || hasGuessedType)
   ) {
     componentName = 'FallbackField';
   }

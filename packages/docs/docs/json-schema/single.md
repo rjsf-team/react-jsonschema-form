@@ -255,3 +255,4 @@ A list naming an unrecognized type alongside a recognized one offers only the re
 
 The field around the value and the field for the value share one label between them, so the schema's `title` and `description` are rendered once whichever type is chosen.
 A union that resolves to a type whose field renders no label of its own — an `object` or a `boolean` first in the list — has the value field render them.
+A `ui:options.label` of `false` turns the type selector's own label off along with the field's, since the selector is one of the controls within the field the caller asked for no label of.

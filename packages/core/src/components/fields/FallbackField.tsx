@@ -292,7 +292,6 @@ function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   const {
     id,
     formData,
-    displayLabel = true,
     schema,
     name,
     uiSchema,
@@ -347,6 +346,13 @@ function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
 
   const schemaTitle = translateString(TranslatableString.Type);
   const typesOptionSchema = useMemo(() => getFallbackTypeSelectionSchema(types, schemaTitle), [types, schemaTitle]);
+  // The selector is a control of its own within the field, so the `ui:options.label` that turns the field's own label
+  // off turns the selector's off with it. Nothing else in the caller's `uiSchema` describes the selector — the rest
+  // describes the value — so that one option is all it is given
+  const typeSelectorUiSchema = useMemo(() => {
+    const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+    return label === false ? ({ [UI_OPTIONS_KEY]: { label } } as UiSchema<T, S, F>) : undefined;
+  }, [uiSchema, globalUiOptions]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so
   // that exactly one of the two fields renders them: the outer one when it labels the value, the value field otherwise
@@ -399,12 +405,12 @@ function FallbackUiField<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
           id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
           name={`${name}__fallback_type`}
           schema={typesOptionSchema as S}
+          uiSchema={typeSelectorUiSchema}
           formData={type as T}
           onChange={onTypeChange}
           onBlur={onBlur}
           onFocus={onFocus}
           registry={registry}
-          hideLabel={!displayLabel}
           disabled={disabled}
           readonly={readonly}
         />
