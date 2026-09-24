@@ -1190,7 +1190,9 @@ describe('Deriving state from changed props', () => {
 
     expect(container.querySelector('label')).toHaveTextContent('A2');
   });
+});
 
+describe('customValidate', () => {
   it('hands customValidate data computed with the defaultFormStateBehavior of the form', async () => {
     const schema: RJSFSchema = {
       type: 'object',

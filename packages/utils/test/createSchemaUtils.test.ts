@@ -144,6 +144,17 @@ describe('createSchemaUtils()', () => {
         ).toBe(true);
       });
     });
+
+    describe('constructed from a context that is later mutated', () => {
+      it('returns true, having snapshotted the context it was constructed with', () => {
+        const context = { validator: testValidator, defaultFormStateBehavior };
+        const mutatedUtils = createSchemaUtils(context, rootSchema);
+
+        context.defaultFormStateBehavior = { arrayMinItems: { populate: 'all' } };
+
+        expect(mutatedUtils.doesSchemaUtilsDiffer(context, rootSchema)).toBe(true);
+      });
+    });
   });
   describe('retrieveSchema() identity retention', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
