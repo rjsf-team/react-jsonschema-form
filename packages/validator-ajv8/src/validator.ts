@@ -3,6 +3,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -179,6 +180,7 @@ export default class AJV8Validator<
    * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
    * transform them in what ever way it chooses.
    *
+   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
@@ -186,6 +188,7 @@ export default class AJV8Validator<
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
+    context: Readonly<SchemaContext<T, S, F>>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -194,7 +197,7 @@ export default class AJV8Validator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { ...context, validator: this },
       rawErrors,
       formData,
       schema,

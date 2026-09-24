@@ -15,7 +15,10 @@ describe('createSchemaUtils()', () => {
   const defaultFormStateBehavior: DefaultFormStateBehavior = {
     arrayMinItems: { populate: 'requiredOnly' },
   };
-  const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema, defaultFormStateBehavior);
+  const schemaUtils: SchemaUtilsType = createSchemaUtils(
+    { validator: testValidator, defaultFormStateBehavior },
+    rootSchema,
+  );
 
   it('getRootSchema()', () => {
     expect(schemaUtils.getRootSchema()).toEqual(rootSchema);
@@ -25,9 +28,13 @@ describe('createSchemaUtils()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
   });
 
+  it('getSchemaContext()', () => {
+    expect(schemaUtils.getSchemaContext()).toEqual({ validator: testValidator, defaultFormStateBehavior });
+  });
+
   it('getUiRequiredErrorSchema()', () => {
     const requiredSchema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
-    const requiredUtils = createSchemaUtils(testValidator, requiredSchema);
+    const requiredUtils = createSchemaUtils({ validator: testValidator }, requiredSchema);
     const errorSchema = requiredUtils.getUiRequiredErrorSchema({ nick: { 'ui:required': true } }, {});
     expect(errorSchema).toEqual({ nick: { __errors: ["must have required property 'nick'"] } });
   });
@@ -48,7 +55,10 @@ describe('createSchemaUtils()', () => {
         },
       },
     };
-    const schemaUtils2020: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema2020, defaultFormStateBehavior);
+    const schemaUtils2020: SchemaUtilsType = createSchemaUtils(
+      { validator: testValidator, defaultFormStateBehavior },
+      rootSchema2020,
+    );
 
     it('getRootSchema()', () => {
       expect(schemaUtils2020.getRootSchema()).toEqual({
@@ -68,48 +78,69 @@ describe('createSchemaUtils()', () => {
         $defs: { example: { type: 'integer' } },
         [PROPERTIES_KEY]: { ref: { [REF_KEY]: '#/$defs/example' } },
       };
-      const schemaUtilsNoId: SchemaUtilsType = createSchemaUtils(testValidator, noIdSchema, defaultFormStateBehavior);
+      const schemaUtilsNoId: SchemaUtilsType = createSchemaUtils(
+        { validator: testValidator, defaultFormStateBehavior },
+        noIdSchema,
+      );
       expect(schemaUtilsNoId.getRootSchema()).toEqual(noIdSchema);
     });
   });
 
   describe('doesSchemaUtilsDiffer()', () => {
     describe('constructed without defaultFormStateBehavior', () => {
-      const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema);
+      const schemaUtils: SchemaUtilsType = createSchemaUtils({ validator: testValidator }, rootSchema);
 
       it('returns false when not passing defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema)).toBe(false);
+        expect(schemaUtils.doesSchemaUtilsDiffer({ validator: testValidator }, rootSchema)).toBe(false);
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'requiredOnly' } }),
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } } },
+            rootSchema,
+          ),
         ).toBe(true);
       });
     });
 
     describe('constructed with defaultFormStateBehavior', () => {
       it('returns false when passing same validator, rootSchema, and defaultFormStateBehavior', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, defaultFormStateBehavior)).toBe(false);
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer({ validator: testValidator, defaultFormStateBehavior }, rootSchema),
+        ).toBe(false);
       });
       it('returns false when passing falsy validator', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(null as unknown as ValidatorType, {}, defaultFormStateBehavior)).toBe(
-          false,
-        );
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: null as unknown as ValidatorType, defaultFormStateBehavior },
+            {},
+          ),
+        ).toBe(false);
       });
       it('returns false when passing falsy rootSchema', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, null as unknown as RJSFSchema, defaultFormStateBehavior),
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: testValidator, defaultFormStateBehavior },
+            null as unknown as RJSFSchema,
+          ),
         ).toBe(false);
       });
       it('returns true when passing different validator', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(getTestValidator({}), {}, defaultFormStateBehavior)).toBe(true);
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer({ validator: getTestValidator({}), defaultFormStateBehavior }, {}),
+        ).toBe(true);
       });
       it('returns true when passing different rootSchema', () => {
-        expect(schemaUtils.doesSchemaUtilsDiffer(testValidator, {}, defaultFormStateBehavior)).toBe(true);
+        expect(schemaUtils.doesSchemaUtilsDiffer({ validator: testValidator, defaultFormStateBehavior }, {})).toBe(
+          true,
+        );
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'all' } }),
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: testValidator, defaultFormStateBehavior: { arrayMinItems: { populate: 'all' } } },
+            rootSchema,
+          ),
         ).toBe(true);
       });
     });
@@ -118,13 +149,13 @@ describe('createSchemaUtils()', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
 
     it('returns the same instance for a repeated call with the same inputs', () => {
-      const utils = createSchemaUtils(testValidator, rootSchema);
+      const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
       const first = utils.retrieveSchema(schema, {});
       expect(utils.retrieveSchema(schema, {})).toBe(first);
     });
 
     it('retains the previous instance when a recomputation is deeply equal', () => {
-      const utils = createSchemaUtils(testValidator, rootSchema);
+      const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
       const first = utils.retrieveSchema(schema, {});
       expect(utils.retrieveSchema(schema, { foo: 'bar' })).toBe(first);
     });
@@ -135,7 +166,7 @@ describe('createSchemaUtils()', () => {
         properties: { k: { type: 'string' } },
         dependencies: { k: { properties: { extra: { type: 'string' } } } },
       };
-      const utils = createSchemaUtils(testValidator, rootSchema);
+      const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
       const data: { k?: string } = {};
       expect(utils.retrieveSchema(conditional, data).properties).not.toHaveProperty('extra');
       data.k = 'a';
@@ -147,7 +178,7 @@ describe('createSchemaUtils()', () => {
         definitions: { s: { type: 'string' } },
         oneOf: [{ $ref: '#/definitions/s' }, { type: 'number' }],
       };
-      const utils = createSchemaUtils(testValidator, withRefs);
+      const utils = createSchemaUtils({ validator: testValidator }, withRefs);
       const plain = utils.retrieveSchema(withRefs, {});
       const resolved = utils.retrieveSchema(withRefs, {}, true);
       expect(resolved).not.toEqual(plain);
@@ -156,7 +187,7 @@ describe('createSchemaUtils()', () => {
     });
 
     it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {
-      const utils = createSchemaUtils(testValidator, rootSchema);
+      const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
       const first = utils.retrieveSchema(true as unknown as RJSFSchema, {});
       expect(first).toEqual({});
       expect(utils.retrieveSchema(true as unknown as RJSFSchema, {})).not.toBe(first);

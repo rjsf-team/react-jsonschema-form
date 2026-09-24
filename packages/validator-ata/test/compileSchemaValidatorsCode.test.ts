@@ -39,9 +39,9 @@ describe('compileSchemaValidatorsCode', () => {
     const validateFns = loadModule(code);
     const validator = createPrecompiledValidator(validateFns, schema);
 
-    const good = validator.validateFormData({ name: 'Mert', address: { city: 'Istanbul' } }, schema);
+    const good = validator.validateFormData({ validator }, { name: 'Mert', address: { city: 'Istanbul' } }, schema);
     expect(good.errors).toHaveLength(0);
-    const bad = validator.validateFormData({ name: 'Mert', address: {} }, schema);
+    const bad = validator.validateFormData({ validator }, { name: 'Mert', address: {} }, schema);
     expect(bad.errors.length).toBeGreaterThan(0);
   });
 
@@ -116,7 +116,7 @@ describe('compileSchemaValidatorsCode', () => {
       additionalProperties: { type: 'number' },
     };
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(apSchema)), apSchema);
-    const { errors } = validator.validateFormData({ a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
+    const { errors } = validator.validateFormData({ validator }, { a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
     expect(errors.map((e) => e.property).sort()).toEqual(['.also', '.bad']);
   });
 });

@@ -20,17 +20,16 @@ import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
 import type {
-  CustomMergeAllOf,
   ErrorSchema,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   UiSchemaDefinitions,
-  ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
@@ -50,12 +49,11 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rootSchema: S,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): SelectedBranch<T, S, F> {
   let keyword: typeof ONE_OF_KEY | typeof ANY_OF_KEY;
   if (ONE_OF_KEY in schema) {
@@ -70,13 +68,12 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     return { schema, uiSchema };
   }
   const index = getClosestMatchingOption<T, S, F>(
-    validator,
+    context,
     rootSchema,
     formData as T,
     options as S[],
     0,
     getDiscriminatorFieldFromSchema<S>(schema),
-    customMergeAllOf,
   );
   return {
     schema: mergeSchemas(remaining as S, options[index] as S) as S,
@@ -128,10 +125,9 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
-  validator: ValidatorType<T, S, F>;
+  schemaContext: Readonly<SchemaContext<T, S, F>>;
   rootSchema: S;
   uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
-  customMergeAllOf?: CustomMergeAllOf<S>;
   globalUiOptions?: GlobalUISchemaOptions;
   formContext?: F;
   builder: ErrorSchemaBuilder<T>;
@@ -146,7 +142,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   required: boolean,
   parentPresent: boolean,
 ) {
-  const { validator, rootSchema, uiSchemaDefinitions, customMergeAllOf, globalUiOptions, formContext, builder } = ctx;
+  const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, builder } = ctx;
   // A repeated $ref is never expanded again for rendering either (see SchemaField/CyclicSchemaField) — without this,
   // a recursive $ref reached through `ui:definitions` (the only thing that disables the prune below) would have
   // `retrieveSchema()` re-resolve the same cycle forever.
@@ -175,11 +171,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // cyclic $ref for it), and resolveAnyOfOrOneOfRefs also disables that flagging for plain (non-xxxOf) object
   // properties, so passing it unconditionally would spin forever on an ordinary recursive $ref.
   const resolvedSchema = retrieveSchema<T, S, F>(
-    validator,
+    schemaContext,
     schema,
     rootSchema,
     formData as T,
-    customMergeAllOf,
     ONE_OF_KEY in schema || ANY_OF_KEY in schema,
   );
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
@@ -202,12 +197,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return;
   }
   const { schema: retrieved, uiSchema: branchUiSchema } = resolveSelectedBranch<T, S, F>(
-    validator,
+    schemaContext,
     rootSchema,
     resolvedSchema,
     uiSchema,
     formData,
-    customMergeAllOf,
   );
   if (getSchemaType<S>(retrieved) === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
@@ -330,11 +324,10 @@ export default function getUiRequiredErrorSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rootSchema: S,
   uiSchema: UiSchema<T, S, F> | undefined,
   formData: T | undefined,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
   globalUiOptions?: GlobalUISchemaOptions,
   formContext?: F,
@@ -347,10 +340,9 @@ export default function getUiRequiredErrorSchema<
   }
   walk<T, S, F>(
     {
-      validator,
+      schemaContext: context,
       rootSchema,
       uiSchemaDefinitions: hasDefinitions ? uiSchemaDefinitions : undefined,
-      customMergeAllOf,
       globalUiOptions,
       formContext,
       builder,

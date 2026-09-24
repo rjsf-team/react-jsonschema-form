@@ -12,7 +12,7 @@ import {
 import type { TestValidatorType } from './types.ts';
 
 export default function findSelectedOptionInXxxOfTest(testValidator: TestValidatorType) {
-  const schemaUtils = createSchemaUtils(testValidator, {} as RJSFSchema);
+  const schemaUtils = createSchemaUtils({ validator: testValidator }, {} as RJSFSchema);
   describe('findSelectedOptionInXxxOf', () => {
     test('returns undefined when schema has no oneOfs', () => {
       expect(schemaUtils.findSelectedOptionInXxxOf({}, 'foo', ONE_OF_KEY)).toBeUndefined();

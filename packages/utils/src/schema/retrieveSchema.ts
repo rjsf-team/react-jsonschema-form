@@ -23,13 +23,12 @@ import isObject from '../isObject.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
-  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
@@ -38,11 +37,10 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
  * potentially recursive resolution.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs = false] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
@@ -51,21 +49,19 @@ export default function retrieveSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs = false,
 ): S {
   return retrieveSchemaInternal<T, S, F>(
-    validator,
+    context,
     schema,
     rootSchema,
     rawFormData,
     undefined,
     undefined,
-    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
   )[0];
 }
@@ -86,30 +82,28 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
  * conditions will be returned.
  *
- * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a condition is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
 export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   preserveDependencies = false,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
-  const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
+  const conditionValue = context.validator.isValid(expression as S, formData || ({} as T), rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
@@ -117,13 +111,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       const thenSchema = then as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
-          validator,
+          context,
           thenSchema,
           rootSchema,
           formData,
           expandAllBranches,
           recurseList,
-          customMergeAllOf,
           undefined,
           preserveDependencies,
         ),
@@ -133,13 +126,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       const otherwiseSchema = otherwise as unknown as S;
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
-          validator,
+          context,
           otherwiseSchema,
           rootSchema,
           formData,
           expandAllBranches,
           recurseList,
-          customMergeAllOf,
           undefined,
           preserveDependencies,
         ),
@@ -151,13 +143,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
       schemas = schemas.concat(
         retrieveSchemaInternal<T, S, F>(
-          validator,
+          context,
           conditionalSchema,
           rootSchema,
           formData,
           expandAllBranches,
           recurseList,
-          customMergeAllOf,
           undefined,
           preserveDependencies,
         ),
@@ -169,13 +160,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   }
   return resolvedSchemas.flatMap((s) =>
     retrieveSchemaInternal<T, S, F>(
-      validator,
+      context,
       s,
       rootSchema,
       formData,
       expandAllBranches,
       recurseList,
-      customMergeAllOf,
       undefined,
       preserveDependencies,
     ),
@@ -233,37 +223,34 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * down to the `retrieveSchemaInternal()`, `resolveReference()` and `resolveDependencies()` helper calls. If
  * `expandAllBranches` is true, then all possible dependencies and/or allOf branches are returned.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a schema is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
 export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
-    validator,
+    context,
     schema,
     rootSchema,
     expandAllBranches,
     recurseList,
     formData,
-    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
     preserveDependencies,
   );
@@ -274,36 +261,26 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   }
   if (DEPENDENCIES_KEY in schema && !preserveDependencies) {
     const resolvedSchemas = resolveDependencies<T, S, F>(
-      validator,
+      context,
       schema,
       rootSchema,
       expandAllBranches,
       recurseList,
       formData,
-      customMergeAllOf,
     );
     return resolvedSchemas.flatMap((s) =>
-      retrieveSchemaInternal<T, S, F>(
-        validator,
-        s,
-        rootSchema,
-        formData,
-        expandAllBranches,
-        recurseList,
-        customMergeAllOf,
-      ),
+      retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, recurseList),
     );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
     const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
       retrieveSchemaInternal<T, S, F>(
-        validator,
+        context,
         allOfSubschema as S,
         rootSchema,
         formData,
         expandAllBranches,
         recurseList,
-        customMergeAllOf,
         undefined,
         preserveDependencies,
       ),
@@ -322,26 +299,24 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * actually different than the original. Passes the `expandAllBranches` flag down to the `retrieveSchemaInternal()`
  * helper call.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a reference is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list schemas retrieved after having all references resolved
  */
 export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
@@ -349,13 +324,12 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   if (updatedSchema !== schema) {
     // Only call this if the schema was actually changed by the `resolveAllReferences()` function
     return retrieveSchemaInternal<T, S, F>(
-      validator,
+      context,
       updatedSchema,
       rootSchema,
       formData,
       expandAllBranches,
       recurseList,
-      customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
       preserveDependencies,
     );
@@ -589,24 +563,17 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
 
 /** Creates new 'properties' items for each key in the `formData`
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param theSchema - The schema for which the existing additional properties is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(
-  validator: ValidatorType<T, S, F>,
-  theSchema: S,
-  rootSchema?: S,
-  aFormData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
-): S {
+>(context: Readonly<SchemaContext<T, S, F>>, theSchema: S, rootSchema?: S, aFormData?: T): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -624,11 +591,10 @@ export function stubExistingAdditionalProperties<
       const matchingProperties = getMatchingPatternProperties(schema, key);
       if (Object.keys(matchingProperties).length > 0) {
         schema.properties[key] = retrieveSchema<T, S, F>(
-          validator,
+          context,
           { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
           rootSchema,
           formData[key],
-          customMergeAllOf,
         );
         (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
         return;
@@ -639,11 +605,10 @@ export function stubExistingAdditionalProperties<
       if (typeof schema.additionalProperties !== 'boolean') {
         if (REF_KEY in schema.additionalProperties!) {
           additionalProperties = retrieveSchema<T, S, F>(
-            validator,
+            context,
             { [REF_KEY]: (schema.additionalProperties as S)[REF_KEY] } as S,
             rootSchema,
             formData[key],
-            customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
           additionalProperties = { ...schema.additionalProperties };
@@ -689,14 +654,13 @@ function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
  * that is used to do the potentially recursive resolution. If `expandAllBranches` is true, then all possible branches
  * of the schema and its references, conditions and dependencies are returned.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
  * @param [recurseList=[]] - The optional, list of recursive references already processed
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The schema(s) resulting from having its conditions, additional properties, references and dependencies
@@ -707,13 +671,12 @@ export function retrieveSchemaInternal<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   rawFormData?: T,
   expandAllBranches = false,
   recurseList: string[] = [],
-  customMergeAllOf?: CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
@@ -721,13 +684,12 @@ export function retrieveSchemaInternal<
     return [{} as S];
   }
   const resolvedSchemas = resolveSchema<T, S, F>(
-    validator,
+    context,
     schema,
     rootSchema,
     expandAllBranches,
     recurseList,
     rawFormData,
-    customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
     preserveDependencies,
   );
@@ -735,13 +697,12 @@ export function retrieveSchemaInternal<
     let resolvedSchema = s;
     if (IF_KEY in resolvedSchema) {
       return resolveCondition<T, S, F>(
-        validator,
+        context,
         resolvedSchema,
         rootSchema,
         expandAllBranches,
         recurseList,
         rawFormData as T,
-        customMergeAllOf,
         preserveDependencies,
       );
     }
@@ -763,7 +724,9 @@ export function retrieveSchemaInternal<
             }
           }
         });
-        resolvedSchema = customMergeAllOf ? customMergeAllOf(resolvedSchema) : mergeAllOf(resolvedSchema);
+        resolvedSchema = context.customMergeAllOf
+          ? context.customMergeAllOf(resolvedSchema)
+          : mergeAllOf(resolvedSchema);
         // Re-apply collected Symbol properties that the merge dropped.
         for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
           (resolvedSchema as any)[sym] = allOfSymbols[sym];
@@ -781,13 +744,12 @@ export function retrieveSchemaInternal<
           const matchingProperties = getMatchingPatternProperties(acc, key);
           if (Object.keys(matchingProperties).length > 0) {
             [acc.properties[key]] = retrieveSchemaInternal<T, S, F>(
-              validator,
+              context,
               { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               getByPath<T>(rawFormData, key),
               undefined,
               undefined,
-              customMergeAllOf,
               undefined,
               preserveDependencies,
             );
@@ -804,13 +766,7 @@ export function retrieveSchemaInternal<
       PATTERN_PROPERTIES_KEY in resolvedSchema ||
       (ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false);
     if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(
-        validator,
-        resolvedSchema,
-        rootSchema,
-        rawFormData as T,
-        customMergeAllOf,
-      );
+      return stubExistingAdditionalProperties<T, S, F>(context, resolvedSchema, rootSchema, rawFormData as T);
     }
 
     return resolvedSchema;
@@ -821,7 +777,7 @@ export function retrieveSchemaInternal<
  * `retrieveSchemaInternal()` for the best matching option. If `expandAllBranches` is true, then a list of schemas for ALL
  * options are retrieved and returned.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
@@ -833,7 +789,7 @@ export function resolveAnyOrOneOfSchemas<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+>(context: Readonly<SchemaContext<T, S, F>>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
   if (Array.isArray(oneOf)) {
@@ -847,7 +803,7 @@ export function resolveAnyOrOneOfSchemas<
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     anyOrOneOf = anyOrOneOf.map((s) => resolveAllReferences(s, rootSchema, []));
     // Call this to trigger the set of isValid() calls that the schema parser will need
-    const option = getFirstMatchingOption<T, S, F>(validator, formData, anyOrOneOf, rootSchema, discriminator);
+    const option = getFirstMatchingOption<T, S, F>(context, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
       // Also trigger isValid() for the relaxed variants so that precompiled validators capture their hashes.
       // omitExtraData's handleOneOf relaxes additionalProperties:false → true before scoring; those mutated
@@ -856,7 +812,7 @@ export function resolveAnyOrOneOfSchemas<
       // of each option (as constructed internally by getFirstMatchingOption for options with properties) are
       // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
       const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
-      getFirstMatchingOption<T, S, F>(validator, formData, relaxed, rootSchema, discriminator);
+      getFirstMatchingOption<T, S, F>(context, formData, relaxed, rootSchema, discriminator);
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
     return [mergeSchemas(remaining, anyOrOneOf[option]) as S];
@@ -895,29 +851,27 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
 /** Resolves dependencies within a schema and its 'anyOf/oneOf' children. Passes the `expandAllBranches` flag down to
  * the `resolveAnyOrOneOfSchema()` and `processDependencies()` helper calls.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a dependency is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with their dependencies resolved
  */
 export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
   const resolvedSchemas = resolveAnyOrOneOfSchemas<T, S, F>(
-    validator,
+    context,
     remainingSchema as S,
     rootSchema,
     expandAllBranches,
@@ -925,14 +879,13 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   );
   return resolvedSchemas.flatMap((resolvedSchema) =>
     processDependencies<T, S, F>(
-      validator,
+      context,
       dependencies,
       resolvedSchema,
       rootSchema,
       expandAllBranches,
       recurseList,
       formData,
-      customMergeAllOf,
     ),
   );
 }
@@ -940,7 +893,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
 /** Processes all the `dependencies` recursively into the list of `resolvedSchema`s as needed. Passes the
  * `expandAllBranches` flag down to the `withDependentSchema()` and the recursive `processDependencies()` helper calls.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param dependencies - The set of dependencies that needs to be processed
  * @param resolvedSchema - The schema for which processing dependencies is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
@@ -948,18 +901,16 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema with the `dependencies` resolved into it
  */
 export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   dependencies: S['dependencies'],
   resolvedSchema: S,
   rootSchema: S,
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
@@ -976,7 +927,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
         schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
       } else if (isObject(dependencyValue)) {
         schemas = withDependentSchema<T, S, F>(
-          validator,
+          context,
           resolvedSchema,
           rootSchema,
           dependencyKey,
@@ -984,19 +935,17 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           expandAllBranches,
           recurseList,
           formData,
-          customMergeAllOf,
         );
       }
       return schemas.flatMap((schema) =>
         processDependencies<T, S, F>(
-          validator,
+          context,
           remainingDependencies,
           schema,
           rootSchema,
           expandAllBranches,
           recurseList,
           formData,
-          customMergeAllOf,
         ),
       );
     }
@@ -1026,7 +975,7 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
 /** Merges a dependent schema into the `schema` dealing with oneOfs and references. Passes the `expandAllBranches` flag
  * down to the `retrieveSchemaInternal()`, `resolveReference()` and `withExactlyOneSubschema()` helper calls.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a dependent schema is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param dependencyKey - The key name of the dependency
@@ -1035,11 +984,10 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData]- The current formData to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with the dependent schema resolved into them
  */
 export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,
@@ -1047,16 +995,14 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
-    validator,
+    context,
     dependencyValue,
     rootSchema,
     formData,
     expandAllBranches,
     recurseList,
-    customMergeAllOf,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -1070,12 +1016,12 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
       if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
         return [subschema as S];
       }
-      return resolveReference<T, S, F>(validator, subschema as S, rootSchema, expandAllBranches, recurseList, formData);
+      return resolveReference<T, S, F>(context, subschema as S, rootSchema, expandAllBranches, recurseList, formData);
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
       withExactlyOneSubschema<T, S, F>(
-        validator,
+        context,
         mergedSchema,
         rootSchema,
         dependencyKey,
@@ -1083,7 +1029,6 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         recurseList,
         formData,
-        customMergeAllOf,
       ),
     );
   });
@@ -1093,7 +1038,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  * true, then a list of schemas for ALL options are retrieved and returned. Passes the `expandAllBranches` flag down to
  * the `retrieveSchemaInternal()` helper call.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used to validate oneOf options
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a oneOf subschema is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param dependencyKey - The key name of the oneOf dependency
@@ -1102,7 +1047,6 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  *          as a list of schemas
  * @param recurseList - The list of recursive references already processed
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function withExactlyOneSubschema<
@@ -1110,7 +1054,7 @@ export function withExactlyOneSubschema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,
@@ -1118,7 +1062,6 @@ export function withExactlyOneSubschema<
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
     if (typeof subschema === 'boolean' || !subschema?.properties) {
@@ -1132,7 +1075,7 @@ export function withExactlyOneSubschema<
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
+      return context.validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
     }
     return false;
   });
@@ -1147,13 +1090,12 @@ export function withExactlyOneSubschema<
     const [dependentSubschema] = splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
     const dependentSchema = { ...subschema, properties: dependentSubschema };
     const schemas = retrieveSchemaInternal<T, S, F>(
-      validator,
+      context,
       dependentSchema,
       rootSchema,
       formData,
       expandAllBranches,
       recurseList,
-      customMergeAllOf,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });

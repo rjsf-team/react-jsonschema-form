@@ -64,10 +64,7 @@
     },
     "list": { "$ref": "#/definitions/list" },
     "single": {
-      "oneOf": [
-        { "$ref": "#/definitions/choice1" },
-        { "$ref": "#/definitions/choice2" }
-      ]
+      "oneOf": [{ "$ref": "#/definitions/choice1" }, { "$ref": "#/definitions/choice2" }]
     },
     "anything": {
       "type": "object",

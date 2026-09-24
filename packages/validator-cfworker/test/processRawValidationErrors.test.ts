@@ -153,7 +153,7 @@ describe('processRawValidationErrors()', () => {
 
   it('turns a validation exception into list and schema errors', () => {
     const validator = customizeValidator();
-    const result = processRawValidationErrors(validator, { validationError: new Error('bad schema') }, {}, schema);
+    const result = processRawValidationErrors({ validator }, { validationError: new Error('bad schema') }, {}, schema);
     expect(result.errors).toEqual([{ stack: 'bad schema' }]);
     expect(result.errorSchema.$schema?.__errors).toEqual(['bad schema']);
   });
@@ -163,7 +163,7 @@ describe('processRawValidationErrors()', () => {
     const uiSchema = { value: { 'ui:label': false } };
     const transform = vi.fn(() => [{ stack: 'transformed' }]);
     const result = processRawValidationErrors(
-      validator,
+      { validator },
       { errors: [rawError()] },
       { value: 1 },
       schema,
@@ -181,7 +181,7 @@ describe('processRawValidationErrors()', () => {
       errors.value.addError('custom error');
       return errors;
     });
-    const result = processRawValidationErrors(validator, { errors: [] }, { value: 'ok' }, schema, customValidate);
+    const result = processRawValidationErrors({ validator }, { errors: [] }, { value: 'ok' }, schema, customValidate);
     expect(customValidate).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), undefined, {});
     expect(result.errorSchema.value?.__errors).toEqual(['custom error']);
   });

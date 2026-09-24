@@ -7,7 +7,7 @@ const testValidator = getTestValidator({});
 describe('resolveDefaultWidget()', () => {
   it('defaults to "text" with no enumOptions when the schema has no enumerable options or registered format', () => {
     const schema: RJSFSchema = { type: 'string' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils)).toEqual({
       defaultWidget: 'text',
@@ -17,7 +17,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('defaults to "select" with enumOptions when the schema has enumerable options', () => {
     const schema: RJSFSchema = { type: 'string', enum: ['foo', 'bar'] };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     const { defaultWidget, enumOptions } = resolveDefaultWidget(schema, {}, schemaUtils);
 
@@ -30,7 +30,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('uses the schema format as the default widget when a widget is registered for it', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
     const registeredWidgets = { 'custom-format': (() => null) as unknown as Widget };
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets)).toEqual({
@@ -41,7 +41,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('ignores the schema format when no widget is registered for it', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils)).toEqual({
       defaultWidget: 'text',
@@ -51,7 +51,7 @@ describe('resolveDefaultWidget()', () => {
 
   it('defaults registeredWidgets to {} when omitted', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
-    const schemaUtils = createSchemaUtils(testValidator, schema);
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
     expect(resolveDefaultWidget(schema, {}, schemaUtils).defaultWidget).toEqual('text');
   });

@@ -14,6 +14,7 @@ import type {
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   SchemaUtilsType,
   TemplatesType,
   UiSchema,
@@ -363,10 +364,11 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   prev: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> | undefined,
 ): Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> {
   const { schema, validator, defaultFormStateBehavior, customMergeAllOf } = props;
-  if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(validator, schema, defaultFormStateBehavior, customMergeAllOf)) {
+  const schemaContext: SchemaContext<T, S, F> = { validator, defaultFormStateBehavior, customMergeAllOf };
+  if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
     return prev;
   }
-  const schemaUtils = createSchemaUtils<T, S, F>(validator, schema, defaultFormStateBehavior, customMergeAllOf);
+  const schemaUtils = createSchemaUtils<T, S, F>(schemaContext, schema);
   // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved schema (only
   // the schema's own top-level `dependencies`/`if` get resolved into it), so comparing the retrieved schema to the
   // previous one can't detect it (#5250). `hasNestedConditionalSchema` lets sanitization run anyway when that's
@@ -459,7 +461,14 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
 
   const schemaValidation = schemaUtils
     .getValidator()
-    .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
+    .validateFormData(
+      schemaUtils.getSchemaContext(),
+      validationFormData,
+      validationSchema,
+      customValidate,
+      transformErrors,
+      uiSchema,
+    );
   // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
   // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
   // Read off the same props as `uiSchema`, not the context's registry, which lags the props until the form commits

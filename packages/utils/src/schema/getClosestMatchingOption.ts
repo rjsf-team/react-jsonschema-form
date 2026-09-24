@@ -4,7 +4,7 @@ import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDisc
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
-import type { CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import retrieveSchema, { resolveAllReferences } from './retrieveSchema.ts';
 
@@ -35,19 +35,17 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  *   value has a `default` or `const`. In those case, if the `default` or `const` and the `formValue` match, the score
  *   is incremented by another 1 otherwise it is decremented by 1.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The score a schema against the formData
  */
 export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rootSchema: S,
   schema?: S,
   formData?: any,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): number {
   let totalScore = 0;
   if (schema) {
@@ -58,10 +56,8 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
           return score;
         }
         if (hasByPath(value, REF_KEY)) {
-          const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
-          return (
-            score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue || {}, customMergeAllOf)
-          );
+          const newSchema = retrieveSchema<T, S, F>(context, value as S, rootSchema, formValue);
+          return score + calculateIndexScore<T, S, F>(context, rootSchema, newSchema, formValue || {});
         }
         if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
           const xxxOfKey = hasByPath(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
@@ -69,24 +65,19 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
           return (
             score +
             getClosestMatchingOption<T, S, F>(
-              validator,
+              context,
               rootSchema,
               formValue,
               getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
-              customMergeAllOf,
             )
           );
         }
         if (value.type === 'object') {
           // If the structure is matching then give it a little boost in score
           const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-          return (
-            score +
-            structureBoost +
-            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, customMergeAllOf)
-          );
+          return score + structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value as S, formValue);
         }
         if (value.type === guessType(formValue)) {
           // If the types match, then we bump the score by one
@@ -125,14 +116,13 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * `calculateIndexScore()` on each, comparing it against the current best score, and returning the index of the one that
  * eventually has the best score.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param formData - The form data associated with the schema
  * @param options - The list of options that can be selected from
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
  */
 export default function getClosestMatchingOption<
@@ -140,13 +130,12 @@ export default function getClosestMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rootSchema: S,
   formData: T | undefined,
   options: S[],
   selectedOption = -1,
   discriminatorField?: string,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
@@ -159,7 +148,7 @@ export default function getClosestMatchingOption<
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
     const testOptions: S[] = [JUNK_OPTION as S, option];
-    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema, discriminatorField);
+    const match = getFirstMatchingOption<T, S, F>(context, formData, testOptions, rootSchema, discriminatorField);
     // The match is the real option, so add its index to list of valid indexes
     if (match === 1) {
       validList.push(index);
@@ -185,7 +174,7 @@ export default function getClosestMatchingOption<
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
       const option = resolvedOptions[index];
-      const score = calculateIndexScore(validator, rootSchema, option, formData, customMergeAllOf);
+      const score = calculateIndexScore(context, rootSchema, option, formData);
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

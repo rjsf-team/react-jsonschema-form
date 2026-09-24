@@ -1,12 +1,12 @@
 import { PROPERTIES_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import { getByPath } from '../pathUtils.ts';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` whose `validator` is used to match the options
  * @param formData - The current formData, if any, used to figure out a match
  * @param options - The list of options to find a matching options from
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
@@ -19,7 +19,7 @@ export default function getFirstMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  { validator }: Readonly<SchemaContext<T, S, F>>,
   formData: T | undefined,
   options: S[],
   rootSchema: S,

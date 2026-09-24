@@ -38,7 +38,7 @@ function getRegistry(rootSchema: RJSFSchema): Registry {
   return {
     formContext: {},
     rootSchema,
-    schemaUtils: createSchemaUtils(getTestValidator({}), rootSchema),
+    schemaUtils: createSchemaUtils({ validator: getTestValidator({}) }, rootSchema),
     translateString: englishStringTranslator,
     fields: {},
     widgets: {},

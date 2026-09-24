@@ -55,7 +55,7 @@ const ANY_OF_SCHEMA_ARRAY: RJSFSchema = {
 const registry: Registry = {
   formContext: {},
   rootSchema: TEST_ROOT_SCHEMA,
-  schemaUtils: createSchemaUtils(getTestValidator({}), TEST_ROOT_SCHEMA),
+  schemaUtils: createSchemaUtils({ validator: getTestValidator({}) }, TEST_ROOT_SCHEMA),
   translateString: englishStringTranslator,
   fields: {},
   widgets: {},

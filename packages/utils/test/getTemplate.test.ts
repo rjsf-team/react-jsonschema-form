@@ -10,7 +10,7 @@ const CustomTemplate = () => undefined;
 const registry: Registry = {
   formContext: {},
   rootSchema: {} as RJSFSchema,
-  schemaUtils: createSchemaUtils(getTestValidator({}), {}),
+  schemaUtils: createSchemaUtils({ validator: getTestValidator({}) }, {}),
   translateString: englishStringTranslator,
   templates: {
     ArrayFieldDescriptionTemplate: FakeTemplate,

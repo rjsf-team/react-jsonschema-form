@@ -1,6 +1,6 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
 import type { RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import { mergeSchemas, ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -22,7 +22,7 @@ describe('CFWorkerValidator', () => {
     expect(raw.validationError).toBeUndefined();
     expect(raw.errors?.some((error) => error.keyword === 'required')).toBe(true);
 
-    const result = validator.validateFormData(formData, schema);
+    const result = validator.validateFormData({ validator }, formData, schema);
     expect(result.errors.some((error) => error.name === 'required')).toBe(true);
     expect(result.errorSchema.email?.__errors?.length).toBeGreaterThan(0);
   });
@@ -42,10 +42,10 @@ describe('CFWorkerValidator', () => {
       type: 'object',
       properties: { price: { type: 'number', multipleOf: 0.01, minimum: 0 } },
     };
-    expect(validator.validateFormData({ price: 0.14 }, priceSchema).errors).toHaveLength(0);
+    expect(validator.validateFormData({ validator }, { price: 0.14 }, priceSchema).errors).toHaveLength(0);
 
     const additionalSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
-    const result = validator.validateFormData({ extra: 42 }, additionalSchema);
+    const result = validator.validateFormData({ validator }, { extra: 42 }, additionalSchema);
     expect(result.errors.some((error) => error.name === 'additionalProperties')).toBe(true);
     expect(result.errorSchema.extra?.__errors).toHaveLength(1);
   });
@@ -57,7 +57,7 @@ describe('CFWorkerValidator', () => {
       type: 'object',
       properties: { first: { type: 'string' }, second: { type: 'string' } },
     };
-    const result = validator.validateFormData({ first: 1, second: 2 }, schema);
+    const result = validator.validateFormData({ validator }, { first: 1, second: 2 }, schema);
     expect(result.errors.some((error) => error.property === '.first')).toBe(true);
     expect(result.errors.some((error) => error.property === '.second')).toBe(false);
   });
@@ -91,7 +91,7 @@ describe('CFWorkerValidator', () => {
       errors.value.addError('custom');
       return errors;
     });
-    const result = validator.validateFormData({}, schema, custom, transform, {});
+    const result = validator.validateFormData({ validator }, {}, schema, custom, transform, {});
     expect(transform).toHaveBeenCalled();
     expect(custom).toHaveBeenCalled();
     expect(result.errors[0].message).toBe('transformed');
@@ -103,7 +103,7 @@ describe('CFWorkerValidator', () => {
     const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
     const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
     const custom = vi.fn((_data, errors) => errors);
-    validator.validateFormData({}, schema, custom, undefined, uiSchema);
+    validator.validateFormData({ validator }, {}, schema, custom, undefined, uiSchema);
     expect(custom).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
   });
 
@@ -230,5 +230,39 @@ describe('package surface', () => {
     expect(typeof pkg.customizeValidator).toBe('function');
     expect(typeof pkg.CFWorkerValidator).toBe('function');
     expect(pkg.default).toBeInstanceOf(pkg.CFWorkerValidator);
+  });
+});
+
+describe('validateFormData() with a SchemaContext', () => {
+  it('computes the data handed to customValidate with the customMergeAllOf and defaultFormStateBehavior of the context', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
+      properties: { fixed: { type: 'string', const: 'constant' } },
+    };
+    const customMergeAllOf = vi.fn(
+      ({ allOf, ...rest }: RJSFSchema) => mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema,
+    );
+    const customValidate = vi.fn((_formData, errors) => errors);
+    validator.validateFormData(
+      { validator, customMergeAllOf, defaultFormStateBehavior: { constAsDefaults: 'never' } },
+      {},
+      schema,
+      customValidate,
+    );
+    expect(customMergeAllOf).toHaveBeenCalled();
+    expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
+  });
+
+  it('computes the data handed to customValidate with itself, whatever validator the context holds', () => {
+    const validator = customizeValidator();
+    const otherValidator = { isValid: vi.fn(() => true), validateFormData: vi.fn(), rawValidation: vi.fn() };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } },
+    };
+    validator.validateFormData({ validator: otherValidator }, { choice: 'b' }, schema, (_formData, errors) => errors);
+    expect(otherValidator.isValid).not.toHaveBeenCalled();
   });
 });

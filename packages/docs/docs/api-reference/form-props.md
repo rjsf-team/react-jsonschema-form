@@ -88,14 +88,14 @@ The signature and documentation for this property is as follow:
 
 ##### computeSkipPopulate &lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
+A function that determines whether to skip populating the array with default values based on the provided `SchemaContext`, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
 If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
 ###### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
-- schema: S - The schema for which resolving a condition is desired
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
 ###### Returns
@@ -125,7 +125,7 @@ const schema: RJSFSchema = {
   required: ['stringArray', 'numberArray'],
 };
 
-const computeSkipPopulateNumberArrays = (validator, schema, rootSchema) =>
+const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   // These conditions are needed to narrow down the type of the schema.items
   !Array.isArray(schema?.items) &&
   typeof schema?.items !== 'boolean' &&

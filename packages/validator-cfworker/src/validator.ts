@@ -4,6 +4,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -152,6 +153,7 @@ export default class CFWorkerValidator<
 
   /** Validates form data and applies RJSF error transformation and custom validation.
    *
+   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - A function that adds application-specific validation errors
@@ -160,6 +162,7 @@ export default class CFWorkerValidator<
    * @returns - The processed validation errors and error schema
    */
   validateFormData(
+    context: Readonly<SchemaContext<T, S, F>>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -168,7 +171,7 @@ export default class CFWorkerValidator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { ...context, validator: this },
       rawErrors,
       formData,
       schema,

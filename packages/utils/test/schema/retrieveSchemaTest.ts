@@ -57,11 +57,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       testValidator.reset?.();
     });
     it('returns empty object when schema is not an object', () => {
-      expect(retrieveSchema(testValidator, [] as RJSFSchema)).toEqual({});
+      expect(retrieveSchema({ validator: testValidator }, [] as RJSFSchema)).toEqual({});
     });
     it('tolerates a schema with an explicitly undefined `properties`', () => {
       const schema = { type: 'object', properties: undefined } as RJSFSchema;
-      expect(retrieveSchema(testValidator, schema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema)).toEqual({
         type: 'object',
         properties: {},
       });
@@ -79,7 +79,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       const rootSchema: RJSFSchema = { definitions: { address } };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual({
         ...address,
         [RJSF_REF_KEY]: '#/definitions/address',
       });
@@ -99,7 +99,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { address },
       };
 
-      expect(retrieveSchema(testValidator, schema, schema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
         definitions: { address },
         ...address,
         [RJSF_REF_KEY]: '#/definitions/address',
@@ -120,7 +120,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { address },
       };
 
-      expect(() => retrieveSchema(testValidator, schema, schema)).toThrow('Could not find a definition');
+      expect(() => retrieveSchema({ validator: testValidator }, schema, schema)).toThrow('Could not find a definition');
     });
     it('should give an error when JSON pointer does not point to anything', () => {
       const schema: RJSFSchema = {
@@ -128,7 +128,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { schemas: {} },
       };
 
-      expect(() => retrieveSchema(testValidator, schema, schema)).toThrow('Could not find a definition');
+      expect(() => retrieveSchema({ validator: testValidator }, schema, schema)).toThrow('Could not find a definition');
     });
     it('should `resolve` escaped JSON Pointers', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/a~0complex~1name' };
@@ -137,7 +137,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { 'a~complex/name': address },
       };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual({
         ...address,
         [RJSF_REF_KEY]: '#/definitions/a~0complex~1name',
       });
@@ -163,7 +163,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const rootSchema: RJSFSchema = { definitions: { address } };
       const formData = { newKey: {} };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
@@ -217,7 +217,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
@@ -255,7 +255,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const rootSchema: RJSFSchema = { definitions: { number } };
       const formData = { newKey: {} };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
@@ -283,7 +283,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = { newKey: {} };
-      expect(retrieveSchema(testValidator, schema, {}, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
@@ -311,7 +311,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = { newKey: {} };
-      expect(retrieveSchema(testValidator, schema, {}, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
@@ -331,7 +331,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = null;
-      expect(retrieveSchema(testValidator, schema, {}, formData)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
         ...schema,
         properties: {},
       });
@@ -347,14 +347,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       const rootSchema: RJSFSchema = { definitions: { address } };
 
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual({
         ...address,
         title: 'foo',
         [RJSF_REF_KEY]: '#/definitions/address',
       });
     });
     it('recursive ref should resolve once', () => {
-      const result = retrieveSchema(testValidator, RECURSIVE_REF, RECURSIVE_REF);
+      const result = retrieveSchema({ validator: testValidator }, RECURSIVE_REF, RECURSIVE_REF);
       const enumDef = RECURSIVE_REF.definitions!['@enum'] as RJSFSchema;
       expect(result).toEqual({
         definitions: RECURSIVE_REF.definitions,
@@ -385,7 +385,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
         $ref: '#/definitions/node',
       };
-      const result = retrieveSchema(testValidator, treeSchema, treeSchema);
+      const result = retrieveSchema({ validator: testValidator }, treeSchema, treeSchema);
       const nodeDef = treeSchema.definitions!.node as RJSFSchema;
       // children.items stays as the original $ref (no __rjsf_ref_cycle) because it's an array context
       expect(result).toEqual({
@@ -396,7 +396,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('recursive allof ref should resolve once', () => {
       const result = retrieveSchema(
-        testValidator,
+        { validator: testValidator },
         getByPath(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
         RECURSIVE_REF_ALLOF,
       );
@@ -415,7 +415,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const rootSchema: RJSFSchema = {
         type: 'object',
       };
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual(schema);
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual(schema);
     });
     it('should `resolve` refs inside of a properties key', () => {
       const entity: RJSFSchema = {
@@ -436,7 +436,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           entity,
         },
       };
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual({
         type: 'object',
         properties: {
           entity: {
@@ -463,7 +463,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           entity,
         },
       };
-      expect(retrieveSchema(testValidator, schema, rootSchema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, rootSchema)).toEqual({
         type: 'array',
         items: {
           ...entity,
@@ -491,7 +491,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         $defs: definitions,
         $ref: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
       };
-      expect(retrieveSchema(testValidator, schema, schema)).toEqual({
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
         $id: 'https://jsonschema.dev/schemas/examples/non-negative-integer-bundle',
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $defs: definitions,
@@ -505,7 +505,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         it('should not add required properties', () => {
           const rootSchema: RJSFSchema = { definitions: {} };
           const formData = {};
-          expect(retrieveSchema(testValidator, PROPERTY_DEPENDENCIES, rootSchema, formData)).toEqual({
+          expect(retrieveSchema({ validator: testValidator }, PROPERTY_DEPENDENCIES, rootSchema, formData)).toEqual({
             type: 'object',
             properties: {
               a: { type: 'string' },
@@ -525,7 +525,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             };
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -544,7 +544,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             };
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -558,7 +558,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           it('should concat required properties', () => {
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, PROPERTY_DEPENDENCIES, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, PROPERTY_DEPENDENCIES, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -576,7 +576,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           it('should not modify properties', () => {
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = {};
-            expect(retrieveSchema(testValidator, SCHEMA_DEPENDENCIES, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, SCHEMA_DEPENDENCIES, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -589,7 +589,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           it('should add properties', () => {
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, SCHEMA_DEPENDENCIES, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, SCHEMA_DEPENDENCIES, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -600,7 +600,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           it('should concat required properties', () => {
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, SCHEMA_AND_REQUIRED_DEPENDENCIES, rootSchema, formData)).toEqual({
+            expect(
+              retrieveSchema({ validator: testValidator }, SCHEMA_AND_REQUIRED_DEPENDENCIES, rootSchema, formData),
+            ).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -629,7 +631,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             };
             const rootSchema: RJSFSchema = { definitions: {} };
             const formData = { a: 'FOO' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string', enum: ['FOO'] },
@@ -663,7 +665,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             };
             const formData = { a: '1' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -711,7 +713,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             };
             const formData = { a: 'typeB' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { enum: ['typeA', 'typeB'] },
@@ -734,7 +736,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               definitions: undefined,
             };
             const formData = {};
-            expect(retrieveSchema(testValidator, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData)).toEqual({
+            expect(
+              retrieveSchema({ validator: testValidator }, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData),
+            ).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string' },
@@ -757,7 +761,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               definitions: undefined,
             };
             const formData = { a: 'int' };
-            expect(retrieveSchema(testValidator, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData)).toEqual({
+            expect(
+              retrieveSchema({ validator: testValidator }, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData),
+            ).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string', enum: ['int', 'bool'] },
@@ -781,7 +787,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               definitions: undefined,
             };
             const formData = { a: 'bool' };
-            expect(retrieveSchema(testValidator, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData)).toEqual({
+            expect(
+              retrieveSchema({ validator: testValidator }, schema, SCHEMA_AND_ONEOF_REF_DEPENDENCIES, formData),
+            ).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string', enum: ['int', 'bool'] },
@@ -814,7 +822,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 employee_accounts: false,
                 update_absences: 'BOTH',
               };
-              expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+              expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
                 type: 'object',
                 properties: {
                   employee_accounts: {
@@ -842,7 +850,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 employee_accounts: true,
                 update_absences: 'BOTH',
               };
-              expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+              expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
                 type: 'object',
                 properties: {
                   employee_accounts: {
@@ -910,7 +918,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             };
             const formData = { a: 'bool' };
-            expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+            expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
               type: 'object',
               properties: {
                 a: { type: 'string', enum: ['int', 'bool'] },
@@ -929,7 +937,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'string',
         });
       });
@@ -973,7 +981,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'array',
           items: {
             type: 'object',
@@ -1012,7 +1020,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({});
         expect(consoleWarnSpy).toHaveBeenCalledWith(
           expect.stringMatching(/could not merge subschemas in allOf/),
           expect.any(Error),
@@ -1026,7 +1034,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
         const { allOf, ...restOfSchema } = schema;
-        expect(retrieveSchemaInternal(testValidator, schema, rootSchema, formData, true)).toEqual([
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
           ...allOf!,
           restOfSchema,
         ]);
@@ -1042,7 +1050,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'string',
           minLength: 5,
           [RJSF_REF_KEY]: '#/definitions/1',
@@ -1063,7 +1071,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'string',
           minLength: 4,
           maxLength: 5,
@@ -1098,7 +1106,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
 
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf)).toEqual({
+        expect(retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData)).toEqual({
           type: 'object',
           properties: {
             string: { type: 'string' },
@@ -1130,7 +1138,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         };
 
-        expect(retrieveSchema(testValidator, schema, {}, {})).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, {}, {})).toEqual({
           $schema: 'http://json-schema.org/draft/2020-12/schema#',
           type: 'object',
           $defs: { string: { type: 'string' }, number: { type: 'number' } },
@@ -1151,7 +1159,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           country: 'United States of America',
           postal_code: '20500',
         };
-        expect(retrieveSchema(testValidator, SCHEMA_WITH_SINGLE_CONDITION, rootSchema, formData)).toEqual({
+        expect(
+          retrieveSchema({ validator: testValidator }, SCHEMA_WITH_SINGLE_CONDITION, rootSchema, formData),
+        ).toEqual({
           type: 'object',
           properties: {
             country: {
@@ -1174,7 +1184,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           country: 'Canada',
           postal_code: 'K1M 1M4',
         };
-        expect(retrieveSchema(testValidator, SCHEMA_WITH_SINGLE_CONDITION, rootSchema, formData)).toEqual({
+        expect(
+          retrieveSchema({ validator: testValidator }, SCHEMA_WITH_SINGLE_CONDITION, rootSchema, formData),
+        ).toEqual({
           type: 'object',
           properties: {
             country: {
@@ -1197,7 +1209,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           then: false,
         };
 
-        expect(retrieveSchema(testValidator, schema, schema, 13)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, 13)).toEqual({
           type: 'number',
           not: {},
         });
@@ -1214,7 +1226,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           then: true,
         };
 
-        expect(retrieveSchema(testValidator, schema, schema, 13)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, 13)).toEqual({
           type: 'number',
         });
       });
@@ -1273,7 +1285,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           animal: 'Cat',
         };
 
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'object',
           properties: {
             animal: {
@@ -1302,7 +1314,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
 
-        expect(retrieveSchema(testValidator, SCHEMA_WITH_MULTIPLE_CONDITIONS, rootSchema, formData)).toEqual({
+        expect(
+          retrieveSchema({ validator: testValidator }, SCHEMA_WITH_MULTIPLE_CONDITIONS, rootSchema, formData),
+        ).toEqual({
           type: 'object',
           properties: {
             Animal: {
@@ -1436,7 +1450,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = {
           animal: 'Cat',
         };
-        const schemaUtils = createSchemaUtils(testValidator, rootSchema);
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
 
         expect(schemaUtils.retrieveSchema(schema, formData)).toEqual({
           type: 'object',
@@ -1457,7 +1471,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           state: 'New York',
         };
 
-        expect(retrieveSchema(testValidator, SCHEMA_WITH_NESTED_CONDITIONS, rootSchema, formData)).toEqual({
+        expect(
+          retrieveSchema({ validator: testValidator }, SCHEMA_WITH_NESTED_CONDITIONS, rootSchema, formData),
+        ).toEqual({
           type: 'object',
           properties: {
             country: {
@@ -1492,7 +1508,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           type: 'object',
           properties: {
             myString: {
@@ -1519,7 +1535,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { properties: undefined },
           { properties: { foo: { type: 'string' } } },
         ];
-        expect(withExactlyOneSubschema(testValidator, schema, schema, 'bar', oneOf, false, [])).toEqual([schema]);
+        expect(withExactlyOneSubschema({ validator: testValidator }, schema, schema, 'bar', oneOf, false, [])).toEqual([
+          schema,
+        ]);
       });
     });
     describe('withPatternProperties()', () => {
@@ -1571,7 +1589,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           isValid: [true, false, true, false],
         });
         expect(
-          retrieveSchema(testValidator, schema, rootSchema, {
+          retrieveSchema({ validator: testValidator }, schema, rootSchema, {
             foo: { isString: true },
             bar: { isString: true },
           }),
@@ -1599,7 +1617,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           isValid: [false, true, false, true],
         });
         expect(
-          retrieveSchema(testValidator, schema, rootSchema, {
+          retrieveSchema({ validator: testValidator }, schema, rootSchema, {
             foo: { isString: false },
             bar: { isString: false },
           }),
@@ -1645,7 +1663,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
-        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
@@ -1663,14 +1681,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('stubExistingAdditionalProperties()', () => {
       it('deals with undefined formData', () => {
         const schema: RJSFSchema = { type: 'string' };
-        expect(stubExistingAdditionalProperties(testValidator, schema)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema)).toEqual({
           ...schema,
           properties: {},
         });
       });
       it('deals with non-object formData', () => {
         const schema: RJSFSchema = { type: 'string' };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, [])).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, [])).toEqual({
           ...schema,
           properties: {},
         });
@@ -1680,7 +1698,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: true,
         };
         const formData = { bar: 1, baz: false, foo: 'str' };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -1710,7 +1728,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: true,
         };
         const formData = { foo: 'blah', bar: 1, baz: true };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             ...schema.properties,
@@ -1727,7 +1745,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: { type: 'number' },
         };
         const formData = { bar: 1 };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -1742,7 +1760,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: {},
         };
         const formData = { foo: 'blah', bar: 1, baz: true };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
@@ -1770,7 +1788,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = { foo: 'a' };
         // The stub takes the guessed type and keeps the constraint, but is NOT marked as guessed: the schema
         // constrains the value, so the fallback UI must not offer it every other type
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
@@ -1788,7 +1806,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = { foo: 'a' };
         // Annotations say nothing about the value, so the property is still free to hold anything and the stub is
         // marked as guessed, letting the fallback UI offer every type
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
@@ -1818,7 +1836,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // property the types it is free to hold. The identifiers are not copied, since every stubbed sibling would
         // otherwise share them
         const { $id, $schema, ...copiedAnnotations } = annotations;
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: {
@@ -1841,8 +1859,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const formData = { foo: 'a' };
         // A container, a content annotation or a keyword not known at all must not lock the property's type in place
-        const stub = stubExistingAdditionalProperties(testValidator, schema, undefined, formData).properties!
-          .foo as RJSFSchema;
+        const stub = stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)
+          .properties!.foo as RJSFSchema;
         expect(GUESSED_TYPE_FLAG in stub).toBe(true);
         expect(stub.type).toBe('string');
         // The `$ref` that would reach into a container is dropped, so copying the container into every property
@@ -1860,7 +1878,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const formData = { foo: 'a', bar: 1 };
 
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: { title: 'Anything', type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
@@ -1873,7 +1891,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = { foo: 1, bar: 'a' };
         // A string default would re-seed the number field with a value it cannot hold, so it is only kept for the
         // property whose data is a string too
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: { title: 'Anything', type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
@@ -1892,7 +1910,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = { foo: 'a' };
         // The subschemas still constrain the property, so it is not marked as guessed, but an `allOf` naming another
         // type than the data cannot be merged with the guessed one, so neither is copied into the stub
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             foo: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
@@ -1909,7 +1927,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { bar: 'blah' };
-        expect(stubExistingAdditionalProperties(testValidator, schema, rootSchema, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -1932,7 +1950,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { baz: 1 };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             baz: {
@@ -1955,7 +1973,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { bar: 1 };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -1983,7 +2001,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { bar: 1 };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -2009,7 +2027,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           additionalProperties: true,
         };
         const formData = { bar: 1, baz: true };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -2042,7 +2060,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { bar: 1, baz: 2 };
-        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
             bar: {
@@ -2143,7 +2161,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveAnyOrOneOfSchemas()', () => {
       it('resolves anyOf with $ref for single element, merging schemas', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
-        expect(resolveAnyOrOneOfSchemas(testValidator, anyOfSchema, SUPER_SCHEMA, false, [])).toEqual([
+        expect(resolveAnyOrOneOfSchemas({ validator: testValidator }, anyOfSchema, SUPER_SCHEMA, false, [])).toEqual([
           {
             ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
             title: 'multi',
@@ -2153,7 +2171,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
       it('resolves oneOf with $ref for expandedAll elements, merging schemas', () => {
         const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
-        expect(resolveAnyOrOneOfSchemas(testValidator, oneOfSchema, SUPER_SCHEMA, true, [])).toEqual([
+        expect(resolveAnyOrOneOfSchemas({ validator: testValidator }, oneOfSchema, SUPER_SCHEMA, true, [])).toEqual([
           {
             ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
             required: ['choice', 'more'],
@@ -2201,7 +2219,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         };
-        expect(resolveAnyOrOneOfSchemas(testValidator, schema, rootSchema, true, [])).toEqual([
+        expect(resolveAnyOrOneOfSchemas({ validator: testValidator }, schema, rootSchema, true, [])).toEqual([
           {
             type: 'object',
             properties: {
@@ -2334,7 +2352,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {
         expect(
-          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, []),
+          resolveCondition(
+            { validator: testValidator },
+            SCHEMA_WITH_SINGLE_CONDITION,
+            SCHEMA_WITH_SINGLE_CONDITION,
+            true,
+            [],
+          ),
         ).toEqual([
           {
             type: 'object',
@@ -2367,7 +2391,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           then: false,
           else: true,
         };
-        expect(resolveCondition(testValidator, schema, schema, true, [])).toEqual([
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
           {
             type: 'object',
             properties: {
@@ -2414,7 +2438,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             number: { type: 'number' },
           },
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, {});
         expect(customMergeAllOf).toHaveBeenCalled();
         expect(result).toEqual({
           type: 'object',
@@ -2461,7 +2485,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             number: { type: 'number' },
           },
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData);
         expect(customMergeAllOf).toHaveBeenCalled();
         expect(result).toEqual({
           type: 'object',
@@ -2534,7 +2558,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             allOf: undefined,
           };
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData);
         // Verify that customMergeAllOf was called multiple times (for different allOf blocks)
         expect(customMergeAllOf).toHaveBeenCalledTimes(3);
         expect(result).toEqual({
@@ -2579,7 +2603,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             nested: { type: 'string' },
           },
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, {});
         expect(customMergeAllOf).toHaveBeenCalled();
         expect(result).toEqual({
           type: 'object',
@@ -2619,7 +2643,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const formData = { trigger: 'value' };
         // Test with undefined customMergeAllOf (should use default mergeAllOf)
-        const result = retrieveSchema(testValidator, schema, rootSchema, formData, undefined);
+        const result = retrieveSchema({ validator: testValidator }, schema, rootSchema, formData);
         expect(result).toEqual({
           type: 'object',
           properties: {
@@ -2649,7 +2673,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const customMergeAllOf = vi.fn().mockImplementation(() => {
           throw new Error('Custom merge failed');
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, {});
         // Should fall back to default behavior when custom merge fails
         expect(result).toEqual({});
         expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
@@ -2710,7 +2734,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             allOf: undefined,
           };
         });
-        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData);
         // Should be called for both allOf blocks (level2 and dependency)
         expect(customMergeAllOf).toHaveBeenCalledTimes(3);
         expect(result).toEqual({
@@ -2727,25 +2751,25 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('retrieveSchema() with resolveAnyOfOrOneOfRefs', () => {
       it('resolves simple ref with no anyOf or oneOfs when false', () => {
         const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
-        expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, priceSchema, SUPER_SCHEMA, {})).toEqual({
           ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
           [RJSF_REF_KEY]: '#/definitions/price',
         });
       });
       it('resolves simple ref with no anyOf or oneOfs when true', () => {
         const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
-        expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, priceSchema, SUPER_SCHEMA, {}, true)).toEqual({
           ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
           [RJSF_REF_KEY]: '#/definitions/price',
         });
       });
       it('does not resolves the references inside of anyOfs when false', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
-        expect(retrieveSchema(testValidator, anyOfSchema, SUPER_SCHEMA, {}, undefined)).toEqual(anyOfSchema);
+        expect(retrieveSchema({ validator: testValidator }, anyOfSchema, SUPER_SCHEMA, {})).toEqual(anyOfSchema);
       });
       it('resolves the references inside of anyOfs when true', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
-        expect(retrieveSchema(testValidator, anyOfSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, anyOfSchema, SUPER_SCHEMA, {}, true)).toEqual({
           ...anyOfSchema,
           anyOf: [
             {
@@ -2757,11 +2781,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
       it('does not resolves the references inside of oneOfs when false', () => {
         const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
-        expect(retrieveSchema(testValidator, oneOfSchema, SUPER_SCHEMA, {}, undefined, false)).toEqual(oneOfSchema);
+        expect(retrieveSchema({ validator: testValidator }, oneOfSchema, SUPER_SCHEMA, {}, false)).toEqual(oneOfSchema);
       });
       it('resolves the references inside of oneOfs when true', () => {
         const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
-        expect(retrieveSchema(testValidator, oneOfSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, oneOfSchema, SUPER_SCHEMA, {}, true)).toEqual({
           ...oneOfSchema,
           oneOf: [
             {
