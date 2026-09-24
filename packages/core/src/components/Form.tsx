@@ -912,9 +912,12 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
     validationSchema: areSchemaUtilsReused ? retrievedSchema : undefined,
     // The committed data is the previous prop, shared, so unchanged subtrees are skipped by identity
     // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
-    // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are
+    // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are.
+    // Construction has no committed errors to clear, and walking against nothing would list every key of the data
     getFormDataChangedFields:
-      edit && isLiveValidated(props) ? undefined : () => getChangedFields(formData, current?.formData, true),
+      current === undefined || (edit && isLiveValidated(props))
+        ? undefined
+        : () => getChangedFields(formData, current.formData, true),
   });
   return {
     ...(current ?? { isControlled: true, initialDefaultsGenerated: true }),
@@ -1329,8 +1332,8 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   formElement: RefObject<HTMLElement | null>;
 
-  /** The operations waiting to run, in order: field changes, `setFieldValue()` calls and resets. The first one is
-   * running; each advances the queue once React has committed its result, so the next one reads props that already
+  /** The operations waiting to run, in order: field changes, `setFieldValue()` calls, blurs and resets. The first one
+   * is running; each advances the queue once React has committed its result, so the next one reads props that already
    * hold a parent's response to it.
    */
   private queue: (() => void)[] = [];
@@ -1544,7 +1547,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       return;
     }
     const isValidated = !deferLiveValidate && isLiveValidated(this.props);
-    const { formData, customErrors, errors, errorSchema } = next;
+    const { formData, customErrors, errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } = next;
     if (isDevelopment) {
       freezeFormData(formData);
     }
@@ -1553,8 +1556,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     } finally {
       // Validated errors describe the proposal, which the parent may yet refuse, so they wait for the parent's
       // answer in `getDerivedStateFromProps`; without live validation they describe the committed data plus the
-      // custom errors, which are the form's own. Committing is also what gives the queue a commit to wait for
-      const owned: Partial<FormState<T, S, F>> = isValidated ? { customErrors } : { customErrors, errors, errorSchema };
+      // custom errors, which are the form's own. The validation base goes with them: `getDerivedStateFromProps`
+      // rebuilds the displayed errors from it before every render, so a field error that replaced a validation error
+      // would otherwise be gone by the next one. Committing is also what gives the queue a commit to wait for
+      const owned: Partial<FormState<T, S, F>> = isValidated
+        ? { customErrors }
+        : { customErrors, errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema };
       this.setState(
         (prevState) => ({ ...prevState, ...owned }),
         () => this.advanceQueue(),
@@ -1617,29 +1624,45 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       onBlur(id, data);
     }
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
-      const { onChange } = this.props;
-      const committed = this.state;
-      // Shared here so an unchanged error list keeps its reference and does not count as a change below
-      const next = replaceEqualDeep(committed, applyBlur(committed, this.props));
-      // Only the `IChangeEvent` members count; the validator's own results are not among them
-      const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some((key) => committed[key] !== next[key]);
-      if (committed.isControlled) {
-        if (isDevelopment) {
-          freezeFormData(next.formData);
-        }
-        this.setSharedState(committed, next);
+      // Queued like a change: a blur in the same tick as an edit must validate or omit the data that edit produced,
+      // not the data from before it
+      this.enqueue(() => this.processBlur(id));
+    }
+  };
+
+  /** Applies a blur's validation and omission with `applyBlur()`. A self-owned form commits the result and reports it;
+   * a parent-owned form proposes the data and commits the errors, which the blur's validation owns.
+   *
+   * @param id - The unique `id` of the field that was blurred
+   */
+  private processBlur(id: string) {
+    const { onChange } = this.props;
+    const committed = this.state;
+    // Shared here so an unchanged error list keeps its reference and does not count as a change below
+    const next = replaceEqualDeep(committed, applyBlur(committed, this.props));
+    // Only the `IChangeEvent` members count; the validator's own results are not among them
+    const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some((key) => committed[key] !== next[key]);
+    if (committed.isControlled) {
+      if (isDevelopment) {
+        freezeFormData(next.formData);
+      }
+      try {
         if (onChange && hasChanges) {
           onChange(toIChangeEvent(next), id);
         }
-        return;
+      } finally {
+        this.setSharedState(committed, next, () => this.advanceQueue());
       }
-      this.setSharedState(committed, next, () => {
+      return;
+    }
+    this.setSharedState(committed, next, () =>
+      this.advanceAfter(() => {
         if (onChange && hasChanges) {
           onChange(toIChangeEvent(this.state), id);
         }
-      });
-    }
-  };
+      }),
+    );
+  }
 
   /** Callback function to handle when a field on the form is focused. Calls the `onFocus` callback for the `Form` if it
    * was provided.

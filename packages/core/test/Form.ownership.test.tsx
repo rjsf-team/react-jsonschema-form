@@ -1,5 +1,5 @@
 import { createRef, StrictMode, useLayoutEffect, useState } from 'react';
-import type { ErrorSchema, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { createSchemaUtils, getTemplate, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, fireEvent, render } from '@testing-library/react';
@@ -11,6 +11,7 @@ import {
   AcceptingParent,
   createFormComponent,
   createParentLog,
+  fieldErrorsById,
   input,
   RejectingParent,
   setupConsoleWarnSuppression,
@@ -758,6 +759,106 @@ describe('form data ownership', () => {
       expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
       expect(ref.current!.getFormData()).toEqual({ a: 'x', extra: 'gone' });
       expect(onChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('errors the form owns under a parent', () => {
+    const minLengthSchema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string', minLength: 5 } },
+    };
+
+    function CustomErrorWidget(props: WidgetProps) {
+      return (
+        <button
+          type='button'
+          id={`${props.id}-raise`}
+          onClick={() => props.onChange(props.value, { __errors: ['custom!'] })}
+        >
+          raise
+        </button>
+      );
+    }
+
+    function RootErrorField(props: FieldProps) {
+      return (
+        <button
+          type='button'
+          id='raise-root'
+          onClick={() => props.onChange(props.formData, props.fieldPath, { __errors: ['custom root!'] })}
+        >
+          raise
+        </button>
+      );
+    }
+
+    function ChangeThenBlurWidget(props: WidgetProps) {
+      return (
+        <button
+          type='button'
+          id={`${props.id}-commit`}
+          onClick={() => {
+            props.onChange('abcdef');
+            props.onBlur(props.id, 'abcdef');
+          }}
+        >
+          commit
+        </button>
+      );
+    }
+
+    it('a custom error a field raises over a validation error stays shown', async () => {
+      const { container } = render(
+        <RejectingParent
+          schema={minLengthSchema}
+          uiSchema={{ foo: { 'ui:widget': CustomErrorWidget } }}
+          initialValue={{ foo: 'a' }}
+        />,
+      );
+      await user.click(container.querySelector('button[type=submit]')!);
+      expect(fieldErrorsById(container).root_foo).toEqual(['must NOT have fewer than 5 characters']);
+
+      await user.click(container.querySelector('#root_foo-raise')!);
+
+      expect(fieldErrorsById(container).root_foo).toEqual(['custom!']);
+    });
+
+    it('a root custom error blocks submit on a form mounted with data', async () => {
+      const onSubmit = vi.fn();
+      const onError = vi.fn();
+      const { container } = render(
+        <RejectingParent
+          schema={schema}
+          uiSchema={{ 'ui:field': RootErrorField }}
+          initialValue={{ a: 'x', b: 'y' }}
+          onSubmit={onSubmit}
+          onError={onError}
+        />,
+      );
+
+      await user.click(container.querySelector('#raise-root')!);
+      await user.click(container.querySelector('button[type=submit]')!);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it('a blur in the same tick as an edit validates the edit instead of proposing the old value', async () => {
+      const log = createParentLog<{ foo?: string }>();
+      const { container } = render(
+        <AcceptingParent
+          schema={minLengthSchema}
+          uiSchema={{ foo: { 'ui:widget': ChangeThenBlurWidget } }}
+          initialValue={{ foo: 'a' }}
+          liveValidate='onBlur'
+          log={log}
+        />,
+      );
+
+      await user.click(container.querySelector('#root_foo-commit')!);
+
+      expect(log.value).toEqual({ foo: 'abcdef' });
+      expect(fieldErrorsById(container)).toEqual({});
     });
   });
 });
