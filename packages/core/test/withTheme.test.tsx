@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, ThemeProps } from '../src/index.ts';
 import { withTheme } from '../src/index.ts';
@@ -307,7 +308,8 @@ describe('withTheme', () => {
     });
   });
 
-  it('infers the form data type from formData and takes the default validator', () => {
+  it('infers the form data type from formData and takes the default validator', async () => {
+    const user = userEvent.setup();
     const ThemedForm = withTheme({});
     const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
     const seen: (string | undefined)[] = [];
@@ -320,9 +322,16 @@ describe('withTheme', () => {
         onChange={({ formData }) => seen.push(formData?.name)}
       />,
     );
-    fireEvent.change(container.querySelector('#root_name') as HTMLInputElement, { target: { value: 'ab' } });
+    await user.type(container.querySelector('#root_name') as HTMLInputElement, 'b');
 
     expect(seen).toEqual(['ab']);
+  });
+
+  it('renders without a theme argument, as an untyped caller could pass', () => {
+    // @ts-expect-error called with no argument
+    const ThemedForm = withTheme();
+    const { container } = render(<ThemedForm schema={{ type: 'string' }} validator={validator} />);
+    expect(container.querySelector('#root')).not.toBeNull();
   });
 
   it('should forward the ref', () => {

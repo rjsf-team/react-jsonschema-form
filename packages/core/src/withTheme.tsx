@@ -44,13 +44,13 @@ export default function withTheme<
   }: FormProps<TT, S, F>) {
     // The theme's components were typed for `T`; they render the narrower `TT` the form is given
     const theme = themeProps as ThemeProps<TT, S, F>;
-    const fields = { ...theme.fields, ...propFields };
-    const widgets = { ...theme.widgets, ...propWidgets };
+    const fields = { ...theme?.fields, ...propFields };
+    const widgets = { ...theme?.widgets, ...propWidgets };
     const templates = {
-      ...theme.templates,
+      ...theme?.templates,
       ...propTemplates,
       ButtonTemplates: {
-        ...theme.templates?.ButtonTemplates,
+        ...theme?.templates?.ButtonTemplates,
         ...propTemplates?.ButtonTemplates,
       },
     };
