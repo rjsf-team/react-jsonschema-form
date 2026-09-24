@@ -529,6 +529,72 @@ describe('Error state consistency when deriving from new props', () => {
     },
   );
 
+  it('lets the parent clear the root extraErrors a root-path raise sent back', async () => {
+    const streetSchema: RJSFSchema = { type: 'object', properties: { street: { type: 'string' } } };
+    const rootServerErrors = { __errors: ['server'] } as unknown as ErrorSchema;
+    const formRef = createRef<Form>();
+    let clearExtraErrors = () => {};
+    let restyle = () => {};
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(rootServerErrors);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      clearExtraErrors = () => setExtraErrors(undefined);
+      restyle = () => setClassName('x');
+      return (
+        <Form
+          ref={formRef}
+          schema={streetSchema}
+          validator={validator}
+          formData={{ street: 'a' }}
+          extraErrors={extraErrors}
+          className={className}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(stateMessages(formRef)).toEqual(['server']);
+
+    // A custom root `Field` handing back the `errorSchema` it displays, `server` included
+    act(() => formRef.current!.onChange({ street: 'b' }, [], formRef.current!.state.errorSchema));
+    act(() => clearExtraErrors());
+    act(() => restyle());
+
+    expect(stateMessages(formRef)).toEqual([]);
+    expect(toErrorList(formRef.current!.state.errorSchema)).toEqual([]);
+  });
+
+  it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
+    };
+    const minLengthError = 'must NOT have fewer than 3 characters';
+    const formRef = createRef<Form>();
+    const { container } = render(
+      <Form ref={formRef} schema={addrSchema} validator={validator} initialFormData={{ addr: { street: 'a' } }} />,
+    );
+
+    act(() => {
+      formRef.current!.onChange('a', ['addr', 'street'], { __errors: [minLengthError] } as unknown as ErrorSchema);
+    });
+    await submitForm(container.querySelector('form')!, user);
+    act(() => {
+      formRef.current!.onChange(
+        'a',
+        ['addr', 'street'],
+        (formRef.current!.state.errorSchema as Record<string, Record<string, ErrorSchema>>).addr.street,
+      );
+    });
+
+    // Not a phantom `{ addr: { street: {} } }`, which the next raise on `addr` would read as a validator error
+    expect(formRef.current!.state.schemaValidationErrorSchema).toEqual({
+      addr: { street: { __errors: [minLengthError] } },
+    });
+    expect(formRef.current!.state.schemaValidationErrors.map(({ message }) => message)).toEqual([minLengthError]);
+  });
+
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const formRef = createRef<Form>();
     const { container } = render(<EchoingParent formRef={formRef} liveValidate='onBlur' />);

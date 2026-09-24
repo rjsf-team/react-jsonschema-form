@@ -1289,23 +1289,26 @@ export default class Form<
           // the user's error at this path without mutating shared state. The list says the same as the schema: the
           // errors at and below the path are the raised ones now. Both halves are stored, so the next derivation
           // rebuilds from a base that carries the raise instead of losing it until the next keystroke
-          mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
           const raisedErrorSchema = withoutSuppliedErrors(newErrorSchema, [
             getByPath(extraErrors, path),
             getByPath(customErrors?.ErrorSchema, path),
           ]);
-          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, raisedErrorSchema, true);
-          mergeBaseErrors = schemaValidationErrors
-            .filter((error) => !isPathPrefix(path, errorPath(error)))
-            .concat(toErrorList(raisedErrorSchema, path.map(String)));
-          // The item errors an `ArrayField` remaps after a reorder, remove or copy come from its displayed `errorSchema`
-          // at their new indexes, where the supplied errors they carry no longer line up to be left out above
-          if (!Array.isArray(newValue)) {
-            storedValidation = {
-              schemaValidationErrors: mergeBaseErrors,
-              schemaValidationErrorSchema: mergeBaseErrorSchema,
-            };
+          // A raise holding only supplied errors had nothing of its own to say, so the validator's entry stands
+          if (Object.keys(raisedErrorSchema).length > 0) {
+            mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
+            // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+            setByPath(mergeBaseErrorSchema, path, raisedErrorSchema, true);
+            mergeBaseErrors = schemaValidationErrors
+              .filter((error) => !isPathPrefix(path, errorPath(error)))
+              .concat(toErrorList(raisedErrorSchema, path.map(String)));
+            // The item errors an `ArrayField` remaps after a reorder, remove or copy come from its displayed
+            // `errorSchema` at their new indexes, where the supplied errors they carry no longer line up to be left out
+            if (!Array.isArray(newValue)) {
+              storedValidation = {
+                schemaValidationErrors: mergeBaseErrors,
+                schemaValidationErrorSchema: mergeBaseErrorSchema,
+              };
+            }
           }
         } else {
           // A root raise is the whole error schema remapped, the way `ArrayField` reshuffles the item errors after a
@@ -1319,7 +1322,7 @@ export default class Form<
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          const pathErrors = newErrorSchema[ERRORS_KEY];
+          const pathErrors = withoutSuppliedErrors(newErrorSchema, [extraErrors])[ERRORS_KEY];
           if (pathErrors) {
             // only set errors when there are some
             customErrors.setErrors(pathErrors);
@@ -1328,12 +1331,12 @@ export default class Form<
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
           // Only `extraErrors` is left out: `setByPath` replaces the node, so leaving out what `customErrors` holds
           // there would drop an error a field re-raises
-          setByPath(
-            customErrors.ErrorSchema,
-            path,
-            withoutSuppliedErrors(newErrorSchema, [getByPath(extraErrors, path)]),
-            true,
-          );
+          const raisedErrorSchema = withoutSuppliedErrors(newErrorSchema, [getByPath(extraErrors, path)]);
+          if (Object.keys(raisedErrorSchema).length > 0) {
+            setByPath(customErrors.ErrorSchema, path, raisedErrorSchema, true);
+          } else {
+            unsetByPath(customErrors.ErrorSchema, path);
+          }
         }
       }
     } else if (customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
