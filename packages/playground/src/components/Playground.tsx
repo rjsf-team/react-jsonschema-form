@@ -7,6 +7,7 @@ import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { createSchemaUtils } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -153,20 +154,35 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         }
       }
 
+      const theLiveSettings = normalizeLiveSettings(loadedLiveSettings);
+      // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+      let seededFormData = loadedFormData;
+      try {
+        const schemaUtils = createSchemaUtils(
+          validators[theValidator ?? validator],
+          loadedSchema,
+          theLiveSettings.defaultFormStateBehavior,
+        );
+        seededFormData = schemaUtils.getDefaultFormState(loadedSchema, loadedFormData);
+      } catch (error) {
+        // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given
+        console.error(error);
+      }
+
       // force resetting form component instance
       setShowForm(false);
       setSchema(loadedSchema);
       setUiSchema(theUiSchema);
-      setFormData(loadedFormData);
+      setFormData(seededFormData);
       setExtraErrors(loadedExtraErrors);
       setShowForm(true);
-      setLiveSettings(normalizeLiveSettings(loadedLiveSettings));
+      setLiveSettings(theLiveSettings);
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);
       }
       setOtherFormProps({ fields, templates, ...rest });
     },
-    [theme, onThemeSelected, themes],
+    [theme, onThemeSelected, themes, validators, validator],
   );
 
   const onSampleSelected = useCallback(
