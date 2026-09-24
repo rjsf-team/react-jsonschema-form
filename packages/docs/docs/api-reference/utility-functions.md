@@ -1268,7 +1268,7 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 
 - string: The `time` string with any trailing offset removed
 
-### optionsList&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType>()
+### optionsList&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
@@ -1493,7 +1493,7 @@ setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects 
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 ```
 
-### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = FormContextType>()
+### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field

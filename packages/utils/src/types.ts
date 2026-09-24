@@ -24,10 +24,6 @@ export type GenericObjectType = Record<string, any>;
  */
 type Bivariant<Args extends unknown[], R = void> = { bivarianceHack(...args: Args): R }['bivarianceHack'];
 
-/** A component slot in a props type, `UiSchema` or the `Registry`. A function component's props are checked
- * bivariantly and a class component's covariantly, so a component written for `unknown` data fits a slot typed for a
- * form's data, and a `UiSchema<MyData>` is still a `UiSchema`.
- */
 /** Never constructed: its `constructor` declaration gives class components the same bivariant props check that
  * `Bivariant` gives function components, which a constructor type written out as `new (props: P) => …` would not.
  */
@@ -35,7 +31,12 @@ declare class SlotComponentClass<P> extends Component<object> {
   constructor(props: P);
 }
 
-export type SlotComponent<P> = Bivariant<[props: P], ReactNode> | typeof SlotComponentClass<P>;
+/** A component slot in a props type, `UiSchema` or the `Registry`. Its props are checked bivariantly, for function and
+ * class components alike, so a component written for `unknown` data fits a slot typed for a form's data, and a
+ * `UiSchema<MyData>` is still a `UiSchema`. The function arm returns what React's `FunctionComponent` does, so a
+ * component annotated as a `ComponentType` or `FunctionComponent` fits too.
+ */
+export type SlotComponent<P> = Bivariant<[props: P], ReactNode | Promise<ReactNode>> | typeof SlotComponentClass<P>;
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else) AND symbol markers with a value of string or boolean

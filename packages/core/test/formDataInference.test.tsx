@@ -1,4 +1,5 @@
-import { PureComponent, createRef } from 'react';
+import { PureComponent } from 'react';
+import type { ComponentType } from 'react';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -67,9 +68,26 @@ describe('form data inference', () => {
   });
 
   it('infers T from a typed handler when no formData is passed', () => {
-    const handleSubmit = ({ formData }: IChangeEvent<MyData>) => formData?.name;
-    const ref = createRef<Form<MyData>>();
-    render(<Form schema={schema} validator={validator} onSubmit={handleSubmit} ref={ref} />);
-    expectTypeOf(ref.current?.state.formData).toEqualTypeOf<MyData | undefined>();
+    const handleSubmit = ({ formData }: IChangeEvent<MyData>) => formData.name;
+    render(
+      <Form
+        schema={schema}
+        validator={validator}
+        onSubmit={handleSubmit}
+        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<MyData>()}
+      />,
+    );
+  });
+
+  it('accepts components annotated as a React ComponentType, typed or not', () => {
+    const TypedWidget: ComponentType<WidgetProps<MyData>> = BareWidget;
+    const UntypedWidget: ComponentType<WidgetProps> = BareWidget;
+    const { container } = render(
+      <>
+        <Form<MyData> schema={schema} validator={validator} widgets={{ TypedWidget }} />
+        <Form schema={schema} validator={validator} widgets={{ UntypedWidget }} />
+      </>,
+    );
+    expect(container.querySelectorAll('#root_name')).toHaveLength(2);
   });
 });

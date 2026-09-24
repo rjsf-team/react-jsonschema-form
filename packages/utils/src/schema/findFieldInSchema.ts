@@ -29,7 +29,7 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
 export default function findFieldInSchema<
-  T = undefined,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(

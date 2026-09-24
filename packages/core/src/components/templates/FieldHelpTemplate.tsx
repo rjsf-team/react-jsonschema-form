@@ -19,7 +19,7 @@ export default function FieldHelpTemplate<
 
   return (
     <div id={helpId(id)} className='help-block'>
-      <RichHelp help={help as string} registry={registry} uiSchema={uiSchema} />
+      <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
 }
