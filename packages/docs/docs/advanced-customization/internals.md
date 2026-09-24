@@ -39,6 +39,8 @@ This are the rules which are used when injecting the defaults:
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.
 
+A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`. You can turn this off using the experimental [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
+
 ### Merging of defaults within the schema
 
 In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the experimental [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.

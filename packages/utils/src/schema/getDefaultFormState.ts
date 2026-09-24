@@ -850,7 +850,11 @@ export function getDefaultBasedOnSchemaType<
     case 'boolean': {
       // A required boolean with no explicit default gets false — it must be
       // present in the submitted data, and false is the natural zero-value.
-      if (computeDefaultsProps.required && defaults === undefined) {
+      // `requiredBooleanDefault: 'skip'` opts out for forms that treat an
+      // unanswered boolean as a distinct state and rely on `required` to flag it.
+      const { requiredBooleanDefault = 'populateFalse' } =
+        computeDefaultsProps.experimental_defaultFormStateBehavior ?? {};
+      if (requiredBooleanDefault === 'populateFalse' && computeDefaultsProps.required && defaults === undefined) {
         return false as unknown as T;
       }
       return undefined;

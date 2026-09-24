@@ -326,6 +326,48 @@ render(
 );
 ```
 
+### requiredBooleanDefault
+
+Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
+An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
+
+| Flag Value      | Description                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `populateFalse` | A required boolean with no `default` is set to `false`                                                                         |
+| `skip`          | No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains a validation concern |
+
+#### Example
+
+In the following example, `agree` is required but has no `default`. By default it would start as `false`, and the form would report `{ agree: false }` through `onChange` on mount. With `requiredBooleanDefault` set to `skip`, `formData` stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    agree: {
+      type: 'boolean',
+      title: 'Do you agree?',
+    },
+  },
+  required: ['agree'],
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    experimental_defaultFormStateBehavior={{
+      requiredBooleanDefault: 'skip',
+    }}
+  />,
+  document.getElementById('app'),
+);
+```
+
 
 ## experimental_customMergeAllOf
 
