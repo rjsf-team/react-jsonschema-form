@@ -1770,7 +1770,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The node within the JSON schema in which to search
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
@@ -1788,7 +1788,7 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
 - schema: S - The schema element in which to search for the selected anyOf/oneOf option
 - fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
@@ -1806,7 +1806,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which the default state is desired
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -1825,7 +1825,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -1844,7 +1844,7 @@ The closest match is determined using the number of matching properties, and mor
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
@@ -1862,7 +1862,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -1880,7 +1880,7 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The current node within the JSON schema recursion
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
@@ -1911,7 +1911,7 @@ Always returns the first option if there is nothing that matches.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
@@ -1927,7 +1927,7 @@ Checks to see if the `schema` combination represents a multi-select
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
@@ -1942,7 +1942,7 @@ Checks to see if the `schema` combination represents a select
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
@@ -1976,7 +1976,7 @@ potentially recursive resolution.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
@@ -2045,7 +2045,7 @@ console.log(filteredFormData);
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema to use for filtering the formData
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The formData to filter
@@ -2065,7 +2065,7 @@ A new schema that declares a type of its own is the type the data has to satisfy
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
@@ -2085,7 +2085,7 @@ The resulting interface implementation will forward the `validator` and `rootSch
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 
 #### Returns

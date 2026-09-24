@@ -86,7 +86,7 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 The signature and documentation for this property is as follow:
 
-##### computeSkipPopulate &lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+##### computeSkipPopulate &lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
@@ -94,7 +94,7 @@ If the function returns `false`, the array will be populated with default values
 
 ###### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
 - schema: S - The schema for which resolving a condition is desired
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
