@@ -1,10 +1,12 @@
 ---
 name: rjsf-testing
-description: Use when writing, converting, or debugging tests in this repo — test helpers, user-event vs fireEvent rules, fake timers, and snapshot updates.
+description: Use when writing, modifying, converting, or debugging any test in this repo, including a regression test added during a bug fix — test helpers, user-event vs fireEvent rules, fake timers, and snapshot updates.
 ---
 
 # Testing in react-jsonschema-form
 
+- Vitest, jsdom and Testing Library; the shared config is `testing/vitest.base.ts`, extended by each package's own vitest config
+- Run one package's tests with `cd packages/<pkg> && pnpm test`, or `pnpm run test:watch` there for watch mode; the root `pnpm test` runs every package
 - Tests resolve `@rjsf/*` imports to TypeScript source via the `@rjsf/source` export condition, so no build is needed before running them
 - Build on the existing test helpers rather than hand-rolling the same setup. `packages/core/test/testUtils.tsx` holds most of them and is the first place to look before writing scaffolding:
   - `createFormComponent(props)` renders a `Form` with the AJV 8 validator wired up and returns `{ node, onChange, onSubmit, onError, rerender }`; `createComponent` does the same for a themed `Form`, and `createFormRef` covers the `FormHandle` cases
@@ -21,16 +23,17 @@ description: Use when writing, converting, or debugging tests in this repo — t
   const user = userEvent.setup(); // module level, after the imports
   ```
 
-  One instance per file is the convention here, but it carries pointer and keyboard state across every test in
-  that file. A test that presses without releasing — `user.keyboard('{Shift>}')`, `user.pointer({ keys: '[MouseLeft>]' })`
-  — leaks that held key or button into the tests after it, which then silently get shift-clicks they never
-  asked for. Release it in the same test, or set `user` up in a `beforeEach` so each test starts clean.
+  One instance per file is the convention here, but it carries pointer and keyboard state across every test in that file. A test that presses without releasing — `user.keyboard('{Shift>}')`, `user.pointer({ keys: '[MouseLeft>]' })` — leaks that held key or button into the tests after it, which then silently get shift-clicks they never asked for. Release it in the same test, or set `user` up in a `beforeEach` so each test starts clean.
 
   Then `await user.click(...)`, `await user.type(...)`, `await user.selectOptions(...)`, `await user.clear(...)`, and make the enclosing `test`/`it` callback `async`. A theme's `Select` is usually a custom combobox rather than a native `<select>`, so click the option rather than reaching for `selectOptions`.
 
+  On a native `<select>`, `user.selectOptions(select, x)` matches an option's text before its `value` attribute. RJSF stores option values as enum indices (`'0'`, `'1'`, …) while the text is the enum value, so select by the enum label: an old `fireEvent.change(select, { target: { value: 2 } })` on enum `[1, 2, 3]` becomes `user.selectOptions(select, '3')`, not `'2'`.
+
+  A test that replaces `element.focus` with a no-op spy (to observe RJSF's focus-on-error) must install it after any `user.type()` / `user.click()` on that element. user-event focuses through `element.focus()`, so with the spy in place first the keystrokes land on `document.body` and the input stays empty.
+
 - `user.type()` is not the only way to set a value, and reaching for `fireEvent` the moment it misbehaves is the common mistake. `await user.click(input)` followed by `await user.paste(value)` sets the whole value in a single input event, which is what you want whenever per-keystroke behavior gets in the way: jsdom's value sanitization for `date`/`time`/`datetime-local` inputs rejecting intermediate characters, an assertion counting `onChange` calls, or a controlled input whose `value` prop never updates and so reverts each keystroke. `user.upload()` covers `type=file`. See `packages/core/test/StringField.test.tsx` for both
 - `fireEvent` stays correct in a few places. Give every one you write or keep a comment saying why, so the next reader doesn't "fix" it back — a handful of older calls in `@rjsf/core` predate this and still lack one, so treat an uncommented call as unreviewed rather than as a precedent. Reach for it only when user-event genuinely can't express the interaction, and confirm that's true rather than assuming it:
-  - user-event's own input model can't produce the value, whatever you drive it with. It only edits the types in its `editableInputTypes` list (text, date, datetime-local, email, month, number, password, search, tel, time, url, week), so `click` + `paste` on a `type=color` input silently does nothing. And every edit to a `type=time` input is rebuilt by its `buildTimeValue`, which strips non-digits and caps the result at `HH:MM` — `'11:10:12'` becomes `'11:59'` — so a seconds-precision time can only be set with `fireEvent.change`. Note that `tabIndex={-1}` is *not* a case of this: it only removes an element from the tab order, and a click still focuses it in a browser and in user-event, so `user.click()` followed by `user.keyboard('{Enter}')` reaches a `tabIndex={-1}` element's own `onKeyDown` guard
+  - user-event's own input model can't produce the value, whatever you drive it with. It only edits the types in its `editableInputTypes` list (text, date, datetime-local, email, month, number, password, search, tel, time, url, week), so `click` + `paste` on a `type=color` input silently does nothing. And every edit to a `type=time` input is rebuilt by its `buildTimeValue`, which strips non-digits and caps the result at `HH:MM` — `'11:10:12'` becomes `'11:59'` — so a seconds-precision time can only be set with `fireEvent.change`. Note that `tabIndex={-1}` is _not_ a case of this: it only removes an element from the tab order, and a click still focuses it in a browser and in user-event, so `user.click()` followed by `user.keyboard('{Enter}')` reaches a `tabIndex={-1}` element's own `onKeyDown` guard
   - a widget rendered with a fixed `value` that never updates, where the re-render after each click reverts the last one — a multiple `<select>` needs its options selected together and reported in one change
   - a component whose behavior depends on the interaction being synchronous. Mantine's `Select` is the live example: its dropdown applies floating-ui's `hide()` middleware, jsdom lays every element out at zero size, and any `await` lets that recomputation set `display: none` so `getByRole('option')` finds nothing
   - `fireEvent.submit` when clicking the real button would focus it, blurring the focused field and firing `onChange` before submit; `submitForm` in `packages/core/test/testUtils.tsx` takes a `forceFireEvent` flag for exactly this
