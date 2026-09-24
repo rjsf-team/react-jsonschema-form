@@ -60,20 +60,31 @@ export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSe
   };
 }
 
+const DEFAULT_VALIDATOR = 'AJV8';
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
-  const [formData, setFormData] = useState<unknown>(samples.Simple.formData);
+  // The sample shown before any is loaded is seeded the way `load()` seeds every other one
+  const [formData, setFormData] = useState<unknown>(() =>
+    createSchemaUtils(validators[DEFAULT_VALIDATOR], samples.Simple.schema).getDefaultFormState(
+      samples.Simple.schema,
+      samples.Simple.formData,
+      false,
+      false,
+      samples.Simple.uiSchema as UiSchema,
+    ),
+  );
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
   const [sampleName, setSampleName] = useState<string>('Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
-  const [validator, setValidator] = useState<string>('AJV8');
+  const [validator, setValidator] = useState<string>(DEFAULT_VALIDATOR);
   const [showForm, setShowForm] = useState(false);
   // Bumped on every load, so a loaded sample always mounts a new form: ownership is decided at mount
   const [formKey, setFormKey] = useState(0);
@@ -160,8 +171,10 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
       let seededFormData = loadedFormData;
       try {
+        // Not the `validator` state: depending on it would re-run the mount effect, which depends on `load`, on every
+        // validator switch. A sample passes the current one and a shared link carries its own
         const schemaUtils = createSchemaUtils(
-          validators[theValidator ?? validator],
+          validators[theValidator ?? DEFAULT_VALIDATOR],
           loadedSchema,
           theLiveSettings.defaultFormStateBehavior,
         );
@@ -183,20 +196,21 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       }
       setOtherFormProps({ fields, templates, ...rest });
     },
-    [theme, onThemeSelected, themes, validators, validator],
+    [theme, onThemeSelected, themes, validators],
   );
 
   const onSampleSelected = useCallback(
     (selectedSampleName: string) => {
       const { liveSettings: sampleLiveSettings, ...sample } = samples[selectedSampleName];
       load({
+        validator,
         ...sample,
         sampleName: selectedSampleName,
         liveSettings: { ...liveSettings, ...sampleLiveSettings },
         theme,
       });
     },
-    [load, liveSettings, theme],
+    [load, liveSettings, theme, validator],
   );
 
   useEffect(() => {

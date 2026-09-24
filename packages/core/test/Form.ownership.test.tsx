@@ -688,6 +688,29 @@ describe('form data ownership', () => {
       expect(select).toHaveValue('1');
     });
 
+    it('a self-owned oneOf switch that leaves the data unchanged keeps the chosen option the data does not fit yet', async () => {
+      const rangeSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          size: {
+            type: 'object',
+            oneOf: [
+              { title: 'Small', type: 'object', properties: { n: { type: 'number', maximum: 9 } } },
+              { title: 'Large', type: 'object', properties: { n: { type: 'number', minimum: 10 } } },
+            ],
+          },
+        },
+      };
+      const { container } = render(
+        <Form schema={rangeSchema} validator={validator} initialFormData={{ size: { n: 5 } }} />,
+      );
+      const select = container.querySelector<HTMLSelectElement>('#root_size__oneof_select')!;
+
+      await user.selectOptions(select, '1');
+
+      expect(select).toHaveValue('1');
+    });
+
     it('an array add or remove the parent declines leaves no optimistic item behind', async () => {
       const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
       const log = createParentLog<string[]>();
@@ -721,6 +744,34 @@ describe('form data ownership', () => {
       expect(container.querySelector('#root_first')).toHaveValue('one');
       expect(container.querySelector('#root_second')).toHaveValue('two');
       expect(container.querySelector('#root_renamed')).toBeNull();
+    });
+
+    it('an additional property the parent declined and then accepted when added again renders once', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      let isAccepting = false;
+      function LateAcceptingParent() {
+        const [value, setValue] = useState<Record<string, string>>({});
+        return (
+          <Form
+            schema={objectSchema}
+            validator={validator}
+            formData={value}
+            onChange={(event) => {
+              if (isAccepting) {
+                setValue(event.formData);
+              }
+            }}
+          />
+        );
+      }
+      const { container } = render(<LateAcceptingParent />);
+      const addButton = () => container.querySelector('.rjsf-object-property-expand button')!;
+
+      await user.click(addButton());
+      isAccepting = true;
+      await user.click(addButton());
+
+      expect(container.querySelectorAll('#root_newKey')).toHaveLength(1);
     });
   });
 
@@ -822,6 +873,27 @@ describe('form data ownership', () => {
       await user.click(container.querySelector('#root_foo-raise')!);
 
       expect(fieldErrorsById(container).root_foo).toEqual(['custom!']);
+    });
+
+    it('a custom error a field raises over a validation error leaves the other errors as the validator reported them', async () => {
+      const pairSchema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'string', minLength: 5 }, bar: { type: 'string', minLength: 5 } },
+      };
+      const { container, onChange } = createFormComponent({
+        schema: pairSchema,
+        uiSchema: { foo: { 'ui:widget': CustomErrorWidget } },
+        initialFormData: { foo: 'a', bar: 'b' },
+      });
+      await user.click(container.querySelector('button[type=submit]')!);
+
+      await user.click(container.querySelector('#root_foo-raise')!);
+
+      const { errors } = onChange.mock.lastCall![0] as IChangeEvent;
+      expect(errors.map(({ name, property, message }) => ({ name, property, message }))).toEqual([
+        { name: undefined, property: '.foo', message: 'custom!' },
+        { name: 'minLength', property: '.bar', message: 'must NOT have fewer than 5 characters' },
+      ]);
     });
 
     it('a root custom error blocks submit on a form mounted with data', async () => {

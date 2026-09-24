@@ -21,7 +21,9 @@ export interface FormHandle<T = any> {
    * behind any edit, `setFieldValue()` or reset in flight, so it submits the data they produced.
    */
   submit(): void;
-  /** Resets the `Form` to its default values and clears validation errors, queued behind any operation in flight */
+  /** Clears the validation errors and, for a self-owned form, resets the data to `initialFormData` and the schema's
+   * defaults; a parent-owned form's data is the parent's to reset. Queued behind any operation in flight.
+   */
   reset(): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
    * root. Passing `undefined` clears the field.

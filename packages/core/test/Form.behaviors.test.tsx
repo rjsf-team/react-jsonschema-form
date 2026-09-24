@@ -3180,8 +3180,7 @@ describe('initialFormData feature to prevent form reset', () => {
     );
   };
   it('show that a controlled Form keeps rendering the parent value when the parent does not accept edits', async () => {
-    // The parent owns `formData` and never hands a proposal back, so the edit is proposed but never rendered; before
-    // the ownership switch the form kept its own copy and showed the edit until `disabled` changed
+    // The parent owns `formData` and never hands a proposal back, so the edit is proposed but never rendered
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);

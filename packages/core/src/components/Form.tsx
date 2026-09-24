@@ -974,9 +974,18 @@ const PARENT_OWNED_COMMIT_KEYS = [
   'schemaValidationErrorSchema',
 ] as const satisfies readonly (keyof FormState)[];
 
-declare const process: { env: Record<string, string | undefined> } | undefined;
-/** Development diagnostics are gated the way React's are, so a bundler strips them from a production build */
-const isDevelopment = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
+declare const process: { env: Record<string, string | undefined> };
+/** Development diagnostics are gated the way React's are, so a bundler strips them from a production build. Vite and
+ * esbuild replace `process.env.NODE_ENV` but not `typeof process`, and a browser has no `process`, so only the replaced
+ * expression is read; the `catch` covers an environment that neither replaces nor defines it.
+ */
+const isDevelopment = (() => {
+  try {
+    return process.env.NODE_ENV !== 'production';
+  } catch {
+    return false;
+  }
+})();
 
 /** Returns `data` with every container along `path` shallow-copied, leaving the copies ready for a write at that
  * path that must not touch the original. Subtrees off the path keep the reference the fields already hold, so

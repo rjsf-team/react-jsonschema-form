@@ -489,13 +489,15 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
-      const currentAdditionalProperties = additionalPropertyOrder.filter(
+      // A set, since an add or rename the parent declined leaves its key in the order, and proposing that key again
+      // appends it a second time
+      const orderedSet = new Set(additionalPropertyOrder);
+      const currentAdditionalProperties = [...orderedSet].filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
       // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
       // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
       // whose order is known
-      const orderedSet = new Set(additionalPropertyOrder);
       const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
       orderedProperties = orderProperties(
         [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
