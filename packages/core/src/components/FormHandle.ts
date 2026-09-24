@@ -17,16 +17,19 @@ export interface FormHandle<T = any> {
    * read-only: mutating it mutates what the form renders.
    */
   getFormData(): T | undefined;
-  /** Programmatically submits the `Form`, running validation and `onSubmit`/`onError` as a submit button would */
+  /** Programmatically submits the `Form`, running validation and `onSubmit`/`onError` as a submit button would. Queued
+   * behind any edit, `setFieldValue()` or reset in flight, so it submits the data they produced.
+   */
   submit(): void;
-  /** Resets the `Form` to its default values and clears validation errors */
+  /** Resets the `Form` to its default values and clears validation errors, queued behind any operation in flight */
   reset(): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
    * root. Passing `undefined` clears the field.
    */
   setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void;
   /** Validates the current form data, filtering extra data first when `omitExtraData` is set, and calls `onError` as a
-   * submission would.
+   * submission would. It returns its answer at once, so it reads committed data like `getFormData()`: an edit or
+   * `setFieldValue()` in the same tick is not validated until React commits it. `submit()` is queued and sees them.
    *
    * @returns - True if the form is valid, false otherwise.
    */

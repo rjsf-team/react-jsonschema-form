@@ -3,18 +3,18 @@ import { noop, toPath } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { describeOwnerships, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
-  const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
-  await submitForm(node, user, true);
-  expect(onSubmit).not.toHaveBeenCalled();
-  expect(onError).toHaveBeenCalled();
-}
+describeOwnerships('ui:required enforcement', (createFormComponent) => {
+  async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
+    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
+    await submitForm(node, user, true);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
+  }
 
-describe('ui:required enforcement', () => {
   let warnSpy: MockInstance;
   beforeAll(() => {
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);

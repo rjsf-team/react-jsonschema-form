@@ -945,6 +945,18 @@ function freezeFormData(data: unknown) {
   }
 }
 
+/** What a parent-owned form commits: its errors, which are its own. Everything else is derived from the props before
+ * every render, so the data an operation computed is the parent's to accept through `onChange`, and the render context
+ * an edit resolved for its proposal would describe data the parent has not accepted
+ */
+const PARENT_OWNED_COMMIT_KEYS = [
+  'customErrors',
+  'errors',
+  'errorSchema',
+  'schemaValidationErrors',
+  'schemaValidationErrorSchema',
+] as const satisfies readonly (keyof FormState)[];
+
 declare const process: { env: Record<string, string | undefined> } | undefined;
 /** Development diagnostics are gated the way React's are, so a bundler strips them from a production build */
 const isDevelopment = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
@@ -1332,16 +1344,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   formElement: RefObject<HTMLElement | null>;
 
-  /** The operations waiting to run, in order: field changes, `setFieldValue()` calls, blurs and resets. The first one
-   * is running; each advances the queue once React has committed its result, so the next one reads props that already
+  /** The operations waiting to run, in order: field changes, `setFieldValue()` calls, blurs, submits and resets. The
+   * first one is running; each advances the queue once React has committed its result, so the next one reads props that already
    * hold a parent's response to it.
    */
   private queue: (() => void)[] = [];
 
   /** `setState` sharing every unchanged subtree of `state` with the current state, so fields' memo boundaries hold
-   * across the update. The updater form keeps it correct under batching. A parent-owned form never commits data:
-   * its `formData` is derived from the prop before every render, so whatever an operation computed for it is the
-   * parent's to accept through `onChange`, and committing it here would render a value the parent has not accepted.
+   * across the update. The updater form keeps it correct under batching. A parent-owned form commits its errors and
+   * nothing else, see `PARENT_OWNED_COMMIT_KEYS`.
    */
   private setSharedState(from: FormState<T, S, F>, next: FormState<T, S, F>, callback?: () => void) {
     // React merges the partial itself; its `Pick` typing has no name for a key set decided at run time
@@ -1353,8 +1364,13 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
     this.setState((prevState) => {
       if (prevState.isControlled) {
-        const { formData: _, ...owned } = changed;
-        return replaceEqualDeep(prevState, owned as FormState<T, S, F>);
+        const owned = {} as FormState<T, S, F>;
+        for (const key of PARENT_OWNED_COMMIT_KEYS) {
+          if (key in changed) {
+            Object.assign(owned, { [key]: changed[key] });
+          }
+        }
+        return replaceEqualDeep(prevState, owned);
       }
       if (isDevelopment && 'formData' in changed) {
         freezeFormData(changed.formData);
@@ -1547,24 +1563,17 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       return;
     }
     const isValidated = !deferLiveValidate && isLiveValidated(this.props);
-    const { formData, customErrors, errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } = next;
     if (isDevelopment) {
-      freezeFormData(formData);
+      freezeFormData(next.formData);
     }
     try {
       onChange?.(toIChangeEvent(next), change.id);
     } finally {
       // Validated errors describe the proposal, which the parent may yet refuse, so they wait for the parent's
       // answer in `getDerivedStateFromProps`; without live validation they describe the committed data plus the
-      // custom errors, which are the form's own. The validation base goes with them: `getDerivedStateFromProps`
-      // rebuilds the displayed errors from it before every render, so a field error that replaced a validation error
-      // would otherwise be gone by the next one. Committing is also what gives the queue a commit to wait for
-      const owned: Partial<FormState<T, S, F>> = isValidated
-        ? { customErrors }
-        : { customErrors, errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema };
-      this.setState(
-        (prevState) => ({ ...prevState, ...owned }),
-        () => this.advanceQueue(),
+      // custom errors, which are the form's own. Committing is also what gives the queue a commit to wait for
+      this.setSharedState(current, isValidated ? { ...current, customErrors: next.customErrors } : next, () =>
+        this.advanceQueue(),
       );
     }
   }
@@ -1583,16 +1592,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     this.enqueue(() => {
       if (this.state.isControlled) {
         // `getDerivedStateFromProps` merges `extraErrors` back onto the cleared errors before the render
-        this.setState(
-          {
-            errors: [],
-            errorSchema: {},
-            schemaValidationErrors: [],
-            schemaValidationErrorSchema: {},
-            customErrors: undefined,
-          },
-          () => this.advanceQueue(),
-        );
+        const cleared: FormState<T, S, F> = {
+          ...this.state,
+          errors: [],
+          errorSchema: {},
+          schemaValidationErrors: [],
+          schemaValidationErrorSchema: {},
+          customErrors: undefined,
+        };
+        this.setSharedState(this.state, cleared, () => this.advanceQueue());
         return;
       }
       this.setSharedState(this.state, applyReset(this.state, this.props), () =>
@@ -1693,6 +1701,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     }
 
     event.persist();
+    // Queued like a change: a submit in the same tick as an edit submits the data that edit produced
+    this.enqueue(() => this.processSubmit(event));
+  };
+
+  /** Validates and submits the data the form renders, see `onSubmit()`
+   *
+   * @param event - The submit HTML form event
+   */
+  private processSubmit(event: SubmitEvent<HTMLFormElement>) {
     // oxlint-disable-next-line typescript/no-deprecated
     const { omitExtraData, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
@@ -1701,15 +1718,19 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       newFormData = this.state.schemaUtils.omitExtraData(this.state.schema, newFormData);
     }
 
-    if (noValidate || this.validateFormWithFormData(newFormData)) {
-      // There are no errors generated through schema validation, so only the user-provided ones are shown
-      this.setSharedState(this.state, applySubmit(this.state, this.props, newFormData), () => {
-        if (onSubmit) {
-          onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
-        }
-      });
+    if (!noValidate && !this.validateFormWithFormData(newFormData)) {
+      // The validation has committed its errors; the queue waits for that commit like any operation's
+      this.setState(
+        (state) => state,
+        () => this.advanceQueue(),
+      );
+      return;
     }
-  };
+    // There are no errors generated through schema validation, so only the user-provided ones are shown
+    this.setSharedState(this.state, applySubmit(this.state, this.props, newFormData), () =>
+      this.advanceAfter(() => onSubmit?.(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event)),
+    );
+  }
 
   /** Provides a function that can be used to programmatically submit the `Form` */
   submit = () => {

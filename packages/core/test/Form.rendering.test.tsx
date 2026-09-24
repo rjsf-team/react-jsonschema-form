@@ -7,6 +7,7 @@ import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
+  createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   describeRepeated,
@@ -1405,11 +1406,12 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     describe('when props.formData does not equal the default values', () => {
       it('should render the parent value as passed and not call props.onChange', () => {
-        // The parent owns the value, defaults included; seeding them is the parent's job (see the v7 upgrade guide)
+        // The parent owns the value, defaults included; seeding them is the parent's job (see the v7 upgrade guide).
+        // A direct `formData` prop, not the suite's creator, whose accepting parent seeds the defaults for this
         const formData = {
           foo: 123,
         };
-        const { node, onChange } = createFormComponent({ schema, formData });
+        const { node, onChange } = createDirectFormComponent({ schema, formData });
         expect(onChange).not.toHaveBeenCalled();
         expect(node.querySelector<HTMLInputElement>('#root_count')).toHaveValue('');
       });

@@ -6,11 +6,11 @@ import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { describeOwnerships, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-describe('Validation', () => {
+describeOwnerships('Validation', (createFormComponent) => {
   describe('Form integration, v8 validator', () => {
     describe('JSONSchema validation', () => {
       it('should block submit when a matched if/then branch resolves to false', async () => {

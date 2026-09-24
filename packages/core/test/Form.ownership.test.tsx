@@ -11,6 +11,7 @@ import {
   AcceptingParent,
   createFormComponent,
   createParentLog,
+  describeOwnerships,
   fieldErrorsById,
   input,
   RejectingParent,
@@ -860,5 +861,41 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ foo: 'abcdef' });
       expect(fieldErrorsById(container)).toEqual({});
     });
+  });
+});
+
+describeOwnerships('operations in one tick', (createFormComponent) => {
+  it('a submit in the same tick as an edit submits the edited data', () => {
+    const ref = createRef<Form>();
+    const { onSubmit } = createFormComponent({ ref, schema, initialFormData: { a: 'old' } });
+
+    act(() => {
+      ref.current!.setFieldValue('a', 'new');
+      ref.current!.submit();
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'new' });
+  });
+
+  it('an invalid submit in the same tick as an edit reports the edited data and lets later operations run', () => {
+    const ref = createRef<Form>();
+    const required: RJSFSchema = { ...schema, required: ['a', 'b'] };
+    const { onSubmit, onError, getFormData } = createFormComponent({
+      ref,
+      schema: required,
+      initialFormData: {},
+      noHtml5Validate: true,
+    });
+
+    act(() => {
+      ref.current!.setFieldValue('a', 'new');
+      ref.current!.submit();
+      ref.current!.setFieldValue('b', 'later');
+    });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError.mock.calls[0][0]).toHaveLength(1);
+    expect(getFormData()).toEqual({ a: 'new', b: 'later' });
   });
 });
