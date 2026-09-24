@@ -27,6 +27,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed live validation dropping every `extraErrors` entry when the form derived state from new props, so a server-supplied error disappeared as soon as a controlled parent replaced the form data
 - Fixed `extraErrors` and `customErrors` being merged into the errors a second time whenever the form derived state from new props under `liveValidate: 'onChange'` without re-validating, so a re-render changing only `className` duplicated every server-supplied error, the duplication half of [#4408](https://github.com/rjsf-team/react-jsonschema-form/issues/4408) (the clearing half was fixed by `getDerivedStateFromProps` in v6)
 - Fixed a changed `validator`, `customMergeAllOf` or `defaultFormStateBehavior` leaving the previously retrieved schema in state, so live validation and sanitization kept running against a schema the old settings had resolved
+- Fixed the changed-field error clearing that deriving state from new props does without live validation reaching the field but not the error list, so the `ErrorList` and the `onChange` payload kept an error the field no longer showed
+- Fixed an `ErrorSchema` a field raises through `onChange`, on a path that already carried a validator error, being lost from the error list and on the next state derivation; a root raise no longer drops every other field's stored validator error, and a raise that hands back the displayed `errorSchema` is stored without the `extraErrors` and `customErrors` it carries, so they no longer outlive the parent clearing them
 
 ## @rjsf/mantine
 

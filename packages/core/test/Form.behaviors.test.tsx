@@ -241,6 +241,431 @@ describe('Live validation onBlur', () => {
         '.name from the server',
       ]);
     });
+
+    it('carries each extraError over exactly once when a prop other than the data changes', async () => {
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      // Reference-stable so that re-rendering the parent is a change to `className` and nothing else
+      const shortName = { name: 'short' };
+      function RestylingParent() {
+        const [className, setClassName] = useState<string | undefined>(undefined);
+        return (
+          <>
+            <button type='button' onClick={() => setClassName('x')}>
+              restyle
+            </button>
+            <Form
+              schema={objectSchema}
+              validator={validator}
+              liveValidate='onChange'
+              extraErrors={extraErrors}
+              formData={shortName}
+              className={className}
+            />
+          </>
+        );
+      }
+      const { container } = render(<RestylingParent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    });
+  });
+});
+
+describe('Error state consistency when deriving from new props', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+  };
+  const relaxedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string' }, other: { type: 'string' } },
+  };
+  const serverErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+  const otherServerErrors: ErrorSchema = { other: { __errors: ['from the server'] } };
+  const shortName = { name: 'short' };
+  /** Raises a custom error on every keystroke, the way a widget validating as the user types does */
+  const errorRaisingWidgets = {
+    TextWidget: ({ id, value, onChange, onBlur }: WidgetProps) => (
+      <input
+        id={id}
+        type='text'
+        value={value ?? ''}
+        onChange={(event) => onChange(event.target.value, { __errors: [`custom:${event.target.value}`] })}
+        onBlur={(event) => onBlur(id, event.target.value)}
+      />
+    ),
+  };
+
+  /** A root field that renders the `ObjectField` and hands its props out, so a test can raise through `onChange` the
+   * way a custom root `Field` does
+   */
+  let rootField: FieldProps;
+  function CapturingRootField(fieldProps: FieldProps) {
+    rootField = fieldProps;
+    const { ObjectField } = fieldProps.registry.fields;
+    return <ObjectField {...fieldProps} />;
+  }
+  const capturingUiSchema: UiSchema = { 'ui:field': CapturingRootField };
+
+  /** A parent that never follows `onChange`, so the form's own data diverges from the `formData` prop as soon as the
+   * user types
+   */
+  function IgnoringParent() {
+    const [className, setClassName] = useState<string | undefined>(undefined);
+    return (
+      <>
+        <button type='button' onClick={() => setClassName('x')}>
+          restyle
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onChange'
+          extraErrors={serverErrors}
+          formData={shortName}
+          className={className}
+        />
+      </>
+    );
+  }
+
+  /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
+  function EchoingParent({ liveValidate }: Pick<FormProps, 'liveValidate'>) {
+    const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
+    return (
+      <>
+        <button type='button' onClick={() => setValue({ name: 'longenoughvalue' })}>
+          replace
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate={liveValidate}
+          formData={value}
+          onChange={(event) => setValue(event.formData)}
+        />
+      </>
+    );
+  }
+
+  it('does not duplicate an extraError once the form data has diverged from the prop', async () => {
+    const { container } = render(<IgnoringParent />);
+
+    // The parent keeps handing back `shortName`, so this keystroke leaves the form's data ahead of the prop
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual({
+      root_name: ['must NOT have fewer than 8 characters', 'from the server'],
+    });
+    expect(errorListMessages(container)).toEqual([
+      '.name must NOT have fewer than 8 characters',
+      '.name from the server',
+    ]);
+  });
+
+  it('drops the stored validator errors when the schema stops producing them under onBlur', async () => {
+    function SchemaSwappingParent() {
+      const [current, setCurrent] = useState(schema);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setCurrent(relaxedSchema)}>
+            relax
+          </button>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form
+            schema={current}
+            validator={validator}
+            liveValidate='onBlur'
+            formData={shortName}
+            className={className}
+          />
+        </>
+      );
+    }
+    const { container } = render(<SchemaSwappingParent />);
+    const buttons = container.querySelectorAll('button');
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.click(buttons[0]);
+    expect(fieldErrorsById(container)).toEqual({});
+
+    // The schema no longer has the rule, so no later prop change may bring its error back
+    await user.click(buttons[1]);
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('keeps a custom error raised on a path that already carries a validator error', async () => {
+    // Restyles without a click, so the field the user is typing in is not blurred, which would validate it afresh
+    let restyle = () => {};
+    function RestylingParent() {
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      restyle = () => setClassName('x');
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          widgets={errorRaisingWidgets}
+          initialFormData={shortName}
+          className={className}
+        />
+      );
+    }
+    const { container } = render(<RestylingParent />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    // The raise replaced the validator error at its path, so the `ErrorList` says the same as the field does, and a
+    // re-derivation rebuilds both from a base that carries the raise
+    act(() => restyle());
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shorty'] });
+    expect(errorListMessages(container)).toEqual(['.name custom:shorty']);
+  });
+
+  it("keeps every other field's validator error when a root-path raise replaces the root errors", async () => {
+    function RestylingParent() {
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form
+            schema={schema}
+            uiSchema={capturingUiSchema}
+            validator={validator}
+            formData={shortName}
+            className={className}
+          />
+        </>
+      );
+    }
+    const { container } = render(<RestylingParent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    // What a custom root `Field`, or a root-level `ArrayField` reorder, hands to `onChange`
+    act(() => rootField.onChange(shortName, rootField.fieldPath, { __errors: ['root level problem'] }));
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual(
+      expect.objectContaining({ root_name: ['must NOT have fewer than 8 characters'] }),
+    );
+  });
+
+  it('lets the parent clear the extraErrors an ArrayField reorder remapped', async () => {
+    const arraySchema: RJSFSchema = {
+      type: 'object',
+      properties: { arr: { type: 'array', items: { type: 'string', minLength: 3 } } },
+    };
+    const arrayData = { arr: ['a', 'bbbb', 'cccc'] };
+    const arrayServerErrors: ErrorSchema = { arr: { 2: { __errors: ['server'] } } };
+    let clearExtraErrors = () => {};
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(arrayServerErrors);
+      clearExtraErrors = () => setExtraErrors(undefined);
+      return <Form schema={arraySchema} validator={validator} formData={arrayData} extraErrors={extraErrors} />;
+    }
+    const { container } = render(<Parent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container)).toEqual(['.arr.0 must NOT have fewer than 3 characters', '.arr.2 server']);
+
+    // The reorder raises the remapped item errors, `server` among them, which must not become part of the stored
+    // validator result
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[1]);
+    act(() => clearExtraErrors());
+
+    expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+    expect(errorListMessages(container)).toEqual(['.arr.0 must NOT have fewer than 3 characters']);
+  });
+
+  it.each([
+    {
+      name: 'a server message of its own',
+      street: { type: 'string', minLength: 3 },
+      server: 'server',
+      expected: ['.addr.street must NOT have fewer than 3 characters'],
+    },
+    {
+      name: 'the message the validator reports',
+      street: { type: 'string', minLength: 3 },
+      server: 'must NOT have fewer than 3 characters',
+      expected: ['.addr.street must NOT have fewer than 3 characters'],
+    },
+    { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
+  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
+    'lets the parent clear the extraErrors an optional object Remove sent back, with $name',
+    async ({ street, server, expected }) => {
+      const addrSchema: RJSFSchema = {
+        type: 'object',
+        properties: { addr: { type: 'object', properties: { street } } },
+      };
+      const addrUiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+      const addrData = { addr: { street: 'a' } };
+      const addrServerErrors: ErrorSchema = { addr: { street: { __errors: [server] } } };
+      let clearExtraErrors = () => {};
+      let restyle = () => {};
+      function Parent() {
+        const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(addrServerErrors);
+        const [className, setClassName] = useState<string | undefined>(undefined);
+        clearExtraErrors = () => setExtraErrors(undefined);
+        restyle = () => setClassName('x');
+        return (
+          <Form
+            schema={addrSchema}
+            uiSchema={addrUiSchema}
+            validator={validator}
+            formData={addrData}
+            extraErrors={extraErrors}
+            className={className}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(errorListMessages(container)).toEqual([...expected, `.addr.street ${server}`]);
+
+      // Remove hands back the displayed `errorSchema`, `server` included, which must not outlive the prop supplying it
+      await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
+      act(() => clearExtraErrors());
+      act(() => restyle());
+
+      expect(errorListMessages(container)).toEqual(expected);
+      expect(Object.values(fieldErrorsById(container)).flat()).toEqual(
+        expected.map((stack) => stack.replace('.addr.street ', '')),
+      );
+    },
+  );
+
+  it('lets the parent clear the root extraErrors a root-path raise sent back', async () => {
+    const streetSchema: RJSFSchema = { type: 'object', properties: { street: { type: 'string' } } };
+    const rootServerErrors: ErrorSchema = { __errors: ['server'] };
+    let clearExtraErrors = () => {};
+    let restyle = () => {};
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(rootServerErrors);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      clearExtraErrors = () => setExtraErrors(undefined);
+      restyle = () => setClassName('x');
+      return (
+        <Form
+          schema={streetSchema}
+          uiSchema={capturingUiSchema}
+          validator={validator}
+          formData={{ street: 'a' }}
+          extraErrors={extraErrors}
+          className={className}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container)).toEqual(['. server']);
+
+    // A custom root `Field` handing back the `errorSchema` it displays, `server` included
+    act(() => rootField.onChange({ street: 'b' }, rootField.fieldPath, rootField.errorSchema));
+    act(() => clearExtraErrors());
+    act(() => restyle());
+
+    expect(errorListMessages(container)).toEqual([]);
+    expect(fieldErrorsById(container)).toEqual({});
+  });
+
+  it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
+    };
+    const minLengthError = 'must NOT have fewer than 3 characters';
+    const streetPath = toFieldPath('street', toFieldPath('addr'));
+    const formRef = createRef<Form>();
+    const { container } = render(
+      <Form
+        ref={formRef}
+        schema={addrSchema}
+        uiSchema={capturingUiSchema}
+        validator={validator}
+        initialFormData={{ addr: { street: 'a' } }}
+      />,
+    );
+
+    act(() => rootField.onChange('a', streetPath, { __errors: [minLengthError] }));
+    await submitForm(container.querySelector('form')!, user);
+    act(() => {
+      const { addr } = rootField.errorSchema as ErrorSchema<{ addr: { street: string } }>;
+      rootField.onChange('a', streetPath, addr!.street);
+    });
+
+    // Not a phantom `{ addr: { street: {} } }`, which the next raise on `addr` would read as a validator error
+    expect(formRef.current!.state.schemaValidationErrorSchema).toEqual({
+      addr: { street: { __errors: [minLengthError] } },
+    });
+    expect(formRef.current!.state.schemaValidationErrors.map(({ message }) => message)).toEqual([minLengthError]);
+  });
+
+  it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
+    const { container } = render(<EchoingParent liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('drops the errors of data the parent replaced under onBlur', async () => {
+    const { container } = render(<EchoingParent liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector<HTMLInputElement>('#root_name')!).toHaveValue('longenoughvalue');
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('lists a server error once when a field raises a custom error with live validation off', async () => {
+    // Uncontrolled, so nothing re-derives state from props afterwards and the merge below is the last word
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={validator}
+        extraErrors={otherServerErrors}
+        widgets={errorRaisingWidgets}
+        initialFormData={shortName}
+      />,
+    );
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
   });
 });
 
