@@ -337,6 +337,23 @@ interface PendingChange<T> {
   id?: string;
 }
 
+/** An operation waiting in the `Form` queue */
+interface QueuedOperation {
+  /** Runs the operation, which calls `advance` once React has committed its result */
+  run: (advance: () => void) => void;
+  /** Whether the operation is a field change or `setFieldValue()` */
+  isChange: boolean;
+}
+
+/** Runs `emit`, then advances the queue even if it threw, so a throwing `onChange` cannot stall later operations */
+function advanceAfter(advance: () => void, emit: () => void) {
+  try {
+    emit();
+  } finally {
+    advance();
+  }
+}
+
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
  * resolved schemas, the uiSchema and the registry. Error and edit bookkeeping is the rest of `FormState`.
  */
@@ -1348,7 +1365,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * first one is running; each advances the queue once React has committed its result, so the next one reads props that already
    * hold a parent's response to it.
    */
-  private queue: (() => void)[] = [];
+  private queue: QueuedOperation[] = [];
 
   /** `setState` sharing every unchanged subtree of `state` with the current state, so fields' memo boundaries hold
    * across the update. The updater form keeps it correct under batching. A parent-owned form commits its errors and
@@ -1516,19 +1533,37 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * an operation a consumer's callback starts is queued behind the one that called it, so it never runs against
    * props the parent is still updating.
    *
-   * @param operation - The operation to queue; it must call `advanceQueue()` once React has committed its result
+   * @param run - The operation to queue; it must call the `advance` it is given once React has committed its result
+   * @param [isChange=false] - Whether the operation is a change, whose live validation covers any change queued before it
    */
-  private enqueue(operation: () => void) {
-    this.queue.push(operation);
+  private enqueue(run: QueuedOperation['run'], isChange = false) {
+    this.queue.push({ run, isChange });
     if (this.queue.length === 1) {
-      operation();
+      this.runQueueHead();
     }
   }
 
-  /** Removes the operation that just completed and runs the next one, if any */
-  private advanceQueue() {
-    this.queue.shift();
-    this.queue[0]?.();
+  /** Runs the operation at the head of the queue. An operation that throws before its commit is dropped so the queue
+   * keeps moving; `advance` only acts for the operation still at the head, so a commit it scheduled before throwing
+   * cannot advance a later one.
+   */
+  private runQueueHead() {
+    const head = this.queue[0];
+    if (!head) {
+      return;
+    }
+    const advance = () => {
+      if (this.queue[0] === head) {
+        this.queue.shift();
+        this.runQueueHead();
+      }
+    };
+    try {
+      head.run(advance);
+    } catch (error) {
+      advance();
+      throw error;
+    }
   }
 
   /** Queues a change to the field at `fieldPath`, see `processChange()`
@@ -1539,7 +1574,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * @param [id] - The id of the field that caused the change
    */
   onChange = (newValue: T | undefined, fieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-    this.enqueue(() => this.processChange({ newValue, fieldPath, newErrorSchema, id }));
+    this.enqueue((advance) => this.processChange({ newValue, fieldPath, newErrorSchema, id }, advance), true);
   };
 
   /** Applies one `change` with `applyChange()` and does with the result the one thing that differs between the two
@@ -1549,16 +1584,17 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * has committed, so the next change reads the parent's response to this one.
    *
    * @param change - The change to apply
+   * @param advance - Advances the queue past this change
    */
-  private processChange(change: PendingChange<T>) {
+  private processChange(change: PendingChange<T>, advance: () => void) {
     const { onChange } = this.props;
     const current = this.state;
-    // If there are pending changes in the queue, skip live validation since it will happen with the last change
-    const deferLiveValidate = this.queue.length > 1;
+    // If a later change is queued, skip live validation since it will happen with the last change
+    const deferLiveValidate = this.queue.some((operation, index) => index > 0 && operation.isChange);
     const next = applyChange(current, change, this.props, deferLiveValidate);
     if (!current.isControlled) {
       this.setSharedState(current, next, () =>
-        this.advanceAfter(() => onChange?.(toIChangeEvent(this.state), change.id)),
+        advanceAfter(advance, () => onChange?.(toIChangeEvent(this.state), change.id)),
       );
       return;
     }
@@ -1572,9 +1608,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       // Validated errors describe the proposal, which the parent may yet refuse, so they wait for the parent's
       // answer in `getDerivedStateFromProps`; without live validation they describe the committed data plus the
       // custom errors, which are the form's own. Committing is also what gives the queue a commit to wait for
-      this.setSharedState(current, isValidated ? { ...current, customErrors: next.customErrors } : next, () =>
-        this.advanceQueue(),
-      );
+      this.setSharedState(current, isValidated ? { ...current, customErrors: next.customErrors } : next, advance);
     }
   }
 
@@ -1589,7 +1623,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * nothing is proposed and `onChange` is not called. `extraErrors` are the parent's too and stay.
    */
   reset = () => {
-    this.enqueue(() => {
+    this.enqueue((advance) => {
       if (this.state.isControlled) {
         // `getDerivedStateFromProps` merges `extraErrors` back onto the cleared errors before the render
         const cleared: FormState<T, S, F> = {
@@ -1600,23 +1634,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
           schemaValidationErrorSchema: {},
           customErrors: undefined,
         };
-        this.setSharedState(this.state, cleared, () => this.advanceQueue());
+        this.setSharedState(this.state, cleared, advance);
         return;
       }
       this.setSharedState(this.state, applyReset(this.state, this.props), () =>
-        this.advanceAfter(() => this.props.onChange?.(toIChangeEvent(this.state))),
+        advanceAfter(advance, () => this.props.onChange?.(toIChangeEvent(this.state))),
       );
     });
   };
-
-  /** Runs `emit`, then advances the queue even if it threw, so a throwing `onChange` cannot stall later operations */
-  private advanceAfter(emit: () => void) {
-    try {
-      emit();
-    } finally {
-      this.advanceQueue();
-    }
-  }
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
    * was provided. Also runs any live validation and/or live omit operations if the flags indicate they should happen
@@ -1634,7 +1659,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
       // Queued like a change: a blur in the same tick as an edit must validate or omit the data that edit produced,
       // not the data from before it
-      this.enqueue(() => this.processBlur(id));
+      this.enqueue((advance) => this.processBlur(id, advance));
     }
   };
 
@@ -1642,8 +1667,9 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * a parent-owned form proposes the data and commits the errors, which the blur's validation owns.
    *
    * @param id - The unique `id` of the field that was blurred
+   * @param advance - Advances the queue past this blur
    */
-  private processBlur(id: string) {
+  private processBlur(id: string, advance: () => void) {
     const { onChange } = this.props;
     const committed = this.state;
     // Shared here so an unchanged error list keeps its reference and does not count as a change below
@@ -1659,12 +1685,12 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
           onChange(toIChangeEvent(next), id);
         }
       } finally {
-        this.setSharedState(committed, next, () => this.advanceQueue());
+        this.setSharedState(committed, next, advance);
       }
       return;
     }
     this.setSharedState(committed, next, () =>
-      this.advanceAfter(() => {
+      advanceAfter(advance, () => {
         if (onChange && hasChanges) {
           onChange(toIChangeEvent(this.state), id);
         }
@@ -1702,14 +1728,15 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     event.persist();
     // Queued like a change: a submit in the same tick as an edit submits the data that edit produced
-    this.enqueue(() => this.processSubmit(event));
+    this.enqueue((advance) => this.processSubmit(event, advance));
   };
 
   /** Validates and submits the data the form renders, see `onSubmit()`
    *
    * @param event - The submit HTML form event
+   * @param advance - Advances the queue past this submit
    */
-  private processSubmit(event: SubmitEvent<HTMLFormElement>) {
+  private processSubmit(event: SubmitEvent<HTMLFormElement>, advance: () => void) {
     // oxlint-disable-next-line typescript/no-deprecated
     const { omitExtraData, noValidate, onSubmit } = this.props;
     let { formData: newFormData } = this.state;
@@ -1720,15 +1747,14 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
     if (!noValidate && !this.validateFormWithFormData(newFormData)) {
       // The validation has committed its errors; the queue waits for that commit like any operation's
-      this.setState(
-        (state) => state,
-        () => this.advanceQueue(),
-      );
+      this.setState((state) => state, advance);
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     this.setSharedState(this.state, applySubmit(this.state, this.props, newFormData), () =>
-      this.advanceAfter(() => onSubmit?.(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event)),
+      advanceAfter(advance, () =>
+        onSubmit?.(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event),
+      ),
     );
   }
 

@@ -898,4 +898,65 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
     expect(onError.mock.calls[0][0]).toHaveLength(1);
     expect(getFormData()).toEqual({ a: 'new', b: 'later' });
   });
+
+  it('a submit whose validation throws lets later operations run', () => {
+    const ref = createRef<Form>();
+    const { node, getFormData } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { a: 'old' },
+      noHtml5Validate: true,
+      customValidate: () => {
+        throw new Error('boom');
+      },
+    });
+
+    // React reports an error thrown from an event handler instead of throwing it to the dispatcher
+    const reported: unknown[] = [];
+    const report = (event: ErrorEvent) => {
+      event.preventDefault();
+      reported.push(event.error);
+    };
+    window.addEventListener('error', report);
+    try {
+      fireEvent.submit(node);
+    } finally {
+      window.removeEventListener('error', report);
+    }
+    act(() => ref.current!.setFieldValue('a', 'new'));
+
+    expect(reported).toEqual([new Error('boom')]);
+
+    expect(getFormData()).toEqual({ a: 'new' });
+  });
+
+  it('a blur queued after two edits leaves the last edit live validated', async () => {
+    function EditTwiceThenBlur(props: WidgetProps) {
+      return (
+        <button
+          type='button'
+          id={`${props.id}-commit`}
+          onClick={() => {
+            props.onChange('abcde');
+            props.onChange('ab');
+            props.onBlur(props.id, 'ab');
+          }}
+        >
+          commit
+        </button>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'string', minLength: 5 } } },
+      uiSchema: { foo: { 'ui:widget': EditTwiceThenBlur } },
+      liveValidate: 'onChange',
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+      initialFormData: { foo: 'abcdef' },
+    });
+
+    await user.click(node.querySelector('#root_foo-commit')!);
+
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['must NOT have fewer than 5 characters'] });
+  });
 });

@@ -161,13 +161,15 @@ function AcceptingSeededParent({ formData, initialFormData, onChange, ...props }
   const [value, setValue] = useState(() => {
     const { schema, uiSchema, defaultFormStateBehavior, customMergeAllOf } = props;
     const schemaUtils = createSchemaUtils(props.validator, schema, defaultFormStateBehavior, customMergeAllOf);
-    return schemaUtils.getDefaultFormState(
+    const seeded = schemaUtils.getDefaultFormState(
       schema,
       formData !== undefined ? formData : initialFormData,
       false,
       false,
       uiSchema,
     );
+    // A seed without defaults resolves to `undefined`, which would make the form own its data
+    return seeded === undefined ? null : seeded;
   });
   const [replaced, setReplaced] = useState(formData);
   if (formData !== replaced) {

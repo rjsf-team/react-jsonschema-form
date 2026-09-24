@@ -155,7 +155,7 @@ describe('Live validation onBlur', () => {
 
   it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
     function InlineCallbackParent() {
-      const [value, setValue] = useState<string | undefined>(undefined);
+      const [value, setValue] = useState<string | null>(null);
       return (
         <Form
           schema={schema}
