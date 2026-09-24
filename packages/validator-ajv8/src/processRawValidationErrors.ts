@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -193,7 +193,7 @@ export function transformRJSFValidationErrors<
  * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
  * transform them in what ever way it chooses.
  *
- * @param validator - The `ValidatorType` implementation used for the `getDefaultFormState()` call
+ * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
  * @param rawErrors - The list of raw `ErrorObject`s to process
  * @param formData - The form data to validate
  * @param schema - The schema against which to validate the form data
@@ -207,7 +207,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rawErrors: RawValidationErrorsType<ErrorObject>,
   formData: T | undefined,
   schema: S,
@@ -243,17 +243,13 @@ export default function processRawValidationErrors<
 
   // Include form data with undefined values, which is required for custom validation. `uiSchema` is threaded through
   // so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(
-    validator,
+  const newFormData = getDefaultFormState<T, S, F>(context, {
     schema,
     formData,
-    schema,
-    true,
-    undefined,
-    undefined,
-    undefined,
+    rootSchema: schema,
+    includeUndefinedValues: true,
     uiSchema,
-  ) as T;
+  }) as T;
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

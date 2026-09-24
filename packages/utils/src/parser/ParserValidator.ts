@@ -8,6 +8,7 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -120,6 +121,7 @@ export default class ParserValidator<
   /** Implements the `ValidatorType` `validateFormData()` method to throw an error since it is never supposed to be
    * called
    *
+   * @param _context - The context parameter that is ignored
    * @param _formData - The formData parameter that is ignored
    * @param _schema - The schema parameter that is ignored
    * @param _customValidate - The customValidate parameter that is ignored
@@ -127,6 +129,7 @@ export default class ParserValidator<
    * @param _uiSchema - The uiSchema parameter that is ignored
    */
   validateFormData(
+    _context: Readonly<SchemaContext<T, S, F>>,
     _formData: T,
     _schema: S,
     _customValidate?: CustomValidator<T, S, F>,

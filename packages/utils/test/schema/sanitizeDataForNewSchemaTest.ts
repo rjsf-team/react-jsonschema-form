@@ -19,14 +19,16 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     };
     let schemaUtils: SchemaUtilsType;
     beforeAll(() => {
-      schemaUtils = createSchemaUtils(testValidator, oneOfSchema);
+      schemaUtils = createSchemaUtils({ validator: testValidator }, oneOfSchema);
     });
     it('returns undefined when the new schema does not contain a "property" object', () => {
-      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, {}, {})).toBeUndefined();
+      expect(sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, {}, {})).toBeUndefined();
     });
     it('returns input formData when the old schema is not an object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
-      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, undefined, oneOfData)).toEqual(oneOfData);
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, undefined, oneOfData),
+      ).toEqual(oneOfData);
     });
     it('handles boolean property schemas without crashing', () => {
       const oldSchema: RJSFSchema = {
@@ -37,7 +39,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         type: 'object',
         properties: { foo: false },
       };
-      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, oldSchema, { foo: 'x' })).toEqual({
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, oldSchema, { foo: 'x' }),
+      ).toEqual({
         foo: 'x',
       });
     });
@@ -45,13 +49,17 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
       const oldSchema = { type: 'object', properties: { foo: {} } } as RJSFSchema;
       const newSchema = { type: 'object', properties: { foo: undefined } } as unknown as RJSFSchema;
-      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, oldSchema, { foo: 'x' })).toEqual({
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, oldSchema, { foo: 'x' }),
+      ).toEqual({
         foo: 'x',
       });
     });
     it('returns input formData when the old schema does not contain a "property" object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
-      expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, {}, oneOfData)).toEqual(oneOfData);
+      expect(sanitizeDataForNewSchema({ validator: testValidator }, oneOfSchema, newSchema, {}, oneOfData)).toEqual(
+        oneOfData,
+      );
     });
     it('restores the default for an undefined property that is newly defined by the new schema', () => {
       const newSchema: RJSFSchema = {
@@ -599,9 +607,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           },
         },
       };
-      expect(sanitizeDataForNewSchema(testValidator, rootSchema, newSchema, oldSchema, { oldField: 'test' })).toEqual(
-        {},
-      );
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, newSchema, oldSchema, { oldField: 'test' }),
+      ).toEqual({});
     });
     it('resolves a dependency nested inside a property before sanitizing its data (#5250)', () => {
       // The root schema itself has no top-level `dependencies`, so its own retrieved form is identical whether
@@ -630,7 +638,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // side); that resolution checks both oneOf branches: the "Cat" branch matches, the "Fish" branch does not.
       testValidator.setReturnValues({ isValid: [true, false] });
       expect(
-        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, {
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, rootSchema, rootSchema, {
           m: { animal: 'Cat', food: 'worms' },
         }),
       ).toEqual({ m: { animal: 'Cat', food: 'meat' } });
@@ -658,7 +666,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // only resolved once (not once per side).
       testValidator.setReturnValues({ isValid: [true, false, false, true] });
       expect(
-        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, [
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, rootSchema, rootSchema, [
           { animal: 'Cat', food: 'worms' },
           { animal: 'Fish', food: 'meat' },
         ]),
@@ -694,7 +702,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       testValidator.setReturnValues({ isValid: [true, false, false, true] });
       expect(
-        sanitizeDataForNewSchema(testValidator, rootSchema, rootSchema, rootSchema, [
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, rootSchema, rootSchema, [
           { animal: 'Cat', food: 'worms' },
           { animal: 'Fish', food: 'meat' },
         ]),
@@ -831,7 +839,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         type: 'array',
         items: { $ref: '#/definitions/string_def' },
       };
-      expect(sanitizeDataForNewSchema(testValidator, rootSchema, newSchema, oldSchema, ['1', '2'])).toEqual(['1', '2']);
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, newSchema, oldSchema, ['1', '2']),
+      ).toEqual(['1', '2']);
     });
     it('returns trimmed array when the new schema has maxItems < size for object type', () => {
       const oldSchema: RJSFSchema = {

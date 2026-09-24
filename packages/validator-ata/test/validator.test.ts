@@ -1,5 +1,5 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
+import { ErrorSchemaBuilder, ID_KEY, mergeSchemas, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
@@ -116,7 +116,7 @@ describe('ATAValidator', () => {
         },
         required: ['email'],
       };
-      const { errors, errorSchema } = v.validateFormData({ email: 'not-an-email' }, schema);
+      const { errors, errorSchema } = v.validateFormData({ validator: v }, { email: 'not-an-email' }, schema);
       expect(errors.length).toBeGreaterThan(0);
       const formatError = errors.find((e) => e.name === 'format');
       expect(formatError).toBeDefined();
@@ -130,7 +130,7 @@ describe('ATAValidator', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'string', minLength: 5 };
       const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
-      const { errors } = v.validateFormData('abc', schema, undefined, transform);
+      const { errors } = v.validateFormData({ validator: v }, 'abc', schema, undefined, transform);
       expect(transform).toHaveBeenCalled();
       expect(errors[0].message).toBe('transformed');
     });
@@ -145,7 +145,7 @@ describe('ATAValidator', () => {
         errorHandler.x.addError('custom error');
         return errorHandler;
       });
-      const { errorSchema } = v.validateFormData({ x: 'a' }, schema, customValidate);
+      const { errorSchema } = v.validateFormData({ validator: v }, { x: 'a' }, schema, customValidate);
       expect(customValidate).toHaveBeenCalled();
       expect(errorSchema.x?.__errors).toContain('custom error');
     });
@@ -155,7 +155,7 @@ describe('ATAValidator', () => {
       const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
       const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
       const customValidate = vi.fn((_data, errorHandler) => errorHandler);
-      v.validateFormData({}, schema, customValidate, undefined, uiSchema);
+      v.validateFormData({ validator: v }, {}, schema, customValidate, undefined, uiSchema);
       expect(customValidate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
     });
 
@@ -167,7 +167,7 @@ describe('ATAValidator', () => {
         allOf: [{ required: ['animal'] }],
       };
       const uiSchema = { animal: { title: 'My animal uiSchema' } };
-      const { errors, errorSchema } = v.validateFormData({}, schema, undefined, undefined, uiSchema);
+      const { errors, errorSchema } = v.validateFormData({ validator: v }, {}, schema, undefined, undefined, uiSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
@@ -185,7 +185,14 @@ describe('ATAValidator', () => {
         then: { required: ['animal'] },
       };
       const uiSchema = { animal: { title: 'My animal uiSchema' } };
-      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema, undefined, undefined, uiSchema);
+      const { errors, errorSchema } = v.validateFormData(
+        { validator: v },
+        { hasPet: true },
+        schema,
+        undefined,
+        undefined,
+        uiSchema,
+      );
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
@@ -198,7 +205,7 @@ describe('ATAValidator', () => {
         properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
         allOf: [{ required: ['animal'] }],
       };
-      const { errors, errorSchema } = v.validateFormData({}, schema);
+      const { errors, errorSchema } = v.validateFormData({ validator: v }, {}, schema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
@@ -215,7 +222,7 @@ describe('ATAValidator', () => {
         if: { properties: { hasPet: { const: true } }, required: ['hasPet'] },
         then: { required: ['animal'] },
       };
-      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema);
+      const { errors, errorSchema } = v.validateFormData({ validator: v }, { hasPet: true }, schema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
@@ -428,5 +435,39 @@ describe('cloneForValidation', () => {
     const schema: RJSFSchema = { type: 'string' };
     expect(v.isValid(schema, 'hello', schema)).toBe(true);
     expect(v.isValid(schema, undefined, schema)).toBe(false);
+  });
+});
+
+describe('validateFormData() with a SchemaContext', () => {
+  it('computes the data handed to customValidate with the customMergeAllOf and defaultFormStateBehavior of the context', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
+      properties: { fixed: { type: 'string', const: 'constant' } },
+    };
+    const customMergeAllOf = vi.fn(
+      ({ allOf, ...rest }: RJSFSchema) => mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema,
+    );
+    const customValidate = vi.fn((_formData, errors) => errors);
+    validator.validateFormData(
+      { validator, customMergeAllOf, defaultFormStateBehavior: { constAsDefaults: 'never' } },
+      {},
+      schema,
+      customValidate,
+    );
+    expect(customMergeAllOf).toHaveBeenCalled();
+    expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
+  });
+
+  it('computes the data handed to customValidate with itself, whatever validator the context holds', () => {
+    const validator = customizeValidator();
+    const otherValidator = { isValid: vi.fn(() => true), validateFormData: vi.fn(), rawValidation: vi.fn() };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } },
+    };
+    validator.validateFormData({ validator: otherValidator }, { choice: 'b' }, schema, (_formData, errors) => errors);
+    expect(otherValidator.isValid).not.toHaveBeenCalled();
   });
 });

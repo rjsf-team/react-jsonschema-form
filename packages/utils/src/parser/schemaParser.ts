@@ -21,12 +21,12 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   rootSchema: S,
   schema: S,
 ) {
-  const schemas = retrieveSchemaInternal<T, S, F>(validator, schema, rootSchema, undefined, true);
+  const schemas = retrieveSchemaInternal<T, S, F>({ validator }, schema, rootSchema, undefined, true);
   schemas.forEach((localSchema) => {
     const sameSchemaIndex = recurseList.findIndex((item) => deepEquals(item, localSchema));
     if (sameSchemaIndex === -1) {
       recurseList.push(localSchema);
-      const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, localSchema, rootSchema, true);
+      const allOptions = resolveAnyOrOneOfSchemas<T, S, F>({ validator }, localSchema, rootSchema, true);
       allOptions.forEach((s) => {
         if (PROPERTIES_KEY in s && s[PROPERTIES_KEY]) {
           for (const value of Object.values(localSchema[PROPERTIES_KEY] ?? {})) {

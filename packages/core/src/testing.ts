@@ -18,7 +18,7 @@ export function getTestRegistry(
     useFallbackUiForUnsupportedType: false,
   },
 ): Registry {
-  const schemaUtils = createSchemaUtils(validator, rootSchema);
+  const schemaUtils = createSchemaUtils({ validator }, rootSchema);
   const registry: Registry = {
     ...buildRegistry(
       { schema: rootSchema, validator, fields, templates, widgets, formContext },

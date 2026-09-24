@@ -1,5 +1,13 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  ErrorSchemaBuilder,
+  JUNK_OPTION_ID,
+  RJSF_REF_KEY,
+  hashForSchema,
+  mergeSchemas,
+  noop,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -44,7 +52,7 @@ describe('ATAPrecompiledValidator', () => {
         expect(validator.ensureSameRootSchema(rootSchema)).toBe(true);
       });
       it('using resolved rootSchema returns true', () => {
-        const resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
+        const resolvedRootSchema = retrieveSchema({ validator }, rootSchema, rootSchema);
         expect(validator.ensureSameRootSchema(resolvedRootSchema)).toBe(true);
       });
       it('using a different schema throws', () => {
@@ -133,7 +141,7 @@ describe('ATAPrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.validateFormData({}, schema)).toThrow(
+        expect(() => validator.validateFormData({ validator }, {}, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -143,7 +151,7 @@ describe('ATAPrecompiledValidator', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ foo: '42' }, rootSchema);
+          const result = validator.validateFormData({ validator }, { foo: '42' }, rootSchema);
           errors = result.errors;
         });
 
@@ -156,7 +164,7 @@ describe('ATAPrecompiledValidator', () => {
         let errorSchema: ErrorSchema;
 
         beforeAll(() => {
-          const result = validator.validateFormData({ foo: 42 }, rootSchema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, rootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -173,7 +181,7 @@ describe('ATAPrecompiledValidator', () => {
       describe('Validating multipleOf with a float', () => {
         let errors: RJSFValidationError[];
         beforeAll(() => {
-          const result = validator.validateFormData({ price: 1.05 }, rootSchema);
+          const result = validator.validateFormData({ validator }, { price: 1.05 }, rootSchema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -184,7 +192,7 @@ describe('ATAPrecompiledValidator', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
         beforeAll(() => {
-          const result = validator.validateFormData({ price: 0.14 }, rootSchema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, rootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -208,7 +216,7 @@ describe('ATAPrecompiledValidator', () => {
         describe('formData is provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData(formData, rootSchema);
+            const result = validator.validateFormData({ validator }, formData, rootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -219,7 +227,7 @@ describe('ATAPrecompiledValidator', () => {
         describe('formData is not provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema);
+            const result = validator.validateFormData({ validator }, formData, rootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -244,7 +252,14 @@ describe('ATAPrecompiledValidator', () => {
           };
           newErrorMessage = 'Better error message';
           transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
-          const result = validator.validateFormData({ name: 42 }, rootSchema, undefined, transformErrors, uiSchema);
+          const result = validator.validateFormData(
+            { validator },
+            { name: 42 },
+            rootSchema,
+            undefined,
+            transformErrors,
+            uiSchema,
+          );
           errors = result.errors;
         });
 
@@ -276,7 +291,14 @@ describe('ATAPrecompiledValidator', () => {
         describe('formData is provided and passes custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
+            const result = validator.validateFormData(
+              { validator },
+              formData,
+              rootSchema,
+              validate,
+              undefined,
+              uiSchema,
+            );
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -290,7 +312,14 @@ describe('ATAPrecompiledValidator', () => {
         describe('formData is provided, but fails custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
+            const result = validator.validateFormData(
+              { validator },
+              formData,
+              rootSchema,
+              validate,
+              undefined,
+              uiSchema,
+            );
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -309,7 +338,7 @@ describe('ATAPrecompiledValidator', () => {
         describe('formData is missing data', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, rootSchema, validate);
+            const result = validator.validateFormData({ validator }, formData, rootSchema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -330,21 +359,21 @@ describe('ATAPrecompiledValidator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData({ validator }, formData, rootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData({ validator }, formData, rootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url with bad data generates error', () => {
           const formData = {
             dataUrlWithName: 'x=',
           };
-          const result = validator.validateFormData(formData, rootSchema);
+          const result = validator.validateFormData({ validator }, formData, rootSchema);
           expect(result.errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors![0]).toEqual('must match format "data-url"');
@@ -363,7 +392,7 @@ describe('ATAPrecompiledValidator', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         vi.mocked(localizer).mockClear();
-        const result = validator.validateFormData({ foo: 42 }, rootSchema);
+        const result = validator.validateFormData({ validator }, { foo: 42 }, rootSchema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -389,14 +418,14 @@ describe('ATAPrecompiledValidator', () => {
     });
     describe('validating using custom string formats', () => {
       it('should not return a validation error if proper string format is used', () => {
-        const result = validator.validateFormData({ phone: '800-555-2368' }, rootSchema);
+        const result = validator.validateFormData({ validator }, { phone: '800-555-2368' }, rootSchema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ phone: '800.555.2368' }, rootSchema);
+          const result = validator.validateFormData({ validator }, { phone: '800.555.2368' }, rootSchema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
@@ -413,5 +442,28 @@ describe('ATAPrecompiledValidator', () => {
       const validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, undefined, 'all');
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
+  });
+});
+
+describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
+  const allOfSchema: RJSFSchema = {
+    type: 'object',
+    allOf: [{ properties: { name: { type: 'string' } } }],
+  };
+  // Merges the `allOf` the way the default merge does, plus a title, so the resolved root schema differs from the
+  // default resolution of the same root schema
+  const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) =>
+    ({ ...(mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema), title: 'Custom merge' }) as RJSFSchema;
+
+  it('accepts the root schema the form resolved with its customMergeAllOf', () => {
+    const validator = new ATAPrecompiledValidator(
+      loadModule(compileSchemaValidatorsCode(allOfSchema)) as ValidatorFunctions,
+      allOfSchema,
+    );
+    const context = { validator, customMergeAllOf };
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
+    expect(resolvedRootSchema.title).toBe('Custom merge');
+    expect(validator.validateFormData(context, formData, resolvedRootSchema).errors).toEqual([]);
   });
 });

@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -186,7 +186,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: Readonly<SchemaContext<T, S, F>>,
   rawErrors: RawValidationErrorsType<ValidationError>,
   formData: T | undefined,
   schema: S,
@@ -222,17 +222,13 @@ export default function processRawValidationErrors<
 
   // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
   // and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(
-    validator,
+  const newFormData = getDefaultFormState<T, S, F>(context, {
     schema,
     formData,
-    schema,
-    true,
-    undefined,
-    undefined,
-    undefined,
+    rootSchema: schema,
+    includeUndefinedValues: true,
     uiSchema,
-  ) as T;
+  }) as T;
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

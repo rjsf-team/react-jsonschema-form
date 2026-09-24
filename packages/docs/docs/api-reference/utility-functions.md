@@ -3,8 +3,8 @@
 In version 5, the utility functions from `@rjsf/core/utils` were refactored into their own library called `@rjsf/utils`.
 These utility functions are separated into two distinct groups.
 The first, larger, group are the [functions](#non-validator-utility-functions) that do NOT require a `ValidatorType` interface be provided as one of their parameters.
-The second, smaller, group are the [functions](#validator-based-utility-functions) that DO require a `ValidatorType` interface be provided as a parameter.
-There is also a helper [function](#schema-utils-creation-function) used to create a `SchemaUtilsType` implementation from a `ValidatorType` implementation and `rootSchema` object.
+The second, smaller, group are the [functions](#validator-based-utility-functions) that DO require a `ValidatorType` interface, which they receive as part of a `SchemaContext`.
+There is also a helper [function](#schema-utils-creation-function) used to create a `SchemaUtilsType` implementation from a `SchemaContext` and `rootSchema` object.
 
 ## Constants
 
@@ -26,6 +26,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 **`ObjectPath`** — Used by the path utilities (`getByPath`, `setByPath`, `hasByPath`, `unsetByPath`) to address a value inside a plain object. It is `string | number | FieldPathList`. A bare **string is always a single literal key**: `'a.b'` means the key `'a.b'`, never the nested path `a` → `b`. To walk a dotted path string, split it explicitly with [toPath()](#topath) first, or pass a `FieldPathList` (`(string | number)[]`) of segments. Reads and existence checks resolve **own** properties only, so inherited members never appear as form data.
 
 **`FieldPath`** — The identity of a field in a form: a canonical string path such as `friends[0].firstName`, with the root form as the empty string (`ROOT_FIELD_PATH`). Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped, so the grammar is unambiguous even when property names contain dots or brackets. It is a branded `string`, so a plain string (such as a DOM id) cannot be passed where a `FieldPath` is expected; build one with [toFieldPath()](#tofieldpath) and derive the HTML id, HTML name or segment list from it with [fieldPathToId()](#fieldpathtoid), [fieldPathToName()](#fieldpathtoname) and [fieldPathToList()](#fieldpathtolist).
+
+**`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf` and `defaultFormStateBehavior` (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) and [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
@@ -1764,18 +1766,29 @@ This is used in isValid to make references to the rootSchema
 
 ## Validator-based utility functions
 
+Every function in this group takes a [`SchemaContext`](#types) as its first parameter, holding the `validator` along with the `customMergeAllOf` and `defaultFormStateBehavior` settings of the form.
+The function passes that `SchemaContext` along whole to every other schema function it calls, so those settings reach every schema it resolves.
+
+```ts
+const context: SchemaContext = { validator, customMergeAllOf, defaultFormStateBehavior };
+
+const resolvedSchema = retrieveSchema(context, schema, rootSchema, formData);
+const defaults = getDefaultFormState(context, { schema, formData, rootSchema });
+```
+
+`getDefaultFormState()` takes the rest of its parameters as a props object, since so many of them are optional; the others keep theirs positional.
+
 ### findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The node within the JSON schema in which to search
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1788,13 +1801,12 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
 - schema: S - The schema element in which to search for the selected anyOf/oneOf option
 - fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
 - xxx: 'anyOf' | 'oneOf' - Either `anyOf` or `oneOf`, defines which value is being sought
 - [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1806,14 +1818,15 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- theSchema: S - The schema for which the default state is desired
-- [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
-- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
-- [defaultFormStateBehavior]: DefaultFormStateBehavior - See `Form` documentation for the [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) prop
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
-- [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs; its `defaultFormStateBehavior` controls how the defaults are computed, see the `Form` documentation for the [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) prop
+- props: GetDefaultFormStateProps&lt;T, S, F> - The props for this function:
+  - schema: S - The schema for which the default state is desired
+  - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
+  - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+  - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
+  - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
+  - [uiSchema]: UiSchema&lt;T, S, F> - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
+  - [uiSchemaDefinitions]: UiSchemaDefinitions&lt;T, S, F> - Optional `ui:definitions`, defaulting to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is a sub-uiSchema that doesn't carry the root's own `ui:definitions`
 
 #### Returns
 
@@ -1825,7 +1838,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -1844,13 +1857,12 @@ The closest match is determined using the number of matching properties, and mor
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
 - [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1862,12 +1874,11 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1880,12 +1891,11 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The current node within the JSON schema recursion
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
 - defaultValue: T | S - The value to return if a value is not found for the `pathList` path
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1911,7 +1921,7 @@ Always returns the first option if there is nothing that matches.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` whose `validator` is used to match the options
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
@@ -1927,10 +1937,9 @@ Checks to see if the `schema` combination represents a multi-select
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1942,10 +1951,9 @@ Checks to see if the `schema` combination represents a select
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -1971,16 +1979,15 @@ Any option whose `additionalProperties` is `false` is widened to `true` so that 
 ### retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
-resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
+resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
 potentially recursive resolution.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -2028,7 +2035,7 @@ const formData = {
   },
 };
 
-const filteredFormData = omitExtraData(validator, schema, schema, formData);
+const filteredFormData = omitExtraData({ validator }, schema, schema, formData);
 console.log(filteredFormData);
 /*
 {
@@ -2045,7 +2052,7 @@ console.log(filteredFormData);
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema to use for filtering the formData
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The formData to filter
@@ -2065,12 +2072,11 @@ A new schema that declares a type of its own is the type the data has to satisfy
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
 
@@ -2080,12 +2086,12 @@ A new schema that declares a type of its own is the type the data has to satisfy
 
 ### createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
-Creates a `SchemaUtilsType` interface that is based around the given `validator` and `rootSchema` parameters.
-The resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
+Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
 
 #### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- context: Readonly&lt;SchemaContext&lt;T, S, F>> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 
 #### Returns

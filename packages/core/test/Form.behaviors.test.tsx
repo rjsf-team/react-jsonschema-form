@@ -1192,6 +1192,26 @@ describe('Deriving state from changed props', () => {
   });
 });
 
+describe('customValidate', () => {
+  it('hands customValidate data computed with the defaultFormStateBehavior of the form', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', default: 'Jo' }, fixed: { type: 'string', const: 'constant' } },
+    };
+    const customValidate = vi.fn((_formData, errors) => errors);
+    const { node } = createFormComponent({
+      schema,
+      customValidate,
+      defaultFormStateBehavior: { constAsDefaults: 'never' },
+    });
+
+    await submitForm(node, user);
+
+    expect(customValidate).toHaveBeenCalled();
+    expect(customValidate.mock.lastCall![0]).toEqual({ name: 'Jo' });
+  });
+});
+
 describe('Calling reset from ref object', () => {
   it('Reset API test', async () => {
     const schema: RJSFSchema = {

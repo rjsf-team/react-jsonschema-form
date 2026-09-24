@@ -8,20 +8,20 @@ describe('getUiRequiredErrorSchema()', () => {
   it('returns an empty error schema when no ui:required is set anywhere', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
     const uiSchema: UiSchema = { foo: { 'ui:widget': 'textarea' } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { foo: 'x' });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { foo: 'x' });
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
   it('returns an empty error schema when uiSchema is undefined', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, undefined, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, undefined, {});
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
   it('reports a missing top-level ui:required field', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.nick');
@@ -31,21 +31,21 @@ describe('getUiRequiredErrorSchema()', () => {
   it('does not report a ui:required field that has a value', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { nick: 'Chuck' });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { nick: 'Chuck' });
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
   it('ignores ui:required: false', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const uiSchema: UiSchema = { nick: { 'ui:required': false } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
   it('does not duplicate a schema-required error when the same field is also ui:required: true', () => {
     const schema: RJSFSchema = { type: 'object', required: ['nick'], properties: { nick: { type: 'string' } } };
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
@@ -57,7 +57,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { addr: { zip: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.addr.zip');
@@ -67,7 +67,7 @@ describe('getUiRequiredErrorSchema()', () => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     // 'ui:required' isn't a real uiSchema key at the root, but even if present it must not be checked at path []
     const uiSchema = { 'ui:required': true } as unknown as UiSchema;
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
@@ -79,7 +79,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { a: { b: { c: { 'ui:required': true } } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { a: { b: {} } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { a: { b: {} } });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.a.b.c');
@@ -93,7 +93,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { a: { b: { c: { 'ui:required': true } } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.a.b.c');
@@ -104,7 +104,10 @@ describe('getUiRequiredErrorSchema()', () => {
     // still exercises the "no properties" branch it's meant to check.
     const schema: RJSFSchema = { type: 'object', properties: { empty: { type: 'object' }, nick: { type: 'string' } } };
     const uiSchema: UiSchema = { empty: { 'ui:widget': 'someWidget' }, nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { empty: {}, nick: 'x' });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      empty: {},
+      nick: 'x',
+    });
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
@@ -114,7 +117,7 @@ describe('getUiRequiredErrorSchema()', () => {
       properties: { flag: true as unknown as RJSFSchema, nick: { type: 'string' } },
     };
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.nick');
@@ -127,7 +130,7 @@ describe('getUiRequiredErrorSchema()', () => {
       dependencies: { a: { properties: { b: { type: 'string' } } } },
     };
     const uiSchema: UiSchema = { b: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { a: 'x' });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { a: 'x' });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.b');
@@ -146,7 +149,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { address: { street: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { address: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { address: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.address.street');
@@ -159,7 +162,7 @@ describe('getUiRequiredErrorSchema()', () => {
       properties: { address: { $ref: '#/definitions/Address' } },
     };
     const uiSchema: UiSchema = { address: { street: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { address: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { address: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.address.street');
@@ -171,7 +174,7 @@ describe('getUiRequiredErrorSchema()', () => {
       $ref: '#/definitions/Person',
     };
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.nick');
@@ -186,7 +189,7 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       'ui:definitions': { '#/definitions/Address': { zip: { 'ui:required': true } } },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { home: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { home: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.home.zip');
@@ -204,7 +207,10 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       'ui:definitions': { '#/definitions/Address': { zip: { 'ui:required': true } } },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { home: {}, work: { zip: '1' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      home: {},
+      work: { zip: '1' },
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.home.zip');
@@ -218,11 +224,10 @@ describe('getUiRequiredErrorSchema()', () => {
     };
     const uiSchemaDefinitions = { '#/definitions/Address': { zip: { 'ui:required': true } } };
     const errorSchema = getUiRequiredErrorSchema(
-      testValidator,
+      { validator: testValidator },
       schema,
       undefined,
       { home: {} },
-      undefined,
       uiSchemaDefinitions,
     );
     const errors = toErrorList(errorSchema);
@@ -239,11 +244,11 @@ describe('getUiRequiredErrorSchema()', () => {
         return { 'ui:widget': 'textarea' };
       },
     };
-    getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     expect(scans).toBe(1);
     // A second call against the very same uiSchema object (the common case across `liveValidate: 'onChange'`
     // keystrokes, where only formData changes) must not re-scan it.
-    getUiRequiredErrorSchema(testValidator, schema, uiSchema, { nick: 'x' });
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { nick: 'x' });
     expect(scans).toBe(1);
     // A genuinely different uiSchema object is still scanned, proving the assertions above aren't just trivially
     // satisfied by the scan never running at all.
@@ -253,7 +258,7 @@ describe('getUiRequiredErrorSchema()', () => {
         return { 'ui:widget': 'textarea' };
       },
     };
-    getUiRequiredErrorSchema(testValidator, schema, otherUiSchema, {});
+    getUiRequiredErrorSchema({ validator: testValidator }, schema, otherUiSchema, {});
     expect(scans).toBe(2);
   });
 
@@ -278,7 +283,7 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       'ui:definitions': { '#/definitions/Unrelated': { zip: { 'ui:widget': 'text' } } },
     };
-    const errorSchema = getUiRequiredErrorSchema(validator, schema, uiSchema, { a: { flag: true } });
+    const errorSchema = getUiRequiredErrorSchema({ validator }, schema, uiSchema, { a: { flag: true } });
     expect(toErrorList(errorSchema)).toEqual([]);
     expect(validator.isValid).not.toHaveBeenCalled();
   });
@@ -291,7 +296,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { people: { items: { name: { 'ui:required': true } } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}, { name: 'x' }] });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      people: [{}, { name: 'x' }],
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.people.0.name');
@@ -308,7 +315,7 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       items: [{ first: { 'ui:required': true } }, { second: { 'ui:required': true } }],
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{}, {}]);
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}, {}]);
     const errors = toErrorList(errorSchema)
       .map((e) => e.property)
       .sort();
@@ -325,7 +332,7 @@ describe('getUiRequiredErrorSchema()', () => {
       items: { first: { 'ui:required': true } },
       additionalItems: { extra: { 'ui:required': true } },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{ first: 'x' }, {}]);
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{ first: 'x' }, {}]);
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.1.extra');
@@ -343,7 +350,7 @@ describe('getUiRequiredErrorSchema()', () => {
       items: () => ({ first: { 'ui:required': true } }),
       additionalItems: { extra: { 'ui:required': true } },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{ first: 'x' }, {}]);
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{ first: 'x' }, {}]);
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.1.extra');
@@ -358,7 +365,10 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       additionalProperties: { name: { 'ui:required': true } },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { foo: 'x', extraKey: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      foo: 'x',
+      extraKey: {},
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.extraKey.name');
@@ -377,7 +387,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true }, bField: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'a' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'a' },
+    });
     const errors = toErrorList(errorSchema);
     // Only the selected ('a') branch's field is checked; the unselected branch's bField is not reached.
     expect(errors).toHaveLength(1);
@@ -397,7 +409,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.aField');
@@ -416,7 +428,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { bField: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
@@ -438,7 +452,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { oneOf: [{}, { bField: { 'ui:required': true } }] } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
@@ -457,7 +473,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { anyOf: [{}, { bField: { 'ui:required': true } }] } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
@@ -480,7 +498,9 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = {
       thing: { bField: { 'ui:required': true }, oneOf: [{ aField: { 'ui:required': true } }] },
     };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
@@ -499,7 +519,9 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     };
     const uiSchema: UiSchema = { thing: { oneOf: [{ aField: { 'ui:required': true } }, undefined as never] } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: { kind: 'b' } });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
+      thing: { kind: 'b' },
+    });
     expect(toErrorList(errorSchema)).toEqual([]);
   });
 
@@ -509,7 +531,7 @@ describe('getUiRequiredErrorSchema()', () => {
       properties: { thing: { type: 'object', oneOf: [], properties: { nick: { type: 'string' } } } },
     };
     const uiSchema: UiSchema = { thing: { nick: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.nick');
@@ -527,7 +549,7 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     } as unknown as RJSFSchema;
     const uiSchema: UiSchema = { thing: { nick: { 'ui:required': true } } };
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} });
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { thing: {} });
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.nick');
@@ -548,7 +570,7 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = {
         'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
       };
-      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { root: {} });
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { root: {} });
       const errors = toErrorList(errorSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].property).toBe('.root.value');
@@ -573,7 +595,7 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = {
         'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
       };
-      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {
         root: { value: 'x', next: {} },
       });
       expect(toErrorList(errorSchema)).toEqual([]);
@@ -593,7 +615,7 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = { 0: { 'ui:required': true } };
     // Simulates formData left over from a mismatched source (e.g. a previous oneOf branch), which is a primitive
     // rather than the object this node's schema expects.
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, 'abc');
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, 'abc');
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.0');
@@ -615,11 +637,10 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
       const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
+        { validator: testValidator },
         schema,
         uiSchema,
         {},
-        undefined,
         undefined,
         globalUiOptions,
       );
@@ -641,11 +662,10 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
       const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
+        { validator: testValidator },
         schema,
         uiSchema,
         {},
-        undefined,
         undefined,
         globalUiOptions,
       );
@@ -667,11 +687,10 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
       const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
+        { validator: testValidator },
         schema,
         uiSchema,
         { thing: {} },
-        undefined,
         undefined,
         globalUiOptions,
       );
@@ -692,11 +711,10 @@ describe('getUiRequiredErrorSchema()', () => {
         const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
         const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
         const errorSchema = getUiRequiredErrorSchema(
-          testValidator,
+          { validator: testValidator },
           schema,
           uiSchema,
           { thing: thingValue },
-          undefined,
           undefined,
           globalUiOptions,
         );
@@ -714,11 +732,10 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = { thing: { 'ui:required': true } };
       const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
+        { validator: testValidator },
         schema,
         uiSchema,
         {},
-        undefined,
         undefined,
         globalUiOptions,
       );
@@ -735,7 +752,7 @@ describe('getUiRequiredErrorSchema()', () => {
         },
       };
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
       const errors = toErrorList(errorSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].property).toBe('.thing.aField');
@@ -753,7 +770,7 @@ describe('getUiRequiredErrorSchema()', () => {
       const uiSchema: UiSchema = {
         people: { items: () => ({ name: { 'ui:required': true } }) },
       };
-      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}] });
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { people: [{}] });
       const errors = toErrorList(errorSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].property).toBe('.people.0.name');
@@ -774,11 +791,10 @@ describe('getUiRequiredErrorSchema()', () => {
         },
       };
       const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
+        { validator: testValidator },
         schema,
         uiSchema,
         { people: [{}] },
-        undefined,
         undefined,
         undefined,
         { requireName: true },
@@ -804,7 +820,7 @@ describe('getUiRequiredErrorSchema()', () => {
           },
         },
       };
-      const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { people: [{}] });
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { people: [{}] });
       expect(toErrorList(errorSchema)).toEqual([]);
       expect(consoleErrorStub).toHaveBeenCalledWith(
         'Error executing dynamic uiSchema.items function for item at index 0:',

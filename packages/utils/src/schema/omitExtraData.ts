@@ -7,8 +7,8 @@ import type {
   FormContextType,
   GenericObjectType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import isSelect from './isSelect.ts';
@@ -51,24 +51,18 @@ function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S, custom
  * properties whose schema-filtered content is entirely empty (per `isValueEmpty`) are pruned; required
  * properties and scalar values are always kept when schema-defined.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s
  * @param [formData] - The data for the `Form`
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(
-  validator: ValidatorType<T, S, F>,
-  schema: S,
-  rootSchema: S = {} as S,
-  formData?: T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
-): T | undefined {
+>(context: Readonly<SchemaContext<T, S, F>>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
+  const { validator, customMergeAllOf } = context;
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -273,7 +267,7 @@ export default function omitExtraData<
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, customMergeAllOf)) {
+    if (!Array.isArray(oneOf) || isSelect(context, childSchema, rootSchema)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
@@ -281,13 +275,12 @@ export default function omitExtraData<
     // respects additionalProperties:false during filtering.
     const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
     const bestIndex = getClosestMatchingOption<T, S, F>(
-      validator,
+      context,
       rootSchema,
       source as T,
       scoringOptions,
       0,
       getDiscriminatorFieldFromSchema<S>(childSchema),
-      customMergeAllOf,
     );
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.

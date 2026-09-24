@@ -3,6 +3,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -101,11 +102,12 @@ export default class ATAPrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
+   * @param [context] - The `SchemaContext` of the form, so the root schema resolves the way the form resolved it
    */
-  ensureSameRootSchema(schema: S, formData?: T) {
+  ensureSameRootSchema(schema: S, formData?: T, context: Readonly<SchemaContext<T, S, F>> = { validator: this }) {
     if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
-      const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
+      const resolvedRootSchema = retrieveSchema(context, this.rootSchema, this.rootSchema, formData);
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
@@ -120,10 +122,15 @@ export default class ATAPrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate, if any
+   * @param [context] - The `SchemaContext` of the form, used to check the `schema` against the root schema
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
-    this.ensureSameRootSchema(schema, formData);
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: T,
+    context?: Readonly<SchemaContext<T, S, F>>,
+  ): RawValidationErrorsType<Result> {
+    this.ensureSameRootSchema(schema, formData, context);
     this.mainValidator(formData);
 
     if (typeof this.localizer === 'function') {
@@ -142,6 +149,7 @@ export default class ATAPrecompiledValidator<
    * supports a `transformErrors` function that will take the raw ata validation errors, prior to custom validation and
    * transform them in what ever way it chooses.
    *
+   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
@@ -149,15 +157,17 @@ export default class ATAPrecompiledValidator<
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData(
+    context: Readonly<SchemaContext<T, S, F>>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
+    const validationContext = { ...context, validator: this };
+    const rawErrors = this.rawValidation<ValidationError>(schema, formData, validationContext);
     return processRawValidationErrors(
-      this,
+      validationContext,
       rawErrors,
       formData,
       schema,

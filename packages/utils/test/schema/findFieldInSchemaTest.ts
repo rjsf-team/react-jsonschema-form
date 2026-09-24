@@ -41,7 +41,7 @@ const nestedAnyOf: RJSFSchema = {
 
 export default function findFieldInSchemaTest(testValidator: TestValidatorType) {
   // Root schema is not needed for these tests
-  const schemaUtils = createSchemaUtils(testValidator, {});
+  const schemaUtils = createSchemaUtils({ validator: testValidator }, {});
   const expectedAnswerField = getByPath(CHOICES[0], [PROPERTIES_KEY, 'answer']);
 
   describe('findFieldInSchema', () => {

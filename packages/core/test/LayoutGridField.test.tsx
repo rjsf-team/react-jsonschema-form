@@ -1034,7 +1034,7 @@ describe('LayoutGridField', () => {
     test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPath when simple schema is used', () => {
       const path = 'ranges';
       const schema = retrieveSchema(
-        validator,
+        { validator },
         getByPath<RJSFSchema>(SAMPLE_SCHEMA, [PROPERTIES_KEY, path]),
         SAMPLE_SCHEMA,
         {},

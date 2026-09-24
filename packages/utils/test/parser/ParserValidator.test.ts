@@ -52,7 +52,7 @@ describe('ParserValidator', () => {
     );
   });
   it('validateFormData() throws error when called', () => {
-    expect(() => validator.validateFormData({}, TINY_SCHEMA)).toThrow(
+    expect(() => validator.validateFormData({ validator }, {}, TINY_SCHEMA)).toThrow(
       new Error('Unexpectedly calling the `validateFormData()` method during schema parsing'),
     );
   });
