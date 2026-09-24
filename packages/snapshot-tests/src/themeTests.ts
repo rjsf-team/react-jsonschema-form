@@ -8,8 +8,8 @@ export interface ThemeGenerators {
 }
 
 /** Recurses into every nested map, so a theme that adds one beside `ButtonTemplates`, or inside it, is covered without
- * this suite having to list it. `memo()`/`forwardRef()` components are objects too, marked by `$$typeof`; those have to
- * be the same instance on every call, or every form using them would remount.
+ * this suite having to list it. Components, whether functions or `memo()`/`forwardRef()` objects marked by `$$typeof`,
+ * have to be the same instance on every call, or every form using them would remount.
  */
 function expectFreshMaps(first: object, second: object, key = 'result') {
   expect(first, key).not.toBe(second);
@@ -21,6 +21,8 @@ function expectFreshMaps(first: object, second: object, key = 'result') {
       } else {
         expectFreshMaps(value, other, childKey);
       }
+    } else if (typeof value === 'function') {
+      expect(value, childKey).toBe((second as Record<string, unknown>)[childKey]);
     }
   }
 }

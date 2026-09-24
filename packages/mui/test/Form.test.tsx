@@ -3,6 +3,7 @@ import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
+import { expectTypeOf } from 'vitest';
 
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
@@ -16,13 +17,13 @@ describe('typed form data', () => {
   const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
 
   it('the default Form infers the form data type from formData', () => {
-    const seen: Data[] = [];
+    const data: Data = { name: 'a' };
     const { container } = render(
       <Form
         schema={schema}
         validator={validator}
-        formData={{ name: 'a' }}
-        onChange={({ formData }) => seen.push(formData ?? {})}
+        formData={data}
+        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<Data | undefined>()}
       />,
     );
     expect(container.querySelector<HTMLInputElement>('#root_name')?.value).toBe('a');

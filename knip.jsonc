@@ -10,8 +10,8 @@
       "ignoreBinaries": ["size-limit"],
       "ignoreDependencies": [
         // Required for nx publish
-        "@nx/js",
-      ],
+        "@nx/js"
+      ]
     },
     // src/index.ts in these themes exports `Form` both as a named export and
     // as `default` (a published alias, kept until the next major), which knip
