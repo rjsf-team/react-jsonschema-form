@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -218,8 +218,7 @@ export default class CFWorkerValidator<
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered validating schema:', error);
+      logOnce('Error encountered validating schema:', 'warn', error);
       return false;
     }
   }

@@ -2924,11 +2924,11 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field'),
+        expect.stringContaining('ui:required is false for schema-required field "root_foo"'),
       );
     });
 
-    it('warns only once per field instance, not on every re-render', async () => {
+    it('warns only once, not on every re-render', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         required: ['foo'],
@@ -2945,6 +2945,46 @@ describe('uiSchema', () => {
       // (ui:required/ui:initialValue/ui:emptyValue) hasn't changed, so it must not warn again.
       await user.type(node.querySelector('input')!, 'abc');
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for each misconfigured field that shares a name', () => {
+      const address: RJSFSchema = {
+        type: 'object',
+        required: ['street'],
+        properties: {
+          street: { type: 'string' },
+        },
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          shipping: address,
+          billing: address,
+        },
+      };
+      const uiSchema: UiSchema = {
+        shipping: { street: { 'ui:required': false } },
+        billing: { street: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_shipping_street"'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_billing_street"'));
+    });
+
+    it('warns separately for each form that makes the same mistake', () => {
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } },
+        uiSchema,
+      });
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'number' } } },
+        uiSchema,
+      });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
     });
 
     it('does not warn when ui:required is false alongside ui:initialValue', () => {

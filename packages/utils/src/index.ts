@@ -83,6 +83,8 @@ import isRootSchema from './isRootSchema.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
+import logOnce, { logOnceInScope, resetLogOnce } from './logOnce.ts';
+import type { LogOnceLevel } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData.ts';
@@ -137,6 +139,7 @@ export type {
   DateElementProps,
   DateTimeLocalValueResult,
   FileInfoType,
+  LogOnceLevel,
   ObjectPath,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
@@ -219,6 +222,8 @@ export {
   labelValue,
   localTimeToOffsetTime,
   localToUTC,
+  logOnce,
+  logOnceInScope,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,
   mergeDefaultsWithFormData,
@@ -236,6 +241,7 @@ export {
   rangeSpec,
   replaceEqualDeep,
   replaceStringParameters,
+  resetLogOnce,
   resolveDefaultWidget,
   resolveUiSchema,
   schemaHasNestedConditional,

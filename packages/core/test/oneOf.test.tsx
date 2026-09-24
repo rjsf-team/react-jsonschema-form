@@ -13,7 +13,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
+import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1397,7 +1397,7 @@ describe('oneOf', () => {
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "My Title"');
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root"');
 
       const $select = node.querySelector('select');
 
@@ -1406,6 +1406,32 @@ describe('oneOf', () => {
       expect($select).toHaveValue('0');
       const inputLabel = node.querySelector('legend#root__title');
       expect(inputLabel?.innerHTML).toEqual('My Title');
+      consoleWarnSpy.mockRestore();
+    });
+
+    describe('a non-array uiSchema.oneOf', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('should warn once for each form that renders it', async () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { title: 'Foo', properties: { foo: { type: 'string' } } },
+            { title: 'Bar', properties: { bar: { type: 'string' } } },
+          ],
+        };
+        const uiSchema: UiSchema = {
+          // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
+          oneOf: { 'ui:title': 'UiSchema title' },
+        };
+        const { node } = createFormComponent({ schema, uiSchema });
+        createFormComponent({ schema, uiSchema });
+        await user.type(node.querySelector('input')!, 'abc');
+
+        const warnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(
+          ([message]) => message === 'uiSchema.oneOf is not an array for "root"',
+        );
+        expect(warnings).toHaveLength(2);
+      });
     });
 
     it('should correctly render mixed types for oneOf inside array items', async () => {

@@ -1155,6 +1155,35 @@ Converts a local Date string into a UTC date string
 
 - string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
 
+### logOnce()
+
+Logs `message` (followed by any `args`) through `console.warn()` or `console.error()`, but only the first time that exact combination of `level`, `message` and `args` is seen.
+This keeps a warning raised while rendering from being repeated on every re-render.
+An `Error` in `args` is compared by its `String()` form, a plain object or array by its `JSON.stringify()` form, and any other object (such as a `Map`) by identity, so distinct errors and payloads still log separately.
+When one of the `args` can't be converted, such as a circular object, the message is always logged, since it can't be told apart from the ones already logged.
+What has been logged is remembered for the whole page, or the whole process when rendering on the server.
+Only the 1000 most recently seen distinct messages are remembered, so once that many have been logged, the one seen least recently is forgotten (and would be logged again).
+Use `logOnceInScope()` to remember messages per form instead.
+
+#### Parameters
+
+- message: string - The message to log
+- [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
+- ...args: unknown[] - Any additional values to pass to the console method after the `message`
+
+### logOnceInScope()
+
+Works like `logOnce()`, but remembers what it has logged separately for each `scope` object, so the same message about two different forms is logged once for each.
+`@rjsf/core` passes a form's `schemaUtils` as the `scope`, since it lasts as long as the form's schema is unchanged.
+A scope's messages are held weakly, so they are freed along with the scope object.
+
+#### Parameters
+
+- scope: object - The object whose messages are remembered together
+- message: string - The message to log
+- [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
+- ...args: unknown[] - Any additional values to pass to the console method after the `message`
+
 ### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 
 Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`.
@@ -1394,6 +1423,11 @@ When a `params` array is provided, each value in the array is used to replace an
 #### Returns
 
 - string: The updated string with any replacement specifiers replaced
+
+### resetLogOnce()
+
+Forgets every message `logOnce()` and `logOnceInScope()` have already logged, so each will be logged again the next time it is seen.
+Mainly useful for tests, where each test expects its own warnings.
 
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -215,8 +215,7 @@ export default class ATAValidator<
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      logOnce('Error encountered compiling schema:', 'warn', e);
       return false;
     }
   }

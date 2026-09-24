@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, memo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -27,6 +27,7 @@ import {
   hasVisibleErrors,
   isConstant,
   isFormDataAvailable,
+  logOnceInScope,
   ONE_OF_KEY,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
@@ -282,11 +283,6 @@ function SchemaFieldRender<
     return strippedUiSchema;
   }, [uiSchema]);
 
-  // Tracks whether this field instance has already warned about a misconfigured `ui:required: false` below, so it
-  // warns once per mounted field instead of on every re-render. Declared unconditionally, alongside the other hooks,
-  // since the cyclic-ref check below must come after all hook calls to satisfy React's rules of hooks.
-  const hasWarnedMisconfiguredRequired = useRef(false);
-
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
   // The check must come after all hook calls to satisfy React's rules of hooks.
   if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
@@ -331,13 +327,11 @@ function SchemaFieldRender<
     fieldEmptyValue === undefined &&
     // schema.default (the resolved schema, after retrieveSchema()) guarantees a value just as well as ui:initialValue
     // or ui:emptyValue would, so it must also silence the warning.
-    schema.default === undefined &&
-    !hasWarnedMisconfiguredRequired.current
+    schema.default === undefined
   ) {
-    hasWarnedMisconfiguredRequired.current = true;
-    // oxlint-disable-next-line no-console
-    console.warn(
-      `ui:required is false for schema-required field "${name}" but neither ui:initialValue nor ui:emptyValue is ` +
+    logOnceInScope(
+      schemaUtils,
+      `ui:required is false for schema-required field "${fieldId}" but neither ui:initialValue nor ui:emptyValue is ` +
         'set. The UI will show this field as optional, but schema validation will still fail if it is left empty.',
     );
   }

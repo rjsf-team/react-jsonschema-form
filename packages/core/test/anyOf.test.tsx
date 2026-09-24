@@ -1466,7 +1466,7 @@ describe('anyOf', () => {
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith('uiSchema.anyOf is not an array for "My Title"');
+      expect(consoleWarnSpy).toHaveBeenCalledWith('uiSchema.anyOf is not an array for "root"');
       consoleWarnSpy.mockRestore();
 
       const $select = node.querySelector('select');

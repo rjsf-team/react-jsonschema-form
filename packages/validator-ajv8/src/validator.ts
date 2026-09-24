@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -262,8 +262,7 @@ export default class AJV8Validator<
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      logOnce('Error encountered compiling schema:', 'warn', e);
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed
       // meta-schema validation. Guard with !compiled so that a runtime error thrown

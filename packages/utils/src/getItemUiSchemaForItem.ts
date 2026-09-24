@@ -1,4 +1,5 @@
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
+import logOnce from './logOnce.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Returns the `uiSchema` that applies to the array item at `index`, given that item's actual `formData`. Unlike
@@ -23,8 +24,7 @@ export default function getItemUiSchemaForItem<
     try {
       return uiSchema.items(item as never, index, formContext) as UiSchema<T, S, F>;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
+      logOnce(`Error executing dynamic uiSchema.items function for item at index ${index}:`, 'error', e);
       return undefined;
     }
   }

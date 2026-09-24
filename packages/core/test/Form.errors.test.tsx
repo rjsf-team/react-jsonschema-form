@@ -1044,7 +1044,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           'root_branch',
         );
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
+          `ignoring oneOf in dependencies of "branch" because there isn't exactly one subschema that is valid`,
         );
         consoleWarnSpy.mockRestore();
       });

@@ -10,6 +10,7 @@ import {
   getWidget,
   hashObject,
   isFormDataAvailable,
+  logOnceInScope,
   mergeSchemas,
   ONE_OF_KEY,
   selectOptionUiSchema,
@@ -130,23 +131,21 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // `onOptionChange`, so that callback can pass the newly-selected option's own uiSchema (rather than none at all)
   // to `getDefaultFormState`, letting `ui:initialValue`/`ui:emptyValue` on that option's fields apply on selection.
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
-  // a fresh `[]` on every render, which would otherwise break its memoization and re-warn on every render too.
+  // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
     if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         return uiSchema[ONE_OF_KEY];
       }
-      // oxlint-disable-next-line no-console
-      console.warn(`uiSchema.oneOf is not an array for "${title || name}"`);
+      logOnceInScope(schemaUtils, `uiSchema.oneOf is not an array for "${id}"`);
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         return uiSchema[ANY_OF_KEY];
       }
-      // oxlint-disable-next-line no-console
-      console.warn(`uiSchema.anyOf is not an array for "${title || name}"`);
+      logOnceInScope(schemaUtils, `uiSchema.anyOf is not an array for "${id}"`);
     }
     return [];
-  }, [schema, uiSchema, title, name]);
+  }, [schema, uiSchema, id, schemaUtils]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to

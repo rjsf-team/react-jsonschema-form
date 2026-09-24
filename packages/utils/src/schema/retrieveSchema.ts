@@ -20,6 +20,7 @@ import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDe
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
+import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
@@ -781,8 +782,7 @@ export function retrieveSchemaInternal<
           (resolvedSchema as any)[sym] = allOfSymbols[sym];
         }
       } catch (e) {
-        // oxlint-disable-next-line no-console
-        console.warn('could not merge subschemas in allOf:\n', e);
+        logOnce('could not merge subschemas in allOf:\n', 'warn', e);
         const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
         return resolvedSchemaWithoutAllOf as S;
       }
@@ -1162,8 +1162,9 @@ export function withExactlyOneSubschema<
   });
 
   if (!expandAllBranches && validSubschemas.length !== 1) {
-    // oxlint-disable-next-line no-console
-    console.warn("ignoring oneOf in dependencies because there isn't exactly one subschema that is valid");
+    logOnce(
+      `ignoring oneOf in dependencies of "${dependencyKey}" because there isn't exactly one subschema that is valid`,
+    );
     return [schema];
   }
   return validSubschemas.flatMap((s) => {

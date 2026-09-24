@@ -6514,7 +6514,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         ]);
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
+          `ignoring oneOf in dependencies of "name" because there isn't exactly one subschema that is valid`,
         );
       });
       it('should populate defaults for nested oneOf + dependencies', () => {

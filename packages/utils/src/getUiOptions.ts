@@ -1,5 +1,6 @@
 import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants.ts';
 import isObject from './isObject.ts';
+import logOnce from './logOnce.ts';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -34,8 +35,7 @@ export default function getUiOptions<
   for (const key of Object.keys(uiSchema).filter(isUiKey)) {
     const value = uiSchema[key];
     if (key === UI_WIDGET_KEY && isObject(value)) {
-      // oxlint-disable-next-line no-console
-      console.error('Setting options via ui:widget object is no longer supported, use ui:options instead');
+      logOnce('Setting options via ui:widget object is no longer supported, use ui:options instead', 'error');
     } else if (key === UI_OPTIONS_KEY && isObject(value)) {
       Object.assign(options, value);
     } else {
