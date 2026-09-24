@@ -3,7 +3,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 
 import type Form from '../src/index.ts';
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, errorListMessages } from './testUtils.tsx';
 
 /** Deriving state from the props honors every input that changed, whether or not the reconciler's identity-prop
  * gate lists it. Reference retention across a derivation is `renderStability.test.tsx`'s job.
@@ -63,6 +63,22 @@ describe('state derivation', () => {
 
     expect(node.querySelector('.panel-danger.errors')).toHaveTextContent('must be >= 100');
     expect(node.querySelector('.panel-danger.errors')).not.toHaveTextContent('must match "then" schema');
+  });
+
+  it('turning noValidate on drops the validator results, so turning it back off does not bring them back', () => {
+    const formRef = createRef<Form>();
+    const props = { ref: formRef, schema: { type: 'string', minLength: 8 } as RJSFSchema, formData: 'short' };
+    const { node, rerender } = createFormComponent(props);
+    act(() => {
+      formRef.current!.validateForm();
+    });
+    expect(errorListMessages(node)).toEqual(['must NOT have fewer than 8 characters']);
+
+    rerender({ ...props, noValidate: true });
+    expect(errorListMessages(node)).toEqual([]);
+
+    rerender(props);
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('a changed idPrefix rebuilds the registry, so the fields render with the new ids', () => {

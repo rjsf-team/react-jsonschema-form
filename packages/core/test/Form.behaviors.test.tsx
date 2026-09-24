@@ -1349,6 +1349,7 @@ describe('Committing a handler result', () => {
   it('renders the data its parent holds when a prop change lands in the same render as a blur validation', async () => {
     const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 5 } } };
     let parentData: { name?: string } = {};
+    const onBlur = vi.fn();
     function Parent() {
       const [formData, setFormData] = useState<{ name?: string }>({});
       parentData = formData;
@@ -1359,7 +1360,10 @@ describe('Committing a handler result', () => {
           liveValidate='onBlur'
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
-          onBlur={() => setFormData({ name: 'hello' })}
+          onBlur={() => {
+            onBlur();
+            setFormData({ name: 'hello' });
+          }}
         />
       );
     }
@@ -1368,7 +1372,11 @@ describe('Committing a handler result', () => {
     await user.type(container.querySelector('input')!, 'ab');
     await user.tab();
 
-    expect(container.querySelector('input')).toHaveValue(parentData.name);
+    // The blur's own `onChange` hands the parent `ab` after its `hello`, as on `v7`; what this pins is that the form
+    // renders the value the parent ends up holding rather than the `hello` it saw in between
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(parentData.name).toBe('ab');
+    expect(container.querySelector('input')).toHaveValue('ab');
   });
 
   it('holds the data its parent holds when a prop change lands in the same render as a blur that omits extra data', async () => {
