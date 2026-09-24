@@ -59,6 +59,12 @@ import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormHandle } from './FormHandle.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 
+/** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
+ * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
+ * `UiSchema`, handler or widget next to them cannot widen it to `unknown` or `{}`.
+ */
+type Uninferred<T> = T extends unknown ? T : never;
+
 /** The properties that are passed to the `Form` */
 export interface FormProps<
   T = unknown,
@@ -72,7 +78,7 @@ export interface FormProps<
   /** The optional children for the form, if provided, it will replace the default `SubmitButton` */
   children?: ReactNode;
   /** The uiSchema for the form */
-  uiSchema?: UiSchema<T, S, F>;
+  uiSchema?: UiSchema<Uninferred<T>, S, F>;
   /** The data of a form whose value you own, like `value` on an `<input>`: the form renders exactly this, proposes
    * each edit through `onChange`, and changes nothing until you pass the new value back. Ownership is decided at
    * mount, so pass it from the first render (`record ?? {}` while loading, or mount once loaded) and seed any schema
@@ -112,19 +118,19 @@ export interface FormProps<
   readonly?: boolean;
   // Form registry
   /** The dictionary of registered fields in the form */
-  fields?: RegistryFieldsType<T, S, F>;
+  fields?: RegistryFieldsType<Uninferred<T>, S, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<T, S, F>, 'ButtonTemplates'>> & {
-    ButtonTemplates?: Partial<TemplatesType<T, S, F>['ButtonTemplates']>;
+  templates?: Partial<Omit<TemplatesType<Uninferred<T>, S, F>, 'ButtonTemplates'>> & {
+    ButtonTemplates?: Partial<TemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
   };
   /** The dictionary of registered widgets in the form */
-  widgets?: RegistryWidgetsType<T, S, F>;
+  widgets?: RegistryWidgetsType<Uninferred<T>, S, F>;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field
    * that caused the change
    */
-  onChange?: (data: IChangeEvent<T, S, F>, id?: string) => void;
+  onChange?: (data: IChangeEvent<Uninferred<T>, S, F>, id?: string) => void;
   /** To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of
    * encountered errors
    */
@@ -133,7 +139,7 @@ export interface FormProps<
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter
    */
-  onSubmit?: (data: IChangeEvent<T, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
+  onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -172,12 +178,12 @@ export interface FormProps<
   target?: string;
   // Errors and validation
   /** Formerly the `validate` prop; Takes a function that specifies custom validation rules for the form */
-  customValidate?: CustomValidator<T, S, F>;
+  customValidate?: CustomValidator<Uninferred<T>, S, F>;
   /** This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it
    * can be used to implement asynchronous validation. By default, these errors block form submission just like
    * JSON Schema errors do.
    */
-  extraErrors?: ErrorSchema<T>;
+  extraErrors?: ErrorSchema<Uninferred<T>>;
   /** If set to true, treats `extraErrors` as warnings instead of blocking form submission */
   extraErrorsAreWarnings?: boolean;
   /** If set to true, turns off HTML5 validation on the form; Set to `false` by default */
@@ -214,7 +220,7 @@ export interface FormProps<
   /** A function can be passed to this prop in order to make modifications to the default errors resulting from JSON
    * Schema validation
    */
-  transformErrors?: ErrorTransformer<T, S, F>;
+  transformErrors?: ErrorTransformer<Uninferred<T>, S, F>;
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
    */
   focusOnFirstError?: boolean | ((error: RJSFValidationError) => void);

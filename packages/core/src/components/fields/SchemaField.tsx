@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react';
 import { useCallback, useMemo, useRef, memo } from 'react';
 import type {
   ErrorSchema,
@@ -128,14 +127,14 @@ function getFieldComponent<
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
   isSelectSchema: boolean,
-): { FieldComponent: ComponentType<FieldProps<T, S, F>>; rendersFallbackUi: boolean } {
+): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean } {
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
   if (typeof field === 'function') {
     return { FieldComponent: field, rendersFallbackUi: false };
   }
   if (typeof field === 'string' && field in fields) {
-    return { FieldComponent: fields[field] as ComponentType<FieldProps<T, S, F>>, rendersFallbackUi: false };
+    return { FieldComponent: fields[field], rendersFallbackUi: false };
   }
 
   const schemaType = getSchemaType(schema);

@@ -1,6 +1,7 @@
 import type {
   ButtonHTMLAttributes,
   ChangeEvent,
+  Component,
   ComponentType,
   FocusEvent,
   HTMLAttributes,
@@ -17,6 +18,24 @@ import './jsonSchemaAugmentation.ts';
  * flexible in the properties they support (i.e. anything else)
  */
 export type GenericObjectType = Record<string, any>;
+
+/** A callback whose parameters are checked bivariantly, the way React checks event handlers, so a props type carrying
+ * one stays covariant in `T`.
+ */
+type Bivariant<Args extends unknown[], R = void> = { bivarianceHack(...args: Args): R }['bivarianceHack'];
+
+/** A component slot in a props type, `UiSchema` or the `Registry`. A function component's props are checked
+ * bivariantly and a class component's covariantly, so a component written for `unknown` data fits a slot typed for a
+ * form's data, and a `UiSchema<MyData>` is still a `UiSchema`.
+ */
+/** Never constructed: its `constructor` declaration gives class components the same bivariant props check that
+ * `Bivariant` gives function components, which a constructor type written out as `new (props: P) => …` would not.
+ */
+declare class SlotComponentClass<P> extends Component<object> {
+  constructor(props: P);
+}
+
+export type SlotComponent<P> = Bivariant<[props: P], ReactNode> | typeof SlotComponentClass<P>;
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else) AND symbol markers with a value of string or boolean
@@ -445,66 +464,66 @@ export type TemplatesType<
   F extends FormContextType = FormContextType,
 > = {
   /** The template to use while rendering normal or fixed array fields */
-  ArrayFieldTemplate: ComponentType<ArrayFieldTemplateProps<T, S, F>>;
+  ArrayFieldTemplate: SlotComponent<ArrayFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the description for an array field */
-  ArrayFieldDescriptionTemplate: ComponentType<ArrayFieldDescriptionProps<T, S, F>>;
+  ArrayFieldDescriptionTemplate: SlotComponent<ArrayFieldDescriptionProps<T, S, F>>;
   /** The template to use while rendering the buttons for an item in an array field */
-  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateProps<T, S, F>>;
+  ArrayFieldItemButtonsTemplate: SlotComponent<ArrayFieldItemButtonsTemplateProps<T, S, F>>;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateProps<T, S, F>>;
+  ArrayFieldItemTemplate: SlotComponent<ArrayFieldItemTemplateProps<T, S, F>>;
   /** The template to use while rendering the title for an array field */
-  ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
+  ArrayFieldTitleTemplate: SlotComponent<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
-  BaseInputTemplate: ComponentType<BaseInputTemplateProps<T, S, F>>;
+  BaseInputTemplate: SlotComponent<BaseInputTemplateProps<T, S, F>>;
   /** The template to use while rendering the cyclic schema expand controls */
-  CyclicSchemaExpandTemplate: ComponentType<CyclicSchemaExpandProps<T, S, F>>;
+  CyclicSchemaExpandTemplate: SlotComponent<CyclicSchemaExpandProps<T, S, F>>;
   /** The template to use for rendering the description of a field */
-  DescriptionFieldTemplate: ComponentType<DescriptionFieldProps<T, S, F>>;
+  DescriptionFieldTemplate: SlotComponent<DescriptionFieldProps<T, S, F>>;
   /** The template to use while rendering the errors for the whole form */
-  ErrorListTemplate: ComponentType<ErrorListProps<T, S, F>>;
+  ErrorListTemplate: SlotComponent<ErrorListProps<T, S, F>>;
   /** The template to use while rendering a fallback field for schemas that have an empty or unknown 'type' */
-  FallbackFieldTemplate: ComponentType<FallbackFieldTemplateProps<T, S, F>>;
+  FallbackFieldTemplate: SlotComponent<FallbackFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
-  FieldErrorTemplate: ComponentType<FieldErrorProps<T, S, F>>;
+  FieldErrorTemplate: SlotComponent<FieldErrorProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
-  FieldHelpTemplate: ComponentType<FieldHelpProps<T, S, F>>;
+  FieldHelpTemplate: SlotComponent<FieldHelpProps<T, S, F>>;
   /** The template to use while rendering a field */
-  FieldTemplate: ComponentType<FieldTemplateProps<T, S, F>>;
+  FieldTemplate: SlotComponent<FieldTemplateProps<T, S, F>>;
   /** The template to use to render a Grid element */
-  GridTemplate: ComponentType<GridTemplateProps>;
+  GridTemplate: SlotComponent<GridTemplateProps>;
   /** The template to use for rendering markdown text in descriptions, help text and translatable strings. The core
    * default renders it as plain text so no markdown library is bundled; `@rjsf/core/markdown` provides one built on
    * `markdown-to-jsx`.
    */
-  MarkdownTemplate: ComponentType<MarkdownTemplateProps<T, S, F>>;
+  MarkdownTemplate: SlotComponent<MarkdownTemplateProps<T, S, F>>;
   /** The template to use while rendering a multi-schema field (i.e. anyOf, oneOf) */
-  MultiSchemaFieldTemplate: ComponentType<MultiSchemaFieldTemplateProps<T, S, F>>;
+  MultiSchemaFieldTemplate: SlotComponent<MultiSchemaFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */
-  ObjectFieldTemplate: ComponentType<ObjectFieldTemplateProps<T, S, F>>;
+  ObjectFieldTemplate: SlotComponent<ObjectFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the Optional Data field controls */
-  OptionalDataControlsTemplate: ComponentType<OptionalDataControlsTemplateProps<T, S, F>>;
+  OptionalDataControlsTemplate: SlotComponent<OptionalDataControlsTemplateProps<T, S, F>>;
   /** The template to use for rendering the title of a field */
-  TitleFieldTemplate: ComponentType<TitleFieldProps<T, S, F>>;
+  TitleFieldTemplate: SlotComponent<TitleFieldProps<T, S, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
-  UnsupportedFieldTemplate: ComponentType<UnsupportedFieldProps<T, S, F>>;
+  UnsupportedFieldTemplate: SlotComponent<UnsupportedFieldProps<T, S, F>>;
   /** The template to use for rendering a field that allows a user to add additional properties */
-  WrapIfAdditionalTemplate: ComponentType<WrapIfAdditionalTemplateProps<T, S, F>>;
+  WrapIfAdditionalTemplate: SlotComponent<WrapIfAdditionalTemplateProps<T, S, F>>;
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
-    SubmitButton: ComponentType<SubmitButtonProps<T, S, F>>;
+    SubmitButton: SlotComponent<SubmitButtonProps<T, S, F>>;
     /** The template to use for the Add button used for AdditionalProperties and Array items */
-    AddButton: ComponentType<IconButtonProps<T, S, F>>;
+    AddButton: SlotComponent<IconButtonProps<T, S, F>>;
     /** The template to use for the Copy button used for Array items */
-    CopyButton: ComponentType<IconButtonProps<T, S, F>>;
+    CopyButton: SlotComponent<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Down button used for Array items */
-    MoveDownButton: ComponentType<IconButtonProps<T, S, F>>;
+    MoveDownButton: SlotComponent<IconButtonProps<T, S, F>>;
     /** The template to use for the Move Up button used for Array items */
-    MoveUpButton: ComponentType<IconButtonProps<T, S, F>>;
+    MoveUpButton: SlotComponent<IconButtonProps<T, S, F>>;
     /** The template to use for the Remove button used for AdditionalProperties and Array items */
-    RemoveButton: ComponentType<IconButtonProps<T, S, F>>;
+    RemoveButton: SlotComponent<IconButtonProps<T, S, F>>;
     /** The template to use for the Clear button used for input fields */
-    ClearButton: ComponentType<IconButtonProps<T, S, F>>;
+    ClearButton: SlotComponent<IconButtonProps<T, S, F>>;
   };
 } & Record<string, ComponentType<any> | Record<string, ComponentType<any>> | undefined>;
 
@@ -655,7 +674,7 @@ export interface FieldProps<
   /** The field change event handler; called with the updated field value, the `FieldPath` of the value
    * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed
    */
-  onChange: (newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string) => void;
+  onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -681,7 +700,7 @@ export type Field<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = ComponentType<FieldProps<T, S, F>> & {
+> = SlotComponent<FieldProps<T, S, F>> & {
   /** The optional TEST_IDS block that some fields contain, exported for testing purposes */
   TEST_IDS?: TestIdShape;
 };
@@ -1125,7 +1144,7 @@ export interface WidgetProps<
   /** The input blur event handler; call it with the widget id and value */
   onBlur: (id: string, value: any) => void;
   /** The value change event handler; call it with the new value every time it changes */
-  onChange: (value: any, es?: ErrorSchema<T>, id?: string) => void;
+  onChange: Bivariant<[value: any, es?: ErrorSchema<T>, id?: string]>;
   /** The input focus event handler; call it with the widget id and value */
   onFocus: (id: string, value: any) => void;
   /** The computed label for this widget, as a string */
@@ -1147,7 +1166,7 @@ export type Widget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = ComponentType<WidgetProps<T, S, F>>;
+> = SlotComponent<WidgetProps<T, S, F>>;
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<
@@ -1565,7 +1584,7 @@ export type UiSchema<
     items?:
       | UiSchema<ArrayElement<T>, S, F, Checks>
       | UiSchema<ArrayElement<T>, S, F, Checks>[]
-      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F, Checks>);
+      | Bivariant<[itemData: ArrayElement<T>, index: number, formContext?: F], UiSchema<ArrayElement<T>, S, F, Checks>>;
     /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
      * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
      */
