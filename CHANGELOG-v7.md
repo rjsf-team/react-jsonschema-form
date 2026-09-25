@@ -110,6 +110,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a field edit being dropped when the form data root is `null` or `undefined`; it now creates the object or array the field lives in
 - **BREAKING CHANGE:** Removed `edit` from `IChangeEvent`. With ownership decided at mount it only restated the props passed to the form (whether `formData` is defined, or whether `initialFormData` was passed); check your own props instead
 - A submit, programmatic or not, is queued behind any change, `setFieldValue()`, blur or reset still in flight, so `setFieldValue(path, value); submit()` submits the new value
+- Fixed a throw from a consumer's code taking the form down: a `customValidate` that throws under `liveValidate: 'onChange'` no longer stops later edits from landing, and a throwing `onChange`, `onSubmit`, `onError` or queued operation no longer unmounts the form. The error is rethrown from a timer instead of inside React's commit phase
 
 ## @rjsf/daisyui
 

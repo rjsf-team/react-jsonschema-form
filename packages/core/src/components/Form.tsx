@@ -1847,7 +1847,11 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       }
       this.setSharedState(this.state, next, () => {
         if (onError) {
-          onError(errors);
+          try {
+            onError(errors);
+          } catch (error) {
+            rethrowOutsideCommit(error);
+          }
         } else {
           // oxlint-disable-next-line no-console
           console.error('Form validation failed', errors);

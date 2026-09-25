@@ -41,20 +41,22 @@ describe('form data ownership', () => {
   const warnings = setupConsoleWarnSuppression();
 
   describe('fixed controlled data', () => {
-    it('an edit is proposed but does not change the rendered data without acceptance', () => {
+    it('an edit is proposed but does not change the rendered data without acceptance', async () => {
       const log = createParentLog<Data>();
       const { container } = render(<RejectingParent<Data> schema={schema} initialValue={{ a: 'a' }} log={log} />);
 
-      fireEvent.change(input(container, 'root_a'), { target: { value: 'ab' } });
+      await user.click(input(container, 'root_a'));
+      await user.paste('b');
 
       expect(log.proposals).toEqual([{ a: 'ab' }]);
       expect(input(container, 'root_a')).toHaveValue('a');
     });
 
-    it('a spy handler is a rejecting parent, so the form keeps rendering the prop', () => {
+    it('a spy handler is a rejecting parent, so the form keeps rendering the prop', async () => {
       const { node, onChange } = createFormComponent({ schema, formData: { a: 'a' } });
 
-      fireEvent.change(node.querySelector('#root_a')!, { target: { value: 'ab' } });
+      await user.click(node.querySelector('#root_a')!);
+      await user.paste('b');
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'ab' });
@@ -287,14 +289,15 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('y');
     });
 
-    it('a null root at mount is controlled: a field edit proposes the object it creates, defaults included', () => {
+    it('a null root at mount is controlled: a field edit proposes the object it creates, defaults included', async () => {
       const onChange = vi.fn();
       const { container } = render(
         <Form schema={withDefaults} validator={validator} formData={null} onChange={onChange} />,
       );
       expect(input(container, 'root_a')).toHaveValue('');
 
-      fireEvent.change(input(container, 'root_a'), { target: { value: 'x' } });
+      await user.click(input(container, 'root_a'));
+      await user.paste('x');
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'x', b: 'B' });
@@ -489,9 +492,10 @@ describe('form data ownership', () => {
       expect(ref.current!.getFormData()).toEqual({ a: 'A', b: 'seed' });
     });
 
-    it('keeps its data across an unrelated prop change and a later formData prop', () => {
+    it('keeps its data across an unrelated prop change and a later formData prop', async () => {
       const { node, rerender } = createFormComponent({ schema, initialFormData: { a: 'own' } });
-      fireEvent.change(node.querySelector('#root_a')!, { target: { value: 'edited' } });
+      await user.clear(node.querySelector('#root_a')!);
+      await user.paste('edited');
 
       rerender({ schema, initialFormData: { a: 'own' }, className: 'other' });
       expect(node.querySelector('#root_a')).toHaveValue('edited');
@@ -502,14 +506,15 @@ describe('form data ownership', () => {
       expect(warnings.consoleSpy.mock.calls[0][0]).toContain('mounted without it');
     });
 
-    it('resets to the latest seed and the current schema, and reports it', () => {
+    it('resets to the latest seed and the current schema, and reports it', async () => {
       const ref = createRef<Form>();
       const { node, onChange, rerender } = createFormComponent({
         ref,
         schema: withDefault,
         initialFormData: { b: 'one' },
       });
-      fireEvent.change(node.querySelector('#root_b')!, { target: { value: 'edited' } });
+      await user.clear(node.querySelector('#root_b')!);
+      await user.paste('edited');
       rerender({ ref, schema: withDefault, initialFormData: { b: 'two' } });
       onChange.mockClear();
 
@@ -556,7 +561,7 @@ describe('form data ownership', () => {
       expect(warnings.consoleSpy).not.toHaveBeenCalled();
     });
 
-    it('freezes the formData handed to onChange, leaving non-plain values alone', () => {
+    it('freezes the formData handed to onChange, leaving non-plain values alone', async () => {
       const when = new Date(0);
       const nested: RJSFSchema = {
         type: 'object',
@@ -574,7 +579,8 @@ describe('form data ownership', () => {
         />,
       );
 
-      fireEvent.change(document.querySelector('#root_a')!, { target: { value: 'x' } });
+      await user.click(document.querySelector('#root_a')!);
+      await user.paste('x');
 
       expect(Object.isFrozen(seen!.formData)).toBe(true);
       expect(Object.isFrozen(seen!.formData.list)).toBe(true);
@@ -582,11 +588,12 @@ describe('form data ownership', () => {
       expect(Object.isFrozen(seen!.formData.when)).toBe(false);
     });
 
-    it('freezes the data a self-owned form commits', () => {
+    it('freezes the data a self-owned form commits', async () => {
       const ref = createRef<Form>();
       const { node } = createFormComponent({ ref, schema, initialFormData: { a: '' } });
 
-      fireEvent.change(node.querySelector('#root_a')!, { target: { value: 'x' } });
+      await user.click(node.querySelector('#root_a')!);
+      await user.paste('x');
 
       expect(Object.isFrozen(ref.current!.getFormData())).toBe(true);
     });
@@ -776,7 +783,7 @@ describe('form data ownership', () => {
   });
 
   describe('reading and submitting the owner', () => {
-    it('getFormData() returns the formData prop of a controlled form and the committed data of a self-owned one', () => {
+    it('getFormData() returns the formData prop of a controlled form and the committed data of a self-owned one', async () => {
       const controlled = createRef<Form>();
       const value = { a: 'parent' };
       render(<Form ref={controlled} schema={schema} validator={validator} formData={value} onChange={noop} />);
@@ -784,7 +791,8 @@ describe('form data ownership', () => {
 
       const owned = createRef<Form>();
       const { node } = createFormComponent({ ref: owned, schema, initialFormData: { a: 'seed' } });
-      fireEvent.change(node.querySelector('#root_a')!, { target: { value: 'edited' } });
+      await user.clear(node.querySelector('#root_a')!);
+      await user.paste('edited');
       expect(owned.current!.getFormData()).toEqual({ a: 'edited' });
     });
 
@@ -1031,6 +1039,7 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
 
     vi.useFakeTimers();
     try {
+      // fireEvent.click is used because catching the rethrow needs fake timers, and user-event hangs under them
       fireEvent.click(node.querySelector('#root_a-go')!);
       // The submit ran from the edit's commit, so its error is rethrown from a timer instead
       expect(() => vi.runAllTimers()).toThrow('boom');
@@ -1103,7 +1112,9 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
   });
 });
 
-/** A self-owned form calls `onChange` and `onSubmit` from its `setState()` callbacks, inside React's commit phase */
+/** A self-owned form calls `onChange` and `onSubmit`, and any form calls `onError`, from a `setState()` callback,
+ * inside React's commit phase
+ */
 describe('a throwing callback on a self-owned form', () => {
   it('an onChange that throws keeps the form mounted', () => {
     const ref = createRef<Form>();
@@ -1143,6 +1154,7 @@ describe('a throwing callback on a self-owned form', () => {
 
     vi.useFakeTimers();
     try {
+      // fireEvent.submit is used because catching the rethrow needs fake timers, and user-event hangs under them
       fireEvent.submit(node);
       expect(() => vi.runAllTimers()).toThrow('boom');
     } finally {
@@ -1151,5 +1163,54 @@ describe('a throwing callback on a self-owned form', () => {
     expect(ref.current).not.toBeNull();
     act(() => ref.current!.setFieldValue('a', 'later'));
     expect(getFormData()).toEqual({ a: 'later' });
+  });
+
+  describe('an onError that throws keeps the form mounted', () => {
+    const renderInvalid = () => {
+      const ref = createRef<Form>();
+      const rendered = createFormComponent({
+        ref,
+        schema: { type: 'object', properties: { a: { type: 'string', minLength: 5 } } },
+        initialFormData: { a: 'x' },
+        noHtml5Validate: true,
+        onError: () => {
+          throw new Error('boom');
+        },
+      });
+      return { ref, ...rendered };
+    };
+
+    it('on an invalid submit', () => {
+      const { ref, node, getFormData } = renderInvalid();
+
+      vi.useFakeTimers();
+      try {
+        // fireEvent.submit is used because catching the rethrow needs fake timers, and user-event hangs under them
+        fireEvent.submit(node);
+        expect(() => vi.runAllTimers()).toThrow('boom');
+      } finally {
+        vi.useRealTimers();
+      }
+      expect(ref.current).not.toBeNull();
+      act(() => ref.current!.setFieldValue('a', 'later'));
+      expect(getFormData()).toEqual({ a: 'later' });
+    });
+
+    it('on a programmatic validateForm()', () => {
+      const { ref, getFormData } = renderInvalid();
+
+      vi.useFakeTimers();
+      try {
+        act(() => {
+          ref.current!.validateForm();
+        });
+        expect(() => vi.runAllTimers()).toThrow('boom');
+      } finally {
+        vi.useRealTimers();
+      }
+      expect(ref.current).not.toBeNull();
+      act(() => ref.current!.setFieldValue('a', 'later'));
+      expect(getFormData()).toEqual({ a: 'later' });
+    });
   });
 });
