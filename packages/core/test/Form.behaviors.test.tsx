@@ -662,7 +662,8 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
-  describe('after an ArrayField reorder in an uncontrolled form', () => {
+  // Add, copy, move and remove all remap through `remapItemErrors()`, so a move covers them
+  describe('after an ArrayField remaps its items in an uncontrolled form', () => {
     const items: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', minLength: 3 } };
     it.each<[string, RJSFSchema, unknown, string]>([
       ['a root array', items, ['aaa', 'bbbb', 'cccc'], 'root'],
