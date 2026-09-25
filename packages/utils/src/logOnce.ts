@@ -63,10 +63,18 @@ export default function logOnce(message: string, level: LogOnceLevel = 'warn', e
     currentMessages = new Set();
   }
   currentMessages.add(key);
+  const args = error === undefined ? [message] : [message, error];
   // `level` is only type-checked, so a JS caller can pass anything; `console[level]` would throw inside the very
-  // render that was trying to warn, and the key is already remembered by then, so the message would never log at all
-  // oxlint-disable-next-line no-console
-  (level === 'error' ? console.error : console.warn)(message, ...(error === undefined ? [] : [error]));
+  // render that was trying to warn, and the key is already remembered by then, so the message would never log at all.
+  // The method is called on `console` rather than through a reference taken off it, since a polyfilled or proxied
+  // console can need its receiver and would throw for the same reason
+  if (level === 'error') {
+    // oxlint-disable-next-line no-console
+    console.error(...args);
+  } else {
+    // oxlint-disable-next-line no-console
+    console.warn(...args);
+  }
 }
 
 /** Forgets every message `logOnce()` has already logged, so each will be logged again the next time it is seen. Mainly
