@@ -1102,3 +1102,54 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
     expect(fieldErrorsById(node)).toEqual({ root_foo: ['must NOT have fewer than 5 characters'] });
   });
 });
+
+/** A self-owned form calls `onChange` and `onSubmit` from its `setState()` callbacks, inside React's commit phase */
+describe('a throwing callback on a self-owned form', () => {
+  it('an onChange that throws keeps the form mounted', () => {
+    const ref = createRef<Form>();
+    const { getFormData } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { a: 'old' },
+      onChange: ({ formData }: IChangeEvent<Data>) => {
+        if (formData?.a === 'first') {
+          throw new Error('boom');
+        }
+      },
+    });
+
+    vi.useFakeTimers();
+    try {
+      act(() => ref.current!.setFieldValue('a', 'first'));
+      expect(() => vi.runAllTimers()).toThrow('boom');
+    } finally {
+      vi.useRealTimers();
+    }
+    expect(ref.current).not.toBeNull();
+    act(() => ref.current!.setFieldValue('a', 'later'));
+    expect(getFormData()).toEqual({ a: 'later' });
+  });
+
+  it('an onSubmit that throws keeps the form mounted', () => {
+    const ref = createRef<Form>();
+    const { node, getFormData } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { a: 'old' },
+      onSubmit: () => {
+        throw new Error('boom');
+      },
+    });
+
+    vi.useFakeTimers();
+    try {
+      fireEvent.submit(node);
+      expect(() => vi.runAllTimers()).toThrow('boom');
+    } finally {
+      vi.useRealTimers();
+    }
+    expect(ref.current).not.toBeNull();
+    act(() => ref.current!.setFieldValue('a', 'later'));
+    expect(getFormData()).toEqual({ a: 'later' });
+  });
+});

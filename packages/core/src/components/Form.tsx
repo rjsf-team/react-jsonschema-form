@@ -345,10 +345,21 @@ interface QueuedOperation {
   isChange: boolean;
 }
 
-/** Runs `emit`, then advances the queue even if it threw, so a throwing `onChange` cannot stall later operations */
+/** Rethrows `error` from a timer: thrown inside React's commit phase, it would unmount the form */
+function rethrowOutsideCommit(error: unknown) {
+  setTimeout(() => {
+    throw error;
+  });
+}
+
+/** Runs `emit` from a `setState()` callback, then advances the queue even if it threw, so a throwing `onChange` or
+ * `onSubmit` can neither stall later operations nor unmount the form
+ */
 function advanceAfter(advance: () => void, emit: () => void) {
   try {
     emit();
+  } catch (error) {
+    rethrowOutsideCommit(error);
   } finally {
     advance();
   }
@@ -1577,10 +1588,7 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
       if (!fromCommit) {
         throw error;
       }
-      // Rethrowing into React's commit phase would unmount the form, so the error is reported out of band instead
-      setTimeout(() => {
-        throw error;
-      });
+      rethrowOutsideCommit(error);
     }
   }
 
