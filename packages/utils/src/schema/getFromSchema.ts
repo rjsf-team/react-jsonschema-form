@@ -71,7 +71,9 @@ export default function getFromSchema<
   defaultValue: T,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T;
+// `_T` keeps this overload's arity equal to the first one's, so explicit `<T, S, F>` type arguments can still reach it
 export default function getFromSchema<
+  _T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(

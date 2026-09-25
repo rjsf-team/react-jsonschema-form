@@ -41,5 +41,16 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
     test('generateTheme() returns fresh maps on every call', () => {
       expectFreshMaps(generateTheme(), generateTheme());
     });
+    // Freshness alone passes for a generator that returns `{}`. A theme may add aliases (daisyui's `boolean`), so its
+    // maps only have to contain every generated key
+    test('generateTemplates() and generateWidgets() return what generateTheme() is built from', () => {
+      const templateKeys = Object.keys(generateTemplates());
+      const widgetKeys = Object.keys(generateWidgets());
+      const { templates = {}, widgets = {} } = generateTheme();
+      expect(templateKeys).not.toHaveLength(0);
+      expect(widgetKeys).not.toHaveLength(0);
+      expect(Object.keys(templates)).toEqual(expect.arrayContaining(templateKeys));
+      expect(Object.keys(widgets)).toEqual(expect.arrayContaining(widgetKeys));
+    });
   });
 }

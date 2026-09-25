@@ -50,7 +50,7 @@ export default function findFieldInSchema<
   if (pathList.length) {
     // drilling into the schema for each sub-path and taking into account of the any/oneOfs
     pathList.forEach((subPath) => {
-      parentField = getFromSchema<S, F>(
+      parentField = getFromSchema<T, S, F>(
         validator,
         rootSchema,
         parentField,
@@ -109,7 +109,7 @@ export default function findFieldInSchema<
   }
 
   // taking the most updated `parentField`, get our desired field
-  let field: S | undefined = getFromSchema<S, F>(
+  let field: S | undefined = getFromSchema<T, S, F>(
     validator,
     rootSchema,
     parentField,

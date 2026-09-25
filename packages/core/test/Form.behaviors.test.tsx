@@ -1741,7 +1741,7 @@ describe('Deriving state from changed props', () => {
           validator={validator}
           liveValidate='onChange'
           formData={formData}
-          onChange={(event) => setFormData(event.formData as { name: string })}
+          onChange={(event) => setFormData(event.formData)}
           {...steps[step]}
         />
       </>

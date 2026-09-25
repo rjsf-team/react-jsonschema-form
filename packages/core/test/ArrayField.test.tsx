@@ -4,7 +4,6 @@ import type {
   ArrayFieldItemTemplateProps,
   DescriptionFieldProps,
   ErrorSchema,
-  Field,
   FieldPath,
   FieldProps,
   GenericObjectType,
@@ -166,8 +165,6 @@ const ArrayFieldTestItemTemplate = (props: ArrayFieldItemTemplateProps) => {
   );
 };
 
-// `RegistryFieldsType` types every entry with the form's single `T`, but `ArrayField` renders `T[]`, so registering
-// this wrapper needs the same cast `generateFields()` uses for the core `ArrayField`
 const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
   const onChangeTest = (newFormData: unknown, path: FieldPath, errorSchema?: ErrorSchema<unknown[]>, id?: string) => {
     let newErrorSchema = errorSchema;
@@ -3264,7 +3261,7 @@ describe('ArrayField', () => {
         ],
         templates,
         fields: {
-          ArrayField: ArrayFieldTest as unknown as Field,
+          ArrayField: ArrayFieldTest,
         },
       });
 
@@ -3288,7 +3285,7 @@ describe('ArrayField', () => {
         ],
         templates,
         fields: {
-          ArrayField: ArrayFieldTest as unknown as Field,
+          ArrayField: ArrayFieldTest,
         },
       });
 
@@ -3310,7 +3307,7 @@ describe('ArrayField', () => {
         ],
         templates,
         fields: {
-          ArrayField: ArrayFieldTest as unknown as Field,
+          ArrayField: ArrayFieldTest,
         },
       });
 

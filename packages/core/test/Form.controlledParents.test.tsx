@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
-import { customizeValidator } from '@rjsf/validator-ajv8';
+import validator from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -22,7 +22,6 @@ interface Data {
   name?: string;
   other?: string | null;
 }
-const validator = customizeValidator<RJSFSchema, Data>();
 
 describe('controlled parent harnesses', () => {
   it('an accepting parent commits each proposal and the form renders the committed value', async () => {
