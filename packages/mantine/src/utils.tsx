@@ -1,4 +1,3 @@
-import { createElement } from 'react';
 import type {
   FormContextType,
   RJSFSchema,
@@ -105,15 +104,15 @@ export function getDescriptionProps<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return {
     description:
-      !hideLabel && !!description
-        ? createElement(DescriptionFieldTemplate, {
-            id: descriptionId(id),
-            description,
-            schema,
-            uiSchema,
-            registry,
-          })
-        : undefined,
+      !hideLabel && !!description ? (
+        <DescriptionFieldTemplate
+          id={descriptionId(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      ) : undefined,
     descriptionProps: {
       component: 'div' as const,
     },

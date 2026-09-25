@@ -6,7 +6,7 @@ import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/uti
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../../utils.ts';
+import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);

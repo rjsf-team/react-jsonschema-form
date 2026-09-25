@@ -4,7 +4,7 @@ import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *

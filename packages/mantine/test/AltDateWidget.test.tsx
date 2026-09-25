@@ -66,4 +66,9 @@ describe('AltDateWidget', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test('renders no description element without a description', () => {
+    const { container } = renderWidget();
+    expect(container.querySelector('.mantine-InputWrapper-description')).toBeNull();
+  });
 });

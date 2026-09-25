@@ -9,7 +9,7 @@ import {
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
-import { getDescriptionProps } from '../../utils.ts';
+import { getDescriptionProps } from '../../utils.tsx';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
