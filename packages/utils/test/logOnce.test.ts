@@ -69,18 +69,45 @@ describe('logOnce()', () => {
     logOnce('a message', 'warn', '');
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
-  it('keeps remembering the messages it already has once there are LOG_ONCE_MAX_MESSAGES of them', () => {
+  it('remembers a message first seen after LOG_ONCE_MAX_MESSAGES others have been', () => {
     for (let i = 0; i < LOG_ONCE_MAX_MESSAGES; i += 1) {
-      logOnce(`message ${i}`);
+      logOnce(`one-off ${i}`);
     }
-    logOnce('message 0');
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES);
-    // Past the cap a message is logged every time, rather than the whole set being forgotten, which would make every
-    // message it already holds log again too
-    logOnce('a new message');
-    logOnce('a new message');
-    logOnce('message 0');
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES + 2);
+    for (let i = 0; i < 50; i += 1) {
+      logOnce('a new message');
+    }
+    // Remembering only the first LOG_ONCE_MAX_MESSAGES would log this on every one of those 50 renders: keys holding a
+    // per-row id or index, or another tenant's form under SSR, fill the cap with messages that never recur
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES + 1);
+  });
+  it('logs a working set larger than LOG_ONCE_MAX_MESSAGES once per message, not once per pass', () => {
+    const workingSetSize = LOG_ONCE_MAX_MESSAGES + 1;
+    for (let pass = 0; pass < 3; pass += 1) {
+      for (let i = 0; i < workingSetSize; i += 1) {
+        logOnce(`message ${i}`);
+      }
+    }
+    // Forgetting every message at the cap, or evicting the least recently seen one, would log all of them on all three
+    // passes instead
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(workingSetSize);
+  });
+  it('keeps remembering a message while the ones seen after it fill a single generation', () => {
+    logOnce('a steady message');
+    for (let i = 0; i < LOG_ONCE_MAX_MESSAGES; i += 1) {
+      logOnce(`one-off ${i}`);
+    }
+    logOnce('a steady message');
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES + 1);
+  });
+  it('logs a message again once two generations of others have displaced it', () => {
+    logOnce('a steady message');
+    for (let i = 0; i < LOG_ONCE_MAX_MESSAGES * 2; i += 1) {
+      logOnce(`one-off ${i}`);
+    }
+    logOnce('a steady message');
+    // The price of keeping the two generations bounded: a message that outlives them is logged a second time. Holding
+    // it instead would cost a slot in every generation, shrinking how large a working set the test above can dedupe
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES * 2 + 2);
   });
   it('logs a message again after resetLogOnce()', () => {
     logOnce('a message');

@@ -813,7 +813,7 @@ describe('getUiRequiredErrorSchema()', () => {
       consoleErrorStub.mockRestore();
     });
 
-    it('names only the index when the throwing uiSchema.items function belongs to the root array', () => {
+    it('names the item by its own path when the throwing uiSchema.items function belongs to the root array', () => {
       const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(() => {});
       const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } };
       const error = new Error('boom');
@@ -824,10 +824,7 @@ describe('getUiRequiredErrorSchema()', () => {
       };
       const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, [{}]);
       expect(toErrorList(errorSchema)).toEqual([]);
-      expect(consoleErrorStub).toHaveBeenCalledWith(
-        'Error executing dynamic uiSchema.items function for item at index 0:',
-        error,
-      );
+      expect(consoleErrorStub).toHaveBeenCalledWith('Error executing dynamic uiSchema.items function for [0]:', error);
       consoleErrorStub.mockRestore();
     });
   });

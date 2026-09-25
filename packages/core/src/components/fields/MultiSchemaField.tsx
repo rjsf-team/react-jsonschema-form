@@ -18,6 +18,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
+
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
@@ -133,19 +135,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
-    // Names the path alongside the id for the same reason `SchemaField`'s ui:required warning does: distinct fields
-    // can share an id when a property name contains the `idSeparator`
-    const field = `"${id}"${fieldPath ? ` (${fieldPath})` : ''}`;
     if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         return uiSchema[ONE_OF_KEY];
       }
-      logOnce(`uiSchema.oneOf is not an array for ${field}`);
+      logOnce(`uiSchema.oneOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         return uiSchema[ANY_OF_KEY];
       }
-      logOnce(`uiSchema.anyOf is not an array for ${field}`);
+      logOnce(`uiSchema.anyOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     }
     return [];
   }, [schema, uiSchema, id, fieldPath]);

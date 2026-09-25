@@ -1,6 +1,7 @@
+import { toFieldPath } from './fieldPath.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import logOnce from './logOnce.ts';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
+import type { FieldPath, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Returns the `uiSchema` that applies to the array item at `index`, given that item's actual `formData`. Unlike
  * `getStaticItemsUiSchema()` (used when only the tuple position is known, e.g. for a `minItems` filler or a newly
@@ -13,8 +14,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './
  * @param item - The item's own form data
  * @param index - The tuple position `uiSchema.items` should apply to, when it is given as an array or a function
  * @param [formContext] - The formContext to pass to the function form of `uiSchema.items`
- * @param [arrayFieldPath] - The path of the array the item belongs to, named in the error logged when the function
- *          throws so that two arrays whose functions fail the same way at the same index are reported separately
+ * @param [arrayFieldPath] - The `FieldPath` of the array the item belongs to, used to name the item in the error
+ *          logged when the function throws, so that two arrays whose functions fail the same way at the same index
+ *          are reported separately
  * @returns - The uiSchema for the item at `index`, or `undefined`
  */
 export default function getItemUiSchemaForItem<
@@ -26,15 +28,13 @@ export default function getItemUiSchemaForItem<
   item: T,
   index: number,
   formContext?: F,
-  arrayFieldPath?: string,
+  arrayFieldPath?: FieldPath,
 ): UiSchema<T, S, F> | undefined {
   if (typeof uiSchema?.items === 'function') {
     try {
       return uiSchema.items(item as never, index, formContext) as UiSchema<T, S, F>;
     } catch (e) {
-      // The root field's path is empty, and a root array is the whole form, so there is nothing to tell it apart from
-      const forItem = arrayFieldPath ? `${arrayFieldPath}[${index}]` : `item at index ${index}`;
-      logOnce(`Error executing dynamic uiSchema.items function for ${forItem}:`, 'error', e);
+      logOnce(`Error executing dynamic uiSchema.items function for ${toFieldPath(index, arrayFieldPath)}:`, 'error', e);
       return undefined;
     }
   }

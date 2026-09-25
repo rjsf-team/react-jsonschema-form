@@ -993,7 +993,7 @@ describe('uiSchema', () => {
         // from its editableInputTypes list, so neither paste() nor type() reaches the value — both are
         // silent no-ops that would leave this assertion testing nothing rather than failing.
         act(() => {
-          fireEvent.change(node.querySelector('[type=color]')!, {
+          fireEvent.change(node.querySelector('[type=color]'), {
             target: {
               value: '#001122',
             },
@@ -1226,7 +1226,7 @@ describe('uiSchema', () => {
         // fireEvent.change is used instead of user.type() because jsdom does not process character
         // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
-          fireEvent.change(node.querySelector('[type=range]')!, {
+          fireEvent.change(node.querySelector('[type=range]'), {
             target: {
               value: '26.28',
             },
@@ -1455,7 +1455,7 @@ describe('uiSchema', () => {
         // fireEvent.change is used instead of user.type() because jsdom does not process character
         // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
-          fireEvent.change(node.querySelector('[type=range]')!, {
+          fireEvent.change(node.querySelector('[type=range]'), {
             target: {
               value: '6',
             },
@@ -2999,6 +2999,27 @@ describe('uiSchema', () => {
       expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"shipping_foo" (foo)'));
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"billing_foo" (foo)'));
+    });
+
+    // The reason the message carries the field path at all: ids join their segments with `idSeparator`, so these two
+    // fields share the id `root_a_b` and would otherwise produce the same message, silencing the second
+    it('warns separately for two misconfigured fields whose idSeparator-joined ids collide', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['a_b', 'a'],
+        properties: {
+          a_b: { type: 'string' },
+          a: { type: 'object', required: ['b'], properties: { b: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        a_b: { 'ui:required': false },
+        a: { b: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema, formData: { a: {} } });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a_b)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a.b)'));
     });
 
     it('does not warn when ui:required is false alongside ui:initialValue', () => {

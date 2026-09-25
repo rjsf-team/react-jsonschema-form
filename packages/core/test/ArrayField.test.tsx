@@ -3600,7 +3600,7 @@ describe('ArrayField', () => {
 
       // Should log error for second item
       expect(consoleErrorStub).toHaveBeenLastCalledWith(
-        'Error executing dynamic uiSchema.items function for item at index 1:',
+        'Error executing dynamic uiSchema.items function for [1]:',
         expect.any(Error),
       );
 
@@ -3641,7 +3641,7 @@ describe('ArrayField', () => {
 
       // Should log error for second item
       expect(consoleErrorStub).toHaveBeenLastCalledWith(
-        'Error executing dynamic uiSchema.items function for item at index 1:',
+        'Error executing dynamic uiSchema.items function for [1]:',
         expect.any(Error),
       );
 

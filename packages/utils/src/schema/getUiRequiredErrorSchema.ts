@@ -23,6 +23,7 @@ import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
 import type {
   CustomMergeAllOf,
   ErrorSchema,
+  FieldPath,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -121,7 +122,7 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
   item: unknown,
   idx: number,
   formContext: F | undefined,
-  arrayFieldPath: string | undefined,
+  arrayFieldPath: FieldPath | undefined,
 ): UiSchema<T, S, F> | undefined {
   if (isFixedItems<S>(retrieved) && idx >= (retrieved.items as S[]).length) {
     return uiSchema.additionalItems as UiSchema<T, S, F> | undefined;

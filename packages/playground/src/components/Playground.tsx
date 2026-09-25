@@ -7,7 +7,7 @@ import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
-import { createSchemaUtils } from '@rjsf/utils';
+import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -173,6 +173,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         }
       }
 
+      // The uiSchema warnings are logged once per page, and every sample renders under the default `idPrefix`, so
+      // without this the second sample to make the same mistake at the same field would warn about nothing. Checking
+      // those warnings by hand is most of what the playground is for.
+      resetLogOnce();
+
+      // force resetting form component instance
+      setShowForm(false);
       const theLiveSettings = normalizeLiveSettings(loadedLiveSettings);
       // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
       let seededFormData = loadedFormData;

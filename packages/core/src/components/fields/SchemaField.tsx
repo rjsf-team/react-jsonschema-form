@@ -40,6 +40,8 @@ import {
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
 
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
+
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
   array: 'ArrayField',
@@ -330,10 +332,7 @@ function SchemaFieldRender<
     schema.default === undefined
   ) {
     logOnce(
-      // Ids join their segments with `idSeparator`, so a property named `a_b` and a nested `a`/`b` share the id
-      // `root_a_b`; naming the path as well keeps one field's warning from standing in for the other's. The root
-      // field's path is empty, and its id already reads as `root`, so it gets no suffix.
-      `ui:required is false for schema-required field "${fieldId}"${fieldPath ? ` (${fieldPath})` : ''} but neither ` +
+      `ui:required is false for schema-required field ${fieldLabelForLog(fieldId, fieldPath)} but neither ` +
         'ui:initialValue nor ui:emptyValue is set. The UI will show this field as optional, but schema validation ' +
         'will still fail if it is left empty.',
     );

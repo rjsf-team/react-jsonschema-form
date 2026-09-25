@@ -1409,6 +1409,32 @@ describe('oneOf', () => {
       consoleWarnSpy.mockRestore();
     });
 
+    it('names a non-root oneOf field by its path as well as its id when warning', () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          choice: {
+            type: 'object',
+            oneOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
+          },
+        },
+      };
+      createFormComponent({
+        schema,
+        uiSchema: {
+          // A nested field's uiSchema isn't checked as strictly as the root's, so unlike the test above this needs no
+          // `@ts-expect-error` to hold a non-array `oneOf`
+          choice: {
+            oneOf: { 'ui:title': 'UiSchema title' },
+          },
+        },
+      });
+
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root_choice" (choice)');
+      consoleWarnSpy.mockRestore();
+    });
+
     describe('a non-array uiSchema.oneOf', () => {
       const consoleWarnSuppression = setupConsoleWarnSuppression();
 
