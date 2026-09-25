@@ -30,6 +30,7 @@ import {
   fieldPathEndsWithIndex,
   fieldPathToId,
   fieldPathToName,
+  ERRORS_KEY,
   ITEMS_KEY,
   TranslatableString,
 } from '@rjsf/utils';
@@ -58,6 +59,31 @@ function keyedToPlainFormData<T>(keyedFormData: KeyedFormDataType<T> | KeyedForm
     return keyedFormData.map((keyedItem) => keyedItem.item);
   }
   return [];
+}
+
+/** Moves each item's errors to the index `newIndexOf` returns, dropping them when it returns `undefined`, and keeps
+ * the array's own errors (such as `minItems`), which belong to no item
+ *
+ * @param errorSchema - The array's current `ErrorSchema`, its own errors included
+ * @param newIndexOf - Maps an item's old index to its new one
+ * @returns - The remapped `ErrorSchema`, or `undefined` when there was none
+ */
+function remapItemErrors<T>(
+  errorSchema: ErrorSchema<T[]> | undefined,
+  newIndexOf: (index: number) => number | undefined,
+): ErrorSchema<T[]> | undefined {
+  if (!errorSchema) {
+    return undefined;
+  }
+  const remapped: ErrorSchema<T[]> = ERRORS_KEY in errorSchema ? { [ERRORS_KEY]: errorSchema[ERRORS_KEY] } : {};
+  for (const key of Object.keys(errorSchema)) {
+    const index = parseInt(key, 10);
+    const newIndex = Number.isNaN(index) ? undefined : newIndexOf(index);
+    if (newIndex !== undefined) {
+      setByPath(remapped, newIndex, errorSchema[index]);
+    }
+  }
+  return remapped;
 }
 
 /** Determines whether the item described in the schema is always required, which is determined by whether any item
@@ -831,7 +857,7 @@ function useKeyedFormData<T = any>(formData: T[] = NO_ITEMS): KeyedFormDataState
 export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FieldProps<T[], S, F>,
 ) {
-  const { schema, uiSchema, errorSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
+  const { schema, uiSchema, errorSchema, rawErrors, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
   // Refs keep the latest values accessible inside stable useCallback closures without being in the dep array,
@@ -839,7 +865,8 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   const keyedFormDataRef = useRef(keyedFormData);
   keyedFormDataRef.current = keyedFormData;
   const errorSchemaRef = useRef(errorSchema);
-  errorSchemaRef.current = errorSchema;
+  // `SchemaField` hands the array's own errors over as `rawErrors`, so they go back in for the handlers to carry over
+  errorSchemaRef.current = rawErrors ? { ...errorSchema, [ERRORS_KEY]: rawErrors } : errorSchema;
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
    * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
@@ -854,18 +881,9 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T[]> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (index === undefined || i < index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i >= index) {
-            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
-          }
-        }
-      }
+      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) =>
+        index === undefined || i < index ? i : i + 1,
+      );
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
@@ -894,18 +912,7 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
 
-      let newErrorSchema: ErrorSchema<T[]> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i <= index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i > index) {
-            setByPath(newErrorSchema, i + 1, errorSchemaRef.current[i]);
-          }
-        }
-      }
+      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => (i <= index ? i : i + 1));
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
@@ -934,18 +941,12 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
       }
       // refs #195: revalidate to ensure properly reindexing errors
-      let newErrorSchema: ErrorSchema<T[]> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i < index) {
-            setByPath(newErrorSchema, i, errorSchemaRef.current[i]);
-          } else if (i > index) {
-            setByPath(newErrorSchema, i - 1, errorSchemaRef.current[i]);
-          }
+      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
+        if (i === index) {
+          return undefined;
         }
-      }
+        return i < index ? i : i - 1;
+      });
       const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
       onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
     },
@@ -965,20 +966,12 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
         event.preventDefault();
         event.currentTarget.blur();
       }
-      let newErrorSchema: ErrorSchema<T[]> | undefined;
-      if (errorSchemaRef.current) {
-        newErrorSchema = {};
-        for (const idx of Object.keys(errorSchemaRef.current)) {
-          const i = parseInt(idx, 10);
-          if (i === index) {
-            setByPath(newErrorSchema, newIndex, errorSchemaRef.current[index]);
-          } else if (i === newIndex) {
-            setByPath(newErrorSchema, index, errorSchemaRef.current[newIndex]);
-          } else {
-            setByPath(newErrorSchema, idx, errorSchemaRef.current[i]);
-          }
+      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
+        if (i === index) {
+          return newIndex;
         }
-      }
+        return i === newIndex ? index : i;
+      });
 
       function reOrderArray() {
         const newKeyedFormData = keyedFormDataRef.current.slice();
