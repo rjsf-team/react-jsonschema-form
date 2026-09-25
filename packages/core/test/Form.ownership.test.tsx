@@ -979,7 +979,7 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
     expect(getFormData()).toEqual({ a: 'new', b: 'later' });
   });
 
-  it('a submit whose validation throws lets later operations run', () => {
+  it('a submit whose validation throws lets later operations run', async () => {
     const ref = createRef<Form>();
     const { node, getFormData } = createFormComponent({
       ref,
@@ -999,7 +999,7 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
     };
     window.addEventListener('error', report);
     try {
-      fireEvent.submit(node);
+      await user.click(node.querySelector('button[type=submit]')!);
     } finally {
       window.removeEventListener('error', report);
     }
