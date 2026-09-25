@@ -1,9 +1,13 @@
 import { MantineProvider } from '@mantine/core';
-import type { WidgetProps } from '@rjsf/utils';
+import { getTestRegistry } from '@rjsf/core/testing';
+import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Templates from '../src/templates/index.ts';
 import TimeWidget from '../src/widgets/DateTime/TimeWidget.tsx';
+
+const schema: RJSFSchema = { type: 'string' };
 
 function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
   return {
@@ -18,10 +22,11 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     hideLabel: false,
     rawErrors: [],
     options: {},
-    schema: { type: 'string' },
+    schema,
     onChange: () => undefined,
     onBlur: () => undefined,
     onFocus: () => undefined,
+    registry: getTestRegistry(schema, {}, Templates, {}),
     ...props,
   } as unknown as WidgetProps;
 }
@@ -83,5 +88,34 @@ describe('TimeWidget', () => {
       const { container } = renderTimeWidget({ value: '13:10:30+02:00', schema });
       expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('13:10:30');
     });
+  });
+
+  test('renders with description from options', () => {
+    const { getByText } = renderTimeWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const { getByText } = renderTimeWidget({
+      schema: {
+        type: 'string',
+        description: 'Test description from schema',
+      },
+    });
+    expect(getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const { queryByText } = renderTimeWidget({
+      hideLabel: true,
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(queryByText('Test description')).not.toBeInTheDocument();
   });
 });

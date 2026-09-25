@@ -12,7 +12,7 @@ import {
   titleId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, visibleErrorText } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -89,6 +89,7 @@ export default function CheckboxesWidget<
         error={visibleErrorText(props)}
         aria-describedby={ariaDescribedByIds(id)}
         {...themeProps}
+        {...getDescriptionProps(props)}
       >
         {Array.isArray(enumOptions) ? (
           <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>

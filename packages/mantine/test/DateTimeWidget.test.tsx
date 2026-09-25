@@ -1,11 +1,14 @@
 import { MantineProvider } from '@mantine/core';
-import type { WidgetProps } from '@rjsf/utils';
+import { getTestRegistry } from '@rjsf/core/testing';
+import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Templates from '../src/templates/index.ts';
 import DateTimeWidget from '../src/widgets/DateTime/DateTimeWidget.tsx';
 
 const user = userEvent.setup();
+const schema: RJSFSchema = { type: 'string', format: 'date-time' };
 
 function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
   return {
@@ -20,10 +23,11 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     hideLabel: false,
     rawErrors: [],
     options: {},
-    schema: { type: 'string', format: 'date-time' },
+    schema,
     onChange: () => undefined,
     onBlur: () => undefined,
     onFocus: () => undefined,
+    registry: getTestRegistry(schema, {}, Templates, {}),
     ...props,
   } as unknown as WidgetProps;
 }
@@ -66,5 +70,33 @@ describe('DateTimeWidget', () => {
       const { container } = renderWidget({ value: 'not-a-date' });
       expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('');
     }).not.toThrow();
+  });
+  test('renders with description from options', () => {
+    const { getByText } = renderWidget({
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const { getByText } = renderWidget({
+      schema: {
+        type: 'string',
+        description: 'Test description from schema',
+      },
+    });
+    expect(getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const { queryByText } = renderWidget({
+      hideLabel: true,
+      options: {
+        description: 'Test description',
+      },
+    });
+    expect(queryByText('Test description')).not.toBeInTheDocument();
   });
 });
