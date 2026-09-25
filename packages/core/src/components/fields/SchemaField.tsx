@@ -27,7 +27,7 @@ import {
   hasVisibleErrors,
   isConstant,
   isFormDataAvailable,
-  logOnceInScope,
+  logOnce,
   ONE_OF_KEY,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
@@ -329,10 +329,12 @@ function SchemaFieldRender<
     // or ui:emptyValue would, so it must also silence the warning.
     schema.default === undefined
   ) {
-    logOnceInScope(
-      schemaUtils,
+    logOnce(
       `ui:required is false for schema-required field "${fieldId}" but neither ui:initialValue nor ui:emptyValue is ` +
         'set. The UI will show this field as optional, but schema validation will still fail if it is left empty.',
+      'warn',
+      undefined,
+      schemaUtils,
     );
   }
   const uiSchemaHideError = uiOptions.hideError;

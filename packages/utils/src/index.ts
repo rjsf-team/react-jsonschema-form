@@ -83,7 +83,7 @@ import isRootSchema from './isRootSchema.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
-import logOnce, { logOnceInScope, resetLogOnce } from './logOnce.ts';
+import logOnce, { resetLogOnce } from './logOnce.ts';
 import type { LogOnceLevel } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
@@ -223,7 +223,6 @@ export {
   localTimeToOffsetTime,
   localToUTC,
   logOnce,
-  logOnceInScope,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,
   mergeDefaultsWithFormData,

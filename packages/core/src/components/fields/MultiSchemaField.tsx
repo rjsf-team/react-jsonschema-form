@@ -10,7 +10,7 @@ import {
   getWidget,
   hashObject,
   isFormDataAvailable,
-  logOnceInScope,
+  logOnce,
   mergeSchemas,
   ONE_OF_KEY,
   selectOptionUiSchema,
@@ -137,12 +137,12 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         return uiSchema[ONE_OF_KEY];
       }
-      logOnceInScope(schemaUtils, `uiSchema.oneOf is not an array for "${id}"`);
+      logOnce(`uiSchema.oneOf is not an array for "${id}"`, 'warn', undefined, schemaUtils);
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         return uiSchema[ANY_OF_KEY];
       }
-      logOnceInScope(schemaUtils, `uiSchema.anyOf is not an array for "${id}"`);
+      logOnce(`uiSchema.anyOf is not an array for "${id}"`, 'warn', undefined, schemaUtils);
     }
     return [];
   }, [schema, uiSchema, id, schemaUtils]);
