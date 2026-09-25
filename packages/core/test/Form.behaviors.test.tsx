@@ -662,6 +662,34 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
+  describe('after an ArrayField reorder in an uncontrolled form', () => {
+    const items: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', minLength: 3 } };
+    it.each<[string, RJSFSchema, unknown, string]>([
+      ['a root array', items, ['aaa', 'bbbb', 'cccc'], 'root'],
+      ['a nested array', { type: 'object', properties: { arr: items } }, { arr: ['aaa', 'bbbb', 'cccc'] }, 'root_arr'],
+    ])("keeps %s's own errors across later prop changes", async (_, schema, data, id) => {
+      let restyle = () => {};
+      function Parent() {
+        const [restyles, setRestyles] = useState(0);
+        restyle = () => setRestyles((count) => count + 1);
+        return <Form schema={schema} validator={validator} className={`restyled-${restyles}`} initialFormData={data} />;
+      }
+      const { container } = render(<Parent />);
+      const ownErrors = { [id]: ['must NOT have fewer than 4 items'] };
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      // Two, since the first prop change after an edit is not derived from while `isProcessingUserChange` is set
+      act(() => restyle());
+      act(() => restyle());
+
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      expect(errorListMessages(container)).toHaveLength(1);
+    });
+  });
+
   it('lets the parent clear the extraErrors an ArrayField reorder remapped', async () => {
     const arraySchema: RJSFSchema = {
       type: 'object',
