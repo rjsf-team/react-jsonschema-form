@@ -1,3 +1,4 @@
+import { deepEqualsIgnoringUndefined } from '../src/deepEquals.ts';
 import { deepEquals } from '../src/index.ts';
 
 describe('deepEquals()', () => {
@@ -85,5 +86,40 @@ describe('deepEquals()', () => {
     b.push(b);
     expect(() => deepEquals(a, b)).not.toThrow();
     expect(deepEquals(a, b)).toBe(true);
+  });
+});
+
+describe('deepEqualsIgnoringUndefined()', () => {
+  it('assumes functions are always equivalent', () => {
+    expect(deepEqualsIgnoringUndefined({ fn: () => undefined }, { fn: (a: number) => a + 1 })).toBe(true);
+  });
+
+  it('disregards undefined-valued keys on either side, at any depth', () => {
+    expect(deepEqualsIgnoringUndefined({ a: 1, b: undefined }, { a: 1 })).toBe(true);
+    expect(deepEqualsIgnoringUndefined({ a: 1 }, { a: 1, b: undefined })).toBe(true);
+    expect(deepEqualsIgnoringUndefined([{ a: 1, b: undefined }], [{ a: 1 }])).toBe(true);
+    expect(deepEqualsIgnoringUndefined({ o: { a: 1, b: undefined } }, { o: { a: 1 } })).toBe(true);
+  });
+
+  it('still reports a difference in the defined keys', () => {
+    expect(deepEqualsIgnoringUndefined({ a: 1, b: undefined }, { a: 2 })).toBe(false);
+    expect(deepEqualsIgnoringUndefined({ a: 1 }, { a: 1, b: 2 })).toBe(false);
+    expect(deepEqualsIgnoringUndefined({ a: 1, b: undefined }, { a: 1, c: undefined, d: 2 })).toBe(false);
+    expect(deepEqualsIgnoringUndefined({ a: 1, b: undefined }, { b: undefined, c: 1 })).toBe(false);
+  });
+
+  it('does not match a key against one the other side only inherits', () => {
+    expect(deepEqualsIgnoringUndefined(JSON.parse('{"__proto__": {}}'), { q: 1 })).toBe(false);
+    expect(deepEqualsIgnoringUndefined({ toString: () => 'x' }, { y: 1 })).toBe(false);
+  });
+
+  it('does not stack-overflow on self-referential objects', () => {
+    const a: any = { name: 'a', gone: undefined };
+    a.self = a;
+    const b: any = { name: 'a' };
+    b.self = b;
+
+    expect(() => deepEqualsIgnoringUndefined(a, b)).not.toThrow();
+    expect(deepEqualsIgnoringUndefined(a, b)).toBe(true);
   });
 });

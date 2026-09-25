@@ -952,14 +952,25 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ),
       ).toEqual({ runners: [{ name: 'test2-runner-1', ratio: 2 }] });
     });
-    it('clears a readOnly object property the user changed away from a default the new schema alters (#4476)', () => {
+    it('keeps a readOnly object property the user changed away from a default the new schema alters (#4476)', () => {
+      // A value a readOnly field holds that no default accounts for came from the server, and clearing an object
+      // leaves the field empty rather than defaulted, since `getDefaultFormState` keeps an explicit undefined key
       expect(
         schemaUtils.sanitizeDataForNewSchema(
           propertyOf('runner', runnerSchema('test2-runner-1', 2, true)),
           propertyOf('runner', runnerSchema('test1-runner-1', 1, false)),
           { runner: { name: 'my-runner', ratio: 7 } },
         ),
-      ).toEqual({ runner: undefined });
+      ).toEqual({ runner: { name: 'my-runner', ratio: 7 } });
+    });
+    it('clears a readOnly scalar property the new schema newly locks, so its default takes over (#4476)', () => {
+      const lockable = (readOnly: boolean): RJSFSchema => ({ type: 'string', default: 'x', readOnly });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('s', lockable(true)), propertyOf('s', lockable(false)), {
+          s: 'typed',
+        }),
+      ).toEqual({ s: undefined });
     });
     it("initializes a newly defined object property from the new schema's default (#4476)", () => {
       expect(
@@ -1076,29 +1087,31 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         r: [{ a: 1 }, { a: 2 }],
       });
     });
-    it('keeps the keys of a replacing default that the schema declares no property for (#4476)', () => {
-      // `getDefaultFormState` emits only declared properties, so it alone would reduce the first default to
-      // `{ name }` and the second, whose schema has no `properties` at all, to `{}`
+    it('falls back to the literal default for an object the schema declares no properties for (#4476)', () => {
+      // `getDefaultFormState` emits only declared properties, so it produces nothing at all for this schema
+      const bare = (name: string): RJSFSchema => ({ type: 'object', default: { name } });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('runner', bare('t2')), propertyOf('runner', bare('t1')), {
+          runner: { name: 't1' },
+        }),
+      ).toEqual({ runner: { name: 't2' } });
+    });
+    it('writes only the keys the form itself would hold when replacing a default (#4476)', () => {
+      // A `default` key the schema declares no property for never reaches the form data, so writing it here would
+      // leave behind a value no later switch recognizes as the default it replaces
       const withExtra = (name: string): RJSFSchema => ({
         type: 'object',
         properties: { name: { type: 'string' } },
-        default: { name, extra: 'keep' },
+        default: { name, extra: 'never-emitted' },
       });
-      const bare = (name: string): RJSFSchema => ({ type: 'object', default: { name } });
 
       expect(
         schemaUtils.sanitizeDataForNewSchema(
           propertyOf('runner', withExtra('t2')),
           propertyOf('runner', withExtra('t1')),
-          {
-            runner: { name: 't1', extra: 'keep' },
-          },
+          { runner: { name: 't1' } },
         ),
-      ).toEqual({ runner: { name: 't2', extra: 'keep' } });
-      expect(
-        schemaUtils.sanitizeDataForNewSchema(propertyOf('runner', bare('t2')), propertyOf('runner', bare('t1')), {
-          runner: { name: 't1' },
-        }),
       ).toEqual({ runner: { name: 't2' } });
     });
     it('keeps an object property whose value violates a const the option switch left untouched (#4476)', () => {
@@ -1149,6 +1162,127 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           },
         ),
       ).toEqual({ e: { a: 9 } });
+    });
+    it('leaves an object property alone when a oneOf option of it is not const-like (#4476)', () => {
+      // `enumValuesForSchema` collects only the const-like options, so treating that collection as the whole of what
+      // the schema allows would reject the data of every other option
+      const kOf = (constValue: unknown): RJSFSchema =>
+        ({
+          type: 'object',
+          oneOf: [{ const: constValue }, { properties: { b: { type: 'string' } } }],
+        }) as RJSFSchema;
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('k', kOf({ a: 2 })), propertyOf('k', kOf({ a: 1 })), {
+          k: { b: 'hello' },
+        }),
+      ).toEqual({ k: { b: 'hello' } });
+    });
+    it('applies a const the new schema adds to an object property rather than clearing it (#4476)', () => {
+      const cfg = (schema: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        properties: { kind: { type: 'string' }, cfg: schema },
+      });
+      const withConst = cfg({ type: 'object', const: { x: 1 }, properties: { x: { type: 'number' } } });
+      const withoutConst = cfg({ type: 'object', properties: { x: { type: 'number' } } });
+
+      expect(schemaUtils.sanitizeDataForNewSchema(withConst, withoutConst, { kind: 'b' })).toEqual({
+        kind: 'b',
+        cfg: { x: 1 },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(withConst, withoutConst, { kind: 'b', cfg: { x: 5 } })).toEqual({
+        kind: 'b',
+        cfg: { x: 1 },
+      });
+    });
+    it('recognizes a default whose value the children of the schema contribute (#4476)', () => {
+      // The form holds `getDefaultFormState`'s output, which merges `ratio`'s own default into the parent's, so the
+      // literal `default` keyword alone never matches what is in the form data
+      const merged = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+      });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('runner', merged('t2')), propertyOf('runner', merged('t1')), {
+          runner: { name: 't1', ratio: 0 },
+        }),
+      ).toEqual({ runner: { name: 't2', ratio: 0 } });
+    });
+    it('leaves its own output alone when run again over it (#4476)', () => {
+      const merged = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+      });
+      const newSchema = propertyOf('runner', merged('t2'));
+      const oldSchema = propertyOf('runner', merged('t1'));
+      const once = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { runner: { name: 't1', ratio: 0 } });
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, once)).toEqual(once);
+    });
+    it("restores the first schema's default when switching back to it (#4476)", () => {
+      const merged = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+      });
+      const a = propertyOf('runner', merged('a'));
+      const b = propertyOf('runner', merged('b'));
+      const toB = schemaUtils.sanitizeDataForNewSchema(b, a, { runner: { name: 'a', ratio: 0 } });
+
+      expect(toB).toEqual({ runner: { name: 'b', ratio: 0 } });
+      expect(schemaUtils.sanitizeDataForNewSchema(a, b, toB)).toEqual({ runner: { name: 'a', ratio: 0 } });
+    });
+    it('replaces a value the object around it defaults differently, not just one its own schema does (#4476)', () => {
+      const runner: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const optionFor = (name: string): RJSFSchema => ({
+        type: 'object',
+        properties: { runner },
+        default: { runner: { name } },
+      });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(optionFor('two'), optionFor('one'), { runner: { name: 'one' } }),
+      ).toEqual({ runner: { name: 'two' } });
+    });
+    it('never hands back a value that aliases a schema or another element (#4476)', () => {
+      // Form data a consumer mutates must not reach into a schema other forms and renders share, and two elements
+      // replaced by the same default must not be the same object
+      const bare = (name: string): RJSFSchema => ({ type: 'object', default: { name } });
+      const newSchema = propertyOf('runner', bare('t2'));
+      const replaced = schemaUtils.sanitizeDataForNewSchema(newSchema, propertyOf('runner', bare('t1')), {
+        runner: { name: 't1' },
+      }) as { runner: object };
+
+      expect(replaced.runner).not.toBe((newSchema.properties!.runner as RJSFSchema).default);
+
+      const itemsOf = (name: string): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'object', default: { name }, properties: { name: { type: 'string' } } },
+      });
+      const elements = schemaUtils.sanitizeDataForNewSchema(
+        propertyOf('runners', itemsOf('t2')),
+        propertyOf('runners', itemsOf('t1')),
+        { runners: [{ name: 't1' }, { name: 't1' }] },
+      ) as { runners: object[] };
+
+      expect(elements.runners).toEqual([{ name: 't2' }, { name: 't2' }]);
+      expect(elements.runners[0]).not.toBe(elements.runners[1]);
+    });
+    it("replaces an element still holding the old scalar items' default with the new default (#4476)", () => {
+      const nums = (value: number): RJSFSchema => ({
+        type: 'array',
+        minItems: 1,
+        items: { type: 'number', default: value },
+      });
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(propertyOf('nums', nums(2)), propertyOf('nums', nums(1)), {
+          nums: [1, 7],
+        }),
+      ).toEqual({ nums: [2, 7] });
     });
     it('returns empty object when the old schema is of type string and the new contains "property" field', () => {
       const oldSchema: RJSFSchema = { type: 'string' };
