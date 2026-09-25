@@ -191,7 +191,7 @@ describe('form data ownership', () => {
     });
 
     it('lets the parent replace the data and clear local errors in one step without an old-value echo', async () => {
-      const ref = createRef<Form>();
+      const ref = createRef<Form<Data>>();
       const proposals: unknown[] = [];
       function Parent() {
         const [data, setData] = useState<Data>({ a: 'x' });
@@ -317,7 +317,7 @@ describe('form data ownership', () => {
       transform = keepProposal,
       log,
     }: {
-      ref: React.RefObject<Form | null>;
+      ref: React.RefObject<Form<Data> | null>;
       accept?: (proposal: Data) => boolean;
       transform?: (proposal: Data) => Data;
       log: { value?: Data; proposals: Data[] };
@@ -331,7 +331,7 @@ describe('form data ownership', () => {
           validator={validator}
           formData={data}
           onChange={(event) => {
-            const proposal = event.formData as Data;
+            const proposal = event.formData;
             log.proposals.push(proposal);
             if (accept(proposal)) {
               setData(transform(proposal));
@@ -342,7 +342,7 @@ describe('form data ownership', () => {
     }
 
     it('two path changes within one act both reach an accepting parent', async () => {
-      const ref = createRef<Form>();
+      const ref = createRef<Form<Data>>();
       const log = { proposals: [] as Data[] } as { value?: Data; proposals: Data[] };
       const { container } = render(<ComposingParent ref={ref} log={log} />);
 
@@ -361,7 +361,7 @@ describe('form data ownership', () => {
     });
 
     it('a transformed first value survives the second change', async () => {
-      const ref = createRef<Form>();
+      const ref = createRef<Form<Data>>();
       const log = { proposals: [] as Data[] } as { value?: Data; proposals: Data[] };
       render(
         <ComposingParent
@@ -381,7 +381,7 @@ describe('form data ownership', () => {
     });
 
     it('a rejected first value is not resurrected by the second change', async () => {
-      const ref = createRef<Form>();
+      const ref = createRef<Form<Data>>();
       const log = { proposals: [] as Data[] } as { value?: Data; proposals: Data[] };
       render(<ComposingParent ref={ref} log={log} accept={(proposal) => proposal.a !== 'first'} />);
 
@@ -398,7 +398,7 @@ describe('form data ownership', () => {
     });
 
     it('a change made from inside onChange is queued behind the one being handled', async () => {
-      const ref = createRef<Form>();
+      const ref = createRef<Form<Data>>();
       const proposals: Data[] = [];
       function ReentrantParent() {
         const [data, setData] = useState<Data>({ a: '', b: '' });
@@ -409,7 +409,7 @@ describe('form data ownership', () => {
             validator={validator}
             formData={data}
             onChange={(event) => {
-              const proposal = event.formData as Data;
+              const proposal = event.formData;
               proposals.push(proposal);
               setData(proposal);
               if (proposal.a === 'first' && proposal.b === '') {
@@ -567,7 +567,7 @@ describe('form data ownership', () => {
         type: 'object',
         properties: { a: { type: 'string' }, list: { type: 'array', items: { type: 'string' } } },
       };
-      let seen: IChangeEvent | undefined;
+      let seen: IChangeEvent<{ a: string; list: string[]; when: Date }> | undefined;
       render(
         <Form
           schema={nested}
@@ -1122,8 +1122,8 @@ describe('a throwing callback on a self-owned form', () => {
       ref,
       schema,
       initialFormData: { a: 'old' },
-      onChange: ({ formData }: IChangeEvent<Data>) => {
-        if (formData?.a === 'first') {
+      onChange: ({ formData }: IChangeEvent) => {
+        if ((formData as Data | undefined)?.a === 'first') {
           throw new Error('boom');
         }
       },

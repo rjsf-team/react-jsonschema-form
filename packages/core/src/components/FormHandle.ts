@@ -30,7 +30,7 @@ export interface FormHandle<T = unknown> {
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
    * root. Passing `undefined` clears the field.
    */
-  setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void;
+  setFieldValue(fieldPath: string | FieldPathList, newValue?: unknown): void;
   /** Validates the current form data, filtering extra data first when `omitExtraData` is set, and calls `onError` as a
    * submission would. It returns its answer at once, so it reads committed data like `getFormData()`: an edit or
    * `setFieldValue()` in the same tick is not validated until React commits it. `submit()` is queued and sees them.

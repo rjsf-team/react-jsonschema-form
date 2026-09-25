@@ -162,7 +162,7 @@ describe('Live validation onBlur', () => {
           validator={validator}
           liveValidate='onBlur'
           formData={value}
-          onChange={(event) => setValue(event.formData)}
+          onChange={(event) => setValue(event.formData ?? null)}
           // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
           // every keystroke
           transformErrors={(errors) => errors}

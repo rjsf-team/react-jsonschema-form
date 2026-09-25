@@ -1566,7 +1566,7 @@ export default class Form<
    * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
    * @param [newValue] - The new value for the field
    */
-  setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
+  setFieldValue = (fieldPath: string | FieldPathList, newValue?: unknown) => {
     const { registry } = this.state;
     let path = fieldPath;
     if (typeof path === 'string') {
@@ -1574,7 +1574,12 @@ export default class Form<
       path = path === '' ? [] : path.split('.');
     }
     const targetFieldPath = fieldPathFromList(path);
-    this.onChange(newValue, targetFieldPath, undefined, fieldPathToId(targetFieldPath, registry.globalFormOptions));
+    this.onChange(
+      newValue as T | undefined,
+      targetFieldPath,
+      undefined,
+      fieldPathToId(targetFieldPath, registry.globalFormOptions),
+    );
   };
 
   /** Queues an operation, running it at once when nothing else is running. The queue is also the reentrancy guard:
