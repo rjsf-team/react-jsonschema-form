@@ -591,7 +591,8 @@ function withoutSupplied<T>(raised: ErrorSchema<T>, supplied: Map<string, number
 
 /** `errors` with the ones at or below `path` replaced by the messages `raised` holds there. A validator error whose
  * message is still raised at its property stays as it was, keeping its place and the `name`, `params` and
- * `schemaPath` that a copy built from the `ErrorSchema` would lose
+ * `schemaPath` that a copy built from the `ErrorSchema` would lose. New messages go where the first error at `path`
+ * was, so the list keeps the validator's order
  *
  * @param errors - The validator's errors
  * @param path - The path the raise was made at
@@ -600,21 +601,27 @@ function withoutSupplied<T>(raised: ErrorSchema<T>, supplied: Map<string, number
  */
 function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, raised: ErrorSchema<T>) {
   const incoming = toErrorList(raised, path.map(String));
-  const kept = errors.filter((error) => {
+  const kept: RJSFValidationError[] = [];
+  let insertAt = -1;
+  for (const error of errors) {
     const pathOfError = errorPath(error);
     if (!isPathPrefix(path, pathOfError)) {
-      return true;
+      kept.push(error);
+    } else {
+      if (insertAt === -1) {
+        insertAt = kept.length;
+      }
+      const found = incoming.findIndex(
+        (entry) => entry.message === error.message && String(errorPath(entry)) === String(pathOfError),
+      );
+      if (found !== -1) {
+        incoming.splice(found, 1);
+        kept.push(error);
+      }
     }
-    const found = incoming.findIndex(
-      (entry) => entry.message === error.message && String(errorPath(entry)) === String(pathOfError),
-    );
-    if (found === -1) {
-      return false;
-    }
-    incoming.splice(found, 1);
-    return true;
-  });
-  return kept.concat(incoming);
+  }
+  kept.splice(insertAt === -1 ? kept.length : insertAt, 0, ...incoming);
+  return kept;
 }
 
 /** The data a derivation pass settles on, with what it took to get there */

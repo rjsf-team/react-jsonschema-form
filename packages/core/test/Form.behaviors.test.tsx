@@ -309,8 +309,7 @@ describe('Error state consistency when deriving from new props', () => {
   }
   const capturingUiSchema: UiSchema = { 'ui:field': CapturingRootField };
 
-  /** A parent that never follows `onChange`, so the form's own data diverges from the `formData` prop as soon as the
-   * user types
+  /** A parent that never follows `onChange`, so every edit the user makes is declined
    */
   function IgnoringParent() {
     const [className, setClassName] = useState<string | undefined>(undefined);
@@ -350,20 +349,17 @@ describe('Error state consistency when deriving from new props', () => {
     );
   }
 
-  it('does not duplicate an extraError once the form data has diverged from the prop', async () => {
+  it('does not duplicate an extraError once the parent declined an edit', async () => {
     const { container } = render(<IgnoringParent />);
 
-    // The parent keeps handing back `shortName`, so this keystroke leaves the form's data ahead of the prop
+    // The parent keeps handing back `shortName`, so this keystroke is only a proposal, and the errors validated for it
+    // go with it
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
     await user.click(container.querySelector('button')!);
 
-    expect(fieldErrorsById(container)).toEqual({
-      root_name: ['must NOT have fewer than 8 characters', 'from the server'],
-    });
-    expect(errorListMessages(container)).toEqual([
-      '.name must NOT have fewer than 8 characters',
-      '.name from the server',
-    ]);
+    expect(container.querySelector<HTMLInputElement>('#root_name')!.value).toBe('short');
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    expect(errorListMessages(container)).toEqual(['.name from the server']);
   });
 
   it('drops the stored validator errors when the schema stops producing them under onBlur', async () => {
@@ -603,26 +599,26 @@ describe('Error state consistency when deriving from new props', () => {
       await submitForm(container.querySelector('form')!, user);
       expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
       await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
-      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
     }
 
     it('keeps the error on the moved item in an uncontrolled form across later prop changes', async () => {
       const { container } = render(<Parent initialFormData={arrayData} />);
 
       await submitAndMoveFirstItemDown(container);
-      // Two, since the first prop change after an edit is not derived from while `isProcessingUserChange` is set
-      act(() => restyle());
+      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
       act(() => restyle());
 
       expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
       expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
     });
 
-    it('puts the error back on the original item when a controlled parent snaps its order back', async () => {
-      // The parent never follows `onChange`, so the next prop change restores its own order
+    it('keeps the error on the original item when a controlled parent declines the reorder', async () => {
+      // The parent never follows `onChange`, so the reorder is only a proposal and its own order stays shown
       const { container } = render(<Parent formData={arrayData} />);
 
       await submitAndMoveFirstItemDown(container);
+      expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
       act(() => restyle());
 
       expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
@@ -682,8 +678,6 @@ describe('Error state consistency when deriving from new props', () => {
       expect(fieldErrorsById(container)).toEqual(ownErrors);
       await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
       expect(fieldErrorsById(container)).toEqual(ownErrors);
-      // Two, since the first prop change after an edit is not derived from while `isProcessingUserChange` is set
-      act(() => restyle());
       act(() => restyle());
 
       expect(fieldErrorsById(container)).toEqual(ownErrors);
