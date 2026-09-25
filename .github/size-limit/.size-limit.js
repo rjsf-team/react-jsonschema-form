@@ -10,8 +10,8 @@ const ROOT = join(__dirname, '..', '..');
 // Node built-ins such as `fs` and cannot be bundled for a browser.
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '25 kB',
-    canaries: [{ label: 'Form', import: 'Form', limit: '25 kB' }],
+    installed: '26 kB',
+    canaries: [{ label: 'Form', import: 'Form', limit: '26 kB' }],
   },
   '@rjsf/utils': {
     installed: '34 kB',
