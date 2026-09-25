@@ -85,15 +85,14 @@ export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOp
 }
 
 /**
- * A HOC implementation for rendering the `DescriptionFieldTemplate` component for rendering
- * the description field across different widgets and templates along with an override for
- * `descriptionProps` to prevent invalid markup.
+ * A props helper for rendering the description field across different widgets and templates
+ * by generating a component for `description` and `descriptionProps` to prevent invalid markup.
  *
  * @param widgetProps - The props of the widget, from which the description and hideLabel are derived
  * @returns - An object to spread on the props of the component that should render the description field
  *
  */
-export function descriptionField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getDescriptionProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   widgetProps: WidgetProps<T, S, F>,
 ) {
   const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
@@ -108,7 +107,6 @@ export function descriptionField<T = any, S extends StrictRJSFSchema = RJSFSchem
     description:
       !hideLabel && !!description
         ? createElement(DescriptionFieldTemplate, {
-            ...widgetProps,
             id: descriptionId(id),
             description,
             schema,

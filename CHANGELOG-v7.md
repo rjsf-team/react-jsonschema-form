@@ -162,6 +162,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `DateTimeInput`, `TimeWidget`, `SelectWidget`, `TextareaWidget`, `PasswordWidget`, `ColorWidget`, `FileWidget`, `RadioWidget`, `CheckboxesWidget`, `AltDateWidget`, and `AltDateTimeWidget` not displaying a `DescriptionFieldTemplate` when a description is included in `schema` or `options`
 - `DescriptionFieldTemplate` now inherits `line-height`, `font-weight`, and `font-size` from parent CSS. In most cases this is Mantine `Input.Description` component
 - `DateTimeInput` and `TimeWidget` now filter the `options` prop using `cleanupOptions`. This will prevent `ui:options.style`, `title`, `label`, `help`, and other options from being applied automatically at the widget level
+- Fixed widget description fields not displaying markdown
 
 ## @rjsf/mui
 

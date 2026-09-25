@@ -42,4 +42,25 @@ describe('FileWidget', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
   });
+
+  test('renders with description from options', () => {
+    const options = { description: 'Test description' };
+    const uiOptions = { ...uiSchema, 'ui:options': options };
+    render(<Form schema={{ type: 'string', format: 'data-url' }} uiSchema={uiOptions} validator={validator} />);
+    expect(screen.getByText('Test description')).toBeInTheDocument();
+  });
+
+  test('renders with description from schema', () => {
+    const schema: RJSFSchema = { type: 'string', description: 'Test description from schema', format: 'data-url' };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+    expect(screen.getByText('Test description from schema')).toBeInTheDocument();
+  });
+
+  test('hides description when hideLabel is true', () => {
+    const uiOptions = { 'ui:options': { description: 'Test description', label: false } };
+    const { queryByText } = render(
+      <Form schema={{ type: 'string', format: 'data-url' }} uiSchema={uiOptions} validator={validator} />,
+    );
+    expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
 });

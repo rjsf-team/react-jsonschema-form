@@ -14,7 +14,7 @@ export default function DescriptionField<
   const { id, description, registry, uiSchema } = props;
   if (description) {
     return (
-      <Text id={id} mt={3} mb='sm' inherit>
+      <Text id={id} inherit>
         <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
       </Text>
     );
