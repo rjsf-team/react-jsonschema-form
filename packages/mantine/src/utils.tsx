@@ -91,7 +91,11 @@ export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOp
  * @returns - An object to spread on the props of the component that should render the description field
  *
  */
-export function getDescriptionProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getDescriptionProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   widgetProps: WidgetProps<T, S, F>,
 ) {
   const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
