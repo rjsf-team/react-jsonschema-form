@@ -1,7 +1,7 @@
 import type { FormProps, FormState } from './components/Form.tsx';
 import Form from './components/Form.tsx';
 import type { FormHandle } from './components/FormHandle.ts';
-import type { IChangeEvent } from './components/IChangeEvent.ts';
+import type { EventFormData, IChangeEvent } from './components/IChangeEvent.ts';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
 import type { RichHelpProps } from './components/RichHelp.tsx';
@@ -9,14 +9,16 @@ import RichHelp from './components/RichHelp.tsx';
 import type { SchemaExamplesProps } from './components/SchemaExamples.tsx';
 import SchemaExamples from './components/SchemaExamples.tsx';
 import type { CoreUiOptionsChecks } from './CoreUiOptionsChecks.ts';
-import type { ThemeProps } from './withTheme.tsx';
+import type { ThemedForm, ThemeProps } from './withTheme.tsx';
 import withTheme from './withTheme.tsx';
 
 export type {
+  EventFormData,
   FormHandle,
   FormProps,
   FormState,
   IChangeEvent,
+  ThemedForm,
   ThemeProps,
   RichDescriptionProps,
   RichHelpProps,

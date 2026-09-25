@@ -29,9 +29,9 @@ import type {
  * @returns - The resolved uiSchema with definitions merged in
  */
 export default function resolveUiSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   schema: S,
   rawLocalUiSchema: UiSchema<T, S, F> | undefined,

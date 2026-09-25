@@ -99,9 +99,9 @@ export function filterDuplicateErrors(
  * @returns - The converted RJSF validation errors
  */
 export function transformRJSFValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   errors: CFWorkerValidationError[] = [],
   uiSchema?: UiSchema<T, S, F>,
@@ -192,11 +192,11 @@ export function transformRJSFValidationErrors<
  * @returns - The processed validation errors and error schema
  */
 export default function processRawValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,

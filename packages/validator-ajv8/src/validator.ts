@@ -19,10 +19,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
 export default class AJV8Validator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The AJV instance to use for all validations
    *
    * @private
@@ -94,7 +93,7 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data   * @param schema
    * @param formData - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
@@ -185,7 +184,7 @@ export default class AJV8Validator<
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -237,7 +236,7 @@ export default class AJV8Validator<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;

@@ -14,7 +14,11 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './
  *  e.g. `MultiSchemaField`'s cleared-selection state) always falls back to `uiSchema`
  * @returns - The uiSchema to use for the selected option's own fields
  */
-export function selectOptionUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function selectOptionUiSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   optionsUiSchema: UiSchema<T, S, F>[] | undefined,
   uiSchema: UiSchema<T, S, F> | undefined,
   index: number,
@@ -37,9 +41,9 @@ export function selectOptionUiSchema<T = any, S extends StrictRJSFSchema = RJSFS
  * @returns - The uiSchema to use for the selected option's own fields
  */
 export default function getOptionUiSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   uiSchema: UiSchema<T, S, F> | undefined,
   keyword: typeof ONE_OF_KEY | typeof ANY_OF_KEY,

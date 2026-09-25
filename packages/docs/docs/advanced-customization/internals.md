@@ -132,7 +132,7 @@ formRef.current.submit();
 
 ## Update field value in form programmatically
 
-You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void` method to change the value of a field.
+You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: unknown): void` method to change the value of a field.
 This method will dispatch the `onChange` event of the form.
 
 ```tsx

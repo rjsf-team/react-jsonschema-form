@@ -17,7 +17,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @param [keepName] - A name to count as free even when taken, the current key of a property being renamed
  * @returns - The allowed names nothing has taken, or undefined when the schema enumerates none
  */
-export default function getFreePropertyNames<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+export default function getFreePropertyNames<T = unknown, S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   formData?: T,
   keepName?: string,

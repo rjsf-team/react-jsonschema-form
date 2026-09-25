@@ -3,18 +3,18 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import { ariaDescribedByIds } from '@rjsf/utils';
 import { FormControl, InputGroup } from 'react-bootstrap';
 
-type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
-  T,
-  S,
-  F
-> & {
+type CustomWidgetProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = WidgetProps<T, S, F> & {
   options: any;
 };
 
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   htmlName,

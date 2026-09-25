@@ -15,9 +15,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './
  * @returns - The uiSchema for the item at `index`, or `undefined`
  */
 export default function getItemUiSchemaForItem<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(uiSchema: UiSchema<T, S, F> | undefined, item: T, index: number, formContext?: F): UiSchema<T, S, F> | undefined {
   if (typeof uiSchema?.items === 'function') {
     try {

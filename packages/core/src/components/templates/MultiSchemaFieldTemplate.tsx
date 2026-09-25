@@ -6,9 +6,9 @@ import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, Strict
  * @param props - The `MultiSchemaFieldTemplate` to be rendered
  */
 export default function MultiSchemaFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
   const { selector, optionSchemaField } = props;
   return (

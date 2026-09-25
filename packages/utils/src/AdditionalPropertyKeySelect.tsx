@@ -9,9 +9,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 
 /** The props for the `AdditionalPropertyKeySelect` component */
 export type AdditionalPropertyKeySelectProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = Pick<
   WidgetProps<T, S, F>,
   'className' | 'disabled' | 'hideLabel' | 'id' | 'label' | 'readonly' | 'registry' | 'required'
@@ -33,9 +33,9 @@ export type AdditionalPropertyKeySelectProps<
  * @param props - The `AdditionalPropertyKeySelectProps` for this component
  */
 export default function AdditionalPropertyKeySelect<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: AdditionalPropertyKeySelectProps<T, S, F>) {
   const { id, propertyNamesEnum, onKeyRename, registry, ...selectProps } = props;
   const { disabled, readonly, value } = selectProps;

@@ -15,7 +15,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function CheckboxWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   schema,
   uiSchema,
   options,

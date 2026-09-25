@@ -4,7 +4,7 @@
  * @param formData - The data to check
  * @returns - True if `formData` is not undefined, null, a primitive type or an array or an empty object
  */
-export default function isFormDataAvailable<T = any>(formData?: T): boolean {
+export default function isFormDataAvailable<T = unknown>(formData?: T): boolean {
   if (formData === undefined || formData === null) {
     return false;
   }

@@ -15,9 +15,9 @@ import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/ut
  * @param props - The `WidgetProps` for this component
  */
 export default function AltDateWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { disabled = false, readonly = false, autofocus = false, options, id, name, registry, onBlur, onFocus } = props;
   const { translateString } = registry;

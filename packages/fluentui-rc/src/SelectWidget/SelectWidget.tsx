@@ -27,7 +27,11 @@ function getValue(data: OptionOnSelectData, multiple: boolean) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
   className,

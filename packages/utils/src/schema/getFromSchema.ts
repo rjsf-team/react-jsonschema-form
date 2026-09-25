@@ -20,8 +20,12 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The internal schema from the `schema` for the given `path` or undefined if not found
  */
-function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+function getFromSchemaInternal<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
@@ -56,23 +60,24 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
  * @returns - The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
  */
 export default function getFromSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
   defaultValue: T,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T;
+// `_T` keeps this overload's arity equal to the first one's, so explicit `<T, S, F>` type arguments can still reach it
 export default function getFromSchema<
-  T = any,
+  _T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
@@ -80,18 +85,18 @@ export default function getFromSchema<
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): S;
 export default function getFromSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
   defaultValue: T | S,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): T | S {
-  const result = getFromSchemaInternal(validator, rootSchema, schema, path, customMergeAllOf);
+  const result = getFromSchemaInternal<T, S, F>(validator, rootSchema, schema, path, customMergeAllOf);
   if (result === undefined) {
     return defaultValue;
   }

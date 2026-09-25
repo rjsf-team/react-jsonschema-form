@@ -10,18 +10,11 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  htmlName,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, htmlName, options, value, required, disabled, readonly, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 

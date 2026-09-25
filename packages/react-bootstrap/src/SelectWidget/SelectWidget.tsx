@@ -16,9 +16,9 @@ import {
 import { FormSelect } from 'react-bootstrap';
 
 export default function SelectWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   schema,
   id,

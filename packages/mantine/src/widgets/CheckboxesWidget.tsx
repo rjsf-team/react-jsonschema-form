@@ -20,9 +20,9 @@ import { cleanupOptions, visibleErrorText } from '../utils.ts';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,

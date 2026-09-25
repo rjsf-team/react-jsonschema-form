@@ -16,14 +16,13 @@ import type { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } fr
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
 export default function createPrecompiledValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   validateFns: ValidatorFunctions,
   rootSchema: S,
   localizer?: Localizer,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-): ValidatorType<T, S, F> {
-  return new ATAPrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
+): ValidatorType<S, F> {
+  return new ATAPrecompiledValidator<S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
 }

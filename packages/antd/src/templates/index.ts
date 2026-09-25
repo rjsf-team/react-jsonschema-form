@@ -17,11 +17,7 @@ import SubmitButton from './SubmitButton/index.tsx';
 import TitleField from './TitleField/index.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.tsx';
 
-export function generateTemplates<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): Partial<TemplatesType<T, S, F>> {
+export function createTemplates() {
   return {
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
@@ -49,4 +45,12 @@ export function generateTemplates<
   };
 }
 
-export default generateTemplates();
+export function generateTemplates<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): Partial<TemplatesType<T, S, F>> {
+  return createTemplates();
+}
+
+export default createTemplates();

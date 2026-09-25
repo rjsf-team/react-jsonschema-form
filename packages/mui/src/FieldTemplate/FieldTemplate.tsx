@@ -24,9 +24,9 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,

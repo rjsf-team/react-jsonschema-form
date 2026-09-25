@@ -107,6 +107,10 @@ describe('ATAValidator', () => {
   });
 
   describe('validateFormData()', () => {
+    interface PetData {
+      hasPet?: boolean;
+      animal?: string;
+    }
     it('returns errors and an errorSchema for invalid data', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = {
@@ -153,9 +157,9 @@ describe('ATAValidator', () => {
     it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
-      const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+      const uiSchema: UiSchema<{ country?: string }> = { country: { 'ui:initialValue': 'US' } };
       const customValidate = vi.fn((_data, errorHandler) => errorHandler);
-      v.validateFormData({}, schema, customValidate, undefined, uiSchema);
+      v.validateFormData<{ country?: string }>({}, schema, customValidate, undefined, uiSchema);
       expect(customValidate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
     });
 
@@ -167,7 +171,7 @@ describe('ATAValidator', () => {
         allOf: [{ required: ['animal'] }],
       };
       const uiSchema = { animal: { title: 'My animal uiSchema' } };
-      const { errors, errorSchema } = v.validateFormData({}, schema, undefined, undefined, uiSchema);
+      const { errors, errorSchema } = v.validateFormData<PetData>({}, schema, undefined, undefined, uiSchema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
@@ -185,7 +189,13 @@ describe('ATAValidator', () => {
         then: { required: ['animal'] },
       };
       const uiSchema = { animal: { title: 'My animal uiSchema' } };
-      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema, undefined, undefined, uiSchema);
+      const { errors, errorSchema } = v.validateFormData<PetData>(
+        { hasPet: true },
+        schema,
+        undefined,
+        undefined,
+        uiSchema,
+      );
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal uiSchema'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal uiSchema'"]);
@@ -198,7 +208,7 @@ describe('ATAValidator', () => {
         properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
         allOf: [{ required: ['animal'] }],
       };
-      const { errors, errorSchema } = v.validateFormData({}, schema);
+      const { errors, errorSchema } = v.validateFormData<PetData>({}, schema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
@@ -215,7 +225,7 @@ describe('ATAValidator', () => {
         if: { properties: { hasPet: { const: true } }, required: ['hasPet'] },
         then: { required: ['animal'] },
       };
-      const { errors, errorSchema } = v.validateFormData({ hasPet: true }, schema);
+      const { errors, errorSchema } = v.validateFormData<PetData>({ hasPet: true }, schema);
       expect(errors).toHaveLength(1);
       expect(errors[0].stack).toBe("must have required property 'My animal'");
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);

@@ -18,8 +18,12 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if schema/uiSchema contains an array of files, otherwise false
  */
-export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
+export default function isFilesArray<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  validator: ValidatorType<S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,

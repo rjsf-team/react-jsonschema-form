@@ -4,9 +4,9 @@ import type { FormContextType, MarkdownTemplateProps, RJSFSchema, StrictRJSFSche
  * registers the one from `@rjsf/core/markdown` (or its own) instead.
  */
 export default function MarkdownTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ children }: MarkdownTemplateProps<T, S, F>) {
   return children;
 }

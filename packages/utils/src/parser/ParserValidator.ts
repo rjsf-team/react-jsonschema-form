@@ -26,10 +26,9 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, 
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
 export default class ParserValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;
 
@@ -90,7 +89,7 @@ export default class ParserValidator<
    * @param rootSchema - The root schema associated with the schema
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
-  isValid(schema: S, _formData: T, rootSchema: S): boolean {
+  isValid(schema: S, _formData: unknown, rootSchema: S): boolean {
     if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
@@ -104,7 +103,7 @@ export default class ParserValidator<
    * @param _schema - The schema parameter that is ignored
    * @param _formData - The formData parameter that is ignored
    */
-  rawValidation<Result = any>(_schema: S, _formData?: T): { errors?: Result[]; validationError?: Error } {
+  rawValidation<Result = any>(_schema: S, _formData?: unknown): { errors?: Result[]; validationError?: Error } {
     throw new Error('Unexpectedly calling the `rawValidation()` method during schema parsing');
   }
 
@@ -113,7 +112,7 @@ export default class ParserValidator<
    * @param _errorSchema - The error schema parameter that is ignored
    * @param _fieldPath - The field path parameter that is ignored
    */
-  toErrorList(_errorSchema?: ErrorSchema<T>, _fieldPath?: string[]): RJSFValidationError[] {
+  toErrorList<T = unknown>(_errorSchema?: ErrorSchema<T>, _fieldPath?: string[]): RJSFValidationError[] {
     throw new Error('Unexpectedly calling the `toErrorList()` method during schema parsing');
   }
 
@@ -126,8 +125,8 @@ export default class ParserValidator<
    * @param _transformErrors - The transformErrors parameter that is ignored
    * @param _uiSchema - The uiSchema parameter that is ignored
    */
-  validateFormData(
-    _formData: T,
+  validateFormData<T = unknown>(
+    _formData: T | undefined,
     _schema: S,
     _customValidate?: CustomValidator<T, S, F>,
     _transformErrors?: ErrorTransformer<T, S, F>,

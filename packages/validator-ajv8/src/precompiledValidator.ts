@@ -24,10 +24,9 @@ import type {
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.
  */
 export default class AJV8PrecompiledValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The root schema object used to construct this validator
    *
    * @private
@@ -102,7 +101,7 @@ export default class AJV8PrecompiledValidator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
    */
-  ensureSameRootSchema(schema: S, formData?: T) {
+  ensureSameRootSchema(schema: S, formData?: unknown) {
     if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
       const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
@@ -122,7 +121,7 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
@@ -148,7 +147,7 @@ export default class AJV8PrecompiledValidator<
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -178,7 +177,7 @@ export default class AJV8PrecompiledValidator<
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator OR if there
    *        isn't a precompiled validator function associated with the schema
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);
     if (schema[ID_KEY] === JUNK_OPTION_ID) {
       return false;

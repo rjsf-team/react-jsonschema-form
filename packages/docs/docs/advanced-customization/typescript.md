@@ -3,39 +3,44 @@
 RJSF fully supports Typescript.
 The [types and functions](../api-reference/utility-functions.md) exported by `@rjsf/utils` are fully typed (as needed) using one or more of the following 3 optional generics:
 
-- `T = any`: This represents the type of the `formData` and defaults to `any`.
+- `T = unknown`: This represents the type of the `formData` and defaults to `unknown`.
 - `S extends StrictRJSFSchema = RJSFSchema`: This represents the type of the `schema` and extends the `StrictRJSFSchema` type and defaults to the `RJSFSchema` type.
-- `F extends FormContextType = any`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `any`.
+- `F extends FormContextType = FormContextType`: This represents the type of the `formContext`, extends the `FormContextType` type and defaults to `FormContextType`.
 
 Every other library in the `@rjsf/*` ecosystem use these same generics in their functions and React component definitions.
 For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
 export default class Form<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   // ... class implementation
 }
 
-export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>,
-) {
+export default function withTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(themeProps: ThemeProps<T, S, F>): ThemedForm<T, S, F> {
   // ... function implementation
 }
 
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> {
   // ... function implementation
 }
 ```
 
-Out of the box, the defaults for these generics will work for all use-cases.
-Providing custom types for any of these generics may be useful for situations where the caller is working with typed `formData`, `schema` or `formContext` props, Typescript is complaining and type casting isn't allowed.
+The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
+Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
+Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
+`Form` infers `T` from the `formData` prop when one is passed, so naming it is only needed when there is no `formData` to infer from.
+The validator has no `T`: `ValidatorType<S, F>` puts the form data type on `validateFormData<T>()`, so one validator serves every form.
 
 ## Overriding generics
 
@@ -64,7 +69,7 @@ const schema: RJSFSchema = {
 
 const formData: FormData = {};
 
-const validator = customizeValidator<FormData>();
+const validator = customizeValidator();
 
 render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
 ```
@@ -95,12 +100,11 @@ const schema: MySchema = {
   },
 };
 
-const validator = customizeValidator<any, MySchema>();
+const validator = customizeValidator<MySchema>();
 
 render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 
 // Alternatively since you have the type, you could also use this
-// const validator = customizeValidator<FormData, MySchema>();
 // render((
 //  <Form<FormData, MySchema> schema={schema} validator={validator} />
 //), document.getElementById("app"));
@@ -136,7 +140,7 @@ const formContext: FormContext = {
   },
 };
 
-const validator = customizeValidator<any, RJSFSchema, FormContext>();
+const validator = customizeValidator<RJSFSchema, FormContext>();
 
 render(
   <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
@@ -179,7 +183,7 @@ const theme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(theme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
@@ -187,8 +191,8 @@ const Demo = () => <ThemedForm schema={schema} uiSchema={uiSchema} validator={va
 ## Overriding generics in other themes
 
 Since all the other themes in RJSF are extensions of `@rjsf/core`, overriding parts of these themes with custom generics is a little different.
-The exported `Theme` and `Form` from any of the themes have been created using the generic defaults, and as a result, do not take generics themselves.
-In order to override generics, special `generateForm()` and `generateTheme()` functions are exported for your use.
+The exported `Form` from any of the themes is a `ThemedForm`, generic over the form data like `Form` itself, and the exported `Theme`, `Templates` and `Widgets` keep each component's own generics, so the `withTheme()` example above works unchanged with a theme's `Theme`.
+To pin the generics up front instead, `generateForm()` and `generateTheme()` functions are exported for your use.
 
 ### Overriding a Theme
 
@@ -228,7 +232,7 @@ import React from 'react';
 import { WidgetProps } from '@rjsf/utils';
 import { ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { generateTheme } from '@rjsf/mui';
+import { Templates, generateTheme } from '@rjsf/mui';
 
 interface FormData {
   foo?: string;
@@ -251,7 +255,7 @@ interface FormContext {
 
 const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
-const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
+const OldBaseInputTemplate = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps<FormData, MySchema, FormContext>) {
@@ -268,7 +272,7 @@ const myTheme: ThemeProps<FormData, MySchema, FormContext> = {
 
 const ThemedForm = withTheme<FormData, MySchema, FormContext>(myTheme);
 
-const validator = customizeValidator<FormData, MySchema, FormContext>();
+const validator = customizeValidator<MySchema, FormContext>();
 
 // You could also do since they are effectively the same:
 // const ThemedForm = generateForm<FormData, MySchema, FormContext>(myTheme);

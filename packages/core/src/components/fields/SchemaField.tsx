@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react';
 import { useCallback, useMemo, useRef, memo } from 'react';
 import type {
   ErrorSchema,
@@ -119,19 +118,23 @@ function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { 
  * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
  *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
  */
-function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function getFieldComponent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
   isSelectSchema: boolean,
-): { FieldComponent: ComponentType<FieldProps<T, S, F>>; rendersFallbackUi: boolean } {
+): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean } {
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
   if (typeof field === 'function') {
     return { FieldComponent: field, rendersFallbackUi: false };
   }
   if (typeof field === 'string' && field in fields) {
-    return { FieldComponent: fields[field] as ComponentType<FieldProps<T, S, F>>, rendersFallbackUi: false };
+    return { FieldComponent: fields[field], rendersFallbackUi: false };
   }
 
   const schemaType = getSchemaType(schema);
@@ -197,9 +200,11 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  *
  * @param props - The `FieldProps` for this component
  */
-function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+function SchemaFieldRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema: _schema,
     fieldPath,

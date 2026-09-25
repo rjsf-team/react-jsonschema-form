@@ -12,9 +12,9 @@ import DateTimeInput from './DateTimeInput.tsx';
  * @param props - The `WidgetProps` for this component
  */
 export default function DateTimeWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { schema } = props;
   const defaultValueFormat = schema.format === 'iso-date-time' ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';

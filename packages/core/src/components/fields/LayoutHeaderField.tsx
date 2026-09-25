@@ -11,9 +11,9 @@ import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
  * @param props - The `LayoutHeaderField` for the component
  */
 export default function LayoutHeaderField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const { id, title, schema, uiSchema, required, registry, name } = props;
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);

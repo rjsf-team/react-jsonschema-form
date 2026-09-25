@@ -15,9 +15,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function RatingWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   value,

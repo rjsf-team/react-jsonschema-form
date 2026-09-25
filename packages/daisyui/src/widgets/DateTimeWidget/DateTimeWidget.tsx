@@ -163,9 +163,9 @@ const MemoizedDateTimePickerPopup = memo(DateTimePickerPopup);
  * @param props - The `WidgetProps` for this component
  */
 export default function DateTimeWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, onChange, onFocus, onBlur, schema } = props;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);

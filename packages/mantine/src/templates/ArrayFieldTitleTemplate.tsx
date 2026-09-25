@@ -8,9 +8,9 @@ import { getUiOptions, titleId } from '@rjsf/utils';
  * @param props - The `ArrayFieldTitleProps` for the component
  */
 export default function ArrayFieldTitleTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTitleProps<T, S, F>) {
   const { id, title, uiSchema, registry, optionalDataControl } = props;
 

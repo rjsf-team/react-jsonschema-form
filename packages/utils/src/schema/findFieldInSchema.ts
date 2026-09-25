@@ -29,11 +29,11 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
 export default function findFieldInSchema<
-  T = undefined,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,

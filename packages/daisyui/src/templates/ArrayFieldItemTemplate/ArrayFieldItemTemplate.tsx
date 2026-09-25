@@ -14,9 +14,9 @@ import { getTemplate, getUiOptions } from '@rjsf/utils';
  * @param props.totalItems - The total number of items in the array (optional)
  */
 export default function ArrayFieldItemTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, displayLabel, hasToolbar, registry, uiSchema, index, totalItems } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);

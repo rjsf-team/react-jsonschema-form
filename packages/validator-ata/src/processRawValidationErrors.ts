@@ -69,9 +69,9 @@ export function filterDuplicateErrors(
  * `message`), so the conversion is structural only.
  */
 export function transformRJSFValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   errors: ValidationError[] = [],
   uiSchema?: UiSchema<T, S, F>,
@@ -182,11 +182,11 @@ export function transformRJSFValidationErrors<
  * including the optional `customValidate` and `transformErrors` hooks.
  */
 export default function processRawValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rawErrors: RawValidationErrorsType<ValidationError>,
   formData: T | undefined,
   schema: S,

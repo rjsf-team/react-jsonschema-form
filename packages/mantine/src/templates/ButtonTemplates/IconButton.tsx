@@ -8,14 +8,16 @@ import { TranslatableString } from '@rjsf/utils';
 import { Copy, ChevronDown, ChevronUp, X } from '../icons.tsx';
 
 export type MantineIconButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = IconButtonProps<T, S, F> & Omit<ActionIconProps, 'onClick'>;
 
-function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function IconButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const { icon, iconType = 'sm', color, onClick, uiSchema, registry, ...otherProps } = props;
   return (
     <ActionIcon
@@ -31,9 +33,11 @@ function IconButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
 export default IconButton;
 
-function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function CopyButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -43,9 +47,11 @@ function CopyButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
 }
 export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
-function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function MoveDownButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -60,9 +66,11 @@ function MoveDownButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 }
 export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
-function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function MoveUpButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -77,9 +85,11 @@ function MoveUpButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
-function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function RemoveButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -95,9 +105,11 @@ function RemoveButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
-function ClearButtonFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: MantineIconButtonProps<T, S, F>,
-) {
+function ClearButtonFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: MantineIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;

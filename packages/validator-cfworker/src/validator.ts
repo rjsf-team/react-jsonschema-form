@@ -55,10 +55,9 @@ export function normalizeFormDataForValidation<D>(data: D): D {
 
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The resolved options used to configure this validator.
    *
    * @private
@@ -136,7 +135,7 @@ export default class CFWorkerValidator<
    * @param [formData] - The form data to validate
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
@@ -159,7 +158,7 @@ export default class CFWorkerValidator<
    * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
    * @returns - The processed validation errors and error schema
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -211,7 +210,7 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean {
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean {
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;

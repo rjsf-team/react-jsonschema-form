@@ -27,9 +27,9 @@ export interface UseTimeWidgetPropsResult {
  * @returns - The `UseTimeWidgetPropsResult` to be used within a `TimeWidget` implementation
  */
 export default function useTimeWidgetProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseTimeWidgetPropsResult {
   const { schema, value } = props;
   const isIsoTime = schema.format === 'iso-time';

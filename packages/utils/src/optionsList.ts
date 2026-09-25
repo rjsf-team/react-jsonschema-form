@@ -40,10 +40,11 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
  * @param [uiSchema] - The optional uiSchema from which to get alternate labels for the options
  * @returns - The list of options from the schema
  */
-export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  schema: S,
-  uiSchema?: UiSchema<T, S, F>,
-): EnumOptionsType<S>[] | undefined {
+export default function optionsList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema?: UiSchema<T, S, F>): EnumOptionsType<S>[] | undefined {
   if (schema.enum) {
     let enumNames: string[] | Record<string | number, string> | undefined;
     let enumOrder: EnumValue[] | undefined;

@@ -1,32 +1,31 @@
-import type { ComponentType } from 'react';
-import type { FormProps, ThemeProps } from '@rjsf/core';
+import type { ThemedForm, ThemeProps } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import Templates, { generateTemplates } from './templates/index.ts';
-import Widgets, { generateWidgets } from './widgets/index.ts';
+import Templates, { createTemplates, generateTemplates } from './templates/index.ts';
+import Widgets, { createWidgets, generateWidgets } from './widgets/index.ts';
 
-export function generateTheme<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): ThemeProps<T, S, F> {
-  return {
-    templates: generateTemplates<T, S, F>(),
-    widgets: generateWidgets<T, S, F>(),
-  };
+function createTheme() {
+  return { templates: createTemplates(), widgets: createWidgets() };
 }
 
-const Theme = generateTheme();
+export function generateTheme<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): ThemeProps<T, S, F> {
+  return createTheme();
+}
 
 export function generateForm<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): ComponentType<FormProps<T, S, F>> {
+  F extends FormContextType = FormContextType,
+>(): ThemedForm<T, S, F> {
   return withTheme<T, S, F>(generateTheme<T, S, F>());
 }
 
+const Theme = createTheme();
 const Form = generateForm();
 
 export { Form, Templates, Theme, Widgets, generateTemplates, generateWidgets };

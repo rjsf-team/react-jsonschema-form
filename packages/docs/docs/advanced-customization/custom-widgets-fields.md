@@ -327,9 +327,14 @@ const schema: RJSFSchema = {
   },
 };
 
+interface GeoData {
+  lat?: number;
+  lon?: number;
+}
+
 // Define a custom component for handling the root position object
-class GeoPosition extends React.Component<FieldProps> {
-  constructor(props: FieldProps) {
+class GeoPosition extends React.Component<FieldProps<GeoData>, GeoData> {
+  constructor(props: FieldProps<GeoData>) {
     super(props);
     this.state = { ...props.formData };
   }

@@ -62,7 +62,11 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - The list of enumOptions for the `schema` and `options`
  * @throws - Error when no enum options were computed
  */
-export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function computeEnumOptions<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S,
   options: S[],
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -90,9 +94,9 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
  * is active. If no `selectorField` is specified, then an error is thrown.
  */
 export default function LayoutMultiSchemaField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
     name,

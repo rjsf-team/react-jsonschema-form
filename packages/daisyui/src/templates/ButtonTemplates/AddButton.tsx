@@ -8,13 +8,11 @@ import DaisyUIButton from './DaisyUIButton.tsx';
  *
  * @param props - The props for the component
  */
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  className,
-  onClick,
-  disabled,
-  registry,
-  ...otherProps
-}: IconButtonProps<T, S, F>) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ className, onClick, disabled, registry, ...otherProps }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <div className='row'>

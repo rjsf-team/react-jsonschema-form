@@ -153,7 +153,13 @@ describe('processRawValidationErrors()', () => {
 
   it('turns a validation exception into list and schema errors', () => {
     const validator = customizeValidator();
-    const result = processRawValidationErrors(validator, { validationError: new Error('bad schema') }, {}, schema);
+    const formData: unknown = {};
+    const result = processRawValidationErrors(
+      validator,
+      { validationError: new Error('bad schema') },
+      formData,
+      schema,
+    );
     expect(result.errors).toEqual([{ stack: 'bad schema' }]);
     expect(result.errorSchema.$schema?.__errors).toEqual(['bad schema']);
   });

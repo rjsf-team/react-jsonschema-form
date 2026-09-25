@@ -9,9 +9,9 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `FieldHelpProps` to be rendered
  */
 export default function FieldHelpTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
   const { id, help, uiSchema, registry, hasErrors } = props;
   if (!help) {

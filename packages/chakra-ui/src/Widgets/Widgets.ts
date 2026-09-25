@@ -11,11 +11,7 @@ import SelectWidget from '../SelectWidget/SelectWidget.tsx';
 import TextareaWidget from '../TextareaWidget/TextareaWidget.tsx';
 import UpDownWidget from '../UpDownWidget/UpDownWidget.tsx';
 
-export function generateWidgets<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): RegistryWidgetsType<T, S, F> {
+export function createWidgets() {
   return {
     AltDateTimeWidget,
     AltDateWidget,
@@ -30,4 +26,12 @@ export function generateWidgets<
   };
 }
 
-export default generateWidgets();
+export function generateWidgets<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): RegistryWidgetsType<T, S, F> {
+  return createWidgets();
+}
+
+export default createWidgets();

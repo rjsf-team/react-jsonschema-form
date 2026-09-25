@@ -12,12 +12,11 @@ import { cn } from '../lib/utils.ts';
  * @param className - Allow custom class names to be passed for Tailwind CSS styling
  * @param props - The component properties
  */
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  uiSchema,
-  registry,
-  className,
-  ...props
-}: IconButtonProps<T, S, F>) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ uiSchema, registry, className, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   return (
     <div className='p-0 m-0'>

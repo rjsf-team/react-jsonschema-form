@@ -24,10 +24,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
  * still resolves between schemas RJSF passes in.
  */
 export default class ATAValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** Stable copy of the constructor options, used when (re)building per-schema
    * `Validator` instances on demand.
    *
@@ -129,7 +128,7 @@ export default class ATAValidator<
    * `AJV8Validator#rawValidation`: returns ata's error array (already in
    * AJV-compatible shape) plus any compilation error encountered.
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
@@ -160,7 +159,7 @@ export default class ATAValidator<
    * `processRawValidationErrors` for the shape of the post-processing
    * pipeline (custom validation, transform hook, ui-title resolution).
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -208,7 +207,7 @@ export default class ATAValidator<
   /** Boolean validation entrypoint. Returns false on validation failure or
    * compilation error. Mirrors `AJV8Validator#isValid` semantics.
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;

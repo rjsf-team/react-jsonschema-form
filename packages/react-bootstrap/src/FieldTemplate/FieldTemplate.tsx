@@ -3,9 +3,9 @@ import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   children,

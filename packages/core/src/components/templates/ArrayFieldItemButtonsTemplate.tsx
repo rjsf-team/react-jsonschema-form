@@ -7,9 +7,9 @@ import { buttonId } from '@rjsf/utils';
  * @param props - The `ArrayFieldItemButtonsTemplateProps` props for the component
  */
 export default function ArrayFieldItemButtonsTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemButtonsTemplateProps<T, S, F>) {
   const {
     disabled,

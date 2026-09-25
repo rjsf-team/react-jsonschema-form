@@ -16,9 +16,9 @@ import { Checkbox } from 'antd';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   autofocus,
   disabled,

@@ -3,9 +3,9 @@ import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFS
 import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,

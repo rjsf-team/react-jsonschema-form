@@ -216,6 +216,28 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
     expect([badWidget, badRawOption]).toHaveLength(2);
   });
 
+  it('allows every name Checks declares, and nothing else, when the form data has no type', () => {
+    type Untyped = UiSchema<unknown, RJSFSchema, FormContextType, ExampleChecks>;
+
+    const ui: Untyped = { 'ui:widget': 'ExampleRangeWidget', 'ui:placeholder': 'any string check applies' };
+    // @ts-expect-error a name no Checks member declares is still rejected
+    const bad: Untyped = { 'ui:widget': 'NotAWidget' };
+
+    expect(ui['ui:widget']).toBe('ExampleRangeWidget');
+    expect(bad).toBeDefined();
+  });
+
+  it('allows the names of every Checks member matching part of a union field type', () => {
+    type Checked = UiSchema<{ amount: string | number }, RJSFSchema, FormContextType, ExampleChecks>;
+
+    const asText: Checked = { amount: { 'ui:widget': 'ExampleTextWidget' } };
+    const asRange: Checked = { amount: { 'ui:widget': 'ExampleRangeWidget' } };
+    // @ts-expect-error ExampleListWidget is for arrays, which neither member of the union is
+    const bad: Checked = { amount: { 'ui:widget': 'ExampleListWidget' } };
+
+    expect([asText, asRange, bad]).toHaveLength(3);
+  });
+
   it('supports both the `ui:optionName` and `ui:options: { optionName }` forms once Checks is supplied', () => {
     type Checked = UiSchema<{ bio: string }, RJSFSchema, FormContextType, ExampleChecks>;
 

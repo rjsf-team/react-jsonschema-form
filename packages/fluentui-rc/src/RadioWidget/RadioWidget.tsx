@@ -17,7 +17,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
   options,

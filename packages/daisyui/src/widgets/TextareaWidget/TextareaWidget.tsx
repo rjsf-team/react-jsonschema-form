@@ -13,9 +13,9 @@ import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { id, htmlName, value, required, disabled, readonly, onChange, onFocus, onBlur, options } = props;
 

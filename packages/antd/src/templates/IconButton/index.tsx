@@ -13,14 +13,16 @@ import type { ButtonProps } from 'antd';
 import { Button } from 'antd';
 
 export type AntdIconButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = IconButtonProps<T, S, F> & Pick<ButtonProps, 'block' | 'danger' | 'size'>;
 
-export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export default function IconButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const { iconType = 'default', icon, onClick, uiSchema, registry, color, ...otherProps } = props;
   return (
     <Button
@@ -35,9 +37,11 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
   );
 }
 
-export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -52,18 +56,22 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   );
 }
 
-export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function CopyButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
   return <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon={<CopyOutlined />} />;
 }
 
-export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function MoveDownButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
@@ -72,18 +80,22 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   );
 }
 
-export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function MoveUpButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;
   return <IconButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon={<ArrowUpOutlined />} />;
 }
 
-export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function RemoveButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so get it from the uiSchema instead
   const options = getUiOptions<T, S, F>(props.uiSchema);
   const {
@@ -101,9 +113,11 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   );
 }
 
-export function ClearButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>,
-) {
+export function ClearButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: AntdIconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;

@@ -679,7 +679,7 @@ function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProp
   return (
     <div data-testid={testId}>
       <span id={id}>{stringifyProps(props)}</span>
-      <input value={formData} onChange={onTextChange} onBlur={onTextBlur} onFocus={onTextFocus} />
+      <input value={formData as string} onChange={onTextChange} onBlur={onTextBlur} onFocus={onTextFocus} />
     </div>
   );
 }
@@ -1108,11 +1108,11 @@ describe('LayoutGridField', () => {
       const path = 'employment.location.state';
       const paths = path.split('.');
       const formData = { employment: { job_type: 'company' } };
-      const schema: RJSFSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
+      const schema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [DEFINITIONS_KEY, 'Location', PROPERTIES_KEY, 'state'],
         {},
-      );
+      ) as RJSFSchema;
       expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, formData, FIELD_PATH)).toEqual({
         schema,
         isRequired: true,
@@ -1715,7 +1715,7 @@ describe('LayoutGridField', () => {
     expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
     // Test onChange and value in the input
     const input = within(fields[0]).getByRole('textbox');
-    expect(input).toHaveValue(props.formData[fieldName]);
+    expect(input).toHaveValue((props.formData as GenericObjectType)[fieldName]);
     await userEvent.type(input, '!');
     expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPath, EXTRA_ERROR, fieldId);
   });

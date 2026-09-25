@@ -32,9 +32,9 @@ import {
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   schema,
   id,

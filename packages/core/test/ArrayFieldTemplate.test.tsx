@@ -290,7 +290,8 @@ describe('ArrayFieldTemplate', () => {
 
     it('should pass formData so it is in sync with items', async () => {
       const ArrayFieldTemplate = ({ formData, items, onAddClick }: ArrayFieldTemplateProps) => {
-        if (formData.length !== items.length) {
+        const rows = formData as string[];
+        if (rows.length !== items.length) {
           throw new Error('Error');
         }
         return (
@@ -298,7 +299,7 @@ describe('ArrayFieldTemplate', () => {
             {items.map((_, i) => (
               // oxlint-disable-next-line react/no-array-index-key
               <span key={i} className='test-data'>
-                {formData[i]}
+                {rows[i]}
               </span>
             ))}
             <button type='button' aria-label='Add item' className='rjsf-array-item-add' onClick={onAddClick} />

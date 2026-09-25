@@ -5,11 +5,6 @@ import { CUSTOM_OPTIONS } from './harness/testData.ts';
 
 vi.mock('../src/validator');
 
-interface TestType {
-  foo: string;
-  bar: boolean;
-}
-
 describe('customizeValidator()', () => {
   it('defaultValidator was created', () => {
     expect(defaultValidator).toBeInstanceOf(AJV8Validator);
@@ -21,7 +16,7 @@ describe('customizeValidator()', () => {
     let custom: any;
     beforeAll(() => {
       vi.mocked(AJV8Validator).mockClear();
-      custom = customizeValidator<TestType>(CUSTOM_OPTIONS);
+      custom = customizeValidator(CUSTOM_OPTIONS);
     });
     it('custom validator was created', () => {
       expect(custom).toBeInstanceOf(AJV8Validator);
@@ -36,7 +31,7 @@ describe('customizeValidator()', () => {
     beforeAll(() => {
       localizer = vi.fn();
       vi.mocked(AJV8Validator).mockClear();
-      custom = customizeValidator<TestType>(undefined, localizer);
+      custom = customizeValidator(undefined, localizer);
     });
     it('custom validator was created', () => {
       expect(custom).toBeInstanceOf(AJV8Validator);

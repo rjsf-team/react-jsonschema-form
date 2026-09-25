@@ -6,9 +6,9 @@ import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
  * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,

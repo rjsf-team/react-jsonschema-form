@@ -77,7 +77,11 @@ export type WidgetAliasFor<Type extends keyof typeof widgetMap> = keyof (typeof 
  * @returns - The `Widget` component to use
  * @throws - An error if there is no `Widget` component that can be returned
  */
-export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export default function getWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: RJSFSchema,
   widget?: Widget<T, S, F> | string,
   registeredWidgets: RegistryWidgetsType<T, S, F> = {},

@@ -12,9 +12,9 @@ import { helpId } from '@rjsf/utils';
  * @param props - The `FieldHelpProps` for the component
  */
 export default function FieldHelpTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
   const { help, uiSchema, registry, id } = props;
   if (!help) {

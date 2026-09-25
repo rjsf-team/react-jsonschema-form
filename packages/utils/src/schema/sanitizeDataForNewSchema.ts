@@ -99,11 +99,11 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
 export default function sanitizeDataForNewSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   newSchema?: S,
   oldSchema?: S,

@@ -6,9 +6,9 @@ import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, ha
 import { Form } from 'react-bootstrap';
 
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   htmlName,

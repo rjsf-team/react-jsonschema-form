@@ -8,7 +8,7 @@ import type { ErrorSchema, RJSFValidationError } from './types.ts';
  * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
  * @returns - The list of `RJSFValidationErrors` extracted from the `errorSchema`
  */
-export default function toErrorList<T = any>(
+export default function toErrorList<T = unknown>(
   errorSchema?: ErrorSchema<T>,
   fieldPath: string[] = [],
 ): RJSFValidationError[] {

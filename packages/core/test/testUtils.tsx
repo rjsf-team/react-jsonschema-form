@@ -158,7 +158,7 @@ function createAcceptingFormComponent(props: NoValFormProps, v: ValidatorType = 
 }
 
 function AcceptingSeededParent({ formData, initialFormData, onChange, ...props }: FormProps) {
-  const [value, setValue] = useState(() => {
+  const [value, setValue] = useState<unknown>(() => {
     const { schema, uiSchema, defaultFormStateBehavior, customMergeAllOf } = props;
     const schemaUtils = createSchemaUtils(props.validator, schema, defaultFormStateBehavior, customMergeAllOf);
     const seeded = schemaUtils.getDefaultFormState(

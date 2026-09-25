@@ -20,10 +20,11 @@ const useStyles = makeStyles({
  *
  * @param props - The `ErrorListProps` for this component
  */
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   const classes = useStyles();
   return (

@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.
 
-Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It only transpiles; `pnpm run typecheck` (`tsc --build`) is the typecheck, and tsc never emits JavaScript.
+Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It only transpiles; `pnpm run typecheck` (`tsc --build`) is the typecheck, and tsc never emits JavaScript. Its `--builders 4 --checkers 1` flags are load-bearing: a plain cold `tsc --build` runs past a CI runner's memory, as would type-aware lint without `lint`'s `--parallel=2`. Most of that cost is the `SlotComponent` (`@rjsf/utils`) and `Uninferred` (`Form.tsx`) types, not the `unknown` generic defaults.
 
 ## Architecture
 

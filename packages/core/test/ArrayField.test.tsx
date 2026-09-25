@@ -165,15 +165,15 @@ const ArrayFieldTestItemTemplate = (props: ArrayFieldItemTemplateProps) => {
   );
 };
 
-const ArrayFieldTest = (props: FieldProps<any[]>) => {
-  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema<any[]>, id?: string) => {
+const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
+  const onChangeTest = (newFormData: unknown, path: FieldPath, errorSchema?: ErrorSchema<unknown[]>, id?: string) => {
     let newErrorSchema = errorSchema;
     if (newFormData !== 'Appie') {
       newErrorSchema = {
         __errors: ['Value must be "Appie"'],
-      } as ErrorSchema<any[]>;
+      } as ErrorSchema<unknown[]>;
     }
-    props.onChange(newFormData, path, newErrorSchema, id);
+    props.onChange(newFormData as unknown[], path, newErrorSchema, id);
   };
   return <ArrayField {...props} onChange={onChangeTest} />;
 };
@@ -3524,8 +3524,8 @@ describe('ArrayField', () => {
       };
 
       const uiSchema: UiSchema = {
-        items: (itemData) => {
-          if (itemData.priority === 'high') {
+        items: (itemData: unknown) => {
+          if ((itemData as GenericObjectType).priority === 'high') {
             return {
               name: {
                 'ui:widget': 'textarea',

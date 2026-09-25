@@ -27,11 +27,11 @@ import isMultiSelect from './isMultiSelect.ts';
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,

@@ -20,11 +20,11 @@ import retrieveSchema from './retrieveSchema.ts';
  * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
  */
 export default function findSelectedOptionInXxxOf<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
   fallbackField: string,

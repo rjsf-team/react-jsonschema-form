@@ -7,9 +7,9 @@ import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
 
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   htmlName,

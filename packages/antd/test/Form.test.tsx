@@ -1,14 +1,15 @@
-import { formTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form from '../src/index.ts';
+import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 const user = userEvent.setup();
 
 formTests(Form);
+themeTests({ generateTemplates, generateTheme, generateWidgets });
 
 describe('antd specific tests', () => {
   test('applies the required attribute to required input fields', () => {
