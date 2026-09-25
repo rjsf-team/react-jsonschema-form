@@ -16,6 +16,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import formDataForNewOption from './formDataForNewOption.ts';
+
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
@@ -115,12 +117,7 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
       const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
 
-      let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-      if (newOption) {
-        // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
-        // so that only the root objects themselves are created without adding undefined children properties
-        newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
-      }
+      const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption);
 
       setSelectedOption(intOption);
       skipNextOptionRecalculation.current = true;

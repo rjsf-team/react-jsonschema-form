@@ -196,6 +196,71 @@ describe('oneOf', () => {
     );
   });
 
+  it('should keep a value matching the old default when the new option does not default that property', async () => {
+    // The value cannot be told apart from one the user typed that happens to equal the default, so dropping it when
+    // nothing would refill it would lose data that survived the switch before
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          title: 'a',
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: 'a', default: 'a' },
+            name: { type: 'string', default: 'Anon' },
+          },
+        },
+        {
+          title: 'b',
+          type: 'object',
+          properties: { kind: { type: 'string', const: 'b', default: 'b' }, name: { type: 'string' } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', name: 'Anon' } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should restore an option's object default when switching away from it and back (#4476)", async () => {
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        runner: {
+          // `extra` is not a declared property, so the form never holds it; writing it into the data would leave a
+          // shape the next switch recognizes as neither option's default
+          type: 'object',
+          default: { name, extra: 'never-emitted' },
+          properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+        },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__oneof_select');
+
+    await user.selectOptions($select!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b', ratio: 0 } } }),
+      'root__oneof_select',
+    );
+
+    await user.selectOptions($select!, '0');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'a', runner: { name: 'a', ratio: 0 } } }),
+      'root__oneof_select',
+    );
+  });
+
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", async () => {
     const { node, onChange } = createFormComponent({
       schema: {

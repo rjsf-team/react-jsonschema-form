@@ -29,6 +29,8 @@ import {
   noop,
 } from '@rjsf/utils';
 
+import formDataForNewOption from './formDataForNewOption.ts';
+
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.
  *
@@ -167,11 +169,7 @@ export default function LayoutMultiSchemaField<
     const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
     const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
 
-    let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-    if (newFormData && newOption) {
-      // Call getDefaultFormState to make sure defaults are populated on change.
-      newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
-    }
+    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption);
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
