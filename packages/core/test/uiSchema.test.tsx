@@ -877,7 +877,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -889,7 +889,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -925,7 +925,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -937,7 +937,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -972,7 +972,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: '#151ce6',
           },
         });
@@ -984,7 +984,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: '#151ce6',
           },
         });
@@ -1021,7 +1021,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1033,7 +1033,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1073,7 +1073,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'b',
           },
         });
@@ -1085,7 +1085,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 'a',
           },
         });
@@ -1127,7 +1127,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3.14,
           },
         });
@@ -1139,7 +1139,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3.14,
           },
         });
@@ -1205,7 +1205,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 13.14,
           },
         });
@@ -1217,7 +1217,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             // Use a value that is greater than the minumum value of the schema
             foo: 13.14,
           },
@@ -1301,7 +1301,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2.718,
           },
         });
@@ -1313,7 +1313,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2.718,
           },
         });
@@ -1343,7 +1343,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1355,7 +1355,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1394,7 +1394,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1406,7 +1406,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1435,7 +1435,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1447,7 +1447,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 3,
           },
         });
@@ -1493,7 +1493,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 2,
           },
         });
@@ -1505,7 +1505,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 1,
           },
         });
@@ -1533,7 +1533,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1545,7 +1545,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: 42,
           },
         });
@@ -1596,7 +1596,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1608,7 +1608,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1622,7 +1622,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1657,7 +1657,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1672,7 +1672,7 @@ describe('uiSchema', () => {
         const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: false,
           },
         });
@@ -1701,7 +1701,7 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1713,7 +1713,7 @@ describe('uiSchema', () => {
         const { node, onSubmit } = createFormComponent({
           schema,
           uiSchema,
-          formData: {
+          initialFormData: {
             foo: true,
           },
         });
@@ -1745,7 +1745,7 @@ describe('uiSchema', () => {
           const rendered = createFormComponent({
             schema,
             uiSchema,
-            formData,
+            initialFormData: formData,
           });
           node = rendered.node;
         });
@@ -2023,7 +2023,7 @@ describe('uiSchema', () => {
           const rendered = createFormComponent({
             schema,
             uiSchema,
-            formData,
+            initialFormData: formData,
           });
           node = rendered.node;
         });
@@ -2680,7 +2680,7 @@ describe('uiSchema', () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        formData: { people: [{ name: 'Alice' }, { name: 'Bob' }] },
+        initialFormData: { people: [{ name: 'Alice' }, { name: 'Bob' }] },
       });
 
       expect(node.querySelectorAll("input[placeholder='Enter name']")).toHaveLength(2);
@@ -3124,7 +3124,7 @@ describe('uiSchema', () => {
       // fireEvent.submit bypasses the browser's own constraint validation (which would otherwise block submission
       // on the rendered `required` field regardless of what schema validation does), isolating what this test
       // actually means to check: that AJV itself rejects the missing field.
-      const { node, onSubmit } = createFormComponent({ schema, uiSchema, formData: { a: 'x' } });
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { a: 'x' } });
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
     });
@@ -3155,7 +3155,7 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         country: { 'ui:initialValue': 'US' },
       };
-      const { node } = createFormComponent({ schema, uiSchema, formData: { country: 'FR' } });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: { country: 'FR' } });
       expect(node.querySelector<HTMLInputElement>('input')).toHaveValue('FR');
     });
 

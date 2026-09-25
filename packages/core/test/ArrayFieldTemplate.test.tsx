@@ -283,7 +283,7 @@ describe('ArrayFieldTemplate', () => {
       };
       createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate },
       });
     });
@@ -307,7 +307,7 @@ describe('ArrayFieldTemplate', () => {
       };
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate },
       });
       let data = node.querySelectorAll('.test-data');

@@ -3,18 +3,18 @@ import { noop, toPath } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { describeOwnerships, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
-  const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
-  await submitForm(node, user, true);
-  expect(onSubmit).not.toHaveBeenCalled();
-  expect(onError).toHaveBeenCalled();
-}
+describeOwnerships('ui:required enforcement', (createFormComponent) => {
+  async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
+    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
+    await submitForm(node, user, true);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
+  }
 
-describe('ui:required enforcement', () => {
   let warnSpy: MockInstance;
   beforeAll(() => {
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -126,7 +126,7 @@ describe('ui:required enforcement', () => {
         },
       };
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-      const { node, onSubmit } = createFormComponent({ schema, uiSchema, formData: { thing: { kind: 'a' } } });
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } } });
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
     });
@@ -139,7 +139,7 @@ describe('ui:required enforcement', () => {
         },
       };
       const uiSchema: UiSchema = { a: { b: { c: { 'ui:required': true } } } };
-      const { node, onSubmit } = createFormComponent({ schema, uiSchema, formData: { a: { b: {} } } });
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { a: { b: {} } } });
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
     });
@@ -147,7 +147,7 @@ describe('ui:required enforcement', () => {
     it('does not fire for a field that has a value', async () => {
       const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
       const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-      const { node, onSubmit } = createFormComponent({ schema, uiSchema, formData: { nick: 'x' } });
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { nick: 'x' } });
       await submitForm(node, user, true);
       expect(onSubmit).toHaveBeenCalled();
     });
@@ -155,7 +155,7 @@ describe('ui:required enforcement', () => {
     it('reports the error at the field path so it renders under the field', async () => {
       const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
       const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-      const { node, onError } = createFormComponent({ schema, uiSchema, formData: {} });
+      const { node, onError } = createFormComponent({ schema, uiSchema, initialFormData: {} });
       await submitForm(node, user, true);
       expect(onError).toHaveBeenCalled();
       const errors = onError.mock.calls[0][0];
@@ -171,7 +171,7 @@ describe('ui:required enforcement', () => {
     it('focusOnFirstError focuses the ui:required field', async () => {
       const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
       const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-      const { node } = createFormComponent({ schema, uiSchema, formData: {}, focusOnFirstError: true });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: {}, focusOnFirstError: true });
       await submitForm(node, user, true);
       expect(document.activeElement?.id).toBe('root_nick');
     });
@@ -179,7 +179,7 @@ describe('ui:required enforcement', () => {
     it('renders the error under the field', async () => {
       const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
       const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-      const { node } = createFormComponent({ schema, uiSchema, formData: {}, showErrorList: false });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: {}, showErrorList: false });
       await submitForm(node, user, true);
       expect(node.textContent).toContain("must have required property 'nick'");
     });
@@ -187,7 +187,7 @@ describe('ui:required enforcement', () => {
     it('reports a single error, not a duplicate, for a field that is both schema-required and ui:required: true', async () => {
       const schema: RJSFSchema = { type: 'object', required: ['nick'], properties: { nick: { type: 'string' } } };
       const uiSchema: UiSchema = { nick: { 'ui:required': true } };
-      const { node, onError } = createFormComponent({ schema, uiSchema, formData: {} });
+      const { node, onError } = createFormComponent({ schema, uiSchema, initialFormData: {} });
       await submitForm(node, user, true);
       expect(onError).toHaveBeenCalled();
       const errors = onError.mock.calls[0][0];

@@ -1,12 +1,18 @@
-import { forwardRef, useState } from 'react';
-import type { FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { createRef, forwardRef, useState } from 'react';
+import type { ErrorSchema, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { IChangeEvent } from '../src/index.ts';
 import Form, { FieldTemplate as DefaultFieldTemplate } from '../src/index.ts';
-import { createFormComponent } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormComponent,
+  createParentLog,
+  RejectingParent,
+  TransformingParent,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -48,7 +54,7 @@ describe('render stability across sibling fields', () => {
   it('typing in one field does not re-render sibling fields', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: initialFormData(),
+      initialFormData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -68,7 +74,7 @@ describe('render stability across sibling fields', () => {
   it('typing in a nested field does not re-render fields outside its branch', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: initialFormData(),
+      initialFormData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -90,7 +96,7 @@ describe('render stability across sibling fields', () => {
         'ui:field': 'LayoutGridField',
         'ui:layoutGrid': { 'ui:row': { children: [{ 'ui:col': { children: ['first', 'second', 'nested'] } }] } },
       },
-      formData: initialFormData(),
+      initialFormData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
@@ -167,7 +173,7 @@ describe('render stability across sibling fields', () => {
         type: 'object',
         properties: { first: { type: 'string' }, second: { type: 'string', minLength: 3 } },
       },
-      formData: { first: '', second: 'ab' },
+      initialFormData: { first: '', second: 'ab' },
       liveValidate: 'onChange',
       templates: { FieldTemplate: CountingFieldTemplate },
     });
@@ -184,7 +190,7 @@ describe('render stability across sibling fields', () => {
   it('live validation on blur leaves sibling fields alone', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: initialFormData(),
+      initialFormData: initialFormData(),
       liveValidate: 'onBlur',
       templates: { FieldTemplate: CountingFieldTemplate },
     });
@@ -202,7 +208,7 @@ describe('render stability across sibling fields', () => {
   it('a submit that changes no errors re-renders no field', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: initialFormData(),
+      initialFormData: initialFormData(),
       templates: { FieldTemplate: CountingFieldTemplate },
     });
     const before = { ...renderCounts };
@@ -216,7 +222,7 @@ describe('render stability across sibling fields', () => {
   it('typing in one array item does not re-render the other items', async () => {
     const { node } = createFormComponent({
       schema: { type: 'array', items: { type: 'string' } },
-      formData: ['', ''],
+      initialFormData: ['', ''],
       templates: { FieldTemplate: CountingFieldTemplate },
     });
     const otherBefore = renderCounts.root_1;
@@ -251,5 +257,168 @@ describe('render stability across sibling fields', () => {
     rerender(<Parent widget={Second} />);
 
     expect(container.querySelector('#root_first')).toHaveAttribute('data-which', 'second');
+  });
+
+  /** The cases single ownership makes well defined (RFC, section 6). Each asserts its baseline count first, so a
+   * renamed id cannot pass vacuously.
+   */
+  describe('under single ownership', () => {
+    const templates = { FieldTemplate: CountingFieldTemplate };
+
+    it('a rejected controlled proposal re-renders nothing outside the proposing branch and shows no rejected value', async () => {
+      const log = createParentLog<FormValue>();
+      const { container } = render(
+        <RejectingParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
+      );
+      const secondBefore = renderCounts.root_second;
+      const innerBefore = renderCounts.root_nested_inner;
+      expect(secondBefore).toBeGreaterThan(0);
+
+      await user.type(container.querySelector('#root_first')!, 'abc');
+
+      expect(log.proposals.map((proposal) => proposal?.first)).toEqual(['a', 'b', 'c']);
+      expect(container.querySelector('#root_first')).toHaveValue('');
+      expect(renderCounts.root_second).toBe(secondBefore);
+      expect(renderCounts.root_nested_inner).toBe(innerBefore);
+    });
+
+    it('a transforming parent re-renders only the field whose value it transformed', async () => {
+      const { container } = render(
+        <TransformingParent<FormValue>
+          schema={schema}
+          initialValue={initialFormData()}
+          templates={templates}
+          transform={(proposal) => proposal && { ...proposal, first: proposal.first.toUpperCase() }}
+        />,
+      );
+      const firstBefore = renderCounts.root_first;
+      const secondBefore = renderCounts.root_second;
+      const innerBefore = renderCounts.root_nested_inner;
+      expect(secondBefore).toBeGreaterThan(0);
+
+      await user.type(container.querySelector('#root_first')!, 'ab');
+
+      expect(container.querySelector('#root_first')).toHaveValue('AB');
+      expect(renderCounts.root_first).toBeGreaterThan(firstBefore);
+      expect(renderCounts.root_second).toBe(secondBefore);
+      expect(renderCounts.root_nested_inner).toBe(innerBefore);
+    });
+
+    it('replaced extraErrors re-render only the fields whose errors changed, and a deep-equal replacement none', () => {
+      const serverError = (): ErrorSchema<FormValue> => ({ first: { __errors: ['from the server'] } });
+      function Parent({ extraErrors }: { extraErrors?: ErrorSchema<FormValue> }) {
+        return (
+          <Form
+            schema={schema}
+            validator={validator}
+            formData={initialFormData()}
+            extraErrors={extraErrors}
+            templates={templates}
+            onChange={() => undefined}
+          />
+        );
+      }
+      const { rerender } = render(<Parent />);
+      const firstBefore = renderCounts.root_first;
+      const secondBefore = renderCounts.root_second;
+      expect(secondBefore).toBeGreaterThan(0);
+
+      rerender(<Parent extraErrors={serverError()} />);
+      expect(renderCounts.root_first).toBeGreaterThan(firstBefore);
+      expect(renderCounts.root_second).toBe(secondBefore);
+
+      const before = { ...renderCounts };
+      rerender(<Parent extraErrors={serverError()} />);
+      expect(renderCounts).toEqual(before);
+    });
+
+    it('a oneOf option switch re-renders nothing outside the switched branch', async () => {
+      const withChoice: RJSFSchema = {
+        type: 'object',
+        properties: {
+          first: { type: 'string' },
+          choice: {
+            oneOf: [
+              { type: 'string', title: 'text' },
+              { type: 'number', title: 'number' },
+            ],
+          },
+        },
+      };
+      const { container } = render(
+        <AcceptingParent schema={withChoice} initialValue={{ first: '', choice: '' }} templates={templates} />,
+      );
+      const firstBefore = renderCounts.root_first;
+      expect(firstBefore).toBeGreaterThan(0);
+
+      await user.selectOptions(container.querySelector('#root_choice__oneof_select')!, '1');
+
+      expect(container.querySelector('#root_choice')).toHaveAttribute('inputmode', 'decimal');
+      expect(renderCounts.root_first).toBe(firstBefore);
+    });
+
+    it('array add, remove and reorder keep the count of items whose data and position are unchanged', async () => {
+      const arraySchema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      const { container } = render(
+        <AcceptingParent<string[]> schema={arraySchema} initialValue={['a', 'b', 'c']} templates={templates} />,
+      );
+      const firstBefore = renderCounts.root_0;
+      const secondBefore = renderCounts.root_1;
+      const thirdBefore = renderCounts.root_2;
+      expect(thirdBefore).toBeGreaterThan(0);
+
+      await user.click(container.querySelector('.rjsf-array-item-add button')!);
+      expect(container.querySelectorAll('input[type=text]')).toHaveLength(4);
+      expect(renderCounts.root_0).toBe(firstBefore);
+      expect(renderCounts.root_1).toBe(secondBefore);
+      expect(renderCounts.root_2).toBe(thirdBefore);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[3]);
+      expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
+      expect(renderCounts.root_0).toBe(firstBefore);
+      expect(renderCounts.root_1).toBe(secondBefore);
+      expect(renderCounts.root_2).toBe(thirdBefore);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+      expect([...container.querySelectorAll<HTMLInputElement>('input[type=text]')].map((el) => el.value)).toEqual([
+        'b',
+        'a',
+        'c',
+      ]);
+      expect(renderCounts.root_2).toBe(thirdBefore);
+    });
+
+    it('a controlled reset re-renders only the fields whose errors cleared', async () => {
+      const constrained: RJSFSchema = {
+        ...schema,
+        properties: { ...schema.properties, first: { type: 'string', minLength: 1 } },
+      };
+      const ref = createRef<Form>();
+      render(
+        <Form
+          ref={ref}
+          schema={constrained}
+          validator={validator}
+          formData={{ first: '', second: '', nested: { inner: '' } }}
+          templates={templates}
+          onChange={() => undefined}
+        />,
+      );
+      await act(async () => {
+        ref.current!.validateForm();
+      });
+      const firstBefore = renderCounts.root_first;
+      const secondBefore = renderCounts.root_second;
+      const innerBefore = renderCounts.root_nested_inner;
+      expect(secondBefore).toBeGreaterThan(0);
+
+      act(() => {
+        ref.current!.reset();
+      });
+
+      expect(renderCounts.root_first).toBeGreaterThan(firstBefore);
+      expect(renderCounts.root_second).toBe(secondBefore);
+      expect(renderCounts.root_nested_inner).toBe(innerBefore);
+    });
   });
 });

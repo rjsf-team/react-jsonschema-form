@@ -62,12 +62,12 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     return schemaUtils.getClosestMatchingOption(formData, retrievedOptions, 0, discriminator);
   });
 
-  /** Flag to skip the formData-change-driven option recalculation when the user just selected an option.
-   * Set to true in onOptionChange (before onChange is called), consumed and reset in the update effect.
-   * This prevents the matching-option recalculation from overriding a user's explicit choice when
-   * getDefaultFormState populates undefined properties that make deepEquals see a false formData change.
+  /** The data the user's last option switch proposed, so the formData-change-driven option recalculation does not
+   * override the explicit choice. Set in onOptionChange (before onChange is called), consumed and reset in the update
+   * effect. It is needed even when the switch is accepted, since getDefaultFormState populates undefined properties
+   * that make deepEquals see a false formData change.
    */
-  const skipNextOptionRecalculation = useRef(false);
+  const optionSwitchProposal = useRef<{ formData: T | undefined } | undefined>(undefined);
   const prevFormDataRef = useRef<T | undefined>(formData);
   const prevFieldIdRef = useRef(id);
 
@@ -80,21 +80,37 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
     prevFormDataRef.current = formData;
     prevFieldIdRef.current = id;
 
-    if (!deepEquals(formData, prevFormData) && id === prevFieldId) {
-      if (skipNextOptionRecalculation.current) {
-        skipNextOptionRecalculation.current = false;
+    if (id !== prevFieldId) {
+      return;
+    }
+    const isFormDataChanged = !deepEquals(formData, prevFormData);
+    const proposal = optionSwitchProposal.current;
+    if (proposal) {
+      optionSwitchProposal.current = undefined;
+      // A switch that proposed the data the form already held has nothing a parent could decline
+      if (isFormDataChanged || deepEquals(formData, proposal.formData)) {
         return;
       }
-      const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-      const matchingOption = schemaUtils.getClosestMatchingOption(
-        formData,
-        retrievedOptions,
-        selectedOption,
-        discriminator,
-      );
-      if (matchingOption !== selectedOption) {
-        setSelectedOption(matchingOption);
+      // The option switch was proposed but the data did not follow it, which is what a parent declining the proposal
+      // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
+      // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
+      // describes it
+      const chosen = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+      if (chosen && schemaUtils.getValidator().isValid(chosen, formData, registry.rootSchema)) {
+        return;
       }
+    } else if (!isFormDataChanged) {
+      return;
+    }
+    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+    const matchingOption = schemaUtils.getClosestMatchingOption(
+      formData,
+      retrievedOptions,
+      selectedOption,
+      discriminator,
+    );
+    if (matchingOption !== selectedOption) {
+      setSelectedOption(matchingOption);
     }
   });
 
@@ -168,10 +184,10 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       }
 
       setSelectedOption(intOption);
-      skipNextOptionRecalculation.current = true;
+      optionSwitchProposal.current = { formData: newFormData };
       onChange(newFormData, fieldPath, undefined, fieldId);
     },
-    // setSelectedOption is stable (guaranteed by useState); skipNextOptionRecalculation is a ref
+    // setSelectedOption is stable (guaranteed by useState); optionSwitchProposal is a ref
     [
       selectedOption,
       retrievedOptions,

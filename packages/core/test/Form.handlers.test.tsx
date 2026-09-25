@@ -1,10 +1,11 @@
 import { createRef, useEffect } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
+import type Form from '../src/index.ts';
 import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -97,16 +98,21 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       };
 
       const secondOnChange = vi.fn();
+      const ref = createRef<Form>();
 
-      const { onChange, rerender } = createFormComponent({ ref: createRef(), schema, formData: { foo: 'bar1' } });
+      const { onChange, rerender } = createFormComponent({ ref, schema, initialFormData: { foo: 'bar1' } });
 
-      rerender({ schema, formData: {}, onChange });
+      act(() => {
+        ref.current!.setFieldValue('foo', 'bar2');
+      });
 
       expect(onChange).toHaveBeenCalledTimes(1);
 
-      rerender({ schema, formData: { foo: 'bar2' } });
+      rerender({ ref, schema, initialFormData: { foo: 'bar1' }, onChange: secondOnChange });
 
-      rerender({ schema, formData: {}, onChange: secondOnChange });
+      act(() => {
+        ref.current!.setFieldValue('foo', 'bar3');
+      });
 
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(secondOnChange).toHaveBeenCalledTimes(1);
@@ -165,18 +171,18 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       };
       createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         onChange,
         uiSchema,
       });
 
       await waitFor(() => {
-        expect(ids).toHaveLength(3);
+        expect(ids).toHaveLength(2);
       });
 
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
-      // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
-      expect(ids).toEqual([undefined, 'root_foo', 'root_baz']);
+      // One id per updated component; the defaults the seed was given are not reported
+      expect(ids).toEqual(['root_foo', 'root_baz']);
     });
     it('should modify an allOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {

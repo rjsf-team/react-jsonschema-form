@@ -12,7 +12,7 @@ type Mutable<O> = { -readonly [K in keyof O]: O[K] };
 describe('IChangeEvent', () => {
   it('carries the same members as FormState, with the same types', () => {
     expectTypeOf<EventKey>().toEqualTypeOf<
-      'schema' | 'uiSchema' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
+      'schema' | 'uiSchema' | 'schemaUtils' | 'formData' | 'errors' | 'errorSchema'
     >();
     expectTypeOf<Mutable<Pick<IChangeEvent, EventKey>>>().toExtend<Pick<FormState, EventKey>>();
     expectTypeOf<Pick<FormState, EventKey>>().toExtend<Mutable<Pick<IChangeEvent, EventKey>>>();

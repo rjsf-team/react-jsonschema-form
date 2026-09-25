@@ -98,7 +98,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -117,11 +117,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -164,7 +160,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change when using refs', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -186,11 +182,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -205,7 +197,7 @@ describe('oneOf', () => {
   });
 
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         type: 'object',
         oneOf: [
@@ -223,11 +215,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -242,7 +230,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change for scalar types schemas', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         type: 'object',
         properties: {
@@ -255,11 +243,7 @@ describe('oneOf', () => {
         },
       },
     });
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -559,7 +543,7 @@ describe('oneOf', () => {
       schema,
       uiSchema: { choice: { 'ui:placeholder': 'None' } },
       widgets: { SelectWidget: CustomSelectWidget },
-      formData: { choice: 'first' },
+      initialFormData: { choice: 'first' },
     });
 
     const select = node.querySelector('select');
@@ -610,7 +594,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: { userId: 'foobarbaz' },
+      initialFormData: { userId: 'foobarbaz' },
       formContext,
       fields: { SchemaField: CustomSchemaField },
     });
@@ -641,7 +625,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         userId: 'foobarbaz',
       },
     });
@@ -669,6 +653,7 @@ describe('oneOf', () => {
     const { rerender, node } = createFormComponent({
       ref: createRef(),
       schema,
+      formData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
@@ -751,7 +736,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         foo: 1,
         bar: 'abc',
       },
@@ -787,7 +772,7 @@ describe('oneOf', () => {
 
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { lorem: {} },
+      initialFormData: { lorem: {} },
     });
 
     const $select = node.querySelector('select');
@@ -847,7 +832,7 @@ describe('oneOf', () => {
 
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { testProperty: { newKey: { prop2: 'foo' } } },
+      initialFormData: { testProperty: { newKey: { prop2: 'foo' } } },
     });
 
     const $select: HTMLSelectElement | null = node.querySelector('select#root_testProperty_newKey__oneof_select');
@@ -920,7 +905,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         contactPreference: {
           contactMethod: 'phone',
           phoneNumber: '1231231231',
@@ -1014,7 +999,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [
             {},
             {
@@ -1067,7 +1052,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{}, {}],
         },
       });
@@ -1125,7 +1110,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({
         schema,
-        formData: [{ ipsum: { night: 'nicht' } }],
+        initialFormData: [{ ipsum: { night: 'nicht' } }],
       });
       const outerOneOf = node.querySelector('select#root_0__oneof_select');
       expect(outerOneOf).toHaveValue('1');
@@ -1526,7 +1511,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           id: 'chain',
           components: [
             {
@@ -1616,16 +1601,12 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({
+      const { node, onChange, getFormData } = createFormComponent({
         schema,
       });
 
       // Added an empty array initially
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { craftTypes: [{ daysOfYear: [undefined] }] },
-        }),
-      );
+      expect(getFormData()).toEqual({ craftTypes: [{ daysOfYear: [undefined] }] });
 
       const select: HTMLSelectElement | null = node.querySelector('select#root_craftTypes_0__oneof_select');
 
@@ -1788,7 +1769,7 @@ describe('oneOf', () => {
     it('Selects the 3rd node by default when there is formData that points to it', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { code: 'baz_coding' },
+        initialFormData: { code: 'baz_coding' },
       });
       const select = node.querySelector('select#root__oneof_select');
       expect(select).toHaveValue('2');
@@ -1889,7 +1870,7 @@ describe('oneOf', () => {
 
       const { node, onChange } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{ type: 'typeA', showField: true }],
         },
         defaultFormStateBehavior: {
@@ -1940,7 +1921,7 @@ describe('oneOf', () => {
 
       const { node, onChange } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{ type: 'typeA' }], // No showField defined
         },
         defaultFormStateBehavior: {
@@ -2320,8 +2301,10 @@ describe('oneOf', () => {
       const fromType = createFormComponent({ schema: typeSchema });
 
       expect(fromConst.node.innerHTML).toEqual(fromType.node.innerHTML);
-      // NullField writes its value when there is none, so both fire `onChange` on mount without user interaction
-      expect(fromConst.onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { note: null } }));
+      // The constant is a seed default, so it is in the data on mount; a self-owned form reports edits only, so no
+      // `onChange` fires for it
+      expect(fromConst.getFormData()).toEqual({ note: null });
+      expect(fromConst.onChange).not.toHaveBeenCalled();
     });
   });
 
@@ -2465,7 +2448,7 @@ describe('oneOf', () => {
       },
     };
     const formData = { status: {} };
-    const { node } = createFormComponent({ schema, formData });
+    const { node } = createFormComponent({ schema, initialFormData: formData });
     const select = node.querySelector('#root_status__oneof_select');
     await user.selectOptions(select!, '1');
 

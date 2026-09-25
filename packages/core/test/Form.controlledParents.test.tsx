@@ -6,7 +6,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
-import { AcceptingParent, RejectingParent, TransformingParent, createParentLog } from './testUtils.tsx';
+import { AcceptingParent, RejectingParent, TransformingParent, createParentLog, input } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -21,10 +21,6 @@ const schema: RJSFSchema = {
 interface Data {
   name?: string;
   other?: string;
-}
-
-function input(container: HTMLElement, id: string) {
-  return container.querySelector<HTMLInputElement>(`#${id}`)!;
 }
 
 describe('controlled parent harnesses', () => {
@@ -46,9 +42,8 @@ describe('controlled parent harnesses', () => {
     await user.type(input(container, 'root_name'), 'b');
 
     expect(log.proposals).toEqual([{ name: 'ab' }]);
-    // Today's Form keeps its own copy of the data and renders the edit even though the parent refused it. Under the
-    // ownership contract (RFC, section 3.2) a controlled form renders the parent's value, so A4 flips this to 'a'.
-    expect(input(container, 'root_name')).toHaveValue('ab');
+    // A controlled form renders the parent's value (RFC, section 3.2): the refused edit is never shown
+    expect(input(container, 'root_name')).toHaveValue('a');
   });
 
   it('a transforming parent commits the transformed proposal and the form renders it', async () => {
@@ -102,8 +97,8 @@ describe('controlled parent harnesses', () => {
 
   it('a dependent field clearing itself from an effect when its sibling changes (#3367)', async () => {
     // The second field watches the first through formContext and clears itself from an effect, so its onChange(null)
-    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent.
-    // Today's Form keeps both; A4 must keep this passing through the shared change pipeline (RFC, section 5).
+    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent
+    // (RFC, section 5).
     // The parent is written out rather than using the harness because formContext has to derive from its state.
     function ClearWhenSiblingChanges({
       formData,

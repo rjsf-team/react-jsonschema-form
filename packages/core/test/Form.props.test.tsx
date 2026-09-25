@@ -1,7 +1,8 @@
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import { createPortal } from 'react-dom';
@@ -29,57 +30,79 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       },
     };
 
+    /** A parent that owns the value and accepts every proposal, and can also replace schema and value from outside */
+    function ReplacingParent({ steps }: { steps: { schema: RJSFSchema; formData: object }[] }) {
+      const [step, setStep] = useState(0);
+      const [formData, setFormData] = useState<object>(steps[0].formData);
+      return (
+        <>
+          <button
+            type='button'
+            onClick={() => {
+              setStep(1);
+              setFormData(steps[1].formData);
+            }}
+            data-testid='replace'
+            aria-label='replace'
+          />
+          <Form
+            schema={steps[step].schema}
+            validator={validator}
+            formData={formData}
+            onChange={(event, id) => {
+              onChange(event, id);
+              setFormData(event.formData);
+            }}
+          />
+        </>
+      );
+    }
+    let onChange = vi.fn();
+    beforeEach(() => {
+      onChange = vi.fn();
+    });
+
     it('should replace state when props remove formData keys', async () => {
-      const formData = { foo: 'foo', bar: 'bar' };
-      const { node, onChange, rerender } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
+      const { container } = render(
+        <ReplacingParent
+          steps={[
+            { schema, formData: { foo: 'foo', bar: 'bar' } },
+            { schema: { type: 'object', properties: { bar: { type: 'string' } } }, formData: { bar: 'bar' } },
+          ]}
+        />,
+      );
 
-      rerender({
-        onChange,
-        schema: {
-          type: 'object',
-          properties: {
-            bar: { type: 'string' },
-          },
-        },
-        formData: { bar: 'bar' },
-      });
-
-      await user.clear(node.querySelector('#root_bar')!);
-      await user.type(node.querySelector('#root_bar')!, 'baz');
+      await user.click(container.querySelector('[data-testid=replace]')!);
+      expect(container.querySelector('#root_foo')).toBeNull();
+      // Every edit from here on composes on the replaced value, so the parent must accept it into that value
+      await user.clear(container.querySelector('#root_bar')!);
+      await user.type(container.querySelector('#root_bar')!, 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { bar: 'baz' }, 'root_bar');
     });
 
     it('should replace state when props change formData keys', async () => {
-      const formData = { foo: 'foo', bar: 'bar' };
-      const { node, onChange, rerender } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
+      const { container } = render(
+        <ReplacingParent
+          steps={[
+            { schema, formData: { foo: 'foo', bar: 'bar' } },
+            {
+              schema: { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } },
+              formData: { foo: 'foo', baz: 'bar' },
+            },
+          ]}
+        />,
+      );
 
-      rerender({
-        onChange,
-        schema: {
-          type: 'object',
-          properties: {
-            foo: { type: 'string' },
-            baz: { type: 'string' },
-          },
-        },
-        formData: { foo: 'foo', baz: 'bar' },
-      });
-
-      await user.clear(node.querySelector('#root_baz')!);
-      await user.type(node.querySelector('#root_baz')!, 'baz');
+      await user.click(container.querySelector('[data-testid=replace]')!);
+      expect(container.querySelector('#root_bar')).toBeNull();
+      await user.clear(container.querySelector('#root_baz')!);
+      await user.type(container.querySelector('#root_baz')!, 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'foo', baz: 'baz' }, 'root_baz');
     });
   });
+
   describe('Form disable prop', () => {
     const schema: RJSFSchema = {
       type: 'object',

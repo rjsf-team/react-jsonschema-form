@@ -7,6 +7,7 @@ import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { createSchemaUtils } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -59,36 +60,55 @@ export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSe
   };
 }
 
+const DEFAULT_VALIDATOR = 'AJV8';
+
+const INITIAL_LIVE_SETTINGS: LiveSettings = {
+  showErrorList: 'top',
+  validate: false,
+  disabled: false,
+  noHtml5Validate: false,
+  readonly: false,
+  omitExtraData: false,
+  liveOmit: 'off',
+  liveValidate: 'off',
+  defaultFormStateBehavior: {
+    arrayMinItems: 'populate',
+    emptyObjectFields: 'populateAllDefaults',
+  },
+  useFallbackField: false,
+};
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
-  const [formData, setFormData] = useState<unknown>(samples.Simple.formData);
+  // The sample shown before any is loaded is seeded the way `load()` seeds every other one
+  const [formData, setFormData] = useState<unknown>(() =>
+    createSchemaUtils(
+      validators[DEFAULT_VALIDATOR],
+      samples.Simple.schema,
+      INITIAL_LIVE_SETTINGS.defaultFormStateBehavior,
+    ).getDefaultFormState(
+      samples.Simple.schema,
+      samples.Simple.formData,
+      false,
+      false,
+      samples.Simple.uiSchema as UiSchema,
+    ),
+  );
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
   const [sampleName, setSampleName] = useState<string>('Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
-  const [validator, setValidator] = useState<string>('AJV8');
+  const [validator, setValidator] = useState<string>(DEFAULT_VALIDATOR);
   const [showForm, setShowForm] = useState(false);
-  const [liveSettings, setLiveSettings] = useState<LiveSettings>({
-    showErrorList: 'top',
-    validate: false,
-    disabled: false,
-    noHtml5Validate: false,
-    readonly: false,
-    omitExtraData: false,
-    liveOmit: 'off',
-    liveValidate: 'off',
-    defaultFormStateBehavior: {
-      arrayMinItems: 'populate',
-      emptyObjectFields: 'populateAllDefaults',
-    },
-    useFallbackField: false,
-  });
+  // Bumped on every load, so a loaded sample always mounts a new form: ownership is decided at mount
+  const [formKey, setFormKey] = useState(0);
+  const [liveSettings, setLiveSettings] = useState<LiveSettings>(INITIAL_LIVE_SETTINGS);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
@@ -153,33 +173,50 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         }
       }
 
-      // force resetting form component instance
-      setShowForm(false);
+      const theLiveSettings = normalizeLiveSettings(loadedLiveSettings);
+      // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+      let seededFormData = loadedFormData;
+      try {
+        // Not the `validator` state: depending on it would re-run the mount effect, which depends on `load`, on every
+        // validator switch. A sample passes the current one and a shared link carries its own
+        const schemaUtils = createSchemaUtils(
+          validators[theValidator ?? DEFAULT_VALIDATOR],
+          loadedSchema,
+          theLiveSettings.defaultFormStateBehavior,
+        );
+        seededFormData = schemaUtils.getDefaultFormState(loadedSchema, loadedFormData, false, false, theUiSchema);
+      } catch (error) {
+        // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given
+        console.error(error);
+      }
+
+      setFormKey((key) => key + 1);
       setSchema(loadedSchema);
       setUiSchema(theUiSchema);
-      setFormData(loadedFormData);
+      setFormData(seededFormData);
       setExtraErrors(loadedExtraErrors);
       setShowForm(true);
-      setLiveSettings(normalizeLiveSettings(loadedLiveSettings));
+      setLiveSettings(theLiveSettings);
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);
       }
       setOtherFormProps({ fields, templates, ...rest });
     },
-    [theme, onThemeSelected, themes],
+    [theme, onThemeSelected, themes, validators],
   );
 
   const onSampleSelected = useCallback(
     (selectedSampleName: string) => {
       const { liveSettings: sampleLiveSettings, ...sample } = samples[selectedSampleName];
       load({
+        validator,
         ...sample,
         sampleName: selectedSampleName,
         liveSettings: { ...liveSettings, ...sampleLiveSettings },
         theme,
       });
     },
-    [load, liveSettings, theme],
+    [load, liveSettings, theme, validator],
   );
 
   useEffect(() => {
@@ -261,6 +298,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               subtheme={subtheme || 'light'}
             >
               <FormComponent
+                key={formKey}
                 {...otherFormProps}
                 {...liveSettings}
                 liveValidate={toLiveSetting(liveSettings.liveValidate)}

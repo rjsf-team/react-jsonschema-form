@@ -206,7 +206,7 @@ describe('StringField', () => {
           type: 'string',
         },
         onFocus,
-        formData: 'yo',
+        initialFormData: 'yo',
       });
       const input = node.querySelector('input')!;
       await user.click(input);
@@ -217,7 +217,7 @@ describe('StringField', () => {
     it('should handle an empty string change event', async () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('input')!);
@@ -229,7 +229,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:emptyValue': 'default' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('input')!);
@@ -241,7 +241,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:allowClearTextInputs': true },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -253,7 +253,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:allowClearTextInputs': true, 'ui:emptyValue': 'default' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -279,7 +279,7 @@ describe('StringField', () => {
         schema: {
           type: 'string',
         },
-        formData: 'plip',
+        initialFormData: 'plip',
       });
 
       expect(node.querySelector('.rjsf-field input')).toHaveValue('plip');
@@ -312,7 +312,7 @@ describe('StringField', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:autocomplete': 'family-name' },
-        formData: undefined,
+        initialFormData: undefined,
       });
 
       expect(node.querySelector('input')).toHaveAttribute('autocomplete', 'family-name');
@@ -322,7 +322,7 @@ describe('StringField', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:autocapitalize': 'words' },
-        formData: undefined,
+        initialFormData: undefined,
       });
 
       expect(node.querySelector('input')).toHaveAttribute('autocapitalize', 'words');
@@ -465,7 +465,7 @@ describe('StringField', () => {
             { const: 'bar', title: 'Bar', description: 'Bar description' },
           ],
         },
-        formData: 'foo',
+        initialFormData: 'foo',
       });
 
       expect(node).toHaveTextContent('Foo description');
@@ -629,7 +629,7 @@ describe('StringField', () => {
           type: 'string',
           enum: ['foo', 'bar'],
         },
-        formData: 'bar',
+        initialFormData: 'bar',
       });
       await submitForm(node, user);
 
@@ -890,7 +890,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:widget': 'textarea' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('textarea')!);
@@ -905,7 +905,7 @@ describe('StringField', () => {
           'ui:widget': 'textarea',
           'ui:emptyValue': 'default',
         },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('textarea')!);
@@ -920,7 +920,7 @@ describe('StringField', () => {
           'ui:widget': 'textarea',
           'ui:options': { rows: 20 },
         },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       expect(node.querySelector('textarea')).toHaveAttribute('rows', '20');
@@ -978,7 +978,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'date-time',
         },
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1042,7 +1042,7 @@ describe('StringField', () => {
             type: 'string',
             format: 'iso-date-time',
           },
-          formData: datetime,
+          initialFormData: datetime,
         });
         await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1070,7 +1070,7 @@ describe('StringField', () => {
             type: 'string',
             format: 'iso-date-time',
           },
-          formData: '2016-04-05T14:01:30.000Z',
+          initialFormData: '2016-04-05T14:01:30.000Z',
         });
 
         expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30.000');
@@ -1149,7 +1149,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'date',
         },
-        formData: datetime,
+        initialFormData: datetime,
         noValidate: true,
       });
       await submitForm(node, user);
@@ -1300,7 +1300,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: '13:10:30+02:00',
+        initialFormData: '13:10:30+02:00',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
@@ -1312,7 +1312,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: '13:10:00',
+        initialFormData: '13:10:00',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10');
@@ -1325,7 +1325,7 @@ describe('StringField', () => {
           format: 'time',
           multipleOf: 1,
         },
-        formData: '13:10:00',
+        initialFormData: '13:10:00',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:00');
@@ -1337,7 +1337,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: '13:10:30',
+        initialFormData: '13:10:30',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
@@ -1350,7 +1350,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: time,
+        initialFormData: time,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, time, true);
@@ -1414,7 +1414,7 @@ describe('StringField', () => {
             type: 'string',
             format: 'iso-time',
           },
-          formData: time,
+          initialFormData: time,
         });
         await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, time, true);
@@ -1426,7 +1426,7 @@ describe('StringField', () => {
             type: 'string',
             format: 'iso-time',
           },
-          formData: '13:10:30',
+          initialFormData: '13:10:30',
         });
 
         expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
@@ -1438,7 +1438,7 @@ describe('StringField', () => {
             type: 'string',
             format: 'iso-time',
           },
-          formData: '13:10:30+02:00',
+          initialFormData: '13:10:30+02:00',
         });
 
         expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
@@ -1542,7 +1542,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'date-time',
         },
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1919,7 +1919,7 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1997,7 +1997,7 @@ describe('StringField', () => {
         },
         uiSchema,
         liveValidate: 'onChange',
-        formData: '2012-12-12',
+        initialFormData: '2012-12-12',
       });
 
       expect(onError).not.toHaveBeenCalled();
@@ -2012,7 +2012,7 @@ describe('StringField', () => {
           },
           uiSchema,
           liveValidate: 'onChange',
-          formData: '2012-1212',
+          initialFormData: '2012-1212',
         }),
       ).toThrow('Unable to parse date 2012-1212');
     });
@@ -2204,7 +2204,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'email',
         },
-        formData: email,
+        initialFormData: email,
       });
 
       await submitForm(node, user);
@@ -2339,7 +2339,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'uri',
         },
-        formData: url,
+        initialFormData: url,
       });
 
       await submitForm(node, user);
@@ -2462,7 +2462,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'color',
         },
-        formData: color,
+        initialFormData: color,
       });
       await submitForm(node, user);
 
@@ -2594,7 +2594,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'data-url',
         },
-        formData: 'data:text/plain;name=file1.txt;base64,x=',
+        initialFormData: 'data:text/plain;name=file1.txt;base64,x=',
       });
 
       // fireEvent.change is used instead of user.upload() because this clears the selection rather than making
@@ -2688,7 +2688,7 @@ describe('StringField', () => {
           format: 'data-url',
         },
         uiSchema: { 'ui:enableMarkdownInDescription': true },
-        formData: 'data:text/plain;name=file1.txt;base64,YQ==',
+        initialFormData: 'data:text/plain;name=file1.txt;base64,YQ==',
         templates: { MarkdownTemplate },
         translateString: (stringToTranslate, params) =>
           stringToTranslate === TranslatableString.FilesInfo ? `**${params?.[0]}**` : stringToTranslate,
@@ -2729,7 +2729,7 @@ describe('StringField', () => {
             format: 'data-url',
           },
         },
-        formData,
+        initialFormData: formData,
       });
 
       // Find the 2nd file and check the file name

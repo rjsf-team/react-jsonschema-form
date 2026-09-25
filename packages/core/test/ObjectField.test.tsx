@@ -207,7 +207,7 @@ describe('ObjectField', () => {
 
     it('should handle object fields with focus events', async () => {
       const onFocus = vi.fn();
-      const { node } = createFormComponent({ schema, onFocus, formData: { foo: 'changed', bar: true } });
+      const { node } = createFormComponent({ schema, onFocus, initialFormData: { foo: 'changed', bar: true } });
 
       const input = node.querySelector('input[type=text]')!;
       await user.click(input);
@@ -283,7 +283,7 @@ describe('ObjectField', () => {
 
       const { node, onChange } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           checkbox: true,
         },
         liveValidate: 'onChange',
@@ -732,7 +732,7 @@ describe('ObjectField', () => {
     it('should automatically add a property field if in formData', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
@@ -767,7 +767,7 @@ describe('ObjectField', () => {
 
       const { node } = createFormComponent({
         schema: recursiveSchema,
-        formData: {
+        initialFormData: {
           type: 'object',
           properties: {
             inner: { type: 'object', properties: {} },
@@ -788,7 +788,7 @@ describe('ObjectField', () => {
             'ui:title': 'CustomName',
           },
         },
-        formData: {
+        initialFormData: {
           property1: 'test',
         },
       });
@@ -827,7 +827,7 @@ describe('ObjectField', () => {
             },
           },
         },
-        formData: {
+        initialFormData: {
           main: {
             property1: {
               firstName: 'hello',
@@ -849,7 +849,7 @@ describe('ObjectField', () => {
       delete undefinedAPSchema.additionalProperties;
       const { node, onSubmit, onError } = createFormComponent({
         schema: undefinedAPSchema,
-        formData: { nonschema: 1 },
+        initialFormData: { nonschema: 1 },
       });
 
       await submitForm(node, user);
@@ -865,7 +865,7 @@ describe('ObjectField', () => {
           additionalProperties: false,
           properties: { second: { type: 'string' } },
         },
-        formData: { nonschema: 1 },
+        initialFormData: { nonschema: 1 },
       });
       await submitForm(node, user);
       expect(onSubmit).not.toHaveBeenCalled();
@@ -900,7 +900,7 @@ describe('ObjectField', () => {
     it('should render a label for the additional property key', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
@@ -909,7 +909,7 @@ describe('ObjectField', () => {
     it('should render a label for the additional property key if additionalProperties is true', () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: true },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
@@ -918,7 +918,7 @@ describe('ObjectField', () => {
     it('should not render a label for the additional property key if additionalProperties is false', () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: false },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first-key']")).toBeNull();
@@ -927,7 +927,7 @@ describe('ObjectField', () => {
     it('should render a text input for the additional property key', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector('#root_first-key')).toHaveValue('first');
@@ -936,7 +936,7 @@ describe('ObjectField', () => {
     it('should render a label for the additional property value', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector("[for='root_first']")).toHaveTextContent('first');
@@ -945,7 +945,7 @@ describe('ObjectField', () => {
     it('should render a text input for the additional property value', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector('#root_first')).toHaveValue('1');
@@ -954,7 +954,7 @@ describe('ObjectField', () => {
     it('should rename formData key if key input is renamed', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       const textNode = node.querySelector('#root_first-key')!;
@@ -974,7 +974,7 @@ describe('ObjectField', () => {
             type: 'string',
           },
         },
-        formData: { 'Custom title': 1 },
+        initialFormData: { 'Custom title': 1 },
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key')!;
@@ -1000,7 +1000,7 @@ describe('ObjectField', () => {
             type: 'string',
           },
         },
-        formData: { 'Custom title': 1 },
+        initialFormData: { 'Custom title': 1 },
       });
 
       const textNode = node.querySelector('#root_Custom\\ title-key')!;
@@ -1015,7 +1015,7 @@ describe('ObjectField', () => {
     it('should keep order of renamed key-value pairs while renaming key', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 1, second: 2, third: 3 },
+        initialFormData: { first: 1, second: 2, third: 3 },
       });
 
       const textNode = node.querySelector('#root_second-key')!;
@@ -1034,7 +1034,7 @@ describe('ObjectField', () => {
             '(.*?)': { type: 'string' },
           },
         },
-        formData: { first: 'one', second: 'two' },
+        initialFormData: { first: 'one', second: 'two' },
       });
 
       const textNode = node.querySelector('#root_second-key')!;
@@ -1113,7 +1113,7 @@ describe('ObjectField', () => {
       const { node, onChange } = createFormComponent({
         ref: formRef,
         schema: nestedSchema,
-        formData: { options: { efs: { option_name: 'EFS' } } },
+        initialFormData: { options: { efs: { option_name: 'EFS' } } },
       });
 
       act(() => {
@@ -1135,7 +1135,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       const textNode = node.querySelector('#root_first-key')!;
@@ -1153,7 +1153,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: {
           'ui:duplicateKeySuffixSeparator': '_',
         },
@@ -1174,7 +1174,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: {
           [UI_GLOBAL_OPTIONS_KEY]: {
             duplicateKeySuffixSeparator: '_',
@@ -1196,7 +1196,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       const textNode = node.querySelector('#root_first-key')!;
@@ -1219,7 +1219,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       const textNode = node.querySelector('#root_first-key')!;
@@ -1263,7 +1263,7 @@ describe('ObjectField', () => {
     it('should preserve focus on value field after renaming key via Tab', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
@@ -1279,7 +1279,7 @@ describe('ObjectField', () => {
     it('should not produce duplicate React keys when adding a property with the old name after rename', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Rename "first" to "second"
@@ -1306,7 +1306,7 @@ describe('ObjectField', () => {
     it('should not duplicate values when clicking Add button during key rename', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Start editing the key
@@ -1338,7 +1338,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       const firstKeyNode = node.querySelector('#root_first-key')!;
@@ -1358,7 +1358,7 @@ describe('ObjectField', () => {
     it('should preserve focus across consecutive renames of the same property', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // First rename
@@ -1383,7 +1383,7 @@ describe('ObjectField', () => {
     it('should handle rename after removing a property', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Remove "first"
@@ -1405,7 +1405,7 @@ describe('ObjectField', () => {
     it('should generate unique stable keys that do not collide with existing property names', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1, 'first-1': 2 },
+        initialFormData: { first: 1, 'first-1': 2 },
       });
 
       // Rename "first" to "other" — previousKey should not be "first" (collision)
@@ -1423,7 +1423,7 @@ describe('ObjectField', () => {
     it('should preserve stable React key when renaming a newly added property for the first time', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Add a new property
@@ -1444,7 +1444,7 @@ describe('ObjectField', () => {
     it('should not collide React keys when a new property is added after rename and gets the old name', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Rename "first" → "renamed"
@@ -1471,7 +1471,7 @@ describe('ObjectField', () => {
     it('should not carry over renamed key input value to newly added property', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: {},
+        initialFormData: {},
       });
 
       // Add a property
@@ -1495,7 +1495,7 @@ describe('ObjectField', () => {
     it('should not corrupt key input when renaming two properties sequentially', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: {},
+        initialFormData: {},
       });
 
       // Add first property and rename to "first"
@@ -1526,7 +1526,7 @@ describe('ObjectField', () => {
     it('should preserve value input in DOM when renaming to a duplicate key', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       // Add a new property
@@ -1574,7 +1574,7 @@ describe('ObjectField', () => {
     it("should add a new property with suffix when clicking the expand button and 'newKey' already exists", async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { newKey: 1 },
+        initialFormData: { newKey: 1 },
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1594,7 +1594,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: additionalPropertiesArraySchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1610,7 +1610,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1631,7 +1631,7 @@ describe('ObjectField', () => {
       const { node, onChange } = createFormComponent({
         schema: additionalPropertiesArraySchema,
         uiSchema: { additionalProperties: { 'ui:initialValue': ['preset'] } },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1649,7 +1649,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1667,7 +1667,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1696,7 +1696,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -1711,12 +1711,12 @@ describe('ObjectField', () => {
           defaultKey: 'defaultValue',
         },
       };
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
-      expectToHaveBeenCalledWithFormData(onChange, { defaultKey: 'defaultValue' });
+      expect(getFormData()).toEqual({ defaultKey: 'defaultValue' });
     });
 
     it('should generate the specified default key/value input with custom formData provided', () => {
@@ -1726,14 +1726,14 @@ describe('ObjectField', () => {
           defaultKey: 'defaultValue',
         },
       };
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: customSchema,
-        formData: {
+        initialFormData: {
           someData: 'someValue',
         },
       });
 
-      expectToHaveBeenCalledWithFormData(onChange, { defaultKey: 'defaultValue', someData: 'someValue' });
+      expect(getFormData()).toEqual({ defaultKey: 'defaultValue', someData: 'someValue' });
     });
 
     it('should edit the specified default key without duplicating', async () => {
@@ -1745,7 +1745,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       const defaultKeyInput = node.querySelector('#root_defaultKey-key')!;
@@ -1765,7 +1765,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-remove')!);
@@ -1797,12 +1797,12 @@ describe('ObjectField', () => {
         },
       };
 
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
-      expectToHaveBeenCalledWithFormData(onChange, {
+      expect(getFormData()).toEqual({
         defaultKey: 'defaultValue',
         nested: {
           bar: {
@@ -1835,7 +1835,7 @@ describe('ObjectField', () => {
 
       const { node, onChange } = createFormComponent({
         schema: customSchema,
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-remove')!);
@@ -1846,7 +1846,7 @@ describe('ObjectField', () => {
     it('should not provide an expand button if length equals maxProperties', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -1855,7 +1855,7 @@ describe('ObjectField', () => {
     it('should provide an expand button if length is less than maxProperties', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 2, ...schema },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
@@ -1864,7 +1864,7 @@ describe('ObjectField', () => {
     it('should not provide an expand button if expandable is expliclty false regardless of maxProperties value', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 2, ...schema },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
         uiSchema: {
           'ui:options': {
             expandable: false,
@@ -1878,7 +1878,7 @@ describe('ObjectField', () => {
     it('should ignore expandable value if maxProperties constraint is not satisfied', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
         uiSchema: {
           'ui:options': {
             expandable: true,
@@ -1912,7 +1912,7 @@ describe('ObjectField', () => {
     it('delete button should delete key-value pair', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
       expect(node.querySelector('#root_first-key')).toHaveValue('first');
       await user.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')!);
@@ -1922,7 +1922,7 @@ describe('ObjectField', () => {
     it('delete button should delete correct pair', async () => {
       const { node } = createFormComponent({
         schema,
-        formData: { first: 1, second: 2, third: 3 },
+        initialFormData: { first: 1, second: 2, third: 3 },
       });
       const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
       expect(node.querySelectorAll(selector)).toHaveLength(3);
@@ -1934,7 +1934,7 @@ describe('ObjectField', () => {
     it('deleting content of value input should not delete pair', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       await user.clear(node.querySelector('#root_first')!);
@@ -1948,7 +1948,7 @@ describe('ObjectField', () => {
           ...schema,
           additionalProperties: true,
         },
-        formData: { first: true },
+        initialFormData: { first: true },
       });
 
       await user.click(node.querySelector('#root_first')!);
@@ -1962,7 +1962,7 @@ describe('ObjectField', () => {
           ...schema,
           additionalProperties: true,
         },
-        formData: { first: 1 },
+        initialFormData: { first: 1 },
       });
 
       const input = node.querySelector<HTMLInputElement>('#root_first')!;
@@ -1974,7 +1974,7 @@ describe('ObjectField', () => {
     it('should change content of value input to null', async () => {
       const { node, onChange } = createFormComponent({
         schema,
-        formData: { first: 'str' },
+        initialFormData: { first: 'str' },
       });
 
       await user.clear(node.querySelector('#root_first')!);
@@ -1999,7 +1999,7 @@ describe('ObjectField', () => {
         };
         const { node, onChange } = createFormComponent({
           schema: nestedSchema,
-          formData: { Example: { [propName]: initialValue } },
+          initialFormData: { Example: { [propName]: initialValue } },
         });
 
         await user.clear(node.querySelector(`#root_Example_${propName}`)!);
@@ -2027,7 +2027,7 @@ describe('ObjectField', () => {
       const { node, onChange } = createFormComponent({
         schema: nestedSchema,
         uiSchema: { additionalProperties: { name: { 'ui:emptyValue': 'custom-default' } } },
-        formData: { Example: { name: 'a' } },
+        initialFormData: { Example: { name: 'a' } },
       });
 
       await user.clear(node.querySelector('#root_Example_name')!);
@@ -2052,7 +2052,7 @@ describe('ObjectField', () => {
       };
       const { node, onChange } = createFormComponent({
         schema: nestedSchema,
-        formData: { Example: { name: 'a' } },
+        initialFormData: { Example: { name: 'a' } },
       });
 
       await user.clear(node.querySelector('#root_Example_name')!);

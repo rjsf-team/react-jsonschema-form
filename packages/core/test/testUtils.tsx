@@ -1,7 +1,7 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, RefObject } from 'react';
 import { createRef, useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { createSchemaUtils, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
@@ -20,6 +20,10 @@ export function createFormRef() {
   return createRef<Form>();
 }
 
+export function input(container: HTMLElement, id: string) {
+  return container.querySelector<HTMLInputElement>(`#${id}`)!;
+}
+
 // oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 export interface FormComponentResult {
@@ -30,6 +34,8 @@ export interface FormComponentResult {
   onSubmit: Mock;
   rerender: RerenderType;
   unmount: () => void;
+  /** The data the form renders, read through its handle; the way to check the defaults a seed was filled with */
+  getFormData: () => unknown;
 }
 export interface ConsoleSuppressionResult {
   readonly consoleSpy: MockInstance;
@@ -116,25 +122,70 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   const onChange = vi.fn();
   const onError = vi.fn();
   const onSubmit = vi.fn();
+  const ref = theProps.ref ?? createFormRef();
   const { container, rerender, unmount } = render(
-    <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} />,
+    <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...theProps} ref={ref} />,
   );
 
   const rerenderFunction: RerenderType = (newProps: NoValFormProps, v: ValidatorType = validator) => {
     // For Form components, ensure validator is always passed
     const propsWithValidator: FormProps = { ...newProps, validator: v };
-    return rerender(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} />);
+    return rerender(
+      <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} ref={ref} />,
+    );
   };
   const node = container.firstElementChild;
   if (!node) {
     throw new Error('node is not defined');
   }
+  const getFormData = () => (ref as RefObject<Form | null>).current?.getFormData();
 
-  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount };
+  return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount, getFormData };
 }
 
 export function createFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
   return createComponent(Form, { validator: v, ...props });
+}
+
+/** `createFormComponent()` with the data owned by an accepting parent instead of the form: the seed (`formData` or
+ * `initialFormData`) is filled with the schema's defaults the way the docs tell a controlled parent to, and every
+ * proposal is stored and passed back, exactly `setData(event.formData)`. A `formData` passed to `rerender()` replaces
+ * the parent's value. Running a suite through both creators is what checks that the two owners behave alike wherever
+ * ownership should make no difference.
+ */
+function createAcceptingFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
+  return createComponent(AcceptingSeededParent, { validator: v, ...props });
+}
+
+function AcceptingSeededParent({ formData, initialFormData, onChange, ...props }: FormProps) {
+  const [value, setValue] = useState(() => {
+    const { schema, uiSchema, defaultFormStateBehavior, customMergeAllOf } = props;
+    const schemaUtils = createSchemaUtils(props.validator, schema, defaultFormStateBehavior, customMergeAllOf);
+    const seeded = schemaUtils.getDefaultFormState(
+      schema,
+      formData !== undefined ? formData : initialFormData,
+      false,
+      false,
+      uiSchema,
+    );
+    // A seed without defaults resolves to `undefined`, which would make the form own its data
+    return seeded === undefined ? null : seeded;
+  });
+  const [replaced, setReplaced] = useState(formData);
+  if (formData !== replaced) {
+    setReplaced(formData);
+    setValue(formData);
+  }
+  return (
+    <Form
+      {...props}
+      formData={value}
+      onChange={(event, id) => {
+        setValue(event.formData);
+        onChange?.(event, id);
+      }}
+    />
+  );
 }
 
 interface FormExtraProps {
@@ -142,7 +193,15 @@ interface FormExtraProps {
   liveOmit?: FormProps['liveOmit'];
 }
 
-/* Run a group of tests with each combination of omitExtraData and liveOmit as form props.
+/** Runs a group of tests once with the form owning its data and once with an accepting parent owning it, for the
+ * behavior ownership must not change: validation, errors, submit and the events that report them
+ */
+export function describeOwnerships(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
+  describe(`${title} (self-owned)`, () => fn(createFormComponent));
+  describe(`${title} (parent-owned)`, () => fn(createAcceptingFormComponent));
+}
+
+/* Run a group of tests with each combination of omitExtraData and liveOmit as form props, under both owners.
  */
 export function describeRepeated(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
   const formExtraPropsList: FormExtraProps[] = [
@@ -151,10 +210,12 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
     { omitExtraData: true, liveOmit: 'onChange' },
     { omitExtraData: true, liveOmit: 'onBlur' },
   ];
-  for (const formExtraProps of formExtraPropsList) {
-    const createFormComponentFn = (props: NoValFormProps) => createFormComponent({ ...props, ...formExtraProps });
-    describe(`${title} ${JSON.stringify(formExtraProps)}`, () => fn(createFormComponentFn));
-  }
+  describeOwnerships(title, (create) => {
+    for (const formExtraProps of formExtraPropsList) {
+      const createFormComponentFn = (props: NoValFormProps) => create({ ...props, ...formExtraProps });
+      describe(JSON.stringify(formExtraProps), () => fn(createFormComponentFn));
+    }
+  });
 }
 
 /** The field-level error messages the `FieldErrorTemplate` renders, keyed by the id of the field each list sits under.

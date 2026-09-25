@@ -8,25 +8,30 @@ import type { FieldPathList, RJSFValidationError, ValidationData } from '@rjsf/u
  * Only the members listed here are supported. Everything else on the class instance may change without notice.
  */
 export interface FormHandle<T = any> {
-  /** Returns the form data the `Form` currently renders. It is the read path for a self-owned form, whose data is not
-   * otherwise reachable between `onChange` calls (autosave, route guards, a submit button outside the form).
+  /** Returns the form data the `Form` currently renders: the `formData` prop of a parent-owned form, the committed
+   * data of a self-owned one. It is the read path for a self-owned form, whose data is not otherwise reachable between
+   * `onChange` calls (autosave, route guards, a submit button outside the form).
    *
-   * It reads committed data only: an edit or `setFieldValue()` in the same tick is not visible until React commits it.
-   * For a parent-owned form this is still what the form renders rather than what the parent holds — the form keeps a
-   * reconciled copy, so a change the parent declined is returned until the parent re-renders it away. Strict ownership
-   * removes that copy. Treat the result as read-only; mutating it mutates what the form renders.
+   * It reads committed data only: an edit or `setFieldValue()` in the same tick is not visible until React commits it,
+   * and for a parent-owned form a proposal is not visible until the parent has passed it back. Treat the result as
+   * read-only: mutating it mutates what the form renders.
    */
   getFormData(): T | undefined;
-  /** Programmatically submits the `Form`, running validation and `onSubmit`/`onError` as a submit button would */
+  /** Programmatically submits the `Form`, running validation and `onSubmit`/`onError` as a submit button would. Queued
+   * behind any edit, `setFieldValue()` or reset in flight, so it submits the data they produced.
+   */
   submit(): void;
-  /** Resets the `Form` to its default values and clears validation errors */
+  /** Clears the validation errors and, for a self-owned form, resets the data to `initialFormData` and the schema's
+   * defaults; a parent-owned form's data is the parent's to reset. Queued behind any operation in flight.
+   */
   reset(): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
    * root. Passing `undefined` clears the field.
    */
   setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void;
   /** Validates the current form data, filtering extra data first when `omitExtraData` is set, and calls `onError` as a
-   * submission would.
+   * submission would. It returns its answer at once, so it reads committed data like `getFormData()`: an edit or
+   * `setFieldValue()` in the same tick is not validated until React commits it. `submit()` is queued and sees them.
    *
    * @returns - True if the form is valid, false otherwise.
    */
