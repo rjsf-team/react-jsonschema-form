@@ -993,7 +993,7 @@ describe('uiSchema', () => {
         // from its editableInputTypes list, so neither paste() nor type() reaches the value — both are
         // silent no-ops that would leave this assertion testing nothing rather than failing.
         act(() => {
-          fireEvent.change(node.querySelector('[type=color]'), {
+          fireEvent.change(node.querySelector('[type=color]')!, {
             target: {
               value: '#001122',
             },
@@ -1226,7 +1226,7 @@ describe('uiSchema', () => {
         // fireEvent.change is used instead of user.type() because jsdom does not process character
         // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
-          fireEvent.change(node.querySelector('[type=range]'), {
+          fireEvent.change(node.querySelector('[type=range]')!, {
             target: {
               value: '26.28',
             },
@@ -1455,7 +1455,7 @@ describe('uiSchema', () => {
         // fireEvent.change is used instead of user.type() because jsdom does not process character
         // input for range inputs — the slider value is controlled by pointer/arrow events, not text input.
         act(() => {
-          fireEvent.change(node.querySelector('[type=range]'), {
+          fireEvent.change(node.querySelector('[type=range]')!, {
             target: {
               value: '6',
             },
