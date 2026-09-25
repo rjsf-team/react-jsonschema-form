@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 import type { ComponentType } from 'react';
 import type {
   CustomValidator,
@@ -77,6 +77,20 @@ describe('form data inference', () => {
         onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<MyData>()}
       />,
     );
+  });
+
+  it('does not infer T from formData when an unannotated ref is passed', () => {
+    const ref = createRef<Form>();
+    render(
+      <Form
+        schema={schema}
+        validator={validator}
+        formData={data}
+        ref={ref}
+        onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<unknown>()}
+      />,
+    );
+    expect(ref.current).not.toBeNull();
   });
 
   it('accepts components annotated as a React ComponentType, typed or not', () => {

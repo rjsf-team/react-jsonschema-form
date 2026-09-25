@@ -18,7 +18,10 @@ describe('IChangeEvent', () => {
     >();
     expectTypeOf<Mutable<Pick<IChangeEvent, SharedKey>>>().toExtend<Pick<FormState, SharedKey>>();
     expectTypeOf<Pick<FormState, SharedKey>>().toExtend<Mutable<Pick<IChangeEvent, SharedKey>>>();
-    expectTypeOf<IChangeEvent['formData']>().toExtend<FormState['formData']>();
+    expectTypeOf<IChangeEvent<{ a: string }>['formData']>().toEqualTypeOf<
+      Exclude<FormState<{ a: string }>['formData'], undefined>
+    >();
+    expectTypeOf<IChangeEvent<string>['formData']>().toEqualTypeOf<FormState<string>['formData']>();
     expectTypeOf<IChangeEvent['status']>().toEqualTypeOf<'submitted' | undefined>();
   });
 

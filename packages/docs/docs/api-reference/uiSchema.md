@@ -653,6 +653,8 @@ const uiSchema: UiSchema = {
 
 ![](https://i.imgur.com/scJUuZo.png)
 
+`ui:help` also accepts a `ReactElement`, which is rendered as-is; for markup in a string, use `ui:enableMarkdownInHelp`.
+
 Help texts work for any kind of field at any level, and will always be rendered immediately below the field component widget(s) (after contextualized errors, if any).
 
 ### hideError
