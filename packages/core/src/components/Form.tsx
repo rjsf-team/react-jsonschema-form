@@ -975,9 +975,10 @@ const PARENT_OWNED_COMMIT_KEYS = [
 ] as const satisfies readonly (keyof FormState)[];
 
 declare const process: { env: Record<string, string | undefined> };
-/** Development diagnostics are gated the way React's are, so a bundler strips them from a production build. Vite and
- * esbuild replace `process.env.NODE_ENV` but not `typeof process`, and a browser has no `process`, so only the replaced
- * expression is read; the `catch` covers an environment that neither replaces nor defines it.
+/** Whether the development diagnostics run. Vite and esbuild replace `process.env.NODE_ENV` but not `typeof process`,
+ * and a browser has no `process`, so only the replaced expression is read; the `catch` covers an environment that
+ * neither replaces nor defines it. Because the check is hoisted into a `const`, a minifier cannot fold it, so the
+ * diagnostics ship in production bundles too and only skip at run time.
  */
 const isDevelopment = (() => {
   try {
@@ -1555,8 +1556,10 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   /** Runs the operation at the head of the queue. An operation that throws before its commit is dropped so the queue
    * keeps moving; `advance` only acts for the operation still at the head, so a commit it scheduled before throwing
    * cannot advance a later one.
+   *
+   * @param [fromCommit=false] - Whether a `setState()` callback of the previous operation is running this one
    */
-  private runQueueHead() {
+  private runQueueHead(fromCommit = false) {
     const head = this.queue[0];
     if (!head) {
       return;
@@ -1564,14 +1567,20 @@ export default class Form<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     const advance = () => {
       if (this.queue[0] === head) {
         this.queue.shift();
-        this.runQueueHead();
+        this.runQueueHead(true);
       }
     };
     try {
       head.run(advance);
     } catch (error) {
       advance();
-      throw error;
+      if (!fromCommit) {
+        throw error;
+      }
+      // Rethrowing into React's commit phase would unmount the form, so the error is reported out of band instead
+      setTimeout(() => {
+        throw error;
+      });
     }
   }
 

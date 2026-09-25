@@ -1002,6 +1002,76 @@ describeOwnerships('operations in one tick', (createFormComponent) => {
     expect(getFormData()).toEqual({ a: 'new' });
   });
 
+  it('a submit queued behind an edit whose validation throws keeps the form mounted', () => {
+    const ref = createRef<Form>();
+    function EditThenSubmit(props: WidgetProps) {
+      return (
+        <button
+          type='button'
+          id={`${props.id}-go`}
+          onClick={() => {
+            ref.current!.setFieldValue('a', 'edited');
+            ref.current!.submit();
+          }}
+        >
+          go
+        </button>
+      );
+    }
+    const { node, getFormData } = createFormComponent({
+      ref,
+      schema,
+      uiSchema: { a: { 'ui:widget': EditThenSubmit } },
+      initialFormData: { a: 'old' },
+      noHtml5Validate: true,
+      customValidate: () => {
+        throw new Error('boom');
+      },
+    });
+
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(node.querySelector('#root_a-go')!);
+      // The submit ran from the edit's commit, so its error is rethrown from a timer instead
+      expect(() => vi.runAllTimers()).toThrow('boom');
+    } finally {
+      vi.useRealTimers();
+    }
+    expect(ref.current).not.toBeNull();
+    act(() => ref.current!.setFieldValue('a', 'later'));
+    expect(getFormData()).toEqual({ a: 'later' });
+  });
+
+  it('a second edit in one tick whose validation throws keeps the form mounted', () => {
+    const ref = createRef<Form>();
+    const { getFormData } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { a: 'old' },
+      liveValidate: 'onChange',
+      customValidate: (formData, errors) => {
+        if ((formData as Data).a === 'second') {
+          throw new Error('boom');
+        }
+        return errors;
+      },
+    });
+
+    vi.useFakeTimers();
+    try {
+      act(() => {
+        ref.current!.setFieldValue('a', 'first');
+        ref.current!.setFieldValue('a', 'second');
+      });
+      expect(() => vi.runAllTimers()).toThrow('boom');
+    } finally {
+      vi.useRealTimers();
+    }
+    expect(ref.current).not.toBeNull();
+    act(() => ref.current!.setFieldValue('a', 'later'));
+    expect(getFormData()).toEqual({ a: 'later' });
+  });
+
   it('a blur queued after two edits leaves the last edit live validated', async () => {
     function EditTwiceThenBlur(props: WidgetProps) {
       return (

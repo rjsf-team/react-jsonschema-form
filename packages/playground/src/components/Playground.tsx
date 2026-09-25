@@ -62,6 +62,22 @@ export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSe
 
 const DEFAULT_VALIDATOR = 'AJV8';
 
+const INITIAL_LIVE_SETTINGS: LiveSettings = {
+  showErrorList: 'top',
+  validate: false,
+  disabled: false,
+  noHtml5Validate: false,
+  readonly: false,
+  omitExtraData: false,
+  liveOmit: 'off',
+  liveValidate: 'off',
+  defaultFormStateBehavior: {
+    arrayMinItems: 'populate',
+    emptyObjectFields: 'populateAllDefaults',
+  },
+  useFallbackField: false,
+};
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
@@ -70,7 +86,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
   // The sample shown before any is loaded is seeded the way `load()` seeds every other one
   const [formData, setFormData] = useState<unknown>(() =>
-    createSchemaUtils(validators[DEFAULT_VALIDATOR], samples.Simple.schema).getDefaultFormState(
+    createSchemaUtils(
+      validators[DEFAULT_VALIDATOR],
+      samples.Simple.schema,
+      INITIAL_LIVE_SETTINGS.defaultFormStateBehavior,
+    ).getDefaultFormState(
       samples.Simple.schema,
       samples.Simple.formData,
       false,
@@ -88,21 +108,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [showForm, setShowForm] = useState(false);
   // Bumped on every load, so a loaded sample always mounts a new form: ownership is decided at mount
   const [formKey, setFormKey] = useState(0);
-  const [liveSettings, setLiveSettings] = useState<LiveSettings>({
-    showErrorList: 'top',
-    validate: false,
-    disabled: false,
-    noHtml5Validate: false,
-    readonly: false,
-    omitExtraData: false,
-    liveOmit: 'off',
-    liveValidate: 'off',
-    defaultFormStateBehavior: {
-      arrayMinItems: 'populate',
-      emptyObjectFields: 'populateAllDefaults',
-    },
-    useFallbackField: false,
-  });
+  const [liveSettings, setLiveSettings] = useState<LiveSettings>(INITIAL_LIVE_SETTINGS);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
