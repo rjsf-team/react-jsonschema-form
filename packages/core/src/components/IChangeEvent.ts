@@ -12,7 +12,7 @@ import type {
  * replaces it with `undefined` (the change writes into it, and defaults are computed from an object), so its type is
  * `T` itself; a scalar root is `undefined` whenever its field is cleared. A write at the root itself can still leave an
  * object or array root `undefined`, which this type does not reflect: `setFieldValue('', undefined)`, or a root-level
- * custom field or widget calling `onChange(undefined, '')`.
+ * custom field or widget calling `onChange(undefined, ROOT_FIELD_PATH)`.
  */
 export type EventFormData<T> = T extends object ? T : T | undefined;
 
