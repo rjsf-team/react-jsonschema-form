@@ -14,9 +14,12 @@ import { deepEquals, isPlainObject } from '@rjsf/utils';
  * one the user or the caller supplied that happens to equal it, so removing a key the fill below would not restore
  * would lose data that used to survive the switch.
  *
- * Both computations pass `excludeObjectChildren`, the flag the fill uses, so that the comparison is made against the
- * same defaults the form itself wrote; computing them any other way makes the two disagree under an
- * `experimental_defaultFormStateBehavior` that suppresses object defaults.
+ * Both computations pass `excludeObjectChildren`, the flag the fill below uses, so that they describe the same thing
+ * it does; computing them any other way makes the two disagree under an `experimental_defaultFormStateBehavior` that
+ * suppresses object defaults. That matches what an earlier switch through here wrote, which is the case this is for,
+ * rather than every default the form holds — `Form` fills the root with `includeUndefinedValues: false`, and a
+ * previous switch merged its fill into carried-over data. Both divergences only stop a key from matching, so the
+ * worst they cost is that the replacement does not happen.
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -25,13 +28,13 @@ import { deepEquals, isPlainObject } from '@rjsf/utils';
  * @param formData - The form data associated with `oldOption`
  * @param [newOption] - The option being switched to, or undefined when the selection is being cleared
  * @param [oldOption] - The option being switched away from, if one was selected
- * @returns - The form data for `newOption`
+ * @returns - The form data for `newOption`, or undefined when it holds nothing, as when the selection is cleared
  */
 export default function formDataForNewOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(schemaUtils: SchemaUtilsType<T, S, F>, formData: T | undefined, newOption?: S, oldOption?: S): T {
+>(schemaUtils: SchemaUtilsType<T, S, F>, formData: T | undefined, newOption?: S, oldOption?: S): T | undefined {
   let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
   if (newOption && oldOption && isPlainObject(newFormData)) {
     const oldDefaults = schemaUtils.getDefaultFormState(oldOption, undefined, 'excludeObjectChildren');
