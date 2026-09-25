@@ -635,7 +635,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       const itemErrorSchema = errorSchema?.[index];
 
       // Compute the item UI schema using the helper method
-      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
+      const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
 
       const itemProps = {
         itemKey: key,
@@ -768,7 +768,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
       } else {
         // Use the helper method for function or static object cases
-        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext);
+        itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
       }
       const itemErrorSchema = errorSchema?.[index];
 

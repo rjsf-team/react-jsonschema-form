@@ -1158,9 +1158,9 @@ Converts a local Date string into a UTC date string
 ### logOnce()
 
 Logs `message` (followed by `error`, when there is one) through `console.warn()` or `console.error()`, but only the first time that combination of `level`, `message` and `error` is seen, so a warning raised while rendering isn't repeated on every re-render.
-The `error` is compared by its `String()` form, falling back to its type when that can't be converted.
-What has been logged is remembered for the whole page, or the whole process when rendering on the server, unless a per-form object is passed as the `scope`; `@rjsf/core` passes a form's `schemaUtils`, so the same problem is reported once for each form.
-A scope remembers its first 1000 distinct messages, then forgets all of them, so a long-running process can't grow the set without bound.
+The `error` is compared by its `String()` form, falling back to its type when that can't be converted, so two values with the same string count as one message; a message that has to be told apart from another must say so itself, as the field warnings do by naming the field.
+What has been logged is remembered for the whole page, or the whole process when rendering on the server, so two forms that make the same mistake at the same field path report it once between them.
+The first 1000 distinct messages are remembered; past that a message is still logged, but every time it is seen, so a long-running process can't grow the set without bound.
 If your tests assert on a message logged through this function, call `resetLogOnce()` before each one, otherwise only the first test to trigger it will see it logged.
 
 #### Parameters
@@ -1168,7 +1168,6 @@ If your tests assert on a message logged through this function, call `resetLogOn
 - message: string - The message to log
 - [level='warn']: LogOnceLevel - Which console method to log through, either `'warn'` or `'error'`
 - [error]: unknown - The error, or any other value, to pass to the console method after the `message`
-- [scope]: object - The object whose messages are remembered together, defaulting to one shared by every caller
 
 ### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 

@@ -13,18 +13,28 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './
  * @param item - The item's own form data
  * @param index - The tuple position `uiSchema.items` should apply to, when it is given as an array or a function
  * @param [formContext] - The formContext to pass to the function form of `uiSchema.items`
+ * @param [arrayFieldPath] - The path of the array the item belongs to, named in the error logged when the function
+ *          throws so that two arrays whose functions fail the same way at the same index are reported separately
  * @returns - The uiSchema for the item at `index`, or `undefined`
  */
 export default function getItemUiSchemaForItem<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined, item: T, index: number, formContext?: F): UiSchema<T, S, F> | undefined {
+>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  item: T,
+  index: number,
+  formContext?: F,
+  arrayFieldPath?: string,
+): UiSchema<T, S, F> | undefined {
   if (typeof uiSchema?.items === 'function') {
     try {
       return uiSchema.items(item as never, index, formContext) as UiSchema<T, S, F>;
     } catch (e) {
-      logOnce(`Error executing dynamic uiSchema.items function for item at index ${index}:`, 'error', e);
+      // The root field's path is empty, and a root array is the whole form, so there is nothing to tell it apart from
+      const forItem = arrayFieldPath ? `${arrayFieldPath}[${index}]` : `item at index ${index}`;
+      logOnce(`Error executing dynamic uiSchema.items function for ${forItem}:`, 'error', e);
       return undefined;
     }
   }

@@ -14,6 +14,4 @@ if (typeof window !== 'undefined') {
 
 // logOnce() only logs a message the first time it's seen, so without this a test asserting on a warning would pass or
 // fail depending on whether an earlier test in the same file had already triggered it.
-beforeEach(() => {
-  resetLogOnce();
-});
+beforeEach(resetLogOnce);

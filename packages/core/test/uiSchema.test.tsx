@@ -2972,7 +2972,9 @@ describe('uiSchema', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_billing_street"'));
     });
 
-    it('warns separately for each form that makes the same mistake', () => {
+    // Both forms use the default idPrefix, so both warnings name the same field and are the same message. Two forms
+    // meant to coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+    it('warns once when two forms make the same mistake at the same field', () => {
       const uiSchema: UiSchema = {
         foo: { 'ui:required': false },
       };
@@ -2984,7 +2986,19 @@ describe('uiSchema', () => {
         schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'number' } } },
         uiSchema,
       });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for two forms whose idPrefixes make the field ids differ', () => {
+      const schema: RJSFSchema = { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema, idPrefix: 'shipping' });
+      createFormComponent({ schema, uiSchema, idPrefix: 'billing' });
       expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"shipping_foo" (foo)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"billing_foo" (foo)'));
     });
 
     it('does not warn when ui:required is false alongside ui:initialValue', () => {

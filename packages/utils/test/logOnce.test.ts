@@ -64,34 +64,29 @@ describe('logOnce()', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('a message:', nullPrototype);
     expect(consoleErrorSpy).toHaveBeenCalledWith('another message:', unprintableError);
   });
-  it('forgets every message it remembers once there are LOG_ONCE_MAX_MESSAGES of them', () => {
+  it('tells an absent error apart from one that converts to an empty string', () => {
+    logOnce('a message');
+    logOnce('a message', 'warn', '');
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+  });
+  it('keeps remembering the messages it already has once there are LOG_ONCE_MAX_MESSAGES of them', () => {
     for (let i = 0; i < LOG_ONCE_MAX_MESSAGES; i += 1) {
       logOnce(`message ${i}`);
     }
     logOnce('message 0');
     expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES);
+    // Past the cap a message is logged every time, rather than the whole set being forgotten, which would make every
+    // message it already holds log again too
+    logOnce('a new message');
     logOnce('a new message');
     logOnce('message 0');
     expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES + 2);
   });
-  it('remembers messages separately for each scope', () => {
-    const scopeA = {};
-    const scopeB = {};
-    logOnce('a message', 'warn', undefined, scopeA);
-    logOnce('a message', 'warn', undefined, scopeA);
-    logOnce('a message', 'warn', undefined, scopeB);
-    logOnce('a message');
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(3);
-    logOnce('a message', 'error', 42, scopeB);
-    expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith('a message', 42);
-  });
   it('logs a message again after resetLogOnce()', () => {
-    const scope = {};
     logOnce('a message');
-    logOnce('a message', 'warn', undefined, scope);
+    logOnce('a message');
     resetLogOnce();
     logOnce('a message');
-    logOnce('a message', 'warn', undefined, scope);
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(4);
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
 });

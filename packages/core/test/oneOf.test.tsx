@@ -1412,7 +1412,9 @@ describe('oneOf', () => {
     describe('a non-array uiSchema.oneOf', () => {
       const consoleWarnSuppression = setupConsoleWarnSuppression();
 
-      it('should warn once for each form that renders it', async () => {
+      // Both forms use the default idPrefix, so both warnings name `root` and are the same message. Two forms meant to
+      // coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+      it('should warn once, however many forms render it and however often they re-render', async () => {
         const schema: RJSFSchema = {
           oneOf: [
             { title: 'Foo', properties: { foo: { type: 'string' } } },
@@ -1430,7 +1432,7 @@ describe('oneOf', () => {
         const warnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(
           ([message]) => message === 'uiSchema.oneOf is not an array for "root"',
         );
-        expect(warnings).toHaveLength(2);
+        expect(warnings).toHaveLength(1);
       });
     });
 
@@ -1800,15 +1802,20 @@ describe('oneOf', () => {
       const select = node.querySelector('select#root__oneof_select');
       expect(select).toHaveValue('2');
     });
-    it('warns when discriminator.propertyName is not a string', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-      const badSchema = { ...schema, discriminator: { propertyName: 5 } };
-      const { node } = createFormComponent({
-        schema: badSchema,
+    describe('a non-string discriminator.propertyName', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('warns when discriminator.propertyName is not a string', () => {
+        const badSchema = { ...schema, discriminator: { propertyName: 5 } };
+        const { node } = createFormComponent({
+          schema: badSchema,
+        });
+        const select = node.querySelector('select#root__oneof_select');
+        expect(select).toHaveValue('0');
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenLastCalledWith(
+          'Expecting discriminator to be a string, got "number" instead',
+        );
       });
-      const select = node.querySelector('select#root__oneof_select');
-      expect(select).toHaveValue('0');
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('Expecting discriminator to be a string, got "number" instead');
     });
   });
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {

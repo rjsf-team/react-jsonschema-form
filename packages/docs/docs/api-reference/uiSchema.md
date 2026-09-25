@@ -887,7 +887,7 @@ The `ui:readonly` uiSchema directive will mark all child widgets from a given fi
 
 The `ui:required` uiSchema directive overrides a field's `required` status on the UI side only. Setting it to `true` shows the required indicator and adds the field to the effective required set used for validation, even if the schema doesn't mark it required. Setting it to `false` hides the required indicator on a schema-required field, but does **not** suppress schema-level validation — if the field is left empty, validation still fails.
 
-Because of that, `ui:required: false` is only useful alongside `ui:initialValue` or `ui:emptyValue`, which guarantee the field always has a value. If it's used on a schema-required field without either, a `console.warn` is emitted, since the UI would show the field as optional while validation still rejects an empty value:
+Because of that, `ui:required: false` is only useful alongside `ui:initialValue` or `ui:emptyValue`, which guarantee the field always has a value. If it's used on a schema-required field without either, a `console.warn` naming the field is emitted, since the UI would show the field as optional while validation still rejects an empty value. It is logged once per page for a given field rather than on every re-render, so a test asserting on it needs `resetLogOnce()` beforehand (see [`logOnce()`](./utility-functions.md#logonce)):
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

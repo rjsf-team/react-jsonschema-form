@@ -133,19 +133,22 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
+    // Names the path alongside the id for the same reason `SchemaField`'s ui:required warning does: distinct fields
+    // can share an id when a property name contains the `idSeparator`
+    const field = `"${id}"${fieldPath ? ` (${fieldPath})` : ''}`;
     if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ONE_OF_KEY])) {
         return uiSchema[ONE_OF_KEY];
       }
-      logOnce(`uiSchema.oneOf is not an array for "${id}"`, 'warn', undefined, schemaUtils);
+      logOnce(`uiSchema.oneOf is not an array for ${field}`);
     } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
       if (Array.isArray(uiSchema[ANY_OF_KEY])) {
         return uiSchema[ANY_OF_KEY];
       }
-      logOnce(`uiSchema.anyOf is not an array for "${id}"`, 'warn', undefined, schemaUtils);
+      logOnce(`uiSchema.anyOf is not an array for ${field}`);
     }
     return [];
-  }, [schema, uiSchema, id, schemaUtils]);
+  }, [schema, uiSchema, id, fieldPath]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
