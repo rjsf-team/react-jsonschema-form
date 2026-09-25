@@ -499,6 +499,33 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual([]);
   });
 
+  it.each([
+    { name: 'an empty error list', cleared: { __errors: [] } },
+    { name: 'an empty errorSchema', cleared: {} },
+  ] satisfies { name: string; cleared: ErrorSchema }[])(
+    'clears a root custom error when a root raise has $name',
+    async ({ cleared }) => {
+      const { container } = render(<RestylingParent />);
+
+      act(() => rootField.onChange(shortName, rootField.fieldPath, { __errors: ['root own'] }));
+      expect(errorListMessages(container)).toEqual(['. root own']);
+      act(() => rootField.onChange(shortName, rootField.fieldPath, cleared));
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+    },
+  );
+
+  it('keeps the nested errors of a root raise with no validator error below it', async () => {
+    const { container } = render(<RestylingParent />);
+
+    act(() => rootField.onChange(shortName, rootField.fieldPath, { other: { __errors: ['x'] } }));
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual({ root_other: ['x'] });
+    expect(errorListMessages(container)).toEqual(['.other x']);
+  });
+
   it('clears a validator error when a field raises only the supplied error it still displays', async () => {
     const { container } = render(<RestylingParent extraErrors={serverErrors} />);
 
@@ -600,6 +627,38 @@ describe('Error state consistency when deriving from new props', () => {
 
       expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
       expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+    });
+
+    it('clears the moved items errors when a controlled parent echoes the reorder', async () => {
+      function EchoingArrayParent() {
+        const [value, setValue] = useState<unknown>(arrayData);
+        const [restyles, setRestyles] = useState(0);
+        restyle = () => setRestyles((count) => count + 1);
+        return (
+          <Form
+            schema={arraySchema}
+            validator={validator}
+            className={`restyled-${restyles}`}
+            formData={value}
+            onChange={(event) => setValue(event.formData)}
+          />
+        );
+      }
+      const { container } = render(<EchoingArrayParent />);
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      // The echo counts both moved items as changed, which clears their errors
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+
+      act(() => restyle());
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
     });
   });
 

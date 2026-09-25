@@ -528,8 +528,8 @@ function errorPath(error: RJSFValidationError): string[] {
 }
 
 /** Counts the messages of `errorSchema` into `counts`, keyed by the property each sits at, or by the message alone when
- * `pooled`: after an `ArrayField` reorder, remove or copy an item's errors sit at an index other than the one they came
- * from, so only the message still says which is which
+ * `pooled`: after an array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at
+ * an index other than the one they came from, so only the message still says which is which
  *
  * @param errorSchema - The `ErrorSchema` whose messages are counted
  * @param pooled - Whether to key by the message alone
@@ -548,7 +548,7 @@ function countMessages(errorSchema: unknown, pooled: boolean, counts = new Map<s
 /** `raised` without the messages `supplied` counts, one copy per count. A field may hand back the `errorSchema` it
  * displays, which already carries `extraErrors`/`customErrors`, and those must not enter the stored validator result,
  * or they outlive the props supplying them. Only the message tells them apart, so a field's own error that reads the
- * same as a supplied one at the same place is taken for the supplied one
+ * same as a supplied one at the same place is taken for the supplied one (#5348)
  *
  * @param raised - The `ErrorSchema` a field raised
  * @param supplied - The supplied messages, from `countMessages()`; consumed
@@ -1021,17 +1021,21 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (newErrorSchema) {
     // First check to see if there is an existing validation error on this path...
     const oldValidationError = !isRootPath ? getByPath(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
-    // After an `ArrayField` reorder, remove or copy the raised item errors sit at their new indexes
-    const pooled = Array.isArray(newValue);
+    // True for any array-valued raise, not only an `ArrayField` reorder, remove or copy that moved item errors to new
+    // indexes: the errors a custom tags or multi-select field raises are matched by message alone too
+    const isArrayRaise = Array.isArray(newValue);
     // If there is an old validation error for this path, assume we are updating it directly
     if (oldValidationError && Object.keys(oldValidationError).length > 0) {
       // What the field displays beyond the validator's own errors is supplied by `extraErrors`/`customErrors`; the
       // rest of the raise is the field's own say over the validator's errors at this path, an empty rest included
-      const supplied = countMessages(isRootPath ? current.errorSchema : getByPath(current.errorSchema, path), pooled);
+      const supplied = countMessages(
+        isRootPath ? current.errorSchema : getByPath(current.errorSchema, path),
+        isArrayRaise,
+      );
       const raisedErrorSchema = withoutSupplied(
         newErrorSchema,
-        countMessages(oldValidationError, pooled, supplied, -1),
-        pooled,
+        countMessages(oldValidationError, isArrayRaise, supplied, -1),
+        isArrayRaise,
       );
       if (isRootPath) {
         mergeBaseErrorSchema = raisedErrorSchema;
@@ -1047,36 +1051,34 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
         }
       }
       mergeBaseErrors = replaceErrorsAt(schemaValidationErrors, path, raisedErrorSchema);
-      // Stored, so the next derivation rebuilds from a base that carries the raise instead of losing it. Remapped item
+      // Stored, so in an uncontrolled form the next derivation rebuilds from a base that carries the raise instead of
+      // losing it; a controlled parent's echo counts the raised path as changed and clears it (#5347). Remapped item
       // errors describe the reordered data, which only an uncontrolled form keeps: a controlled parent either echoes
       // it, which clears the changed items' errors, or snaps back to its own order, which the old indexes describe
-      if (!pooled || props.formData === undefined) {
+      if (!isArrayRaise || props.formData === undefined) {
         storedValidation = {
           schemaValidationErrors: mergeBaseErrors,
           schemaValidationErrorSchema: mergeBaseErrorSchema,
         };
       }
     } else {
-      // The committed builder is left as it is; the edit lands on a copy, which the constructor clones
-      customErrors = new ErrorSchemaBuilder<T>(customErrors?.ErrorSchema);
-      // Only `extraErrors` is left out: `setByPath` replaces the node, so leaving out what `customErrors` holds
+      // Only `extraErrors` is left out: the raise replaces the node, so leaving out what `customErrors` holds
       // there would drop an error a field re-raises
       const raisedErrorSchema = withoutSupplied(
         newErrorSchema,
-        countMessages(isRootPath ? extraErrors : getByPath(extraErrors, path), pooled),
-        pooled,
+        countMessages(isRootPath ? extraErrors : getByPath(extraErrors, path), isArrayRaise),
+        isArrayRaise,
       );
-      if (isRootPath) {
-        const pathErrors = raisedErrorSchema[ERRORS_KEY];
-        if (pathErrors) {
-          // only set errors when there are some
-          customErrors.setErrors(pathErrors);
+      // The committed builder is left as it is; the edit lands on a copy, which the constructor clones. A root raise
+      // replaces everything, as a raise at any other path replaces its node
+      customErrors = new ErrorSchemaBuilder<T>(isRootPath ? raisedErrorSchema : customErrors?.ErrorSchema);
+      if (!isRootPath) {
+        if (Object.keys(raisedErrorSchema).length > 0) {
+          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+          setByPath(customErrors.ErrorSchema, path, raisedErrorSchema, true);
+        } else {
+          unsetByPath(customErrors.ErrorSchema, path);
         }
-      } else if (Object.keys(raisedErrorSchema).length > 0) {
-        // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-        setByPath(customErrors.ErrorSchema, path, raisedErrorSchema, true);
-      } else {
-        unsetByPath(customErrors.ErrorSchema, path);
       }
     }
   }
