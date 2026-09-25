@@ -76,8 +76,8 @@ describe('logOnce()', () => {
     for (let i = 0; i < 50; i += 1) {
       logOnce('a new message');
     }
-    // Remembering only the first LOG_ONCE_MAX_MESSAGES would log this on every one of those 50 renders: keys holding a
-    // per-row id or index, or another tenant's form under SSR, fill the cap with messages that never recur
+    // Keys holding a per-row id or index, or another tenant's form under SSR, fill the cap with messages that never
+    // recur, so one first seen after the cap is full still has to be deduped across the renders that follow
     expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES + 1);
   });
   it('logs a working set larger than LOG_ONCE_MAX_MESSAGES once per message, not once per pass', () => {
@@ -87,8 +87,7 @@ describe('logOnce()', () => {
         logOnce(`message ${i}`);
       }
     }
-    // Forgetting every message at the cap, or evicting the least recently seen one, would log all of them on all three
-    // passes instead
+    // Each message is still remembered when the next pass comes round to it, so the passes after the first are silent
     expect(consoleWarnSpy).toHaveBeenCalledTimes(workingSetSize);
   });
   it('keeps remembering a message while the ones seen after it fill a single generation', () => {
@@ -106,7 +105,7 @@ describe('logOnce()', () => {
     }
     logOnce('a steady message');
     // The price of keeping the two generations bounded: a message that outlives them is logged a second time. Holding
-    // it instead would cost a slot in every generation, shrinking how large a working set the test above can dedupe
+    // it instead would cost a slot in every generation, capping how large a working set the test above can dedupe
     expect(consoleWarnSpy).toHaveBeenCalledTimes(LOG_ONCE_MAX_MESSAGES * 2 + 2);
   });
   it('logs a message again after resetLogOnce()', () => {

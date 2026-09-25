@@ -7,6 +7,9 @@ import type { FieldPath } from '@rjsf/utils';
  * no `idPrefix`, so it can't tell two forms apart on its own either — hence both, id first, since that is what the
  * developer sees in the DOM. The root field's path is empty and its id already reads as `root`, so it gets no suffix.
  *
+ * Internal to `@rjsf/core`: `package.json` excludes `./lib/fieldLabelForLog.js` from the `./lib/*.js` exports wildcard
+ * so it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
+ *
  * @param id - The id of the field in the hierarchy
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @returns - The field named as `"root_shipping_street" (shipping.street)`, or just `"root"` at the root

@@ -211,14 +211,28 @@ export default class CFWorkerValidator<
    * @returns - Whether the form data is valid
    */
   isValid(schema: S, formData: unknown, rootSchema: S): boolean {
+    // Declared outside the try so the catch block can say which schema the error is about, and what failed
+    let id: string | undefined;
+    let compiled = false;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
+      compiled = true;
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      logOnce('Error encountered validating schema:', 'warn', error);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
+      // `compiled` distinguishes a schema the engine rejected from one it accepted before the form data threw, which
+      // would otherwise share a key whenever the two errors read alike
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(
+        compiled
+          ? `Error encountered validating form data against schema${named}:`
+          : `Error encountered validating schema${named}:`,
+        'warn',
+        error,
+      );
       return false;
     }
   }

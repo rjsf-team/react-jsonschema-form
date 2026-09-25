@@ -208,14 +208,28 @@ export default class ATAValidator<
    * compilation error. Mirrors `AJV8Validator#isValid` semantics.
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
+    // Declared outside the try so the catch block can say which schema the error is about, and what failed
+    let id: string | undefined;
+    let compiled = false;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
+      compiled = true;
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {
-      logOnce('Error encountered compiling schema:', 'warn', e);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
+      // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,
+      // which would otherwise share a key whenever the two errors read alike
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(
+        compiled
+          ? `Error encountered validating form data against schema${named}:`
+          : `Error encountered compiling schema${named}:`,
+        'warn',
+        e,
+      );
       return false;
     }
   }

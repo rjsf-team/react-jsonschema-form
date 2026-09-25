@@ -293,7 +293,21 @@ describe('ATAValidator', () => {
       const broken = null as unknown as RJSFSchema;
       const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
       expect(v.isValid(broken, {}, broken)).toBe(false);
-      expect(warn).toHaveBeenCalled();
+      // The throw happens before the schema's id is known, so there is no schema to name
+      expect(warn).toHaveBeenCalledWith('Error encountered compiling schema:', expect.any(Error));
+      warn.mockRestore();
+    });
+    it('names the schema in the warning when the error comes from validating the data', () => {
+      const v = customizeValidator();
+      const schema: RJSFSchema = { [ID_KEY]: 'has-an-id', type: 'object' };
+      // `structuredClone` rejects a function, so this throws after the id has been computed. The message names the
+      // schema so two schemas failing with the same error text are reported separately rather than deduped into one
+      const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+      expect(v.isValid(schema, { fn: () => undefined }, { type: 'object' })).toBe(false);
+      expect(warn).toHaveBeenCalledWith(
+        'Error encountered validating form data against schema "has-an-id":',
+        expect.any(Error),
+      );
       warn.mockRestore();
     });
   });

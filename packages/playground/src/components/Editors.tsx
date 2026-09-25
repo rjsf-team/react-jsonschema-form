@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { resetLogOnce } from '@rjsf/utils';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
 import type { SubthemeType } from './SubthemeSelector.tsx';
@@ -129,13 +128,8 @@ export default function Editors({
     },
     [setSubtheme, setStylesheet],
   );
-  // Each edit is a deliberate change to the thing the uiSchema warnings are about, so the warnings it provokes are
-  // wanted again even when an identical one has already been logged for this page — fixing a `ui:required` and then
-  // re-breaking it to check the warning is exactly how the playground gets used. Re-arming per committed edit is
-  // human-rate, unlike the every-re-render logging `logOnce()` exists to stop.
   const onSchemaEdited = useCallback(
     (newSchema: any) => {
-      resetLogOnce();
       setSchema(newSchema);
       setShareURL(null);
     },
@@ -144,7 +138,6 @@ export default function Editors({
 
   const onUISchemaEdited = useCallback(
     (newUiSchema: any) => {
-      resetLogOnce();
       setUiSchema(newUiSchema);
       setShareURL(null);
     },

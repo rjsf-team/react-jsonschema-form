@@ -178,8 +178,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       // those warnings by hand is most of what the playground is for.
       resetLogOnce();
 
-      // force resetting form component instance
-      setShowForm(false);
       const theLiveSettings = normalizeLiveSettings(loadedLiveSettings);
       // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
       let seededFormData = loadedFormData;

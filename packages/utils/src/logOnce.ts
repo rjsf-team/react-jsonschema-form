@@ -7,21 +7,22 @@ export type LogOnceLevel = 'warn' | 'error';
  * every one of them on every pass, because no message survives long enough to be seen a second time. That edge is why
  * the number is larger than the mistakes a form could plausibly contain — the warnings are raised per field, not per
  * mistake, so an array of a thousand rows whose item schema is misconfigured twice is two thousand distinct messages.
- * The memory is only spent by a form that actually produces that many, since this is a ceiling and not an allocation:
- * two full generations of the longest message logged here stays under a megabyte, and a form warning about a handful
- * of fields holds a handful of strings.
+ * What is bounded is the number of remembered messages, at twice this; how much memory they take follows what callers
+ * pass, since a remembered message holds the `message` and the `String()` of the `error`, both of which can carry
+ * arbitrary text. Two full generations of the warnings raised inside this library, which run a few hundred bytes each,
+ * stay under a megabyte. The cap is a ceiling rather than an allocation, so a form warning about a handful of fields
+ * holds a handful of strings.
  */
 export const LOG_ONCE_MAX_MESSAGES = 2000;
 
 /** What has been logged is kept in two generations rather than one set: when `currentMessages` fills it becomes
  * `previousMessages` and a fresh one takes its place, so a message is still remembered for at least
  * `LOG_ONCE_MAX_MESSAGES` further distinct messages after it is first seen, and memory stays bounded at twice that.
- * The alternatives both bring back the every-render flood this exists to prevent, and bring it back at a far smaller
- * working set: clearing at the cap un-remembers every message at once, so a render producing more distinct messages
- * than the cap empties it on every pass and logs all of them every time; keeping the first `LOG_ONCE_MAX_MESSAGES` and
- * remembering nothing after means that once the cap has filled with messages that never recur — a per-row id or index,
- * or another tenant's form under SSR — every message first seen after that point logs on every render for the rest of
- * the process's life.
+ * Both halves matter. Reaching the cap must not un-remember everything at once, or a render producing more distinct
+ * messages than the cap starts each pass with nothing remembered and logs all of them every time. And it must not stop
+ * remembering either, since keys carrying a per-row id or index, or another tenant's form under SSR, fill the cap with
+ * messages that never recur, and anything first seen afterwards would then log on every render for the rest of the
+ * process's life.
  */
 let currentMessages = new Set<string>();
 let previousMessages = new Set<string>();
@@ -51,10 +52,9 @@ export default function logOnce(message: string, level: LogOnceLevel = 'warn', e
     key = `${level}\u0000${message}\u0000\u0001${typeof error}`;
   }
   // A message found in `previousMessages` is deliberately left there rather than promoted into `currentMessages`, so
-  // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would keep it
-  // forever, but every such message would then hold a slot in the current generation too, collapsing how large a
-  // working set stays deduped: the largest one that survives today, of exactly twice the cap, would go from one log
-  // per message to one log per pass.
+  // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would hold it
+  // forever, at the cost of a slot in the current generation too, which is what caps how large a working set stays
+  // deduped: the largest one that survives, of exactly twice the cap, would drop to one log per pass.
   if (currentMessages.has(key) || previousMessages.has(key)) {
     return;
   }
