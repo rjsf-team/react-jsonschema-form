@@ -172,7 +172,7 @@ describe('CFWorkerValidator', () => {
     warn.mockRestore();
   });
 
-  it('names the schema in the warning when the error comes from validating the data', () => {
+  it('names the schema in the warning once its id is known', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { $id: 'has-an-id', type: 'object' };
     const selfReferential: Record<string, unknown> = {};
@@ -181,10 +181,7 @@ describe('CFWorkerValidator', () => {
     // failing with the same error text are reported separately rather than deduped into one
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     expect(validator.isValid(schema, selfReferential, { type: 'object' })).toBe(false);
-    expect(warn).toHaveBeenCalledWith(
-      'Error encountered validating form data against schema "has-an-id":',
-      expect.any(Error),
-    );
+    expect(warn).toHaveBeenCalledWith('Error encountered validating schema "has-an-id":', expect.any(Error));
     warn.mockRestore();
   });
 

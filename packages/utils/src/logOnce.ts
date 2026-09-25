@@ -77,8 +77,10 @@ export default function logOnce(message: string, level: LogOnceLevel = 'warn', e
   }
 }
 
-/** Forgets every message `logOnce()` has already logged, so each will be logged again the next time it is seen. Mainly
- * useful for tests, where each test expects its own warnings.
+/** Forgets every message `logOnce()` has already logged, so each will be logged again the next time it is seen. Tests
+ * need it so each one sees its own warnings, and an app that swaps schemas at runtime needs it for the same reason the
+ * playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise
+ * have the second schema's warnings held back by the first's.
  */
 export function resetLogOnce() {
   currentMessages.clear();

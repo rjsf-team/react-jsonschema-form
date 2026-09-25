@@ -1166,6 +1166,7 @@ How much memory that takes follows what is logged, since a remembered message ho
 A message that outlives both generations is logged again, and a render producing more than 4,000 distinct messages isn't deduped at all, since none of them survives long enough to be seen a second time.
 Warnings are raised per field rather than per mistake, so a misconfigured item schema counts once per array row.
 If your tests assert on a message logged through this function, call `resetLogOnce()` before each one, otherwise only the first test to trigger it will see it logged.
+An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
 
 #### Parameters
 
@@ -1416,7 +1417,8 @@ When a `params` array is provided, each value in the array is used to replace an
 ### resetLogOnce()
 
 Forgets every message `logOnce()` has already logged, so each will be logged again the next time it is seen.
-Mainly useful for tests, where each test expects its own warnings.
+Tests need it so each one sees its own warnings.
+An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
 
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

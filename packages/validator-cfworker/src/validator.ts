@@ -211,28 +211,21 @@ export default class CFWorkerValidator<
    * @returns - Whether the form data is valid
    */
   isValid(schema: S, formData: unknown, rootSchema: S): boolean {
-    // Declared outside the try so the catch block can say which schema the error is about, and what failed
+    // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
-    let compiled = false;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
-      compiled = true;
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
-      // `compiled` distinguishes a schema the engine rejected from one it accepted before the form data threw, which
-      // would otherwise share a key whenever the two errors read alike
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning. Which of
+      // the schema and the form data is at fault is deliberately not claimed: the `Validator` constructor only
+      // dereferences, leaving `$ref` resolution and keyword checks to `validate()`, so a schema defect such as a
+      // dangling `$ref` or an unparseable `pattern` throws from there and would be reported as a problem with the data
       const named = id === undefined ? '' : ` "${id}"`;
-      logOnce(
-        compiled
-          ? `Error encountered validating form data against schema${named}:`
-          : `Error encountered validating schema${named}:`,
-        'warn',
-        error,
-      );
+      logOnce(`Error encountered validating schema${named}:`, 'warn', error);
       return false;
     }
   }
