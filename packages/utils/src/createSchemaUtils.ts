@@ -352,7 +352,6 @@ class SchemaUtils<
       oldSchema,
       data,
       this.experimental_customMergeAllOf,
-      this.experimental_defaultFormStateBehavior,
     );
   }
 
