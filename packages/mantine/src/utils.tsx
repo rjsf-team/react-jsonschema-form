@@ -95,9 +95,7 @@ export function getDescriptionProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  widgetProps: WidgetProps<T, S, F>,
-) {
+>(widgetProps: WidgetProps<T, S, F>) {
   const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
   const description = options.description || schema.description;
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
