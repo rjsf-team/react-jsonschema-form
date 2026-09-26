@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -96,7 +96,7 @@ export default function FieldTemplate<
         style={{ ...style, ...daisy.style }}
       >
         {displayLabel && !widgetRendersLabel && !!label && (
-          <label id={titleId(id)} htmlFor={id} className='label'>
+          <label htmlFor={id} className='label'>
             <span className='label-text font-medium'>
               {label}
               {required && <span className='text-error ml-1'>*</span>}

@@ -69,7 +69,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 - value: any - The value currently selected for this element
 - name: string - The name of the field the element belongs to
-- rootId: string - The id of the field, from which the element derives its own id by appending its `type`
+- rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
 - range: DateElementProp['range'] - The inclusive range of values the element offers
@@ -208,6 +208,27 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 #### Returns
 
 - \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
+
+### dateElementId()
+
+Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
+`DateElement` gives its `SelectWidget` this id, so a theme can point a label at the year, month or day control rather than rebuilding the id itself.
+Note that the separator here is always `_`, independent of the form's `idSeparator`.
+
+#### Parameters
+
+- rootId: string - The id of the `AltDateWidget` field the date element belongs to
+- type: string - The type of the date element, as given by its `DateElementProp`
+
+#### Returns
+
+- string: The consistent id for that date element's control
+
+#### Example
+
+```typescript
+dateElementId('root_birthday', 'year'); // 'root_birthday_year'
+```
 
 ### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

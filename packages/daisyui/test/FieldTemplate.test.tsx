@@ -4,11 +4,11 @@ import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 
-/** The label `FieldTemplate` renders above the control, which is the only one carrying `titleId()` — a widget's own
- * label (`CheckboxWidget`) and `BaseInputTemplate`'s hidden one both also use the `label` class
+/** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
+ * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
  */
 function templateLabelFor(container: HTMLElement, id: string) {
-  return container.querySelector(`label[id="${id}__title"]`);
+  return container.querySelector(`label[for="${id}"]`);
 }
 
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
@@ -133,11 +133,11 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
     });
 
-    test('claims no aria-labelledby when the label is hidden, so the reference cannot dangle', () => {
+    test('claims no name of its own when the label is hidden', () => {
       renderForm({ agree: { 'ui:widget': 'radio', 'ui:options': { label: false } } });
 
       const group = screen.getByRole('radiogroup');
-      expect(group).not.toHaveAttribute('aria-labelledby');
+      expect(group).not.toHaveAttribute('aria-label');
       expect(group).toHaveAccessibleName('');
     });
   });
@@ -173,7 +173,7 @@ describe('FieldTemplate', () => {
       );
 
       expect(templateLabelFor(container, 'root')).toBeNull();
-      expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby');
+      expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-label');
     });
 
     test('renders no label, and so no required asterisk, for an untitled required array item', () => {

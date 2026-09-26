@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, titleId } from '@rjsf/utils';
+import { getDateTimeLocalValue } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
@@ -336,7 +336,7 @@ export default function DateTimeWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-labelledby={!hideLabel && label ? titleId(id) : undefined}
+          aria-label={!hideLabel && label ? label : undefined}
           tabIndex={0}
           ref={inputRef}
         >
