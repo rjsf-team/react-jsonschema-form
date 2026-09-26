@@ -379,8 +379,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the enum option whose `String(value)` matches the input string and returns the original typed value.
-For object/array values that were encoded as indices, falls back to index resolution.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their index, round-trip too.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
 #### Parameters
@@ -399,6 +398,7 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
 Non-primitive values (objects, arrays) fall back to the index since `String()` would produce `"[object Object]"`.
+So does `null`, since the empty string is the value of a select's empty placeholder.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters
@@ -1407,10 +1407,9 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
 
-If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is the list of either:
 
--
-- The `const` values from the schema if present
+- The `const` values from the schema if present, labelled with the option's `title`, or its value (as JSON for an object or array) when it has none. When the options aren't all constants, there is no list and `undefined` is returned
 - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
   provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
   objects containing `ui:title` then the UI schema values will replace the values from the schema.
@@ -1422,7 +1421,7 @@ If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 
 #### Returns
 
-- \{ schema?: S, label: string, value: any }: The list of options from the schema
+- \{ schema?: S, label: string, value: any }[] | undefined: The list of options from the schema, or `undefined` when it has none
 
 ### orderProperties()
 
@@ -2127,7 +2126,8 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select
+Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants.
+When the schema has both keywords, `anyOf` is the one checked, as it is in `optionsList()`.
 
 #### Parameters
 

@@ -16,6 +16,12 @@ const booleanOptions: EnumOptionsType[] = [
   { value: false, label: 'No' },
 ];
 
+const nullableOptions: EnumOptionsType[] = [
+  { value: null, label: 'Unknown' },
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' },
+];
+
 const objectOptions: EnumOptionsType[] = [
   { value: { name: 'NY' } as unknown as RJSFSchema, label: 'New York' },
   { value: { name: 'LA' } as unknown as RJSFSchema, label: 'Los Angeles' },
@@ -58,6 +64,15 @@ describe('enumOptionValueDecoder', () => {
     });
     it('returns emptyValue for empty string', () => {
       expect(enumOptionValueDecoder('', stringOptions, 'realValue', '')).toBe('');
+    });
+    it('finds null by its index', () => {
+      expect(enumOptionValueDecoder('0', nullableOptions, 'realValue', 'empty')).toBeNull();
+    });
+    it('returns emptyValue for empty string when an option is null', () => {
+      expect(enumOptionValueDecoder('', nullableOptions, 'realValue', 'empty')).toBe('empty');
+    });
+    it('does not resolve an index to a primitive option', () => {
+      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('empty');
     });
     it('handles array of real values', () => {
       expect(enumOptionValueDecoder(['foo', 'bar'], stringOptions, 'realValue')).toEqual(['foo', 'bar']);

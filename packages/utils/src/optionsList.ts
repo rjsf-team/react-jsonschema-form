@@ -2,9 +2,18 @@ import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getUiOptions from './getUiOptions.ts';
+import isConstant from './isConstant.ts';
+import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
+
+/** The label for an option with no title of its own: its value, with an object or array spelled out, since `String()`
+ * would label every one of them `[object Object]`
+ */
+function valueLabel(value: unknown): string {
+  return typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value);
+}
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
  * remaining options in their original order. Options not listed in `order` (and not covered by
@@ -30,7 +39,8 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
 /** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned. The
  * label will be the same as the `value`.
  *
- * If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+ * If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is
+ * the list of either:
  * - The `const` values from the schema if present
  * - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
  * provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
@@ -38,7 +48,8 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * @param schema - The schema from which to extract the options list
  * @param [uiSchema] - The optional uiSchema from which to get alternate labels for the options
- * @returns - The list of options from the schema
+ * @returns - The list of options from the schema, or `undefined` when it has none, including when its `anyOf`/`oneOf`
+ *        options are not all constants and no selector field names where their values are
  */
 export default function optionsList<
   T = unknown,
@@ -55,8 +66,8 @@ export default function optionsList<
     }
     let options = schema.enum.map((value, i) => {
       const label = Array.isArray(enumNames)
-        ? enumNames[i] || String(value)
-        : enumNames?.[String(value)] || String(value);
+        ? enumNames[i] || valueLabel(value)
+        : enumNames?.[String(value)] || valueLabel(value);
       return { label, value };
     });
     if (enumOrder) {
@@ -80,6 +91,11 @@ export default function optionsList<
     const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
     selectorField = optionsSchemaSelector;
   }
+  // Without a selector, each option's value is its constant, which `toConstant()` throws for when there isn't one, so a
+  // list that isn't made of constants has no options to offer rather than taking down the render
+  if (!selectorField && altSchemas?.some((aSchema) => !isObject(aSchema) || !isConstant(aSchema as S))) {
+    return undefined;
+  }
   return altSchemas?.map((aSchemaDef, index) => {
     const { title } = getUiOptions<T, S, F>(altUiSchemas?.[index]);
     const aSchema = aSchemaDef as S;
@@ -89,10 +105,10 @@ export default function optionsList<
       const innerSchema = getPropertySchema<S>(aSchema, selectorField);
       value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
       // Use nullish coalescing so that an explicitly empty string title is preserved
-      label = label ?? innerSchema?.title ?? aSchema.title ?? String(value);
+      label = label ?? innerSchema?.title ?? aSchema.title ?? valueLabel(value);
     } else {
       value = toConstant(aSchema);
-      label = label ?? aSchema.title ?? String(value);
+      label = label ?? aSchema.title ?? valueLabel(value);
     }
     return {
       schema: aSchema,

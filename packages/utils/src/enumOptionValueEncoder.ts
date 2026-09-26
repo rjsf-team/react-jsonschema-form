@@ -4,7 +4,8 @@ import type { OptionValueFormat } from './types.ts';
  *
  * When `format` is `'realValue'`, primitive values are converted via `String()`.
  * Non-primitive values (objects, arrays) fall back to the index since
- * `String()` would produce `"[object Object]"`.
+ * `String()` would produce `"[object Object]"`. So does `null`, since `String()` would make it indistinguishable
+ * from the string `'null'` and the empty string is the value of a select's empty placeholder.
  *
  * When `format` is `'indexed'` (the default), returns the index as a string.
  *
@@ -21,7 +22,7 @@ export default function enumOptionValueEncoder(
   if (format !== 'realValue') {
     return String(index);
   }
-  if (value == null) {
+  if (value === undefined) {
     return '';
   }
   if (typeof value === 'object') {

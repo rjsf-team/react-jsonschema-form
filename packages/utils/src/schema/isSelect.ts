@@ -16,7 +16,9 @@ export default function isSelect<
   F extends FormContextType = FormContextType,
 >(validator: ValidatorType<S, F>, theSchema: S, rootSchema: S = {} as S, customMergeAllOf?: CustomMergeAllOf<S>) {
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, customMergeAllOf);
-  const altSchemas = schema.oneOf || schema.anyOf;
+  // `anyOf` is read first, the same as `optionsList()` and the field that renders the options, so a schema carrying both
+  // keywords is judged by the list that is actually rendered
+  const altSchemas = schema.anyOf || schema.oneOf;
   if (Array.isArray(schema.enum)) {
     return true;
   }

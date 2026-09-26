@@ -117,7 +117,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   });
 
-  const fieldId = `${id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
+  // `SchemaField` renders the `anyOf` when a schema carries both keywords, so the suffix names that one
+  const selectSuffix = schema.anyOf ? '__anyof_select' : '__oneof_select';
+  const fieldId = `${id}${selectSuffix}`;
 
   const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const {
@@ -265,7 +267,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     !isOptionalRender || hasFormData ? (
       <Widget
         id={fieldId}
-        name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
+        name={`${name}${selectSuffix}`}
         schema={{ type: 'number', default: 0 } as S}
         onChange={onOptionChange}
         onBlur={onBlur}
