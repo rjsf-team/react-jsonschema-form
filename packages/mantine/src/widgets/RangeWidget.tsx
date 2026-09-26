@@ -32,7 +32,8 @@ export default function RangeWidget<
     schema,
   } = props;
 
-  const themeProps = cleanupOptions(options);
+  // `FieldTitle` applies these, and `Slider` would pass them on to its root element
+  const { inputWrapperOrder, labelProps, wrapperProps, ...themeProps }: GenericObjectType = cleanupOptions(options);
   const { min, max, step } = rangeSpec(schema);
   const { description, descriptionProps } = getDescriptionProps(props);
   const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
@@ -64,13 +65,7 @@ export default function RangeWidget<
 
   return (
     <>
-      <FieldTitle
-        id={id}
-        label={label}
-        hideLabel={hideLabel}
-        required={required}
-        inputWrapperOrder={options.inputWrapperOrder}
-      />
+      <FieldTitle id={id} label={label} hideLabel={hideLabel} required={required} options={options} />
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Slider
         id={id}
@@ -88,8 +83,11 @@ export default function RangeWidget<
         thumbProps={{
           ...thumbProps,
           'aria-describedby': [ariaDescribedByIds(id), thumbProps?.['aria-describedby']].filter(Boolean).join(' '),
-          // Mantine names the thumb by `thumbLabel` through `aria-label`, which `aria-labelledby` would override
-          'aria-labelledby': thumbProps?.['aria-labelledby'] ?? (label && !thumbLabel ? titleId(id) : undefined),
+          // Mantine names the thumb by `thumbLabel`, which `thumbProps` can override, through `aria-label`, which
+          // `aria-labelledby` would override in turn
+          'aria-labelledby':
+            thumbProps?.['aria-labelledby'] ??
+            (label && !(thumbProps?.thumbLabel ?? thumbLabel) ? titleId(id) : undefined),
         }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (

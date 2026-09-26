@@ -1,5 +1,5 @@
 import { createTheme, MantineProvider } from '@mantine/core';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -243,33 +243,81 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('combobox', { name: 'Birthday year' })).toBeInTheDocument();
   });
 
-  test.each([
-    ['range', 'ui:options', 'slider', { type: 'integer' }],
-    ['range', 'theme', 'slider', { type: 'integer' }],
-    ['alt-date', 'ui:options', 'combobox', { type: 'string' }],
-    ['alt-date', 'theme', 'combobox', { type: 'string' }],
-  ] as [string, string, string, RJSFSchema][])(
+  const titledWidgets: [string, string, RJSFSchema][] = [
+    ['range', 'slider', { type: 'integer' }],
+    ['alt-date', 'combobox', { type: 'string' }],
+  ];
+  const titleOptionSources = ['ui:options', 'ui:options.wrapperProps', 'theme'];
+  const titledCases = titledWidgets.flatMap(([widget, role, schema]) =>
+    titleOptionSources.map((source) => [widget, source, role, schema] as [string, string, string, RJSFSchema]),
+  );
+
+  /** Renders `widget` titled 'A title', with `props` set in `ui:options`, its `wrapperProps` or the theme's
+   * `InputWrapper` `defaultProps`, as `source` names
+   */
+  function renderTitled(widget: string, schema: RJSFSchema, source: string, props: GenericObjectType) {
+    const components = source === 'theme' ? { InputWrapper: { defaultProps: props } } : {};
+    const optionsBySource: Record<string, GenericObjectType> = {
+      'ui:options': props,
+      'ui:options.wrapperProps': { wrapperProps: props },
+    };
+    const options = optionsBySource[source];
+    return render(
+      <MantineProvider theme={createTheme({ components })}>
+        <Form
+          schema={{ ...schema, title: 'A title' }}
+          uiSchema={{ 'ui:widget': widget, ...(options && { 'ui:options': options }) }}
+          validator={validator}
+        />
+      </MantineProvider>,
+    );
+  }
+
+  test.each(titledCases)(
     '%s widget hides the field title but keeps it as the name when an inputWrapperOrder from the %s leaves the label out',
     (widget, source, role, schema) => {
-      const components =
-        source === 'theme' ? { InputWrapper: { defaultProps: { inputWrapperOrder: orderWithoutLabel } } } : {};
-      render(
-        <MantineProvider theme={createTheme({ components })}>
-          <Form
-            schema={{ ...schema, title: 'A title' }}
-            uiSchema={{
-              'ui:widget': widget,
-              ...(source === 'ui:options' && { 'ui:options': { inputWrapperOrder: orderWithoutLabel } }),
-            }}
-            validator={validator}
-          />
-        </MantineProvider>,
-      );
+      renderTitled(widget, schema, source, { inputWrapperOrder: orderWithoutLabel });
 
       expect(screen.getByText('A title')).not.toBeVisible();
       expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
     },
   );
+
+  test.each(titledCases)(
+    '%s widget applies labelProps from the %s to the field title, except its id',
+    (widget, source, role, schema) => {
+      renderTitled(widget, schema, source, { labelProps: { 'data-testid': 'title', id: 'mine' } });
+
+      expect(screen.getByTestId('title')).toHaveAttribute('id', titleId('root'));
+      expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
+    },
+  );
+
+  test('range widget keeps the slider thumb named by a thumbLabel from ui:options.thumbProps', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbProps: { thumbLabel: 'Volume' } } },
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-labelledby');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('range widget keeps the title options it applies off the slider root element', () => {
+    const { container } = renderField(
+      { type: 'integer', title: 'A title' },
+      {
+        'ui:widget': 'range',
+        'ui:options': { inputWrapperOrder: ['label', 'input'], labelProps: {}, wrapperProps: {} },
+      },
+    );
+
+    const root = container.querySelector('.mantine-Slider-root')!;
+    expect(root).toBeInTheDocument();
+    for (const name of ['inputwrapperorder', 'labelprops', 'wrapperprops']) {
+      expect(root).not.toHaveAttribute(name);
+    }
+  });
 
   const selectWidgets: [string, RJSFSchema][] = [
     ['select', enumSchema],

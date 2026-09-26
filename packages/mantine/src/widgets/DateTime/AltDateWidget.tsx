@@ -61,13 +61,7 @@ export default function AltDateWidget<
   const { descriptionProps, description } = getDescriptionProps(props);
   return (
     <>
-      <FieldTitle
-        id={id}
-        label={label}
-        hideLabel={hideLabel}
-        required={required}
-        inputWrapperOrder={options.inputWrapperOrder}
-      />
+      <FieldTitle id={id} label={label} hideLabel={hideLabel} required={required} options={options} />
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Flex gap='xs' align='center' wrap='nowrap'>
         {elements.map((part, i) => (

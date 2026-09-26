@@ -244,30 +244,33 @@ function labelInOrder(order: unknown) {
 /** Renders the field's title with the id `titleId(id)`, for a widget that renders its own label rather than leaving it
  * to a Mantine input: Mantine's label when it is shown, else the title `hidden`, so that the widget's inputs can keep
  * `titleId(id)` as their accessible name either way. As for `Checkbox.Group` and `Radio.Group`, the label isn't shown
- * when `inputWrapperOrder`, from the widget's options else `InputWrapper`'s theme `defaultProps`, leaves it out.
- * Renders nothing when the field has no label.
+ * when `inputWrapperOrder` leaves it out, and it takes any `labelProps` except an `id`, each resolved from the widget's
+ * options, then its `wrapperProps`, then `InputWrapper`'s theme `defaultProps`. Renders nothing when the field has no
+ * label.
  */
 export function FieldTitle({
   id,
   label,
   hideLabel,
   required,
-  inputWrapperOrder,
+  options,
 }: {
   id: string;
   label: ReactNode;
   hideLabel?: boolean;
   required?: boolean;
-  inputWrapperOrder?: unknown;
+  options: GenericObjectType;
 }) {
-  const order = useProps<GenericObjectType>('InputWrapper', {}, { inputWrapperOrder }).inputWrapperOrder;
+  const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
+  const wrapperObject = asObject(options.wrapperProps);
+  const resolve = (name: string) => options[name] ?? wrapperObject?.[name] ?? wrapperDefaults[name];
   if (!label) {
     return null;
   }
-  return hideLabel || !labelInOrder(order) ? (
+  return hideLabel || !labelInOrder(resolve('inputWrapperOrder')) ? (
     <HiddenTitle id={id} label={label} />
   ) : (
-    <Input.Label id={titleId(id)} required={required}>
+    <Input.Label {...asObject(resolve('labelProps'))} id={titleId(id)} required={required}>
       {label}
     </Input.Label>
   );
