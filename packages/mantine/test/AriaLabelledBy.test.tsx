@@ -136,11 +136,33 @@ describe('aria-labelledby', () => {
     },
   );
 
-  test('range widget names its slider thumb by the shown field title', () => {
-    renderField({ type: 'integer', title: 'A title' }, { 'ui:widget': 'range' });
+  test('range widget names its slider thumb by the field title, whether the label is shown or hidden', () => {
+    const { rerender } = renderField({ type: 'integer', title: 'A title' }, { 'ui:widget': 'range' });
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', titleId('root'));
     expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
+    expect(screen.getByText('A title')).toBeVisible();
+
+    rerender(
+      <WrappedForm
+        schema={{ type: 'integer', title: 'A title' }}
+        uiSchema={{ 'ui:widget': 'range', 'ui:label': false }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', titleId('root'));
+    expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
+    expect(screen.getByText('A title')).not.toBeVisible();
+  });
+
+  test('range widget keeps an aria-labelledby from ui:options.thumbProps', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbProps: { 'aria-labelledby': 'my-label' } } },
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'my-label');
   });
 
   const selectWidgets: [string, RJSFSchema][] = [

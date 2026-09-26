@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -58,8 +57,7 @@ export default function CheckboxesWidget<
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
-  const groupAriaProps = useGroupAriaProps('CheckboxGroup', props);
-  const describedBy = ariaDescribedByIds(id);
+  const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -70,7 +68,7 @@ export default function CheckboxesWidget<
       readOnly={disabled || readonly}
       error={visibleErrorText(props)}
       {...themeProps}
-      {...groupAriaProps}
+      {...groupProps}
       {...getDescriptionProps(props)}
     >
       <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
@@ -85,7 +83,7 @@ export default function CheckboxesWidget<
             autoFocus={i === 0 && autofocus}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={describedBy}
+            {...optionProps}
           />
         ))}
       </Flex>

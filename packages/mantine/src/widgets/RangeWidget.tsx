@@ -36,7 +36,6 @@ export default function RangeWidget<
   const { min, max, step } = rangeSpec(schema);
   const { description, descriptionProps } = getDescriptionProps(props);
   const { thumbProps } = useProps<GenericObjectType>('Slider', {}, { thumbProps: options.thumbProps });
-  const describedBy = ariaDescribedByIds(id);
   const labelShown = !hideLabel && !!label;
 
   const handleChange = useCallback(
@@ -67,6 +66,11 @@ export default function RangeWidget<
           {label}
         </Input.Label>
       )}
+      {!labelShown && !!label && (
+        <span id={titleId(id)} hidden>
+          {label}
+        </span>
+      )}
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Slider
         id={id}
@@ -83,8 +87,8 @@ export default function RangeWidget<
         {...themeProps}
         thumbProps={{
           ...thumbProps,
-          'aria-describedby': describedBy,
-          'aria-labelledby': labelShown ? titleId(id) : thumbProps?.['aria-labelledby'],
+          'aria-describedby': [ariaDescribedByIds(id), thumbProps?.['aria-describedby']].filter(Boolean).join(' '),
+          'aria-labelledby': thumbProps?.['aria-labelledby'] ?? (label ? titleId(id) : undefined),
         }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (

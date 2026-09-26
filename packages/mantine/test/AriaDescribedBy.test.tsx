@@ -120,6 +120,17 @@ describe('aria-describedby', () => {
       expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
     });
 
+    test('set on InputWrapper still renders when ui:options sets wrapperProps.inputContainer to undefined', () => {
+      const { container } = renderThemed(
+        { InputWrapper: { defaultProps: { inputContainer } } },
+        { type: 'string' },
+        { 'ui:options': { wrapperProps: { inputContainer: undefined } } },
+      );
+
+      expect(screen.getByTestId('theme-container')).toContainElement(screen.getByRole('textbox'));
+      expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
+    });
+
     test('set in wrapperProps still renders inside the aria-describedby override, with the other wrapperProps', () => {
       const { container } = renderThemed(
         { TextInput: { defaultProps: { wrapperProps: { inputContainer, 'data-wrapper': 'theme' } } } },
@@ -239,6 +250,7 @@ describe('aria-describedby', () => {
         { wrapperProps: { successProps: { id: 'wrapped-success' } } },
         'wrapped-success',
       ],
+      ['the default id for a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'wrapped-success'],
     ])('still describes the input, by %s', (_, uiOptions, successId) => {
       const { container } = renderThemed(
         {},
@@ -261,6 +273,15 @@ describe('aria-describedby', () => {
     renderField({ type: 'integer' }, { 'ui:widget': 'range' });
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+  });
+
+  test('range widget keeps an aria-describedby from ui:options.thumbProps, after the field ids', () => {
+    renderField(
+      { type: 'integer' },
+      { 'ui:widget': 'range', 'ui:options': { thumbProps: { 'aria-describedby': 'my-hint' } } },
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', `${ariaDescribedByIds('root')} my-hint`);
   });
 
   test('range widget keeps the thumbProps default from the Mantine theme', async () => {

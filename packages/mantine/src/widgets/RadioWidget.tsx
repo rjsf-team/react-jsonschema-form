@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -58,8 +57,7 @@ export default function RadioWidget<
 
   const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
-  const groupAriaProps = useGroupAriaProps('RadioGroup', props);
-  const describedBy = ariaDescribedByIds(id);
+  const { groupProps, optionProps } = useGroupAriaProps('RadioGroup', props);
 
   return (
     <Radio.Group
@@ -71,7 +69,7 @@ export default function RadioWidget<
       readOnly={disabled || readonly}
       error={visibleErrorText(props)}
       {...themeProps}
-      {...groupAriaProps}
+      {...groupProps}
       {...getDescriptionProps(props)}
     >
       {Array.isArray(enumOptions) ? (
@@ -86,7 +84,7 @@ export default function RadioWidget<
               autoFocus={i === 0 && autofocus}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              aria-describedby={describedBy}
+              {...optionProps}
             />
           ))}
         </Flex>

@@ -218,7 +218,7 @@ function useAriaContainerProps(
     if (isGroup) {
       value = prop ?? wrapperObject?.[name];
     } else {
-      value = wrapperObject && name in wrapperObject ? wrapperObject[name] : prop;
+      value = wrapperObject?.[name] !== undefined ? wrapperObject[name] : prop;
     }
     return value ?? wrapperDefaults[name];
   };
@@ -226,7 +226,9 @@ function useAriaContainerProps(
 
   const { describedBy, labelId } = overrides;
   const ownSuccessProps = resolveWrapperProp('successProps', successProps) as GenericObjectType | undefined;
-  const successId: string = ownSuccessProps?.id ?? `${id}-success`;
+  // An input's `wrapperProps.id` replaces the id Mantine builds the wrapper's element ids from; a group's own `id` wins
+  const wrapperId: string = (!isGroup && wrapperObject?.id) || id;
+  const successId: string = ownSuccessProps?.id ?? `${wrapperId}-success`;
   const ownInputWrapperOrder = resolveWrapperProp('inputWrapperOrder', inputWrapperOrder);
   const labelRendered = labelShown && (!Array.isArray(ownInputWrapperOrder) || ownInputWrapperOrder.includes('label'));
   const before = labelRendered ? undefined : hiddenLabel;
@@ -279,7 +281,8 @@ export function useAriaDescribedByProps(
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility and the options are derived
- * @returns - An object to spread on the props of the Mantine group, after the theme props
+ * @returns - The `groupProps` to spread on the Mantine group, after the theme props, and the `optionProps` to spread on
+ *   each of its option inputs
  */
 export function useGroupAriaProps<
   T = unknown,
@@ -304,9 +307,13 @@ export function useGroupAriaProps<
     hiddenLabel,
     !!shownLabel,
   );
+  const optionProps = useMemo(() => ({ 'aria-describedby': ariaDescribedByIds(id) }), [id]);
   return {
-    label: shownLabel,
-    labelProps: { ...(typeof ownLabelProps === 'object' ? ownLabelProps : {}), id: titleId(id) },
-    ...containerProps,
+    groupProps: {
+      label: shownLabel,
+      labelProps: { ...(typeof ownLabelProps === 'object' ? ownLabelProps : {}), id: titleId(id) },
+      ...containerProps,
+    },
+    optionProps,
   };
 }
