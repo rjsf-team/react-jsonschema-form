@@ -37,6 +37,7 @@ export default function RangeWidget<
   const { description, descriptionProps } = getDescriptionProps(props);
   const { thumbProps } = useProps<GenericObjectType>('Slider', {}, { thumbProps: options.thumbProps });
   const describedBy = ariaDescribedByIds(id);
+  const labelShown = !hideLabel && !!label;
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -61,7 +62,7 @@ export default function RangeWidget<
 
   return (
     <>
-      {!hideLabel && !!label && (
+      {labelShown && (
         <Input.Label id={titleId(id)} required={required}>
           {label}
         </Input.Label>
@@ -80,7 +81,11 @@ export default function RangeWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...themeProps}
-        thumbProps={{ ...thumbProps, 'aria-describedby': describedBy }}
+        thumbProps={{
+          ...thumbProps,
+          'aria-describedby': describedBy,
+          'aria-labelledby': labelShown ? titleId(id) : thumbProps?.['aria-labelledby'],
+        }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (
         // oxlint-disable-next-line react/no-array-index-key

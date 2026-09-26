@@ -73,24 +73,22 @@ export default function CheckboxesWidget<
       {...groupAriaProps}
       {...getDescriptionProps(props)}
     >
-      {Array.isArray(enumOptions) ? (
-        <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
-          {enumOptions.map((option, i) => (
-            <Checkbox
-              key={String(option.value)}
-              id={optionId(id, i)}
-              name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
-              label={option.label}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              autoFocus={i === 0 && autofocus}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
-              aria-describedby={describedBy}
-            />
-          ))}
-        </Flex>
-      ) : null}
+      <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
+        {enumOptions.map((option, i) => (
+          <Checkbox
+            key={String(option.value)}
+            id={optionId(id, i)}
+            name={htmlName || id}
+            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+            label={option.label}
+            disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+            autoFocus={i === 0 && autofocus}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            aria-describedby={describedBy}
+          />
+        ))}
+      </Flex>
     </Checkbox.Group>
   ) : null;
 }
