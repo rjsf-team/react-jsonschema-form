@@ -53,61 +53,53 @@ const COMPONENT_TYPES: Record<string, string> = {
   null: 'NullField',
 };
 
-/** The types `guessType()` returns for the constant values that a select can represent */
-const SELECT_CONSTANT_TYPES = ['string', 'number', 'boolean', 'null'];
+/** The `guessType()` results whose own field can render a select over constants of that type */
+const SELECT_FIELD_TYPES = ['string', 'number', 'boolean'];
 
 /** Reduces the `guessType()` results of a constant option list to the single `type` whose field can show all of them.
- * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
- * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
- * `string` can represent either.
+ * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), an all-`null` list
+ * would reach NullField, which renders nothing, and object or array constants would reach a field that edits their
+ * contents rather than choosing between them. The select widget maps each option back to its original constant, so
+ * `string` can represent any of them.
  *
  * @param types - The distinct `guessType()` results of the constants in one option list
  * @returns - The `type` to give a select over those constants
  */
 function selectTypeForConstants(types: string[]): string {
   const nonNullTypes = types.filter((type) => type !== 'null');
-  return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
+  return nonNullTypes.length === 1 && SELECT_FIELD_TYPES.includes(nonNullTypes[0]) ? nonNullTypes[0] : 'string';
 }
 
 /** A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the schema's `type`.
  * JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be resolved, so infer it
- * from the constant values. Only primitive constants are inferred since those are what a select can represent.
+ * from the constant values. The options are read from the same keyword `isSelect()` and `optionsList()` read.
  *
  * @param schema - The retrieved schema for the field
  * @returns - The `schema`, with an inferred `type` when it is a typeless select, along with the `widget` name to
  *        default the `uiSchema` to when the field for that type wouldn't render a select on its own
  */
 function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { schema: S; widget?: string } {
-  if (getSchemaType<S>(schema) !== undefined) {
-    return { schema };
-  }
-  const oneOfOptions = Array.isArray(schema[ONE_OF_KEY]) ? schema[ONE_OF_KEY] : [];
-  const anyOfOptions = Array.isArray(schema[ANY_OF_KEY]) ? schema[ANY_OF_KEY] : [];
-  const options = [...oneOfOptions, ...anyOfOptions];
+  const options = schema[ANY_OF_KEY] || schema[ONE_OF_KEY];
   // `toConstant()` throws for an option that isn't a constant, so the options it maps are checked directly
-  if (options.length === 0 || !options.every((option) => isObject(option) && isConstant<S>(option as S))) {
+  if (
+    !Array.isArray(options) ||
+    options.length === 0 ||
+    !options.every((option) => isObject(option) && isConstant<S>(option as S))
+  ) {
     return { schema };
   }
-  const constantTypes = (list: typeof options) => [
-    ...new Set(list.map((option) => guessType(toConstant<S>(option as S)))),
-  ];
-  const oneOfTypes = constantTypes(oneOfOptions);
-  const anyOfTypes = constantTypes(anyOfOptions);
-  if (![...oneOfTypes, ...anyOfTypes].every((type) => SELECT_CONSTANT_TYPES.includes(type))) {
-    return { schema };
-  }
-  const oneOfType = oneOfOptions.length > 0 ? selectTypeForConstants(oneOfTypes) : undefined;
-  const anyOfType = anyOfOptions.length > 0 ? selectTypeForConstants(anyOfTypes) : undefined;
-  // `isSelect()` reads `oneOf` first while `optionsList()` reads `anyOf` first, so a schema carrying both only gets a
-  // type when the two lists infer the same one; otherwise it would describe whichever list the reader didn't pick
-  if (oneOfType !== undefined && anyOfType !== undefined && oneOfType !== anyOfType) {
-    return { schema };
-  }
-  const type = (anyOfType ?? oneOfType)!;
+  const schemaType = getSchemaType<S>(schema);
   // BooleanField defaults to a checkbox, which ignores `enumOptions` and so drops the option titles. Defaulting the
-  // widget rather than the type keeps `schema.type` truthful for custom fields, templates and widgets
-  const widget = type === 'boolean' ? 'select' : undefined;
-  return { schema: { ...schema, type }, widget };
+  // widget rather than the type keeps `schema.type` truthful for custom fields, templates and widgets. A typed boolean
+  // keeps its checkbox unless a title would be dropped, since a single option is how a checkbox that must be checked
+  // is spelled, and untitled `true`/`false` options are exactly what a checkbox shows
+  if (schemaType !== undefined) {
+    const dropsTitles =
+      schemaType === 'boolean' && options.length > 1 && options.some((option) => Boolean((option as S).title));
+    return { schema, widget: dropsTitles ? 'select' : undefined };
+  }
+  const type = selectTypeForConstants([...new Set(options.map((option) => guessType(toConstant<S>(option as S))))]);
+  return { schema: { ...schema, type }, widget: type === 'boolean' ? 'select' : undefined };
 }
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the

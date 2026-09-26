@@ -728,4 +728,33 @@ describe('optionsList()', () => {
       );
     });
   });
+  it('should label an untitled object or array constant with its JSON', () => {
+    const schema: RJSFSchema = { oneOf: [{ const: { a: 1 } }, { const: [1, 2] }, { const: null }] };
+    expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}', '[1,2]', 'null']);
+  });
+  it('should label an untitled object enum value with its JSON', () => {
+    const schema: RJSFSchema = { enum: [{ a: 1 }] as unknown as RJSFSchema['enum'] };
+    expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}']);
+  });
+  describe('anyOf and oneOf together', () => {
+    it('should read anyOf, the list isSelect() reads, when both are constants', () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+        anyOf: [{ const: 1 }, { const: 2 }],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual([1, 2]);
+    });
+    it('should return undefined rather than throw when the list it reads is not all constants', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        anyOf: [{ minLength: 1 }],
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+      };
+      expect(optionsList(schema)).toBeUndefined();
+    });
+    it('should return undefined rather than throw for a boolean option', () => {
+      const schema: RJSFSchema = { oneOf: [{ const: 'a' }, true] };
+      expect(optionsList(schema)).toBeUndefined();
+    });
+  });
 });

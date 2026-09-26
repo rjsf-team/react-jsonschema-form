@@ -35,8 +35,8 @@ describe('enumOptionValueEncoder', () => {
     it('returns empty string for undefined', () => {
       expect(enumOptionValueEncoder(undefined, 0, 'realValue')).toBe('');
     });
-    it('returns empty string for null', () => {
-      expect(enumOptionValueEncoder(null, 0, 'realValue')).toBe('');
+    it('falls back to index for null, keeping it distinct from the empty placeholder', () => {
+      expect(enumOptionValueEncoder(null, 2, 'realValue')).toBe('2');
     });
   });
 });

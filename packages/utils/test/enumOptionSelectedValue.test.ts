@@ -57,6 +57,9 @@ describe('enumOptionSelectedValue', () => {
       { value: null, label: 'None' },
       { value: { id: 1 }, label: 'Object' },
     ];
+    it('returns emptyValue for null when no option carries it', () => {
+      expect(enumOptionSelectedValue(null, stringOptions, false, 'realValue', '')).toBe('');
+    });
     it('encodes null the same way as the option value', () => {
       expect(enumOptionSelectedValue(null, mixedOptions, false, 'realValue', '')).toBe(
         enumOptionValueEncoder(null, 1, 'realValue'),
@@ -72,7 +75,7 @@ describe('enumOptionSelectedValue', () => {
       expect(enumOptionSelectedValue([{ id: 1 }, { id: 2 }], mixedOptions, true, 'realValue', [])).toEqual(['2', '']);
     });
     it('encodes multiple values the same way as the option values', () => {
-      expect(enumOptionSelectedValue(['a', null], mixedOptions, true, 'realValue', [])).toEqual(['a', '']);
+      expect(enumOptionSelectedValue(['a', null], mixedOptions, true, 'realValue', [])).toEqual(['a', '1']);
     });
     it('returns String(value) for a single string value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');
