@@ -151,6 +151,7 @@ exports[`array fields > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -345,6 +346,7 @@ exports[`array fields > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -624,6 +626,7 @@ exports[`array fields > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -843,6 +846,7 @@ exports[`array fields > empty errors array 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -934,6 +938,7 @@ exports[`array fields > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -976,6 +981,7 @@ exports[`array fields > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -1217,7 +1223,7 @@ exports[`array fields > has errors 1`] = `
                   style="--input-margin-bottom: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-describedby="root_name-error"
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     aria-invalid="true"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-error="true"
@@ -1350,6 +1356,7 @@ exports[`array fields > no errors 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -1472,6 +1479,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_0_name"
@@ -1511,6 +1519,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
+                                aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_0_value"
@@ -1754,6 +1763,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_1_name"
@@ -1793,6 +1803,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
+                                aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_1_value"
@@ -2101,6 +2112,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -2257,6 +2269,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -2498,6 +2511,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -2709,6 +2723,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -2751,6 +2766,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -2983,6 +2999,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_0_0"
@@ -3139,6 +3156,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_0_1"
@@ -3482,6 +3500,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_1_0"
@@ -3638,6 +3657,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_1_1"
@@ -4085,6 +4105,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_0_name"
@@ -4124,6 +4145,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
+                                aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_0_value"
@@ -4367,6 +4389,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_1_name"
@@ -4406,6 +4429,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                             >
                               <input
+                                aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                                 data-variant="default"
                                 id="root_1_value"
@@ -4714,6 +4738,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -4870,6 +4895,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -5288,7 +5314,7 @@ exports[`with title and description > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -5514,7 +5540,7 @@ exports[`with title and description > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -5818,7 +5844,7 @@ exports[`with title and description > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root-description"
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -6082,7 +6108,7 @@ exports[`with title and description > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -6156,7 +6182,7 @@ exports[`with title and description > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -6470,7 +6496,7 @@ exports[`with title and description from both > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -6696,7 +6722,7 @@ exports[`with title and description from both > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -7000,7 +7026,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root-description"
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -7264,7 +7290,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -7338,7 +7364,7 @@ exports[`with title and description from both > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -7652,7 +7678,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -7878,7 +7904,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -8182,7 +8208,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root-description"
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -8446,7 +8472,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
-                        aria-describedby="root_0-description"
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -8520,7 +8546,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
-                        aria-describedby="root_1-description"
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
@@ -8769,6 +8795,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -8963,6 +8990,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -9242,6 +9270,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -9456,6 +9485,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -9498,6 +9528,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"

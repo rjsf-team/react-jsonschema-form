@@ -4,7 +4,6 @@ import type { ComboboxParsedItem, OptionsFilter } from '@mantine/core';
 import { defaultOptionsFilter, MultiSelect, Select } from '@mantine/core';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -16,7 +15,7 @@ import {
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrorText } from '../utils.tsx';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -99,6 +98,8 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
 
+  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options);
+
   const sharedProps = {
     id,
     name: htmlName || id,
@@ -114,9 +115,9 @@ export default function SelectWidget<
     error: visibleErrorText(props),
     searchable: true,
     filter: optionsFilter,
-    'aria-describedby': ariaDescribedByIds(id),
     comboboxProps: { withinPortal: false },
     ...themeProps,
+    ...ariaDescribedByProps,
     ...getDescriptionProps(props),
   };
 

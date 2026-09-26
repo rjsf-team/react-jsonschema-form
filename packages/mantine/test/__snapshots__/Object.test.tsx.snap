@@ -94,6 +94,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_person_name"
@@ -162,6 +163,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_person_address_street"
@@ -200,6 +202,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_person_address_city"
@@ -238,6 +241,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_person_address_country"
@@ -345,6 +349,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -444,6 +449,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_customField__error root_customField__description root_customField__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_customField"
@@ -630,6 +636,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -669,6 +676,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_age"
@@ -860,6 +868,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_tags_0"
@@ -1032,6 +1041,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_tags_1"
@@ -1296,6 +1306,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_firstName"
@@ -1334,6 +1345,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_lastName"
@@ -1373,6 +1385,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_age"
@@ -1555,6 +1568,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_person_name"
@@ -1623,6 +1637,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_person_address_street"
@@ -1661,6 +1676,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_person_address_city"
@@ -1768,6 +1784,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_name"
@@ -1807,6 +1824,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_count__error root_count__description root_count__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_count"
@@ -1940,6 +1958,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_items_0"
@@ -2112,6 +2131,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                             >
                               <input
+                                aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                                 class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                 data-variant="default"
                                 id="root_items_1"
@@ -2376,6 +2396,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_firstName"
@@ -2414,6 +2435,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_lastName"
@@ -2453,6 +2475,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_age"
@@ -2666,6 +2689,7 @@ exports[`object fields > additionalProperties 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -2877,6 +2901,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"
@@ -3073,7 +3098,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
-                            aria-describedby="root_foo-description"
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -3626,7 +3651,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                           style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
-                            aria-describedby="root_foo-description"
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -3874,6 +3899,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -4151,6 +4177,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                                 >
                                   <input
+                                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                                     data-variant="default"
                                     id="root_foo_foo"
@@ -4366,6 +4393,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"
@@ -4542,6 +4570,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -4753,6 +4782,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"
@@ -4929,6 +4959,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -5115,6 +5146,7 @@ exports[`object fields > object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_a"
@@ -5154,6 +5186,7 @@ exports[`object fields > object 1`] = `
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_b"
@@ -5367,6 +5400,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_additionalProperty"
@@ -5630,6 +5664,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -5847,7 +5882,7 @@ exports[`object fields > with title and description > object 1`] = `
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-describedby="root_a-description"
+                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_a"
@@ -5902,7 +5937,7 @@ exports[`object fields > with title and description > object 1`] = `
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
-                    aria-describedby="root_b-description"
+                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_b"
@@ -6132,6 +6167,7 @@ exports[`object fields > with title and description > show add button and fields
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_additionalProperty"
@@ -6395,6 +6431,7 @@ exports[`object fields > with title and description from both > additionalProper
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -6612,7 +6649,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-describedby="root_a-description"
+                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_a"
@@ -6667,7 +6704,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
-                    aria-describedby="root_b-description"
+                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_b"
@@ -6897,6 +6934,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -7114,7 +7152,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
-                    aria-describedby="root_a-description"
+                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_a"
@@ -7169,7 +7207,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
-                    aria-describedby="root_b-description"
+                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_b"
@@ -7399,6 +7437,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_additionalProperty"
@@ -7628,6 +7667,7 @@ exports[`object fields > with title and description with global label off > addi
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_foo__error root_foo__description root_foo__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo"
@@ -7805,6 +7845,7 @@ exports[`object fields > with title and description with global label off > obje
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                 >
                   <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                     data-variant="default"
                     id="root_a"
@@ -7835,6 +7876,7 @@ exports[`object fields > with title and description with global label off > obje
                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                 >
                   <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                     data-variant="default"
                     id="root_b"
@@ -8030,6 +8072,7 @@ exports[`object fields > with title and description with global label off > show
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_additionalProperty"

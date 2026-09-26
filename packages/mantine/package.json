@@ -25,9 +25,9 @@
     "test:update": "vitest run --update"
   },
   "peerDependencies": {
-    "@mantine/core": ">=9",
-    "@mantine/dates": ">=9",
-    "@mantine/hooks": ">=9",
+    "@mantine/core": ">=9.2",
+    "@mantine/dates": ">=9.2",
+    "@mantine/hooks": ">=9.2",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "react": ">=19.2"

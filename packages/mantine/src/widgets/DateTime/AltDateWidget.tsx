@@ -1,15 +1,8 @@
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
 import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import {
-  ariaDescribedByIds,
-  dateRangeOptions,
-  getVisibleErrors,
-  titleId,
-  TranslatableString,
-  useAltDateWidgetProps,
-} from '@rjsf/utils';
+import { dateRangeOptions, getVisibleErrors, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
-import { getDescriptionProps } from '../../utils.tsx';
+import { getDescriptionProps, useAriaDescribedByProps } from '../../utils.tsx';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -23,6 +16,7 @@ export default function AltDateWidget<
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
   const { descriptionProps, description } = getDescriptionProps(props);
+  const ariaDescribedByProps = useAriaDescribedByProps('Select', id);
   return (
     <>
       {!hideLabel && !!label && (
@@ -48,7 +42,7 @@ export default function AltDateWidget<
                 searchable={false}
                 allowDeselect={false}
                 comboboxProps={{ withinPortal: false }}
-                aria-describedby={ariaDescribedByIds(elemId)}
+                {...ariaDescribedByProps}
               />
             </Box>
           );
