@@ -85,6 +85,13 @@ describe('enumOptionSelectedValue', () => {
         `${ENUM_OPTION_INDEX_PREFIX}1`,
       ]);
     });
+    it('matches a lone non-array value of a multiple selection as a one-item selection', () => {
+      expect(enumOptionSelectedValue(null, mixedOptions, true, 'realValue', [])).toEqual([
+        `${ENUM_OPTION_INDEX_PREFIX}1`,
+      ]);
+      expect(enumOptionSelectedValue(null, stringOptions, true, 'realValue', [])).toEqual(['']);
+      expect(enumOptionSelectedValue('bar', stringOptions, true, 'realValue', [])).toEqual(['bar']);
+    });
     it('returns String(value) for a single string value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');
     });

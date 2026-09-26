@@ -80,7 +80,7 @@ export default function RadioWidget<
             {(describedOptionProps) =>
               enumOptions.map((option, i) => (
                 <Radio
-                  key={String(option.value)}
+                  key={i}
                   id={optionId(id, i)}
                   value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
                   label={option.label}

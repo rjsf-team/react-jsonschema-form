@@ -1,7 +1,14 @@
 import type { FocusEvent } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } from '@rjsf/utils';
+import {
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
+  enumOptionValueDecoder,
+  enumOptionValueEncoder,
+  getOptionValueFormat,
+  optionId,
+} from '@rjsf/utils';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -24,25 +31,7 @@ export default function CheckboxesWidget<
 >({ id, htmlName, disabled, options, value, readonly, required, onChange, onFocus, onBlur }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
-  const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
-
-  /** Determines if a checkbox option should be checked based on the current value
-   *
-   * @param option - The option to check
-   * @returns Whether the option should be checked
-   */
-  const isChecked = useCallback(
-    (option: any) => {
-      if (!Array.isArray(value)) {
-        return false;
-      }
-      if (isEnumeratedObject) {
-        return value.some((v) => v.name === option.value.name);
-      }
-      return value.includes(option.value);
-    },
-    [value, isEnumeratedObject],
-  );
+  const selected = useMemo(() => (Array.isArray(value) ? value : []), [value]);
 
   /** Handles changes to a checkbox's checked state */
   const handleChange = useCallback(
@@ -53,16 +42,14 @@ export default function CheckboxesWidget<
         return;
       }
 
-      const newValue = Array.isArray(value) ? [...value] : [];
-      const optionValue = isEnumeratedObject ? option.value : option.value;
-
-      if (isChecked(option)) {
-        onChange(newValue.filter((v) => (isEnumeratedObject ? v.name !== optionValue.name : v !== optionValue)));
+      // Compared by value, since an object option in form data is rarely the same instance as the option's constant
+      if (enumOptionsIsSelected<S>(option.value, selected)) {
+        onChange(enumOptionsDeselectValue<S>(index, selected, enumOptions));
       } else {
-        onChange([...newValue, optionValue]);
+        onChange([...selected, option.value]);
       }
     },
-    [onChange, value, isChecked, isEnumeratedObject, enumOptions],
+    [onChange, selected, enumOptions],
   );
 
   /** Handles focus events for accessibility */
@@ -90,14 +77,15 @@ export default function CheckboxesWidget<
       {/* Use a vertical layout with proper spacing */}
       <div className='flex flex-col gap-2 mt-1'>
         {enumOptions?.map((option, index) => (
-          <label key={option.value} className='flex items-center cursor-pointer gap-2'>
+          // oxlint-disable-next-line react/no-array-index-key
+          <label key={index} className='flex items-center cursor-pointer gap-2'>
             <input
               type='checkbox'
-              id={`${id}-${option.value}`}
+              id={optionId(id, index)}
               className='checkbox'
               name={htmlName || id}
               value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-              checked={isChecked(option)}
+              checked={enumOptionsIsSelected<S>(option.value, selected)}
               required={required}
               disabled={disabled || readonly}
               data-index={index}

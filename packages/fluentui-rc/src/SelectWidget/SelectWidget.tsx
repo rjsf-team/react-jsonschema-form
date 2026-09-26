@@ -80,8 +80,10 @@ function SelectWidget<
   );
   const selectedOptions = selectedValues === undefined ? [] : ([] as string[]).concat(selectedValues);
 
-  const handleBlur = () => onBlur(id, selectedIndexes);
-  const handleFocus = () => onFocus(id, selectedIndexes);
+  // Reported the way a native select reports its decoded selection, with no selection read as the empty value
+  const reportedValue = value === undefined ? optEmptyVal : value;
+  const handleBlur = () => onBlur(id, reportedValue);
+  const handleFocus = () => onFocus(id, reportedValue);
   const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));

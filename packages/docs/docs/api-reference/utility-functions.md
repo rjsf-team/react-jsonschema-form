@@ -300,7 +300,8 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 ### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Computes the value to pass to a select element's `value` attribute.
-When `format` is `'realValue'`, converts form data values to strings.
+When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
+A lone non-array value of a `multiple` selection is encoded as a one-item selection.
 When `format` is `'indexed'` (the default), resolves to index-based values via `enumOptionsIndexForValue`.
 Returns `emptyValue` when the current value is empty.
 
@@ -956,8 +957,8 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
-schema type and `widget` name. The `object` type accepts `select`, `radio` and `hidden`, which a select over object
-constants renders with. If no widget component can be found an `Error` is thrown.
+schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
+object constants, or one whose `type` list starts with `null`, renders with. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 

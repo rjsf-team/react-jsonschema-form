@@ -143,10 +143,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       if (Array.isArray(uiSchema[xxxOfKey])) {
         return uiSchema[xxxOfKey];
       }
-      logOnce(`uiSchema.${xxxOfKey} is not an array for "${title || name}"`);
+      logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     }
     return [];
-  }, [xxxOfKey, uiSchema, title, name]);
+  }, [xxxOfKey, uiSchema, id, fieldPath]);
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
