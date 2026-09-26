@@ -3,7 +3,7 @@ import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, getVisibleErrors, rangeSpec, titleId } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, HiddenTitle } from '../utils.tsx';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value alongside it.
@@ -35,7 +35,11 @@ export default function RangeWidget<
   const themeProps = cleanupOptions(options);
   const { min, max, step } = rangeSpec(schema);
   const { description, descriptionProps } = getDescriptionProps(props);
-  const { thumbProps } = useProps<GenericObjectType>('Slider', {}, { thumbProps: options.thumbProps });
+  const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
+    'Slider',
+    {},
+    { thumbProps: options.thumbProps, thumbLabel: options.thumbLabel },
+  );
   const labelShown = !hideLabel && !!label;
 
   const handleChange = useCallback(
@@ -66,11 +70,7 @@ export default function RangeWidget<
           {label}
         </Input.Label>
       )}
-      {!labelShown && !!label && (
-        <span id={titleId(id)} hidden>
-          {label}
-        </span>
-      )}
+      {!labelShown && !!label && <HiddenTitle id={id} label={label} />}
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Slider
         id={id}
@@ -88,7 +88,8 @@ export default function RangeWidget<
         thumbProps={{
           ...thumbProps,
           'aria-describedby': [ariaDescribedByIds(id), thumbProps?.['aria-describedby']].filter(Boolean).join(' '),
-          'aria-labelledby': thumbProps?.['aria-labelledby'] ?? (label ? titleId(id) : undefined),
+          // Mantine names the thumb by `thumbLabel` through `aria-label`, which `aria-labelledby` would override
+          'aria-labelledby': thumbProps?.['aria-labelledby'] ?? (label && !thumbLabel ? titleId(id) : undefined),
         }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (

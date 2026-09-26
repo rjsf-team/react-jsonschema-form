@@ -165,6 +165,30 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'my-label');
   });
 
+  test('range widget keeps the slider thumb named by a thumbLabel from ui:options', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbLabel: 'Volume' } },
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-labelledby');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('range widget keeps the slider thumb named by a thumbLabel from the Mantine theme', () => {
+    render(
+      <MantineProvider theme={createTheme({ components: { Slider: { defaultProps: { thumbLabel: 'Volume' } } } })}>
+        <Form
+          schema={{ type: 'integer', title: 'A title' }}
+          uiSchema={{ 'ui:widget': 'range' }}
+          validator={validator}
+        />
+      </MantineProvider>,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
   const selectWidgets: [string, RJSFSchema][] = [
     ['select', enumSchema],
     ['multi-select', checkboxesSchema],
