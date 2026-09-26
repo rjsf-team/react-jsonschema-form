@@ -7239,8 +7239,16 @@ exports[`single fields > help and error display 1`] = `
                   style="height: 0px; opacity: 0;"
                 >
                   <div
+                    id="root__error"
+                  >
+                    <div>
+                      an error
+                    </div>
+                  </div>
+                  <div
                     class="help-block"
                     id="root__help"
+                    style="color: rgba(0, 0, 0, 0.45);"
                   >
                     help me!
                   </div>
