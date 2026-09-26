@@ -301,6 +301,50 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
   });
 
+  test('multi-select: reports the picked values in the realValue format', async () => {
+    const user = userEvent.setup();
+    const seen: unknown[] = [];
+
+    function Controlled() {
+      const [value, setValue] = useState<unknown[]>([]);
+      return (
+        <SelectWidget
+          {...makeWidgetMockProps({
+            autofocus: false,
+            disabled: false,
+            readonly: false,
+            multiple: true,
+            rawErrors: [],
+            value,
+            onChange: (next) => {
+              seen.push(next);
+              setValue(next as unknown[]);
+            },
+            options: {
+              enumOptions: [
+                { label: 'A', value: 'a' },
+                { label: 'B', value: 'b' },
+                { label: 'None', value: null },
+              ],
+              optionValueFormat: 'realValue',
+            },
+          })}
+        />
+      );
+    }
+
+    const pick = async (name: string) => {
+      await user.click(screen.getByPlaceholderText('Select ...'));
+      await user.click(screen.getByRole('option', { name }));
+    };
+
+    render(<Controlled />);
+    await pick('B');
+    await pick('None');
+
+    expect(seen).toEqual([['b'], ['b', null]]);
+  });
+
   test('multi-select: optgroups does not reorder the selected values it reports', async () => {
     const user = userEvent.setup();
     const seen: unknown[] = [];

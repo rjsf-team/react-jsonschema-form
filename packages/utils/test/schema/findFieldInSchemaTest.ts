@@ -122,6 +122,13 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         isRequired: true,
       });
     });
+    it('drills into the anyOf when the schema also has a oneOf (#5309)', () => {
+      const schema: RJSFSchema = {
+        ...testAnyOfSchema,
+        oneOf: [{ type: 'object', properties: { answer: { type: 'number', title: 'Other' } } }],
+      };
+      expect(schemaUtils.findFieldInSchema(schema, 'answer', ANSWER_1).field).toEqual(expectedAnswerField);
+    });
     it('schema has oneOf in nested field in properties key and isRequired true', () => {
       const path = 'nested.answer';
       expect(schemaUtils.findFieldInSchema(nestedOneOf, path, { nested: ANSWER_1 })).toEqual({

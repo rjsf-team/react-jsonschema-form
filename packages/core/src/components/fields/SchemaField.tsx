@@ -70,16 +70,47 @@ function selectTypeForConstants(types: string[]): string {
   return nonNullTypes.length === 1 && SELECT_FIELD_TYPES.includes(nonNullTypes[0]) ? nonNullTypes[0] : 'string';
 }
 
+/** Whether any of a constant option list's labels comes from somewhere other than its values: an option's own
+ * `title`, its `ui:title` in the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry, or `ui:enumNames`
+ *
+ * @param options - The constant options of the keyword being rendered
+ * @param keyword - The keyword the `options` came from
+ * @param uiSchema - The resolved `uiSchema` for the field
+ * @returns - True when at least one option is labelled
+ */
+function hasOptionLabels<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(options: S[], keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY, uiSchema: UiSchema<T, S, F>): boolean {
+  const { enumNames } = getUiOptions<T, S, F>(uiSchema);
+  if (enumNames && Object.keys(enumNames).length > 0) {
+    return true;
+  }
+  const optionUiSchemas = uiSchema[keyword];
+  return options.some(
+    (option, index) =>
+      Boolean(option.title) ||
+      (Array.isArray(optionUiSchemas) && Boolean(getUiOptions<T, S, F>(optionUiSchemas[index]).title)),
+  );
+}
+
 /** A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the schema's `type`.
  * JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be resolved, so infer it
  * from the constant values. The options are read from the same keyword `isSelect()` and `optionsList()` read.
  *
  * @param schema - The retrieved schema for the field
+ * @param uiSchema - The resolved `uiSchema` for the field, which may label the options
  * @returns - The `schema`, with an inferred `type` when it is a typeless select, along with the `widget` name to
  *        default the `uiSchema` to when the field for that type wouldn't render a select on its own
  */
-function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { schema: S; widget?: string } {
-  const options = schema[ANY_OF_KEY] || schema[ONE_OF_KEY];
+function inferSelectType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema: UiSchema<T, S, F>): { schema: S; widget?: string } {
+  const keyword = schema[ANY_OF_KEY] ? ANY_OF_KEY : ONE_OF_KEY;
+  const options = schema[keyword];
   // `toConstant()` throws for an option that isn't a constant, so the options it maps are checked directly
   if (
     !Array.isArray(options) ||
@@ -89,14 +120,19 @@ function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { 
     return { schema };
   }
   const schemaType = getSchemaType<S>(schema);
-  // BooleanField defaults to a checkbox, which ignores `enumOptions` and so drops the option titles. Defaulting the
+  // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a typed list of object
+  // or array constants takes the `string` type its typeless spelling gets, the one whose field renders the select
+  if (schemaType === 'object' || schemaType === 'array') {
+    return { schema: { ...schema, type: 'string' } };
+  }
+  // BooleanField defaults to a checkbox, which ignores `enumOptions` and so drops the option labels. Defaulting the
   // widget rather than the type keeps `schema.type` truthful for custom fields, templates and widgets. A typed boolean
-  // keeps its checkbox unless a title would be dropped, since a single option is how a checkbox that must be checked
-  // is spelled, and untitled `true`/`false` options are exactly what a checkbox shows
+  // keeps its checkbox unless a label would be dropped, since a single option is how a checkbox that must be checked
+  // is spelled, and unlabelled `true`/`false` options are exactly what a checkbox shows
   if (schemaType !== undefined) {
-    const dropsTitles =
-      schemaType === 'boolean' && options.length > 1 && options.some((option) => Boolean((option as S).title));
-    return { schema, widget: dropsTitles ? 'select' : undefined };
+    const dropsLabels =
+      schemaType === 'boolean' && options.length > 1 && hasOptionLabels<T, S, F>(options as S[], keyword, uiSchema);
+    return { schema, widget: dropsLabels ? 'select' : undefined };
   }
   const type = selectTypeForConstants([...new Set(options.map((option) => guessType(toConstant<S>(option as S))))]);
   return { schema: { ...schema, type }, widget: type === 'boolean' ? 'select' : undefined };
@@ -240,8 +276,8 @@ function SchemaFieldRender<
     if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
       return { schema: _schema, widget: undefined };
     }
-    return inferSelectType<S>(schemaUtils.retrieveSchema(_schema, formData));
-  }, [_schema, formData, schemaUtils]);
+    return inferSelectType<T, S, F>(schemaUtils.retrieveSchema(_schema, formData), resolvedUiSchema);
+  }, [_schema, formData, resolvedUiSchema, schemaUtils]);
   // An inferred widget is only a default, so a widget the caller named through either spelling is written back
   // unchanged. `ui:widget` is always the key that carries it because `getDisplayLabel()` reads only that spelling to
   // decide a boolean keeps its label, and spreading leaves an existing key where the caller put it, so the order

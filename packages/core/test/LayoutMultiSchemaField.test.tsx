@@ -740,6 +740,23 @@ describe('LayoutMultiSchemaField', () => {
         },
       ]);
     });
+    test('Reads the resolved anyOf when the schema also has a oneOf (#5309)', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          a: { title: 'A', type: 'object', properties: { answer: { type: 'string', const: 'a' } } },
+          b: { title: 'B', type: 'object', properties: { answer: { type: 'string', const: 'b' } } },
+        },
+        anyOf: [{ $ref: '#/definitions/a' }, { $ref: '#/definitions/b' }],
+        oneOf: [{ title: 'Other', type: 'object', properties: { answer: { type: 'string', const: 'x' } } }],
+      };
+      const uiSchema = { [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'answer' } };
+      const { schemaUtils } = getTestRegistry(schema);
+      const enumOptions = computeEnumOptions(schema, schema[ANY_OF_KEY] as RJSFSchema[], schemaUtils, uiSchema);
+      expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
+        { label: 'A', value: 'a' },
+        { label: 'B', value: 'b' },
+      ]);
+    });
     test('throws error when no enumOptions are generated', () => {
       const { schemaUtils } = getTestRegistry({});
       expect(() => computeEnumOptions({}, [], schemaUtils)).toThrow('No enumOptions were computed from the schema {}');

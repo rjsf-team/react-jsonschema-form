@@ -2359,6 +2359,39 @@ describe('oneOf', () => {
       });
     });
 
+    it.each<[string, RJSFSchema, unknown]>([
+      [
+        'object',
+        {
+          type: 'object',
+          oneOf: [
+            { const: { a: 1 }, title: 'One' },
+            { const: { a: 2 }, title: 'Two' },
+          ],
+        },
+        { a: 2 },
+      ],
+      [
+        'array',
+        {
+          type: 'array',
+          anyOf: [
+            { const: [1], title: 'One' },
+            { const: [2], title: 'Two' },
+          ],
+        },
+        [2],
+      ],
+    ])('should render a select for a typed %s with constant options (#5317)', async (_, v, expected) => {
+      const schema: RJSFSchema = { type: 'object', properties: { v } };
+      const { node, onChange } = createFormComponent({ schema, formData: {} });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'One', 'Two']);
+      await user.selectOptions(select, 'Two');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: expected } }), 'root_v');
+    });
+
     it('should render the anyOf, not throw, when only the oneOf of a typed schema is made of consts (#5309)', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -2421,6 +2454,24 @@ describe('oneOf', () => {
       await user.selectOptions(select, 'Unknown');
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: null } }), 'root_p');
       expect(getSelectedOptionValue(select)).toEqual('Unknown');
+    });
+
+    it('should keep a null const apart from a 0 const in the realValue format (#5309)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { oneOf: [{ const: null, title: 'None' }, { const: 0, title: 'Zero' }, { const: 1 }] } },
+      };
+      const uiSchema: UiSchema = { p: { 'ui:options': { optionValueFormat: 'realValue' } } };
+      const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: 1 } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_p')!;
+      expect(new Set([...select.options].map((option) => option.value)).size).toBe(select.options.length);
+      await user.selectOptions(select, 'Zero');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: 0 } }), 'root_p');
+      expect(getSelectedOptionValue(select)).toEqual('Zero');
+      await user.selectOptions(select, 'None');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: null } }), 'root_p');
+      expect(getSelectedOptionValue(select)).toEqual('None');
     });
 
     it('should render a null const property the same way as an explicit type of null', () => {

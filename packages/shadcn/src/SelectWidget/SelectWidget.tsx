@@ -10,6 +10,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
+  enumOptionsValueForIndex,
   enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
@@ -135,8 +136,10 @@ export default function SelectWidget<
           items={items}
           sections={sections}
           selected={value}
-          onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
+          onValueChange={(indexes) => {
+            // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
+            // resolved as indexes rather than decoded as DOM values
+            onChange(enumOptionsValueForIndex<S>(indexes.map(String), enumOptions, optEmptyValue));
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

@@ -72,3 +72,8 @@ export const JSON_SCHEMA_TYPES = [
   'array',
   'null',
 ] as const satisfies JSONSchema7TypeName[];
+
+/** Prefixes the index that the `realValue` option value format encodes an object, array or `null` option as, so that
+ * index can't collide with a primitive option whose `String()` is the same number
+ */
+export const ENUM_OPTION_INDEX_PREFIX = '__rjsf_index:';

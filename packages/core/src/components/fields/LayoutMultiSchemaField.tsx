@@ -75,10 +75,11 @@ export function computeEnumOptions<
 ): EnumOptionsType<S>[] {
   const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
   let tempSchema = schema;
-  if (ONE_OF_KEY in schema) {
-    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
-  } else if (ANY_OF_KEY in schema) {
+  // `anyOf` first, the keyword `optionsList()` reads first, so the resolved options replace the list it reads
+  if (ANY_OF_KEY in schema) {
     tempSchema = { ...schema, [ANY_OF_KEY]: realOptions };
+  } else if (ONE_OF_KEY in schema) {
+    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
   if (!enumOptions) {
@@ -184,7 +185,7 @@ export default function LayoutMultiSchemaField<
       // when the same schema is rendered through plain SchemaField/AnyOfField.
       // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
-      const keyword = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
+      const keyword = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
       const newOptionIndex = enumOptions.findIndex(({ schema: enumOptionSchema }) => enumOptionSchema === newOption);
       newFormData = schemaUtils.getDefaultFormState(
         newOption,

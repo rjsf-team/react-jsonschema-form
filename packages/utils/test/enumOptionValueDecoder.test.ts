@@ -1,4 +1,4 @@
-import { enumOptionValueDecoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX, enumOptionValueDecoder } from '../src/index.ts';
 import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
@@ -65,14 +65,32 @@ describe('enumOptionValueDecoder', () => {
     it('returns emptyValue for empty string', () => {
       expect(enumOptionValueDecoder('', stringOptions, 'realValue', '')).toBe('');
     });
-    it('finds null by its index', () => {
-      expect(enumOptionValueDecoder('0', nullableOptions, 'realValue', 'empty')).toBeNull();
+    it('finds null by its prefixed index', () => {
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, nullableOptions, 'realValue', 'empty')).toBeNull();
+    });
+    it('finds object value by its prefixed index', () => {
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, objectOptions, 'realValue')).toEqual({
+        name: 'LA',
+      });
+    });
+    it('keeps a null option apart from a primitive option spelled as its index', () => {
+      const options: EnumOptionsType[] = [
+        { value: null, label: 'None' },
+        { value: 0, label: 'Zero' },
+        { value: '0', label: 'Zero string' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBeNull();
+      expect(enumOptionValueDecoder('0', options, 'realValue')).toBe(0);
     });
     it('returns emptyValue for empty string when an option is null', () => {
       expect(enumOptionValueDecoder('', nullableOptions, 'realValue', 'empty')).toBe('empty');
     });
-    it('does not resolve an index to a primitive option', () => {
-      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('empty');
+    it('falls back to the option at a bare index no option encodes as', () => {
+      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('bar');
+    });
+    it('returns emptyValue for an out of range or non-integer index', () => {
+      expect(enumOptionValueDecoder('2', stringOptions, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('0.5', stringOptions, 'realValue', 'empty')).toBe('empty');
     });
     it('handles array of real values', () => {
       expect(enumOptionValueDecoder(['foo', 'bar'], stringOptions, 'realValue')).toEqual(['foo', 'bar']);

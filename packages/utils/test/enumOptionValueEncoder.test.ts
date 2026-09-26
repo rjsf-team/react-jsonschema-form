@@ -1,4 +1,4 @@
-import { enumOptionValueEncoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX, enumOptionValueEncoder } from '../src/index.ts';
 
 describe('enumOptionValueEncoder', () => {
   describe("when format is 'indexed'", () => {
@@ -27,16 +27,16 @@ describe('enumOptionValueEncoder', () => {
       expect(enumOptionValueEncoder(true, 0, 'realValue')).toBe('true');
     });
     it('falls back to index for object values', () => {
-      expect(enumOptionValueEncoder({ name: 'test' }, 1, 'realValue')).toBe('1');
+      expect(enumOptionValueEncoder({ name: 'test' }, 1, 'realValue')).toBe(`${ENUM_OPTION_INDEX_PREFIX}1`);
     });
     it('falls back to index for array values', () => {
-      expect(enumOptionValueEncoder([1, 2], 0, 'realValue')).toBe('0');
+      expect(enumOptionValueEncoder([1, 2], 0, 'realValue')).toBe(`${ENUM_OPTION_INDEX_PREFIX}0`);
     });
     it('returns empty string for undefined', () => {
       expect(enumOptionValueEncoder(undefined, 0, 'realValue')).toBe('');
     });
     it('falls back to index for null, keeping it distinct from the empty placeholder', () => {
-      expect(enumOptionValueEncoder(null, 2, 'realValue')).toBe('2');
+      expect(enumOptionValueEncoder(null, 2, 'realValue')).toBe(`${ENUM_OPTION_INDEX_PREFIX}2`);
     });
   });
 });
