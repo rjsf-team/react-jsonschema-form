@@ -554,7 +554,7 @@ This is the order a widget's UI library needs when it manages its own selection 
 
 - IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
 
-### getByPath&lt;R = unknown>()
+### getByPath&lt;R = unknown>() {#getbypath}
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
@@ -1747,7 +1747,7 @@ Converts an `errorSchema` into a list of `RJSFValidationErrors`
 
 - RJSFValidationErrors[]: The list of `RJSFValidationErrors` extracted from the `errorSchema`
 
-### toErrorSchema&lt;T = unknown>()
+### toErrorSchema&lt;T = unknown>() {#toerrorschema}
 
 Transforms a RJSF validation errors list into an `ErrorSchema`
 
@@ -1988,22 +1988,6 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 - T: The resulting `formData` with all the defaults provided
 
-### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
-
-#### Parameters
-
-- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The schema for which the display label flag is desired
-- [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
-- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
-
-#### Returns
-
-- boolean: True if the label should be displayed or false if it should not
-
 ### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines which of the given `options` provided most closely matches the `formData`.
@@ -2035,7 +2019,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options
 - [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
 
 #### Returns
