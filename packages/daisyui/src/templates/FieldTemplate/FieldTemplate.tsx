@@ -2,6 +2,8 @@ import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType 
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
 import { fieldLabelId, getDaisy } from '../../utils.ts';
+import CheckboxWidget from '../../widgets/CheckboxWidget/CheckboxWidget.tsx';
+import ToggleWidget from '../../widgets/ToggleWidget/ToggleWidget.tsx';
 
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
@@ -63,9 +65,15 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and toggle widgets render their own label after the input, and their own description, so this
   // template renders neither. Every other widget leaves both to this template
-  // `getWidget()` accepts a widget's registry key as well as its lowercase alias, so both spellings of the
-  // checkbox have to be recognized here; daisyui registers the toggle under its alias only
-  const widgetRendersLabel = ['checkbox', 'CheckboxWidget', 'toggle'].includes(uiOptions.widget as string);
+  // `ui:widget` can name a widget by its lowercase alias or by its registry key, or hand over the component itself,
+  // and all three spellings have to be recognized: whichever one reaches the checkbox or the toggle, that widget
+  // renders the label and description this template then skips. daisyui registers the toggle under its alias only. A
+  // third-party widget that renders its own label cannot be recognized from here, and gets this template's label too
+  const { widget } = uiOptions;
+  const widgetRendersLabel =
+    typeof widget === 'string'
+      ? ['checkbox', 'CheckboxWidget', 'toggle'].includes(widget)
+      : widget === CheckboxWidget || widget === ToggleWidget;
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',

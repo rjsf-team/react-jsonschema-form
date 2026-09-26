@@ -142,7 +142,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, placeholder, onChange, onFocus, onBlur } = props;
   // Initialize the local date from the parent's value. Only the `YYYY-MM-DD` part is parsed, and with `parseISO`
   // rather than `new Date()`, which reads a date-only string as UTC midnight and so names the previous day once
   // date-fns formats it in local time. Taking the date part also means a value left over from when this widget
@@ -352,6 +352,14 @@ export default function DateWidget<
     inputRef.current?.focus();
   }, [localDate, onChange, onBlur, id, value, setIsOpen]);
 
+  const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP') : undefined;
+  // The trigger's own contents carry the selected value, so it names itself from the label *and* itself to keep that
+  // value in the name. With no value those contents are the label, which would otherwise read out twice
+  let triggerLabelledBy: string | undefined;
+  if (!hideLabel && label) {
+    triggerLabelledBy = formattedValue ? `${fieldLabelId(id)} ${id}` : fieldLabelId(id);
+  }
+
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
@@ -371,12 +379,12 @@ export default function DateWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-labelledby={!hideLabel && label ? `${fieldLabelId(id)} ${id}` : undefined}
+          aria-labelledby={triggerLabelledBy}
           tabIndex={0}
           ref={inputRef}
         >
           <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
-            {localDate && isValid(localDate) ? format(localDate, 'PP') : schema.title}
+            {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
         </div>

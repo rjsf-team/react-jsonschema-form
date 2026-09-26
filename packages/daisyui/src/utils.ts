@@ -34,6 +34,7 @@ interface GroupProps {
   id: string;
   role: 'group' | 'radiogroup';
   'aria-labelledby'?: string;
+  'aria-label'?: string;
 }
 
 interface GetGroupProps {
@@ -78,5 +79,12 @@ export function fieldLabelId(id: string) {
  * @returns - The `id`, `role` and, when there is a label to point at, `aria-labelledby` props for the group's wrapper
  */
 export function getGroupProps({ id, label, hideLabel, role }: GetGroupProps): GroupProps {
-  return { id, role, 'aria-labelledby': !hideLabel && label ? fieldLabelId(id) : undefined };
+  if (hideLabel || !label) {
+    return { id, role };
+  }
+  // Both, because the widget cannot see whether the template rendered a label to point at. `aria-labelledby` wins
+  // wherever it resolves, so the name stays the visible text; `aria-label` is what names the group in the one case the
+  // two conditions disagree — a `boolean` whose widget is set through `ui:options.widget` rather than `ui:widget`,
+  // where `getDisplayLabel()` suppresses the template's label but `BooleanField` still reports `hideLabel: false`
+  return { id, role, 'aria-labelledby': fieldLabelId(id), 'aria-label': label };
 }

@@ -249,7 +249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -258,7 +258,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <span
                           class="text-base-content/50"
                         >
-                          Date of Birth
+                          DOB
                         </span>
                         <svg
                           aria-hidden="true"
@@ -316,6 +316,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
+                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -1933,7 +1934,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -1942,7 +1943,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <span
                           class="text-base-content/50"
                         >
-                          Date of Birth
+                          DOB
                         </span>
                         <svg
                           aria-hidden="true"
@@ -2000,6 +2001,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
+                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -3617,7 +3619,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -3626,7 +3628,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <span
                           class="text-base-content/50"
                         >
-                          Date of Birth
+                          DOB
                         </span>
                         <svg
                           aria-hidden="true"
@@ -3684,6 +3686,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
+                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -5301,7 +5304,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -5310,7 +5313,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <span
                           class="text-base-content/50"
                         >
-                          Date of Birth
+                          DOB
                         </span>
                         <svg
                           aria-hidden="true"
@@ -5368,6 +5371,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
+                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -6974,7 +6978,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <div
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                      aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       role="button"
@@ -6983,7 +6987,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <span
                         class="text-base-content/50"
                       >
-                        Date of Birth
+                        DOB
                       </span>
                       <svg
                         aria-hidden="true"
@@ -7041,6 +7045,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="form-control"
                 >
                   <div
+                    aria-label="Race"
                     aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"
@@ -8484,7 +8489,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <div
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-labelledby="root_person_birth_date__label root_person_birth_date"
+                      aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       role="button"
@@ -8493,7 +8498,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <span
                         class="text-base-content/50"
                       >
-                        Date of Birth
+                        DOB
                       </span>
                       <svg
                         aria-hidden="true"
@@ -8551,6 +8556,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="form-control"
                 >
                   <div
+                    aria-label="Race"
                     aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"

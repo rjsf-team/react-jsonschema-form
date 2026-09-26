@@ -168,7 +168,7 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, placeholder, onChange, onFocus, onBlur, schema } = props;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
   // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
   // is optional), or a UTC ISO string otherwise.
@@ -322,6 +322,14 @@ export default function DateTimeWidget<
     inputRef.current?.focus();
   }, [localDate, onChange, onBlur, id, value, setIsOpen, commitValue]);
 
+  const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP p') : undefined;
+  // The trigger's own contents carry the selected value, so it names itself from the label *and* itself to keep that
+  // value in the name. With no value those contents are the label, which would otherwise read out twice
+  let triggerLabelledBy: string | undefined;
+  if (!hideLabel && label) {
+    triggerLabelledBy = formattedValue ? `${fieldLabelId(id)} ${id}` : fieldLabelId(id);
+  }
+
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
@@ -337,12 +345,12 @@ export default function DateTimeWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-labelledby={!hideLabel && label ? `${fieldLabelId(id)} ${id}` : undefined}
+          aria-labelledby={triggerLabelledBy}
           tabIndex={0}
           ref={inputRef}
         >
           <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
-            {localDate && isValid(localDate) ? format(localDate, 'PP p') : schema.title}
+            {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
         </div>

@@ -3,6 +3,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
+import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
 
 /** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
  * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
@@ -63,6 +64,23 @@ describe('FieldTemplate', () => {
 
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
+    test('leaves the label to the checkbox widget handed over as a component', () => {
+      const { container, templateLabel } = renderForm(
+        { agree: { 'ui:widget': DaisyCheckboxWidget } },
+        {
+          ...agree,
+          description: 'Whether you agree',
+        },
+      );
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+      // Both this template and the widget render a description, so a second one would duplicate its DOM id and leave
+      // the input's `aria-describedby` pointing at two elements
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+      expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(1);
     });
 
     test('leaves the label to the toggle widget, which renders it after the switch', () => {
@@ -138,6 +156,15 @@ describe('FieldTemplate', () => {
       renderForm({ agree: { 'ui:widget': 'checkboxes' } }, choices);
 
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
+    });
+
+    // `BooleanField` reports `hideLabel` from `ui:options.label` while the template's `displayLabel` comes from
+    // `getDisplayLabel()`, which suppresses a boolean's label unless the `ui:widget` key itself is set. The two
+    // therefore disagree for this spelling, and the group would be left pointing at a label that was never rendered
+    test('still has a name when the widget is set through ui:options.widget', () => {
+      renderForm({ agree: { 'ui:options': { widget: 'radio' } } });
+
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Agree');
     });
 
     test('claims no name of its own when the label is hidden', () => {

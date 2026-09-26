@@ -80,12 +80,36 @@ describe('DateWidget', () => {
 
     test('falls back to the title instead of an Invalid Date when the stored value is unparsable', () => {
       const { container } = render(
-        <DateWidget {...makeWidgetMockProps({ value: 'not-a-date', schema: { ...schema, title: 'When' } })} />,
+        <DateWidget {...makeWidgetMockProps({ value: 'not-a-date', label: 'When', placeholder: '', schema })} />,
       );
 
       const trigger = container.querySelector('[role=button]');
       expect(trigger).toHaveTextContent('When');
       expect(trigger).not.toHaveTextContent('Invalid');
+    });
+  });
+
+  // The trigger's name comes partly from the label `FieldTemplate` renders, so these go through a `Form`
+  describe('the trigger it renders', () => {
+    const dateSchema = { type: 'object' as const, properties: { birthday: { ...schema, title: 'Birthday' } } };
+
+    test('is named by the label once when no date is selected', () => {
+      render(<Form schema={dateSchema} validator={validator} />);
+
+      // With no date the trigger's contents are the label, so naming it from the label *and* itself would say it twice
+      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
+    });
+
+    test('is named by the label and the selected date once there is one', () => {
+      render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
+
+      expect(screen.getByRole('button', { name: /Birthday/ })).toHaveAccessibleName('Birthday May 3, 2020');
+    });
+
+    test('shows the label rather than the schema title, which ui:title overrides', () => {
+      render(<Form schema={dateSchema} uiSchema={{ birthday: { 'ui:title': 'DOB' } }} validator={validator} />);
+
+      expect(screen.getByRole('button', { name: 'DOB' })).toBeInTheDocument();
     });
   });
 
