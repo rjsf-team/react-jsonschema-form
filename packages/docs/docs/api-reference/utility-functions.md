@@ -35,7 +35,9 @@ There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core
 
 These enums can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts).
 
-## Non-Validator utility functions
+## React components
+
+The components `@rjsf/utils` exports are the ones a theme renders as-is, so that behavior shared by every theme lives in one place rather than being reimplemented in each of them.
 
 ### AdditionalPropertyKeySelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -57,6 +59,45 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [required]: boolean - Optional flag, if true, the widget is required
+
+### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
+The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
+
+#### Props
+
+- value: any - The value currently selected for this element
+- name: string - The name of the field the element belongs to
+- rootId: string - The id of the field, from which the element derives its own id by appending its `type`
+- select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
+- type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
+- range: DateElementProp['range'] - The inclusive range of values the element offers
+- registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
+- onBlur: (id: string, value: any) => void - Callback for the widget's blur event
+- onFocus: (id: string, value: any) => void - Callback for the widget's focus event
+- [className='form-control']: string - Optional class name given to the rendered widget
+- [autofocus]: boolean - Optional flag, if true, the widget autofocuses
+- [disabled]: boolean - Optional flag, if true, the widget is disabled
+- [readonly]: boolean - Optional flag, if true, the widget is read-only
+
+### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Renders the description of the `oneOf`/`anyOf` option currently selected in a single-select widget, through the `DescriptionFieldTemplate` from the registry.
+A theme's `SelectWidget` renders it so that choosing an option shows what that option is for, which the widget's own description cannot say.
+Nothing is rendered when the widget takes multiple values, when the label is suppressed by `hideLabel` or a `ui:label` of false, or when the selected option's schema has no `description`.
+
+#### Props
+
+- id: string - The id of the widget, from which the description's own id is derived
+- value: any - The currently selected value, matched against the `enumOptions` to find the option
+- options: WidgetProps['options'] - The widget's options, whose `enumOptions` carry each option's schema
+- registry: Registry&lt;T, S, F> - The `registry` object, from which the `DescriptionFieldTemplate` is resolved
+- [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field, read for the `label` option
+- [multiple]: boolean - Optional flag, if true, nothing is rendered
+- [hideLabel]: boolean - Optional flag, if true, nothing is rendered
+
+## Non-Validator utility functions
 
 ### allowAdditionalItems()
 
@@ -406,6 +447,18 @@ Return a consistent `id` for the field examples element.
 
 - string: The consistent id for the field examples element from the given `id`
 
+### expandButtonId()
+
+Return a consistent `id` for the expand button of a cyclic schema's expand controls
+
+#### Parameters
+
+- id: string - The id of the field whose cyclic schema can be expanded
+
+#### Returns
+
+- string: The consistent id for the expand button from the given `id`
+
 ### fieldPathEndsWithIndex()
 
 Determines whether the last segment of `fieldPath` is an array index, i.e. whether the path addresses an array element.
@@ -417,6 +470,18 @@ Determines whether the last segment of `fieldPath` is an array index, i.e. wheth
 #### Returns
 
 - boolean: True when the path addresses an array element, otherwise false
+
+### fieldPathFromList()
+
+Folds a `FieldPathList` into the `FieldPath` addressing the same field, the inverse of [`fieldPathToList()`](#fieldpathtolist).
+
+#### Parameters
+
+- fieldPathList: FieldPathList - The list of property names and array indexes to fold
+
+#### Returns
+
+- FieldPath: The `FieldPath` for `fieldPathList`
 
 ### fieldPathToId()
 
@@ -654,6 +719,24 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 - InputPropsType: The extracted `InputPropsType` object
 
+### getItemUiSchemaForItem&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the `uiSchema` that applies to the array item at `index`, given that item's own form data.
+Unlike `getStaticItemsUiSchema()`, which is used where only the tuple position is known, this also resolves the function form of `uiSchema.items`, calling it with `item`, `index` and `formContext` exactly as `ArrayField` does while rendering.
+If the function throws, the error is logged through [`logOnce()`](#logonce) and `undefined` is returned, so the caller proceeds without that item's uiSchema, matching what `ArrayField` renders in that case.
+
+#### Parameters
+
+- [uiSchema]: UiSchema&lt;T, S, F> - The parent (array) uiSchema, if any
+- item: T - The item's own form data
+- index: number - The tuple position `uiSchema.items` should apply to, when it is given as an array or a function
+- [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
+- [arrayFieldPath]: FieldPath - The `FieldPath` of the array the item belongs to, used to name the item in the error logged when the function throws, so two arrays whose functions fail the same way at the same index are reported separately. A caller with no path to give, such as a custom `ArrayField`, can omit it, and the error names the index alone rather than a path the caller never supplied
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
+
 ### getKnownTypes()
 
 Gets the JSON Schema types a `schema` lists, without the duplicates and the type names that are not one of `JSON_SCHEMA_TYPES`, which no field can render.
@@ -698,6 +781,22 @@ This function does not work with discriminators of `"type": "object"` and `"type
 #### Returns
 
 - number | undefined: index of the matched option
+
+### getOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the uiSchema for the `oneOf`/`anyOf` option at `index`, resolved the way `AnyOfField` resolves it: `uiSchema[keyword][index]` when that keyword's uiSchema is declared as an array reaching `index`, falling back to `uiSchema` itself otherwise.
+Once a branch declares its own array-form uiSchema for `keyword`, a plain per-key entry on the parent uiSchema, say `uiSchema.thing.a`, is never consulted for that branch's own fields.
+Using this everywhere an option is resolved, rather than only where one is rendered, is what keeps the rest of the library agreeing with what the user sees.
+
+#### Parameters
+
+- [uiSchema]: UiSchema&lt;T, S, F> - The parent uiSchema, if any
+- keyword: typeof ONE_OF_KEY | typeof ANY_OF_KEY - Which of `oneOf`/`anyOf` `index` selects into
+- index: number - The index of the selected option within `schema[keyword]`
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: The uiSchema to use for the selected option's own fields
 
 ### getOptionValueFormat()
 
@@ -747,6 +846,22 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 #### Returns
 
 - string | string[] | undefined: The type of the schema
+
+### getStaticItemsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the plain-object form of `uiSchema.items` that applies at tuple position `index`, or `undefined` when `uiSchema.items` cannot be resolved without more context than the caller has.
+`uiSchema.items` takes three forms: one object applying uniformly to every item, an array of per-tuple-position objects, or a `(itemData, index, formContext) => UiSchema` function.
+The function form needs an item's data, index and form context, none of which is available where this is used — there is no item yet for a `minItems` filler or a newly added row — so it always resolves to `undefined`; use `getItemUiSchemaForItem()` instead once the item's data is in hand.
+The array (tuple) form resolves to the entry at `index`, or to `undefined` when no `index` is given, there being no single position to take a uniform value from in that case.
+
+#### Parameters
+
+- [uiSchema]: UiSchema&lt;T, S, F> - The parent (array) uiSchema, if any
+- [index]: number - The tuple position `uiSchema.items` should apply to, when it is given as an array
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: The static `items` uiSchema for `index`, or undefined
 
 ### getSubmitButtonOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1474,6 +1589,20 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
 
+### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the hash of the schema.
+It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through `properties` and `items`, stopping at a schema it has already collected so that a recursive `$ref` cannot loop.
+This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the hash it keys them by is the one the validator looks them up under at runtime; see [validator-ajv8](./validator-ajv8.md).
+
+#### Parameters
+
+- rootSchema: S - The root schema to parse for the sub-schemas that `isValid()` is called with
+
+#### Returns
+
+- SchemaMap&lt;S>: The map of every schema that was parsed, keyed by its hash
+
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Check to see if a `schema` specifies that a value must be true. This happens when:
@@ -1490,6 +1619,21 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 #### Returns
 
 - boolean: True if the schema specifies a value that must be true, false otherwise
+
+### selectOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the uiSchema for the option at `index` from an already-resolved array of per-option uiSchemas: `optionsUiSchema[index]` when that array reaches `index`, falling back to `uiSchema` itself otherwise.
+This is the lookup half of `getOptionUiSchema()`, split out for a caller that has already derived, and memoized, its own `optionsUiSchema` array — `AnyOfField` and `MultiSchemaField` do, reusing it across a render — so it is not re-derived from `uiSchema` on every lookup.
+
+#### Parameters
+
+- optionsUiSchema: UiSchema&lt;T, S, F>[] | undefined - The already-resolved array of per-option uiSchemas, if any
+- [uiSchema]: UiSchema&lt;T, S, F> - The parent uiSchema, if any, used as the fallback
+- index: number - The index of the selected option within `optionsUiSchema`; a negative index, meaning no option is selected, always falls back to `uiSchema`
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: The uiSchema to use for the selected option's own fields
 
 ### setByPath&lt;O>()
 
@@ -1945,6 +2089,42 @@ Always returns the first option if there is nothing that matches.
 #### Returns
 
 - number: The index of the first matched option or 0 if none is available
+
+### getUiRequiredErrorSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Walks the `rootSchema`, resolved node by node against `formData` exactly as `SchemaField` does while rendering, and the `uiSchema`, resolved through `ui:definitions` the same way, returning an `ErrorSchema` carrying a required error for every field marked [`ui:required`](./uiSchema.md#required) whose value is missing.
+The schema handed to the validator is left untouched, so this behaves identically on the submit and live-validation paths and with a precompiled validator, which cannot be given a schema the compile step never saw.
+
+#### Parameters
+
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- rootSchema: S - The root schema to walk
+- [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema the `ui:required` flags are read from
+- [formData]: T - The current formData, whose missing values the errors are raised for
+- [customMergeAllOf]: CustomMergeAllOf&lt;S> - See `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop
+- [uiSchemaDefinitions=uiSchema['ui:definitions']]: UiSchemaDefinitions&lt;T, S, F> - The `ui:definitions` a `$ref`'d uiSchema is resolved through
+- [globalUiOptions]: GlobalUISchemaOptions - The global uiSchema options, read as the fields themselves read them
+- [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
+
+#### Returns
+
+- ErrorSchema&lt;T>: An `ErrorSchema` holding a required error for every missing `ui:required` field
+
+### isFilesArray&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Checks to see if the `schema` and `uiSchema` combination represents an array of files, either because the uiSchema asks for the `files` widget by name or because the schema's `items` resolve to a string of `data-url` format.
+
+#### Parameters
+
+- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The schema for which check for array of files flag is desired
+- [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to check the widget
+- [rootSchema]: S - The root schema, used primarily to look up `$ref`s
+- [customMergeAllOf]: CustomMergeAllOf&lt;S> - Optional function that allows for custom merging of `allOf` schemas
+
+#### Returns
+
+- boolean: True if schema/uiSchema contains an array of files, otherwise false
 
 ### isMultiSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
