@@ -105,6 +105,40 @@ describe('SelectWidget', () => {
     expect(onChange).toHaveBeenCalledWith('baz');
   });
 
+  test.each(['indexed', 'realValue'] as const)(
+    'selecting an option fires onChange with its value in the %s format',
+    async (optionValueFormat) => {
+      const onChange = vi.fn();
+      render(
+        <SelectWidget
+          {...makeWidgetMockProps({ value: undefined, onChange, options: { enumOptions, optionValueFormat } })}
+        />,
+      );
+
+      await user.click(screen.getByRole('option', { name: 'Bar' }));
+
+      expect(onChange).toHaveBeenLastCalledWith('bar');
+    },
+  );
+
+  test('multi-select: selecting an option fires onChange with its value in the realValue format', async () => {
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: ['foo'],
+          multiple: true,
+          onChange,
+          options: { enumOptions, optionValueFormat: 'realValue' },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('option', { name: 'Baz' }));
+
+    expect(onChange).toHaveBeenLastCalledWith(['foo', 'baz']);
+  });
+
   test('marks enumDisabled options as disabled and ignores clicks on them', async () => {
     const onChange = vi.fn();
     render(

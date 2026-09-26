@@ -58,7 +58,18 @@ export default function findFieldInSchema<
         {} as S,
         customMergeAllOf,
       );
-      if (hasByPath(parentField, ONE_OF_KEY)) {
+      if (hasByPath(parentField, ANY_OF_KEY)) {
+        // if this sub-path has an `anyOf` then use the formData to drill into the schema with the selected option
+        parentField = findSelectedOptionInXxxOf(
+          validator,
+          rootSchema,
+          parentField,
+          fieldNameKey,
+          ANY_OF_KEY,
+          getByPath<T>(formData, subPath),
+          customMergeAllOf,
+        )!;
+      } else if (hasByPath(parentField, ONE_OF_KEY)) {
         // if this sub-path has a `oneOf` then use the formData to drill into the schema with the selected option
         parentField = findSelectedOptionInXxxOf(
           validator,
@@ -69,33 +80,11 @@ export default function findFieldInSchema<
           getByPath<T>(formData, subPath),
           customMergeAllOf,
         )!;
-      } else if (hasByPath(parentField, ANY_OF_KEY)) {
-        // if this sub-path has a `anyOf` then use the formData to drill into the schema with the selected option
-        parentField = findSelectedOptionInXxxOf(
-          validator,
-          rootSchema,
-          parentField,
-          fieldNameKey,
-          ANY_OF_KEY,
-          getByPath<T>(formData, subPath),
-          customMergeAllOf,
-        )!;
       }
     });
   }
 
-  if (hasByPath(parentField, ONE_OF_KEY)) {
-    // When oneOf is in the root schema, use the formData to drill into the schema with the selected option
-    parentField = findSelectedOptionInXxxOf(
-      validator,
-      rootSchema,
-      parentField,
-      fieldNameKey,
-      ONE_OF_KEY,
-      formData,
-      customMergeAllOf,
-    )!;
-  } else if (hasByPath(parentField, ANY_OF_KEY)) {
+  if (hasByPath(parentField, ANY_OF_KEY)) {
     // When anyOf is in the root schema, use the formData to drill into the schema with the selected option
     parentField = findSelectedOptionInXxxOf(
       validator,
@@ -103,6 +92,17 @@ export default function findFieldInSchema<
       parentField,
       fieldNameKey,
       ANY_OF_KEY,
+      formData,
+      customMergeAllOf,
+    )!;
+  } else if (hasByPath(parentField, ONE_OF_KEY)) {
+    // When oneOf is in the root schema, use the formData to drill into the schema with the selected option
+    parentField = findSelectedOptionInXxxOf(
+      validator,
+      rootSchema,
+      parentField,
+      fieldNameKey,
+      ONE_OF_KEY,
       formData,
       customMergeAllOf,
     )!;

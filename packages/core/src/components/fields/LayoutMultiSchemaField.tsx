@@ -91,10 +91,11 @@ export function computeEnumOptions<
 ): EnumOptionsType<S>[] {
   const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
   let tempSchema = schema;
-  if (ONE_OF_KEY in schema) {
-    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
-  } else if (ANY_OF_KEY in schema) {
+  // `anyOf` first, the keyword `optionsList()` reads first, so the resolved options replace the list it reads
+  if (ANY_OF_KEY in schema) {
     tempSchema = { ...schema, [ANY_OF_KEY]: realOptions };
+  } else if (ONE_OF_KEY in schema) {
+    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
   if (!enumOptions) {
@@ -201,11 +202,30 @@ export default function LayoutMultiSchemaField<
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
     const keyword = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
-    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+    let newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
       newOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
       oldOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex),
       uiSchemaDefinitions,
     });
+    if (newFormData && newOption) {
+      // Call getDefaultFormState to make sure defaults are populated on change, resolving the newly-selected
+      // option's own uiSchema the same way AnyOfField's optionsUiSchema/optionUiSchema does — `uiSchema.oneOf[i]`/
+      // `uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling back to this field's own
+      // uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the same way here as they do
+      // when the same schema is rendered through plain SchemaField/AnyOfField.
+      // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
+      // never carries the root's `ui:definitions` itself.
+      const keyword = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
+      const newOptionIndex = enumOptions.findIndex(({ schema: enumOptionSchema }) => enumOptionSchema === newOption);
+      newFormData = schemaUtils.getDefaultFormState(
+        newOption,
+        newFormData,
+        'excludeObjectChildren',
+        undefined,
+        getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
+        uiSchemaDefinitions,
+      ) as T;
+    }
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }

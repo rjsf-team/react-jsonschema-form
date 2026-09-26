@@ -1,4 +1,4 @@
-import { enumOptionSelectedValue, enumOptionValueEncoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionValueEncoder } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
@@ -66,16 +66,24 @@ describe('enumOptionSelectedValue', () => {
       );
     });
     it('encodes an object value as its option index', () => {
-      expect(enumOptionSelectedValue({ id: 1 }, mixedOptions, false, 'realValue', '')).toBe('2');
+      expect(enumOptionSelectedValue({ id: 1 }, mixedOptions, false, 'realValue', '')).toBe(
+        `${ENUM_OPTION_INDEX_PREFIX}2`,
+      );
     });
     it('returns emptyValue for an object value that matches no option', () => {
       expect(enumOptionSelectedValue({ id: 2 }, mixedOptions, false, 'realValue', '')).toBe('');
     });
     it('returns an empty string, not the whole-selection emptyValue, for an unmatched object of multiple values', () => {
-      expect(enumOptionSelectedValue([{ id: 1 }, { id: 2 }], mixedOptions, true, 'realValue', [])).toEqual(['2', '']);
+      expect(enumOptionSelectedValue([{ id: 1 }, { id: 2 }], mixedOptions, true, 'realValue', [])).toEqual([
+        `${ENUM_OPTION_INDEX_PREFIX}2`,
+        '',
+      ]);
     });
     it('encodes multiple values the same way as the option values', () => {
-      expect(enumOptionSelectedValue(['a', null], mixedOptions, true, 'realValue', [])).toEqual(['a', '1']);
+      expect(enumOptionSelectedValue(['a', null], mixedOptions, true, 'realValue', [])).toEqual([
+        'a',
+        `${ENUM_OPTION_INDEX_PREFIX}1`,
+      ]);
     });
     it('returns String(value) for a single string value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');

@@ -231,6 +231,36 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       expect(schemaUtils.omitExtraData(schema, strippedData)).toEqual({ discriminator: 'bar' });
     });
 
+    it('should strip extras within a oneOf when the anyOf beside it is made of constants (#5309)', () => {
+      const schema: RJSFSchema = {
+        anyOf: [{ const: { config: { name: 'test' } } }],
+        oneOf: [
+          {
+            type: 'object',
+            properties: { config: { type: 'object', properties: { name: { type: 'string' } } } },
+          },
+        ],
+      };
+      const formData = { config: { name: 'test', extraField: 'should be stripped' } };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual({ config: { name: 'test' } });
+    });
+    it('should leave the data of an enum with a oneOf alone', () => {
+      const schema: RJSFSchema = {
+        enum: [{ config: { name: 'test', extraField: 'kept' } }],
+        oneOf: [
+          {
+            type: 'object',
+            properties: { config: { type: 'object', properties: { name: { type: 'string' } } } },
+          },
+        ],
+      };
+      const formData = { config: { name: 'test', extraField: 'kept' } };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
+    });
     it('preserves properties from non-matching oneOf options when parent allows additionalProperties', () => {
       // When the parent schema has additionalProperties, keys not in the parent's own `properties`
       // are processed by additionalProperties at the parent level — including keys defined only in
