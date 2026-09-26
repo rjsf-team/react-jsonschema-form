@@ -2,9 +2,9 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrorText } from '../utils.tsx';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -61,6 +61,8 @@ export default function PasswordWidget<
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useAriaDescribedByProps('PasswordInput', id, options);
+
   return (
     <PasswordInput
       id={id}
@@ -76,7 +78,7 @@ export default function PasswordWidget<
       onFocus={handleFocus}
       error={visibleErrorText(props)}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...ariaDescribedByProps}
       {...getDescriptionProps(props)}
     />
   );

@@ -11,7 +11,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrorText } from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -23,21 +23,7 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    value,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    hideLabel,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, required, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -72,18 +58,20 @@ export default function RadioWidget<
 
   const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
+  const groupAriaProps = useGroupAriaProps('RadioGroup', props);
+  const describedBy = ariaDescribedByIds(id);
+
   return (
     <Radio.Group
       id={id}
       name={htmlName || id}
       value={selected}
-      label={!hideLabel ? label : undefined}
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
       error={visibleErrorText(props)}
-      aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
+      {...groupAriaProps}
       {...getDescriptionProps(props)}
     >
       {Array.isArray(enumOptions) ? (
@@ -98,6 +86,7 @@ export default function RadioWidget<
               autoFocus={i === 0 && autofocus}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              aria-describedby={describedBy}
             />
           ))}
         </Flex>

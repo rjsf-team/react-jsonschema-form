@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrorText } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -102,6 +102,8 @@ export default function DateTimeInput<
     ? offsetValueParser(value as string | undefined)
     : dateParser(localValue, valueFormat as string);
 
+  const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
+
   return (
     <DateInput
       id={id}
@@ -118,8 +120,8 @@ export default function DateTimeInput<
       onFocus={handleFocus}
       error={visibleErrorText(props)}
       {...themeProps}
+      {...ariaDescribedByProps}
       {...getDescriptionProps(props)}
-      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
       valueFormat={displayFormat}
