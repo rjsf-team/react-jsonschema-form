@@ -81,12 +81,15 @@ export default function SelectWidget<
   const optionValueFormat = getOptionValueFormat(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  // `value` is already form data rather than a DOM value, so it's reported as is, with `emptyValue` for no selection
+  // the way the other select widgets report it
+  const reportedValue = value === undefined ? optEmptyValue : value;
   const handleFancyFocus = () => {
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
+    onFocus(id, reportedValue);
   };
 
   const handleFancyBlur = () => {
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
+    onBlur(id, reportedValue);
   };
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({

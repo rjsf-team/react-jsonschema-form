@@ -6,7 +6,7 @@ import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
-  enumOptionsIndexForValue,
+  enumOptionSelectedValue,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -45,7 +45,8 @@ export default function RadioWidget<
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? undefined;
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selectedValue: string | undefined = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat);
 
   return (
     <>
@@ -59,7 +60,7 @@ export default function RadioWidget<
         id={id}
         name={htmlName || id}
         layout={inline ? 'horizontal' : 'vertical'}
-        value={selectedIndex as string | undefined}
+        value={selectedValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

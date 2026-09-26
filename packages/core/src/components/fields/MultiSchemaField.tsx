@@ -7,6 +7,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
+  getXxxOfKey,
   getWidget,
   hashObject,
   isFormDataAvailable,
@@ -118,8 +119,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   });
 
-  // `SchemaField` renders the `anyOf` when a schema carries both keywords, so the suffix names that one
-  const selectSuffix = schema.anyOf ? '__anyof_select' : '__oneof_select';
+  const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+  const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
   const fieldId = `${id}${selectSuffix}`;
 
   const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
@@ -138,19 +139,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
-    if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
-      if (Array.isArray(uiSchema[ONE_OF_KEY])) {
-        return uiSchema[ONE_OF_KEY];
+    if (uiSchema && xxxOfKey in uiSchema) {
+      if (Array.isArray(uiSchema[xxxOfKey])) {
+        return uiSchema[xxxOfKey];
       }
-      logOnce(`uiSchema.oneOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
-    } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
-      if (Array.isArray(uiSchema[ANY_OF_KEY])) {
-        return uiSchema[ANY_OF_KEY];
-      }
-      logOnce(`uiSchema.anyOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
+      logOnce(`uiSchema.${xxxOfKey} is not an array for "${title || name}"`);
     }
     return [];
-  }, [schema, uiSchema, id, fieldPath]);
+  }, [xxxOfKey, uiSchema, title, name]);
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);

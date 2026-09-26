@@ -3,7 +3,9 @@ import { useCallback } from 'react';
 import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  ariaDescribedByIds,
   enumOptionsIndexForValue,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -55,7 +57,8 @@ export default function CheckboxesWidget<
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selectedValues: string[] = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat) ?? [];
 
   const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
 
