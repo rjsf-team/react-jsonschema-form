@@ -78,11 +78,13 @@ function RadioWidget<
           );
 
           return inline ? (
-            <label key={String(option.value)} className={`radio-inline ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <label key={i} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={String(option.value)} className={`radio ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={i} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

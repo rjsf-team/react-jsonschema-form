@@ -57,6 +57,11 @@ const widgetMap = {
     radio: 'RadioWidget',
     hidden: 'HiddenWidget',
   },
+  null: {
+    select: 'SelectWidget',
+    radio: 'RadioWidget',
+    hidden: 'HiddenWidget',
+  },
   array: {
     select: 'SelectWidget',
     checkboxes: 'CheckboxesWidget',

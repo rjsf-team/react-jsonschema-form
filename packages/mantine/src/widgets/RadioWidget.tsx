@@ -91,7 +91,8 @@ export default function RadioWidget<
         <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
           {enumOptions.map((option, i) => (
             <Radio
-              key={String(option.value)}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={i}
               id={optionId(id, i)}
               value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
               label={option.label}

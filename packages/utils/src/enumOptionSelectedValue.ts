@@ -44,9 +44,13 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
       // A value with no matching option has no index to encode, which would otherwise render as the string `NaN`
       return index === undefined ? noMatch : enumOptionValueEncoder(item, Number(index), format);
     };
-    // `emptyValue` describes the whole selection, so an unmatched entry of a multiple selection uses the empty string
-    // that `enumOptionValueEncoder()` gives a single empty option instead
-    return multiple ? value.map((item: any) => encode(item, '')) : encode(value, emptyValue);
+    if (!multiple) {
+      return encode(value, emptyValue);
+    }
+    // Form data for a multiple widget isn't guaranteed to be an array (e.g. `null` for a nullable array type), so a lone
+    // value is matched as a one-item selection, as the `indexed` format does. `emptyValue` describes the whole
+    // selection, so an unmatched entry uses the empty string that `enumOptionValueEncoder()` gives a single empty option
+    return (Array.isArray(value) ? value : [value]).map((item: any) => encode(item, ''));
   }
 
   const indexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

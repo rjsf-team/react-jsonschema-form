@@ -351,7 +351,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="0"
-                          id="root_person_race-native_american"
+                          id="root_person_race-0"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -369,7 +369,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="1"
-                          id="root_person_race-asian"
+                          id="root_person_race-1"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -387,7 +387,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="2"
-                          id="root_person_race-black"
+                          id="root_person_race-2"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -405,7 +405,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="3"
-                          id="root_person_race-pacific_islander"
+                          id="root_person_race-3"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -423,7 +423,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="4"
-                          id="root_person_race-white"
+                          id="root_person_race-4"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -1672,7 +1672,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           checked=""
                           class="radio"
                           data-index="0"
-                          id="root_employment-company"
+                          id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
@@ -1689,7 +1689,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="1"
-                          id="root_employment-education"
+                          id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
@@ -1706,7 +1706,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="2"
-                          id="root_employment-other"
+                          id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
@@ -2096,7 +2096,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="0"
-                          id="root_person_race-native_american"
+                          id="root_person_race-0"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -2114,7 +2114,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="1"
-                          id="root_person_race-asian"
+                          id="root_person_race-1"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -2132,7 +2132,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="2"
-                          id="root_person_race-black"
+                          id="root_person_race-2"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -2150,7 +2150,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="3"
-                          id="root_person_race-pacific_islander"
+                          id="root_person_race-3"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -2168,7 +2168,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="4"
-                          id="root_person_race-white"
+                          id="root_person_race-4"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -3416,7 +3416,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="0"
-                          id="root_employment-company"
+                          id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
@@ -3434,7 +3434,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           checked=""
                           class="radio"
                           data-index="1"
-                          id="root_employment-education"
+                          id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
@@ -3451,7 +3451,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="2"
-                          id="root_employment-other"
+                          id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
@@ -3841,7 +3841,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="0"
-                          id="root_person_race-native_american"
+                          id="root_person_race-0"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -3859,7 +3859,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="1"
-                          id="root_person_race-asian"
+                          id="root_person_race-1"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -3877,7 +3877,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="2"
-                          id="root_person_race-black"
+                          id="root_person_race-2"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -3895,7 +3895,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="3"
-                          id="root_person_race-pacific_islander"
+                          id="root_person_race-3"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -3913,7 +3913,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="4"
-                          id="root_person_race-white"
+                          id="root_person_race-4"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -5161,7 +5161,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="0"
-                          id="root_employment-company"
+                          id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
@@ -5178,7 +5178,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="1"
-                          id="root_employment-education"
+                          id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
@@ -5196,7 +5196,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           checked=""
                           class="radio"
                           data-index="2"
-                          id="root_employment-other"
+                          id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
@@ -5586,7 +5586,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="0"
-                          id="root_person_race-native_american"
+                          id="root_person_race-0"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -5604,7 +5604,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="1"
-                          id="root_person_race-asian"
+                          id="root_person_race-1"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -5622,7 +5622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="2"
-                          id="root_person_race-black"
+                          id="root_person_race-2"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -5640,7 +5640,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="3"
-                          id="root_person_race-pacific_islander"
+                          id="root_person_race-3"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -5658,7 +5658,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="checkbox"
                           data-index="4"
-                          id="root_person_race-white"
+                          id="root_person_race-4"
                           name="root_person_race"
                           required=""
                           type="checkbox"
@@ -6907,7 +6907,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           checked=""
                           class="radio"
                           data-index="0"
-                          id="root_employment-company"
+                          id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
@@ -6924,7 +6924,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="1"
-                          id="root_employment-education"
+                          id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
@@ -6941,7 +6941,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           class="radio"
                           data-index="2"
-                          id="root_employment-other"
+                          id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
@@ -7320,7 +7320,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <input
                         class="checkbox"
                         data-index="0"
-                        id="root_person_race-native_american"
+                        id="root_person_race-0"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -7338,7 +7338,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <input
                         class="checkbox"
                         data-index="1"
-                        id="root_person_race-asian"
+                        id="root_person_race-1"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -7356,7 +7356,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <input
                         class="checkbox"
                         data-index="2"
-                        id="root_person_race-black"
+                        id="root_person_race-2"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -7374,7 +7374,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <input
                         class="checkbox"
                         data-index="3"
-                        id="root_person_race-pacific_islander"
+                        id="root_person_race-3"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -7392,7 +7392,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       <input
                         class="checkbox"
                         data-index="4"
-                        id="root_person_race-white"
+                        id="root_person_race-4"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -8883,7 +8883,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <input
                         class="checkbox"
                         data-index="0"
-                        id="root_person_race-native_american"
+                        id="root_person_race-0"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -8901,7 +8901,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <input
                         class="checkbox"
                         data-index="1"
-                        id="root_person_race-asian"
+                        id="root_person_race-1"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -8919,7 +8919,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <input
                         class="checkbox"
                         data-index="2"
-                        id="root_person_race-black"
+                        id="root_person_race-2"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -8937,7 +8937,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <input
                         class="checkbox"
                         data-index="3"
-                        id="root_person_race-pacific_islander"
+                        id="root_person_race-3"
                         name="root_person_race"
                         required=""
                         type="checkbox"
@@ -8955,7 +8955,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       <input
                         class="checkbox"
                         data-index="4"
-                        id="root_person_race-white"
+                        id="root_person_race-4"
                         name="root_person_race"
                         required=""
                         type="checkbox"

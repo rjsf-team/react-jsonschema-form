@@ -104,4 +104,13 @@ describe('Checkboxes', () => {
       expect(screen.getByRole('checkbox', { name: 'One' })).not.toBeChecked();
     },
   );
+
+  test.each(['indexed', 'realValue'] as const)(
+    'renders with nothing checked for null form data in the %s format',
+    (optionValueFormat) => {
+      renderWidget({ value: null, options: { optionValueFormat } });
+      expect(screen.getAllByRole('checkbox')).toHaveLength(4);
+      screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).not.toBeChecked());
+    },
+  );
 });

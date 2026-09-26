@@ -68,7 +68,8 @@ export default function RadioWidget<
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
             disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.includes(option.value))}
-            key={String(option.value)}
+            // oxlint-disable-next-line react/no-array-index-key
+            key={i}
             value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
           >
             {option.label}

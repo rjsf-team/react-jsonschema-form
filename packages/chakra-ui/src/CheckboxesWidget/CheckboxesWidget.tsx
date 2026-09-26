@@ -54,7 +54,8 @@ export default function CheckboxesWidget<
               const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
               return (
                 <Checkbox
-                  key={String(option.value)}
+                  // oxlint-disable-next-line react/no-array-index-key
+                  key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
                   value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
