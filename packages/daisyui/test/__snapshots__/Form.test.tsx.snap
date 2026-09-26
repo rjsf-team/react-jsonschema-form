@@ -11,14 +11,6 @@ exports[`format iso-date-time 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control my-4 w-full relative"
         >
@@ -84,14 +76,6 @@ exports[`format iso-time 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -204,6 +188,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
+                                          id="root_tasks_0_title__title"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -415,6 +400,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
+                                          id="root_tasks_1_title__title"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -709,6 +695,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -844,6 +831,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1065,6 +1053,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   <label
                     class="label"
                     for="root_choices"
+                    id="root_choices__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1076,7 +1065,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     class="form-control"
                   >
                     <div
+                      aria-labelledby="root_choices__title"
                       class="flex flex-col gap-2 mt-1"
+                      id="root_choices"
+                      role="group"
                     >
                       <label
                         class="flex items-center cursor-pointer gap-2"
@@ -1221,6 +1213,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
+                              id="root_person_firstName__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1278,6 +1271,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
+                              id="root_person_lastName__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1363,6 +1357,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1420,6 +1415,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1541,6 +1537,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   <label
                     class="label"
                     for="root_option"
+                    id="root_option__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1552,7 +1549,10 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     class="form-control"
                   >
                     <div
+                      aria-labelledby="root_option__title"
                       class="flex flex-col gap-2 mt-1"
+                      id="root_option"
+                      role="radiogroup"
                     >
                       <label
                         class="flex items-center cursor-pointer gap-2"
@@ -1652,6 +1652,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   <label
                     class="label"
                     for="root_color"
+                    id="root_color__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1796,6 +1797,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1853,6 +1855,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1995,6 +1998,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   <label
                     class="label"
                     for="root_description"
+                    id="root_description__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -2126,6 +2130,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
+                                          id="root_tasks_0_title__title"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -2337,6 +2342,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
+                                          id="root_tasks_1_title__title"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -2631,6 +2637,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -2766,6 +2773,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3015,6 +3023,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
+                              id="root_person_firstName__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -3072,6 +3081,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
+                              id="root_person_lastName__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -3157,6 +3167,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -3214,6 +3225,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -3335,6 +3347,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   <label
                     class="label"
                     for="root_color"
+                    id="root_color__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -3479,6 +3492,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -3536,6 +3550,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -3678,6 +3693,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                   <label
                     class="label"
                     for="root_region"
+                    id="root_region__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -3761,6 +3777,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         <label
                           class="label"
                           for="root_region"
+                          id="root_region__title"
                         >
                           <span
                             class="label-text font-medium"
@@ -3875,14 +3892,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -3960,14 +3969,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -4075,14 +4076,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -4190,14 +4183,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -4290,14 +4275,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -4828,6 +4805,7 @@ exports[`single fields > checkboxes field 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -4839,7 +4817,10 @@ exports[`single fields > checkboxes field 1`] = `
           class="form-control"
         >
           <div
+            aria-labelledby="root__title"
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="group"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -4946,6 +4927,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -4957,7 +4939,10 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           class="form-control"
         >
           <div
+            aria-labelledby="root__title"
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="group"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -5064,6 +5049,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -5075,7 +5061,10 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           class="form-control"
         >
           <div
+            aria-labelledby="root__title"
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="group"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -5190,6 +5179,7 @@ exports[`single fields > field with description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5297,6 +5287,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5404,6 +5395,7 @@ exports[`single fields > field with markdown description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5517,6 +5509,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5606,14 +5599,6 @@ exports[`single fields > format color 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -5672,14 +5657,6 @@ exports[`single fields > format date 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control my-4 w-full relative"
         >
@@ -5745,14 +5722,6 @@ exports[`single fields > format datetime 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control my-4 w-full relative"
         >
@@ -5818,14 +5787,6 @@ exports[`single fields > format time 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -5879,14 +5840,6 @@ exports[`single fields > help and error display 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -6063,14 +6016,6 @@ exports[`single fields > null field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-null"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="rjsf-field-error-template text-red-600"
         >
@@ -6103,14 +6048,6 @@ exports[`single fields > number field 0 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-number"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -6172,14 +6109,6 @@ exports[`single fields > number field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-number"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -6300,6 +6229,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -6385,6 +6315,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -6482,6 +6413,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -6891,6 +6823,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -7035,6 +6968,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -7161,6 +7095,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__title"
                                   >
                                     <span
                                       class="label-text font-medium"
@@ -7234,6 +7169,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -7491,6 +7427,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -7577,6 +7514,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -7675,6 +7613,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -8089,6 +8028,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -8235,6 +8175,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -8361,6 +8302,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__title"
                                   >
                                     <span
                                       class="label-text font-medium"
@@ -8434,6 +8376,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -8725,6 +8668,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -8882,6 +8826,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -9231,6 +9176,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
+                                id="root_nestedArrayOptional_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -9393,6 +9339,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -9785,6 +9732,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -9916,6 +9864,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -10215,6 +10164,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
+                                id="root_nestedArrayOptional_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -10380,6 +10330,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -10860,6 +10811,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -11343,6 +11295,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -11633,14 +11586,6 @@ exports[`single fields > password field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -11699,19 +11644,13 @@ exports[`single fields > radio field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
           <div
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -11784,6 +11723,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -11795,7 +11735,10 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           class="form-control"
         >
           <div
+            aria-labelledby="root__title"
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -12042,14 +11985,6 @@ exports[`single fields > schema examples 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -12128,14 +12063,6 @@ exports[`single fields > schema examples with mixed types (string examples and n
       <div
         class="field-template mb-3 rjsf-field rjsf-field-integer"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -12211,14 +12138,6 @@ exports[`single fields > select field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -12311,14 +12230,6 @@ exports[`single fields > select field multiple choice 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -12461,14 +12372,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -12612,19 +12515,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
           <div
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="group"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -12728,14 +12625,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -12880,14 +12769,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -13010,14 +12891,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -13111,19 +12984,13 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
           <div
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -13194,19 +13061,13 @@ exports[`single fields > select field single choice form disabled using radio wi
         class="field-template mb-3 rjsf-field rjsf-field-string"
         disabled=""
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
           <div
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -13279,14 +13140,6 @@ exports[`single fields > select field single choice formData 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -13379,14 +13232,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -13539,14 +13384,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -13701,19 +13538,13 @@ exports[`single fields > select field single choice uiSchema disabled using radi
         class="field-template mb-3 rjsf-field rjsf-field-string"
         disabled=""
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
           <div
             class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
           >
             <label
               class="flex items-center cursor-pointer gap-2"
@@ -13788,6 +13619,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -13897,14 +13729,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -14099,14 +13923,6 @@ exports[`single fields > slider field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-integer"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14164,6 +13980,7 @@ exports[`single fields > string field > field with markdown help and description
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -14270,6 +14087,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -14367,6 +14185,7 @@ exports[`single fields > string field > field with markdown help text without a 
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -14450,14 +14269,6 @@ exports[`single fields > string field > format data-url 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div>
           <div
             class="form-control"
@@ -14518,14 +14329,6 @@ exports[`single fields > string field > format email 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14584,14 +14387,6 @@ exports[`single fields > string field > format uri 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14650,14 +14445,6 @@ exports[`single fields > string field > regular 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14719,6 +14506,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -14808,14 +14596,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14875,14 +14655,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -14960,14 +14732,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -15026,14 +14790,6 @@ exports[`single fields > textarea field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -15107,6 +14863,7 @@ exports[`single fields > title field 1`] = `
                   <label
                     class="label"
                     for="root_title"
+                    id="root_title__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -15186,14 +14943,6 @@ exports[`single fields > unsupported field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-undefined"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="unsupported-field"
         >
@@ -15236,14 +14985,6 @@ exports[`single fields > up/down field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-number"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -15303,14 +15044,6 @@ exports[`single fields > using custom tagName 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -15369,14 +15102,6 @@ exports[`string field with autocapitalize 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-string"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control"
         >
@@ -15454,6 +15179,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   <label
                     class="label"
                     for="root_answer"
+                    id="root_answer__title"
                   >
                     <span
                       class="label-text font-medium"

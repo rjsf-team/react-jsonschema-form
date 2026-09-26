@@ -1,6 +1,8 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
+import { getGroupProps } from '../../utils.ts';
+
 /** The `AltDateWidget` component provides an alternative date/time input
  * with individual fields for year, month, day, and optionally time components.
  *
@@ -19,12 +21,24 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled = false, readonly = false, autofocus = false, options, id, name, registry, onBlur, onFocus } = props;
+  const {
+    disabled = false,
+    readonly = false,
+    autofocus = false,
+    options,
+    id,
+    name,
+    label,
+    hideLabel,
+    registry,
+    onBlur,
+    onFocus,
+  } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
-    <div className='space-y-3'>
+    <div className='space-y-3' {...getGroupProps({ id, label, hideLabel, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key

@@ -4,6 +4,13 @@ import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 
+/** The label `FieldTemplate` renders above the control, which is the only one carrying `titleId()` — a widget's own
+ * label (`CheckboxWidget`) and `BaseInputTemplate`'s hidden one both also use the `label` class
+ */
+function templateLabelFor(container: HTMLElement, id: string) {
+  return container.querySelector(`label[id="${id}__title"]`);
+}
+
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
 
 function CustomWidget({ id, value }: WidgetProps) {
@@ -17,8 +24,7 @@ function renderForm(uiSchema: UiSchema = {}, fieldSchema: RJSFSchema = agree) {
   );
   return {
     container,
-    /** The label the `FieldTemplate` itself renders above the input, as opposed to one a widget renders */
-    templateLabel: () => container.querySelector('label[for="root_agree"]'),
+    templateLabel: () => templateLabelFor(container, 'root_agree'),
   };
 }
 
@@ -90,6 +96,56 @@ describe('FieldTemplate', () => {
       renderForm({ agree: { 'ui:widget': 'radio' } }, described);
 
       expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+    });
+  });
+
+  describe('labelling a widget that renders a group of controls', () => {
+    const choices: RJSFSchema = {
+      type: 'array',
+      title: 'Agree',
+      items: { type: 'string', enum: ['yes', 'no'] },
+      uniqueItems: true,
+    };
+
+    test('names the radio group of a boolean rendered as radios', () => {
+      renderForm({ agree: { 'ui:widget': 'radio' } });
+
+      expect(screen.getByRole('radiogroup', { name: 'Agree' })).toBeInTheDocument();
+    });
+
+    test('names the group of an array rendered as checkboxes', () => {
+      renderForm({ agree: { 'ui:widget': 'checkboxes' } }, choices);
+
+      expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
+    });
+
+    test('claims no aria-labelledby when the label is hidden, so the reference cannot dangle', () => {
+      renderForm({ agree: { 'ui:widget': 'radio', 'ui:options': { label: false } } });
+
+      const group = screen.getByRole('radiogroup');
+      expect(group).not.toHaveAttribute('aria-labelledby');
+      expect(group).toHaveAccessibleName('');
+    });
+  });
+
+  // A named property falls back to its name for the label, so only a root field and an array item can end up with none
+  describe('a field with no title', () => {
+    test('renders no label element at all', () => {
+      const { container } = render(
+        <Form schema={{ type: 'boolean' }} uiSchema={{ 'ui:widget': 'radio' }} validator={validator} />,
+      );
+
+      expect(templateLabelFor(container, 'root')).toBeNull();
+      expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby');
+    });
+
+    test('renders no label, and so no required asterisk, for an untitled required array item', () => {
+      const { container } = render(
+        <Form schema={{ type: 'array', items: { type: 'string' } }} formData={['first']} validator={validator} />,
+      );
+
+      expect(templateLabelFor(container, 'root_0')).toBeNull();
+      expect(screen.queryByText('*')).not.toBeInTheDocument();
     });
   });
 

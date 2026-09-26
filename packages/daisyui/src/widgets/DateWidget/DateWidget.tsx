@@ -3,6 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { titleId } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
@@ -141,7 +142,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, onChange, onFocus, onBlur, schema } = props;
   // Initialize the local date from the parent's value.
   const initialDate = useMemo(() => (value ? new Date(value) : undefined), [value]);
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
@@ -359,6 +360,7 @@ export default function DateWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
+          aria-labelledby={!hideLabel && label ? titleId(id) : undefined}
           tabIndex={0}
           ref={inputRef}
         >

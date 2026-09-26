@@ -111,20 +111,6 @@ exports[`array fields > array icons 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -264,20 +250,6 @@ exports[`array fields > array icons 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -476,14 +448,6 @@ exports[`array fields > checkboxes 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -624,6 +588,7 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -721,20 +686,6 @@ exports[`array fields > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -781,20 +732,6 @@ exports[`array fields > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -899,6 +836,7 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1000,6 +938,7 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1115,6 +1054,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1172,6 +1112,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1331,6 +1272,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1388,6 +1330,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1606,20 +1549,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -1738,20 +1667,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -1929,14 +1844,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -2077,20 +1984,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -2137,20 +2030,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -2293,20 +2172,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
@@ -2425,20 +2290,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
@@ -2693,20 +2544,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
@@ -2825,20 +2662,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
@@ -3170,6 +2993,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3227,6 +3051,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3386,6 +3211,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3443,6 +3269,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3661,20 +3488,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -3793,20 +3606,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
@@ -4115,6 +3914,7 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4281,6 +4081,7 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4506,6 +4307,7 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -4680,6 +4482,7 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4753,6 +4556,7 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4983,6 +4787,7 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5149,6 +4954,7 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5374,6 +5180,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -5548,6 +5355,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5621,6 +5429,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5851,6 +5660,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -6017,6 +5827,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -6242,6 +6053,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__title"
         >
           <span
             class="label-text font-medium"
@@ -6416,6 +6228,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -6489,6 +6302,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__title"
                     >
                       <span
                         class="label-text font-medium"

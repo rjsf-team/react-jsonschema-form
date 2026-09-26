@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, titleId } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
@@ -167,7 +167,7 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, onChange, onFocus, onBlur, schema } = props;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
   // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
   // is optional), or a UTC ISO string otherwise.
@@ -336,6 +336,7 @@ export default function DateTimeWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
+          aria-labelledby={!hideLabel && label ? titleId(id) : undefined}
           tabIndex={0}
           ref={inputRef}
         >

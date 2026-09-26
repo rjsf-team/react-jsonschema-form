@@ -57,6 +57,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_name"
+                              id="root_person_name__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -142,6 +143,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -199,6 +201,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -256,6 +259,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_country"
+                                        id="root_person_address_country__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -377,6 +381,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -456,6 +461,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <label
                       class="label"
                       for="root_customField"
+                      id="root_customField__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -613,6 +619,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -670,6 +677,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -797,6 +805,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -932,6 +941,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1153,6 +1163,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1210,6 +1221,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_lastName"
+                    id="root_lastName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1267,6 +1279,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1395,6 +1408,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_name"
+                              id="root_person_name__title"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1480,6 +1494,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1537,6 +1552,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__title"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1658,6 +1674,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1715,6 +1732,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="label"
                     for="root_count"
+                    id="root_count__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -1799,6 +1817,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <label
                                 class="label"
                                 for="root_items_0"
+                                id="root_items_0__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1934,6 +1953,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <label
                                 class="label"
                                 for="root_items_1"
+                                id="root_items_1__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -2155,6 +2175,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -2212,6 +2233,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_lastName"
+                    id="root_lastName__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -2269,6 +2291,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -2391,6 +2414,7 @@ exports[`object fields > additionalProperties 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -2639,6 +2663,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -2828,6 +2853,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -3035,6 +3061,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -3224,6 +3251,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -3403,6 +3431,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -3441,6 +3470,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <label
                                 class="label"
                                 for="root_foo_foo"
+                                id="root_foo_foo__title"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3701,6 +3731,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -3949,6 +3980,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4106,6 +4138,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -4163,6 +4196,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -4285,6 +4319,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4487,6 +4522,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -4667,6 +4703,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -4734,6 +4771,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -4889,6 +4927,7 @@ exports[`object fields > with title and description > show add button and fields
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5091,6 +5130,7 @@ exports[`object fields > with title and description from both > additionalProper
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5271,6 +5311,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5338,6 +5379,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5493,6 +5535,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__title"
                     >
                       <span
                         class="label-text font-medium"
@@ -5673,6 +5716,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5740,6 +5784,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__title"
                   >
                     <span
                       class="label-text font-medium"
@@ -5895,6 +5940,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__title"
                     >
                       <span
                         class="label-text font-medium"

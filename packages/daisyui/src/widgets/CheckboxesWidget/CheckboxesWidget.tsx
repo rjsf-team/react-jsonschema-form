@@ -11,6 +11,8 @@ import {
   optionId,
 } from '@rjsf/utils';
 
+import { getGroupProps } from '../../utils.ts';
+
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
  *
@@ -29,7 +31,20 @@ export default function CheckboxesWidget<
   T,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, htmlName, disabled, options, value, readonly, required, onChange, onFocus, onBlur }: WidgetProps<T, S, F>) {
+>({
+  id,
+  htmlName,
+  disabled,
+  options,
+  value,
+  label,
+  hideLabel,
+  readonly,
+  required,
+  onChange,
+  onFocus,
+  onBlur,
+}: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const selected = useMemo(() => (Array.isArray(value) ? value : []), [value]);
@@ -76,7 +91,7 @@ export default function CheckboxesWidget<
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
-      <div className='flex flex-col gap-2 mt-1'>
+      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, hideLabel, role: 'group' })}>
         {enumOptions?.map((option, index) => (
           // oxlint-disable-next-line react/no-array-index-key
           <label key={index} className='flex items-center cursor-pointer gap-2'>

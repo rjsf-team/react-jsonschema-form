@@ -9,6 +9,8 @@ import {
   optionId,
 } from '@rjsf/utils';
 
+import { getGroupProps } from '../../utils.ts';
+
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
  * Features:
@@ -25,7 +27,20 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, htmlName, options, value, required, disabled, readonly, onChange, onFocus, onBlur }: WidgetProps<T, S, F>) {
+>({
+  id,
+  htmlName,
+  options,
+  value,
+  label,
+  hideLabel,
+  required,
+  disabled,
+  readonly,
+  onChange,
+  onFocus,
+  onBlur,
+}: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
@@ -64,7 +79,7 @@ export default function RadioWidget<
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
-      <div className='flex flex-col gap-2 mt-1'>
+      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, hideLabel, role: 'radiogroup' })}>
         {enumOptions?.map((option, index) => (
           // oxlint-disable-next-line react/no-array-index-key
           <label key={index} className='flex items-center cursor-pointer gap-2'>
