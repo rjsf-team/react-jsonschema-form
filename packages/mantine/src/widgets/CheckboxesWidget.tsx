@@ -4,7 +4,7 @@ import { Checkbox, Flex, Input } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -71,7 +71,8 @@ export default function CheckboxesWidget<
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selectedValues: string[] = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat) ?? [];
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <>
@@ -82,7 +83,7 @@ export default function CheckboxesWidget<
       )}
       <Checkbox.Group
         id={id}
-        value={selectedIndexes}
+        value={selectedValues}
         onChange={handleChange}
         required={required}
         readOnly={disabled || readonly}
@@ -95,7 +96,8 @@ export default function CheckboxesWidget<
           <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
             {enumOptions.map((option, i) => (
               <Checkbox
-                key={String(option.value)}
+                // oxlint-disable-next-line react/no-array-index-key
+                key={i}
                 id={optionId(id, i)}
                 name={htmlName || id}
                 value={enumOptionValueEncoder(option.value, i, optionValueFormat)}

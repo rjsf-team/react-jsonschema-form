@@ -7,6 +7,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
+  getXxxOfKey,
   getWidget,
   hashObject,
   isFormDataAvailable,
@@ -117,7 +118,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   });
 
-  const fieldId = `${id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
+  const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+  const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
+  const fieldId = `${id}${selectSuffix}`;
 
   const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const {
@@ -135,19 +138,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
-    if (ONE_OF_KEY in schema && uiSchema && ONE_OF_KEY in uiSchema) {
-      if (Array.isArray(uiSchema[ONE_OF_KEY])) {
-        return uiSchema[ONE_OF_KEY];
+    if (uiSchema && xxxOfKey in uiSchema) {
+      if (Array.isArray(uiSchema[xxxOfKey])) {
+        return uiSchema[xxxOfKey];
       }
-      logOnce(`uiSchema.oneOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
-    } else if (ANY_OF_KEY in schema && uiSchema && ANY_OF_KEY in uiSchema) {
-      if (Array.isArray(uiSchema[ANY_OF_KEY])) {
-        return uiSchema[ANY_OF_KEY];
-      }
-      logOnce(`uiSchema.anyOf is not an array for ${fieldLabelForLog(id, fieldPath)}`);
+      logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     }
     return [];
-  }, [schema, uiSchema, id, fieldPath]);
+  }, [xxxOfKey, uiSchema, id, fieldPath]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -265,7 +263,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     !isOptionalRender || hasFormData ? (
       <Widget
         id={fieldId}
-        name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
+        name={`${name}${selectSuffix}`}
         schema={{ type: 'number', default: 0 } as S}
         onChange={onOptionChange}
         onBlur={onBlur}

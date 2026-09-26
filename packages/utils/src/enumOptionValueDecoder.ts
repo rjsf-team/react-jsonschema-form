@@ -1,12 +1,12 @@
 import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
+import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
 import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** Resolves a single DOM value string back to its typed enum value in `'realValue'` mode.
  *
- * First attempts a reverse lookup by matching `String(opt.value)` against the input.
- * If no option matches and the input parses as a valid index, falls back to the
- * option at that index — this is how object/array enum values round-trip, since
- * they are encoded as indices by the encoder.
+ * Finds the option that `enumOptionValueEncoder()` encodes as the input, so every value round-trips, including the
+ * object, array and `null` values that are encoded as their prefixed index. When no option encodes that way and the
+ * input is a bare index, falls back to the option at that index, for widgets that report an option by its position.
  *
  * @param value - A single string value from a DOM attribute
  * @param enumOptions - The available enum options
@@ -21,13 +21,12 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
   if (value === '' || !Array.isArray(enumOptions)) {
     return emptyValue;
   }
-  const match = enumOptions.find((opt) => String(opt.value) === value);
+  const match = enumOptions.find((opt, index) => enumOptionValueEncoder(opt.value, index, 'realValue') === value);
   if (match) {
     return match.value;
   }
-  // Fallback: value might be an index (for object/array enum values)
   const index = Number(value);
-  if (!Number.isNaN(index) && index >= 0 && index < enumOptions.length) {
+  if (Number.isInteger(index) && index >= 0 && index < enumOptions.length) {
     return enumOptions[index].value;
   }
   return emptyValue;
@@ -36,8 +35,8 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
 /** Decodes a string from a DOM value attribute back to a typed enum value.
  *
  * When `format` is `'realValue'`, does a reverse lookup: finds the enum option
- * whose `String(value)` matches the input string and returns the original typed value.
- * For object/array values that were encoded as indices, falls back to index resolution.
+ * that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, falling back to
+ * the option at the input's index when it is a bare index that no option encodes as.
  *
  * When `format` is `'indexed'` (the default), uses index-based resolution via
  * `enumOptionsValueForIndex`.

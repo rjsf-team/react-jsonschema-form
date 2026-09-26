@@ -56,7 +56,8 @@ export default function CheckboxesWidget<
 
           return (
             <Form.Check
-              key={option.value}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
               inline={inline}
               required={required}
               checked={checked}

@@ -39,7 +39,8 @@ export default function RadioWidget<
               inline={inline}
               label={option.label}
               id={optionId(id, index)}
-              key={String(option.value)}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
               name={htmlName || id}
               type='radio'
               disabled={disabled || itemDisabled || readonly}

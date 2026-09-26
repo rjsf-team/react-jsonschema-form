@@ -545,6 +545,17 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         enumField: 'newData',
       });
     });
+    it('checks data against the anyOf, the rendered select, when a schema carries both keywords (#5309)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { field: { anyOf: [{ const: 1 }, { const: 2 }], oneOf: [{ const: 'a' }] } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { field: { anyOf: [{ const: 1 }, { const: 2 }], oneOf: [{ const: 'b' }] } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { field: 2 })).toEqual({ field: 2 });
+    });
     it('keeps invalid data when oneOf does not provide enum-like values', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',

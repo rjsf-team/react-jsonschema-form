@@ -806,7 +806,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option values in their DOM `value` attributes. Accepts `'indexed'` (default) or `'realValue'`.
 
 - `'indexed'`: options are encoded as their array index (e.g. `value="0"`, `value="1"`). This is the historical behavior and keeps non-primitive enum values (objects, arrays) addressable without stringifying them.
-- `'realValue'`: primitive option values are stringified directly (e.g. `value="admin"`, `value="42"`, `value="true"`). This enables native HTML form submission and browser autocomplete since the submitted value matches the enum value. Non-primitive values (objects, arrays) still fall back to their index because `String(obj)` would produce `"[object Object]"`.
+- `'realValue'`: primitive option values are stringified directly (e.g. `value="admin"`, `value="42"`, `value="true"`). This enables native HTML form submission and browser autocomplete since the submitted value matches the enum value. Non-primitive values (objects, arrays) fall back to their index, prefixed with `__rjsf_index:` (e.g. `value="__rjsf_index:2"`), because `String(obj)` would produce `"[object Object]"`, and so does `null`, since the empty string is the value of the select's empty placeholder. The prefix keeps that index from colliding with a primitive option spelled as the same number.
 
 The form data passed to `onChange` is always the typed enum value; this option only affects the DOM-level encoding. Can be specified in `ui:globalOptions` to apply to all enum-backed fields, or per-field in `ui:options`.
 

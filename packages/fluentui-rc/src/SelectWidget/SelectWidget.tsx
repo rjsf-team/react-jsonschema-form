@@ -3,6 +3,7 @@ import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -70,8 +71,19 @@ function SelectWidget<
     .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
     .join(', ');
 
-  const handleBlur = () => onBlur(id, selectedIndexes);
-  const handleFocus = () => onFocus(id, selectedIndexes);
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is compared in that encoding too
+  const selectedValues: string | string[] | undefined = enumOptionSelectedValue<S>(
+    value,
+    enumOptions,
+    multiple,
+    optionValueFormat,
+  );
+  const selectedOptions = selectedValues === undefined ? [] : ([] as string[]).concat(selectedValues);
+
+  // Reported the way a native select reports its decoded selection, with no selection read as the empty value
+  const reportedValue = value === undefined ? optEmptyVal : value;
+  const handleBlur = () => onBlur(id, reportedValue);
+  const handleFocus = () => onFocus(id, reportedValue);
   const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
@@ -108,7 +120,7 @@ function SelectWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         onOptionSelect={handleChange}
-        selectedOptions={selectedIndexesAsArray}
+        selectedOptions={selectedOptions}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}

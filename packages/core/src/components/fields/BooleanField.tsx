@@ -13,6 +13,7 @@ import {
   getUiOptions,
   getWidget,
   isConstant,
+  isConstantOptionList,
   isObject,
   ONE_OF_KEY,
   optionsList,
@@ -83,17 +84,12 @@ function BooleanField<
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  // `optionsList()` reads `anyOf` before `oneOf`, so the options come from the same keyword it would have picked, but
-  // only when they are constants, since it maps them with `toConstant()`, which throws for anything else. The `oneOf`
-  // fallback is left unguarded because it is the keyword this field has always read, and guarding it would change
-  // which field renders a non-constant `oneOf` that reaches here through an `enum`
+  // The options come from a constant `anyOf`, the keyword `isSelect()` and `optionsList()` read first, and otherwise
+  // from `oneOf`: a non-constant `anyOf` is rendered by `AnyOfField`, whose option carries the parent's `oneOf` along,
+  // so those labels still reach the widget. A `oneOf` that isn't made of constants gives `optionsList()` nothing to
+  // list, which leaves the widget without `enumOptions`
   const anyOfSchemas = schema[ANY_OF_KEY];
-  const altKey =
-    Array.isArray(anyOfSchemas) &&
-    anyOfSchemas.length > 0 &&
-    anyOfSchemas.every((option) => isObject(option) && isConstant(option))
-      ? ANY_OF_KEY
-      : ONE_OF_KEY;
+  const altKey = isConstantOptionList<S>(anyOfSchemas) && anyOfSchemas.length > 0 ? ANY_OF_KEY : ONE_OF_KEY;
   const altSchemas = schema[altKey];
   if (Array.isArray(altSchemas)) {
     enumOptions = optionsList<T, S, F>(

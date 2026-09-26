@@ -300,7 +300,8 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 ### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Computes the value to pass to a select element's `value` attribute.
-When `format` is `'realValue'`, converts form data values to strings.
+When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
+A lone non-array value of a `multiple` selection is encoded as a one-item selection.
 When `format` is `'indexed'` (the default), resolves to index-based values via `enumOptionsIndexForValue`.
 Returns `emptyValue` when the current value is empty.
 
@@ -379,8 +380,8 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the enum option whose `String(value)` matches the input string and returns the original typed value.
-For object/array values that were encoded as indices, falls back to index resolution.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their prefixed index, round-trip too.
+When no option encodes as the input and it is a bare index, falls back to the option at that index.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
 #### Parameters
@@ -398,7 +399,9 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to the index since `String()` would produce `"[object Object]"`.
+Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
+So does `null`, since the empty string is the value of a select's empty placeholder.
+The prefix keeps that index from sharing a value with a primitive option spelled as the same number.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters
@@ -954,7 +957,8 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
-schema type and `widget` name. If no widget component can be found an `Error` is thrown.
+schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
+object constants, or one whose `type` list starts with `null`, renders with. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
@@ -969,6 +973,20 @@ schema type and `widget` name. If no widget component can be found an `Error` is
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords.
+Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
+the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
+
+#### Parameters
+
+- schema: S - The schema that may carry an `anyOf` or a `oneOf`
+
+#### Returns
+
+- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1122,6 +1140,20 @@ This happens when either the schema has an `enum` array with a single value or t
 #### Returns
 
 - boolean: True if the `schema` has a single constant value, false otherwise
+
+### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
+as a select. An empty list passes, since every one of its options is vacuously a constant; a caller that needs an
+option to exist checks the length itself.
+
+#### Parameters
+
+- options: unknown - The `anyOf` or `oneOf` list, or anything else
+
+#### Returns
+
+- boolean: True if `options` is an array whose every entry is a constant schema object
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1407,10 +1439,9 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
 
-If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is the list of either:
 
--
-- The `const` values from the schema if present
+- The `const` values from the schema if present, labelled with the option's `title`, or its value (as JSON for an object or array) when it has none. When the options aren't all constants, there is no list and `undefined` is returned
 - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
   provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
   objects containing `ui:title` then the UI schema values will replace the values from the schema.
@@ -1422,7 +1453,7 @@ If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 
 #### Returns
 
-- \{ schema?: S, label: string, value: any }: The list of options from the schema
+- \{ schema?: S, label: string, value: any }[] | undefined: The list of options from the schema, or `undefined` when it has none
 
 ### orderProperties()
 
@@ -2012,6 +2043,7 @@ The closest match is determined using the number of matching properties, and mor
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants renders as one select for the whole value, so it keeps its label.
 
 #### Parameters
 
@@ -2127,7 +2159,8 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select
+Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
+When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
 
 #### Parameters
 

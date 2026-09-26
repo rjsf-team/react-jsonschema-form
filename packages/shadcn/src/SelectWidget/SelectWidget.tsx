@@ -10,6 +10,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
+  enumOptionsValueForIndex,
   enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
@@ -80,12 +81,15 @@ export default function SelectWidget<
   const optionValueFormat = getOptionValueFormat(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  // `value` is already form data rather than a DOM value, so it's reported as is, with `emptyValue` for no selection
+  // the way the other select widgets report it
+  const reportedValue = value === undefined ? optEmptyValue : value;
   const handleFancyFocus = () => {
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
+    onFocus(id, reportedValue);
   };
 
   const handleFancyBlur = () => {
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
+    onBlur(id, reportedValue);
   };
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
@@ -135,8 +139,10 @@ export default function SelectWidget<
           items={items}
           sections={sections}
           selected={value}
-          onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
+          onValueChange={(indexes) => {
+            // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
+            // resolved as indexes rather than decoded as DOM values
+            onChange(enumOptionsValueForIndex<S>(indexes.map(String), enumOptions, optEmptyValue));
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

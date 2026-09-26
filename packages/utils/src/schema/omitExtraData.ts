@@ -1,6 +1,7 @@
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject from '../isObject.ts';
 import type {
   CustomMergeAllOf,
@@ -11,7 +12,6 @@ import type {
   ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import isSelect from './isSelect.ts';
 import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
@@ -273,7 +273,8 @@ export default function omitExtraData<
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, customMergeAllOf)) {
+    // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by
+    if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.

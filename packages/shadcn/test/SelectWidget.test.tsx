@@ -301,6 +301,85 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
   });
 
+  test('multi-select: reports the picked values in the realValue format', async () => {
+    const user = userEvent.setup();
+    const seen: unknown[] = [];
+
+    function Controlled() {
+      const [value, setValue] = useState<unknown[]>([]);
+      return (
+        <SelectWidget
+          {...makeWidgetMockProps({
+            autofocus: false,
+            disabled: false,
+            readonly: false,
+            multiple: true,
+            rawErrors: [],
+            value,
+            onChange: (next) => {
+              seen.push(next);
+              setValue(next as unknown[]);
+            },
+            options: {
+              enumOptions: [
+                { label: 'A', value: 'a' },
+                { label: 'B', value: 'b' },
+                { label: 'None', value: null },
+              ],
+              optionValueFormat: 'realValue',
+            },
+          })}
+        />
+      );
+    }
+
+    const pick = async (name: string) => {
+      await user.click(screen.getByPlaceholderText('Select ...'));
+      await user.click(screen.getByRole('option', { name }));
+    };
+
+    render(<Controlled />);
+    await pick('B');
+    await pick('None');
+
+    expect(seen).toEqual([['b'], ['b', null]]);
+  });
+
+  test('single select: reports the form data value on focus and blur rather than decoding it', async () => {
+    const user = userEvent.setup();
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <>
+        <SelectWidget
+          {...makeWidgetMockProps({
+            autofocus: false,
+            disabled: false,
+            readonly: false,
+            rawErrors: [],
+            // Decoded as a DOM value, `1` would be read as the index of the option whose value is `0`
+            value: 1,
+            onFocus,
+            onBlur,
+            options: {
+              enumOptions: [
+                { label: 'One', value: 1 },
+                { label: 'Zero', value: 0 },
+              ],
+            },
+          })}
+        />
+        <button type='button'>After select</button>
+      </>,
+    );
+
+    await user.tab();
+    await user.tab();
+
+    expect(onFocus).toHaveBeenCalledWith('_id', 1);
+    expect(onBlur).toHaveBeenCalledWith('_id', 1);
+  });
+
   test('multi-select: optgroups does not reorder the selected values it reports', async () => {
     const user = userEvent.setup();
     const seen: unknown[] = [];

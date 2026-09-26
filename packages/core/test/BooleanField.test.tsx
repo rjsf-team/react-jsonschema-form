@@ -1,4 +1,4 @@
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import {
@@ -485,7 +485,7 @@ describe('BooleanField', () => {
     expect(labels).toEqual(['Yes', 'No']);
   });
 
-  it('should fall back to the oneOf when the anyOf options are not all constants', () => {
+  it('should render the anyOf, with the oneOf options within it, when the anyOf options are not all constants', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'boolean',
@@ -499,11 +499,63 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
-      (label: Element) => label.textContent,
-    );
-    expect(labels).toEqual(['Yes', 'No']);
+    const labelsOf = (group: string) =>
+      [].map.call(node.querySelectorAll(`${group} label`), (label: Element) => label.textContent);
+    expect(labelsOf('#root__anyof_select')).toEqual(['A', 'B']);
+    expect(labelsOf('#root')).toEqual(['Yes', 'No']);
+  });
+
+  describe('titled constant options (#5309)', () => {
+    const titledSchema: RJSFSchema = {
+      type: 'boolean',
+      title: 'Answer',
+      oneOf: [
+        { const: true, title: 'Affirmative' },
+        { const: false, title: 'Negative' },
+      ],
+    };
+
+    it('should default to a select that shows the option titles and the field label', async () => {
+      const { node, onChange } = createFormComponent({ schema: titledSchema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'Affirmative', 'Negative']);
+      expect(node.querySelector('label[for=root]')).toHaveTextContent('Answer');
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+      await user.selectOptions(select, 'Negative');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    it('should keep a widget the uiSchema names', () => {
+      const { node } = createFormComponent({ schema: titledSchema, uiSchema: { 'ui:widget': 'checkbox' } });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+    });
+
+    it.each<[string, UiSchema]>([
+      ['ui:enumNames', { 'ui:enumNames': ['Accept', 'Decline'] }],
+      ['a ui:title in uiSchema.oneOf', { oneOf: [{ 'ui:title': 'Accept' }, {}] }],
+    ])('should default to a select when %s labels the options', (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+        uiSchema,
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toContain('Accept');
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+    });
+
+    it.each([
+      ['untitled options', { type: 'boolean', anyOf: [{ const: true }, { const: false }] }],
+      ['a single titled option', { type: 'boolean', oneOf: [{ const: true, title: 'I agree' }] }],
+    ])('should keep the checkbox for %s', (_, schema) => {
+      const { node } = createFormComponent({ schema: schema as RJSFSchema });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+    });
   });
 
   it('should give an anyOf of single-value enums the same Yes/No labels as the const spelling', () => {

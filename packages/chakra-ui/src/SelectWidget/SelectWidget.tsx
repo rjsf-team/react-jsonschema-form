@@ -82,8 +82,8 @@ export default function SelectWidget<
   );
 
   const groupedOptions = useMemo(() => {
-    // `realValue` encodes '' and null as '', which `enumOptionValueDecoder` reads as "no selection", so an option
-    // encoded that way can never be picked.
+    // `realValue` encodes '' as '', which `enumOptionValueDecoder` reads as "no selection", so an option encoded that
+    // way can never be picked.
     const isSelectable = (option: IndexedEnumOptionType<S>) =>
       enumOptionValueEncoder(option.value, option.index, optionValueFormat) !== '';
     return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item): GroupedEnumOptionsType<S>[] => {

@@ -1,6 +1,8 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isCustomWidget from '../isCustomWidget.ts';
 import type {
   FormContextType,
@@ -44,17 +46,22 @@ export default function getDisplayLabel<
   if (displayLabel) {
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
+    // A constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is labelled
+    // like any other select rather than left to the fields of its contents
+    const xxxOfKey = getXxxOfKey<S>(schema);
+    const isConstantSelect = xxxOfKey !== undefined && isConstantOptionList<S>(schema[xxxOfKey]);
 
     if (schemaType === 'array') {
       displayLabel =
         addedByAdditionalProperty ||
+        isConstantSelect ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
         isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, customMergeAllOf) ||
         isCustomWidget(uiSchema);
     }
 
     if (schemaType === 'object') {
-      displayLabel = addedByAdditionalProperty;
+      displayLabel = addedByAdditionalProperty || isConstantSelect;
     }
     if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
       displayLabel = false;

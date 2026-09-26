@@ -88,8 +88,23 @@ describe('getWidget()', () => {
     expect(() => getWidget(schema)).toThrow(`Unsupported widget definition: undefined in schema: ${schemaStr}`);
   });
 
-  it('should fail if widget has no type property', () => {
-    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget for type 'object' in schema: ${schemaStr}`);
+  it('should fail for a type that is not a JSON Schema type', () => {
+    const unknownType = { type: 'foo' } as unknown as RJSFSchema;
+    expect(() => getWidget(unknownType, 'blabla')).toThrow(`No widget for type 'foo' in schema: {"type":"foo"}`);
+  });
+
+  it('should return `SelectWidget` for a null type, which a select that lists null first among its types renders with', () => {
+    const registry = { SelectWidget: TestWidget };
+    expect(getWidget({ type: ['null', 'object', 'string'] }, 'select', registry)).toBe(TestWidget);
+  });
+
+  it('should fail if the object type has no such widget', () => {
+    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget 'blabla' for type 'object' in schema: ${schemaStr}`);
+  });
+
+  it('should return `SelectWidget` for an object type, which a select over object constants renders with', () => {
+    const registry = { SelectWidget: TestWidget };
+    expect(getWidget(schema, 'select', registry)).toBe(TestWidget);
   });
 
   it('should fail if schema `type` has no widget property', () => {

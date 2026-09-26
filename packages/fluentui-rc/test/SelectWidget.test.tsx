@@ -109,4 +109,83 @@ describe('SelectWidget', () => {
 
     expect(onChange).toHaveBeenCalledWith('baz');
   });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'marks the selected object option in the %s format',
+    async (optionValueFormat) => {
+      render(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            value: { a: 2 },
+            options: {
+              enumOptions: [
+                { label: 'One', value: { a: 1 } },
+                { label: 'Two', value: { a: 2 } },
+              ],
+              optionValueFormat,
+            },
+          })}
+        />,
+      );
+
+      await user.click(await screen.findByRole('combobox'));
+
+      expect(screen.getByRole('option', { name: 'Two' })).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByRole('option', { name: 'One' })).toHaveAttribute('aria-selected', 'false');
+    },
+  );
+
+  test('multi-select: deselects a selected object option in the realValue format', async () => {
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: [{ a: 1 }],
+          multiple: true,
+          onChange,
+          options: {
+            enumOptions: [
+              { label: 'One', value: { a: 1 } },
+              { label: 'Two', value: { a: 2 } },
+            ],
+            optionValueFormat: 'realValue',
+          },
+        })}
+      />,
+    );
+
+    await user.click(await screen.findByRole('combobox'));
+    // A multiselect's options are checkable menu items
+    const one = screen.getByRole('menuitemcheckbox', { name: 'One' });
+    expect(one).toHaveAttribute('aria-checked', 'true');
+    await user.click(one);
+
+    expect(onChange).toHaveBeenLastCalledWith([]);
+  });
+
+  test('reports focus and blur with the selected value rather than its option index', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(<SelectWidget {...makeWidgetMockProps({ value: 'bar', onFocus, onBlur, options: { enumOptions } })} />);
+
+    await user.click(await screen.findByRole('combobox'));
+    expect(onFocus).toHaveBeenLastCalledWith('test-id', 'bar');
+    await user.keyboard('{Escape}');
+    await user.tab();
+    expect(onBlur).toHaveBeenLastCalledWith('test-id', 'bar');
+  });
+
+  test('multi-select: does not crash on a non-array value in the realValue format', async () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: null,
+          multiple: true,
+          options: { enumOptions, optionValueFormat: 'realValue' },
+        })}
+      />,
+    );
+
+    expect(await screen.findByRole('combobox')).toBeInTheDocument();
+  });
 });

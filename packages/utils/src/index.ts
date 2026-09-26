@@ -55,6 +55,7 @@ import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
+import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
@@ -73,6 +74,7 @@ import {
   titleId,
 } from './idGenerators.ts';
 import isConstant from './isConstant.ts';
+import isConstantOptionList from './isConstantOptionList.ts';
 import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
@@ -202,6 +204,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getXxxOfKey,
   groupEnumOptions,
   guessType,
   hasByPath,
@@ -212,6 +215,7 @@ export {
   hashString,
   helpId,
   isConstant,
+  isConstantOptionList,
   isCustomWidget,
   isEnumOptionsGroup,
   isFixedItems,
