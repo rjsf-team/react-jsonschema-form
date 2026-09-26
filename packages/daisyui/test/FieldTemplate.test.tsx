@@ -142,6 +142,29 @@ describe('FieldTemplate', () => {
     });
   });
 
+  describe('the alt-date widget', () => {
+    test('associates each of its labels with the control it names', () => {
+      renderForm(
+        { agree: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } } },
+        { type: 'string', format: 'date', title: 'Agree' },
+      );
+
+      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with
+      for (const type of ['year', 'month', 'day']) {
+        expect(screen.getByLabelText(type)).toBe(screen.getByRole('button', { name: type }));
+      }
+    });
+
+    test('names the whole group with the field label', () => {
+      renderForm(
+        { agree: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } } },
+        { type: 'string', format: 'date', title: 'Agree' },
+      );
+
+      expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
+    });
+  });
+
   // A named property falls back to its name for the label, so only a root field and an array item can end up with none
   describe('a field with no title', () => {
     test('renders no label element at all', () => {

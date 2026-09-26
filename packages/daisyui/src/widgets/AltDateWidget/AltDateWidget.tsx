@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -43,7 +43,7 @@ export default function AltDateWidget<
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
-            <label className='label'>
+            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>
             </label>
             <DateElement
