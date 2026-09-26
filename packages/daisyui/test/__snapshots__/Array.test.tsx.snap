@@ -114,15 +114,6 @@ exports[`array fields > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -253,15 +244,6 @@ exports[`array fields > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -599,17 +581,6 @@ exports[`array fields > empty errors array 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -689,15 +660,6 @@ exports[`array fields > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -735,15 +697,6 @@ exports[`array fields > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -847,17 +800,6 @@ exports[`array fields > has errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -949,17 +891,6 @@ exports[`array fields > no errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1065,17 +996,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1123,17 +1043,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1283,17 +1192,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1341,17 +1239,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1552,15 +1439,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1670,15 +1548,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1987,15 +1856,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2033,15 +1893,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2175,15 +2026,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2293,15 +2135,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2547,15 +2380,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2665,15 +2489,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -3004,17 +2819,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3062,17 +2866,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3222,17 +3015,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3280,17 +3062,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3491,15 +3262,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3609,15 +3371,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3930,17 +3683,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4097,17 +3839,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4498,17 +4229,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4572,17 +4292,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4803,17 +4512,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4970,17 +4668,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5371,17 +5058,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5445,17 +5121,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5676,17 +5341,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5843,17 +5497,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6244,17 +5887,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6318,17 +5950,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6505,17 +6126,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6646,17 +6256,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6986,17 +6585,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7034,17 +6622,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >

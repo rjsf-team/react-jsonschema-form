@@ -10,7 +10,6 @@ import { getInputProps, getNumericInputTitle, ariaDescribedByIds, examplesId } f
  * Features:
  * - Wraps input in DaisyUI's form-control for proper spacing
  * - Uses DaisyUI's input and input-bordered classes for styling
- * - Includes a hidden label for accessibility
  * - Handles common input properties like disabled and readonly states
  * - Processes input props based on schema type and options
  * - Supports schema examples with datalist
@@ -39,7 +38,6 @@ export default function BaseInputTemplate<
     options,
     schema,
     type,
-    label,
     placeholder,
     registry,
   } = props;
@@ -84,9 +82,6 @@ export default function BaseInputTemplate<
   return (
     <>
       <div className='form-control'>
-        <label htmlFor={id} className='label hidden' style={{ display: 'none' }}>
-          <span className='label-text'>{label}</span>
-        </label>
         <div style={{ position: 'relative' }}>
           <input
             id={id}
