@@ -36,6 +36,7 @@ export default function RangeWidget<
   const { min, max, step } = rangeSpec(schema);
   const { description, descriptionProps } = getDescriptionProps(props);
   const { thumbProps } = useProps<GenericObjectType>('Slider', {}, { thumbProps: options.thumbProps });
+  const describedBy = ariaDescribedByIds(id);
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -81,8 +82,8 @@ export default function RangeWidget<
         {...themeProps}
         // The thumb is the focusable `role="slider"` element, but Mantine drops the `thumbProps` it doesn't use
         // (https://github.com/mantinedev/mantine/issues/9218), so the root keeps `aria-describedby` until that is fixed.
-        aria-describedby={ariaDescribedByIds(id)}
-        thumbProps={{ ...thumbProps, 'aria-describedby': ariaDescribedByIds(id) }}
+        aria-describedby={describedBy}
+        thumbProps={{ ...thumbProps, 'aria-describedby': describedBy }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (
         // oxlint-disable-next-line react/no-array-index-key

@@ -59,6 +59,7 @@ export default function CheckboxesWidget<
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   const groupAriaProps = useGroupAriaProps('CheckboxGroup', props);
+  const describedBy = ariaDescribedByIds(id);
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -85,7 +86,7 @@ export default function CheckboxesWidget<
               autoFocus={i === 0 && autofocus}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              aria-describedby={ariaDescribedByIds(id)}
+              aria-describedby={describedBy}
             />
           ))}
         </Flex>

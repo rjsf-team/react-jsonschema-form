@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { use, useCallback, useMemo } from 'react';
-import type { MantineTheme } from '@mantine/core';
-import { InputWrapperContext, useMantineTheme, useProps } from '@mantine/core';
+import { InputWrapperContext, useProps } from '@mantine/core';
 import type {
   FormContextType,
   GenericObjectType,
@@ -161,21 +160,24 @@ interface InputWrapperAriaOverrides {
   labelId?: string;
 }
 
+/** Replaces the aria ids in the `InputWrapper` context, keeping the id of the success message Mantine renders, which
+ * rjsf has no id for. Mantine only puts that id in the context when the message is rendered.
+ */
 function InputWrapperAriaProvider({
   overrides,
+  successId,
   children,
 }: {
   overrides: InputWrapperAriaOverrides;
+  successId: string;
   children: ReactNode;
 }) {
   const inputWrapperContext = use(InputWrapperContext);
-  return <InputWrapperContext value={{ ...inputWrapperContext, ...overrides }}>{children}</InputWrapperContext>;
-}
-
-/** The `defaultProps` a Mantine theme sets for one component, resolved as Mantine's `useProps` resolves them */
-function themeDefaultProps(theme: MantineTheme, component: string): GenericObjectType {
-  const payload = theme.components[component]?.defaultProps;
-  return (typeof payload === 'function' ? payload(theme) : payload) ?? {};
+  const successShown = inputWrapperContext.describedBy?.split(' ').includes(successId);
+  const describedBy = [overrides.describedBy, successShown && successId].filter(Boolean).join(' ') || undefined;
+  return (
+    <InputWrapperContext value={{ ...inputWrapperContext, ...overrides, describedBy }}>{children}</InputWrapperContext>
+  );
 }
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping the
@@ -183,53 +185,59 @@ function themeDefaultProps(theme: MantineTheme, component: string): GenericObjec
  * Inputs give `wrapperProps.inputContainer` precedence over `inputContainer` and groups the reverse, as Mantine does.
  * The override is set in both places, since an explicit prop replaces the theme's default. `before` is rendered ahead
  * of the input, inside the wrapper. Also returns the `labelProps` Mantine would otherwise apply, for a group to extend.
+ * `successProps` and `labelProps` resolve with the same precedence as the container.
  */
 function useAriaContainerProps(
   component: AriaComponentName,
+  id: string,
   options: GenericObjectType,
   overrides: InputWrapperAriaOverrides,
   before?: ReactNode,
 ) {
-  const theme = useMantineTheme();
-  const { inputContainer, wrapperProps, labelProps } = useProps<GenericObjectType>(
+  const { inputContainer, wrapperProps, labelProps, successProps } = useProps<GenericObjectType>(
     themeComponentNames[component],
     {},
     {
       inputContainer: options.inputContainer,
       wrapperProps: options.wrapperProps,
       labelProps: options.labelProps,
+      successProps: options.successProps,
     },
   );
   const isGroup = component === 'CheckboxGroup' || component === 'RadioGroup';
   // A group renders a bare `Input.Wrapper`, whose own theme defaults apply beneath the group's; an input's already
   // include them
-  const wrapperDefaults = isGroup ? themeDefaultProps(theme, 'InputWrapper') : {};
+  const inputWrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
+  const wrapperDefaults: GenericObjectType = isGroup ? inputWrapperDefaults : {};
   const wrapperObject = typeof wrapperProps === 'object' && wrapperProps !== null ? wrapperProps : undefined;
-  const wrapperContainer = wrapperObject?.inputContainer;
-  let ownContainer: unknown;
-  if (isGroup) {
-    ownContainer = inputContainer ?? wrapperContainer;
-  } else {
-    ownContainer = wrapperObject && 'inputContainer' in wrapperObject ? wrapperContainer : inputContainer;
-  }
-  ownContainer ??= wrapperDefaults.inputContainer;
+  const resolveWrapperProp = (name: string, prop: unknown): unknown => {
+    let value: unknown;
+    if (isGroup) {
+      value = prop ?? wrapperObject?.[name];
+    } else {
+      value = wrapperObject && name in wrapperObject ? wrapperObject[name] : prop;
+    }
+    return value ?? wrapperDefaults[name];
+  };
+  const ownContainer = resolveWrapperProp('inputContainer', inputContainer);
 
   const { describedBy, labelId } = overrides;
-  const hasLabelId = 'labelId' in overrides;
+  const ownSuccessProps = resolveWrapperProp('successProps', successProps) as GenericObjectType | undefined;
+  const successId: string = ownSuccessProps?.id ?? `${id}-success`;
   const container = useCallback(
     (children: ReactNode) => (
-      <InputWrapperAriaProvider overrides={hasLabelId ? { describedBy, labelId } : { describedBy }}>
+      <InputWrapperAriaProvider overrides={isGroup ? { describedBy, labelId } : { describedBy }} successId={successId}>
         {before}
         {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
       </InputWrapperAriaProvider>
     ),
-    [describedBy, labelId, hasLabelId, before, ownContainer],
+    [describedBy, labelId, isGroup, successId, before, ownContainer],
   );
   const containerProps = useMemo(
     () => ({ inputContainer: container, wrapperProps: { ...wrapperObject, inputContainer: container } }),
     [container, wrapperObject],
   );
-  const ownLabelProps: unknown = labelProps ?? wrapperDefaults.labelProps;
+  const ownLabelProps = resolveWrapperProp('labelProps', labelProps);
   return { containerProps, ownLabelProps };
 }
 
@@ -251,7 +259,7 @@ export function useAriaDescribedByProps(
   options: GenericObjectType = {},
   includeExamples = false,
 ) {
-  return useAriaContainerProps(component, options, { describedBy: ariaDescribedByIds(id, includeExamples) })
+  return useAriaContainerProps(component, id, options, { describedBy: ariaDescribedByIds(id, includeExamples) })
     .containerProps;
 }
 
@@ -285,6 +293,7 @@ export function useGroupAriaProps<
   );
   const { containerProps, ownLabelProps } = useAriaContainerProps(
     component,
+    id,
     options,
     { describedBy: undefined, labelId: label ? titleId(id) : undefined },
     hiddenLabel,
