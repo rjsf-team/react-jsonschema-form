@@ -21,7 +21,6 @@ export default function FieldTemplate<
     displayLabel,
     errors,
     help,
-    rawHelp,
     hidden,
     id,
     label,
@@ -33,7 +32,7 @@ export default function FieldTemplate<
     schema,
     uiSchema,
   } = props;
-  const { formContext } = registry;
+  const { formContext, globalUiOptions } = registry;
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -69,12 +68,27 @@ export default function FieldTemplate<
       break;
   }
   const isCheckbox = uiOptions.widget === 'checkbox';
+  // `Form.Item`'s `help` is the only slot antd gives us for below-the-field text, so help and errors have to share it,
+  // and antd draws an empty explain block for a `help` node that renders nothing. The gate has to resolve help exactly
+  // as `SchemaField` does — hence the second `getUiOptions` rather than `rawHelp`, which is undefined for a `ui:help`
+  // passed as a React element, or `uiOptions`, which omits `globalUiOptions` so it can keep resolving the widget from
+  // this field's own uiSchema.
+  const { help: resolvedHelp } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const helpNode = resolvedHelp ? help : undefined;
+  const errorNode = hasError ? errors : undefined;
+  const explainNode =
+    errorNode || helpNode ? (
+      <>
+        {errorNode}
+        {helpNode}
+      </>
+    ) : undefined;
   return (
     <WrapIfAdditionalTemplate {...props}>
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (hasError ? errors : undefined)}
+        help={explainNode}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}
