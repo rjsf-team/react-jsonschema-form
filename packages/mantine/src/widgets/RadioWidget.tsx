@@ -4,7 +4,7 @@ import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionsIndexForValue,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -70,7 +70,8 @@ export default function RadioWidget<
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selected: string | undefined = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat);
 
   return (
     <Radio.Group

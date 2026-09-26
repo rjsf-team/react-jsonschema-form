@@ -956,7 +956,8 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
-schema type and `widget` name. If no widget component can be found an `Error` is thrown.
+schema type and `widget` name. The `object` type accepts `select`, `radio` and `hidden`, which a select over object
+constants renders with. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
@@ -971,6 +972,20 @@ schema type and `widget` name. If no widget component can be found an `Error` is
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords.
+Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
+the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
+
+#### Parameters
+
+- schema: S - The schema that may carry an `anyOf` or a `oneOf`
+
+#### Returns
+
+- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1124,6 +1139,20 @@ This happens when either the schema has an `enum` array with a single value or t
 #### Returns
 
 - boolean: True if the `schema` has a single constant value, false otherwise
+
+### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
+as a select. An empty list passes, since every one of its options is vacuously a constant; a caller that needs an
+option to exist checks the length itself.
+
+#### Parameters
+
+- options: unknown - The `anyOf` or `oneOf` list, or anything else
+
+#### Returns
+
+- boolean: True if `options` is an array whose every entry is a constant schema object
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -2013,6 +2042,7 @@ The closest match is determined using the number of matching properties, and mor
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants renders as one select for the whole value, so it keeps its label.
 
 #### Parameters
 
@@ -2128,8 +2158,8 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants.
-When the schema has both keywords, `anyOf` is the one checked, as it is in `optionsList()`.
+Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
+When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
 
 #### Parameters
 

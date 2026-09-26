@@ -1,6 +1,7 @@
 import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   CustomMergeAllOf,
@@ -19,11 +20,11 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
     return schema.enum;
   }
 
-  // `anyOf` is read first, the same as `isSelect()` and `optionsList()`, so the values are those of the rendered select
-  const options = (schema.anyOf || schema.oneOf) as S[] | undefined;
-  if (!Array.isArray(options)) {
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (!xxxOfKey) {
     return undefined;
   }
+  const options = schema[xxxOfKey] as S[];
 
   const values = options
     .map((option) => {

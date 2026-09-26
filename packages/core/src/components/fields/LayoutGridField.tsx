@@ -13,18 +13,17 @@ import type {
 import {
   getByPath,
   toPath,
-  ANY_OF_KEY,
   deepEquals,
   getDiscriminatorFieldFromSchema,
   getTemplate,
   getTestIds,
   getPropertySchema,
   getUiOptions,
+  getXxxOfKey,
   hashObject,
   isObject,
   isPlainObject,
   lookupFromFormContext,
-  ONE_OF_KEY,
   PROPERTIES_KEY,
   READONLY_KEY,
   toFieldPath,
@@ -353,10 +352,10 @@ export function getSchemaDetailsForField<
     // dive into the properties of the current schema (when it exists) and get the schema for the next part
     let segment: string | number = part;
     const schemaProperties = schema?.[PROPERTIES_KEY];
+    const xxx = schema && getXxxOfKey<S>(schema);
     if (schemaProperties) {
       rawSchema = (schemaProperties[part] ?? {}) as S;
-    } else if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
+    } else if (schema && xxx) {
       // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
       const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
       rawSchema = getPropertySchema<S>(selectedSchema, part);
@@ -381,8 +380,8 @@ export function getSchemaDetailsForField<
   }
   if (schema && leafPath) {
     // When we have both a schema and a leafPath...
-    if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
+    const xxx = getXxxOfKey<S>(schema);
+    if (xxx) {
       // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
       schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
     }
@@ -398,11 +397,11 @@ export function getSchemaDetailsForField<
       schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
     }
     isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
-    if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
+    const optionsKey = schema && getXxxOfKey<S>(schema);
+    if (optionsKey) {
       // Set the options if we have a schema with a oneOf/anyOf
-      const discriminator = getDiscriminatorFieldFromSchema(schema);
-      optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };
+      const discriminator = getDiscriminatorFieldFromSchema(schema!);
+      optionsInfo = { options: schema![optionsKey] as S[], hasDiscriminator: !!discriminator };
     }
   }
 

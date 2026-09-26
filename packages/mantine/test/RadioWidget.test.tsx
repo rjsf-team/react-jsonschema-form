@@ -1,7 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Templates from '../src/templates/index.ts';
 import RadioWidget from '../src/widgets/RadioWidget.tsx';
@@ -72,4 +72,33 @@ describe('RadioWidget', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test.each(['indexed', 'realValue'] as const)('checks the selected option in the %s format', (optionValueFormat) => {
+    renderWidget({
+      value: 'two',
+      options: {
+        enumOptions: ['one', 'two'].map((value) => ({ label: value, value })),
+        optionValueFormat,
+      },
+    });
+    expect(screen.getByRole('radio', { name: 'two' })).toBeChecked();
+  });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'checks the selected object option in the %s format',
+    (optionValueFormat) => {
+      renderWidget({
+        value: { a: 2 },
+        options: {
+          enumOptions: [
+            { label: 'One', value: { a: 1 } },
+            { label: 'Two', value: { a: 2 } },
+          ],
+          optionValueFormat,
+        },
+      });
+      expect(screen.getByRole('radio', { name: 'Two' })).toBeChecked();
+      expect(screen.getByRole('radio', { name: 'One' })).not.toBeChecked();
+    },
+  );
 });

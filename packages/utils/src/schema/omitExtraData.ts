@@ -1,7 +1,7 @@
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
-import isConstant from '../isConstant.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject from '../isObject.ts';
 import type {
   CustomMergeAllOf,
@@ -273,13 +273,8 @@ export default function omitExtraData<
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by. The list passed in
-    // is checked rather than `isSelect()` on the parent, which judges only one keyword when the parent carries both
-    if (
-      !Array.isArray(oneOf) ||
-      Array.isArray(childSchema.enum) ||
-      oneOf.every((option) => isObject(option) && isConstant<S>(option as S))
-    ) {
+    // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by
+    if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.

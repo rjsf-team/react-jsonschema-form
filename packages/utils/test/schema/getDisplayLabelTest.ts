@@ -24,6 +24,16 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     it('object type from additionalProperty', () => {
       expect(getDisplayLabel(testValidator, { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true })).toEqual(true);
     });
+    it('object type with constant options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }),
+      ).toEqual(true);
+    });
+    it('object type with non-constant options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', anyOf: [{ properties: { a: { type: 'string' } } }] }),
+      ).toEqual(false);
+    });
     it('boolean type without widget', () => {
       expect(getDisplayLabel(testValidator, { type: 'boolean' })).toEqual(false);
     });
@@ -44,6 +54,11 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       });
       it('items enum', () => {
         expect(getDisplayLabel(testValidator, { type: 'array', enum: ['NW', 'NE', 'SW', 'SE'] }, {})).toEqual(false);
+      });
+      it('constant options', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] }, {})).toEqual(
+          true,
+        );
       });
       it('files type', () => {
         expect(getDisplayLabel(testValidator, { type: 'array' }, { 'ui:widget': 'files' })).toEqual(true);
