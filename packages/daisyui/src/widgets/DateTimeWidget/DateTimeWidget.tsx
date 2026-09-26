@@ -8,7 +8,7 @@ import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { fieldLabelId } from '../../utils.ts';
+import { getTriggerLabelledBy, triggerValueId } from '../../utils.ts';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -205,13 +205,25 @@ export default function DateTimeWidget<
 
   const { isOpen, setIsOpen, month, setMonth } = useDatePickerState(initialDate);
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLButtonElement>(null);
+
+  /** Commit the instant the picker is holding, which closing it does whether or not the user chose one
+   */
+  const commitDate = useCallback(() => {
+    if (localDate) {
+      onChange(commitValue(localDate));
+    } else if (!value) {
+      // A stored value this widget could not read is left alone: the user dismissed the picker without choosing a
+      // day, which is not a request to throw that value away
+      onChange(commitValue(undefined));
+    }
+  }, [commitValue, localDate, onChange, value]);
 
   // Close the popup when clicking outside and commit changes.
   useClickOutside(containerRef, () => {
     if (isOpen) {
       setIsOpen(false);
-      onChange(commitValue(localDate));
+      commitDate();
       // Manually invoke the blur handler to ensure blur event is triggered
       if (onBlur) {
         onBlur(id, value);
@@ -249,7 +261,12 @@ export default function DateTimeWidget<
         const [hours, minutes] = e.target.value.split(':');
         const newDate = new Date(localDate);
         newDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-        setLocalDate(newDate);
+        // An emptied or half-typed time parses as `NaN`, which invalidates the whole date. The last valid one is kept
+        // instead, so the input re-renders the time it still holds and the user can carry on editing it; an
+        // `Invalid Date` in this state throws from the calendar's month caption before it can be corrected
+        if (isValid(newDate)) {
+          setLocalDate(newDate);
+        }
       }
     },
     [localDate],
@@ -281,16 +298,6 @@ export default function DateTimeWidget<
     }
   }, [id, onBlur, value, isOpen]);
 
-  // Handle keydown events for accessibility
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        togglePicker(e as unknown as React.MouseEvent);
-      }
-    },
-    [togglePicker],
-  );
-
   // Prevent event propagation for popup container
   const handleContainerClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -317,45 +324,38 @@ export default function DateTimeWidget<
    */
   const handleDoneClick = useCallback(() => {
     setIsOpen(false);
-    onChange(commitValue(localDate));
+    commitDate();
     if (onBlur) {
       onBlur(id, value);
     }
     inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value, setIsOpen, commitValue]);
+  }, [commitDate, onBlur, id, value, setIsOpen]);
 
   const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP p') : undefined;
-  // The trigger's own contents carry the selected value, so it names itself from the label *and* itself to keep that
-  // value in the name. With no value those contents are the label, which would otherwise read out twice
-  let triggerLabelledBy: string | undefined;
-  if (!hideLabel && label) {
-    triggerLabelledBy = formattedValue ? `${fieldLabelId(id)} ${id}` : fieldLabelId(id);
-  }
+  const triggerLabelledBy = getTriggerLabelledBy({ id, label, hideLabel, hasValue: !!formattedValue });
 
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
-        <div
+        <button
+          type='button'
           id={id}
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
           onClick={togglePicker}
-          onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
           aria-labelledby={triggerLabelledBy}
-          tabIndex={0}
           ref={inputRef}
         >
-          <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
+          <span id={triggerValueId(id)} className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
             {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
-        </div>
+        </button>
         {isOpen && (
           <div
             role='presentation'

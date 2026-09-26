@@ -1,9 +1,47 @@
-import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, getWidget, hasWidget } from '@rjsf/utils';
+import type {
+  FieldTemplateProps,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+  RegistryWidgetsType,
+  Widget,
+} from '@rjsf/utils';
+import { getSchemaType, getTemplate, getUiOptions, getWidget } from '@rjsf/utils';
 
 import { fieldLabelId, getDaisy } from '../../utils.ts';
-import CheckboxWidget from '../../widgets/CheckboxWidget/CheckboxWidget.tsx';
-import ToggleWidget from '../../widgets/ToggleWidget/ToggleWidget.tsx';
+
+/** Whether the widget a field resolves to renders the field's label itself, which the checkbox and the toggle do,
+ * after their input. The answer is the registry's own entry rather than this theme's component, so a consumer who
+ * wraps or replaces either key still gets exactly one label: whatever is registered as the checkbox or the toggle is
+ * the widget that renders it, whoever wrote it. A widget registered under any other key cannot be recognized from
+ * here and gets the template's label too, which is the better way to be wrong — guessing the other way would leave a
+ * control replaced by a label-less widget with no accessible name at all.
+ *
+ * Only a `boolean` can reach either widget, so nothing else is resolved: `getWidget()` reports a name it cannot
+ * resolve by throwing an error built from a `JSON.stringify()` of the whole schema, and a `ui:widget` that a custom
+ * `ui:field` consumes itself would pay for that on every render just to be told no.
+ *
+ * @param schema - The schema for the field
+ * @param widget - The widget named by the field's ui options, if any
+ * @param registeredWidgets - The widgets of the field's registry
+ * @returns - True if that widget renders the field's label itself
+ */
+function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  widget: Widget<T, S, F> | string | undefined,
+  registeredWidgets: RegistryWidgetsType<T, S, F>,
+) {
+  if (!widget || getSchemaType(schema) !== 'boolean') {
+    return false;
+  }
+  let resolved: Widget<T, S, F>;
+  try {
+    resolved = getWidget<T, S, F>(schema, widget, registeredWidgets);
+  } catch {
+    return false;
+  }
+  return resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle;
+}
 
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
@@ -63,20 +101,10 @@ export default function FieldTemplate<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  // The checkbox and toggle widgets render their own label after the input, and their own description, so this
-  // template renders neither. Every other widget leaves both to this template
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
-  // renders neither for them. Which widget `ui:widget` names is resolved rather than matched against how it is spelled,
-  // since an alias, a registry key and the component itself all have to reach the same answer — and a consumer who
-  // overrides one of those keys with a widget of their own has to reach a different one, or their field would be left
-  // with no label at all. `hasWidget()` first because `getWidget()` throws for a name nothing is registered under. A
-  // third-party widget that renders its own label cannot be recognized from here, and gets this template's label too
-  const { widget } = uiOptions;
-  const resolvedWidget =
-    widget && hasWidget<T, S, F>(schema, widget, registry.widgets)
-      ? getWidget<T, S, F>(schema, widget, registry.widgets)
-      : undefined;
-  const widgetRendersLabel = resolvedWidget === CheckboxWidget || resolvedWidget === ToggleWidget;
+  // renders neither for them. Which widget the ui options name is resolved rather than matched against how it is
+  // spelled, since an alias, a registry key and the component itself all have to reach the same answer
+  const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',

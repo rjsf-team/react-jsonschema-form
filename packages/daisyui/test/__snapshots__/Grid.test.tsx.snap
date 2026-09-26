@@ -246,17 +246,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="w-full"
                     >
-                      <div
+                      <button
                         aria-expanded="false"
                         aria-haspopup="true"
                         aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="text-base-content/50"
+                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -273,7 +273,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             fill="currentColor"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                   <div
@@ -1931,17 +1931,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="w-full"
                     >
-                      <div
+                      <button
                         aria-expanded="false"
                         aria-haspopup="true"
                         aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="text-base-content/50"
+                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -1958,7 +1958,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             fill="currentColor"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                   <div
@@ -3616,17 +3616,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="w-full"
                     >
-                      <div
+                      <button
                         aria-expanded="false"
                         aria-haspopup="true"
                         aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="text-base-content/50"
+                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -3643,7 +3643,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             fill="currentColor"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                   <div
@@ -5301,17 +5301,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="w-full"
                     >
-                      <div
+                      <button
                         aria-expanded="false"
                         aria-haspopup="true"
                         aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
-                        role="button"
-                        tabindex="0"
+                        type="button"
                       >
                         <span
                           class="text-base-content/50"
+                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -5328,7 +5328,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             fill="currentColor"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                   <div
@@ -6975,17 +6975,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="w-full"
                   >
-                    <div
+                    <button
                       aria-expanded="false"
                       aria-haspopup="true"
                       aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
-                      role="button"
-                      tabindex="0"
+                      type="button"
                     >
                       <span
                         class="text-base-content/50"
+                        id="root_person_birth_date__value"
                       >
                         DOB
                       </span>
@@ -7002,7 +7002,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           fill="currentColor"
                         />
                       </svg>
-                    </div>
+                    </button>
                   </div>
                 </div>
                 <div
@@ -8486,17 +8486,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="w-full"
                   >
-                    <div
+                    <button
                       aria-expanded="false"
                       aria-haspopup="true"
                       aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
-                      role="button"
-                      tabindex="0"
+                      type="button"
                     >
                       <span
                         class="text-base-content/50"
+                        id="root_person_birth_date__value"
                       >
                         DOB
                       </span>
@@ -8513,7 +8513,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           fill="currentColor"
                         />
                       </svg>
-                    </div>
+                    </button>
                   </div>
                 </div>
                 <div

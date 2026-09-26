@@ -8,7 +8,7 @@ exports[`ToggleWidget > renders correctly 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <div
+      <span
         class="mr-2"
       >
         <input
@@ -16,10 +16,9 @@ exports[`ToggleWidget > renders correctly 1`] = `
           class="toggle "
           id="test-id"
           name="test-id"
-          required=""
           type="checkbox"
         />
-      </div>
+      </span>
       <span
         class="label-text"
       >
@@ -38,7 +37,7 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <div
+      <span
         class="mr-2"
       >
         <input
@@ -47,10 +46,9 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
           disabled=""
           id="test-id"
           name="test-id"
-          required=""
           type="checkbox"
         />
-      </div>
+      </span>
       <span
         class="label-text"
       >
@@ -69,7 +67,7 @@ exports[`ToggleWidget > renders with custom label 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <div
+      <span
         class="mr-2"
       >
         <input
@@ -77,10 +75,9 @@ exports[`ToggleWidget > renders with custom label 1`] = `
           class="toggle "
           id="test-id"
           name="test-id"
-          required=""
           type="checkbox"
         />
-      </div>
+      </span>
       <span
         class="label-text"
       >

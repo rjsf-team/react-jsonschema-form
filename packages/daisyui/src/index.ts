@@ -6,6 +6,7 @@ export { default as Form, generateForm } from './DaisyUIForm.tsx';
 export { __createDaisyUIFrameProvider } from './DaisyUIFrameProvider.tsx';
 export { default as GridTemplate } from './templates/GridTemplate/GridTemplate.tsx';
 export { default as Templates, generateTemplates } from './templates/Templates.tsx';
+export { fieldLabelId, getGroupProps, getTriggerLabelledBy, triggerValueId } from './utils.ts';
 export { default as Theme, generateTheme } from './theme/index.ts';
 export { default as Widgets, generateWidgets } from './widgets/Widgets.tsx';
 export { ThemeProvider, useTheme };

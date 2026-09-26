@@ -653,7 +653,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
@@ -663,7 +663,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           name="root[active]"
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >

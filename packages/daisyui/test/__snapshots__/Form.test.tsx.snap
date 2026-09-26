@@ -17,16 +17,16 @@ exports[`format iso-date-time 1`] = `
           <div
             class="w-full"
           >
-            <div
+            <button
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="text-base-content/50"
+                id="root__value"
               />
               <svg
                 aria-hidden="true"
@@ -41,7 +41,7 @@ exports[`format iso-date-time 1`] = `
                   fill="currentColor"
                 />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
         <div
@@ -238,7 +238,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <div
+                                            <span
                                               class="mr-2"
                                             >
                                               <input
@@ -247,7 +247,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 name="root[tasks][0][done]"
                                                 type="checkbox"
                                               />
-                                            </div>
+                                            </span>
                                             <span
                                               class="label-text"
                                             >
@@ -439,7 +439,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <div
+                                            <span
                                               class="mr-2"
                                             >
                                               <input
@@ -449,7 +449,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 name="root[tasks][1][done]"
                                                 type="checkbox"
                                               />
-                                            </div>
+                                            </span>
                                             <span
                                               class="label-text"
                                             >
@@ -1811,7 +1811,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
@@ -1820,7 +1820,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                           name="root[active]"
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >
@@ -2072,7 +2072,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <div
+                                            <span
                                               class="mr-2"
                                             >
                                               <input
@@ -2081,7 +2081,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 name="root.tasks.0.done"
                                                 type="checkbox"
                                               />
-                                            </div>
+                                            </span>
                                             <span
                                               class="label-text"
                                             >
@@ -2273,7 +2273,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <div
+                                            <span
                                               class="mr-2"
                                             >
                                               <input
@@ -2283,7 +2283,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 name="root.tasks.1.done"
                                                 type="checkbox"
                                               />
-                                            </div>
+                                            </span>
                                             <span
                                               class="label-text"
                                             >
@@ -3396,7 +3396,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
@@ -3405,7 +3405,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                           name="root.active"
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >
@@ -4342,7 +4342,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
           <label
             class="label cursor-pointer justify-start"
           >
-            <div
+            <span
               class="mr-2"
             >
               <input
@@ -4351,7 +4351,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                 name="root"
                 type="checkbox"
               />
-            </div>
+            </span>
             <span
               class="label-text"
             >
@@ -4397,7 +4397,7 @@ exports[`single fields > checkbox field with label 1`] = `
           <label
             class="label cursor-pointer justify-start"
           >
-            <div
+            <span
               class="mr-2"
             >
               <input
@@ -4406,7 +4406,7 @@ exports[`single fields > checkbox field with label 1`] = `
                 name="root"
                 type="checkbox"
               />
-            </div>
+            </span>
             <span
               class="label-text"
             >
@@ -4462,7 +4462,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
           <label
             class="label cursor-pointer justify-start"
           >
-            <div
+            <span
               class="mr-2"
             >
               <input
@@ -4471,7 +4471,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
                 name="root"
                 type="checkbox"
               />
-            </div>
+            </span>
             <span
               class="label-text"
             >
@@ -4535,7 +4535,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
           <label
             class="label cursor-pointer justify-start"
           >
-            <div
+            <span
               class="mr-2"
             >
               <input
@@ -4544,7 +4544,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                 name="root"
                 type="checkbox"
               />
-            </div>
+            </span>
             <span
               class="label-text"
             >
@@ -5395,16 +5395,16 @@ exports[`single fields > format date 1`] = `
           <div
             class="w-full"
           >
-            <div
+            <button
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="text-base-content/50"
+                id="root__value"
               />
               <svg
                 aria-hidden="true"
@@ -5419,7 +5419,7 @@ exports[`single fields > format date 1`] = `
                   fill="currentColor"
                 />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
         <div
@@ -5460,16 +5460,16 @@ exports[`single fields > format datetime 1`] = `
           <div
             class="w-full"
           >
-            <div
+            <button
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
-              role="button"
-              tabindex="0"
+              type="button"
             >
               <span
                 class="text-base-content/50"
+                id="root__value"
               />
               <svg
                 aria-hidden="true"
@@ -5484,7 +5484,7 @@ exports[`single fields > format datetime 1`] = `
                   fill="currentColor"
                 />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
         <div
@@ -11307,17 +11307,16 @@ exports[`single fields > required checkbox field 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
                           class="checkbox"
                           id="root_agree"
                           name="root_agree"
-                          required=""
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >
@@ -11390,7 +11389,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
@@ -11398,10 +11397,9 @@ exports[`single fields > required checkbox field, default true 1`] = `
                           class="checkbox"
                           id="root_agree"
                           name="root_agree"
-                          required=""
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >

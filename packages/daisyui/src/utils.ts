@@ -60,6 +60,18 @@ export function fieldLabelId(id: string) {
   return `${id}__label`;
 }
 
+/** Return the `id` of the element inside a picker's trigger that displays the selected value, which the trigger
+ * references to keep that value in its accessible name. The trigger cannot reference itself for this: it is a
+ * `<button>`, which the `FieldTemplate` label already names through `htmlFor`, and a self-reference inside
+ * `aria-labelledby` is dropped rather than resolved back to the element's own contents.
+ *
+ * @param id - The id of the trigger
+ * @returns - The id of the element displaying its value
+ */
+export function triggerValueId(id: string) {
+  return `${id}__value`;
+}
+
 /** Builds the props that name a widget rendering several controls, since no single control in a group can carry the
  * label `FieldTemplate` renders above it and a `label htmlFor` does not associate with the group's wrapper. The group
  * points at the label element rather than repeating its text, so its accessible name is whatever the label displays:
@@ -83,8 +95,38 @@ export function getGroupProps({ id, label, hideLabel, role }: GetGroupProps): Gr
     return { id, role };
   }
   // Both, because the widget cannot see whether the template rendered a label to point at. `aria-labelledby` wins
-  // wherever it resolves, so the name stays the visible text; `aria-label` is what names the group in the one case the
-  // two conditions disagree — a `boolean` whose widget is set through `ui:options.widget` rather than `ui:widget`,
-  // where `getDisplayLabel()` suppresses the template's label but `BooleanField` still reports `hideLabel: false`
+  // wherever it resolves, so the name stays the visible text; `aria-label` is what names the group wherever the two
+  // conditions disagree — a `boolean` whose widget is set through `ui:options.widget` rather than `ui:widget`, where
+  // `getDisplayLabel()` suppresses the template's label but `BooleanField` still reports `hideLabel: false`, and an
+  // optional field rendered without one. The fallback is lossy: the `label` a widget is handed is not always the text
+  // the template would have rendered, so in those cases the group is named something that is not on the screen. That
+  // first case is `getDisplayLabel()` reading only the `ui:widget` spelling, which `SchemaField` carries its own
+  // workaround for; the fallback is worth dropping once that reads the reduced ui options instead
   return { id, role, 'aria-labelledby': fieldLabelId(id), 'aria-label': label };
+}
+
+interface GetTriggerLabelledBy {
+  id: string;
+  label?: string;
+  hideLabel?: boolean;
+  hasValue: boolean;
+}
+
+/** Names the trigger of a picker whose own contents carry the selected value. The trigger points at the label element
+ * `FieldTemplate` renders *and* at itself, so the value stays part of the name; with no value those contents are the
+ * label, which would otherwise read out twice, so only the label element is referenced. Where the label is hidden or
+ * the field has no title the template renders no label element to point at, and the trigger's contents are the whole
+ * name.
+ *
+ * @param id - The trigger's `id`, which `fieldLabelId()` and `triggerValueId()` derive the two ids from
+ * @param label - The field's label, empty when it has no title
+ * @param hideLabel - Whether the label is hidden, in which case the template renders none
+ * @param hasValue - Whether the trigger is displaying a value rather than falling back to the label
+ * @returns - The `aria-labelledby` for the trigger, or `undefined` where its own contents are the whole name
+ */
+export function getTriggerLabelledBy({ id, label, hideLabel, hasValue }: GetTriggerLabelledBy): string | undefined {
+  if (hideLabel || !label) {
+    return undefined;
+  }
+  return hasValue ? `${fieldLabelId(id)} ${triggerValueId(id)}` : fieldLabelId(id);
 }

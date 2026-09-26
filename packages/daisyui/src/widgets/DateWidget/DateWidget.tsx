@@ -7,7 +7,7 @@ import { format, isSameDay, isToday, isValid, parseISO } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { fieldLabelId } from '../../utils.ts';
+import { getTriggerLabelledBy, triggerValueId } from '../../utils.ts';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -126,6 +126,48 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
 // Use React.memo to optimize re-renders
 const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
+/** Reads the stored value of a `format: 'date'` field as the calendar day it stands for.
+ *
+ * A `date` proper carries no time, and `parseISO` reads it as local midnight where `new Date()` would read UTC
+ * midnight and so name the previous day once date-fns formats it locally.
+ *
+ * A value carrying a time is not a `date` at all, and which day it names depends on where it came from. An instant
+ * landing exactly on UTC midnight names that calendar day — it is what a backend emits for a date, and what this
+ * widget commits for a user in UTC. Any other time of day is the `toISOString()` of a local midnight, the shape older
+ * daisyUI data holds, so it names the day it lands on in the reader's own zone. Reading every such value one way or
+ * the other moves the day back by one for either the backend-written kind behind UTC or the daisyUI-written kind
+ * ahead of it.
+ *
+ * @param raw - The stored value
+ * @returns - The day it names, or `undefined` for a value that cannot be parsed, which would otherwise become an
+ *          `Invalid Date` that the calendar, its month caption and the trigger would each have to guard against
+ */
+function parseDateValue(raw: string | number | Date) {
+  // Anything carrying a time goes to `Date`, which reads the lowercase separator and zone RFC 3339 also allows and
+  // `parseISO` rejects, as well as the epoch number that is not ISO text at all
+  if (typeof raw === 'string' && !/t/i.test(raw)) {
+    const dateOnly = parseISO(raw);
+    return isValid(dateOnly) ? dateOnly : undefined;
+  }
+  const instant = new Date(raw);
+  if (!isValid(instant)) {
+    return undefined;
+  }
+  const namesACalendarDay =
+    instant.getUTCHours() === 0 &&
+    instant.getUTCMinutes() === 0 &&
+    instant.getUTCSeconds() === 0 &&
+    instant.getUTCMilliseconds() === 0;
+  if (!namesACalendarDay) {
+    return instant;
+  }
+  // Through the day's own ISO text rather than the `Date` constructor, which reads a year below 100 as a two-digit one
+  // and would turn a stored year 50 into 1950
+  const [utcDay = ''] = instant.toISOString().split('T');
+  const day = parseISO(utcDay);
+  return isValid(day) ? day : instant;
+}
+
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
  *
  * Features:
@@ -143,18 +185,12 @@ export default function DateWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, label, hideLabel, placeholder, options, onChange, onFocus, onBlur } = props;
-  // Initialize the local date from the parent's value. Only the `YYYY-MM-DD` part is parsed, and with `parseISO`
-  // rather than `new Date()`, which reads a date-only string as UTC midnight and so names the previous day once
-  // date-fns formats it in local time. Taking the date part also means a value left over from when this widget
-  // committed a UTC date-time still shows the day it names. An unparsable value normalizes to `undefined` here rather
-  // than becoming an `Invalid Date` that the calendar, its month caption and the trigger would each have to guard.
   const initialDate = useMemo(() => {
-    if (!value) {
-      return undefined;
+    // Anything else — an object, a boolean — names no day, and `Date` would read it as `Invalid Date`
+    if (typeof value === 'string' || typeof value === 'number' || value instanceof Date) {
+      return parseDateValue(value);
     }
-    const [datePart = ''] = String(value).split('T');
-    const parsed = parseISO(datePart);
-    return isValid(parsed) ? parsed : undefined;
+    return undefined;
   }, [value]);
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
 
@@ -165,13 +201,25 @@ export default function DateWidget<
 
   const { isOpen, setIsOpen, month, setMonth } = useDatePickerState(initialDate);
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLButtonElement>(null);
+
+  /** Commit the day the picker is holding, which closing it does whether or not the user chose one
+   */
+  const commitDate = useCallback(() => {
+    if (localDate) {
+      onChange(format(localDate, 'yyyy-MM-dd'));
+    } else if (!value) {
+      // A stored value this widget could not read is left alone: the user dismissed the picker without choosing a
+      // day, which is not a request to throw that value away
+      onChange(options.emptyValue);
+    }
+  }, [localDate, onChange, options.emptyValue, value]);
 
   // Close the popup when clicking outside and commit changes.
   useClickOutside(containerRef, () => {
     if (isOpen) {
       setIsOpen(false);
-      onChange(localDate ? format(localDate, 'yyyy-MM-dd') : options.emptyValue);
+      commitDate();
       // Manually invoke the blur handler to ensure blur event is triggered
       if (onBlur) {
         onBlur(id, value);
@@ -345,49 +393,38 @@ export default function DateWidget<
    */
   const handleDoneClick = useCallback(() => {
     setIsOpen(false);
-    onChange(localDate ? format(localDate, 'yyyy-MM-dd') : options.emptyValue);
+    commitDate();
     if (onBlur) {
       onBlur(id, value);
     }
     inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value, setIsOpen]);
+  }, [commitDate, onBlur, id, value, setIsOpen]);
 
   const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP') : undefined;
-  // The trigger's own contents carry the selected value, so it names itself from the label *and* itself to keep that
-  // value in the name. With no value those contents are the label, which would otherwise read out twice
-  let triggerLabelledBy: string | undefined;
-  if (!hideLabel && label) {
-    triggerLabelledBy = formattedValue ? `${fieldLabelId(id)} ${id}` : fieldLabelId(id);
-  }
+  const triggerLabelledBy = getTriggerLabelledBy({ id, label, hideLabel, hasValue: !!formattedValue });
 
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
-        <div
+        <button
+          type='button'
           id={id}
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
           onClick={togglePicker}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              togglePicker(e as unknown as React.MouseEvent);
-            }
-          }}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
           aria-labelledby={triggerLabelledBy}
-          tabIndex={0}
           ref={inputRef}
         >
-          <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
+          <span id={triggerValueId(id)} className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
             {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
-        </div>
+        </button>
         {isOpen && (
           <div
             ref={containerRef}

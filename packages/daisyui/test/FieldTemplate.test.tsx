@@ -83,7 +83,21 @@ describe('FieldTemplate', () => {
       expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(1);
     });
 
-    test('renders the label itself when a widget of its own is registered under the checkbox key', () => {
+    test('leaves the label to a consumer widget wrapping the checkbox under its key', () => {
+      function WrappedCheckbox(props: WidgetProps) {
+        return <DaisyCheckboxWidget {...props} />;
+      }
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'checkbox' } }, agree, {
+        CheckboxWidget: WrappedCheckbox,
+      });
+
+      // A wrapper is a component of its own, so the rule is the registry key rather than the identity of this
+      // theme's widget: whatever is registered as the checkbox is what renders the label
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
+    test('leaves the label to a label-less widget registered under the checkbox key, which then renders none', () => {
       function PlainCheckbox({ id, value, onChange }: WidgetProps) {
         return <input type='checkbox' id={id} checked={!!value} onChange={(e) => onChange(e.target.checked)} />;
       }
@@ -91,8 +105,10 @@ describe('FieldTemplate', () => {
         CheckboxWidget: PlainCheckbox,
       });
 
-      // The widget under that key is no longer daisyui's, and renders no label of its own, so this template owes one
-      expect(templateLabel()).toHaveTextContent('Agree');
+      // What taking that key costs: this template cannot tell a wrapper from a replacement, and the widget that
+      // takes the checkbox's place takes its job of rendering the label with it
+      expect(templateLabel()).toBeNull();
+      expect(screen.queryByText('Agree')).not.toBeInTheDocument();
     });
 
     test('leaves the label to the toggle widget, which renders it after the switch', () => {
