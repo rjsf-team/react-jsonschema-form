@@ -58,6 +58,14 @@ describe('FieldTemplate', () => {
       expect(label.querySelector('input[type="checkbox"]')).toBeInTheDocument();
     });
 
+    test('leaves the label to the toggle widget, which renders it after the switch', () => {
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'toggle' } });
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+      expect(screen.getByLabelText('Agree')).toBe(screen.getByRole('checkbox'));
+    });
+
     test('leaves the label to the checkbox widget for a nullable boolean', () => {
       const { templateLabel } = renderForm({ agree: { 'ui:widget': 'checkbox' } }, {
         type: ['boolean', 'null'],
@@ -88,6 +96,12 @@ describe('FieldTemplate', () => {
 
     test('leaves the description to the checkbox widget, which renders its own', () => {
       renderForm({ agree: { 'ui:widget': 'checkbox' } }, described);
+
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+    });
+
+    test('leaves the description to the toggle widget, which renders its own', () => {
+      renderForm({ agree: { 'ui:widget': 'toggle' } }, described);
 
       expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
     });

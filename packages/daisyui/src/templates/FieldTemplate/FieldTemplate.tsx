@@ -61,9 +61,9 @@ export default function FieldTemplate<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  // Special handling for checkboxes - they should have the label after the input, which the CheckboxWidget renders
-  // itself. Any other widget a boolean is rendered through leaves the label to this template
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The checkbox and toggle widgets render their own label after the input, and their own description, so this
+  // template renders neither. Every other widget leaves both to this template
+  const widgetRendersLabel = uiOptions.widget === 'checkbox' || uiOptions.widget === 'toggle';
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
@@ -95,7 +95,7 @@ export default function FieldTemplate<
         {...divProps}
         style={{ ...style, ...daisy.style }}
       >
-        {displayLabel && !isCheckbox && !!label && (
+        {displayLabel && !widgetRendersLabel && !!label && (
           <label id={titleId(id)} htmlFor={id} className='label'>
             <span className='label-text font-medium'>
               {label}
@@ -104,7 +104,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {displayLabel && !isCheckbox && description ? description : null}
+        {displayLabel && !widgetRendersLabel && description ? description : null}
         {errors}
         {help}
       </div>
