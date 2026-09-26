@@ -84,11 +84,13 @@ function CheckboxesWidget<
             </span>
           );
           return inline ? (
-            <label key={String(option.value)} className={`checkbox-inline ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <label key={index} className={`checkbox-inline ${disabledCls}`}>
               {checkbox}
             </label>
           ) : (
-            <div key={String(option.value)} className={`checkbox ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={index} className={`checkbox ${disabledCls}`}>
               <label>{checkbox}</label>
             </div>
           );

@@ -142,10 +142,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       if (Array.isArray(uiSchema[xxxOfKey])) {
         return uiSchema[xxxOfKey];
       }
-      logOnce(`uiSchema.${xxxOfKey} is not an array for "${title || name}"`);
+      logOnce(`uiSchema.${xxxOfKey} is not an array for ${fieldLabelForLog(id, fieldPath)}`);
     }
     return [];
-  }, [xxxOfKey, uiSchema, title, name]);
+  }, [xxxOfKey, uiSchema, id, fieldPath]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to

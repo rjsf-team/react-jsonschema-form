@@ -68,8 +68,9 @@ export type TestIdShape = Record<string, string>;
 /** Controls how enum-backed widgets encode option values in their DOM `value` attributes.
  *
  * - `'indexed'`: options are encoded as their array index (default, historical behavior).
- * - `'realValue'`: primitive option values are stringified directly, enabling native form
- *   submission. Object/array values still fall back to their index.
+ * - `'realValue'`: string, number and boolean option values are stringified directly, enabling native form
+ *   submission. Object, array and `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
+ *   (e.g. `__rjsf_index:2`), which keeps them apart from a string option that happens to look like an index.
  */
 export type OptionValueFormat = 'indexed' | 'realValue';
 
@@ -567,10 +568,12 @@ interface GlobalUISchemaOptionsKeys {
    *  - `'indexed'` (default): options are encoded as their array index. This is the
    *    historical behavior and keeps object/array enum values addressable without
    *    stringifying them.
-   *  - `'realValue'`: primitive option values are stringified directly (e.g. `"foo"`,
-   *    `"42"`, `"true"`). This enables native form submission and browser autocomplete
-   *    since the submitted value matches the enum value. Object/array values still
-   *    fall back to their index since `String(obj)` would produce `"[object Object]"`.
+   *  - `'realValue'`: string, number and boolean option values are stringified directly
+   *    (e.g. `"foo"`, `"42"`, `"true"`). This enables native form submission and browser
+   *    autocomplete since the submitted value matches the enum value. Object, array and
+   *    `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
+   *    (e.g. `"__rjsf_index:2"`), since `String(obj)` would produce `"[object Object]"`
+   *    and `String(null)` would collide with a `"null"` string option.
    *
    *  The form data passed to `onChange` is always the typed enum value; this option
    *  only affects the DOM-level encoding.

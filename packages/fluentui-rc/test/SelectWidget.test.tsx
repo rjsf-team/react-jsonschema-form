@@ -162,4 +162,30 @@ describe('SelectWidget', () => {
 
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
+
+  test('reports focus and blur with the selected value rather than its option index', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(<SelectWidget {...makeWidgetMockProps({ value: 'bar', onFocus, onBlur, options: { enumOptions } })} />);
+
+    await user.click(await screen.findByRole('combobox'));
+    expect(onFocus).toHaveBeenLastCalledWith('test-id', 'bar');
+    await user.keyboard('{Escape}');
+    await user.tab();
+    expect(onBlur).toHaveBeenLastCalledWith('test-id', 'bar');
+  });
+
+  test('multi-select: does not crash on a non-array value in the realValue format', async () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: null,
+          multiple: true,
+          options: { enumOptions, optionValueFormat: 'realValue' },
+        })}
+      />,
+    );
+
+    expect(await screen.findByRole('combobox')).toBeInTheDocument();
+  });
 });

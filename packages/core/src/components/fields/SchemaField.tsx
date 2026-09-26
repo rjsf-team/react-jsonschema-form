@@ -55,13 +55,9 @@ const COMPONENT_TYPES: Record<string, string> = {
   null: 'NullField',
 };
 
-/** The `guessType()` results whose own field can render a select over constants of that type */
-const SELECT_FIELD_TYPES = ['string', 'number', 'boolean'];
-
-/** Reduces the `guessType()` results of a constant option list to the single `type` whose field can show all of them.
- * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), an all-`null` list
- * would reach NullField, which renders nothing, and object or array constants would reach a field that edits their
- * contents rather than choosing between them. The select widget maps each option back to its original constant, so
+/** Reduces the `guessType()` results of a constant option list to the single `type` that describes all of them.
+ * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
+ * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
  * `string` can represent any of them.
  *
  * @param types - The distinct `guessType()` results of the constants in one option list
@@ -69,7 +65,7 @@ const SELECT_FIELD_TYPES = ['string', 'number', 'boolean'];
  */
 function selectTypeForConstants(types: string[]): string {
   const nonNullTypes = types.filter((type) => type !== 'null');
-  return nonNullTypes.length === 1 && SELECT_FIELD_TYPES.includes(nonNullTypes[0]) ? nonNullTypes[0] : 'string';
+  return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
 }
 
 /** Whether any of a constant option list's labels comes from somewhere other than its values: an option's own
@@ -138,6 +134,7 @@ function inferSelectType<
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
  * @param registry - The registry from which fields and templates are obtained
+ * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is a `oneOf`/`anyOf` that represents a select
  * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
  *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
@@ -150,6 +147,7 @@ function getFieldComponent<
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
+  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
 ): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean } {
   const { field, widget } = uiOptions;
@@ -162,14 +160,20 @@ function getFieldComponent<
   }
 
   const schemaType = getSchemaType(schema);
-  const type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
+  let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
+  // A select offers `null` as one of its options rather than as a field of its own, so one that lists `null` first
+  // among several types is rendered by the field for the first of the others, which NullField would leave blank
+  if (isSelectSchema && type === 'null' && Array.isArray(schema.type)) {
+    type = schema.type.find((t) => t !== 'null') ?? type;
+  }
 
   const schemaId = schema.$id;
 
   let componentName = COMPONENT_TYPES[type];
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
-  // array constants is rendered by the field that renders every other select, while `schema.type` stays as declared
-  if (isSelectSchema && (type === 'object' || type === 'array')) {
+  // array constants is rendered by the field that renders every other select, while `schema.type` stays as declared.
+  // An empty option list offers nothing to choose, so the object or array is still edited through its own field
+  if (isSelectSchema && xxxOfKey && schema[xxxOfKey]!.length > 0 && (type === 'object' || type === 'array')) {
     componentName = 'StringField';
   }
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
@@ -213,7 +217,7 @@ function getFieldComponent<
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
   // FallbackField is excluded alongside ObjectField: it renders the option selector within its own value field, for
   // the type currently chosen, so returning nothing here would drop the type selector and the options with it.
-  if (getXxxOfKey<S>(schema) && !isSelectSchema && componentName !== 'ObjectField' && !rendersFallbackUi) {
+  if (xxxOfKey && !isSelectSchema && componentName !== 'ObjectField' && !rendersFallbackUi) {
     return { FieldComponent: () => null, rendersFallbackUi: false };
   }
 
@@ -327,9 +331,16 @@ function SchemaFieldRender<
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
   // `isSelect()` resolves the schema on every call, so compute it once, and only for the `oneOf`/`anyOf` it applies to
-  const isSelectSchema = getXxxOfKey<S>(schema) !== undefined && schemaUtils.isSelect(schema);
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  const isSelectSchema = xxxOfKey !== undefined && schemaUtils.isSelect(schema);
 
-  const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(schema, uiOptions, registry, isSelectSchema);
+  const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(
+    schema,
+    uiOptions,
+    registry,
+    xxxOfKey,
+    isSelectSchema,
+  );
 
   const isDeprecated = Boolean(schema.deprecated);
   const deprecatedHandling = isDeprecated ? (uiOptions.deprecatedHandling ?? 'label') : undefined;
@@ -382,7 +393,7 @@ function SchemaFieldRender<
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
-  const rendersOptionSelector = getXxxOfKey<S>(schema) !== undefined && !isReplacingAnyOrOneOf && !isSelectSchema;
+  const rendersOptionSelector = xxxOfKey !== undefined && !isReplacingAnyOrOneOf && !isSelectSchema;
   // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
   // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
   // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
@@ -395,7 +406,6 @@ function SchemaFieldRender<
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose
   if (rendersOptionSelector && !rendersFallbackUi) {
-    const xxxOfKey = getXxxOfKey<S>(schema);
     if (xxxOfKey) {
       XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
       XxxOfOptions = schema[xxxOfKey]!.map((xxxOfSchema) =>

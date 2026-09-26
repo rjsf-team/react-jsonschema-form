@@ -2418,6 +2418,87 @@ describe('oneOf', () => {
       expect(node.querySelector('label[for=root_v]')).toHaveTextContent('Pick one');
     });
 
+    it('should keep the object type of a typeless object select, as a typed one does (#5317)', () => {
+      const schemaTypes: unknown[] = [];
+      const CustomSelect = (props: WidgetProps) => {
+        schemaTypes.push(props.schema.type);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              { const: { a: 1 }, title: 'One' },
+              { const: { a: 2 }, title: 'Two' },
+            ],
+          },
+        },
+      };
+      createFormComponent({ schema, uiSchema: { v: { 'ui:widget': CustomSelect } } });
+
+      expect(schemaTypes).toContain('object');
+      expect(schemaTypes).not.toContain('string');
+    });
+
+    it('should render a select, not NullField, for constant options whose type list starts with null', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            type: ['null', 'object', 'string'],
+            oneOf: [
+              { const: null, title: 'None' },
+              { const: { a: 1 }, title: 'One' },
+              { const: 'b', title: 'Bee' },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: {} });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'None', 'One', 'Bee']);
+      await user.selectOptions(select, 'One');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 1 } } }), 'root_v');
+    });
+
+    it('should edit the properties of a typed object whose oneOf is empty rather than render a select', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { type: 'object', properties: { name: { type: 'string' } }, oneOf: [] },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_v_name')).toBeInTheDocument();
+      expect(node.querySelector('select#root_v')).not.toBeInTheDocument();
+    });
+
+    it('should check only the selected object constant in a radio group, with no duplicate keys', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error');
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              { const: { a: 1 }, title: 'One' },
+              { const: { a: 2 }, title: 'Two' },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': 'radio' } } });
+
+      await user.click(node.querySelector('input[type=radio][value="1"]')!);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
+      const radios = node.querySelectorAll<HTMLInputElement>('input[type=radio]');
+      expect([...radios].map((radio) => radio.checked)).toEqual([false, true]);
+      expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleErrorSpy.mockRestore();
+    });
+
     it('should label the anyOf options from uiSchema.anyOf when the schema also has a oneOf', async () => {
       const schema: RJSFSchema = {
         type: 'object',

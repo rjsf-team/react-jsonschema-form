@@ -398,10 +398,10 @@ export function getSchemaDetailsForField<
     }
     isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
     const optionsKey = schema && getXxxOfKey<S>(schema);
-    if (optionsKey) {
+    if (schema && optionsKey) {
       // Set the options if we have a schema with a oneOf/anyOf
-      const discriminator = getDiscriminatorFieldFromSchema(schema!);
-      optionsInfo = { options: schema![optionsKey] as S[], hasDiscriminator: !!discriminator };
+      const discriminator = getDiscriminatorFieldFromSchema(schema);
+      optionsInfo = { options: schema[optionsKey] as S[], hasDiscriminator: !!discriminator };
     }
   }
 
