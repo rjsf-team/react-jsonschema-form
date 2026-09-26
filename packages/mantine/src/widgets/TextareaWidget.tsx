@@ -4,7 +4,7 @@ import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrors } from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -76,7 +76,7 @@ export default function TextareaWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrorText(props)}
+      error={visibleErrors(props)}
       {...themeProps}
       {...ariaDescribedByProps}
       {...getDescriptionProps(props)}

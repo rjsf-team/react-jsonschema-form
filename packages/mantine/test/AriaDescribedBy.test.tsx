@@ -110,6 +110,13 @@ describe('aria-describedby', () => {
     },
   );
 
+  test('a wrapperProps.inputContainer set to undefined replaces a top-level inputContainer, as in Mantine', () => {
+    const inputContainer = (children: ReactNode) => <div data-testid='custom-container'>{children}</div>;
+    renderField({ type: 'string' }, { 'ui:options': { inputContainer, wrapperProps: { inputContainer: undefined } } });
+
+    expect(screen.queryByTestId('custom-container')).not.toBeInTheDocument();
+  });
+
   describe('an inputContainer default from the Mantine theme', () => {
     const inputContainer = (children: ReactNode) => <div data-testid='theme-container'>{children}</div>;
 

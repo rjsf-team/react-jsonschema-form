@@ -10,7 +10,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrors } from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -67,7 +67,7 @@ export default function RadioWidget<
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={visibleErrorText(props)}
+      error={visibleErrors(props)}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}

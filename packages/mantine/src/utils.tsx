@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { use, useCallback, useMemo } from 'react';
-import { Input, InputWrapperContext, useProps } from '@mantine/core';
+import type { BoxProps, ElementProps, InputWrapperFactory, InputWrapperProps, StylesApiProps } from '@mantine/core';
+import { extractStyleProps, filterProps, InputWrapperContext, useInputProps, useProps } from '@mantine/core';
 import type {
   FormContextType,
   GenericObjectType,
@@ -75,21 +76,28 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'WrapIfAdditionalTemplate',
 ];
 
-/** Builds the text for the `error` prop Mantine's inputs render, from the errors the component should surface.
- * Mantine renders the `error` prop as text, so an empty string has to become `undefined` or the input reserves the
- * space for a message it will never show.
+/** Builds the `error` prop Mantine's inputs render, from the errors the component should surface. Mantine's error
+ * element doesn't keep line breaks, so the messages are separated by `<br>`s, and no errors has to be `undefined`, or
+ * the input reserves the space for a message it will never show.
  *
  * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
- * @returns - The error text to render, or undefined when there is none
+ * @returns - The errors to render, or undefined when there are none
  */
-export function visibleErrorText(props: VisibleErrorsProps): string | undefined {
-  return getVisibleErrors(props).join('\n') || undefined;
+export function visibleErrors(props: VisibleErrorsProps): ReactNode {
+  const errors = getVisibleErrors(props);
+  return errors.length
+    ? // oxlint-disable-next-line react/no-array-index-key
+      errors.flatMap((error, index) => (index ? [<br key={index} />, error] : [error]))
+    : undefined;
 }
 
-export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOptionsType> {
+export function cleanupOptions<T extends object>(
+  options: T,
+  extraKeys: readonly string[] = [],
+): Omit<T, keyof UIOptionsType> {
   const result = {} as T;
   for (const key in options) {
-    if (!uiOptionsKeys.includes(key)) {
+    if (!uiOptionsKeys.includes(key) && !extraKeys.includes(key)) {
       result[key] = options[key];
     }
   }
@@ -97,8 +105,9 @@ export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOp
 }
 
 /**
- * A props helper for rendering the description field across different widgets and templates
- * by generating a component for `description` and `descriptionProps` to prevent invalid markup.
+ * A props helper for rendering the description field across different widgets and templates. The description renders
+ * block content, so the `descriptionProps` from the aria hooks render its container as a `div`, to prevent invalid
+ * markup.
  *
  * @param widgetProps - The props of the widget, from which the description and hideLabel are derived
  * @returns - An object to spread on the props of the component that should render the description field
@@ -128,10 +137,14 @@ export function getDescriptionProps<
           registry={registry}
         />
       ) : undefined,
-    descriptionProps: {
-      component: 'div' as const,
-    },
   };
+}
+
+/** Renders a Mantine description as a `div`, since the description template renders block content, keeping the other
+ * `descriptionProps` Mantine would otherwise apply
+ */
+function withDescriptionDiv(descriptionProps: unknown) {
+  return { ...asObject(descriptionProps), component: 'div' as const };
 }
 
 type InputContainer = (children: ReactNode) => ReactNode;
@@ -159,11 +172,6 @@ const themeComponentNames = {
 /** The name of a Mantine input, as its `defaultProps` are keyed in the theme's `components` */
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
-interface InputWrapperAriaOverrides {
-  describedBy?: string;
-  labelId?: string;
-}
-
 function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
 }
@@ -173,23 +181,38 @@ function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined)
 }
 
 /** Replaces the aria ids in the `InputWrapper` context, keeping the id of the success message Mantine renders, which
- * rjsf has no element for. Mantine only puts that id in the context when the message is rendered.
+ * rjsf has no element for. Mantine only puts that id in the context when the message is rendered. The context's
+ * `labelId` is only replaced when one is given.
  */
 function InputWrapperAriaProvider({
-  overrides,
+  describedBy,
+  labelId,
   successId,
   children,
 }: {
-  overrides: InputWrapperAriaOverrides;
+  describedBy?: string;
+  labelId?: string;
   successId: string;
   children: ReactNode;
 }) {
   const inputWrapperContext = use(InputWrapperContext);
   const successShown = inputWrapperContext.describedBy?.split(' ').includes(successId);
-  const describedBy = [overrides.describedBy, successShown && successId].filter(Boolean).join(' ') || undefined;
-  return (
-    <InputWrapperContext value={{ ...inputWrapperContext, ...overrides, describedBy }}>{children}</InputWrapperContext>
-  );
+  const value = {
+    ...inputWrapperContext,
+    ...(labelId && { labelId }),
+    describedBy: [describedBy, successShown && successId].filter(Boolean).join(' ') || undefined,
+  };
+  return <InputWrapperContext value={value}>{children}</InputWrapperContext>;
+}
+
+interface AriaContainerOptions {
+  successId: string;
+  describedBy?: string;
+  labelId?: string;
+  ownSuccessProps?: GenericObjectType;
+  ownContainer?: unknown;
+  wrapperObject?: GenericObjectType;
+  before?: ReactNode;
 }
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
@@ -198,18 +221,18 @@ function InputWrapperAriaProvider({
  * `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two a different precedence
  * for inputs and groups.
  */
-function useAriaContainerProps(
-  successId: string,
-  overrides: InputWrapperAriaOverrides,
-  ownSuccessProps: GenericObjectType | undefined,
-  ownContainer: unknown,
-  wrapperObject: GenericObjectType | undefined,
-  before?: ReactNode,
-) {
-  const { describedBy, labelId } = overrides;
+function useAriaContainerProps({
+  successId,
+  describedBy,
+  labelId,
+  ownSuccessProps,
+  ownContainer,
+  wrapperObject,
+  before,
+}: AriaContainerOptions) {
   const container = useCallback(
     (children: ReactNode) => (
-      <InputWrapperAriaProvider overrides={labelId ? { describedBy, labelId } : { describedBy }} successId={successId}>
+      <InputWrapperAriaProvider describedBy={describedBy} labelId={labelId} successId={successId}>
         {before}
         {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
       </InputWrapperAriaProvider>
@@ -226,6 +249,58 @@ function useAriaContainerProps(
   }, [container, ownSuccessProps, successId, wrapperObject]);
 }
 
+function pickOptions(options: GenericObjectType, names: readonly string[]) {
+  return Object.fromEntries(names.map((name) => [name, options[name]]));
+}
+
+const rootSlotKeys = ['classNames', 'styles', 'attributes'];
+
+function withoutRootSlot(value: unknown): unknown {
+  if (typeof value === 'function') {
+    return (...args: unknown[]) => withoutRootSlot(value(...args));
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  const { root: _root, ...rest } = value;
+  return rest;
+}
+
+/** A value for a style prop that renders no style. `undefined` would let `Input.Wrapper` fall back to the theme's. */
+function noStyle(name: string) {
+  if (name === 'lightHidden' || name === 'darkHidden') {
+    return false;
+  }
+  return name === 'hiddenFrom' || name === 'visibleFrom' ? '' : {};
+}
+
+/** Keeps only the root element props set in `ownWrapperProps`, for a wrapper around inputs that apply the theme's root
+ * element props to their own wrappers: `className`, `style`, `mod`, the style props such as `mt`, and the `root` entry
+ * of `classNames`, `styles` and `attributes`. `Input.Wrapper` fills an `undefined` prop from `InputWrapper`'s theme
+ * `defaultProps`, so those the theme sets are given values that render nothing.
+ */
+function withOwnRootProps(
+  wrapperProps: GenericObjectType,
+  wrapperDefaults: GenericObjectType,
+  ownWrapperProps: GenericObjectType = {},
+): GenericObjectType {
+  const {
+    rest: { className: _className, style: _style, mod: _mod, ...rest },
+  } = extractStyleProps(wrapperProps);
+  const { styleProps: themeStyleProps } = extractStyleProps(wrapperDefaults);
+  const { styleProps: ownStyleProps, rest: own } = extractStyleProps(ownWrapperProps);
+  const slots = rootSlotKeys.filter((key) => !(key in ownWrapperProps));
+  return {
+    ...rest,
+    ...Object.fromEntries(slots.map((key) => [key, withoutRootSlot(rest[key])])),
+    ...Object.fromEntries(Object.keys(themeStyleProps).map((name) => [name, noStyle(name)])),
+    ...ownStyleProps,
+    className: own.className ?? '',
+    style: own.style ?? {},
+    mod: own.mod ?? {},
+  };
+}
+
 /** Renders the field's title, `hidden`, so that an element labelled by `titleId(id)` keeps an accessible name when the
  * visible label isn't rendered
  */
@@ -237,85 +312,175 @@ function HiddenTitle({ id, label }: { id: string; label: ReactNode }) {
   );
 }
 
-function labelInOrder(order: unknown) {
-  return !Array.isArray(order) || order.includes('label');
-}
-
-/** Renders the field's title with the id `titleId(id)`, for a widget that renders its own label rather than leaving it
- * to a Mantine input: Mantine's label when it is shown, else the title `hidden`, so that the widget's inputs can keep
- * `titleId(id)` as their accessible name either way. As for `Checkbox.Group` and `Radio.Group`, the label isn't shown
- * when `inputWrapperOrder` leaves it out, and it takes any `labelProps` except an `id`, each resolved from the widget's
- * options, then its `wrapperProps`, then `InputWrapper`'s theme `defaultProps`. Renders nothing when the field has no
- * label.
+/** Renders the field's title `hidden` when Mantine won't render it, because it is hidden or left out of
+ * `inputWrapperOrder`, so that the elements labelled by `titleId(id)` keep an accessible name
  */
-export function FieldTitle({
-  id,
-  label,
-  hideLabel,
-  required,
-  options,
-}: {
-  id: string;
-  label: ReactNode;
-  hideLabel?: boolean;
-  required?: boolean;
-  options: GenericObjectType;
-}) {
-  const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
-  const wrapperObject = asObject(options.wrapperProps);
-  const resolve = (name: string) => options[name] ?? wrapperObject?.[name] ?? wrapperDefaults[name];
-  if (!label) {
-    return null;
-  }
-  return hideLabel || !labelInOrder(resolve('inputWrapperOrder')) ? (
-    <HiddenTitle id={id} label={label} />
-  ) : (
-    <Input.Label {...asObject(resolve('labelProps'))} id={titleId(id)} required={required}>
-      {label}
-    </Input.Label>
+function useHiddenTitle(id: string, label: ReactNode, hideLabel: boolean | undefined, inputWrapperOrder: unknown) {
+  const titleRendered =
+    !hideLabel && !!label && (!Array.isArray(inputWrapperOrder) || inputWrapperOrder.includes('label'));
+  return useMemo(
+    () => (!!label && !titleRendered ? <HiddenTitle id={id} label={label} /> : undefined),
+    [id, label, titleRendered],
   );
 }
+
+/** The keys of `P` that aren't also keys of `Base` */
+export type OwnKeys<P, Base> = Exclude<keyof P, keyof Base>;
+
+/** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
+type FieldWrapperOptionKey = Exclude<
+  OwnKeys<InputWrapperProps, BoxProps & StylesApiProps<InputWrapperFactory> & ElementProps<'div'>>,
+  `__${string}` | 'label' | 'description' | 'error' | 'success' | 'required'
+>;
+
+// A record, not a list, so that an option a later Mantine release adds fails typecheck until it is listed here
+const fieldWrapperOptionKeyRecord: Record<FieldWrapperOptionKey, true> = {
+  descriptionProps: true,
+  errorProps: true,
+  inputContainer: true,
+  inputWrapperOrder: true,
+  labelElement: true,
+  labelProps: true,
+  size: true,
+  successProps: true,
+  withAsterisk: true,
+};
+const fieldWrapperOptionKeys = Object.keys(fieldWrapperOptionKeyRecord) as FieldWrapperOptionKey[];
+const fieldWrapperPickedKeys = [...fieldWrapperOptionKeys, 'wrapperProps'];
+
+function renderChildren(children: ReactNode): ReactNode {
+  return children;
+}
+
+/**
+ * A props hook for the `Input.Wrapper` a widget renders around inputs that don't render their own wrapper, such as a
+ * `Slider` or the parts of a date, so that Mantine lays out and styles the field's title, description and errors as
+ * it does an input's. The title gets the id `titleId(id)`, and a title Mantine doesn't render, because it is hidden
+ * or left out of `inputWrapperOrder`, is still rendered with it, `hidden`, so that the widget's inputs can keep it as
+ * their accessible name. The hidden title goes beside the wrapper rather than in it, since a custom `inputContainer`,
+ * like Mantine's `Tooltip`, may only accept the single element Mantine's own inputs pass it. The wrapper options are
+ * resolved as Mantine's inputs resolve them, from the widget's options and `Input`'s and `InputWrapper`'s theme
+ * `defaultProps`; the widget's own component's theme `defaultProps` aren't read, since Mantine would spread them on its
+ * root element. The wrapper gets no `id`, which Mantine would put on its root element and point the title's `for` at,
+ * though the widget's inputs have their own ids; the title gets no `for`.
+ *
+ * @param widgetProps - The props of the widget, from which the label, description, errors and options are derived
+ * @param [containerOnInputs=false] - Whether the widget's inputs render the `inputContainer` themselves, each in its
+ *   own wrapper, so that the field's wrapper mustn't render it again
+ * @returns - The `wrapperProps` to spread on `Input.Wrapper`, and the `hiddenTitle` to render before it, if any
+ */
+export function useFieldWrapperProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(widgetProps: WidgetProps<T, S, F>, containerOnInputs = false) {
+  const { id, label, hideLabel, required, options } = widgetProps;
+  const { description } = getDescriptionProps(widgetProps);
+  const { labelElement, wrapperProps: inputWrapperProps } = useInputProps(
+    'InputWrapper',
+    {},
+    pickOptions(options, fieldWrapperPickedKeys),
+  );
+  // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
+  // props, rather than by its own, which a `wrapperProps.size` may have replaced
+  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps as GenericObjectType;
+  // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
+  // `labelElement` with the input, while this wrapper takes it.
+  const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
+  const resolved: GenericObjectType = { ...wrapperDefaults, ...filterProps({ labelElement, ...mantineWrapperProps }) };
+  // The widget's inputs apply the theme's root element props to the wrappers they render
+  const wrapperProps = containerOnInputs
+    ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))
+    : resolved;
+  const hiddenTitle = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
+  return {
+    wrapperProps: {
+      ...wrapperProps,
+      inputContainer: containerOnInputs ? renderChildren : wrapperProps.inputContainer,
+      label: labelValue(label || undefined, hideLabel, false),
+      labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
+      required,
+      description,
+      descriptionProps: withDescriptionDiv(resolved.descriptionProps),
+      error: visibleErrors(widgetProps),
+      success: null,
+    },
+    hiddenTitle,
+  };
+}
+
+const ariaPickedKeys = ['descriptionProps', 'inputContainer', 'successProps', 'wrapperProps'];
 
 /**
  * A props hook that points a Mantine input's `aria-describedby` at the field's description, error and help ids.
  * Mantine's `Input` sets `aria-describedby` from the `InputWrapper` context after spreading the caller's props, so an
  * `aria-describedby` prop never reaches the DOM, and that context only knows about Mantine's own description and error
  * elements. Overriding the context from `inputContainer` is the one place the value Mantine applies can be replaced.
- * The container and `successProps` Mantine would otherwise apply come from the widget's options, else the theme's
- * `defaultProps`, with `wrapperProps` taking precedence over the top-level prop, as Mantine's inputs give it.
+ * The container, `successProps` and `descriptionProps` Mantine would otherwise apply are resolved as Mantine's inputs
+ * resolve them, from the widget's options and the theme's `defaultProps`.
  *
  * @param component - The Mantine input the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param id - The id of the field the input belongs to
  * @param [options={}] - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
- * @param [includeExamples=false] - Whether to also describe the input by the field's examples list
- * @param [successId] - The id to give the success message, in place of the one from `successProps`, else
- *   `<id>-success`, for an input that is one of several parts of the field, each rendering its own message
+ * @param [settings={}] - `includeExamples`, whether to also describe the input by the field's examples list, and
+ *   `successId`, the id to give the success message in place of the one from `successProps`, else `<id>-success`, for
+ *   an input that is one of several parts of the field, each rendering its own message, and `wrapperOverrides`, set
+ *   over the `wrapperProps` the input would otherwise take, rather than replacing them
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
   component: AriaInputComponentName,
   id: string,
   options: GenericObjectType = {},
-  includeExamples = false,
-  successId?: string,
+  {
+    includeExamples = false,
+    successId,
+    wrapperOverrides,
+  }: { includeExamples?: boolean; successId?: string; wrapperOverrides?: GenericObjectType } = {},
 ) {
-  const { inputContainer, wrapperProps, successProps } = useProps<GenericObjectType>(
-    themeComponentNames[component],
-    {},
-    { inputContainer: options.inputContainer, wrapperProps: options.wrapperProps, successProps: options.successProps },
+  const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, ariaPickedKeys));
+  const wrapperObject = useMemo(
+    () => (wrapperOverrides ? { ...asObject(props.wrapperProps), ...wrapperOverrides } : asObject(props.wrapperProps)),
+    [props.wrapperProps, wrapperOverrides],
   );
-  const wrapperObject = asObject(wrapperProps);
-  const fromWrapper = (name: string, prop: unknown) =>
-    wrapperObject?.[name] !== undefined ? wrapperObject[name] : prop;
-  const ownSuccessProps = asObject(fromWrapper('successProps', successProps));
-  return useAriaContainerProps(
-    successId ?? successIdOf(id, ownSuccessProps),
-    { describedBy: ariaDescribedByIds(id, includeExamples) },
+  // As in Mantine's `useInputProps`, a key present in `wrapperProps` wins even when `undefined`, which `Input.Wrapper`
+  // then resolves from `InputWrapper`'s theme `defaultProps`
+  const fromWrapper = (name: string) => (wrapperObject && name in wrapperObject ? wrapperObject[name] : props[name]);
+  const resolved = useProps<GenericObjectType>(
+    'InputWrapper',
+    {},
+    {
+      descriptionProps: fromWrapper('descriptionProps'),
+      inputContainer: fromWrapper('inputContainer'),
+      successProps: fromWrapper('successProps'),
+    },
+  );
+  const ownSuccessProps = asObject(resolved.successProps);
+  const containerProps = useAriaContainerProps({
+    successId: successId ?? successIdOf(id, ownSuccessProps),
+    describedBy: ariaDescribedByIds(id, includeExamples),
     ownSuccessProps,
-    fromWrapper('inputContainer', inputContainer),
+    ownContainer: resolved.inputContainer,
     wrapperObject,
+  });
+  // Set in `wrapperProps`, whose `descriptionProps` would otherwise replace it
+  return useMemo(
+    () => ({
+      ...containerProps,
+      wrapperProps: { ...containerProps.wrapperProps, descriptionProps: withDescriptionDiv(resolved.descriptionProps) },
+    }),
+    [containerProps, resolved.descriptionProps],
   );
 }
+
+const groupOptionNames = [
+  'descriptionProps',
+  'inputContainer',
+  'inputWrapperOrder',
+  'labelProps',
+  'successProps',
+] as const;
+const groupPickedKeys = [...groupOptionNames, 'wrapperProps'];
 
 /**
  * A props hook for `Checkbox.Group` and `Radio.Group`, which render the field's label and take their group element's
@@ -324,9 +489,9 @@ export function useAriaDescribedByProps(
  * description, error and help on entering it. The group is labelled by the field's title id: the shown label has that
  * id, and a label Mantine doesn't render, because it is hidden or left out of `inputWrapperOrder`, is still rendered
  * with it, `hidden`, since a group needs an accessible name. Mantine only labels the group by a label it renders itself.
- * The container, `labelProps`, `successProps` and `inputWrapperOrder` Mantine would otherwise apply come from the
- * widget's options, then its `wrapperProps`, then the group's and `InputWrapper`'s theme `defaultProps`, as Mantine's
- * groups resolve them.
+ * The container, `labelProps`, `descriptionProps`, `successProps` and `inputWrapperOrder` Mantine would otherwise apply
+ * are resolved as Mantine's groups resolve them: the widget's options or the group's theme `defaultProps`, then
+ * `wrapperProps`, then `InputWrapper`'s theme `defaultProps`.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility and the options are derived
@@ -338,43 +503,34 @@ export function useGroupAriaProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(component: 'CheckboxGroup' | 'RadioGroup', { id, label, hideLabel, options }: WidgetProps<T, S, F>) {
-  const { inputContainer, wrapperProps, labelProps, successProps, inputWrapperOrder } = useProps<GenericObjectType>(
-    component,
+  const props = useProps<GenericObjectType>(component, {}, pickOptions(options, groupPickedKeys));
+  const wrapperObject = asObject(props.wrapperProps);
+  // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
+  // `InputWrapper`'s theme `defaultProps`
+  const resolved = useProps<GenericObjectType>(
+    'InputWrapper',
     {},
-    {
-      inputContainer: options.inputContainer,
-      wrapperProps: options.wrapperProps,
-      labelProps: options.labelProps,
-      successProps: options.successProps,
-      inputWrapperOrder: options.inputWrapperOrder,
-    },
+    Object.fromEntries(
+      groupOptionNames.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
+    ),
   );
-  // A group renders a bare `Input.Wrapper`, whose own theme defaults apply beneath the group's
-  const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
-  const wrapperObject = asObject(wrapperProps);
-  const resolve = (name: string, prop: unknown) => prop ?? wrapperObject?.[name] ?? wrapperDefaults[name];
-
   const shownLabel = labelValue(label || undefined, hideLabel, false);
-  const order = resolve('inputWrapperOrder', inputWrapperOrder);
-  const labelRendered = !!shownLabel && labelInOrder(order);
-  const hiddenLabel = useMemo(
-    () => (label && !labelRendered ? <HiddenTitle id={id} label={label} /> : undefined),
-    [label, labelRendered, id],
-  );
-  const ownSuccessProps = asObject(resolve('successProps', successProps));
-  const containerProps = useAriaContainerProps(
-    successIdOf(id, ownSuccessProps),
-    { describedBy: undefined, labelId: label ? titleId(id) : undefined },
+  const hiddenLabel = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
+  const ownSuccessProps = asObject(resolved.successProps);
+  const containerProps = useAriaContainerProps({
+    successId: successIdOf(id, ownSuccessProps),
+    labelId: label ? titleId(id) : undefined,
     ownSuccessProps,
-    resolve('inputContainer', inputContainer),
+    ownContainer: resolved.inputContainer,
     wrapperObject,
-    hiddenLabel,
-  );
+    before: hiddenLabel,
+  });
   const optionProps = useMemo(() => ({ 'aria-describedby': ariaDescribedByIds(id) }), [id]);
   return {
     groupProps: {
       label: shownLabel,
-      labelProps: { ...asObject(resolve('labelProps', labelProps)), id: titleId(id) },
+      labelProps: { ...asObject(resolved.labelProps), id: titleId(id) },
+      descriptionProps: withDescriptionDiv(resolved.descriptionProps),
       ...containerProps,
     },
     optionProps,

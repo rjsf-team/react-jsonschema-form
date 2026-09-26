@@ -10,7 +10,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrors } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -66,7 +66,7 @@ export default function CheckboxesWidget<
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={visibleErrorText(props)}
+      error={visibleErrors(props)}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}

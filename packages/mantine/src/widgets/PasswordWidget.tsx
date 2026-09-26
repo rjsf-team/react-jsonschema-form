@@ -4,7 +4,7 @@ import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrors } from '../utils.tsx';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -76,7 +76,7 @@ export default function PasswordWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrorText(props)}
+      error={visibleErrors(props)}
       {...themeProps}
       {...ariaDescribedByProps}
       {...getDescriptionProps(props)}

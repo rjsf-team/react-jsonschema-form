@@ -166,10 +166,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1jg_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1ji_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1jg_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ji_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -203,7 +203,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1jn_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1jp_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -231,10 +231,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_1js_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                              .__m__-_r_1ju_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                             </style>
                             <div
-                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1js_"
+                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ju_"
                               style="margin-bottom: var(--mantine-spacing-sm);"
                             >
                               <div
@@ -458,7 +458,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1kj_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1kl_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -486,10 +486,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_1ko_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                              .__m__-_r_1kq_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                             </style>
                             <div
-                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ko_"
+                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1kq_"
                               style="margin-bottom: var(--mantine-spacing-sm);"
                             >
                               <div
@@ -812,10 +812,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1i4_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1i6_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1i4_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1i6_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -849,7 +849,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1ib_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1id_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -1022,7 +1022,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1ir_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1it_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -1292,10 +1292,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1n8_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1na_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1n8_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1na_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1319,7 +1319,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   role="group"
                 >
                   <div
-                    class="m_8bffd616 mantine-Flex-root __m__-_r_1ne_"
+                    class="m_8bffd616 mantine-Flex-root __m__-_r_1ng_"
                     style="gap: var(--mantine-spacing-xs); flex-wrap: wrap; flex-direction: column; margin-top: var(--mantine-spacing-xs);"
                   >
                     <div
@@ -1533,10 +1533,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1gt_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1gv_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1gt_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1gv_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1563,10 +1563,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1h2_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1h4_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1h2_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1h4_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -1671,10 +1671,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_1hj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_1hl_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1hj_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1hl_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -1818,10 +1818,10 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1mg_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1mi_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1mg_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1mi_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1845,7 +1845,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   role="radiogroup"
                 >
                   <div
-                    class="m_8bffd616 mantine-Flex-root __m__-_r_1mn_"
+                    class="m_8bffd616 mantine-Flex-root __m__-_r_1mp_"
                     style="gap: var(--mantine-spacing-xs); flex-wrap: wrap; flex-direction: column; margin-top: var(--mantine-spacing-xs);"
                   >
                     <div
@@ -2004,10 +2004,10 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1lk_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1lm_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1lk_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1lm_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -2112,7 +2112,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1m7_"
+                              id="_r_1m9_"
                               role="option"
                               value="0"
                             >
@@ -2124,7 +2124,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1m9_"
+                              id="_r_1mb_"
                               role="option"
                               value="1"
                             >
@@ -2136,7 +2136,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1mb_"
+                              id="_r_1md_"
                               role="option"
                               value="2"
                             >
@@ -2227,10 +2227,10 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1g3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1g5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1g3_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1g5_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -2476,10 +2476,10 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1o5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1o7_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1o5_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1o7_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -2574,10 +2574,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1rt_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1rv_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1rt_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1rv_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -2611,7 +2611,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1s4_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1s6_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2639,10 +2639,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_1s9_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                              .__m__-_r_1sb_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                             </style>
                             <div
-                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1s9_"
+                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1sb_"
                               style="margin-bottom: var(--mantine-spacing-sm);"
                             >
                               <div
@@ -2866,7 +2866,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1t0_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1t2_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2894,10 +2894,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_1t5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                              .__m__-_r_1t7_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                             </style>
                             <div
-                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1t5_"
+                              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1t7_"
                               style="margin-bottom: var(--mantine-spacing-sm);"
                             >
                               <div
@@ -3220,10 +3220,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1qh_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1qj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1qh_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1qj_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -3257,7 +3257,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1qo_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1qq_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -3430,7 +3430,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1r8_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1ra_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -3700,10 +3700,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1pa_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1pc_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1pa_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1pc_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -3730,10 +3730,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1pf_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1ph_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1pf_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ph_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -3838,10 +3838,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_1q0_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_1q2_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1q0_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1q2_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -3985,10 +3985,10 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1u1_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1u3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1u1_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1u3_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -4093,7 +4093,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1uk_"
+                              id="_r_1um_"
                               role="option"
                               value="0"
                             >
@@ -4105,7 +4105,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1um_"
+                              id="_r_1uo_"
                               role="option"
                               value="1"
                             >
@@ -4117,7 +4117,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_1uo_"
+                              id="_r_1uq_"
                               role="option"
                               value="2"
                             >
@@ -4208,10 +4208,10 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1og_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1oi_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1og_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1oi_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -4457,10 +4457,10 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_20t_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_20v_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_20t_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_20v_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -4568,7 +4568,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_21h_"
+                                id="_r_21j_"
                                 role="option"
                                 value="0"
                               >
@@ -4582,7 +4582,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_21j_"
+                                id="_r_21l_"
                                 role="option"
                                 value="1"
                               >
@@ -4729,7 +4729,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   aria-selected="false"
                                   class="m_92253aa5 mantine-Select-option m_390b5f4"
                                   data-combobox-option="true"
-                                  id="_r_225_"
+                                  id="_r_227_"
                                   role="option"
                                   value="0"
                                 >
@@ -4743,7 +4743,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   data-checked="true"
                                   data-combobox-active="true"
                                   data-combobox-option="true"
-                                  id="_r_227_"
+                                  id="_r_229_"
                                   role="option"
                                   value="1"
                                 >
@@ -4927,7 +4927,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_23h_"
+                      id="_r_23j_"
                       role="option"
                       value="0"
                     >
@@ -5104,7 +5104,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_20k_"
+                      id="_r_20m_"
                       role="option"
                       value="0"
                     >
@@ -5118,7 +5118,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_20m_"
+                      id="_r_20o_"
                       role="option"
                       value="1"
                     >
@@ -5144,7 +5144,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_20o_"
+                      id="_r_20q_"
                       role="option"
                       value="2"
                     >
@@ -5308,7 +5308,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_22q_"
+                      id="_r_22s_"
                       role="option"
                       value="0"
                     >
@@ -5334,7 +5334,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_22s_"
+                      id="_r_22u_"
                       role="option"
                       value="1"
                     >
@@ -5346,7 +5346,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_22u_"
+                      id="_r_230_"
                       role="option"
                       value="2"
                     >
@@ -5509,7 +5509,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_1vv_"
+                      id="_r_201_"
                       role="option"
                       value="0"
                     >
@@ -5523,7 +5523,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_201_"
+                      id="_r_203_"
                       role="option"
                       value="1"
                     >
@@ -5699,7 +5699,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_244_"
+                      id="_r_246_"
                       role="option"
                       value="0"
                     >
@@ -5713,7 +5713,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_246_"
+                      id="_r_248_"
                       role="option"
                       value="1"
                     >
@@ -5830,10 +5830,10 @@ exports[`single fields > Cyclic schema 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_qq_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_qs_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_qq_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_qs_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -5868,10 +5868,10 @@ exports[`single fields > Cyclic schema 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_r0_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_r2_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_r0_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_r2_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -7230,10 +7230,10 @@ exports[`single fields > field with description 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_ne_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_ng_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ne_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ng_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7345,10 +7345,10 @@ exports[`single fields > field with description in uiSchema 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_nr_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_nt_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nr_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nt_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7460,10 +7460,10 @@ exports[`single fields > field with markdown description 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_o8_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_oa_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_o8_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_oa_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7581,10 +7581,10 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_ol_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_on_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ol_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_on_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -8180,10 +8180,10 @@ exports[`single fields > hidden field 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_n9_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_nb_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_n9_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nb_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         />
       </div>
@@ -8593,10 +8593,10 @@ exports[`single fields > optional data controls > does not show optional control
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_rc_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_re_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rc_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_re_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -8623,10 +8623,10 @@ exports[`single fields > optional data controls > does not show optional control
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_rh_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_rj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rh_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rj_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -8692,10 +8692,10 @@ exports[`single fields > optional data controls > does not show optional control
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_rs_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_ru_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rs_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ru_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -8765,10 +8765,10 @@ exports[`single fields > optional data controls > does not show optional control
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_s7_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_s9_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_s7_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_s9_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -9130,10 +9130,10 @@ exports[`single fields > optional data controls > does not show optional control
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_te_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_tg_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_te_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_tg_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -9358,7 +9358,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_uf_"
+                                id="_r_uh_"
                                 role="option"
                                 value="0"
                               >
@@ -9384,7 +9384,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_uh_"
+                                id="_r_uj_"
                                 role="option"
                                 value="1"
                               >
@@ -9396,7 +9396,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_uj_"
+                                id="_r_ul_"
                                 role="option"
                                 value="2"
                               >
@@ -9451,10 +9451,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_un_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_up_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_un_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_up_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -9612,7 +9612,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_vh_"
+                                id="_r_vj_"
                                 role="option"
                                 value="0"
                               >
@@ -9638,7 +9638,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_vj_"
+                                id="_r_vl_"
                                 role="option"
                                 value="1"
                               >
@@ -9650,7 +9650,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_vl_"
+                                id="_r_vn_"
                                 role="option"
                                 value="2"
                               >
@@ -9818,10 +9818,10 @@ exports[`single fields > optional data controls > does not show optional control
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_170_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_172_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_170_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_172_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -9848,10 +9848,10 @@ exports[`single fields > optional data controls > does not show optional control
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_175_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_177_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_175_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_177_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -9920,10 +9920,10 @@ exports[`single fields > optional data controls > does not show optional control
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_17g_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_17i_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_17g_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_17i_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -9996,10 +9996,10 @@ exports[`single fields > optional data controls > does not show optional control
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_17r_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_17t_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_17r_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_17t_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -10372,10 +10372,10 @@ exports[`single fields > optional data controls > does not show optional control
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_192_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_194_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_192_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_194_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -10609,7 +10609,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_1a3_"
+                                id="_r_1a5_"
                                 role="option"
                                 value="0"
                               >
@@ -10635,7 +10635,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_1a5_"
+                                id="_r_1a7_"
                                 role="option"
                                 value="1"
                               >
@@ -10647,7 +10647,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_1a7_"
+                                id="_r_1a9_"
                                 role="option"
                                 value="2"
                               >
@@ -10703,10 +10703,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_1ab_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_1ad_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ab_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1ad_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <div
@@ -10868,7 +10868,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-checked="true"
                                 data-combobox-active="true"
                                 data-combobox-option="true"
-                                id="_r_1b5_"
+                                id="_r_1b7_"
                                 role="option"
                                 value="0"
                               >
@@ -10894,7 +10894,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_1b7_"
+                                id="_r_1b9_"
                                 role="option"
                                 value="1"
                               >
@@ -10906,7 +10906,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 aria-selected="false"
                                 class="m_92253aa5 mantine-Select-option m_390b5f4"
                                 data-combobox-option="true"
-                                id="_r_1b9_"
+                                id="_r_1bb_"
                                 role="option"
                                 value="2"
                               >
@@ -11077,10 +11077,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_12d_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_12f_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_12d_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_12f_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -11099,10 +11099,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_12h_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_12j_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_12h_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_12j_"
                 >
                   <div
                     class="m_dee7bd2f mantine-Grid-inner"
@@ -11110,10 +11110,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_12j_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                      .__m__-_r_12l_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col __m__-_r_12j_"
+                      class="m_96bdd299 mantine-Grid-col __m__-_r_12l_"
                     >
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
@@ -11127,10 +11127,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_12m_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                      .__m__-_r_12o_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col __m__-_r_12m_"
+                      class="m_96bdd299 mantine-Grid-col __m__-_r_12o_"
                     >
                       <button
                         class="mantine-focus-auto mantine-active rjsf-remove-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -11176,10 +11176,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_12q_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_12s_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_12q_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_12s_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -11237,10 +11237,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_134_{--grid-gap:var(--mantine-spacing-md);}
+                          .__m__-_r_136_{--grid-gap:var(--mantine-spacing-md);}
                         </style>
                         <div
-                          class="m_410352e9 mantine-Grid-root __m__-_r_134_"
+                          class="m_410352e9 mantine-Grid-root __m__-_r_136_"
                         >
                           <div
                             class="m_dee7bd2f mantine-Grid-inner"
@@ -11248,10 +11248,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_136_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                              .__m__-_r_138_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                             </style>
                             <div
-                              class="m_96bdd299 mantine-Grid-col __m__-_r_136_"
+                              class="m_96bdd299 mantine-Grid-col __m__-_r_138_"
                             >
                               <h3
                                 class="m_8a5d1357 mantine-Title-root"
@@ -11265,10 +11265,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <style
                               data-mantine-styles="inline"
                             >
-                              .__m__-_r_139_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                              .__m__-_r_13b_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                             </style>
                             <div
-                              class="m_96bdd299 mantine-Grid-col __m__-_r_139_"
+                              class="m_96bdd299 mantine-Grid-col __m__-_r_13b_"
                             >
                               <button
                                 class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -11314,10 +11314,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_13d_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_13f_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_13d_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_13f_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         />
                       </div>
@@ -11347,10 +11347,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_13i_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_13k_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_13i_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_13k_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -11485,10 +11485,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <style
                             data-mantine-styles="inline"
                           >
-                            .__m__-_r_143_{--grid-gap:var(--mantine-spacing-md);}
+                            .__m__-_r_145_{--grid-gap:var(--mantine-spacing-md);}
                           </style>
                           <div
-                            class="m_410352e9 mantine-Grid-root __m__-_r_143_"
+                            class="m_410352e9 mantine-Grid-root __m__-_r_145_"
                           >
                             <div
                               class="m_dee7bd2f mantine-Grid-inner"
@@ -11496,10 +11496,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_145_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                                .__m__-_r_147_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                               </style>
                               <div
-                                class="m_96bdd299 mantine-Grid-col __m__-_r_145_"
+                                class="m_96bdd299 mantine-Grid-col __m__-_r_147_"
                               >
                                 <h4
                                   class="m_8a5d1357 mantine-Title-root"
@@ -11513,10 +11513,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <style
                                 data-mantine-styles="inline"
                               >
-                                .__m__-_r_148_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                                .__m__-_r_14a_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                               </style>
                               <div
-                                class="m_96bdd299 mantine-Grid-col __m__-_r_148_"
+                                class="m_96bdd299 mantine-Grid-col __m__-_r_14a_"
                               >
                                 <button
                                   class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -11659,10 +11659,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <style
                     data-mantine-styles="inline"
                   >
-                    .__m__-_r_14m_{--grid-gap:var(--mantine-spacing-md);}
+                    .__m__-_r_14o_{--grid-gap:var(--mantine-spacing-md);}
                   </style>
                   <div
-                    class="m_410352e9 mantine-Grid-root __m__-_r_14m_"
+                    class="m_410352e9 mantine-Grid-root __m__-_r_14o_"
                   >
                     <div
                       class="m_dee7bd2f mantine-Grid-inner"
@@ -11670,10 +11670,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_14o_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                        .__m__-_r_14q_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                       </style>
                       <div
-                        class="m_96bdd299 mantine-Grid-col __m__-_r_14o_"
+                        class="m_96bdd299 mantine-Grid-col __m__-_r_14q_"
                       >
                         <h4
                           class="m_8a5d1357 mantine-Title-root"
@@ -11687,10 +11687,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_14r_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                        .__m__-_r_14t_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                       </style>
                       <div
-                        class="m_96bdd299 mantine-Grid-col __m__-_r_14r_"
+                        class="m_96bdd299 mantine-Grid-col __m__-_r_14t_"
                       >
                         <button
                           class="mantine-focus-auto mantine-active rjsf-remove-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -11742,7 +11742,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_151_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_153_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -11909,10 +11909,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_15i_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_15k_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_15i_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_15k_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -12053,10 +12053,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_164_{--grid-gap:var(--mantine-spacing-md);}
+                      .__m__-_r_166_{--grid-gap:var(--mantine-spacing-md);}
                     </style>
                     <div
-                      class="m_410352e9 mantine-Grid-root __m__-_r_164_"
+                      class="m_410352e9 mantine-Grid-root __m__-_r_166_"
                     >
                       <div
                         class="m_dee7bd2f mantine-Grid-inner"
@@ -12064,10 +12064,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_166_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                          .__m__-_r_168_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                         </style>
                         <div
-                          class="m_96bdd299 mantine-Grid-col __m__-_r_166_"
+                          class="m_96bdd299 mantine-Grid-col __m__-_r_168_"
                         >
                           <h3
                             class="m_8a5d1357 mantine-Title-root"
@@ -12081,10 +12081,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_169_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                          .__m__-_r_16b_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                         </style>
                         <div
-                          class="m_96bdd299 mantine-Grid-col __m__-_r_169_"
+                          class="m_96bdd299 mantine-Grid-col __m__-_r_16b_"
                         >
                           <button
                             class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -12130,10 +12130,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_16d_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_16f_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_16d_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_16f_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     />
                   </div>
@@ -12165,10 +12165,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_16i_{--grid-gap:var(--mantine-spacing-md);}
+                        .__m__-_r_16k_{--grid-gap:var(--mantine-spacing-md);}
                       </style>
                       <div
-                        class="m_410352e9 mantine-Grid-root __m__-_r_16i_"
+                        class="m_410352e9 mantine-Grid-root __m__-_r_16k_"
                       >
                         <div
                           class="m_dee7bd2f mantine-Grid-inner"
@@ -12176,10 +12176,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <style
                             data-mantine-styles="inline"
                           >
-                            .__m__-_r_16k_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                            .__m__-_r_16m_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                           </style>
                           <div
-                            class="m_96bdd299 mantine-Grid-col __m__-_r_16k_"
+                            class="m_96bdd299 mantine-Grid-col __m__-_r_16m_"
                           >
                             <h4
                               class="m_8a5d1357 mantine-Title-root"
@@ -12193,10 +12193,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <style
                             data-mantine-styles="inline"
                           >
-                            .__m__-_r_16n_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                            .__m__-_r_16p_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                           </style>
                           <div
-                            class="m_96bdd299 mantine-Grid-col __m__-_r_16n_"
+                            class="m_96bdd299 mantine-Grid-col __m__-_r_16p_"
                           >
                             <button
                               class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -12311,10 +12311,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1d1_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1d3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1d1_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1d3_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -12341,10 +12341,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1d6_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1d8_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1d6_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1d8_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -12413,10 +12413,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_1dh_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_1dj_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1dh_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1dj_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <em
@@ -12452,10 +12452,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_1dm_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_1do_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1dm_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1do_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -12722,7 +12722,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_1el_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_1en_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -12896,10 +12896,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1f6_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1f8_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1f6_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1f8_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -13053,10 +13053,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_1fp_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_1fr_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1fp_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1fr_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <em
@@ -13177,10 +13177,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_101_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_103_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_101_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_103_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -13199,10 +13199,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_105_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_107_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_105_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_107_"
                 >
                   <div
                     class="m_dee7bd2f mantine-Grid-inner"
@@ -13210,10 +13210,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_107_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                      .__m__-_r_109_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col __m__-_r_107_"
+                      class="m_96bdd299 mantine-Grid-col __m__-_r_109_"
                     >
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
@@ -13227,10 +13227,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_10a_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                      .__m__-_r_10c_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col __m__-_r_10a_"
+                      class="m_96bdd299 mantine-Grid-col __m__-_r_10c_"
                     >
                       <button
                         class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -13276,10 +13276,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_10e_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_10g_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_10e_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_10g_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 />
               </div>
@@ -13302,10 +13302,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <style
                     data-mantine-styles="inline"
                   >
-                    .__m__-_r_10i_{--grid-gap:var(--mantine-spacing-md);}
+                    .__m__-_r_10k_{--grid-gap:var(--mantine-spacing-md);}
                   </style>
                   <div
-                    class="m_410352e9 mantine-Grid-root __m__-_r_10i_"
+                    class="m_410352e9 mantine-Grid-root __m__-_r_10k_"
                   >
                     <div
                       class="m_dee7bd2f mantine-Grid-inner"
@@ -13313,10 +13313,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_10k_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                        .__m__-_r_10m_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                       </style>
                       <div
-                        class="m_96bdd299 mantine-Grid-col __m__-_r_10k_"
+                        class="m_96bdd299 mantine-Grid-col __m__-_r_10m_"
                       >
                         <h4
                           class="m_8a5d1357 mantine-Title-root"
@@ -13330,10 +13330,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_10n_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                        .__m__-_r_10p_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                       </style>
                       <div
-                        class="m_96bdd299 mantine-Grid-col __m__-_r_10n_"
+                        class="m_96bdd299 mantine-Grid-col __m__-_r_10p_"
                       >
                         <button
                           class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -13407,10 +13407,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_10v_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_111_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_10v_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_111_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -13551,10 +13551,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_11h_{--grid-gap:var(--mantine-spacing-md);}
+                      .__m__-_r_11j_{--grid-gap:var(--mantine-spacing-md);}
                     </style>
                     <div
-                      class="m_410352e9 mantine-Grid-root __m__-_r_11h_"
+                      class="m_410352e9 mantine-Grid-root __m__-_r_11j_"
                     >
                       <div
                         class="m_dee7bd2f mantine-Grid-inner"
@@ -13562,10 +13562,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_11j_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                          .__m__-_r_11l_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                         </style>
                         <div
-                          class="m_96bdd299 mantine-Grid-col __m__-_r_11j_"
+                          class="m_96bdd299 mantine-Grid-col __m__-_r_11l_"
                         >
                           <h3
                             class="m_8a5d1357 mantine-Title-root"
@@ -13579,10 +13579,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_11m_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                          .__m__-_r_11o_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                         </style>
                         <div
-                          class="m_96bdd299 mantine-Grid-col __m__-_r_11m_"
+                          class="m_96bdd299 mantine-Grid-col __m__-_r_11o_"
                         >
                           <button
                             class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -13628,10 +13628,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_11q_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_11s_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_11q_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_11s_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     />
                   </div>
@@ -13663,10 +13663,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       <style
                         data-mantine-styles="inline"
                       >
-                        .__m__-_r_11v_{--grid-gap:var(--mantine-spacing-md);}
+                        .__m__-_r_121_{--grid-gap:var(--mantine-spacing-md);}
                       </style>
                       <div
-                        class="m_410352e9 mantine-Grid-root __m__-_r_11v_"
+                        class="m_410352e9 mantine-Grid-root __m__-_r_121_"
                       >
                         <div
                           class="m_dee7bd2f mantine-Grid-inner"
@@ -13674,10 +13674,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           <style
                             data-mantine-styles="inline"
                           >
-                            .__m__-_r_121_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
+                            .__m__-_r_123_{--col-flex-grow:1;--col-flex-basis:0rem;--col-max-width:100%;}
                           </style>
                           <div
-                            class="m_96bdd299 mantine-Grid-col __m__-_r_121_"
+                            class="m_96bdd299 mantine-Grid-col __m__-_r_123_"
                           >
                             <h4
                               class="m_8a5d1357 mantine-Title-root"
@@ -13691,10 +13691,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           <style
                             data-mantine-styles="inline"
                           >
-                            .__m__-_r_124_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
+                            .__m__-_r_126_{--col-flex-grow:auto;--col-flex-basis:auto;--col-width:auto;--col-max-width:unset;}
                           </style>
                           <div
-                            class="m_96bdd299 mantine-Grid-col __m__-_r_124_"
+                            class="m_96bdd299 mantine-Grid-col __m__-_r_126_"
                           >
                             <button
                               class="mantine-focus-auto mantine-active rjsf-add-optional-data m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
@@ -13809,10 +13809,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_1bl_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_1bn_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1bl_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1bn_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -13839,10 +13839,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1bq_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1bs_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1bq_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1bs_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <em
@@ -13913,10 +13913,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_1c3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_1c5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1c3_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1c5_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -14070,10 +14070,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_1cm_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                      .__m__-_r_1co_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                     </style>
                     <div
-                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1cm_"
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_1co_"
                       style="margin-bottom: var(--mantine-spacing-sm);"
                     >
                       <em
@@ -18320,43 +18320,47 @@ exports[`single fields > slider field 1`] = `
       class="rjsf-field rjsf-field-integer"
     >
       <div
-        class="m_dd36362e mantine-Slider-root"
-        data-size="md"
-        id="root"
-        style="--slider-size: var(--slider-size-md); --slider-radius: var(--mantine-radius-xl); --slider-thumb-size: calc(var(--slider-size) * 2);"
-        tabindex="-1"
+        class="m_46b77525 mantine-InputWrapper-root"
       >
         <div
-          class="m_a8645c2 mantine-Slider-trackContainer"
+          class="m_dd36362e mantine-Slider-root"
+          data-size="md"
+          id="root"
+          style="--slider-size: var(--slider-size-md); --slider-radius: var(--mantine-radius-xl); --slider-thumb-size: calc(var(--slider-size) * 2);"
+          tabindex="-1"
         >
           <div
-            class="m_c9ade57f mantine-Slider-track"
+            class="m_a8645c2 mantine-Slider-trackContainer"
           >
             <div
-              class="m_38aeed47 mantine-Slider-bar"
-              style="--slider-bar-width: calc(56.896551724137936% + 2 * var(--slider-size)); --slider-bar-offset: calc(0% - var(--slider-size));"
-            />
-            <div
-              aria-describedby="root__error root__description root__help"
-              aria-disabled="false"
-              aria-label=""
-              aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="42"
-              aria-valuenow="75"
-              class="mantine-focus-auto m_c9a9a60a mantine-Slider-thumb"
-              role="slider"
-              style="--slider-thumb-offset: 56.896551724137936%;"
-              tabindex="0"
-            />
-            <div />
+              class="m_c9ade57f mantine-Slider-track"
+            >
+              <div
+                class="m_38aeed47 mantine-Slider-bar"
+                style="--slider-bar-width: calc(56.896551724137936% + 2 * var(--slider-size)); --slider-bar-offset: calc(0% - var(--slider-size));"
+              />
+              <div
+                aria-describedby="root__error root__description root__help"
+                aria-disabled="false"
+                aria-label=""
+                aria-orientation="horizontal"
+                aria-valuemax="100"
+                aria-valuemin="42"
+                aria-valuenow="75"
+                class="mantine-focus-auto m_c9a9a60a mantine-Slider-thumb"
+                role="slider"
+                style="--slider-thumb-offset: 56.896551724137936%;"
+                tabindex="0"
+              />
+              <div />
+            </div>
           </div>
+          <input
+            name=""
+            type="hidden"
+            value="75"
+          />
         </div>
-        <input
-          name=""
-          type="hidden"
-          value="75"
-        />
       </div>
     </div>
     <button
@@ -19410,10 +19414,10 @@ exports[`single fields > title field 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_p3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_p5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_p3_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_p5_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -19813,10 +19817,10 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_24b_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_24d_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_24b_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_24d_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -19922,7 +19926,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                               data-checked="true"
                               data-combobox-active="true"
                               data-combobox-option="true"
-                              id="_r_24u_"
+                              id="_r_250_"
                               role="option"
                               value="0"
                             >
@@ -19948,7 +19952,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                               aria-selected="false"
                               class="m_92253aa5 mantine-Select-option m_390b5f4"
                               data-combobox-option="true"
-                              id="_r_250_"
+                              id="_r_252_"
                               role="option"
                               value="1"
                             >
