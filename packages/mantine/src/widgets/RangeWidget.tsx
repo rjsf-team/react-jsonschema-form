@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { Slider, Input } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { Slider, Input, useProps } from '@mantine/core';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, getVisibleErrors, rangeSpec, titleId } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps } from '../utils.tsx';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value alongside it.
@@ -34,6 +34,8 @@ export default function RangeWidget<
 
   const themeProps = cleanupOptions(options);
   const { min, max, step } = rangeSpec(schema);
+  const { description, descriptionProps } = getDescriptionProps(props);
+  const { thumbProps } = useProps<GenericObjectType>('Slider', {}, { thumbProps: options.thumbProps });
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -63,7 +65,7 @@ export default function RangeWidget<
           {label}
         </Input.Label>
       )}
-      {options?.description && <Input.Description>{options.description}</Input.Description>}
+      {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Slider
         id={id}
         name={name}
@@ -77,7 +79,10 @@ export default function RangeWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...themeProps}
+        // The thumb is the focusable `role="slider"` element, but Mantine drops the `thumbProps` it doesn't use
+        // (https://github.com/mantinedev/mantine/issues/9218), so the root keeps `aria-describedby` until that is fixed.
         aria-describedby={ariaDescribedByIds(id)}
+        thumbProps={{ ...thumbProps, 'aria-describedby': ariaDescribedByIds(id) }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (
         // oxlint-disable-next-line react/no-array-index-key
