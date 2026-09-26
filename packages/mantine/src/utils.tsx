@@ -248,7 +248,7 @@ export function useAriaDescribedByProps(
     wrapperObject?.[name] !== undefined ? wrapperObject[name] : prop;
   // `wrapperProps.id` replaces the id Mantine builds the wrapper's element ids from
   const wrapperId: string = wrapperObject?.id || id;
-  const successId: string = asObject(fromWrapper('successProps', successProps))?.id ?? `${wrapperId}-success`;
+  const successId: string = asObject(fromWrapper('successProps', successProps))?.id || `${wrapperId}-success`;
   return useAriaContainerProps(
     { describedBy: ariaDescribedByIds(id, includeExamples) },
     successId,
@@ -301,7 +301,7 @@ export function useGroupAriaProps<
     () => (label && !labelRendered ? <HiddenTitle id={id} label={label} /> : undefined),
     [label, labelRendered, id],
   );
-  const successId: string = asObject(resolve('successProps', successProps))?.id ?? `${id}-success`;
+  const successId: string = asObject(resolve('successProps', successProps))?.id || `${id}-success`;
   const containerProps = useAriaContainerProps(
     { describedBy: undefined, labelId: label ? titleId(id) : undefined },
     successId,

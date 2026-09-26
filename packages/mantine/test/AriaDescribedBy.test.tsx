@@ -250,6 +250,7 @@ describe('aria-describedby', () => {
         { wrapperProps: { successProps: { id: 'wrapped-success' } } },
         'wrapped-success',
       ],
+      ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root-success'],
       ['the default id for a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'wrapped-success'],
     ])('still describes the input, by %s', (_, uiOptions, successId) => {
       const { container } = renderThemed(
