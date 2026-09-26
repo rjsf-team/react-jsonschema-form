@@ -2,8 +2,8 @@ import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getUiOptions from './getUiOptions.ts';
-import isConstant from './isConstant.ts';
-import isObject from './isObject.ts';
+import getXxxOfKey from './getXxxOfKey.ts';
+import isConstantOptionList from './isConstantOptionList.ts';
 import { getByPath } from './pathUtils.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
@@ -75,15 +75,9 @@ export default function optionsList<
     }
     return options;
   }
-  let altSchemas: S['anyOf'] | S['oneOf'] = undefined;
-  let altUiSchemas: UiSchema<T, S, F>[] | undefined = undefined;
-  if (schema.anyOf) {
-    altSchemas = schema.anyOf;
-    altUiSchemas = uiSchema?.anyOf;
-  } else if (schema.oneOf) {
-    altSchemas = schema.oneOf;
-    altUiSchemas = uiSchema?.oneOf;
-  }
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  const altSchemas: S['anyOf'] | S['oneOf'] = xxxOfKey && schema[xxxOfKey];
+  const altUiSchemas: UiSchema<T, S, F>[] | undefined = xxxOfKey && uiSchema?.[xxxOfKey];
   // See if there is a discriminator path specified in the schema, and if so, use it as the selectorField, otherwise
   // pull one from the uiSchema
   let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
@@ -93,7 +87,7 @@ export default function optionsList<
   }
   // Without a selector, each option's value is its constant, which `toConstant()` throws for when there isn't one, so a
   // list that isn't made of constants has no options to offer rather than taking down the render
-  if (!selectorField && altSchemas?.some((aSchema) => !isObject(aSchema) || !isConstant(aSchema as S))) {
+  if (!selectorField && altSchemas && !isConstantOptionList<S>(altSchemas)) {
     return undefined;
   }
   return altSchemas?.map((aSchemaDef, index) => {

@@ -89,7 +89,16 @@ describe('getWidget()', () => {
   });
 
   it('should fail if widget has no type property', () => {
-    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget for type 'object' in schema: ${schemaStr}`);
+    expect(() => getWidget({ type: 'null' }, 'blabla')).toThrow(`No widget for type 'null' in schema: {"type":"null"}`);
+  });
+
+  it('should fail if the object type has no such widget', () => {
+    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget 'blabla' for type 'object' in schema: ${schemaStr}`);
+  });
+
+  it('should return `SelectWidget` for an object type, which a select over object constants renders with', () => {
+    const registry = { SelectWidget: TestWidget };
+    expect(getWidget(schema, 'select', registry)).toBe(TestWidget);
   });
 
   it('should fail if schema `type` has no widget property', () => {

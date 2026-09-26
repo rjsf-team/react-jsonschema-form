@@ -345,6 +345,41 @@ describe('SelectWidget', () => {
     expect(seen).toEqual([['b'], ['b', null]]);
   });
 
+  test('single select: reports the form data value on focus and blur rather than decoding it', async () => {
+    const user = userEvent.setup();
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <>
+        <SelectWidget
+          {...makeWidgetMockProps({
+            autofocus: false,
+            disabled: false,
+            readonly: false,
+            rawErrors: [],
+            // Decoded as a DOM value, `1` would be read as the index of the option whose value is `0`
+            value: 1,
+            onFocus,
+            onBlur,
+            options: {
+              enumOptions: [
+                { label: 'One', value: 1 },
+                { label: 'Zero', value: 0 },
+              ],
+            },
+          })}
+        />
+        <button type='button'>After select</button>
+      </>,
+    );
+
+    await user.tab();
+    await user.tab();
+
+    expect(onFocus).toHaveBeenCalledWith('_id', 1);
+    expect(onBlur).toHaveBeenCalledWith('_id', 1);
+  });
+
   test('multi-select: optgroups does not reorder the selected values it reports', async () => {
     const user = userEvent.setup();
     const seen: unknown[] = [];

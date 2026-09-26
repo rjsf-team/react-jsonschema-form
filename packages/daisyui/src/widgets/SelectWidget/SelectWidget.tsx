@@ -10,6 +10,8 @@ import type {
 } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsDeselectValue,
+  enumOptionsIsSelected,
   enumOptionsValueForIndex,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -82,8 +84,9 @@ export default function SelectWidget<
       const optionValue = enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
       if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
-        const newValue = currentValue.includes(optionValue)
-          ? currentValue.filter((v) => v !== optionValue)
+        // Compared by value, since an object option in form data is rarely the same instance as the option's constant
+        const newValue = enumOptionsIsSelected<S>(optionValue, currentValue)
+          ? enumOptionsDeselectValue<S>(index, currentValue, enumOptions)
           : [...currentValue, optionValue];
         onChange(newValue);
       } else {
@@ -93,24 +96,24 @@ export default function SelectWidget<
     [value, isMultiple, enumOptions, optEmptyVal, onChange],
   );
 
+  // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
+  // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLButtonElement>) => {
-      const dataValue = target?.getAttribute('data-value');
-      if (dataValue !== null) {
-        onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
+    ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
+      if (!currentTarget.contains(relatedTarget)) {
+        onBlur(id, value);
       }
     },
-    [onBlur, id, enumOptions, optEmptyVal],
+    [onBlur, id, value],
   );
 
   const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLButtonElement>) => {
-      const dataValue = target?.getAttribute('data-value');
-      if (dataValue !== null) {
-        onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
+    ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
+      if (!currentTarget.contains(relatedTarget)) {
+        onFocus(id, value);
       }
     },
-    [onFocus, id, enumOptions, optEmptyVal],
+    [onFocus, id, value],
   );
 
   // The custom dropdown iterates `selectedValues.includes(...)` per option, so
@@ -128,6 +131,10 @@ export default function SelectWidget<
       ? schema.examples.map((example) => ({ value: example, label: getDisplayValue(example) }))
       : []);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
+  // Looked up by encoded value, which is an option's index only in the `indexed` format
+  const selectedLabels = optionsList
+    .filter((option, index) => selectedValues.includes(enumOptionValueEncoder(option.value, index, optionValueFormat)))
+    .map((option) => option.label);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const encodedValue = enumOptionValueEncoder(option.value, option.index, optionValueFormat);
@@ -167,7 +174,7 @@ export default function SelectWidget<
 
   return (
     <div className='form-control w-full'>
-      <div className='dropdown w-full'>
+      <div className='dropdown w-full' onBlur={handleBlur} onFocus={handleFocus}>
         {/* A real `button` rather than the `div role='button'` daisyui's own markup uses: `label htmlFor` only
             associates with a labelable element, so on a `div` the key label and the `FieldTemplate` label both point
             at nothing. `type='button'` keeps it from submitting the form it sits in, and the explicit focus covers
@@ -186,13 +193,9 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
         >
           <span className='truncate'>
-            {selectedValues.length > 0
-              ? selectedValues.map((index) => optionsList[Number(index)]?.label).join(', ')
-              : placeholder || label || 'Select...'}
+            {selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
           </span>
           <span className='ml-2'>▼</span>
         </button>

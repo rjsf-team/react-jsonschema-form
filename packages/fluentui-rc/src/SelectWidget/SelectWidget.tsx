@@ -3,6 +3,7 @@ import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -70,6 +71,15 @@ function SelectWidget<
     .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
     .join(', ');
 
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is compared in that encoding too
+  const selectedValues: string | string[] | undefined = enumOptionSelectedValue<S>(
+    value,
+    enumOptions,
+    multiple,
+    optionValueFormat,
+  );
+  const selectedOptions = selectedValues === undefined ? [] : ([] as string[]).concat(selectedValues);
+
   const handleBlur = () => onBlur(id, selectedIndexes);
   const handleFocus = () => onFocus(id, selectedIndexes);
   const handleChange = (_: any, data: OptionOnSelectData) => {
@@ -108,7 +118,7 @@ function SelectWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         onOptionSelect={handleChange}
-        selectedOptions={selectedIndexesAsArray}
+        selectedOptions={selectedOptions}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}

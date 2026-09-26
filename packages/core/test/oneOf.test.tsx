@@ -2392,6 +2392,57 @@ describe('oneOf', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: expected } }), 'root_v');
     });
 
+    it('should keep the declared type and label of a typed object select (#5317)', () => {
+      const schemaTypes: unknown[] = [];
+      const CustomSelect = (props: WidgetProps) => {
+        schemaTypes.push(props.schema.type);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            type: 'object',
+            title: 'Pick one',
+            oneOf: [
+              { const: { a: 1 }, title: 'One' },
+              { const: { a: 2 }, title: 'Two' },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': CustomSelect } } });
+
+      expect(schemaTypes).toContain('object');
+      expect(schemaTypes).not.toContain('string');
+      expect(node.querySelector('label[for=root_v]')).toHaveTextContent('Pick one');
+    });
+
+    it('should label the anyOf options from uiSchema.anyOf when the schema also has a oneOf', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            anyOf: [
+              { type: 'string', title: 'A' },
+              { type: 'number', title: 'B' },
+            ],
+            oneOf: [{ minLength: 1 }, { minLength: 2 }],
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        v: {
+          anyOf: [{ 'ui:title': 'From anyOf A' }, { 'ui:title': 'From anyOf B' }],
+          oneOf: [{ 'ui:title': 'From oneOf C' }, { 'ui:title': 'From oneOf D' }],
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v__anyof_select')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['From anyOf A', 'From anyOf B']);
+    });
+
     it('should render the anyOf, not throw, when only the oneOf of a typed schema is made of consts (#5309)', () => {
       const schema: RJSFSchema = {
         type: 'object',
