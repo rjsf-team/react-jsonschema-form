@@ -233,7 +233,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   } else if (Array.isArray(formData)) {
     // Only names the array in the error a throwing function-form `uiSchema.items` logs, so it isn't worth deriving for
     // the arrays that don't have one — this walks every field of the form on every validation pass
-    const arrayFieldPath = typeof branchUiSchema?.items === 'function' ? fieldPathFromList(path) : undefined;
+    const arrayFieldPath = typeof branchUiSchema.items === 'function' ? fieldPathFromList(path) : undefined;
     formData.forEach((item, idx) => {
       walk(
         ctx,
