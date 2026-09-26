@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { format, isSameDay, isToday, isValid } from 'date-fns';
+import { format, isSameDay, isToday, isValid, parseISO } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
@@ -143,8 +143,19 @@ export default function DateWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, label, hideLabel, onChange, onFocus, onBlur, schema } = props;
-  // Initialize the local date from the parent's value.
-  const initialDate = useMemo(() => (value ? new Date(value) : undefined), [value]);
+  // Initialize the local date from the parent's value. Only the `YYYY-MM-DD` part is parsed, and with `parseISO`
+  // rather than `new Date()`, which reads a date-only string as UTC midnight and so names the previous day once
+  // date-fns formats it in local time. Taking the date part also means a value left over from when this widget
+  // committed a UTC date-time still shows the day it names. An unparsable value normalizes to `undefined` here rather
+  // than becoming an `Invalid Date` that the calendar, its month caption and the trigger would each have to guard.
+  const initialDate = useMemo(() => {
+    if (!value) {
+      return undefined;
+    }
+    const [datePart = ''] = String(value).split('T');
+    const parsed = parseISO(datePart);
+    return isValid(parsed) ? parsed : undefined;
+  }, [value]);
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
 
   // When the parent's value changes externally, update local state.
@@ -160,7 +171,7 @@ export default function DateWidget<
   useClickOutside(containerRef, () => {
     if (isOpen) {
       setIsOpen(false);
-      onChange(localDate ? localDate.toISOString() : '');
+      onChange(localDate ? format(localDate, 'yyyy-MM-dd') : '');
       // Manually invoke the blur handler to ensure blur event is triggered
       if (onBlur) {
         onBlur(id, value);
@@ -334,7 +345,7 @@ export default function DateWidget<
    */
   const handleDoneClick = useCallback(() => {
     setIsOpen(false);
-    onChange(localDate ? localDate.toISOString() : '');
+    onChange(localDate ? format(localDate, 'yyyy-MM-dd') : '');
     if (onBlur) {
       onBlur(id, value);
     }

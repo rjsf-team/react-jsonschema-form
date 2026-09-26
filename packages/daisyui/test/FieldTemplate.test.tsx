@@ -208,9 +208,9 @@ describe('FieldTemplate', () => {
       />,
     );
 
-    // The trigger's contents are the selected date, so naming it from the label alone would drop the value
-    const trigger = screen.getByRole('button', { name: /Birthday/ });
-    expect(trigger).toHaveAccessibleName(`Birthday ${trigger.textContent?.trim()}`);
+    // The trigger's contents are the selected date, so naming it from the label alone would drop the value. The date
+    // is spelled out rather than read back off the element, which would pass for a wrong day as much as the right one
+    expect(screen.getByRole('button', { name: /Birthday/ })).toHaveAccessibleName('Birthday May 3, 2020');
   });
 
   // A named property falls back to its name for the label, so only a root field and an array item can end up with none
