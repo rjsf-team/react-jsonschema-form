@@ -351,7 +351,8 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           },
         };
         const mutualOptions: RJSFSchema[] = [{ $ref: '#/definitions/A' }, options[1]];
-        // The recursive option scores `name` and the nested `label`, the flat one only `name`
+        // The recursive option scores `name`, the matching structure of `b` and the nested `label`, the flat one
+        // only `name`
         expect(
           getClosestMatchingOption(testValidator, mutualSchema, { name: 'a', b: { label: 'x' } }, mutualOptions),
         ).toEqual(0);
