@@ -80,9 +80,6 @@ export default function RangeWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...themeProps}
-        // The thumb is the focusable `role="slider"` element, but Mantine drops the `thumbProps` it doesn't use
-        // (https://github.com/mantinedev/mantine/issues/9218), so the root keeps `aria-describedby` until that is fixed.
-        aria-describedby={describedBy}
         thumbProps={{ ...thumbProps, 'aria-describedby': describedBy }}
       />
       {getVisibleErrors(props).map((error: string, index: number) => (
