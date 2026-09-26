@@ -4601,16 +4601,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
           </label>
         </div>
         <div
-          class="description-field my-4"
-          id="root__description"
-        >
-          <div
-            class="text-sm text-base-content/80"
-          >
-            This is a checkbox description
-          </div>
-        </div>
-        <div
           class="rjsf-field-error-template text-red-600"
         >
           <ul
@@ -5972,35 +5962,14 @@ exports[`single fields > hidden field 1`] = `
             class="grid grid-cols-1 gap-4 "
           >
             <div
-              class="flex-grow rjsf-field rjsf-field-string"
+              class="hidden"
             >
-              <div
-                class="field-template mb-3 rjsf-field rjsf-field-string"
-              >
-                <label
-                  class="label"
-                  for="root_my-field"
-                >
-                  <span
-                    class="label-text font-medium"
-                  >
-                    my-field
-                  </span>
-                </label>
-                <input
-                  id="root_my-field"
-                  name="root_my-field"
-                  type="hidden"
-                  value=""
-                />
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
-              </div>
+              <input
+                id="root_my-field"
+                name="root_my-field"
+                type="hidden"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -11730,6 +11699,14 @@ exports[`single fields > radio field 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          />
+        </label>
         <div
           class="form-control"
         >
@@ -11804,6 +11781,16 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       <div
         class="field-template mb-3 rjsf-field rjsf-field-boolean"
       >
+        <label
+          class="label"
+          for="root"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            test
+          </span>
+        </label>
         <div
           class="form-control"
         >

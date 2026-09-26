@@ -8,6 +8,7 @@ import { getDaisy } from '../../utils.ts';
  *
  * - Displaying field labels with required indicators
  * - Special layout for checkbox fields (label positioned after the input)
+ * - Rendering only the children of a hidden field
  * - Proper spacing between form fields
  * - Rendering error messages and help text
  * - Maintaining accessibility with proper label associations
@@ -55,10 +56,14 @@ export default function FieldTemplate<
     ...divProps
   } = props;
 
+  if (hidden) {
+    return <div className='hidden'>{children}</div>;
+  }
+
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  // Special handling for checkboxes - they should have the label after the input. A boolean rendered through a select
-  // (a `oneOf`/`anyOf` of boolean constants) has no label of its own, so it still needs this one
-  const isCheckbox = schema.type === 'boolean' && uiOptions.widget !== 'select';
+  // Special handling for checkboxes - they should have the label after the input, which the CheckboxWidget renders
+  // itself. Any other widget a boolean is rendered through leaves the label to this template
+  const isCheckbox = uiOptions.widget === 'checkbox';
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
@@ -99,7 +104,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {displayLabel && description ? description : null}
+        {displayLabel && !isCheckbox && description ? description : null}
         {errors}
         {help}
       </div>
