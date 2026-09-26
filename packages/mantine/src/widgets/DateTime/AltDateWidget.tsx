@@ -1,8 +1,51 @@
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
-import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  DateElementProp,
+  DateObject,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { dateRangeOptions, getVisibleErrors, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
-import { getDescriptionProps, useAriaDescribedByProps } from '../../utils.tsx';
+import { FieldTitle, getDescriptionProps, useAriaDescribedByProps } from '../../utils.tsx';
+
+interface AltDatePartProps {
+  id: string;
+  part: DateElementProp;
+  disabled?: boolean;
+  labelled: boolean;
+  onChange: (value: string | null) => void;
+}
+
+/** One part of the date, such as the year, as a `Select` with its own id and success message. The part is named by the
+ * field's title followed by its own `aria-label`, which a self-reference in `aria-labelledby` resolves to, and which
+ * Mantine also gives the part's listbox.
+ */
+function AltDatePart({ id, part, disabled, labelled, onChange }: AltDatePartProps) {
+  const partId = `${id}_${part.type}`;
+  const ariaDescribedByProps = useAriaDescribedByProps('Select', id, {}, false, `${partId}-success`);
+  return (
+    <Box>
+      <Select
+        id={partId}
+        name={partId}
+        placeholder={part.type}
+        aria-label={part.type}
+        aria-labelledby={labelled ? `${titleId(id)} ${partId}` : undefined}
+        disabled={disabled}
+        data={dateRangeOptions(part.range[0], part.range[1]).map((item) => item.value.toString())}
+        value={!part.value || part.value < 0 ? null : part.value.toString()}
+        onChange={onChange}
+        searchable={false}
+        allowDeselect={false}
+        comboboxProps={{ withinPortal: false }}
+        {...ariaDescribedByProps}
+      />
+    </Box>
+  );
+}
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
@@ -16,42 +59,28 @@ export default function AltDateWidget<
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
   const { descriptionProps, description } = getDescriptionProps(props);
-  const ariaDescribedByProps = useAriaDescribedByProps('Select', id);
   return (
     <>
-      {!hideLabel && !!label && (
-        <Input.Label id={titleId(id)} required={required}>
-          {label}
-        </Input.Label>
-      )}
+      <FieldTitle
+        id={id}
+        label={label}
+        hideLabel={hideLabel}
+        required={required}
+        inputWrapperOrder={options.inputWrapperOrder}
+      />
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Flex gap='xs' align='center' wrap='nowrap'>
-        {elements.map((elemProps, i) => {
-          const elemId = `${id}_${elemProps.type}`;
-          // Each part renders its own success message, so each needs its own id
-          const successProps = { ...ariaDescribedByProps.successProps, id: `${elemId}-success` };
-          const wrapperProps = { ...ariaDescribedByProps.wrapperProps, successProps };
-          return (
+        {elements.map((part, i) => (
+          <AltDatePart
             // oxlint-disable-next-line react/no-array-index-key
-            <Box key={i}>
-              <Select
-                id={elemId}
-                name={elemId}
-                placeholder={elemProps.type}
-                disabled={disabled || readonly}
-                data={dateRangeOptions<S>(elemProps.range[0], elemProps.range[1]).map((item) => item.value.toString())}
-                value={!elemProps.value || elemProps.value < 0 ? null : elemProps.value.toString()}
-                onChange={(v) => handleChange(elemProps.type as keyof DateObject, v || undefined)}
-                searchable={false}
-                allowDeselect={false}
-                comboboxProps={{ withinPortal: false }}
-                {...ariaDescribedByProps}
-                successProps={successProps}
-                wrapperProps={wrapperProps}
-              />
-            </Box>
-          );
-        })}
+            key={i}
+            id={id}
+            part={part}
+            disabled={disabled || readonly}
+            labelled={!!label}
+            onChange={(v) => handleChange(part.type as keyof DateObject, v || undefined)}
+          />
+        ))}
         <Group wrap='nowrap' gap={3}>
           {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
             <Button variant='subtle' size='xs' onClick={handleSetNow}>

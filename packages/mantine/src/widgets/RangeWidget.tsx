@@ -3,7 +3,7 @@ import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, getVisibleErrors, rangeSpec, titleId } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, HiddenTitle } from '../utils.tsx';
+import { cleanupOptions, FieldTitle, getDescriptionProps } from '../utils.tsx';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value alongside it.
@@ -40,7 +40,6 @@ export default function RangeWidget<
     {},
     { thumbProps: options.thumbProps, thumbLabel: options.thumbLabel },
   );
-  const labelShown = !hideLabel && !!label;
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -65,12 +64,13 @@ export default function RangeWidget<
 
   return (
     <>
-      {labelShown && (
-        <Input.Label id={titleId(id)} required={required}>
-          {label}
-        </Input.Label>
-      )}
-      {!labelShown && !!label && <HiddenTitle id={id} label={label} />}
+      <FieldTitle
+        id={id}
+        label={label}
+        hideLabel={hideLabel}
+        required={required}
+        inputWrapperOrder={options.inputWrapperOrder}
+      />
       {description && <Input.Description {...descriptionProps}>{description}</Input.Description>}
       <Slider
         id={id}

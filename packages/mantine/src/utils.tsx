@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { use, useCallback, useMemo } from 'react';
-import { InputWrapperContext, useProps } from '@mantine/core';
+import { Input, InputWrapperContext, useProps } from '@mantine/core';
 import type {
   FormContextType,
   GenericObjectType,
@@ -168,6 +168,10 @@ function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
 }
 
+function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined): string {
+  return ownSuccessProps?.id || `${id}-success`;
+}
+
 /** Replaces the aria ids in the `InputWrapper` context, keeping the id of the success message Mantine renders, which
  * rjsf has no element for. Mantine only puts that id in the context when the message is rendered.
  */
@@ -190,12 +194,12 @@ function InputWrapperAriaProvider({
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
  * `ownContainer`, the container Mantine would otherwise render, after anything in `before`. The success message is
- * given a known id, the one from `ownSuccessProps` else `<id>-success`, since Mantine's components derive it
- * differently. Both are set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and
- * Mantine gives the two a different precedence for inputs and groups.
+ * given the known `successId`, since Mantine's components derive it differently. Both are set top-level and in
+ * `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two a different precedence
+ * for inputs and groups.
  */
 function useAriaContainerProps(
-  id: string,
+  successId: string,
   overrides: InputWrapperAriaOverrides,
   ownSuccessProps: GenericObjectType | undefined,
   ownContainer: unknown,
@@ -203,7 +207,6 @@ function useAriaContainerProps(
   before?: ReactNode,
 ) {
   const { describedBy, labelId } = overrides;
-  const successId: string = ownSuccessProps?.id || `${id}-success`;
   const container = useCallback(
     (children: ReactNode) => (
       <InputWrapperAriaProvider overrides={labelId ? { describedBy, labelId } : { describedBy }} successId={successId}>
@@ -226,11 +229,47 @@ function useAriaContainerProps(
 /** Renders the field's title, `hidden`, so that an element labelled by `titleId(id)` keeps an accessible name when the
  * visible label isn't rendered
  */
-export function HiddenTitle({ id, label }: { id: string; label: ReactNode }) {
+function HiddenTitle({ id, label }: { id: string; label: ReactNode }) {
   return (
     <span id={titleId(id)} hidden>
       {label}
     </span>
+  );
+}
+
+function labelInOrder(order: unknown) {
+  return !Array.isArray(order) || order.includes('label');
+}
+
+/** Renders the field's title with the id `titleId(id)`, for a widget that renders its own label rather than leaving it
+ * to a Mantine input: Mantine's label when it is shown, else the title `hidden`, so that the widget's inputs can keep
+ * `titleId(id)` as their accessible name either way. As for `Checkbox.Group` and `Radio.Group`, the label isn't shown
+ * when `inputWrapperOrder`, from the widget's options else `InputWrapper`'s theme `defaultProps`, leaves it out.
+ * Renders nothing when the field has no label.
+ */
+export function FieldTitle({
+  id,
+  label,
+  hideLabel,
+  required,
+  inputWrapperOrder,
+}: {
+  id: string;
+  label: ReactNode;
+  hideLabel?: boolean;
+  required?: boolean;
+  inputWrapperOrder?: unknown;
+}) {
+  const order = useProps<GenericObjectType>('InputWrapper', {}, { inputWrapperOrder }).inputWrapperOrder;
+  if (!label) {
+    return null;
+  }
+  return hideLabel || !labelInOrder(order) ? (
+    <HiddenTitle id={id} label={label} />
+  ) : (
+    <Input.Label id={titleId(id)} required={required}>
+      {label}
+    </Input.Label>
   );
 }
 
@@ -246,6 +285,8 @@ export function HiddenTitle({ id, label }: { id: string; label: ReactNode }) {
  * @param id - The id of the field the input belongs to
  * @param [options={}] - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param [includeExamples=false] - Whether to also describe the input by the field's examples list
+ * @param [successId] - The id to give the success message, in place of the one from `successProps`, else
+ *   `<id>-success`, for an input that is one of several parts of the field, each rendering its own message
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -253,6 +294,7 @@ export function useAriaDescribedByProps(
   id: string,
   options: GenericObjectType = {},
   includeExamples = false,
+  successId?: string,
 ) {
   const { inputContainer, wrapperProps, successProps } = useProps<GenericObjectType>(
     themeComponentNames[component],
@@ -262,10 +304,11 @@ export function useAriaDescribedByProps(
   const wrapperObject = asObject(wrapperProps);
   const fromWrapper = (name: string, prop: unknown) =>
     wrapperObject?.[name] !== undefined ? wrapperObject[name] : prop;
+  const ownSuccessProps = asObject(fromWrapper('successProps', successProps));
   return useAriaContainerProps(
-    id,
+    successId ?? successIdOf(id, ownSuccessProps),
     { describedBy: ariaDescribedByIds(id, includeExamples) },
-    asObject(fromWrapper('successProps', successProps)),
+    ownSuccessProps,
     fromWrapper('inputContainer', inputContainer),
     wrapperObject,
   );
@@ -310,15 +353,16 @@ export function useGroupAriaProps<
 
   const shownLabel = labelValue(label || undefined, hideLabel, false);
   const order = resolve('inputWrapperOrder', inputWrapperOrder);
-  const labelRendered = !!shownLabel && (!Array.isArray(order) || order.includes('label'));
+  const labelRendered = !!shownLabel && labelInOrder(order);
   const hiddenLabel = useMemo(
     () => (label && !labelRendered ? <HiddenTitle id={id} label={label} /> : undefined),
     [label, labelRendered, id],
   );
+  const ownSuccessProps = asObject(resolve('successProps', successProps));
   const containerProps = useAriaContainerProps(
-    id,
+    successIdOf(id, ownSuccessProps),
     { describedBy: undefined, labelId: label ? titleId(id) : undefined },
-    asObject(resolve('successProps', successProps)),
+    ownSuccessProps,
     resolve('inputContainer', inputContainer),
     wrapperObject,
     hiddenLabel,

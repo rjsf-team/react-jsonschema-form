@@ -189,6 +189,88 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
   });
 
+  test('alt-date widget names each part by the field title and the part, whether the label is shown or hidden', () => {
+    const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-labelledby'));
+    const { rerender } = renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
+
+    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root_year', 'root_month', 'root_day']);
+    for (const part of screen.getAllByRole('combobox')) {
+      expect(part).toHaveAccessibleName(`Birthday ${part.id.replace('root_', '')}`);
+    }
+    expect(screen.getByText('Birthday')).toBeVisible();
+    const shownNames = partNames();
+
+    rerender(
+      <WrappedForm
+        schema={{ type: 'string', title: 'Birthday' }}
+        uiSchema={{ 'ui:widget': 'alt-date', 'ui:label': false }}
+        validator={validator}
+      />,
+    );
+
+    expect(partNames()).toEqual(shownNames);
+    expect(screen.getByRole('combobox', { name: 'Birthday year' })).toBeInTheDocument();
+    expect(screen.getByText('Birthday')).not.toBeVisible();
+  });
+
+  test('alt-date widget names each part by the part alone when the field has no label', () => {
+    renderField({ type: 'string' }, { 'ui:widget': 'alt-date' });
+
+    expect(screen.getByRole('combobox', { name: 'year' })).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('alt-date widget names each part listbox by the part', () => {
+    renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
+
+    expect(
+      screen.getAllByRole('listbox', { hidden: true }).map((listbox) => listbox.getAttribute('aria-label')),
+    ).toEqual(['year', 'month', 'day']);
+  });
+
+  test('alt-date widget keeps each part named, with unique ids, when the theme gives Select a label', () => {
+    const { container } = render(
+      <MantineProvider theme={createTheme({ components: { Select: { defaultProps: { label: 'Part' } } } })}>
+        <Form
+          schema={{ type: 'string', title: 'Birthday' }}
+          uiSchema={{ 'ui:widget': 'alt-date' }}
+          validator={validator}
+        />
+      </MantineProvider>,
+    );
+
+    const ids = Array.from(container.querySelectorAll('[id^="root"]'), (el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(screen.getByRole('combobox', { name: 'Birthday year' })).toBeInTheDocument();
+  });
+
+  test.each([
+    ['range', 'ui:options', 'slider', { type: 'integer' }],
+    ['range', 'theme', 'slider', { type: 'integer' }],
+    ['alt-date', 'ui:options', 'combobox', { type: 'string' }],
+    ['alt-date', 'theme', 'combobox', { type: 'string' }],
+  ] as [string, string, string, RJSFSchema][])(
+    '%s widget hides the field title but keeps it as the name when an inputWrapperOrder from the %s leaves the label out',
+    (widget, source, role, schema) => {
+      const components =
+        source === 'theme' ? { InputWrapper: { defaultProps: { inputWrapperOrder: orderWithoutLabel } } } : {};
+      render(
+        <MantineProvider theme={createTheme({ components })}>
+          <Form
+            schema={{ ...schema, title: 'A title' }}
+            uiSchema={{
+              'ui:widget': widget,
+              ...(source === 'ui:options' && { 'ui:options': { inputWrapperOrder: orderWithoutLabel } }),
+            }}
+            validator={validator}
+          />
+        </MantineProvider>,
+      );
+
+      expect(screen.getByText('A title')).not.toBeVisible();
+      expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
+    },
+  );
+
   const selectWidgets: [string, RJSFSchema][] = [
     ['select', enumSchema],
     ['multi-select', checkboxesSchema],

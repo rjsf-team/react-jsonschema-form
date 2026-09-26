@@ -282,17 +282,17 @@ describe('aria-describedby', () => {
       expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} root-success`]);
     });
 
-    test('gives each alt-date part its own success message id', () => {
-      const { container } = renderThemed(
-        { Select: { defaultProps: { success: 'Looks good' } } },
-        { type: 'string' },
-        {
-          'ui:widget': 'alt-date',
-        },
-      );
+    test.each([
+      ['no successProps id', { success: 'Looks good' }],
+      ['a successProps id', { success: 'Looks good', successProps: { id: 'shared' } }],
+    ])('describes each alt-date part by its own success message with %s', (_, defaultProps) => {
+      const { container } = renderThemed({ Select: { defaultProps } }, { type: 'string' }, { 'ui:widget': 'alt-date' });
 
       const successIds = [...container.querySelectorAll('[id$="-success"]')].map((el) => el.id);
       expect(successIds).toEqual(['root_year-success', 'root_month-success', 'root_day-success']);
+      expect(describedByValues(container)).toEqual(
+        successIds.map((successId) => `${ariaDescribedByIds('root')} ${successId}`),
+      );
     });
 
     test('describes a radio group, which is otherwise left undescribed', () => {
