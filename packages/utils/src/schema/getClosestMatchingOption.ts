@@ -26,7 +26,7 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * the object are processed as follows after obtaining the formValue from `formData` using the `key`:
  * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
  *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
- *   the total.
+ *   the total, unless the ref is a recursive one that has run out of form data to score (see `visitedRefs`).
  * - If the `value` contains a `oneOf` and there is a formValue, then score based on the index returned from calling
  *   `getClosestMatchingOption()` of that oneOf.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
@@ -40,6 +40,7 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
  * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param [visitedRefs] - The set of `$ref`s already followed without form data, used to stop a recursive one
  * @returns - The score a schema against the formData
  */
 export function calculateIndexScore<
@@ -52,19 +53,44 @@ export function calculateIndexScore<
   schema?: S,
   formData?: any,
   customMergeAllOf?: CustomMergeAllOf<S>,
+  visitedRefs: Set<string> = new Set<string>(),
 ): number {
   let totalScore = 0;
   if (schema) {
     if (isObject(schema.properties)) {
       totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
-        const formValue = formData?.[key];
+        // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
+        // data's own value rather than the one every object inherits, which would never look like missing data
+        const formValue = getByPath<any>(formData, key);
         if (typeof value === 'boolean') {
           return score;
         }
         if (hasByPath(value, REF_KEY)) {
+          const ref = getByPath<string>(value, REF_KEY);
+          // `resolveAllReferences()` leaves a recursive `$ref` in place, so `retrieveSchema()` below resolves the same
+          // definition again and hands back a schema holding that same `$ref` one level down. While there is form data
+          // the descent is bounded by it being consumed a key at a time, but the `{}` substituted for it below lets a
+          // recursive ref resolve forever, so a ref followed without data is followed only once for the whole score.
+          // The set is shared rather than copied per branch so that a cluster of mutually recursive definitions is
+          // followed once in total rather than once per path through the cluster. Resolving such a cluster is
+          // expensive in `retrieveSchema()` itself, which this cannot bound.
+          if (formValue === undefined) {
+            if (visitedRefs.has(ref)) {
+              return score;
+            }
+            visitedRefs.add(ref);
+          }
           const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
           return (
-            score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue || {}, customMergeAllOf)
+            score +
+            calculateIndexScore<T, S, F>(
+              validator,
+              rootSchema,
+              newSchema,
+              formValue || {},
+              customMergeAllOf,
+              visitedRefs,
+            )
           );
         }
         if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
@@ -89,7 +115,7 @@ export function calculateIndexScore<
           return (
             score +
             structureBoost +
-            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, customMergeAllOf)
+            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, customMergeAllOf, visitedRefs)
           );
         }
         if (value.type === guessType(formValue)) {

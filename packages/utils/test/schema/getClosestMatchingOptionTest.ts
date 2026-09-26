@@ -63,6 +63,21 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         ),
       ).toEqual(2);
     });
+    it('scores a recursive $ref under a property named for an inherited member', () => {
+      // `toString` is a legal property name, but every object has one, so reading it off the data with `.[key]` would
+      // make the recursion look like it always had data left to score
+      const schema: RJSFSchema = {
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { name: { type: 'string' }, toString: { $ref: '#/definitions/Node' } },
+          },
+        },
+      };
+      expect(calculateIndexScore(testValidator, schema, schema.definitions!.Node as RJSFSchema, { name: 'a' })).toEqual(
+        1,
+      );
+    });
     it('returns 0 for a schema that has a const that does not match the formData value', () => {
       expect(
         calculateIndexScore(
@@ -296,6 +311,52 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       // Use the schemaUtils to verify the discriminator prop gets passed
       const schemaUtils = createSchemaUtils(testValidator, schema);
       expect(schemaUtils.getClosestMatchingOption(formData, options, 0, 'code')).toEqual(1);
+    });
+    describe('recursive $ref in an option, see https://github.com/rjsf-team/react-jsonschema-form/issues/5337', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              child: { $ref: '#/definitions/Node' },
+            },
+          },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { $ref: '#/definitions/Node' },
+        { type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } },
+      ];
+      beforeEach(() => {
+        // Without mocked results every option matches the junk option too, so none is the single match and all of
+        // them get scored, which is the only path that reaches the recursive $ref
+        testValidator.setReturnValues({ isValid: [] });
+      });
+      it('terminates when the recursion runs out of form data', () => {
+        // Neither option matches `{ child: 5 }` and both score 0, so the tie falls back to the selectedOption
+        expect(getClosestMatchingOption(testValidator, schema, { child: 5 }, options)).toEqual(-1);
+      });
+      it('scores the recursive option as deep as the form data goes', () => {
+        // The recursive option scores `name` at both levels, the flat one only at the top
+        expect(getClosestMatchingOption(testValidator, schema, { name: 'a', child: { name: 'b' } }, options)).toEqual(
+          0,
+        );
+      });
+      it('terminates for a pair of mutually recursive definitions', () => {
+        const mutualSchema: RJSFSchema = {
+          definitions: {
+            A: { type: 'object', properties: { name: { type: 'string' }, b: { $ref: '#/definitions/B' } } },
+            B: { type: 'object', properties: { label: { type: 'string' }, a: { $ref: '#/definitions/A' } } },
+          },
+        };
+        const mutualOptions: RJSFSchema[] = [{ $ref: '#/definitions/A' }, options[1]];
+        // The recursive option scores `name`, the matching structure of `b` and the nested `label`, the flat one
+        // only `name`
+        expect(
+          getClosestMatchingOption(testValidator, mutualSchema, { name: 'a', b: { label: 'x' } }, mutualOptions),
+        ).toEqual(0);
+      });
     });
   });
 }
