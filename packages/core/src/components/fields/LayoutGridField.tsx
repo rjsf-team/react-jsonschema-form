@@ -356,7 +356,7 @@ export function getSchemaDetailsForField<
     if (schemaProperties) {
       rawSchema = (schemaProperties[part] ?? {}) as S;
     } else if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
+      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
       // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
       const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
       rawSchema = getPropertySchema<S>(selectedSchema, part);
@@ -382,7 +382,7 @@ export function getSchemaDetailsForField<
   if (schema && leafPath) {
     // When we have both a schema and a leafPath...
     if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
+      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
       // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
       schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
     }
@@ -399,7 +399,7 @@ export function getSchemaDetailsForField<
     }
     isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
     if (schema && (ONE_OF_KEY in schema || ANY_OF_KEY in schema)) {
-      const xxx = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
+      const xxx = ANY_OF_KEY in schema ? ANY_OF_KEY : ONE_OF_KEY;
       // Set the options if we have a schema with a oneOf/anyOf
       const discriminator = getDiscriminatorFieldFromSchema(schema);
       optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };

@@ -10,7 +10,7 @@ import type {
 } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
-  enumOptionValueDecoder,
+  enumOptionsValueForIndex,
   enumOptionValueEncoder,
   getOptionValueFormat,
   groupEnumOptions,
@@ -77,44 +77,40 @@ export default function SelectWidget<
         return;
       }
 
+      // `data-value` is the option's index whatever the `optionValueFormat`, so it's resolved as one rather than
+      // decoded as a DOM value
+      const optionValue = enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
       if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
-        const optionValue = isEnumeratedObject
-          ? enumOptions[index].value
-          : enumOptionValueDecoder<S>(String(index), enumOptions, optionValueFormat, optEmptyVal);
         const newValue = currentValue.includes(optionValue)
           ? currentValue.filter((v) => v !== optionValue)
           : [...currentValue, optionValue];
         onChange(newValue);
       } else {
-        onChange(
-          isEnumeratedObject
-            ? enumOptions[index].value
-            : enumOptionValueDecoder<S>(String(index), enumOptions, optionValueFormat, optEmptyVal),
-        );
+        onChange(optionValue);
       }
     },
-    [value, isMultiple, isEnumeratedObject, enumOptions, optEmptyVal, optionValueFormat, onChange],
+    [value, isMultiple, enumOptions, optEmptyVal, onChange],
   );
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLButtonElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
-        onBlur(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
+        onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
       }
     },
-    [onBlur, id, enumOptions, optEmptyVal, optionValueFormat],
+    [onBlur, id, enumOptions, optEmptyVal],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLButtonElement>) => {
       const dataValue = target?.getAttribute('data-value');
       if (dataValue !== null) {
-        onFocus(id, enumOptionValueDecoder<S>(dataValue, enumOptions, optionValueFormat, optEmptyVal));
+        onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
       }
     },
-    [onFocus, id, enumOptions, optEmptyVal, optionValueFormat],
+    [onFocus, id, enumOptions, optEmptyVal],
   );
 
   // The custom dropdown iterates `selectedValues.includes(...)` per option, so

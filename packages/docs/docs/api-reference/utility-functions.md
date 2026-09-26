@@ -379,7 +379,8 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their index, round-trip too.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their prefixed index, round-trip too.
+When no option encodes as the input and it is a bare index, falls back to the option at that index.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
 #### Parameters
@@ -397,8 +398,9 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to the index since `String()` would produce `"[object Object]"`.
+Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
 So does `null`, since the empty string is the value of a select's empty placeholder.
+The prefix keeps that index from sharing a value with a primitive option spelled as the same number.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters

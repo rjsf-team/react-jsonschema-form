@@ -1,4 +1,4 @@
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import {
@@ -531,6 +531,20 @@ describe('BooleanField', () => {
 
       expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
       expect(node.querySelector('select')).not.toBeInTheDocument();
+    });
+
+    it.each<[string, UiSchema]>([
+      ['ui:enumNames', { 'ui:enumNames': ['Accept', 'Decline'] }],
+      ['a ui:title in uiSchema.oneOf', { oneOf: [{ 'ui:title': 'Accept' }, {}] }],
+    ])('should default to a select when %s labels the options', (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+        uiSchema,
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toContain('Accept');
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
     });
 
     it.each([
