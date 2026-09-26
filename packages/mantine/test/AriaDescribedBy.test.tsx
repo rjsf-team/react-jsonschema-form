@@ -202,6 +202,59 @@ describe('aria-describedby', () => {
     },
   );
 
+  test.each([
+    [
+      'checkboxes',
+      'ui:options',
+      'CheckboxGroup',
+      { type: 'array', items: enumSchema, uniqueItems: true },
+      'checkboxes',
+    ],
+    ['checkboxes', 'theme', 'CheckboxGroup', { type: 'array', items: enumSchema, uniqueItems: true }, 'checkboxes'],
+    ['radio', 'ui:options', 'RadioGroup', enumSchema, 'radio'],
+    ['radio', 'theme', 'RadioGroup', enumSchema, 'radio'],
+  ] as [string, string, string, RJSFSchema, string][])(
+    '%s widget keeps the wrapperProps.labelProps from the %s, with the field title id',
+    (_, source, name, schema, widget) => {
+      const wrapperProps = { labelProps: { 'data-wrapper-label': 'yes' } };
+      renderThemed(
+        source === 'theme' ? { [name]: { defaultProps: { wrapperProps } } } : {},
+        { ...schema, title: 'A title' },
+        { 'ui:widget': widget, ...(source === 'ui:options' && { 'ui:options': { wrapperProps } }) },
+      );
+
+      expect(screen.getByText('A title')).toHaveAttribute('data-wrapper-label', 'yes');
+      expect(screen.getByText('A title')).toHaveAttribute('id', 'root__title');
+    },
+  );
+
+  describe('a success message Mantine renders', () => {
+    test.each([
+      ['its default id', {}, 'root-success'],
+      ['a successProps id', { successProps: { id: 'custom-success' } }, 'custom-success'],
+      [
+        'a wrapperProps.successProps id',
+        { wrapperProps: { successProps: { id: 'wrapped-success' } } },
+        'wrapped-success',
+      ],
+    ])('still describes the input, by %s', (_, uiOptions, successId) => {
+      const { container } = renderThemed(
+        {},
+        { type: 'string' },
+        { 'ui:options': { success: 'Looks good', ...uiOptions } },
+      );
+
+      expect(container.querySelector(`[id="${successId}"]`)).toHaveTextContent('Looks good');
+      expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} ${successId}`]);
+    });
+
+    test('describes a radio group, which is otherwise left undescribed', () => {
+      renderThemed({}, enumSchema, { 'ui:widget': 'radio', 'ui:options': { success: 'Looks good' } });
+
+      expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-describedby', 'root-success');
+    });
+  });
+
   test('range widget keeps the thumbProps default from the Mantine theme', async () => {
     const onFocus = vi.fn();
     renderThemed(

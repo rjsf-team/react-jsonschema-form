@@ -59,6 +59,7 @@ export default function RadioWidget<
   const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
 
   const groupAriaProps = useGroupAriaProps('RadioGroup', props);
+  const describedBy = ariaDescribedByIds(id);
 
   return (
     <Radio.Group
@@ -85,7 +86,7 @@ export default function RadioWidget<
               autoFocus={i === 0 && autofocus}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              aria-describedby={ariaDescribedByIds(id)}
+              aria-describedby={describedBy}
             />
           ))}
         </Flex>
