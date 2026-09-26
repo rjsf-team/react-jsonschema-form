@@ -6,7 +6,7 @@ exports[`RatingWidget > renders in disabled state 1`] = `
     class="form-control w-full"
   >
     <div
-      aria-label="Sample Field Label"
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
       id="test-id"
       role="radiogroup"
@@ -68,7 +68,7 @@ exports[`RatingWidget > renders in readonly state 1`] = `
     class="form-control w-full"
   >
     <div
-      aria-label="Sample Field Label"
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
       id="test-id"
       role="radiogroup"
@@ -130,7 +130,7 @@ exports[`RatingWidget > renders with default props (value=0) 1`] = `
     class="form-control w-full"
   >
     <div
-      aria-label="Sample Field Label"
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
       id="test-id"
       role="radiogroup"
@@ -187,7 +187,7 @@ exports[`RatingWidget > renders with maximum stars from schema 1`] = `
     class="form-control w-full"
   >
     <div
-      aria-label="Sample Field Label"
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
       id="test-id"
       role="radiogroup"
@@ -243,7 +243,7 @@ exports[`RatingWidget > renders with value=3 1`] = `
     class="form-control w-full"
   >
     <div
-      aria-label="Sample Field Label"
+      aria-labelledby="test-id__label"
       class="rating gap-1 "
       id="test-id"
       role="radiogroup"

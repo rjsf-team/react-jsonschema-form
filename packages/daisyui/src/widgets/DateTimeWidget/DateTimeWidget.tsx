@@ -8,6 +8,7 @@ import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
+import { fieldLabelId } from '../../utils.ts';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -336,7 +337,7 @@ export default function DateTimeWidget<
           role='button'
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-label={!hideLabel && label ? label : undefined}
+          aria-labelledby={!hideLabel && label ? `${fieldLabelId(id)} ${id}` : undefined}
           tabIndex={0}
           ref={inputRef}
         >

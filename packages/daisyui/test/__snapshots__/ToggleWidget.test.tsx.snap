@@ -15,6 +15,7 @@ exports[`ToggleWidget > renders correctly 1`] = `
           checked=""
           class="toggle "
           id="test-id"
+          name="test-id"
           required=""
           type="checkbox"
         />
@@ -45,6 +46,7 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
           class="toggle "
           disabled=""
           id="test-id"
+          name="test-id"
           required=""
           type="checkbox"
         />
@@ -74,6 +76,7 @@ exports[`ToggleWidget > renders with custom label 1`] = `
           checked=""
           class="toggle "
           id="test-id"
+          name="test-id"
           required=""
           type="checkbox"
         />

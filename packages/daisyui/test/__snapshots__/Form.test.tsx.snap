@@ -188,6 +188,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
+                                          id="root_tasks_0_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -388,6 +389,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
+                                          id="root_tasks_1_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -671,6 +673,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -795,6 +798,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1005,6 +1009,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   <label
                     class="label"
                     for="root_choices"
+                    id="root_choices__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1016,7 +1021,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     class="form-control"
                   >
                     <div
-                      aria-label="choices"
+                      aria-labelledby="root_choices__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_choices"
                       role="group"
@@ -1164,6 +1169,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
+                              id="root_person_firstName__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1210,6 +1216,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
+                              id="root_person_lastName__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1284,6 +1291,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1330,6 +1338,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1440,6 +1449,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   <label
                     class="label"
                     for="root_option"
+                    id="root_option__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1451,7 +1461,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     class="form-control"
                   >
                     <div
-                      aria-label="option"
+                      aria-labelledby="root_option__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_option"
                       role="radiogroup"
@@ -1554,6 +1564,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   <label
                     class="label"
                     for="root_color"
+                    id="root_color__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1698,6 +1709,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1744,6 +1756,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1875,6 +1888,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   <label
                     class="label"
                     for="root_description"
+                    id="root_description__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -2006,6 +2020,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
+                                          id="root_tasks_0_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -2206,6 +2221,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
+                                          id="root_tasks_1_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
@@ -2489,6 +2505,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -2613,6 +2630,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -2851,6 +2869,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
+                              id="root_person_firstName__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -2897,6 +2916,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
+                              id="root_person_lastName__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -2971,6 +2991,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -3017,6 +3038,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -3127,6 +3149,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   <label
                     class="label"
                     for="root_color"
+                    id="root_color__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3271,6 +3294,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3317,6 +3341,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3448,6 +3473,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                   <label
                     class="label"
                     for="root_region"
+                    id="root_region__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3531,6 +3557,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         <label
                           class="label"
                           for="root_region"
+                          id="root_region__label"
                         >
                           <span
                             class="label-text font-medium"
@@ -4558,6 +4585,7 @@ exports[`single fields > checkboxes field 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -4569,7 +4597,7 @@ exports[`single fields > checkboxes field 1`] = `
           class="form-control"
         >
           <div
-            aria-label="An enum list rendered as checkboxes"
+            aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
             role="group"
@@ -4679,6 +4707,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -4690,7 +4719,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           class="form-control"
         >
           <div
-            aria-label="Checkbox Group"
+            aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
             role="group"
@@ -4800,6 +4829,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -4811,7 +4841,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           class="form-control"
         >
           <div
-            aria-label="Required Checkbox Group"
+            aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
             role="group"
@@ -4929,6 +4959,7 @@ exports[`single fields > field with description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5025,6 +5056,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5121,6 +5153,7 @@ exports[`single fields > field with markdown description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5223,6 +5256,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5886,6 +5920,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -5960,6 +5995,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -6046,6 +6082,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -6444,6 +6481,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -6577,6 +6615,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -6703,6 +6742,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     <span
                                       class="label-text font-medium"
@@ -6765,6 +6805,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -7022,6 +7063,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -7097,6 +7139,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -7184,6 +7227,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -7587,6 +7631,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -7722,6 +7767,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -7848,6 +7894,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     <span
                                       class="label-text font-medium"
@@ -7910,6 +7957,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="label"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -8201,6 +8249,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -8347,6 +8396,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -8685,6 +8735,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
+                                id="root_nestedArrayOptional_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -8836,6 +8887,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -9217,6 +9269,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -9337,6 +9390,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -9625,6 +9679,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
+                                id="root_nestedArrayOptional_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -9779,6 +9834,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -10248,6 +10304,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -10720,6 +10777,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -11127,6 +11185,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -11138,7 +11197,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           class="form-control"
         >
           <div
-            aria-label="test"
+            aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
             role="radiogroup"
@@ -13004,6 +13063,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -13364,6 +13424,7 @@ exports[`single fields > string field > field with markdown help and description
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -13459,6 +13520,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -13545,6 +13607,7 @@ exports[`single fields > string field > field with markdown help text without a 
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -13818,6 +13881,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -14136,6 +14200,7 @@ exports[`single fields > title field 1`] = `
                   <label
                     class="label"
                     for="root_title"
+                    id="root_title__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -14413,6 +14478,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   <label
                     class="label"
                     for="root_answer"
+                    id="root_answer__label"
                   >
                     <span
                       class="label-text font-medium"

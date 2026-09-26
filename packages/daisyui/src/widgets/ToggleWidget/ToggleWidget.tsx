@@ -20,6 +20,7 @@ export default function ToggleWidget<
   F extends FormContextType = FormContextType,
 >({
   id,
+  htmlName,
   value,
   label,
   hideLabel,
@@ -78,6 +79,7 @@ export default function ToggleWidget<
     <input
       type='checkbox'
       id={id}
+      name={htmlName || id}
       checked={value}
       required={required}
       disabled={disabled || readonly}

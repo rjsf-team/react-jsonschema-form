@@ -58,6 +58,13 @@ describe('FieldTemplate', () => {
       expect(label.querySelector('input[type="checkbox"]')).toBeInTheDocument();
     });
 
+    test('leaves the label to the checkbox widget under its registry-key spelling too', () => {
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'CheckboxWidget' } });
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
     test('leaves the label to the toggle widget, which renders it after the switch', () => {
       const { templateLabel } = renderForm({ agree: { 'ui:widget': 'toggle' } });
 
@@ -137,8 +144,35 @@ describe('FieldTemplate', () => {
       renderForm({ agree: { 'ui:widget': 'radio', 'ui:options': { label: false } } });
 
       const group = screen.getByRole('radiogroup');
-      expect(group).not.toHaveAttribute('aria-label');
+      expect(group).not.toHaveAttribute('aria-labelledby');
       expect(group).toHaveAccessibleName('');
+    });
+  });
+
+  // A group is named by pointing at the label element, so its accessible name is whatever the label displays. The
+  // `label` a widget is handed is computed separately and differs from the template's in both cases below
+  describe('naming a group from the label the user can see', () => {
+    test('uses the key, not the schema title, for an additionalProperties entry', () => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', additionalProperties: { type: 'string', title: 'Extra', enum: ['a', 'b'] } }}
+          uiSchema={{ additionalProperties: { 'ui:widget': 'radio' } }}
+          formData={{ foo: 'a' }}
+          validator={validator}
+        />,
+      );
+
+      expect(templateLabelFor(container, 'root_foo')).toHaveTextContent('foo');
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('foo');
+    });
+
+    test('keeps the deprecated decoration the template adds', () => {
+      renderForm(
+        { agree: { 'ui:widget': 'radio' }, 'ui:options': { deprecatedHandling: 'label' } },
+        { ...agree, deprecated: true },
+      );
+
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Agree (deprecated)');
     });
   });
 
@@ -165,6 +199,20 @@ describe('FieldTemplate', () => {
     });
   });
 
+  test("a date widget's trigger is named by the label and its own selected value", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { birthday: { type: 'string', format: 'date', title: 'Birthday' } } }}
+        formData={{ birthday: '2020-05-03' }}
+        validator={validator}
+      />,
+    );
+
+    // The trigger's contents are the selected date, so naming it from the label alone would drop the value
+    const trigger = screen.getByRole('button', { name: /Birthday/ });
+    expect(trigger).toHaveAccessibleName(`Birthday ${trigger.textContent?.trim()}`);
+  });
+
   // A named property falls back to its name for the label, so only a root field and an array item can end up with none
   describe('a field with no title', () => {
     test('renders no label element at all', () => {
@@ -173,7 +221,7 @@ describe('FieldTemplate', () => {
       );
 
       expect(templateLabelFor(container, 'root')).toBeNull();
-      expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-label');
+      expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby');
     });
 
     test('renders no label, and so no required asterisk, for an untitled required array item', () => {

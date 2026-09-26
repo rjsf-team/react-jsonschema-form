@@ -67,6 +67,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_first"
+                    id="root_person_name_first__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -120,6 +121,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_middle"
+                    id="root_person_name_middle__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -167,6 +169,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_last"
+                    id="root_person_name_last__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -224,6 +227,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_birth_date"
+                    id="root_person_birth_date__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -245,7 +249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-label="Date of Birth"
+                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -295,6 +299,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_race"
+                    id="root_person_race__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -311,7 +316,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
+                      aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
                       role="group"
@@ -458,6 +463,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_1"
+                            id="root_person_address_line_1__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -511,6 +517,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_2"
+                            id="root_person_address_line_2__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -558,6 +565,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_city"
+                            id="root_person_address_city__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -614,6 +622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_state"
+                              id="root_person_address_state__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1519,6 +1528,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_postal_code"
+                              id="root_person_address_postal_code__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1741,6 +1751,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_first"
+                    id="root_person_name_first__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1794,6 +1805,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_middle"
+                    id="root_person_name_middle__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1841,6 +1853,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_last"
+                    id="root_person_name_last__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1898,6 +1911,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_birth_date"
+                    id="root_person_birth_date__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1919,7 +1933,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-label="Date of Birth"
+                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -1969,6 +1983,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_race"
+                    id="root_person_race__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1985,7 +2000,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
+                      aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
                       role="group"
@@ -2132,6 +2147,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_1"
+                            id="root_person_address_line_1__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -2185,6 +2201,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_2"
+                            id="root_person_address_line_2__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -2232,6 +2249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_city"
+                            id="root_person_address_city__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -2288,6 +2306,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_state"
+                              id="root_person_address_state__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -3193,6 +3212,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_postal_code"
+                              id="root_person_address_postal_code__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -3415,6 +3435,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_first"
+                    id="root_person_name_first__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3468,6 +3489,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_middle"
+                    id="root_person_name_middle__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3515,6 +3537,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_last"
+                    id="root_person_name_last__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3572,6 +3595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_birth_date"
+                    id="root_person_birth_date__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3593,7 +3617,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-label="Date of Birth"
+                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -3643,6 +3667,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_race"
+                    id="root_person_race__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -3659,7 +3684,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
+                      aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
                       role="group"
@@ -3806,6 +3831,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_1"
+                            id="root_person_address_line_1__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -3859,6 +3885,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_2"
+                            id="root_person_address_line_2__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -3906,6 +3933,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_city"
+                            id="root_person_address_city__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -3962,6 +3990,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_state"
+                              id="root_person_address_state__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -4867,6 +4896,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_postal_code"
+                              id="root_person_address_postal_code__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -5089,6 +5119,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_first"
+                    id="root_person_name_first__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5142,6 +5173,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_middle"
+                    id="root_person_name_middle__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5189,6 +5221,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_name_last"
+                    id="root_person_name_last__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5246,6 +5279,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_birth_date"
+                    id="root_person_birth_date__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5267,7 +5301,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <div
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-label="Date of Birth"
+                        aria-labelledby="root_person_birth_date__label root_person_birth_date"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         role="button"
@@ -5317,6 +5351,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="label"
                     for="root_person_race"
+                    id="root_person_race__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5333,7 +5368,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
+                      aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
                       role="group"
@@ -5480,6 +5515,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_1"
+                            id="root_person_address_line_1__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -5533,6 +5569,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_line_2"
+                            id="root_person_address_line_2__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -5580,6 +5617,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="label"
                             for="root_person_address_city"
+                            id="root_person_address_city__label"
                           >
                             <span
                               class="label-text font-medium"
@@ -5636,6 +5674,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_state"
+                              id="root_person_address_state__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -6541,6 +6580,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="label"
                               for="root_person_address_postal_code"
+                              id="root_person_address_postal_code__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -6756,6 +6796,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_name_first"
+                  id="root_person_name_first__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -6809,6 +6850,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_name_middle"
+                  id="root_person_name_middle__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -6856,6 +6898,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_name_last"
+                  id="root_person_name_last__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -6909,6 +6952,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_birth_date"
+                  id="root_person_birth_date__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -6930,7 +6974,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <div
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-label="Date of Birth"
+                      aria-labelledby="root_person_birth_date__label root_person_birth_date"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       role="button"
@@ -6980,6 +7024,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_race"
+                  id="root_person_race__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -6996,7 +7041,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="form-control"
                 >
                   <div
-                    aria-label="Race"
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"
                     role="group"
@@ -7126,6 +7171,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_address_line_1"
+                  id="root_person_address_line_1__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -7179,6 +7225,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_address_line_2"
+                  id="root_person_address_line_2__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -7226,6 +7273,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_address_city"
+                  id="root_person_address_city__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -7279,6 +7327,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="label"
                   for="root_person_address_state"
+                  id="root_person_address_state__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8257,6 +8306,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_name_first"
+                  id="root_person_name_first__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8310,6 +8360,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_name_middle"
+                  id="root_person_name_middle__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8357,6 +8408,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_name_first"
+                  id="root_person_name_first__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8410,6 +8462,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_birth_date"
+                  id="root_person_birth_date__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8431,7 +8484,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <div
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-label="Date of Birth"
+                      aria-labelledby="root_person_birth_date__label root_person_birth_date"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       role="button"
@@ -8481,6 +8534,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_race"
+                  id="root_person_race__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8497,7 +8551,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="form-control"
                 >
                   <div
-                    aria-label="Race"
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"
                     role="group"
@@ -8627,6 +8681,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_address_line_1"
+                  id="root_person_address_line_1__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8680,6 +8735,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_address_line_2"
+                  id="root_person_address_line_2__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8727,6 +8783,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_address_city"
+                  id="root_person_address_city__label"
                 >
                   <span
                     class="label-text font-medium"
@@ -8780,6 +8837,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="label"
                   for="root_person_address_state"
+                  id="root_person_address_state__label"
                 >
                   <span
                     class="label-text font-medium"

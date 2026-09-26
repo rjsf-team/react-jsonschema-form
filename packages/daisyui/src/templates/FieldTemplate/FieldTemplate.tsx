@@ -1,7 +1,7 @@
 import type { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 
-import { getDaisy } from '../../utils.ts';
+import { fieldLabelId, getDaisy } from '../../utils.ts';
 
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
@@ -63,7 +63,9 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and toggle widgets render their own label after the input, and their own description, so this
   // template renders neither. Every other widget leaves both to this template
-  const widgetRendersLabel = uiOptions.widget === 'checkbox' || uiOptions.widget === 'toggle';
+  // `getWidget()` accepts a widget's registry key as well as its lowercase alias, so both spellings of the
+  // checkbox have to be recognized here; daisyui registers the toggle under its alias only
+  const widgetRendersLabel = ['checkbox', 'CheckboxWidget', 'toggle'].includes(uiOptions.widget as string);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
@@ -96,7 +98,7 @@ export default function FieldTemplate<
         style={{ ...style, ...daisy.style }}
       >
         {displayLabel && !widgetRendersLabel && !!label && (
-          <label htmlFor={id} className='label'>
+          <label id={fieldLabelId(id)} htmlFor={id} className='label'>
             <span className='label-text font-medium'>
               {label}
               {required && <span className='text-error ml-1'>*</span>}
