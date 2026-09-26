@@ -268,9 +268,8 @@ export function useAriaDescribedByProps(
  * `aria-describedby` and `aria-labelledby` from the `InputWrapper` context. Each option input is described by the
  * field's ids, as in `@rjsf/core`, so the group is left undescribed rather than having a screen reader repeat the
  * description, error and help on entering it. The group is labelled by the field's title id: the shown label has that
- * id, and a hidden label is still rendered with it, `hidden`, since a group needs an accessible name. Mantine would
- * otherwise point `aria-labelledby` at its own label id even when it renders no label
- * (https://github.com/mantinedev/mantine/issues/9217).
+ * id, and a hidden label is still rendered with it, `hidden`, since a group needs an accessible name. Mantine only
+ * labels the group by a label it renders itself.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility and the options are derived

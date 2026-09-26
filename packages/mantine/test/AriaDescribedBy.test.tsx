@@ -59,10 +59,12 @@ describe('aria-describedby', () => {
     ['text', { type: 'string' }],
     ['number', { type: 'number' }],
     ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['password', { type: 'string' }, { 'ui:widget': 'password' }],
     ['select', enumSchema],
     ['multi-select', { type: 'array', items: enumSchema, uniqueItems: true }],
     ['checkboxes', { type: 'array', items: enumSchema, uniqueItems: true }, { 'ui:widget': 'checkboxes' }, 2],
     ['radio', enumSchema, { 'ui:widget': 'radio' }, 2],
+    ['range', { type: 'integer' }, { 'ui:widget': 'range' }],
     ['checkbox', { type: 'boolean' }],
     ['color', { type: 'string', format: 'color' }],
     ['file', { type: 'string', format: 'data-url' }],
@@ -255,6 +257,12 @@ describe('aria-describedby', () => {
     });
   });
 
+  test('range widget describes its focusable slider thumb, not the slider root', () => {
+    renderField({ type: 'integer' }, { 'ui:widget': 'range' });
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+  });
+
   test('range widget keeps the thumbProps default from the Mantine theme', async () => {
     const onFocus = vi.fn();
     renderThemed(
@@ -267,42 +275,5 @@ describe('aria-describedby', () => {
 
     expect(screen.getByRole('slider')).toHaveFocus();
     expect(onFocus).toHaveBeenCalled();
-  });
-
-  // Pins the value Mantine's `PasswordInput` renders today, so the `test.fails` case below can only be failing for the
-  // known reason (https://github.com/mantinedev/mantine/issues/9216); remove this test once that case is fixed.
-  test('password widget describes its input by Mantine description and error ids only', () => {
-    const { container } = renderField({ type: 'string' }, { 'ui:widget': 'password' });
-
-    expect(describedByValues(container).map((value) => value?.split(/\s+/))).toEqual([
-      ['root-error', 'root-description'],
-    ]);
-    expect(container.querySelector(`[id="${helpId('root')}"]`)).toBeInTheDocument();
-  });
-
-  // Mantine's `PasswordInput` sets its own `aria-describedby` instead of reading the `InputWrapper` context
-  // (https://github.com/mantinedev/mantine/issues/9216); once a Mantine release fixes that, this test starts failing
-  // and should move into the table above, and the `password field` snapshot in `Form.test.tsx.snap` needs updating.
-  test.fails('password widget describes its input by the field description, error and help', () => {
-    expectDescribedByFieldIds({ type: 'string' }, { 'ui:widget': 'password' });
-  });
-
-  // Pins what Mantine's `Slider` renders today, so the `test.fails` case below can only be failing for the known reason
-  // (https://github.com/mantinedev/mantine/issues/9218); remove this test once that case is fixed.
-  test('range widget describes only its slider root, since Mantine drops the thumbProps it is passed in', () => {
-    const { container } = renderField({ type: 'integer' }, { 'ui:widget': 'range' });
-
-    expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
-    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-describedby');
-  });
-
-  // Mantine's slider `Thumb` drops the `thumbProps` it doesn't use, and the thumb is the focusable `role="slider"`
-  // element (https://github.com/mantinedev/mantine/issues/9218); once a Mantine release fixes that, this test starts
-  // failing and should replace the pinned test above, the root's `aria-describedby` in `RangeWidget` should be removed,
-  // and the `slider field` snapshots need updating.
-  test.fails('range widget describes its slider by the field description, error and help', () => {
-    renderField({ type: 'integer' }, { 'ui:widget': 'range' });
-
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
   });
 });

@@ -14195,6 +14195,7 @@ exports[`single fields > password field 1`] = `
             data-variant="default"
           >
             <input
+              aria-describedby="root__error root__description root__help"
               autocomplete="off"
               class="m_f2d85dd2 mantine-PasswordInput-innerInput"
               id="root"
@@ -18319,7 +18320,6 @@ exports[`single fields > slider field 1`] = `
       class="rjsf-field rjsf-field-integer"
     >
       <div
-        aria-describedby="root__error root__description root__help"
         class="m_dd36362e mantine-Slider-root"
         data-size="md"
         id="root"
@@ -18337,6 +18337,7 @@ exports[`single fields > slider field 1`] = `
               style="--slider-bar-width: calc(56.896551724137936% + 2 * var(--slider-size)); --slider-bar-offset: calc(0% - var(--slider-size));"
             />
             <div
+              aria-describedby="root__error root__description root__help"
               aria-disabled="false"
               aria-label=""
               aria-orientation="horizontal"
