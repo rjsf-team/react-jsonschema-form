@@ -18,10 +18,10 @@ function CustomWidget({ id, value }: WidgetProps) {
   return <input type='text' id={id} readOnly value={String(value ?? '')} />;
 }
 
-function renderForm(uiSchema: UiSchema = {}, fieldSchema: RJSFSchema = agree) {
+function renderForm(uiSchema: UiSchema = {}, fieldSchema: RJSFSchema = agree, widgets = {}) {
   const schema: RJSFSchema = { type: 'object', properties: { agree: fieldSchema } };
   const { container } = render(
-    <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={{ custom: CustomWidget }} />,
+    <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={{ custom: CustomWidget, ...widgets }} />,
   );
   return {
     container,
@@ -81,6 +81,18 @@ describe('FieldTemplate', () => {
       // the input's `aria-describedby` pointing at two elements
       expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
       expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(1);
+    });
+
+    test('renders the label itself when a widget of its own is registered under the checkbox key', () => {
+      function PlainCheckbox({ id, value, onChange }: WidgetProps) {
+        return <input type='checkbox' id={id} checked={!!value} onChange={(e) => onChange(e.target.checked)} />;
+      }
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'checkbox' } }, agree, {
+        CheckboxWidget: PlainCheckbox,
+      });
+
+      // The widget under that key is no longer daisyui's, and renders no label of its own, so this template owes one
+      expect(templateLabel()).toHaveTextContent('Agree');
     });
 
     test('leaves the label to the toggle widget, which renders it after the switch', () => {

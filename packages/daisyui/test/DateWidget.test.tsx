@@ -52,14 +52,27 @@ describe('DateWidget', () => {
       expect(onChange).toHaveBeenCalledWith('2020-05-17');
     });
 
-    test('commits an empty string when there is no date', async () => {
+    test('commits the empty value, not an empty string, when there is no date', async () => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
       await openPicker(container);
       await user.click(screen.getByText('Done'));
 
-      expect(onChange).toHaveBeenCalledWith('');
+      // `''` is not a `date`, so committing it would fail the format of a field the user never filled in
+      expect(onChange).toHaveBeenCalledWith(undefined);
+    });
+
+    test('honors an explicit ui:emptyValue when there is no date', async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <DateWidget {...makeWidgetMockProps({ value: '', onChange, schema, options: { emptyValue: null } })} />,
+      );
+
+      await openPicker(container);
+      await user.click(screen.getByText('Done'));
+
+      expect(onChange).toHaveBeenCalledWith(null);
     });
   });
 
@@ -111,6 +124,27 @@ describe('DateWidget', () => {
 
       expect(screen.getByRole('button', { name: 'DOB' })).toBeInTheDocument();
     });
+  });
+
+  test('leaves an optional field untouched when the picker closes with no date chosen', async () => {
+    const onError = vi.fn();
+    const onSubmit = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { when: { ...schema, title: 'When' } } }}
+        validator={validator}
+        onError={onError}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    await openPicker(container);
+    await user.click(screen.getByText('Done'));
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.calls[0][0].formData.when).toBeUndefined();
   });
 
   test('the committed value satisfies the field format, so submitting reports no error', async () => {

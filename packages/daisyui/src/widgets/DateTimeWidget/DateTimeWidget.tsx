@@ -168,18 +168,20 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, placeholder, options, onChange, onFocus, onBlur, schema } = props;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
   // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
   // is optional), or a UTC ISO string otherwise.
   const commitValue = useCallback(
     (date: Date | undefined) => {
       if (!date) {
-        return '';
+        // Not `''`, which is no more a `date-time` than it is a date: committing it fails the format of a field the
+        // user never filled in
+        return options.emptyValue;
       }
       return isIsoDateTime ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : date.toISOString();
     },
-    [isIsoDateTime],
+    [isIsoDateTime, options.emptyValue],
   );
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
   // carry an offset is stripped first, so it's parsed as the naive wall-clock time it represents instead of

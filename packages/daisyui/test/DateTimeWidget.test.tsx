@@ -50,7 +50,7 @@ describe('DateTimeWidget', () => {
       expect(onChange).toHaveBeenCalledWith('2016-04-05T14:01:30.000Z');
     });
 
-    test('commits an empty string instead of throwing when the stored value is unparsable', async () => {
+    test('commits the empty value instead of throwing when the stored value is unparsable', async () => {
       const onChange = vi.fn();
       const { container } = render(
         <DateTimeWidget {...makeWidgetMockProps({ value: 'not-a-date', onChange, schema })} />,
@@ -70,7 +70,8 @@ describe('DateTimeWidget', () => {
       }
 
       expect(onWindowError).not.toHaveBeenCalled();
-      expect(onChange).toHaveBeenCalledWith('');
+      // Not `''`, which is not a `date-time` either, so committing it would fail the format of the field it came from
+      expect(onChange).toHaveBeenCalledWith(undefined);
     });
   });
 });

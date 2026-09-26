@@ -142,7 +142,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, onChange, onFocus, onBlur } = props;
+  const { id, value, label, hideLabel, placeholder, options, onChange, onFocus, onBlur } = props;
   // Initialize the local date from the parent's value. Only the `YYYY-MM-DD` part is parsed, and with `parseISO`
   // rather than `new Date()`, which reads a date-only string as UTC midnight and so names the previous day once
   // date-fns formats it in local time. Taking the date part also means a value left over from when this widget
@@ -171,7 +171,7 @@ export default function DateWidget<
   useClickOutside(containerRef, () => {
     if (isOpen) {
       setIsOpen(false);
-      onChange(localDate ? format(localDate, 'yyyy-MM-dd') : '');
+      onChange(localDate ? format(localDate, 'yyyy-MM-dd') : options.emptyValue);
       // Manually invoke the blur handler to ensure blur event is triggered
       if (onBlur) {
         onBlur(id, value);
@@ -345,7 +345,7 @@ export default function DateWidget<
    */
   const handleDoneClick = useCallback(() => {
     setIsOpen(false);
-    onChange(localDate ? format(localDate, 'yyyy-MM-dd') : '');
+    onChange(localDate ? format(localDate, 'yyyy-MM-dd') : options.emptyValue);
     if (onBlur) {
       onBlur(id, value);
     }
