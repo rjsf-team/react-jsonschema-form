@@ -251,7 +251,7 @@ describe('aria-describedby', () => {
         'wrapped-success',
       ],
       ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root-success'],
-      ['the default id for a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'wrapped-success'],
+      ['the default id despite a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'root-success'],
     ])('still describes the input, by %s', (_, uiOptions, successId) => {
       const { container } = renderThemed(
         {},
@@ -261,6 +261,38 @@ describe('aria-describedby', () => {
 
       expect(container.querySelector(`[id="${successId}"]`)).toHaveTextContent('Looks good');
       expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} ${successId}`]);
+    });
+
+    test.each<[string, RJSFSchema, UiSchema?]>([
+      ['text', { type: 'string' }],
+      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+      ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+      ['select', enumSchema],
+      ['color', { type: 'string', format: 'color' }],
+      ['file', { type: 'string', format: 'data-url' }],
+      ['time', { type: 'string', format: 'time' }],
+      ['date', { type: 'string', format: 'date' }],
+    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema = {}) => {
+      const { container } = renderThemed({}, schema, {
+        ...uiSchema,
+        'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
+      });
+
+      expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
+      expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} root-success`]);
+    });
+
+    test('gives each alt-date part its own success message id', () => {
+      const { container } = renderThemed(
+        { Select: { defaultProps: { success: 'Looks good' } } },
+        { type: 'string' },
+        {
+          'ui:widget': 'alt-date',
+        },
+      );
+
+      const successIds = [...container.querySelectorAll('[id$="-success"]')].map((el) => el.id);
+      expect(successIds).toEqual(['root_year-success', 'root_month-success', 'root_day-success']);
     });
 
     test('describes a radio group, which is otherwise left undescribed', () => {
@@ -274,6 +306,16 @@ describe('aria-describedby', () => {
     renderField({ type: 'integer' }, { 'ui:widget': 'range' });
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+  });
+
+  test('range widget renders a ui:options description only as its description', () => {
+    const { container } = renderField(
+      { type: 'integer' },
+      { 'ui:widget': 'range', 'ui:options': { description: 'Pick a level' } },
+    );
+
+    expect(container.querySelector(`[id="${descriptionId('root')}"]`)).toHaveTextContent('Pick a level');
+    expect(container.querySelector('[description]')).not.toBeInTheDocument();
   });
 
   test('range widget keeps an aria-describedby from ui:options.thumbProps, after the field ids', () => {

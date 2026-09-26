@@ -28,6 +28,9 @@ export default function AltDateWidget<
       <Flex gap='xs' align='center' wrap='nowrap'>
         {elements.map((elemProps, i) => {
           const elemId = `${id}_${elemProps.type}`;
+          // Each part renders its own success message, so each needs its own id
+          const successProps = { ...ariaDescribedByProps.successProps, id: `${elemId}-success` };
+          const wrapperProps = { ...ariaDescribedByProps.wrapperProps, successProps };
           return (
             // oxlint-disable-next-line react/no-array-index-key
             <Box key={i}>
@@ -43,6 +46,8 @@ export default function AltDateWidget<
                 allowDeselect={false}
                 comboboxProps={{ withinPortal: false }}
                 {...ariaDescribedByProps}
+                successProps={successProps}
+                wrapperProps={wrapperProps}
               />
             </Box>
           );
