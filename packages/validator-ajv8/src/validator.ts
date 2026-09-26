@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -262,8 +262,17 @@ export default class AJV8Validator<
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
+      // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,
+      // which would otherwise share a key whenever the two errors read alike
+      const named = schemaId === undefined ? '' : ` "${schemaId}"`;
+      logOnce(
+        compiled
+          ? `Error encountered validating form data against schema${named}:`
+          : `Error encountered compiling schema${named}:`,
+        'warn',
+        e,
+      );
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed
       // meta-schema validation. Guard with !compiled so that a runtime error thrown

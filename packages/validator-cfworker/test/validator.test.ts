@@ -167,7 +167,21 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     expect(validator.isValid(null as unknown as RJSFSchema, {}, null as unknown as RJSFSchema)).toBe(false);
-    expect(warn).toHaveBeenCalled();
+    // The throw happens before the schema's id is known, so there is no schema to name
+    expect(warn).toHaveBeenCalledWith('Error encountered validating schema:', expect.any(Error));
+    warn.mockRestore();
+  });
+
+  it('names the schema in the warning once its id is known', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { $id: 'has-an-id', type: 'object' };
+    const selfReferential: Record<string, unknown> = {};
+    selfReferential.self = selfReferential;
+    // Normalizing a cyclic value throws after the id has been computed. The message names the schema so two schemas
+    // failing with the same error text are reported separately rather than deduped into one
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    expect(validator.isValid(schema, selfReferential, { type: 'object' })).toBe(false);
+    expect(warn).toHaveBeenCalledWith('Error encountered validating schema "has-an-id":', expect.any(Error));
     warn.mockRestore();
   });
 

@@ -1,6 +1,7 @@
 import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
+import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
 import type {
   FormContextType,
@@ -72,8 +73,7 @@ export default function resolveUiSchema<
       try {
         resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
       } catch (e) {
-        // oxlint-disable-next-line no-console
-        console.warn('could not resolve $ref in resolveUiSchema:\n', e);
+        logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;
       }
     }

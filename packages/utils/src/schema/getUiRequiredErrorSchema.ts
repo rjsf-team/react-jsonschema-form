@@ -7,6 +7,7 @@ import {
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
+import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
@@ -22,6 +23,7 @@ import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
 import type {
   CustomMergeAllOf,
   ErrorSchema,
+  FieldPath,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -120,11 +122,12 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
   item: unknown,
   idx: number,
   formContext: F | undefined,
+  arrayFieldPath: FieldPath | undefined,
 ): UiSchema<T, S, F> | undefined {
   if (isFixedItems<S>(retrieved) && idx >= (retrieved.items as S[]).length) {
     return uiSchema.additionalItems as UiSchema<T, S, F> | undefined;
   }
-  return getItemUiSchemaForItem<T, S, F>(uiSchema, item as never, idx, formContext);
+  return getItemUiSchemaForItem<T, S, F>(uiSchema, item as never, idx, formContext, arrayFieldPath);
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -228,6 +231,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent);
     });
   } else if (Array.isArray(formData)) {
+    // Only names the array in the error a throwing function-form `uiSchema.items` logs, so it isn't worth deriving for
+    // the arrays that don't have one — this walks every field of the form on every validation pass
+    const arrayFieldPath = typeof branchUiSchema.items === 'function' ? fieldPathFromList(path) : undefined;
     formData.forEach((item, idx) => {
       walk(
         ctx,
@@ -236,7 +242,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           AdditionalItemsHandling.Fallback,
           Array.isArray(retrieved.items) ? idx : -1,
         ),
-        resolveArrayItemUiSchema<T, S, F>(retrieved, branchUiSchema, item, idx, formContext),
+        resolveArrayItemUiSchema<T, S, F>(retrieved, branchUiSchema, item, idx, formContext, arrayFieldPath),
         item,
         [...path, idx],
         false,

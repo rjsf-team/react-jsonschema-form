@@ -59,7 +59,27 @@ describe('AJV8Validator', () => {
 
         const isValid = expectWarn(
           () => validator.isValid(schema, { foo: 'bar' }, schema),
+          // The throw happens before the schema's id is known, so there is no schema to name
           'Error encountered compiling schema:',
+          expect.any(Error),
+        );
+        expect(isValid).toBe(false);
+      });
+      it('says the form data is what failed when the schema compiled and validating it threw', () => {
+        // A custom format that throws runs during validation, not compilation. The two are told apart so a schema
+        // that won't compile and one that throws on its data don't share a key when the errors read alike
+        const localValidator = new AJV8Validator({
+          customFormats: {
+            boom: () => {
+              throw new Error('custom format threw');
+            },
+          },
+        });
+        const schema: RJSFSchema = { $id: 'throws-on-data', type: 'string', format: 'boom' };
+
+        const isValid = expectWarn(
+          () => localValidator.isValid(schema, 'anything', { type: 'string' }),
+          'Error encountered validating form data against schema "throws-on-data":',
           expect.any(Error),
         );
         expect(isValid).toBe(false);
@@ -152,7 +172,7 @@ describe('AJV8Validator', () => {
             validator.isValid(schema, formData, rootSchema);
             validator.isValid(schema, formData, rootSchema);
           },
-          'Error encountered compiling schema:',
+          'Error encountered compiling schema "schema-id-2":',
           expect.any(Error),
         );
 

@@ -35,6 +35,7 @@
       "default": "./lib/markdown.js"
     },
     "./lib": "./lib/index.js",
+    "./lib/fieldLabelForLog.js": null,
     "./lib/*.js": "./lib/*.js",
     "./testing": {
       "@rjsf/source": "./src/testing.ts",

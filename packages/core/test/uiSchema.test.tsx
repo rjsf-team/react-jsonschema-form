@@ -2924,11 +2924,11 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field'),
+        expect.stringContaining('ui:required is false for schema-required field "root_foo"'),
       );
     });
 
-    it('warns only once per field instance, not on every re-render', async () => {
+    it('warns only once, not on every re-render', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         required: ['foo'],
@@ -2945,6 +2945,81 @@ describe('uiSchema', () => {
       // (ui:required/ui:initialValue/ui:emptyValue) hasn't changed, so it must not warn again.
       await user.type(node.querySelector('input')!, 'abc');
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for each misconfigured field that shares a name', () => {
+      const address: RJSFSchema = {
+        type: 'object',
+        required: ['street'],
+        properties: {
+          street: { type: 'string' },
+        },
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          shipping: address,
+          billing: address,
+        },
+      };
+      const uiSchema: UiSchema = {
+        shipping: { street: { 'ui:required': false } },
+        billing: { street: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_shipping_street"'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_billing_street"'));
+    });
+
+    // Both forms use the default idPrefix, so both warnings name the same field and are the same message. Two forms
+    // meant to coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+    it('warns once when two forms make the same mistake at the same field', () => {
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } },
+        uiSchema,
+      });
+      createFormComponent({
+        schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'number' } } },
+        uiSchema,
+      });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('warns separately for two forms whose idPrefixes make the field ids differ', () => {
+      const schema: RJSFSchema = { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:required': false },
+      };
+      createFormComponent({ schema, uiSchema, idPrefix: 'shipping' });
+      createFormComponent({ schema, uiSchema, idPrefix: 'billing' });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"shipping_foo" (foo)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"billing_foo" (foo)'));
+    });
+
+    // The reason the message carries the field path at all: ids join their segments with `idSeparator`, so these two
+    // fields share the id `root_a_b` and would otherwise produce the same message, silencing the second
+    it('warns separately for two misconfigured fields whose idSeparator-joined ids collide', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['a_b', 'a'],
+        properties: {
+          a_b: { type: 'string' },
+          a: { type: 'object', required: ['b'], properties: { b: { type: 'string' } } },
+        },
+      };
+      const uiSchema: UiSchema = {
+        a_b: { 'ui:required': false },
+        a: { b: { 'ui:required': false } },
+      };
+      createFormComponent({ schema, uiSchema, formData: { a: {} } });
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a_b)'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a.b)'));
     });
 
     it('does not warn when ui:required is false alongside ui:initialValue', () => {

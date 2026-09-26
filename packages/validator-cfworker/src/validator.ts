@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -211,15 +211,21 @@ export default class CFWorkerValidator<
    * @returns - Whether the form data is valid
    */
   isValid(schema: S, formData: unknown, rootSchema: S): boolean {
+    // Declared outside the try so the catch block can say which schema the error is about
+    let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered validating schema:', error);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning. Which of
+      // the schema and the form data is at fault is deliberately not claimed: the `Validator` constructor only
+      // dereferences, leaving `$ref` resolution and keyword checks to `validate()`, so a schema defect such as a
+      // dangling `$ref` or an unparseable `pattern` throws from there and would be reported as a problem with the data
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(`Error encountered validating schema${named}:`, 'warn', error);
       return false;
     }
   }

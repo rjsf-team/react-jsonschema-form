@@ -13,7 +13,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
+import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1397,7 +1397,7 @@ describe('oneOf', () => {
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "My Title"');
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root"');
 
       const $select = node.querySelector('select');
 
@@ -1406,6 +1406,60 @@ describe('oneOf', () => {
       expect($select).toHaveValue('0');
       const inputLabel = node.querySelector('legend#root__title');
       expect(inputLabel?.innerHTML).toEqual('My Title');
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('names a non-root oneOf field by its path as well as its id when warning', () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          choice: {
+            type: 'object',
+            oneOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
+          },
+        },
+      };
+      createFormComponent({
+        schema,
+        uiSchema: {
+          // A nested field's uiSchema isn't checked as strictly as the root's, so unlike the test above this needs no
+          // `@ts-expect-error` to hold a non-array `oneOf`
+          choice: {
+            oneOf: { 'ui:title': 'UiSchema title' },
+          },
+        },
+      });
+
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root_choice" (choice)');
+      consoleWarnSpy.mockRestore();
+    });
+
+    describe('a non-array uiSchema.oneOf', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      // Both forms use the default idPrefix, so both warnings name `root` and are the same message. Two forms meant to
+      // coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+      it('should warn once, however many forms render it and however often they re-render', async () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { title: 'Foo', properties: { foo: { type: 'string' } } },
+            { title: 'Bar', properties: { bar: { type: 'string' } } },
+          ],
+        };
+        const uiSchema: UiSchema = {
+          // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
+          oneOf: { 'ui:title': 'UiSchema title' },
+        };
+        const { node } = createFormComponent({ schema, uiSchema });
+        createFormComponent({ schema, uiSchema });
+        await user.type(node.querySelector('input')!, 'abc');
+
+        const warnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(
+          ([message]) => message === 'uiSchema.oneOf is not an array for "root"',
+        );
+        expect(warnings).toHaveLength(1);
+      });
     });
 
     it('should correctly render mixed types for oneOf inside array items', async () => {
@@ -1774,15 +1828,20 @@ describe('oneOf', () => {
       const select = node.querySelector('select#root__oneof_select');
       expect(select).toHaveValue('2');
     });
-    it('warns when discriminator.propertyName is not a string', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-      const badSchema = { ...schema, discriminator: { propertyName: 5 } };
-      const { node } = createFormComponent({
-        schema: badSchema,
+    describe('a non-string discriminator.propertyName', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('warns when discriminator.propertyName is not a string', () => {
+        const badSchema = { ...schema, discriminator: { propertyName: 5 } };
+        const { node } = createFormComponent({
+          schema: badSchema,
+        });
+        const select = node.querySelector('select#root__oneof_select');
+        expect(select).toHaveValue('0');
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenLastCalledWith(
+          'Expecting discriminator to be a string, got "number" instead',
+        );
       });
-      const select = node.querySelector('select#root__oneof_select');
-      expect(select).toHaveValue('0');
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('Expecting discriminator to be a string, got "number" instead');
     });
   });
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
