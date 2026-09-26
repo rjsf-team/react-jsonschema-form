@@ -49,7 +49,9 @@ function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
 
 describe('aria-labelledby', () => {
   // Mantine's `Select` and `MultiSelect` point their listbox's `aria-labelledby` at their own label id whenever a label
-  // is passed, rendered or not, so they are left out of the case where `inputWrapperOrder` drops the label
+  // is passed, rendered or not (https://github.com/mantinedev/mantine/issues/9219), so they are left out of the case
+  // where `inputWrapperOrder` drops the label, and covered by the pinned and `test.fails` cases below instead. Once a
+  // Mantine release fixes that, drop this filter along with the pinned test.
   const labelCaseWidgets = (labelCase: string) =>
     labelCase.includes('inputWrapperOrder')
       ? widgets.filter(([name]) => name !== 'select' && name !== 'multi-select')
@@ -140,4 +142,43 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', titleId('root'));
     expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
   });
+
+  const selectWidgets: [string, RJSFSchema][] = [
+    ['select', enumSchema],
+    ['multi-select', checkboxesSchema],
+  ];
+
+  // Pins what Mantine's `Select` and `MultiSelect` render today, so the `test.fails` case below can only be failing for
+  // the known reason (https://github.com/mantinedev/mantine/issues/9219); remove this test once that case is fixed.
+  test.each(selectWidgets)(
+    '%s widget labels its listbox by a label id Mantine does not render when inputWrapperOrder leaves the label out',
+    (_, schema) => {
+      const { container } = renderField(
+        { ...schema, title: 'A title' },
+        { 'ui:options': { inputWrapperOrder: orderWithoutLabel } },
+      );
+
+      expect(screen.getByRole('listbox', { hidden: true })).toHaveAttribute('aria-labelledby', 'root-label');
+      expect(container.querySelector('[id="root-label"]')).not.toBeInTheDocument();
+    },
+  );
+
+  // Mantine's `Select` and `MultiSelect` build their listbox's label id from the `label` prop alone
+  // (https://github.com/mantinedev/mantine/issues/9219); once a Mantine release fixes that, this test starts failing and
+  // should be removed, along with the pinned test above and the filter in `labelCaseWidgets`.
+  test.fails.each(selectWidgets)(
+    '%s widget only references elements that exist when inputWrapperOrder leaves the label out',
+    (_, schema) => {
+      const { container } = renderField(
+        { ...schema, title: 'A title' },
+        { 'ui:options': { inputWrapperOrder: orderWithoutLabel } },
+      );
+
+      for (const el of container.querySelectorAll('[aria-labelledby]')) {
+        for (const id of el.getAttribute('aria-labelledby')!.split(/\s+/)) {
+          expect(container.querySelector(`[id="${id}"]`)).toBeInTheDocument();
+        }
+      }
+    },
+  );
 });
