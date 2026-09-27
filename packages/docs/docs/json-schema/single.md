@@ -254,7 +254,7 @@ A schema with no usable type of its own — an unrecognized `type`, or an `addit
 An unrecognized `type` keeps that selector however the schema pins its value: an `enum`, a `const` or a `ui:widget` component alongside it does not withhold the selector the way it does from a union, since without it no field would render such a schema at all.
 An `anyOf` or `oneOf` alongside it does withhold it, unless its options are all constants: the option selector it renders is already the choice a type selector would offer, so the options are what supplies the types.
 An option naming a type of its own would override a type the selector had pinned, leaving the screen as it was while the value was cast on every switch; one naming no type inherits the unrecognized `type` and so gets a selector of its own, within that option rather than around the whole list.
-An `enum`, a `const` or an `anyOf`/`oneOf` on an `additionalProperties` entry is a constraint, so such an entry is no longer one the schema puts no constraint on at all, and it renders without a type selector, as whatever that keyword calls for.
+An `enum` or a `const` on an `additionalProperties` entry is a constraint, so such an entry is no longer one the schema puts no constraint on at all, and it renders as the select those keywords call for rather than with a type selector.
 A `ui:widget` constrains nothing, so an entry carrying one still gets the selector, with the widget rendering within it for whichever type is chosen.
 A list naming an unrecognized type alongside a recognized one offers only the recognized ones, `null` included: a `['foo', 'null']` offers `null` and nothing else.
 

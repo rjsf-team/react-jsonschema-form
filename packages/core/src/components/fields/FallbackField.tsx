@@ -27,6 +27,7 @@ import {
   toFieldPath,
   fieldPathToId,
   TranslatableString,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
@@ -174,6 +175,11 @@ const HELP_UI_OPTION = 'help';
  * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
  * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
  * selected. A widget registered under its own name is left alone since it is expected to handle whatever it is given.
+ * The `ui:field` is dropped whatever it names, for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming
+ * this field routes the value straight back here, and each of those renders another one, without end. There is nothing
+ * to lose by dropping it, since a `ui:field` that resolves to any other field is rendered by `getFieldComponent()`
+ * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or a name
+ * no field is registered under, which resolves to nothing wherever it is read.
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param valueSchema - The schema the value field renders, with its type pinned.
  * @param widgets - The widgets registered with the form.
@@ -194,11 +200,13 @@ function getValueUiSchema<
   // oxlint-disable-next-line typescript/no-unnecessary-type-assertion -- without it the spread widens past `UiSchema`
   const valueUiSchema = { ...(uiSchema ?? ({} as UiSchema<T, S, F>)) };
   delete valueUiSchema[HELP_UI_KEY];
+  delete valueUiSchema[UI_FIELD_KEY];
   if (!keepsWidget) {
     delete valueUiSchema[UI_WIDGET_KEY];
   }
   const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
   delete uiOptions[HELP_UI_OPTION];
+  delete uiOptions.field;
   if (!keepsWidget) {
     delete uiOptions.widget;
   }

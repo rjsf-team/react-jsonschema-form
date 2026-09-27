@@ -205,13 +205,12 @@ function getUiFieldComponent<
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
  * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
- * @returns - The `Field` component that renders the actual field data, whether it is the fallback UI taking the schema
- *            over — because a union or a guessed type was diverted to it, or because the schema has no field of its own
- *            and no `anyOf`/`oneOf` to supply the types — and whether the schema has a non-select `anyOf`/`oneOf` for
- *            `SchemaFieldRender` to render an option selector of. That one is decided here so that both this function
- *            and `SchemaFieldRender` read the same answer, and both read it against the fallback UI: when the fallback
- *            UI has the schema it renders those options itself, within the value field for the type it has pinned, so
- *            the selector `SchemaFieldRender` would render is left unrendered even though the schema calls for one
+ * @returns - The `Field` component that renders the actual field data, whether that component is the fallback UI, and
+ *            whether the `schema` has options for `SchemaFieldRender` to render an option selector of. Both flags are
+ *            decided here so that this function and `SchemaFieldRender` read the same answers, and `SchemaFieldRender`
+ *            reads them together: when the fallback UI has the schema it renders those options itself, within the value
+ *            field for the type it has pinned, so the selector it would render is left unrendered even though the
+ *            schema calls for one
  */
 function getFieldComponent<
   T = unknown,
@@ -227,16 +226,31 @@ function getFieldComponent<
 ): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean; rendersOptionSelector: boolean } {
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
-  /** An `anyOf`/`oneOf` that can be rendered as a select control is left to the field for the schema's type, which
-   * renders that control; `ui:fieldReplacesAnyOrOneOf` asks for the options to give way to the field named alongside
-   * it. Every other `anyOf`/`oneOf` gets the option selector `SchemaFieldRender` renders, which is the only thing
-   * besides the fallback UI that can render the value of a schema with no field of its own
+  /** `FallbackField` is the fallback UI only with the opt-in on; without it the component renders the unsupported field
+   * template, which takes no `anyOf`/`oneOf` over. Read from the component rather than from the name that reached it,
+   * so that every way of arriving at it — the type the schema names having no field, the opt-in diverting a union, a
+   * `ui:field` naming it — gives the same answer
+   */
+  const rendersFallbackUiAs = (FieldComponent: Field<T, S, F>) =>
+    FieldComponent === fields.FallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
+  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to. A name no
+   * field is registered under resolves to nothing, so there is nothing to give way to and the options are rendered,
+   * which is what lets the form be completed: without them an object union loses the `properties` of every option
+   */
+  const uiFieldComponent = getUiFieldComponent<T, S, F>(field, fields);
+  /** An `anyOf`/`oneOf` that represents a select is rendered by the field for the schema's type as one control, rather
+   * than by an option selector
    */
   const rendersOptionSelector =
-    xxxOfKey !== undefined && !isSelectSchema && !(Boolean(field) && uiOptions.fieldReplacesAnyOrOneOf === true);
-  const uiFieldComponent = getUiFieldComponent<T, S, F>(field, fields);
+    xxxOfKey !== undefined &&
+    !isSelectSchema &&
+    !(uiFieldComponent !== undefined && uiOptions.fieldReplacesAnyOrOneOf === true);
   if (uiFieldComponent) {
-    return { FieldComponent: uiFieldComponent, rendersFallbackUi: false, rendersOptionSelector };
+    return {
+      FieldComponent: uiFieldComponent,
+      rendersFallbackUi: rendersFallbackUiAs(uiFieldComponent),
+      rendersOptionSelector,
+    };
   }
 
   const schemaType = getSchemaType(schema);
@@ -273,35 +287,23 @@ function getFieldComponent<
   // control for this very schema, unions included, so wrapping it in a type selector that pins the type and casts the
   // value on every switch would take away what it was written to do. A widget named by string is a theme's control for
   // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead.
-  // A schema with a guessed type still gets the selector whatever the widget is, the way one with no field of its own
-  // does below: it lists no types for such a control to handle, so the widget renders within it for the chosen one.
-  //
-  // A schema with no field of its own — an unrecognized `type`, or no type at all — is taken over whatever else it
-  // says, since no other field can render it and the guards above are there to protect one that can. It reaches
-  // `FallbackField` through the fallthrough below either way, so naming it here is what lets `rendersFallbackUi`
-  // describe both ways in rather than only the diverted one.
-  // Its `anyOf`/`oneOf` is not kept the way a union's is: the option selector a non-select one renders is already the
-  // choice a type selector would offer, and an option naming a type of its own overrides the type the fallback UI
-  // pins, so a selector over it would leave the screen as it was while casting the value on every switch. The options
-  // supply the types there, which is also what an ordinary typeless `anyOf`/`oneOf` has them do.
+  // A schema with a guessed type still gets the selector whatever the widget is: it lists no types for such a control
+  // to handle, so the widget renders within it for the chosen one
   const hasGuessedType = GUESSED_TYPE_FLAG in schema;
   const isNamedWidget = !widget || typeof widget === 'string';
-  const hasNoFieldOfItsOwn = !(componentName && componentName in fields);
-  if (
+  const isDivertedToFallbackUi =
     globalFormOptions.useFallbackUiForUnsupportedType &&
-    ((hasNoFieldOfItsOwn && !rendersOptionSelector) ||
-      ((isNamedWidget || hasGuessedType) &&
-        !isSelectSchema &&
-        !schema.enum &&
-        !isConstant<S>(schema) &&
-        (getUnionTypes<S>(schema) || hasGuessedType)))
-  ) {
+    (isNamedWidget || hasGuessedType) &&
+    !isSelectSchema &&
+    !schema.enum &&
+    !isConstant<S>(schema) &&
+    Boolean(getUnionTypes<S>(schema) || hasGuessedType);
+  if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }
   if (schemaId && schemaId in fields) {
     componentName = schemaId;
   }
-  const rendersFallbackUi = componentName === 'FallbackField';
 
   // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
   // let the MultiSchemaField component handle the form display entirely.
@@ -309,17 +311,22 @@ function getFieldComponent<
   // level) alongside the XxxOfField option selector.
   // All other field types — including primitives and arrays — have no shared renderable
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
-  // FallbackField is excluded alongside ObjectField: it renders the option selector within its own value field, for
-  // the type currently chosen, so returning nothing here would drop the type selector and the options with it.
-  if (rendersOptionSelector && componentName !== 'ObjectField' && !rendersFallbackUi) {
+  // A union diverted to the fallback UI is excluded alongside ObjectField: it renders the option selector within its
+  // own value field, for the type currently chosen, so returning nothing here would drop the type selector and the
+  // options with it. A schema with no field of its own is not excluded, even though it reaches `FallbackField` through
+  // the fallthrough below: the option selector is already the choice a type selector would offer, and an option naming
+  // a type of its own would override the type the fallback UI pins, leaving the screen as it was while the value was
+  // cast on every switch, so the options are what supplies the types for such a schema
+  if (rendersOptionSelector && componentName !== 'ObjectField' && componentName !== 'FallbackField') {
     return { FieldComponent: () => null, rendersFallbackUi: false, rendersOptionSelector };
   }
 
-  return {
-    FieldComponent: componentName in fields ? fields[componentName] : fields.FallbackField,
-    rendersFallbackUi,
-    rendersOptionSelector,
-  };
+  // A schema the `COMPONENT_TYPES` name no field for — an unrecognized `type`, or no type at all — is rendered by
+  // `FallbackField`, since nothing else can render it. The flag is read from the component the name resolves to, so it
+  // describes that way in as well as the diverted one, and it is read after the return above so that the options of
+  // such a schema still supply its types
+  const FieldComponent = componentName in fields ? fields[componentName] : fields.FallbackField;
+  return { FieldComponent, rendersFallbackUi: rendersFallbackUiAs(FieldComponent), rendersOptionSelector };
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to

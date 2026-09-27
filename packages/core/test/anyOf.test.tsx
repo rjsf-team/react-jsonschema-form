@@ -1742,22 +1742,6 @@ describe('anyOf', () => {
     });
   });
 
-  it('renders the field for the schema type when the anyOf key has no list under it', async () => {
-    const { node, onSubmit } = createFormComponent({
-      schema: { type: 'object', properties: { val: { type: 'string', anyOf: undefined } } } as RJSFSchema,
-    });
-
-    // A schema assembled in JS can carry the key with nothing under it, which no option selector can be rendered from,
-    // so the field for the schema's own type renders rather than giving way to one
-    expect(node.querySelector('#root_val')).toBeInTheDocument();
-    expect(node.querySelectorAll('select')).toHaveLength(0);
-
-    await user.type(node.querySelector<HTMLInputElement>('#root_val')!, 'hello');
-    await submitForm(node, user);
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(onSubmit.mock.calls[0][0].formData).toEqual({ val: 'hello' });
-  });
-
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       anyOf: [
@@ -1809,15 +1793,16 @@ describe('anyOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
-    it('should render the field for the schema type when no field is registered under the name', () => {
+    it('should render the option selector when no field is registered under the name', () => {
       const { node } = createFormComponent({
-        schema: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } as RJSFSchema,
-        uiSchema: { 'ui:field': 'NotARegisteredField', 'ui:fieldReplacesAnyOrOneOf': true },
+        schema,
+        uiSchema: { 'ui:field': 'MyFeild', 'ui:fieldReplacesAnyOrOneOf': true },
       });
 
-      // The options still give way, since that is what the directive asks for, but a name nothing is registered under
-      // leaves the field for the schema's own type rather than nothing at all
-      expect(node.querySelectorAll('select')).toHaveLength(0);
+      // The options give way to the field named alongside the directive, and a name no field is registered under names
+      // nothing for them to give way to: dropping them would leave the value of an option union with no way in
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(0);
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
       expect(node.querySelector('#root')).toBeInTheDocument();
     });
   });

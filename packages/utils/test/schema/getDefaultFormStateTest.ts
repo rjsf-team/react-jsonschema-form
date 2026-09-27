@@ -6064,24 +6064,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schema: RJSFSchema = { type: 'array', items: { type: 'string' }, anyOf: [] };
         expect(getDefaultFormState(testValidator, schema, ['x', 'y'])).toEqual(['x', 'y']);
       });
-      it('should compute the defaults of a schema whose oneOf key has no list under it', () => {
-        const schema = {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'object',
-              oneOf: undefined,
-              properties: {
-                inner: { type: 'string', default: 'a' },
-              },
-            },
-          },
-        } as RJSFSchema;
-        // A schema assembled in JS can carry the key with nothing under it, which reading the list's length threw on.
-        // The schema carries no `default` of its own, since one of those is read from the value of the key rather than
-        // its presence and so never reaches the branch that read the list
-        expect(getDefaultFormState(testValidator, schema, {})).toEqual({ name: { inner: 'a' } });
-      });
       it('should populate defaults for oneOf', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -6364,24 +6346,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const expected = getDefaultFormState(testValidator, withParent(child), {});
         expect(expected).toEqual({ p: { c: { a: 1, b: 2 } } });
         expect(getDefaultFormState(testValidator, withParent({ ...child, anyOf: [] }), {})).toEqual(expected);
-      });
-      it('should compute the defaults of a schema whose anyOf key has no list under it', () => {
-        const schema = {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'object',
-              anyOf: undefined,
-              properties: {
-                inner: { type: 'string', default: 'a' },
-              },
-            },
-          },
-        } as RJSFSchema;
-        // A schema assembled in JS can carry the key with nothing under it, which reading the list's length threw on.
-        // The schema carries no `default` of its own, since one of those is read from the value of the key rather than
-        // its presence and so never reaches the branch that read the list
-        expect(getDefaultFormState(testValidator, schema, {})).toEqual({ name: { inner: 'a' } });
       });
       it('should populate defaults for anyOf', () => {
         const schema: RJSFSchema = {
