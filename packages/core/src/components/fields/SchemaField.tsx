@@ -468,7 +468,7 @@ function SchemaFieldRender<
     ),
     rawDescription: description,
     help: helpComponent,
-    rawHelp: typeof help === 'string' ? help : undefined,
+    rawHelp: help,
     errors: errorsComponent,
     rawErrors: hideError ? undefined : __errors,
     errorSchema,

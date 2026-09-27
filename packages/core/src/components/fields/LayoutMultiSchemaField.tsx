@@ -138,10 +138,11 @@ export default function LayoutMultiSchemaField<
     optionsSchemaSelector: selectorField = discriminator,
     hideError: uiSchemaHideError,
     ...uiOptions
-  } = getUiOptions<T, S, F>(uiSchema);
+  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
+  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
@@ -209,6 +210,17 @@ export default function LayoutMultiSchemaField<
     visibleErrors.length > 0 ? (
       <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
     ) : undefined;
+  const { help } = uiOptions;
+  const helpComponent = (
+    <FieldHelpTemplate
+      help={help}
+      id={id}
+      schema={schema}
+      uiSchema={uiSchema}
+      hasErrors={visibleErrors.length > 0}
+      registry={registry}
+    />
+  );
 
   return (
     <FieldTemplate
@@ -224,6 +236,8 @@ export default function LayoutMultiSchemaField<
       registry={registry}
       displayLabel={displayLabel}
       errors={errors}
+      help={helpComponent}
+      rawHelp={help}
       rawErrors={hideFieldError ? undefined : rawErrors}
       errorSchema={errorSchema}
       hideError={hideFieldError}

@@ -138,6 +138,7 @@ const anyOfSchema = {
 const DEFAULT_ID = 'test-id';
 const FIELD_ERROR_TEST_ID = 'FakeFieldErrorTemplate-testId';
 const FIELD_TEMPLATE_TEST_ID = 'FakeFieldTemplate-testId';
+const RAW_HELP_TEST_ID = 'FakeFieldTemplate-rawHelp-testId';
 
 const NOT_SHOWN_ERROR_SCHEMA = new ErrorSchemaBuilder().addErrors(
   'error message will not be rendered due to hideError flag',
@@ -154,11 +155,13 @@ function FakeFieldErrorTemplate(props: FieldErrorProps) {
 }
 
 function FakeFieldTemplate(props: FieldTemplateProps) {
-  const { children, errors } = props;
+  const { children, errors, help, rawHelp } = props;
   return (
     <div data-testid={FIELD_TEMPLATE_TEST_ID}>
       {children}
       {errors}
+      {help}
+      {rawHelp ? <span data-testid={RAW_HELP_TEST_ID} /> : null}
     </div>
   );
 }
@@ -701,6 +704,46 @@ describe('LayoutMultiSchemaField', () => {
     expect(screen.queryByTestId(FIELD_TEMPLATE_TEST_ID)).not.toBeInTheDocument();
     expect(screen.queryByTestId(FIELD_ERROR_TEST_ID)).not.toBeInTheDocument();
   });
+  describe('ui:help', () => {
+    test('renders the help for a ui:help on the field', () => {
+      const props = getProps({ uiSchema: { [UI_OPTIONS_KEY]: { help: 'some help text' } } });
+      render(<LayoutMultiSchemaField {...props} />);
+
+      const fieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+      expect(within(fieldTemplate).getByText('some help text')).toBeInTheDocument();
+      expect(within(fieldTemplate).getByTestId(RAW_HELP_TEST_ID)).toBeInTheDocument();
+    });
+
+    test('renders the help for a ui:help given as a React element', () => {
+      const props = getProps({ uiSchema: { [UI_OPTIONS_KEY]: { help: <strong>element help</strong> } } });
+      render(<LayoutMultiSchemaField {...props} />);
+
+      const fieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+      expect(within(fieldTemplate).getByText('element help')).toBeInTheDocument();
+      expect(within(fieldTemplate).getByTestId(RAW_HELP_TEST_ID)).toBeInTheDocument();
+    });
+
+    test('renders the help inherited from ui:globalOptions', () => {
+      const baseProps = getProps();
+      // getTestRegistry() freezes the registry it returns, so a new object is substituted in rather than mutated.
+      const props = {
+        ...baseProps,
+        registry: { ...baseProps.registry, globalUiOptions: { help: 'global help' } },
+      };
+      render(<LayoutMultiSchemaField {...props} />);
+
+      const fieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+      expect(within(fieldTemplate).getByText('global help')).toBeInTheDocument();
+    });
+
+    test('renders no help when there is no ui:help', () => {
+      render(<LayoutMultiSchemaField {...getProps()} />);
+
+      const fieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+      expect(within(fieldTemplate).queryByTestId(RAW_HELP_TEST_ID)).toBeNull();
+    });
+  });
+
   describe('computeEnumOptions', () => {
     test('Reads oneOfs from refs', () => {
       const schema = oneOfSchema as RJSFSchema;
