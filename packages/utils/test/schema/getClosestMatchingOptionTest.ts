@@ -64,8 +64,8 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       ).toEqual(2);
     });
     it('scores a recursive $ref under a property named for an inherited member', () => {
-      // `toString` is a legal property name, but every object has one, so reading it off the data with `.[key]` would
-      // make the recursion look like it always had data left to score
+      // `toString` is a legal property name that every object also inherits, so the read has to be an own-property one
+      // or the recursion never sees the data run out
       const schema: RJSFSchema = {
         definitions: {
           Node: {
@@ -77,6 +77,16 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(calculateIndexScore(testValidator, schema, schema.definitions!.Node as RJSFSchema, { name: 'a' })).toEqual(
         1,
       );
+    });
+    it('does not follow a $ref that the formData has no value for', () => {
+      // Scoring a fabricated value against the resolved definition would only ever reward the absence of data
+      const schema: RJSFSchema = {
+        definitions: { Node: { type: 'object', properties: { x: { type: 'null' } } } },
+        type: 'object',
+        properties: { a: { $ref: '#/definitions/Node' }, b: { type: 'string' } },
+      };
+      expect(calculateIndexScore(testValidator, schema, schema, { b: 'here' })).toEqual(1);
+      expect(calculateIndexScore(testValidator, schema, schema, { a: null, b: 'here' })).toEqual(1);
     });
     it('returns 0 for a schema that has a const that does not match the formData value', () => {
       expect(
