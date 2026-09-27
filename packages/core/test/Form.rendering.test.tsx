@@ -266,7 +266,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_multi_shared')).toBeInTheDocument();
 
       const select = node.querySelector('select')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'string')!,
+      );
 
       expect(node.querySelector<HTMLInputElement>('#root_multi_shared')).not.toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'text');
@@ -323,7 +326,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
 
       const discSelect = node.querySelector<HTMLSelectElement>('#root_disc')!;
-      await user.selectOptions(discSelect, Array.from(discSelect.options).find((o) => o.textContent === 'b')!);
+      await user.selectOptions(
+        discSelect,
+        Array.from(discSelect.options).find((o) => o.textContent === 'b')!,
+      );
 
       // The branch switch replaces the types on offer, so the `string` selection gives way rather than leaving the
       // selector reading `boolean` while a text input renders below it
@@ -341,8 +347,14 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = () => node.querySelector<HTMLSelectElement>('select')!;
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'null')!);
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'null')!,
+      );
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'string')!,
+      );
 
       // `String(null)` would put the literal text `null` into the input as though the user had typed it
       expectToHaveBeenCalledWithFormData(onChange, { aKey: '' }, 'root_aKey');
@@ -370,7 +382,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
-      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        typeSelect,
+        Array.from(typeSelect.options).find((o) => o.textContent === 'string')!,
+      );
 
       // Choosing `string` re-pins the type the options are rendered for, so the option selector stays while the
       // properties of the `object` type give way to the input the chosen type calls for
@@ -416,7 +431,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expectToHaveBeenCalledWithFormData(onChange, { multi: '42' }, 'root_multi');
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
-      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        typeSelect,
+        Array.from(typeSelect.options).find((o) => o.textContent === 'number')!,
+      );
 
       // The other member of the union is reachable from within the option, which is what having a type selector at
       // all is for: before it composed with the option selector, an option could only ever be the first type
@@ -495,7 +513,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
-      await user.selectOptions(typeSelect, Array.from(typeSelect.options).find((o) => o.textContent === 'null')!);
+      await user.selectOptions(
+        typeSelect,
+        Array.from(typeSelect.options).find((o) => o.textContent === 'null')!,
+      );
 
       // A `null` is the whole of the value, so an option has nothing left to say about it: the selector would stand
       // over a field that renders nothing and change nothing below it
@@ -562,7 +583,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       await user.clear(node.querySelector<HTMLInputElement>('#root_aKey')!);
       const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // Clearing an additional property stores the empty string so its key survives, which must not read as a
       // `string` the selector has to go back to and so put every other type out of reach of a cleared value
@@ -744,13 +768,19 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
 
       const select = () => node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // There is no `textarea` widget for `boolean`, and `getWidget()` throws rather than falling back, which would
       // take the whole form down instead of rendering the type the user asked for
       expect(node.querySelector<HTMLInputElement>('#root_multi')).toHaveAttribute('type', 'checkbox');
 
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'string')!,
+      );
 
       // The widget is only dropped for the types that cannot render it
       expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
@@ -867,7 +897,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'number')!,
+      );
 
       // Text that reads as no number at all leaves the field empty, since a `0` would satisfy `required` and
       // `minimum` as though the user had entered it
@@ -883,7 +916,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'integer')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'integer')!,
+      );
 
       // Clearing a value with no integer form must not cost the conversion of one that has it
       expectToHaveBeenCalledWithFormData(onChange, { val: 4 }, 'root_val');
@@ -897,7 +933,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'integer')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'integer')!,
+      );
 
       // Rounding would rewrite the value the user entered, and switching back would show the rounded value rather
       // than what they had, so the number they typed is never recoverable
@@ -912,7 +951,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'number')!,
+      );
       await user.type(node.querySelector<HTMLInputElement>('#root_val')!, '3.');
 
       // `asNumber()` holds a trailing decimal point as the string `'3.'` until the next digit is typed, which must
@@ -929,10 +971,16 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'string')!,
+      );
       expectToHaveBeenCalledWithFormData(onChange, { val: 'false' }, 'root_val');
 
-      await user.selectOptions(select(), Array.from(select().options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select(),
+        Array.from(select().options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // `Boolean('false')` is `true`, which would have two clicks turn a `false` the user never touched into a `true`
       expectToHaveBeenCalledWithFormData(onChange, { val: false }, 'root_val');
@@ -946,7 +994,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'number')!,
+      );
 
       // Remounting the selector on every form data change would drop the keyboard focus of the user changing types
       expect(document.activeElement).toBe(node.querySelector('#root_val___internal_type_selector'));
@@ -960,7 +1011,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector('select')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'null')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'null')!,
+      );
 
       // `null` is a value the property is allowed to hold, so it survives `omitExtraData` and the key stays editable
       expectToHaveBeenCalledWithFormData(onChange, { aKey: null }, 'root_aKey');
@@ -1037,7 +1091,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
 
       const select = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // The value schema keeping the marker of the `$ref` it was resolved from would have the definition's widget
       // merged back in below, undoing the drop and taking the whole form down with a widget `boolean` has no
@@ -1056,7 +1113,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // `Boolean(undefined)` is `false`, which would satisfy `required` for a field nobody has filled in
       for (const [{ formData }] of onChange.mock.calls) {
@@ -1107,7 +1167,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // `Boolean({})` is `true`, which would check a box the user never checked
       for (const [{ formData }] of onChange.mock.calls) {
@@ -1154,7 +1217,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       expectToHaveBeenCalledWithFormData(onChange, { val: false }, 'root_val');
     });
@@ -1170,7 +1236,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'number')!,
+      );
 
       // `Number(true)` is `1` and `Number('   ')` is `0`, neither of which the user entered
       expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val');
@@ -1192,7 +1261,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val_nested__error')).toBeInTheDocument();
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'string')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'string')!,
+      );
 
       // The error belonged to a property of the object the cast replaced, so passing the field's error schema back
       // with the new value would re-assert it against a string that has no such property
@@ -1212,7 +1284,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'boolean')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'boolean')!,
+      );
 
       // Text a user has cleared spells neither `true` nor `false`, so reading it as a definite `false` would satisfy
       // `required` for a field nobody has filled in
@@ -1232,7 +1307,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+      await user.selectOptions(
+        select,
+        Array.from(select.options).find((o) => o.textContent === 'number')!,
+      );
       await user.click(node.querySelector('button[type=submit]')!);
 
       // An empty error schema handed to a value that had no errors is stored as a custom error of the form's own,
@@ -1310,7 +1388,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         });
         const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
 
-        await user.selectOptions(select, Array.from(select.options).find((o) => o.textContent === 'number')!);
+        await user.selectOptions(
+          select,
+          Array.from(select.options).find((o) => o.textContent === 'number')!,
+        );
 
         expectToHaveBeenCalledWithFormData(onChange, { val: undefined }, 'root_val');
       };
