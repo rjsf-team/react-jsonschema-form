@@ -59,7 +59,7 @@ export function calculateIndexScore<
       totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
         // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
         // data's own value rather than the one every object inherits, which would never look like missing data
-        const formValue = getByPath(formData, key);
+        const formValue = getByPath<T>(formData, key);
         if (typeof value === 'boolean') {
           return score;
         }
@@ -73,13 +73,7 @@ export function calculateIndexScore<
           if (formValue == null) {
             return score;
           }
-          const newSchema = retrieveSchema<T, S, F>(
-            validator,
-            value as S,
-            rootSchema,
-            formValue as T,
-            customMergeAllOf,
-          );
+          const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
           return score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue, customMergeAllOf);
         }
         if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
@@ -90,7 +84,7 @@ export function calculateIndexScore<
             getClosestMatchingOption<T, S, F>(
               validator,
               rootSchema,
-              formValue as T,
+              formValue,
               getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
