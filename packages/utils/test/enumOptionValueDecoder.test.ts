@@ -1,5 +1,5 @@
 import { ENUM_OPTION_INDEX_PREFIX, enumOptionValueDecoder } from '../src/index.ts';
-import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
+import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
@@ -59,9 +59,6 @@ describe('enumOptionValueDecoder', () => {
     it('finds boolean false from string', () => {
       expect(enumOptionValueDecoder('false', booleanOptions, 'realValue')).toBe(false);
     });
-    it('finds object value by index fallback', () => {
-      expect(enumOptionValueDecoder('0', objectOptions, 'realValue')).toEqual({ name: 'NY' });
-    });
     it('returns emptyValue for empty string', () => {
       expect(enumOptionValueDecoder('', stringOptions, 'realValue', '')).toBe('');
     });
@@ -85,12 +82,10 @@ describe('enumOptionValueDecoder', () => {
     it('returns emptyValue for empty string when an option is null', () => {
       expect(enumOptionValueDecoder('', nullableOptions, 'realValue', 'empty')).toBe('empty');
     });
-    it('falls back to the option at a bare index no option encodes as', () => {
-      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('bar');
-    });
-    it('returns emptyValue for an out of range or non-integer index', () => {
-      expect(enumOptionValueDecoder('2', stringOptions, 'realValue', 'empty')).toBe('empty');
-      expect(enumOptionValueDecoder('0.5', stringOptions, 'realValue', 'empty')).toBe('empty');
+    it('does not resolve a bare index as the option at that position', () => {
+      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('1', numericOptions, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('0', objectOptions, 'realValue', 'empty')).toBe('empty');
     });
     it('handles array of real values', () => {
       expect(enumOptionValueDecoder(['foo', 'bar'], stringOptions, 'realValue')).toEqual(['foo', 'bar']);

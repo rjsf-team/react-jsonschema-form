@@ -733,7 +733,7 @@ describe('optionsList()', () => {
     expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}', '[1,2]', 'null']);
   });
   it('should label an untitled object enum value with its JSON', () => {
-    const schema: RJSFSchema = { enum: [{ a: 1 }] as unknown as RJSFSchema['enum'] };
+    const schema: RJSFSchema = { enum: [{ a: 1 }] };
     expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}']);
   });
   describe('anyOf and oneOf together', () => {

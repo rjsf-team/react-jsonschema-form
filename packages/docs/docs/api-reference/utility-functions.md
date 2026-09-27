@@ -321,7 +321,8 @@ Returns `emptyValue` when the current value is empty.
 
 Returns the index(es) of the options in `allEnumOptions` whose value(s) match the ones in `value`.
 All the `enumOptions` are filtered based on whether they are a "selected" `value` and the index of each selected one is then stored in an array.
-If `multiple` is true, that array is returned, otherwise the first element in the array is returned.
+If `multiple` is true, that array is returned.
+Otherwise the index of an option whose value is the whole `value` is returned, such as an array option's for an array `value`, falling back to the first element in that array.
 
 #### Parameters
 
@@ -336,20 +337,22 @@ If `multiple` is true, that array is returned, otherwise the first element in th
 ### enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Determines whether the given `value` is (one of) the `selected` value(s).
+An array `selected` is read as a list of selections unless `multiple` is `false`, which a single-select widget passes so that an array is compared whole, as the selection of an option whose value is an array, e.g. the `[2]` of a `{ const: [2] }` constant.
 
 #### Parameters
 
 - value: EnumOptionsType&lt;S>["value"] - The value being checked to see if it is selected
 - selected: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The current selected value or list of values
-- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+- [multiple]: boolean | undefined - Whether `selected` is a list of selections; when omitted, an array `selected` is one
 
 #### Returns
 
-- boolean: true if the `value` is one of the `selected` ones, false otherwise
+- boolean: true if the `value` is the `selected` one, or one of them for a list of selections, false otherwise
 
 ### enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
+Values are compared by deep equality, so an object or array option finds its place whether or not `selected` holds the option's own instance.
 
 #### Parameters
 
@@ -381,7 +384,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 
 Decodes a string from a DOM value attribute back to a typed enum value.
 When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their prefixed index, round-trip too.
-When no option encodes as the input and it is a bare index, falls back to the option at that index.
+A bare index is not an option's position here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with `enumOptionsValueForIndex()` instead.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
 #### Parameters
@@ -976,7 +979,7 @@ object constants, or one whose `type` list starts with `null`, renders with. If 
 
 ### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords.
+Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords, unless its list is empty and the `oneOf`'s is not.
 Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
 the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
 

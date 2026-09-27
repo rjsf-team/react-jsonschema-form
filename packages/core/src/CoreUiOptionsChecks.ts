@@ -113,10 +113,11 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       null,
       {
-        // `NullField` never calls `getWidget` (there's no widget map entry for the `null` schema type, and nothing to
-        // render), so `'HiddenWidget'` has no runtime effect here - only the literal `'hidden'`, checked the same way
-        // as the object branch below, actually hides a null field.
-        widget?: 'hidden';
+        // `NullField` never calls `getWidget` (it has nothing to render), so `'HiddenWidget'` has no runtime effect on
+        // it - only the literal `'hidden'`, checked the same way as the object branch below, actually hides a null
+        // field. A `oneOf`/`anyOf` of constants typed `null` is rendered as a select instead, which does resolve its
+        // `ui:widget` through `getWidget`, so the select and radio widgets are offered for it.
+        widget?: 'SelectWidget' | 'RadioWidget' | WidgetAliasFor<'null'>;
         field?: 'NullField';
       }
     >
@@ -142,11 +143,12 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       NonBuiltInObject,
       {
-        // Only the literal `'hidden'` has any runtime effect here: `ObjectField`/`SchemaField` decide to hide an
-        // object field via `uiOptions.widget === 'hidden'`, a strict comparison to that exact alias - unlike
-        // string/number/boolean/array fields, an object field never resolves `ui:widget` through `getWidget`, so
+        // `ObjectField`/`SchemaField` decide to hide an object field via `uiOptions.widget === 'hidden'`, a strict
+        // comparison to that exact alias - an object field never resolves `ui:widget` through `getWidget`, so
         // `'HiddenWidget'` (the PascalCase component name) does nothing for it and is deliberately not offered here.
-        widget?: 'hidden';
+        // A `oneOf`/`anyOf` of object constants is rendered as a select instead, which does resolve its `ui:widget`
+        // through `getWidget`, so the select and radio widgets are offered for it.
+        widget?: 'SelectWidget' | 'RadioWidget' | WidgetAliasFor<'object'>;
         field?: 'ObjectField';
         optionsSchemaSelector?: string;
         order?: string[];

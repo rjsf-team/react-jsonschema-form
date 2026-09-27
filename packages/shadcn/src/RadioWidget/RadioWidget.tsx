@@ -53,7 +53,7 @@ export default function RadioWidget<
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
-            const checked = enumOptionsIsSelected<S>(option.value, value);
+            const checked = enumOptionsIsSelected<S>(option.value, value, false);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
                 <RadioGroupItem

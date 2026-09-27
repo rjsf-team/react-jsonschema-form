@@ -12,6 +12,7 @@ import {
   enumOptionSelectedValue,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
+  enumOptionsSelectValue,
   enumOptionsValueForIndex,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -70,8 +71,6 @@ export default function SelectWidget<
     return String(val);
   };
 
-  const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
-
   const handleOptionClick = useCallback(
     (event: React.MouseEvent<HTMLLIElement>) => {
       const index = Number(event.currentTarget.dataset.value);
@@ -85,9 +84,9 @@ export default function SelectWidget<
       if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
         // Compared by value, since an object option in form data is rarely the same instance as the option's constant
-        const newValue = enumOptionsIsSelected<S>(optionValue, currentValue)
+        const newValue = enumOptionsIsSelected<S>(optionValue, currentValue, true)
           ? enumOptionsDeselectValue<S>(index, currentValue, enumOptions)
-          : [...currentValue, optionValue];
+          : enumOptionsSelectValue<S>(index, currentValue, enumOptions);
         onChange(newValue);
       } else {
         onChange(optionValue);
@@ -96,24 +95,26 @@ export default function SelectWidget<
     [value, isMultiple, enumOptions, optEmptyVal, onChange],
   );
 
+  const reportedValue = value === undefined ? optEmptyVal : value;
+
   // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
   // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
-        onBlur(id, value);
+        onBlur(id, reportedValue);
       }
     },
-    [onBlur, id, value],
+    [onBlur, id, reportedValue],
   );
 
   const handleFocus = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
-        onFocus(id, value);
+        onFocus(id, reportedValue);
       }
     },
-    [onFocus, id, value],
+    [onFocus, id, reportedValue],
   );
 
   // The custom dropdown iterates `selectedValues.includes(...)` per option, so
@@ -166,7 +167,7 @@ export default function SelectWidget<
               readOnly
             />
           )}
-          <span>{isEnumeratedObject ? option.label : getDisplayValue(option.label)}</span>
+          <span>{option.label}</span>
         </div>
       </li>
     );

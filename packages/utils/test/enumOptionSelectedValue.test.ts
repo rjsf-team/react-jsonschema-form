@@ -12,10 +12,18 @@ const numericOptions: EnumOptionsType[] = [
   { value: 20, label: 'Twenty' },
 ];
 
+const arrayOptions: EnumOptionsType[] = [
+  { value: [1], label: 'One' },
+  { value: [2], label: 'Two' },
+];
+
 describe('enumOptionSelectedValue', () => {
   describe("when format is 'indexed' (default)", () => {
     it('returns index for a single value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'indexed', '')).toBe('1');
+    });
+    it('returns the index of an array option for a single selection', () => {
+      expect(enumOptionSelectedValue([2], arrayOptions, false, 'indexed', '')).toBe('1');
     });
     it('returns indexes for multiple values', () => {
       expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, 'indexed', [])).toEqual(['0', '2']);
@@ -69,6 +77,9 @@ describe('enumOptionSelectedValue', () => {
       expect(enumOptionSelectedValue({ id: 1 }, mixedOptions, false, 'realValue', '')).toBe(
         `${ENUM_OPTION_INDEX_PREFIX}2`,
       );
+    });
+    it('encodes an array value of a single selection as its option index', () => {
+      expect(enumOptionSelectedValue([2], arrayOptions, false, 'realValue', '')).toBe(`${ENUM_OPTION_INDEX_PREFIX}1`);
     });
     it('returns emptyValue for an object value that matches no option', () => {
       expect(enumOptionSelectedValue({ id: 2 }, mixedOptions, false, 'realValue', '')).toBe('');

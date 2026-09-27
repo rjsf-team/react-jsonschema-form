@@ -43,4 +43,18 @@ describe('enumOptionsSelectValue()', () => {
       expect(selected).toStrictEqual(expected);
     });
   });
+  it('orders an object option equal to, but not the same instance as, its constant', () => {
+    const objectOptions: EnumOptionsType[] = [
+      { value: { a: 1 }, label: 'One' },
+      { value: { a: 2 }, label: 'Two' },
+    ];
+    expect(enumOptionsSelectValue(0, [{ a: 2 }], objectOptions)).toEqual([{ a: 1 }, { a: 2 }]);
+  });
+  it('selects a null option', () => {
+    const nullableOptions: EnumOptionsType[] = [
+      { value: null, label: 'None' },
+      { value: 1, label: 'One' },
+    ];
+    expect(enumOptionsSelectValue(0, [1], nullableOptions)).toEqual([null, 1]);
+  });
 });

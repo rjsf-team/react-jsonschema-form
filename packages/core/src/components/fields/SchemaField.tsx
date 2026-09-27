@@ -118,11 +118,18 @@ function inferSelectType<
   // BooleanField defaults to a checkbox, which ignores `enumOptions` and so drops the option labels. Defaulting the
   // widget rather than the type keeps `schema.type` truthful for custom fields, templates and widgets. A typed boolean
   // keeps its checkbox unless a label would be dropped, since a single option is how a checkbox that must be checked
-  // is spelled, and unlabelled `true`/`false` options are exactly what a checkbox shows
+  // is spelled, and unlabelled `true`/`false` options are exactly what a checkbox shows. A `null` option, which a
+  // nullable boolean can offer, is one a checkbox has no state for, so it gets the select too. So does a type list
+  // naming `boolean` first among other non-null types: `getFieldComponent()` renders it through StringField, and
+  // without a widget `getDisplayLabel()` would still hide the label the way it does for a checkbox
   if (schemaType !== undefined) {
-    const dropsLabels =
-      schemaType === 'boolean' && options.length > 1 && hasOptionLabels<T, S, F>(options, keyword, uiSchema);
-    return { schema, widget: dropsLabels ? 'select' : undefined };
+    const needsSelect =
+      schemaType === 'boolean' &&
+      options.length > 1 &&
+      (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
+        options.some((option) => toConstant<S>(option) === null) ||
+        (Array.isArray(schema.type) && selectTypeForConstants(schema.type) !== 'boolean'));
+    return { schema, widget: needsSelect ? 'select' : undefined };
   }
   const type = selectTypeForConstants([...new Set(options.map((option) => guessType(toConstant<S>(option))))]);
   return { schema: { ...schema, type }, widget: type === 'boolean' ? 'select' : undefined };
@@ -162,10 +169,12 @@ function getFieldComponent<
 
   const schemaType = getSchemaType(schema);
   let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
-  // A select offers `null` as one of its options rather than as a field of its own, so one that lists `null` first
-  // among several types is rendered by the field for the first of the others, which NullField would leave blank
-  if (isSelectSchema && type === 'null' && Array.isArray(schema.type)) {
-    type = schema.type.find((t) => t !== 'null') ?? type;
+  // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
+  // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
+  // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
+  // the way NumberField turns `true` into `1`
+  if (isSelectSchema && Array.isArray(schema.type)) {
+    type = selectTypeForConstants(schema.type);
   }
 
   const schemaId = schema.$id;
@@ -274,13 +283,20 @@ function SchemaFieldRender<
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
   );
-  // A schema tagged as a `$ref` cycle returns below before either value is read, so it is left unretrieved
-  const { schema, widget: inferredWidget } = useMemo(() => {
-    if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
-      return { schema: _schema, widget: undefined };
-    }
-    return inferSelectType<T, S, F>(schemaUtils.retrieveSchema(_schema, formData), resolvedUiSchema);
-  }, [_schema, formData, resolvedUiSchema, schemaUtils]);
+  // A schema tagged as a `$ref` cycle returns below before either value is read, so it is left unretrieved. Retrieving
+  // is kept apart from inferring the select type so that a `uiSchema` rebuilt on every render doesn't retrieve again
+  const isRefCycle = Boolean((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+  const retrievedSchema = useMemo(
+    () => (isRefCycle ? _schema : schemaUtils.retrieveSchema(_schema, formData)),
+    [isRefCycle, _schema, formData, schemaUtils],
+  );
+  const { schema, widget: inferredWidget } = useMemo(
+    () =>
+      isRefCycle
+        ? { schema: retrievedSchema, widget: undefined }
+        : inferSelectType<T, S, F>(retrievedSchema, resolvedUiSchema),
+    [isRefCycle, retrievedSchema, resolvedUiSchema],
+  );
   // An inferred widget is only a default, so a widget the caller named through either spelling is written back
   // unchanged. `ui:widget` is always the key that carries it because `getDisplayLabel()` reads only that spelling to
   // decide a boolean keeps its label, and spreading leaves an existing key where the caller put it, so the order
@@ -413,12 +429,10 @@ function SchemaFieldRender<
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose
   if (rendersOptionSelector && !rendersFallbackUi) {
-    if (xxxOfKey) {
-      XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
-      XxxOfOptions = schema[xxxOfKey]!.map((xxxOfSchema) =>
-        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-      );
-    }
+    XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
+    XxxOfOptions = schema[xxxOfKey]!.map((xxxOfSchema) =>
+      schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
+    );
     // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
     // rendering of the same data address by the `XxxOfField`
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);

@@ -29,6 +29,11 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
         getDisplayLabel(testValidator, { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }),
       ).toEqual(true);
     });
+    it('object type with an empty list of options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', properties: { a: { type: 'string' } }, oneOf: [] }),
+      ).toEqual(false);
+    });
     it('object type with non-constant options', () => {
       expect(
         getDisplayLabel(testValidator, { type: 'object', anyOf: [{ properties: { a: { type: 'string' } } }] }),
@@ -58,6 +63,11 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       it('constant options', () => {
         expect(getDisplayLabel(testValidator, { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] }, {})).toEqual(
           true,
+        );
+      });
+      it('empty list of options', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', items: { type: 'string' }, anyOf: [] }, {})).toEqual(
+          false,
         );
       });
       it('files type', () => {

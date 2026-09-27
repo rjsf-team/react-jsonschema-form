@@ -16,6 +16,7 @@ import {
   getAllPermutationsOfXxxOf,
   getMatchingPatternProperties,
   relaxOptionsForScoring,
+  resolveAllReferences,
   resolveAnyOrOneOfSchemas,
   resolveCondition,
   retrieveSchemaInternal,
@@ -2140,6 +2141,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    it('resolveAllReferences() resolves the references of a oneOf beside an empty anyOf', () => {
+      const schema: RJSFSchema = {
+        definitions: { name: { type: 'string' } },
+        anyOf: [],
+        oneOf: [{ $ref: '#/definitions/name' }],
+      };
+      expect(resolveAllReferences(schema, schema, [], undefined, true).oneOf).toEqual([
+        { type: 'string', [RJSF_REF_KEY]: '#/definitions/name' },
+      ]);
+    });
     describe('resolveAnyOrOneOfSchemas()', () => {
       it('resolves anyOf with $ref for single element, merging schemas', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
@@ -2149,6 +2160,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             title: 'multi',
             [RJSF_REF_KEY]: '#/definitions/foo',
           },
+        ]);
+      });
+      it('resolves the anyOf of a schema that also has a oneOf', () => {
+        const schema: RJSFSchema = { title: 'both', anyOf: [{ type: 'string' }], oneOf: [{ type: 'number' }] };
+        expect(resolveAnyOrOneOfSchemas(testValidator, schema, schema, true)).toEqual([
+          { title: 'both', type: 'string' },
         ]);
       });
       it('resolves oneOf with $ref for expandedAll elements, merging schemas', () => {

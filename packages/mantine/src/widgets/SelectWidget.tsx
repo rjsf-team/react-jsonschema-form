@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useCallback, useMemo } from 'react';
 import type { ComboboxParsedItem, OptionsFilter } from '@mantine/core';
 import { defaultOptionsFilter, MultiSelect, Select } from '@mantine/core';
@@ -66,23 +65,21 @@ export default function SelectWidget<
     [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  // The focused element is the search input, whose value is the selected option's label rather than an encoded option
+  // value, so the form data value is reported as it is
+  const reportedValue = value === undefined ? emptyValue : value;
 
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, reportedValue);
+    }
+  }, [onBlur, id, reportedValue]);
+
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, reportedValue);
+    }
+  }, [onFocus, id, reportedValue]);
 
   const selectOptions = useMemo(() => {
     const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({

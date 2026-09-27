@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useCallback, useMemo, useRef } from 'react';
 import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
@@ -64,11 +63,12 @@ export default function SelectWidget<
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  // The focused element is the trigger button, which carries no option value, so the form data value is reported as it is
+  const reportedValue = value === undefined ? emptyValue : value;
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const handleBlur = () => onBlur(id, reportedValue);
+
+  const handleFocus = () => onFocus(id, reportedValue);
 
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 

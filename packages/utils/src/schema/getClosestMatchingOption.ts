@@ -1,6 +1,7 @@
-import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants.ts';
+import { REF_KEY, JUNK_OPTION_ID } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
@@ -76,8 +77,8 @@ export function calculateIndexScore<
           const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
           return score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue, customMergeAllOf);
         }
-        if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
-          const xxxOfKey = hasByPath(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+        const xxxOfKey = getXxxOfKey<S>(value as S);
+        if (xxxOfKey && formValue) {
           const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
           return (
             score +

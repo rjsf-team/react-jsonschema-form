@@ -25,7 +25,7 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const option = options.enumOptions?.find(({ value: enumValue }) => enumOptionsIsSelected(enumValue, value));
+  const option = options.enumOptions?.find(({ value: enumValue }) => enumOptionsIsSelected(enumValue, value, false));
   const description = option?.schema?.description;
   if (!description) {
     return null;

@@ -5,8 +5,9 @@ import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema }
 /** Resolves a single DOM value string back to its typed enum value in `'realValue'` mode.
  *
  * Finds the option that `enumOptionValueEncoder()` encodes as the input, so every value round-trips, including the
- * object, array and `null` values that are encoded as their prefixed index. When no option encodes that way and the
- * input is a bare index, falls back to the option at that index, for widgets that report an option by its position.
+ * object, array and `null` values that are encoded as their prefixed index. A bare index is not an option's position
+ * here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with
+ * `enumOptionsValueForIndex()` instead.
  *
  * @param value - A single string value from a DOM attribute
  * @param enumOptions - The available enum options
@@ -22,21 +23,13 @@ function decodeSingle<S extends StrictRJSFSchema = RJSFSchema>(
     return emptyValue;
   }
   const match = enumOptions.find((opt, index) => enumOptionValueEncoder(opt.value, index, 'realValue') === value);
-  if (match) {
-    return match.value;
-  }
-  const index = Number(value);
-  if (Number.isInteger(index) && index >= 0 && index < enumOptions.length) {
-    return enumOptions[index].value;
-  }
-  return emptyValue;
+  return match ? match.value : emptyValue;
 }
 
 /** Decodes a string from a DOM value attribute back to a typed enum value.
  *
  * When `format` is `'realValue'`, does a reverse lookup: finds the enum option
- * that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, falling back to
- * the option at the input's index when it is a bare index that no option encodes as.
+ * that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value.
  *
  * When `format` is `'indexed'` (the default), uses index-based resolution via
  * `enumOptionsValueForIndex`.
