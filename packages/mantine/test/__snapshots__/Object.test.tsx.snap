@@ -763,7 +763,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     data-label-position="right"
                   >
                     <input
-                      aria-describedby="root_active__error root_active__description root_active__help"
+                      aria-describedby="root_active__description root_active__help"
                       checked=""
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"

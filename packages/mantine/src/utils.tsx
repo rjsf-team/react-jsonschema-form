@@ -1,7 +1,14 @@
 import type { ReactNode } from 'react';
 import { use, useCallback, useMemo } from 'react';
 import type { BoxProps, ElementProps, InputWrapperFactory, InputWrapperProps, StylesApiProps } from '@mantine/core';
-import { extractStyleProps, filterProps, InputWrapperContext, useInputProps, useProps } from '@mantine/core';
+import {
+  extractStyleProps,
+  filterProps,
+  InputWrapperContext,
+  STYLE_PROPS_DATA,
+  useInputProps,
+  useProps,
+} from '@mantine/core';
 import type {
   FormContextType,
   GenericObjectType,
@@ -14,6 +21,7 @@ import type {
 import {
   ariaDescribedByIds,
   descriptionId,
+  errorId,
   getTemplate,
   getVisibleErrors,
   isObject,
@@ -206,9 +214,11 @@ function InputWrapperAriaProvider({
 }
 
 interface AriaContainerOptions {
+  id: string;
   successId: string;
   describedBy?: string;
   labelId?: string;
+  ownErrorProps?: GenericObjectType;
   ownSuccessProps?: GenericObjectType;
   ownContainer?: unknown;
   wrapperObject?: GenericObjectType;
@@ -216,15 +226,17 @@ interface AriaContainerOptions {
 }
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
- * `ownContainer`, the container Mantine would otherwise render, after anything in `before`. The success message is
- * given the known `successId`, since Mantine's components derive it differently. Both are set top-level and in
- * `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two a different precedence
- * for inputs and groups.
+ * `ownContainer`, the container Mantine would otherwise render, after anything in `before`. The error element Mantine
+ * renders is given the field's `errorId(id)`, the id the input is described by, and the success message the known
+ * `successId`, since Mantine's components derive it differently. Both are set top-level and in `wrapperProps`, since an
+ * explicit prop replaces the theme's default and Mantine gives the two a different precedence for inputs and groups.
  */
 function useAriaContainerProps({
+  id,
   successId,
   describedBy,
   labelId,
+  ownErrorProps,
   ownSuccessProps,
   ownContainer,
   wrapperObject,
@@ -240,13 +252,15 @@ function useAriaContainerProps({
     [describedBy, labelId, successId, before, ownContainer],
   );
   return useMemo(() => {
+    const errorProps = { ...ownErrorProps, id: errorId(id) };
     const successProps = { ...ownSuccessProps, id: successId };
     return {
       inputContainer: container,
+      errorProps,
       successProps,
-      wrapperProps: { ...wrapperObject, inputContainer: container, successProps },
+      wrapperProps: { ...wrapperObject, inputContainer: container, errorProps, successProps },
     };
-  }, [container, ownSuccessProps, successId, wrapperObject]);
+  }, [container, id, ownErrorProps, ownSuccessProps, successId, wrapperObject]);
 }
 
 function pickOptions(options: GenericObjectType, names: readonly string[]) {
@@ -266,12 +280,13 @@ function withoutRootSlot(value: unknown): unknown {
   return rest;
 }
 
-/** A value for a style prop that renders no style. `undefined` would let `Input.Wrapper` fall back to the theme's. */
+/** A value for a style prop that renders no style. `undefined` would let `Input.Wrapper` fall back to the theme's, and
+ * an object is a responsive value, for which Mantine renders a `<style>` element. A color prop throws on anything but
+ * a string.
+ */
 function noStyle(name: string) {
-  if (name === 'lightHidden' || name === 'darkHidden') {
-    return false;
-  }
-  return name === 'hiddenFrom' || name === 'visibleFrom' ? '' : {};
+  const type = (STYLE_PROPS_DATA as GenericObjectType)[name]?.type;
+  return type === 'color' || type === 'textColor' ? '' : null;
 }
 
 /** Keeps only the root element props set in `ownWrapperProps`, for a wrapper around inputs that apply the theme's root
@@ -403,21 +418,23 @@ export function useFieldWrapperProps<
       description,
       descriptionProps: withDescriptionDiv(resolved.descriptionProps),
       error: visibleErrors(widgetProps),
+      errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       success: null,
     },
     hiddenTitle,
   };
 }
 
-const ariaPickedKeys = ['descriptionProps', 'inputContainer', 'successProps', 'wrapperProps'];
+const ariaPickedKeys = ['descriptionProps', 'errorProps', 'inputContainer', 'successProps', 'wrapperProps'];
 
 /**
  * A props hook that points a Mantine input's `aria-describedby` at the field's description, error and help ids.
  * Mantine's `Input` sets `aria-describedby` from the `InputWrapper` context after spreading the caller's props, so an
  * `aria-describedby` prop never reaches the DOM, and that context only knows about Mantine's own description and error
  * elements. Overriding the context from `inputContainer` is the one place the value Mantine applies can be replaced.
- * The container, `successProps` and `descriptionProps` Mantine would otherwise apply are resolved as Mantine's inputs
- * resolve them, from the widget's options and the theme's `defaultProps`.
+ * The container, `successProps`, `errorProps` and `descriptionProps` Mantine would otherwise apply are resolved as
+ * Mantine's inputs resolve them, from the widget's options and the theme's `defaultProps`, and the error element is
+ * given the field's `errorId(id)`, whatever `errorProps.id` says.
  *
  * @param component - The Mantine input the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param id - The id of the field the input belongs to
@@ -451,14 +468,17 @@ export function useAriaDescribedByProps(
     {},
     {
       descriptionProps: fromWrapper('descriptionProps'),
+      errorProps: fromWrapper('errorProps'),
       inputContainer: fromWrapper('inputContainer'),
       successProps: fromWrapper('successProps'),
     },
   );
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
+    id,
     successId: successId ?? successIdOf(id, ownSuccessProps),
     describedBy: ariaDescribedByIds(id, includeExamples),
+    ownErrorProps: asObject(resolved.errorProps),
     ownSuccessProps,
     ownContainer: resolved.inputContainer,
     wrapperObject,
@@ -475,6 +495,7 @@ export function useAriaDescribedByProps(
 
 const groupOptionNames = [
   'descriptionProps',
+  'errorProps',
   'inputContainer',
   'inputWrapperOrder',
   'labelProps',
@@ -489,9 +510,10 @@ const groupPickedKeys = [...groupOptionNames, 'wrapperProps'];
  * description, error and help on entering it. The group is labelled by the field's title id: the shown label has that
  * id, and a label Mantine doesn't render, because it is hidden or left out of `inputWrapperOrder`, is still rendered
  * with it, `hidden`, since a group needs an accessible name. Mantine only labels the group by a label it renders itself.
- * The container, `labelProps`, `descriptionProps`, `successProps` and `inputWrapperOrder` Mantine would otherwise apply
- * are resolved as Mantine's groups resolve them: the widget's options or the group's theme `defaultProps`, then
- * `wrapperProps`, then `InputWrapper`'s theme `defaultProps`.
+ * The container, `labelProps`, `descriptionProps`, `errorProps`, `successProps` and `inputWrapperOrder` Mantine would
+ * otherwise apply are resolved as Mantine's groups resolve them: the widget's options or the group's theme
+ * `defaultProps`, then `wrapperProps`, then `InputWrapper`'s theme `defaultProps`. The error element is given the
+ * field's `errorId(id)`, whatever `errorProps.id` says.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility and the options are derived
@@ -518,8 +540,10 @@ export function useGroupAriaProps<
   const hiddenLabel = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
+    id,
     successId: successIdOf(id, ownSuccessProps),
     labelId: label ? titleId(id) : undefined,
+    ownErrorProps: asObject(resolved.errorProps),
     ownSuccessProps,
     ownContainer: resolved.inputContainer,
     wrapperObject,

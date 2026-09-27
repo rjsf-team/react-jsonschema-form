@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { use } from 'react';
 import { createTheme, InputWrapperContext, MantineProvider } from '@mantine/core';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, errorId, helpId } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, helpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -40,17 +40,24 @@ function renderThemed(components: Record<string, { defaultProps: object }>, sche
   );
 }
 
+// The rendered description, error and help, each read once, which a hidden copy of the errors fails
+const describedOnceByDescriptionErrorAndHelp =
+  /^(?=.*A description)(?=.*Some help)(?=.*An error)(?!.*An error.*An error)(?!.*A description.*A description)/;
+
 function expectDescribedByFieldIds(schema: RJSFSchema, uiSchema?: UiSchema, describedCount = 1) {
   const { container } = renderField(schema, uiSchema);
-  const rjsfIds = ariaDescribedByIds('root').split(' ');
 
   const values = describedByValues(container);
   expect(values).toHaveLength(describedCount);
   for (const value of values) {
-    expect(value?.split(/\s+/)).toEqual(expect.arrayContaining(rjsfIds));
+    const ids = value!.split(/\s+/);
+    expect(ids).toEqual(expect.arrayContaining([descriptionId('root'), helpId('root')]));
+    for (const id of ids) {
+      expect(container.querySelector(`[id="${id}"]`)).toBeInTheDocument();
+    }
   }
-  for (const id of [descriptionId('root'), errorId('root'), helpId('root')]) {
-    expect(container.querySelector(`[id="${id}"]`)).toBeInTheDocument();
+  for (const el of container.querySelectorAll('[aria-describedby]')) {
+    expect(el).toHaveAccessibleDescription(describedOnceByDescriptionErrorAndHelp);
   }
 }
 
@@ -79,6 +86,31 @@ describe('aria-describedby', () => {
       expectDescribedByFieldIds(schema, uiSchema, describedCount);
     },
   );
+
+  test('oneOf selector is described by the error Mantine renders for it', async () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          oneOf: [
+            { properties: { a: { type: 'string' } }, required: ['a'] },
+            { properties: { b: { type: 'string' } }, required: ['b'] },
+          ],
+        }}
+        formData={{}}
+        validator={validator}
+        showErrorList={false}
+        noHtml5Validate
+      />,
+    );
+
+    // `noHtml5Validate`, since the required field of the selected option would otherwise block the submit
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(container.querySelector('[id="root__oneof_select"]')).toHaveAccessibleDescription(
+      /must match exactly one schema in oneOf/,
+    );
+  });
 
   test('text widget with examples also describes its input by the examples list', () => {
     const { container } = renderField({ type: 'string', examples: ['x'] });

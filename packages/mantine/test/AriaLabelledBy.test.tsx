@@ -51,8 +51,8 @@ function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
 describe('aria-labelledby', () => {
   // Mantine's `Select` and `MultiSelect` point their listbox's `aria-labelledby` at their own label id whenever a label
   // is passed, rendered or not (https://github.com/mantinedev/mantine/issues/9219), so they are left out of the case
-  // where `inputWrapperOrder` drops the label, and covered by the pinned and `test.fails` cases below instead. Once a
-  // Mantine release fixes that, drop this filter along with the pinned test.
+  // where `inputWrapperOrder` drops the label, and covered by the skipped case below instead. Once a Mantine release
+  // fixes that, drop this filter and unskip that case.
   const labelCaseWidgets = (labelCase: string) =>
     labelCase.includes('inputWrapperOrder')
       ? widgets.filter(([name]) => name !== 'select' && name !== 'multi-select')
@@ -482,6 +482,22 @@ describe('aria-labelledby', () => {
     },
   );
 
+  test('alt-date widget renders no style or style element on its field wrapper for the InputWrapper theme style props', () => {
+    const styleProps = { mt: 'xl', w: 10, bg: 'red', c: 'blue', bd: '1px solid red', fz: 'lg', lightHidden: true };
+    const baseline = render(titledForm('alt-date', { type: 'string' }, 'ui:options', {}));
+    const baselineStyleCount = baseline.container.querySelectorAll('style').length;
+    baseline.unmount();
+
+    const { container } = render(titledForm('alt-date', { type: 'string' }, 'theme', styleProps));
+
+    const fieldWrapper = container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)!;
+    expect(fieldWrapper).not.toHaveAttribute('style');
+    expect(Array.from(fieldWrapper.classList).filter((name) => !name.startsWith('m_'))).toEqual([
+      'mantine-InputWrapper-root',
+    ]);
+    expect(container.querySelectorAll('style')).toHaveLength(baselineStyleCount);
+  });
+
   test.each(titledWidgets)(
     '%s widget applies root props from its ui:options.wrapperProps to the field wrapper',
     (widget, _, schema) => {
@@ -747,25 +763,11 @@ describe('aria-labelledby', () => {
     ['multi-select', checkboxesSchema],
   ];
 
-  // Pins what Mantine's `Select` and `MultiSelect` render today, so the `test.fails` case below can only be failing for
-  // the known reason (https://github.com/mantinedev/mantine/issues/9219); remove this test once that case is fixed.
-  test.each(selectWidgets)(
-    '%s widget labels its listbox by a label id Mantine does not render when inputWrapperOrder leaves the label out',
-    (_, schema) => {
-      const { container } = renderField(
-        { ...schema, title: 'A title' },
-        { 'ui:options': { inputWrapperOrder: orderWithoutLabel } },
-      );
-
-      expect(screen.getByRole('listbox', { hidden: true })).toHaveAttribute('aria-labelledby', 'root-label');
-      expect(container.querySelector('[id="root-label"]')).not.toBeInTheDocument();
-    },
-  );
-
   // Mantine's `Select` and `MultiSelect` build their listbox's label id from the `label` prop alone
-  // (https://github.com/mantinedev/mantine/issues/9219); once a Mantine release fixes that, this test starts failing and
-  // should be removed, along with the pinned test above and the filter in `labelCaseWidgets`.
-  test.fails.each(selectWidgets)(
+  // (https://github.com/mantinedev/mantine/issues/9219). Skipped rather than expected to fail, so that the Mantine
+  // release fixing it can be adopted without an unrelated failure; unskip it then, and drop the filter in
+  // `labelCaseWidgets`.
+  test.skip.each(selectWidgets)(
     '%s widget only references elements that exist when inputWrapperOrder leaves the label out',
     (_, schema) => {
       const { container } = renderField(

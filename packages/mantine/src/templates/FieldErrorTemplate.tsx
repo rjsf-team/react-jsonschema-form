@@ -1,29 +1,14 @@
-import { Box, List } from '@mantine/core';
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { errorId } from '@rjsf/utils';
 
-/** The `FieldErrorTemplate` component renders the errors local to the particular field
+/** The `FieldErrorTemplate` component renders nothing: each Mantine widget renders its errors through Mantine's own
+ * error element, which is given the field's `errorId`, so a second copy would be read out twice or reference nothing
  *
- * @param props - The `FieldErrorProps` for the errors being rendered
+ * @param _props - The `FieldErrorProps` for the errors being rendered
  */
 export default function FieldErrorTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ errors, id: fieldId }: FieldErrorProps<T, S, F>) {
-  if (!errors?.length) {
-    return null;
-  }
-  // In mantine, errors are handled directly in each component, so there is no need to render a separate error template.
-  const id = errorId(fieldId);
-  return (
-    <Box id={id} c='red' display='none'>
-      <List>
-        {errors.map((error, index) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <List.Item key={`field-error-${index}`}>{error}</List.Item>
-        ))}
-      </List>
-    </Box>
-  );
+>(_props: FieldErrorProps<T, S, F>) {
+  return null;
 }

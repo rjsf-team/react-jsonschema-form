@@ -2,7 +2,7 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { descriptionId, getTemplate, helpId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { visibleErrors } from '../utils.tsx';
 
@@ -103,7 +103,9 @@ export default function CheckboxWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         error={visibleErrors(props)}
-        aria-describedby={ariaDescribedByIds(id)}
+        // Mantine's `Checkbox` puts its own error's id ahead of these, and ignores `errorProps`, so rjsf's `errorId(id)`
+        // would name no element
+        aria-describedby={`${descriptionId(id)} ${helpId(id)}`}
       />
     </>
   );
