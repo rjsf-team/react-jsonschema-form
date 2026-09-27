@@ -1742,6 +1742,22 @@ describe('anyOf', () => {
     });
   });
 
+  it('renders the field for the schema type when the anyOf key has no list under it', async () => {
+    const { node, onSubmit } = createFormComponent({
+      schema: { type: 'object', properties: { val: { type: 'string', anyOf: undefined } } } as RJSFSchema,
+    });
+
+    // A schema assembled in JS can carry the key with nothing under it, which no option selector can be rendered from,
+    // so the field for the schema's own type renders rather than giving way to one
+    expect(node.querySelector('#root_val')).toBeInTheDocument();
+    expect(node.querySelectorAll('select')).toHaveLength(0);
+
+    await user.type(node.querySelector<HTMLInputElement>('#root_val')!, 'hello');
+    await submitForm(node, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.calls[0][0].formData).toEqual({ val: 'hello' });
+  });
+
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       anyOf: [
