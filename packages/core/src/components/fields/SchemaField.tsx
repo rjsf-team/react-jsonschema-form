@@ -233,22 +233,24 @@ function getFieldComponent<
    */
   const rendersFallbackUiAs = (FieldComponent: Field<T, S, F>) =>
     FieldComponent === fields.FallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
+  /** The field a `ui:field` names, or `undefined` for a name no field is registered under, which resolves to nothing */
+  const namedField = getUiFieldComponent<T, S, F>(field, fields);
   /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to. A name no
    * field is registered under resolves to nothing, so there is nothing to give way to and the options are rendered,
-   * which is what lets the form be completed: without them an object union loses the `properties` of every option
+   * which is what lets the form be completed: without them an object union loses the `properties` of every option.
+   * One naming the fallback UI is not a field the options can give way to either: it renders them itself, against the
+   * schema with its type pinned, so they are rendered whatever the directive asks for
    */
-  const uiFieldComponent = getUiFieldComponent<T, S, F>(field, fields);
+  const optionsGiveWayToField =
+    namedField !== undefined && !rendersFallbackUiAs(namedField) && uiOptions.fieldReplacesAnyOrOneOf === true;
   /** An `anyOf`/`oneOf` that represents a select is rendered by the field for the schema's type as one control, rather
    * than by an option selector
    */
-  const rendersOptionSelector =
-    xxxOfKey !== undefined &&
-    !isSelectSchema &&
-    !(uiFieldComponent !== undefined && uiOptions.fieldReplacesAnyOrOneOf === true);
-  if (uiFieldComponent) {
+  const rendersOptionSelector = xxxOfKey !== undefined && !isSelectSchema && !optionsGiveWayToField;
+  if (namedField !== undefined) {
     return {
-      FieldComponent: uiFieldComponent,
-      rendersFallbackUi: rendersFallbackUiAs(uiFieldComponent),
+      FieldComponent: namedField,
+      rendersFallbackUi: rendersFallbackUiAs(namedField),
       rendersOptionSelector,
     };
   }

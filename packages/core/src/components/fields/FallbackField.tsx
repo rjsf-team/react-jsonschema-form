@@ -175,9 +175,11 @@ const HELP_UI_OPTION = 'help';
  * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
  * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
  * selected. A widget registered under its own name is left alone since it is expected to handle whatever it is given.
- * The `ui:field` is dropped whatever it names, for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming
- * this field routes the value straight back here, and each of those renders another one, without end. There is nothing
- * to lose by dropping it, since a `ui:field` that resolves to any other field is rendered by `getFieldComponent()`
+ * The `ui:field` is shadowed whatever it names and wherever it was written — `ui:field`, `ui:options.field` or
+ * `ui:globalOptions.field` — for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming this field routes
+ * the value straight back here, and each of those renders another one, without end. Shadowed rather than deleted,
+ * because a global one reaches every field in the form and so survives the caller's own entry being removed. There is
+ * nothing to lose either way, since a `ui:field` that resolves to any other field is rendered by `getFieldComponent()`
  * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or a name
  * no field is registered under, which resolves to nothing wherever it is read.
  * @param uiSchema - The uiSchema for the field being rendered.
@@ -206,7 +208,10 @@ function getValueUiSchema<
   }
   const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
   delete uiOptions[HELP_UI_OPTION];
-  delete uiOptions.field;
+  // Set rather than deleted, so it shadows a `field` in `ui:globalOptions` too: `getUiOptions()` layers the local
+  // options over the global ones, so deleting the key alone would let a global one naming this field through and
+  // route the value straight back here
+  uiOptions.field = undefined;
   if (!keepsWidget) {
     delete uiOptions.widget;
   }
@@ -362,10 +367,16 @@ function FallbackUiField<
   const typesOptionSchema = useMemo(() => getFallbackTypeSelectionSchema(types, schemaTitle), [types, schemaTitle]);
   // The selector is a control of its own within the field, so the `ui:options.label` that turns the field's own label
   // off turns the selector's off with it. Nothing else in the caller's `uiSchema` describes the selector — the rest
-  // describes the value — so that one option is all it is given
+  // describes the value — so that one option is all it is given, alongside the `field` shadowed for the reason
+  // `getValueUiSchema()` shadows it: the selector is a `SchemaField` like any other, so a `field` in `ui:globalOptions`
+  // naming this one reaches it too, and each selector would render another
   const typeSelectorUiSchema = useMemo(() => {
     const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-    return label === false ? { [UI_OPTIONS_KEY]: { label } } : undefined;
+    const options: UIOptionsType<T, S, F> = { field: undefined };
+    if (label === false) {
+      options.label = label;
+    }
+    return { [UI_OPTIONS_KEY]: options };
   }, [uiSchema, globalUiOptions]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so

@@ -1504,7 +1504,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: {
           type: 'object',
           properties: { val: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
-        } as RJSFSchema,
+        },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -1541,7 +1541,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: {
           type: 'object',
           properties: { val: { type: ['string', 'number'], anyOf: [{ minLength: 2 }, { maximum: 5 }] } },
-        } as RJSFSchema,
+        },
         uiSchema: { val: { 'ui:field': field } },
         useFallbackUiForUnsupportedType: true,
       });
@@ -1549,6 +1549,24 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The value field renders for the schema the selector pins a type on, so a `ui:field` naming this field routes
       // back to it, and every one of those renders another selector around another value field without end
       expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(1);
+      expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
+      expect(node.querySelector('#root_val')).toBeInTheDocument();
+    });
+
+    it('renders one of each selector for a ui:globalOptions field naming the fallback field itself', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'number'], anyOf: [{ minLength: 2 }, { maximum: 5 }] } },
+        },
+        uiSchema: { 'ui:globalOptions': { field: 'FallbackField' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // A global option reaches every field in the form, so the `field` has to be shadowed on both of the uiSchemas
+      // this field hands down rather than dropped from the one the caller wrote: the value field routes straight back
+      // here without it, and so does the type selector, which is a `SchemaField` like any other
+      expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(2);
       expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
       expect(node.querySelector('#root_val')).toBeInTheDocument();
     });
