@@ -171,7 +171,7 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
     if (newFormData !== 'Appie') {
       newErrorSchema = {
         __errors: ['Value must be "Appie"'],
-      } as ErrorSchema<unknown[]>;
+      };
     }
     props.onChange(newFormData as unknown[], path, newErrorSchema, id);
   };

@@ -28,7 +28,7 @@ const ObjectFieldTest = (props: FieldProps) => {
       newErrorSchema = {
         ...errorSchema,
         __errors: ['Value must be "test"'],
-      } as ErrorSchema;
+      };
     }
     props.onChange(newFormData, path, newErrorSchema, id);
   };

@@ -32,7 +32,7 @@ function StringFieldTest(props: FieldProps) {
     if (value !== 'test') {
       raiseError = {
         __errors: ['Value must be "test"'],
-      } as ErrorSchema;
+      };
     }
     props.onChange(newFormData, path, raiseError, id);
   };
@@ -357,7 +357,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
@@ -374,7 +374,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);
@@ -389,15 +389,15 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       let errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
-      await user.clear(inputs[0] as HTMLElement);
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);
@@ -412,12 +412,12 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(1);
 
-      await user.clear(inputs[0] as HTMLElement);
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(0);
     });
@@ -431,7 +431,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
@@ -448,7 +448,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);

@@ -1106,7 +1106,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // Only do this when the previous formData was null/undefined (switching FROM null).
   const hasOnlyUndefinedValues =
     isObject(formData) &&
-    Object.keys(formData as object).length > 0 &&
+    Object.keys(formData).length > 0 &&
     Object.values(formData as object).every((v) => v === undefined);
   const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
   const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;

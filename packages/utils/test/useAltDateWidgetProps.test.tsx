@@ -18,7 +18,7 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
   const { enumOptions } = options;
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newValue = (event.target as HTMLSelectElement).value;
+    const newValue = event.target.value;
     return onChange(enumOptionsValueForIndex(newValue, enumOptions));
   };
 

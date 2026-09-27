@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
 import { generateWidgets } from '@rjsf/core';
-import type { ErrorSchema, RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { cleanup, render } from '@testing-library/react';
 
@@ -76,7 +76,7 @@ function renderBothWays(Form: ComponentType<FormProps>, widgetName: string, fixt
       uiSchema={uiSchema}
       validator={validator}
       showErrorList={false}
-      extraErrors={{ field: { __errors: ['a hidden error'] } } as ErrorSchema}
+      extraErrors={{ field: { __errors: ['a hidden error'] } }}
     />,
   );
   const erroredMarkup = errored.container.innerHTML;

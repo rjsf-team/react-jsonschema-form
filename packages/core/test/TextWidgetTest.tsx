@@ -9,7 +9,7 @@ export function TextWidgetTest(props: WidgetProps) {
     if (value !== 'test') {
       raiseError = {
         __errors: ['Value must be "test"'],
-      } as ErrorSchema;
+      };
     }
     props.onChange(newFormData, raiseError, id);
   };

@@ -26,7 +26,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onBlur: () => undefined,
     onFocus: () => undefined,
     ...props,
-  } as unknown as WidgetProps;
+  };
 }
 
 function renderWidget(props: Partial<WidgetProps> = {}) {

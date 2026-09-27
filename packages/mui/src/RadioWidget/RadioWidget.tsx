@@ -73,7 +73,7 @@ export default function RadioWidget<
         id={id}
         name={htmlName || id}
         value={selectValue}
-        row={row as boolean}
+        row={row}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

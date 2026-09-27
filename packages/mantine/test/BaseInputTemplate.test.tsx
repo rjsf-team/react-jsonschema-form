@@ -23,7 +23,7 @@ function makeProps(props: Partial<BaseInputTemplateProps> = {}): BaseInputTempla
     onBlur: () => undefined,
     onFocus: () => undefined,
     ...props,
-  } as unknown as BaseInputTemplateProps;
+  };
 }
 
 /** Renders the template inside a `MantineProvider`, which its components require */

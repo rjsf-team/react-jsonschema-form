@@ -52,11 +52,7 @@ export default function resolveUiSchema<
   } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
     result = { ...definitionUiSchema };
   } else {
-    result = mergeObjects(definitionUiSchema as GenericObjectType, localUiSchema as GenericObjectType) as UiSchema<
-      T,
-      S,
-      F
-    >;
+    result = mergeObjects(definitionUiSchema, localUiSchema) as UiSchema<T, S, F>;
   }
 
   // The same goes for `ui:options`: consumers spread it and use `in` on it, both of which assume an object
@@ -90,11 +86,7 @@ export default function resolveUiSchema<
           const optionRef = ((option as RJSFMarkedSchema)?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
           if (optionRef && optionRef in definitions) {
             const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
-            uiSchemaArray[i] = mergeObjects(definitions[optionRef] as GenericObjectType, optionUiSchema) as UiSchema<
-              T,
-              S,
-              F
-            >;
+            uiSchemaArray[i] = mergeObjects(definitions[optionRef], optionUiSchema) as UiSchema<T, S, F>;
             hasExpanded = true;
           }
         }

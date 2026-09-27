@@ -28,7 +28,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onFocus: () => undefined,
     registry: getTestRegistry(schema, {}, Templates, {}),
     ...props,
-  } as unknown as WidgetProps;
+  };
 }
 
 function renderTimeWidget(props: Partial<WidgetProps> = {}) {

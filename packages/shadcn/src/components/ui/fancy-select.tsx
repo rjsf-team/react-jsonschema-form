@@ -106,7 +106,7 @@ export function FancySelect({
   }, [open]);
 
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
-    if (containerRef.current && !containerRef.current.contains(e.relatedTarget as Node)) {
+    if (containerRef.current && !containerRef.current.contains(e.relatedTarget)) {
       setOpen(false);
     }
     onBlur?.(e);

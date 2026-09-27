@@ -1,4 +1,4 @@
-import type { RJSFSchema, Registry, UIOptionsType } from '../src/index.ts';
+import type { Registry, UIOptionsType } from '../src/index.ts';
 import { createSchemaUtils, englishStringTranslator, getTemplate } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
@@ -9,7 +9,7 @@ const CustomTemplate = () => undefined;
 
 const registry: Registry = {
   formContext: {},
-  rootSchema: {} as RJSFSchema,
+  rootSchema: {},
   schemaUtils: createSchemaUtils(getTestValidator({}), {}),
   translateString: englishStringTranslator,
   templates: {
@@ -50,27 +50,27 @@ const registry: Registry = {
 };
 
 const uiOptions: UIOptionsType = {
-  ArrayFieldDescriptionTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldDescriptionTemplate'],
-  ArrayFieldItemTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldItemTemplate'],
-  ArrayFieldItemButtonsTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldItemButtonsTemplate'],
-  ArrayFieldTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTemplate'],
-  ArrayFieldTitleTemplate: CustomTemplate as unknown as UIOptionsType['ArrayFieldTitleTemplate'],
-  BaseInputTemplate: CustomTemplate as unknown as UIOptionsType['BaseInputTemplate'],
-  CyclicSchemaExpandTemplate: CustomTemplate as unknown as UIOptionsType['CyclicSchemaExpandTemplate'],
-  DescriptionFieldTemplate: CustomTemplate as unknown as UIOptionsType['DescriptionFieldTemplate'],
-  ErrorListTemplate: CustomTemplate as unknown as UIOptionsType['ErrorListTemplate'],
-  FallbackFieldTemplate: CustomTemplate as unknown as UIOptionsType['FallbackFieldTemplate'],
-  FieldErrorTemplate: CustomTemplate as unknown as UIOptionsType['FieldErrorTemplate'],
-  FieldHelpTemplate: CustomTemplate as unknown as UIOptionsType['FieldHelpTemplate'],
-  FieldTemplate: CustomTemplate as unknown as UIOptionsType['FieldTemplate'],
-  GridTemplate: CustomTemplate as unknown as UIOptionsType['GridTemplate'],
+  ArrayFieldDescriptionTemplate: CustomTemplate,
+  ArrayFieldItemTemplate: CustomTemplate,
+  ArrayFieldItemButtonsTemplate: CustomTemplate,
+  ArrayFieldTemplate: CustomTemplate,
+  ArrayFieldTitleTemplate: CustomTemplate,
+  BaseInputTemplate: CustomTemplate,
+  CyclicSchemaExpandTemplate: CustomTemplate,
+  DescriptionFieldTemplate: CustomTemplate,
+  ErrorListTemplate: CustomTemplate,
+  FallbackFieldTemplate: CustomTemplate,
+  FieldErrorTemplate: CustomTemplate,
+  FieldHelpTemplate: CustomTemplate,
+  FieldTemplate: CustomTemplate,
+  GridTemplate: CustomTemplate,
   MarkdownTemplate: CustomTemplate,
-  MultiSchemaFieldTemplate: CustomTemplate as unknown as UIOptionsType['MultiSchemaFieldTemplate'],
-  ObjectFieldTemplate: CustomTemplate as unknown as UIOptionsType['ObjectFieldTemplate'],
-  OptionalDataControlsTemplate: CustomTemplate as unknown as UIOptionsType['OptionalDataControlsTemplate'],
-  TitleFieldTemplate: CustomTemplate as unknown as UIOptionsType['TitleFieldTemplate'],
-  UnsupportedFieldTemplate: CustomTemplate as unknown as UIOptionsType['UnsupportedFieldTemplate'],
-  WrapIfAdditionalTemplate: CustomTemplate as unknown as UIOptionsType['WrapIfAdditionalTemplate'],
+  MultiSchemaFieldTemplate: CustomTemplate,
+  ObjectFieldTemplate: CustomTemplate,
+  OptionalDataControlsTemplate: CustomTemplate,
+  TitleFieldTemplate: CustomTemplate,
+  UnsupportedFieldTemplate: CustomTemplate,
+  WrapIfAdditionalTemplate: CustomTemplate,
 };
 
 const KEYS = Object.keys(registry.templates).filter((k) => k !== 'ButtonTemplates');

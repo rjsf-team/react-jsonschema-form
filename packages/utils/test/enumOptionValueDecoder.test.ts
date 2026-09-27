@@ -1,5 +1,5 @@
 import { enumOptionValueDecoder } from '../src/index.ts';
-import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
+import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
@@ -17,8 +17,8 @@ const booleanOptions: EnumOptionsType[] = [
 ];
 
 const objectOptions: EnumOptionsType[] = [
-  { value: { name: 'NY' } as unknown as RJSFSchema, label: 'New York' },
-  { value: { name: 'LA' } as unknown as RJSFSchema, label: 'Los Angeles' },
+  { value: { name: 'NY' }, label: 'New York' },
+  { value: { name: 'LA' }, label: 'Los Angeles' },
 ];
 
 describe('enumOptionValueDecoder', () => {

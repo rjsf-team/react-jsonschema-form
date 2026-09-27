@@ -53,7 +53,7 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
         // `retrieveSchema()` (via `{ ...refSchema, ...localSchema }`), so a local `dependencies`/`if` next to a
         // `$ref` must still be seen here, not just ones found on the ref target.
         const { [REF_KEY]: _ref, ...localSchema } = resolved;
-        resolved = { ...target, ...localSchema } as S;
+        resolved = { ...target, ...localSchema };
       }
     } catch {
       // An unresolvable $ref will already have surfaced elsewhere (e.g. when rendering the field); treat it as

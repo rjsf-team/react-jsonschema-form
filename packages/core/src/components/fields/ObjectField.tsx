@@ -266,7 +266,7 @@ export default function ObjectField<
     registry,
     title,
   } = props;
-  const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? {};
+  const uiSchema = useMemo((): UiSchema<T, S, F> => rawUiSchema ?? {}, [rawUiSchema]);
   const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
@@ -305,7 +305,7 @@ export default function ObjectField<
     }
   }, [propertyNames, schemaUtils]);
   const resolvedSchema = useMemo(
-    () => (resolvedPropertyNames ? ({ ...schema, propertyNames: resolvedPropertyNames } as S) : schema),
+    () => (resolvedPropertyNames ? { ...schema, propertyNames: resolvedPropertyNames } : schema),
     [resolvedPropertyNames, schema],
   );
   /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out

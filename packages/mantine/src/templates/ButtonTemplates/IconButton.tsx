@@ -1,4 +1,3 @@
-import type { MouseEventHandler } from 'react';
 import { memo } from 'react';
 import type { ActionIconProps } from '@mantine/core';
 import { ActionIcon } from '@mantine/core';
@@ -20,12 +19,7 @@ function IconButtonFn<
 >(props: MantineIconButtonProps<T, S, F>) {
   const { icon, iconType = 'sm', color, onClick, uiSchema, registry, ...otherProps } = props;
   return (
-    <ActionIcon
-      size={iconType as ActionIconProps['size']}
-      color={color as ActionIconProps['color']}
-      onClick={onClick as MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>}
-      {...otherProps}
-    >
+    <ActionIcon size={iconType} color={color} onClick={onClick} {...otherProps}>
       {icon}
     </ActionIcon>
   );

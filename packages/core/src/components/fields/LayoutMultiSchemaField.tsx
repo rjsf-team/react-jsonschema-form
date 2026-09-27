@@ -151,7 +151,7 @@ export default function LayoutMultiSchemaField<
   let optionSchema = getPropertySchema<S>(enumOptions[0]?.schema, selectorField);
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
-  optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
+  optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
   const Widget = getWidget<T, S, F>(optionSchema, widget, widgets);
 
   // The following code was copied from `@rjsf`'s `SchemaField`

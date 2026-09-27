@@ -80,6 +80,7 @@ export function transformRJSFValidationErrors<
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
     const { instancePath, keyword, params, schemaPath, parentSchema } = e;
+    // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
@@ -151,7 +152,7 @@ export function transformRJSFValidationErrors<
         stack = `'${uiSchemaTitle}' ${message}`.trim();
         uiTitle = uiSchemaTitle;
       } else {
-        const parentSchemaTitle = (parentSchema as { title?: string } | undefined)?.title;
+        const parentSchemaTitle = getByPath<string | undefined>(parentSchema, ['title']);
 
         if (parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();

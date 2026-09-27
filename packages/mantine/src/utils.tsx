@@ -76,11 +76,11 @@ export function visibleErrorText(props: VisibleErrorsProps): string | undefined 
 export function cleanupOptions<T extends object>(options: T): Omit<T, keyof UIOptionsType> {
   const result = {} as T;
   for (const key in options) {
-    if (!uiOptionsKeys.includes(key as keyof UIOptionsType)) {
+    if (!uiOptionsKeys.includes(key)) {
       result[key] = options[key];
     }
   }
-  return result as Omit<T, keyof UIOptionsType>;
+  return result;
 }
 
 /**

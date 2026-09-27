@@ -129,7 +129,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const load = useCallback(
     (
       data: Sample & {
-        theme: string;
+        theme?: string;
         liveSettings: LiveSettings;
         sampleName?: string;
         validator?: string;

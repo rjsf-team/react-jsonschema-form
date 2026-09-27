@@ -115,7 +115,7 @@ export default class AJV8Validator<
       // Guard with compiledValidator === undefined so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
       if (compiledValidator === undefined) {
-        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
+        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : schema);
       }
     }
 

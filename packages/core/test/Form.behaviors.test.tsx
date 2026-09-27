@@ -3391,7 +3391,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
       ref: formRef,
       schema,
       fields: { StringField: RaisingField },
-      extraErrors: { foo: { __errors: ['extra!'] } } as ErrorSchema,
+      extraErrors: { foo: { __errors: ['extra!'] } },
     });
     // A submit puts a real validation error into `schemaValidationErrorSchema`, which is the base the custom-error
     // path re-merges onto
