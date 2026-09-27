@@ -26,7 +26,7 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * the object are processed as follows after obtaining the formValue from `formData` using the `key`:
  * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
  *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
- *   the total.
+ *   the total, as long as the formValue has data to score; a `$ref` with no form data left is not followed.
  * - If the `value` contains a `oneOf` and there is a formValue, then score based on the index returned from calling
  *   `getClosestMatchingOption()` of that oneOf.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
@@ -57,15 +57,24 @@ export function calculateIndexScore<
   if (schema) {
     if (isObject(schema.properties)) {
       totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
-        const formValue = formData?.[key];
+        // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
+        // data's own value rather than the one every object inherits, which would never look like missing data
+        const formValue = getByPath<T>(formData, key);
         if (typeof value === 'boolean') {
           return score;
         }
         if (hasByPath(value, REF_KEY)) {
+          // `resolveAllReferences()` leaves a recursive `$ref` in place, so `retrieveSchema()` below resolves the same
+          // definition again and hands back a schema holding that same `$ref` one level down. The descent is bounded
+          // only by the form data being consumed a key at a time, so it never terminates once that data runs out.
+          // Descending anyway could only ever add points for the absence of data — an empty object matching a
+          // property-less `type: 'object'`, `undefined` matching a `type: 'null'` property — so a `$ref` is followed
+          // only as far as the form data goes.
+          if (formValue == null) {
+            return score;
+          }
           const newSchema = retrieveSchema<T, S, F>(validator, value as S, rootSchema, formValue, customMergeAllOf);
-          return (
-            score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue || {}, customMergeAllOf)
-          );
+          return score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue, customMergeAllOf);
         }
         if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
           const xxxOfKey = hasByPath(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
