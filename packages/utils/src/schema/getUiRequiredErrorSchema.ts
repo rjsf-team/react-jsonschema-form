@@ -13,6 +13,7 @@ import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -59,16 +60,12 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   formData: unknown,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): SelectedBranch<T, S, F> {
-  let keyword: typeof ONE_OF_KEY | typeof ANY_OF_KEY;
-  if (ONE_OF_KEY in schema) {
-    keyword = ONE_OF_KEY;
-  } else if (ANY_OF_KEY in schema) {
-    keyword = ANY_OF_KEY;
-  } else {
+  const keyword = getXxxOfKey<S>(schema);
+  if (!keyword) {
     return { schema, uiSchema };
   }
   const { [keyword]: options, ...remaining } = schema;
-  if (!Array.isArray(options) || options.length === 0) {
+  if (options!.length === 0) {
     return { schema, uiSchema };
   }
   const index = getClosestMatchingOption<T, S, F>(
@@ -81,7 +78,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     customMergeAllOf,
   );
   return {
-    schema: mergeSchemas(remaining as S, options[index] as S) as S,
+    schema: mergeSchemas(remaining as S, options![index] as S) as S,
     uiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, index) ?? {},
   };
 }
@@ -95,14 +92,8 @@ function isOptionalDataControlType<T, S extends StrictRJSFSchema, F extends Form
   uiSchema: UiSchema<T, S, F>,
   globalUiOptions?: GlobalUISchemaOptions,
 ): boolean {
-  let schemaType: ReturnType<typeof getSchemaType<S>> | string[];
-  if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ANY_OF_KEY] as S[]);
-  } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ONE_OF_KEY] as S[]);
-  } else {
-    schemaType = getSchemaType<S>(schema);
-  }
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  const schemaType = xxxOfKey ? getSchemaTypesForXxxOf<S>(schema[xxxOfKey] as S[]) : getSchemaType<S>(schema);
   const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   return (
     !!schemaType && !Array.isArray(schemaType) && !!enableOptionalDataFieldForType.find((val) => val === schemaType)

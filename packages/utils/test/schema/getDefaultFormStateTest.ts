@@ -1595,6 +1595,43 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            field: { type: 'string', anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [{ const: 'a' }] },
+          },
+          required: ['field'],
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'skipOneOf' }),
+        ).toEqual({});
+      });
+
+      it('takes the constant default from the oneOf of a schema whose anyOf is empty', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { field: { anyOf: [], oneOf: [{ const: 'a' }] } },
+          required: ['field'],
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'always' }),
+        ).toEqual({ field: 'a' });
+      });
+
+      it('takes the constant default from the anyOf of a schema that also has a oneOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            field: { anyOf: [{ const: 1 }, { const: 2 }], oneOf: [{ const: 'a' }] },
+          },
+          required: ['field'],
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'always' }),
+        ).toEqual({ field: 1 });
+      });
+
       describe('oneOf with const values', () => {
         const schema: RJSFSchema = {
           type: 'object',

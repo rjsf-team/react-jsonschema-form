@@ -2,9 +2,13 @@ import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import Templates from '../src/templates/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget.tsx';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = { type: 'string', enum: ['foo', 'bar', 'baz', 'qux'] };
 
@@ -167,4 +171,33 @@ describe('mantine SelectWidget optgroups', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+});
+
+describe('mantine SelectWidget focus and blur', () => {
+  // Focusing the input opens the dropdown, which scrolls the selected option into view with an API jsdom lacks
+  beforeAll(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterAll(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'reports the form data value, not the label in the input, in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      const enumOptions = [
+        { label: 'One', value: { a: 1 } },
+        { label: 'Two', value: { a: 2 } },
+      ];
+      renderWidget({ value: { a: 2 }, onFocus, onBlur, options: { enumOptions, optionValueFormat } });
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', { a: 2 });
+      expect(onBlur).toHaveBeenCalledWith('root', { a: 2 });
+    },
+  );
 });

@@ -1,9 +1,12 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 // Ark UI's Select content is always mounted (just visually hidden until opened), so these
 // tests can check the rendered structure without driving the popover's real open interaction
@@ -92,4 +95,30 @@ describe('SelectWidget optgroups', () => {
     expect(screen.getByText('Group A')).toBeInTheDocument();
     expect(screen.queryByText('Empty Group')).not.toBeInTheDocument();
   });
+});
+
+describe('SelectWidget focus and blur', () => {
+  test.each(['indexed', 'realValue'] as const)(
+    'reports the form data value on focus and blur in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'number', enum: [10, 20] }}
+          uiSchema={{ 'ui:options': { optionValueFormat } }}
+          formData={20}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', 20);
+      expect(onBlur).toHaveBeenCalledWith('root', 20);
+    },
+  );
 });

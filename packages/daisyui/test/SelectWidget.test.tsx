@@ -139,6 +139,17 @@ describe('SelectWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith(['foo', 'baz']);
   });
 
+  test('multi-select: keeps the selected values in the order of the options', async () => {
+    const onChange = vi.fn();
+    render(
+      <SelectWidget {...makeWidgetMockProps({ value: ['baz'], multiple: true, onChange, options: { enumOptions } })} />,
+    );
+
+    await user.click(screen.getByRole('option', { name: 'Foo' }));
+
+    expect(onChange).toHaveBeenLastCalledWith(['foo', 'baz']);
+  });
+
   test.each(['indexed', 'realValue'] as const)(
     'shows the label of a selected object option in the %s format',
     (optionValueFormat) => {
@@ -203,6 +214,25 @@ describe('SelectWidget', () => {
     await user.click(screen.getByRole('button', { name: 'After select' }));
     expect(onFocus).toHaveBeenCalledTimes(1);
     expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', 'bar');
+  });
+
+  test('reports the emptyValue on focus and blur when nothing is selected', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <>
+        <SelectWidget
+          {...makeWidgetMockProps({ value: undefined, onFocus, onBlur, options: { enumOptions, emptyValue: null } })}
+        />
+        <button type='button'>After select</button>
+      </>,
+    );
+
+    await user.click(screen.getAllByRole('button')[0]);
+    await user.click(screen.getByRole('button', { name: 'After select' }));
+
+    expect(onFocus).toHaveBeenCalledWith('test-id', null);
+    expect(onBlur).toHaveBeenCalledWith('test-id', null);
   });
 
   test('marks enumDisabled options as disabled and ignores clicks on them', async () => {

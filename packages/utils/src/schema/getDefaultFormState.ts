@@ -22,6 +22,7 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import isConstant from '../isConstant.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
@@ -320,6 +321,7 @@ export function computeDefaults<
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
+  const xxxOfKey = getXxxOfKey<S>(schema);
   if (
     schema[CONST_KEY] !== undefined &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -410,48 +412,37 @@ export function computeDefaults<
         uiSchemaDefinitions,
       }),
     ) as T[];
-  } else if (ONE_OF_KEY in schema) {
-    const { oneOf, ...remaining } = schema;
-    if (oneOf!.length === 0) {
+  } else if (xxxOfKey) {
+    const { [xxxOfKey]: options, ...remaining } = schema;
+    if (options!.length === 0) {
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const { type = 'null' } = remaining;
-    if (!Array.isArray(type) && PRIMITIVE_TYPES.includes(type) && dfsb_to_compute?.constAsDefaults === 'skipOneOf') {
+    // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
+    if (
+      ONE_OF_KEY in schema &&
+      !Array.isArray(type) &&
+      PRIMITIVE_TYPES.includes(type) &&
+      dfsb_to_compute?.constAsDefaults === 'skipOneOf'
+    ) {
       // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
       dfsb_to_compute = {
         ...dfsb_to_compute,
         constAsDefaults: 'never',
       };
     }
-    const oneOfIndex = getClosestMatchingOption<T, S, F>(
+    const optionIndex = getClosestMatchingOption<T, S, F>(
       validator,
       rootSchema,
       rawFormData ?? (schema.default as T),
-      oneOf as S[],
+      options as S[],
       0,
       discriminator,
       customMergeAllOf,
     );
-    schemaToCompute = mergeSchemas(remaining, oneOf![oneOfIndex] as S) as S;
-    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ONE_OF_KEY, oneOfIndex);
-  } else if (ANY_OF_KEY in schema) {
-    const { anyOf, ...remaining } = schema;
-    if (anyOf!.length === 0) {
-      return undefined;
-    }
-    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const anyOfIndex = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema,
-      rawFormData ?? (schema.default as T),
-      anyOf as S[],
-      0,
-      discriminator,
-      customMergeAllOf,
-    );
-    schemaToCompute = mergeSchemas(remaining, anyOf![anyOfIndex] as S) as S;
-    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ANY_OF_KEY, anyOfIndex);
+    schemaToCompute = mergeSchemas(remaining, options![optionIndex] as S) as S;
+    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, optionIndex);
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,

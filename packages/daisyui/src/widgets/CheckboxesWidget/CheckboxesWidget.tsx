@@ -4,6 +4,7 @@ import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from 
 import {
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
+  enumOptionsSelectValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
@@ -46,7 +47,7 @@ export default function CheckboxesWidget<
       if (enumOptionsIsSelected<S>(option.value, selected)) {
         onChange(enumOptionsDeselectValue<S>(index, selected, enumOptions));
       } else {
-        onChange([...selected, option.value]);
+        onChange(enumOptionsSelectValue<S>(index, selected, enumOptions));
       }
     },
     [onChange, selected, enumOptions],

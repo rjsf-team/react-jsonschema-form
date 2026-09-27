@@ -2,6 +2,7 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import Form from '../src/index.ts';
 
@@ -96,4 +97,33 @@ describe('SelectWidget optgroups', () => {
     expect(screen.getByTitle('baz')).toBeInTheDocument();
     expect(screen.queryByTitle('foo')).not.toBeInTheDocument();
   });
+});
+
+describe('SelectWidget focus and blur', () => {
+  it.each(['indexed', 'realValue'] as const)(
+    'reports the form data value on focus and blur in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <>
+          <Form
+            schema={{ type: 'number', enum: [10, 20] }}
+            uiSchema={{ 'ui:options': { optionValueFormat } }}
+            formData={10}
+            validator={validator}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          />
+          <button type='button'>After select</button>
+        </>,
+      );
+
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByRole('button', { name: 'After select' }));
+
+      expect(onFocus).toHaveBeenCalledWith('root', 10);
+      expect(onBlur).toHaveBeenCalledWith('root', 10);
+    },
+  );
 });

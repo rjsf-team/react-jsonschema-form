@@ -74,7 +74,7 @@ export default function RadioWidget<
               className='radio'
               name={htmlName || id}
               value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-              checked={enumOptionsIsSelected<S>(option.value, value)}
+              checked={enumOptionsIsSelected<S>(option.value, value, false)}
               required={required}
               disabled={disabled || readonly}
               data-index={index}

@@ -35,7 +35,7 @@ describe('CheckboxesWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith([{ a: 2 }]);
   });
 
-  test('selecting an object option appends its value', async () => {
+  test('selecting an object option keeps the selection in the order of the options', async () => {
     const onChange = vi.fn();
     render(
       <CheckboxesWidget
@@ -45,6 +45,6 @@ describe('CheckboxesWidget', () => {
 
     await user.click(screen.getByRole('checkbox', { name: 'One' }));
 
-    expect(onChange).toHaveBeenLastCalledWith([{ a: 2 }, { a: 1 }]);
+    expect(onChange).toHaveBeenLastCalledWith([{ a: 1 }, { a: 2 }]);
   });
 });

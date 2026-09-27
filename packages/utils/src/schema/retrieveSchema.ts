@@ -18,6 +18,7 @@ import {
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import logOnce from '../logOnce.ts';
@@ -464,15 +465,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (resolveAnyOfOrOneOfRefs) {
-    let key: 'anyOf' | 'oneOf' | undefined;
-    let schemas: S[] | undefined;
-    if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-      key = ANY_OF_KEY;
-      schemas = resolvedSchema[ANY_OF_KEY] as S[];
-    } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-      key = ONE_OF_KEY;
-      schemas = resolvedSchema[ONE_OF_KEY] as S[];
-    }
+    const key = getXxxOfKey<S>(schema);
+    const schemas = key && (resolvedSchema[key] as S[] | undefined);
     if (key && schemas) {
       resolvedSchema = {
         ...resolvedSchema,
@@ -846,14 +840,10 @@ export function resolveAnyOrOneOfSchemas<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(validator: ValidatorType<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
-  let anyOrOneOf: S[] | undefined;
+  const xxxOfKey = getXxxOfKey<S>(schema);
   const { oneOf, anyOf, ...remaining } = schema;
-  if (Array.isArray(oneOf)) {
-    anyOrOneOf = oneOf as S[];
-  } else if (Array.isArray(anyOf)) {
-    anyOrOneOf = anyOf as S[];
-  }
-  if (anyOrOneOf) {
+  if (xxxOfKey) {
+    let anyOrOneOf = schema[xxxOfKey] as S[];
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);

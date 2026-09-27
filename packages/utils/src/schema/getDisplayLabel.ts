@@ -47,9 +47,11 @@ export default function getDisplayLabel<
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
     // A constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is labelled
-    // like any other select rather than left to the fields of its contents
+    // like any other select rather than left to the fields of its contents. An empty list renders no select, so the
+    // schema's own fields are labelled as usual
     const xxxOfKey = getXxxOfKey<S>(schema);
-    const isConstantSelect = xxxOfKey !== undefined && isConstantOptionList<S>(schema[xxxOfKey]);
+    const isConstantSelect =
+      xxxOfKey !== undefined && schema[xxxOfKey]!.length > 0 && isConstantOptionList<S>(schema[xxxOfKey]);
 
     if (schemaType === 'array') {
       displayLabel =

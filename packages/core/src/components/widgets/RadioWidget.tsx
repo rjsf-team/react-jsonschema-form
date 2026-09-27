@@ -51,7 +51,7 @@ function RadioWidget<
     <div className='field-radio-group' id={id} role='radiogroup'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
-          const checked = enumOptionsIsSelected<S>(option.value, value);
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 

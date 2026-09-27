@@ -102,6 +102,20 @@ describe('CoreUiOptionsChecks', () => {
     expect(badHiddenObject).toBeDefined();
   });
 
+  it('offers the select and radio widgets for an object field, which a oneOf/anyOf of constants renders', () => {
+    type Checked = UiSchema<{ plan: { tier: number }; backup: { tier: number } }, any, any, CoreUiOptionsChecks>;
+
+    const ui: Checked = { plan: { 'ui:widget': 'radio' }, backup: { 'ui:widget': 'SelectWidget' } };
+    const badWidget: Checked = {
+      // @ts-expect-error a checkbox list selects several values, which an object select never does
+      plan: { 'ui:widget': 'checkboxes' },
+    };
+
+    expect(ui.plan?.['ui:widget']).toBe('radio');
+    expect(ui.backup?.['ui:widget']).toBe('SelectWidget');
+    expect(badWidget).toBeDefined();
+  });
+
   it('makes emptyValue/placeholder/inline/filePreview available on every type that actually reads them', () => {
     type Checked = UiSchema<{ age: number; agree: boolean; tags: string[] }, any, any, CoreUiOptionsChecks>;
 
