@@ -150,6 +150,7 @@ should change the heading of the (upcoming) version to include a major version b
 - The fallback UI's type selector is given none of the `ui:globalOptions` except those naming a template. A global `title` renamed the `Type` control and a global `widget` replaced it, neither of which the caller wrote about a control within the field; a template says how any field renders rather than what one holds, so a form-wide `FieldTemplate` lays the selector out as it lays out every other field ([#5333](https://github.com/rjsf-team/react-jsonschema-form/issues/5333))
 - A `ui:globalOptions` help text renders once for a field the fallback UI renders, rather than three times ([#5333](https://github.com/rjsf-team/react-jsonschema-form/issues/5333))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; the examples `<datalist>` no longer renders duplicate keys or suggests `null`, object or array values, and isn't rendered or referenced by the input when nothing is left to suggest ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- `BooleanField` takes its options from a constant `oneOf` when the `anyOf` before it isn't made of constants, instead of falling back to the `enum` ([#5319](https://github.com/rjsf-team/react-jsonschema-form/issues/5319))
 
 ## @rjsf/daisyui
 

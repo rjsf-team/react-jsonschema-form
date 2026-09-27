@@ -8,12 +8,12 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  ANY_OF_KEY,
   fieldPathToName,
   getUiOptions,
   getWidget,
-  getXxxOfKey,
-  isConstant,
-  isObject,
+  isConstantOptionList,
+  ONE_OF_KEY,
   optionsList,
   toConstant,
   TranslatableString,
@@ -82,38 +82,34 @@ function BooleanField<
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  // The options are read from the keyword `isSelect()` and `optionsList()` read. A list that isn't made of constants,
-  // or that has no option schemas at all, gives `optionsList()` nothing to list, so the widget gets the options of the
-  // `enum`, or Yes/No, instead
-  const altKey = getXxxOfKey<S>(schema);
+  // The options come from the first of `anyOf` and `oneOf` that lists constants. Unlike `getXxxOfKey()`, which stops at
+  // any `anyOf` array, this looks past an empty or non-constant `anyOf` to a constant `oneOf`, since that `anyOf` has no
+  // values to offer. Without either, the `enum`, or `true` and `false` without one, supplies the options; with an
+  // `enum`, no `AnyOfField` or `OneOfField` renders non-constant alternatives, so they can't label the options either
+  const altKey = ([ANY_OF_KEY, ONE_OF_KEY] as const).find((key) => isConstantOptionList<S>(schema[key], true));
   if (altKey) {
     enumOptions = optionsList<T, S, F>(
       {
-        [altKey]: schema[altKey]!.map((option, index) => {
-          if (isObject(option)) {
-            // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const`
-            // spelling
-            const constant = isConstant(option) ? toConstant(option) : undefined;
-            return {
-              ...option,
-              // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and
-              // so would otherwise be dropped by taking this path at all. Both of its spellings are honored: an
-              // array by position and a record by value. Only a boolean constant gets a Yes/No label after that;
-              // `optionsList()` falls back to the value for the rest, so a `null` option reads as `null` rather than
-              // sharing `false`'s label
-              title:
-                option.title ||
-                (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
-                booleanConstantTitle(constant, yes, no),
-            };
-          }
-          return undefined;
-        }).filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
+        [altKey]: (schema[altKey] as S[]).map((option, index) => {
+          // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const` spelling
+          const constant = toConstant(option);
+          return {
+            ...option,
+            // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and so
+            // would otherwise be dropped by taking this path at all. Both of its spellings are honored: an array by
+            // position and a record by value. Only a boolean constant gets a Yes/No label after that; `optionsList()`
+            // falls back to the value for the rest, so a `null` option reads as `null` rather than sharing `false`'s
+            // label
+            title:
+              option.title ||
+              (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
+              booleanConstantTitle(constant, yes, no),
+          };
+        }),
       } as unknown as S,
       uiSchema,
     );
-  }
-  if (!enumOptions?.length) {
+  } else {
     const enums = schema.enum ?? [true, false];
     if (!enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
       enumOptions = [

@@ -654,6 +654,59 @@ describe('BooleanField', () => {
     expect([...select!.options].map((option) => option.text)).toEqual(['', 'Y', 'N']);
   });
 
+  describe('an enum alongside a oneOf that is not made of constants (#5319)', () => {
+    const schema: RJSFSchema = { type: 'boolean', enum: [true, false], oneOf: [{ title: 'Y' }, { title: 'N' }] };
+
+    it('should render the enum as a select', async () => {
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'select' } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+      await user.selectOptions(select, 'No');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    it('should render the enum as radios', async () => {
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'radio' } });
+
+      const labels = [].map.call(
+        node.querySelectorAll('.field-radio-group label'),
+        (label: Element) => label.textContent,
+      );
+      expect(labels).toEqual(['Yes', 'No']);
+      await user.click(node.querySelectorAll<HTMLInputElement>('.field-radio-group input')[0]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }), 'root');
+    });
+
+    it('should label the enum with ui:enumNames', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'Accept', 'Decline']);
+    });
+
+    it('should read the constants of a oneOf that follows a non-constant anyOf', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'boolean',
+          enum: [true, false],
+          anyOf: [{ title: 'A' }, { title: 'B' }],
+          oneOf: [
+            { const: true, title: 'Y' },
+            { const: false, title: 'N' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'select' },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'Y', 'N']);
+    });
+  });
+
   it('should label a null const with its value rather than sharing the false label', () => {
     const { node } = createFormComponent({
       schema: {
