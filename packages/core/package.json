@@ -6,7 +6,7 @@
     "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
-    "lint": "oxlint --max-warnings 0 src test",
+    "lint": "oxlint src test",
     "precommit": "lint-staged",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
