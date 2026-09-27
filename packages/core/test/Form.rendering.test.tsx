@@ -1459,6 +1459,96 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // labelled `false`, so this is the one field either label could come from
       expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).not.toContain('TITLE');
     });
+
+    it('leaves the types to the options of an unrecognized type whose anyOf names its own', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: 'someUnsupportedType', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+        } as unknown as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The option selector is already the choice a type selector would offer, and an option naming a type of its own
+      // overrides the one the fallback UI would pin, so the options are what supplies the types here
+      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
+
+      const optionSelect = node.querySelector<HTMLSelectElement>('#root_val__anyof_select')!;
+      await user.selectOptions(optionSelect, 'Option 2');
+
+      // The option chosen is what pins the type, so the field follows it rather than the unrecognized one
+      expect(node.querySelector('.rjsf-field-number')).toBeInTheDocument();
+    });
+
+    it('leaves the types to the options of an unrecognized type whose oneOf names its own', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: 'someUnsupportedType', oneOf: [{ type: 'string' }, { type: 'number' }] } },
+        } as unknown as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__oneof_select')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
+    });
+
+    it('offers no type selector for an anyOf that names no type of its own', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+        } as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // An `anyOf` standing in for a type is ordinary usage, so the opt-in must not wrap every one of them in a
+      // selector of all seven JSON Schema types that the options are already there to choose between
+      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
+    });
+
+    it('renders the fallback UI for an unrecognized type whose options a ui:field replaces', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: 'someUnsupportedType', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+        } as unknown as RJSFSchema,
+        uiSchema: { val: { 'ui:field': 'NotARegisteredField', 'ui:fieldReplacesAnyOrOneOf': true } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The directive leaves no option selector to supply the types, so nothing but the fallback UI can render the
+      // schema. A name no field is registered under used to leave the field empty, options and all
+      expect(node.querySelector('#root_val___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_val__anyof_select')).not.toBeInTheDocument();
+    });
+
+    it('offers a type selector within an option of an unrecognized type that names none of its own', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            val: { type: 'someUnsupportedType', anyOf: [{ title: 'A' }, { title: 'B' }] },
+          },
+        } as unknown as RJSFSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The options supply no type, so each one is left with the unrecognized one the parent propagates and gets the
+      // selector for it, rather than the parent getting one that every option would then be rendered within
+      expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(typeSelect).toBeInTheDocument();
+      expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual([...JSON_SCHEMA_TYPES]);
+    });
   });
 
   describe('on component creation', () => {

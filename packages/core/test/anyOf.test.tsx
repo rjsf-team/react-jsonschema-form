@@ -1793,6 +1793,17 @@ describe('anyOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
+    it('should render the field for the schema type when no field is registered under the name', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } as RJSFSchema,
+        uiSchema: { 'ui:field': 'NotARegisteredField', 'ui:fieldReplacesAnyOrOneOf': true },
+      });
+
+      // The options still give way, since that is what the directive asks for, but a name nothing is registered under
+      // leaves the field for the schema's own type rather than nothing at all
+      expect(node.querySelectorAll('select')).toHaveLength(0);
+      expect(node.querySelector('#root')).toBeInTheDocument();
+    });
   });
 
   describe('Boolean field value preservation', () => {
