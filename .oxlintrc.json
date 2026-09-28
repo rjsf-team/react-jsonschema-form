@@ -473,7 +473,7 @@
     "react/prefer-es6-class": ["error", "always"],
     "react/prefer-function-component": "off",
     "react/preserve-manual-memoization": "error",
-    "react/purity": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/purity": "error",
     "react/react-in-jsx-scope": "off",
     "react/refs": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/require-render-return": "error",

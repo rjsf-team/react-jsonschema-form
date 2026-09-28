@@ -10,6 +10,8 @@ import 'react-day-picker/dist/style.css';
  */
 export const CALENDAR_MIN_WIDTH = 320;
 
+const END_MONTH = new Date(new Date().getFullYear() + 10, 11);
+
 /** DayPicker's own elements, painted with DaisyUI classes. Shared so the two pickers cannot drift into two calendars
  * that look alike but not the same
  */
@@ -76,7 +78,7 @@ function DatePickerCalendar({ selectedDate, month, onMonthChange, onSelect }: Da
       onSelect={onSelect}
       captionLayout='dropdown'
       startMonth={new Date(1900, 0)}
-      endMonth={new Date(new Date().getFullYear() + 10, 11)}
+      endMonth={END_MONTH}
       showOutsideDays
       classNames={calendarClassNames}
       modifiers={modifiers}

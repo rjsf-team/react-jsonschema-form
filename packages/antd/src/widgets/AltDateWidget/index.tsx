@@ -10,11 +10,10 @@ export default function AltDateWidget<
   const { id, name, onBlur, onFocus, registry } = props;
   const { formContext, translateString } = registry;
   const { rowGutter = 24 } = formContext as GenericObjectType;
-  const realOptions = { yearsRange: [1900, new Date().getFullYear() + 2], ...options };
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
     ...props,
     autofocus,
-    options: realOptions,
+    options,
   });
 
   return (
