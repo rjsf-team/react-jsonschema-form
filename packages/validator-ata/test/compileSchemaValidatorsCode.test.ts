@@ -117,6 +117,6 @@ describe('compileSchemaValidatorsCode', () => {
     };
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(apSchema)), apSchema);
     const { errors } = validator.validateFormData({ a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
-    expect(errors.map((e) => e.property).sort()).toEqual(['.also', '.bad']);
+    expect(errors.map((e) => e.property ?? '').sort()).toEqual(['.also', '.bad']);
   });
 });

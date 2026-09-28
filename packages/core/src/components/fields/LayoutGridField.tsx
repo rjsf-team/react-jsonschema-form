@@ -202,6 +202,18 @@ export function computeFieldUiSchema<
   return { fieldUiSchema, uiReadonly };
 }
 
+/** Orders two values the way `Array.prototype.sort()` does without a compare function: by their string forms, in
+ * UTF-16 code unit order.
+ */
+function compareAsStrings(a: unknown, b: unknown): number {
+  const left = String(a);
+  const right = String(b);
+  if (left === right) {
+    return 0;
+  }
+  return left < right ? -1 : 1;
+}
+
 /** Given an `operator`, `datum` and `value` determines whether this condition is considered matching. Matching
  * depends on the `operator`. The `datum` and `value` are converted into arrays if they aren't already and then the
  * contents of the two arrays are compared using the `operator`. When `operator` is All, then the two arrays must be
@@ -221,8 +233,8 @@ export function conditionMatches(
   datum?: unknown,
   value: unknown = '$0m3tH1nG Un3xP3cT3d',
 ): boolean {
-  const data = [datum].flat().sort();
-  const values = [value].flat().sort();
+  const data = [datum].flat().sort(compareAsStrings);
+  const values = [value].flat().sort(compareAsStrings);
   switch (operator) {
     case Operators.ALL:
       return deepEquals(data, values);

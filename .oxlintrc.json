@@ -602,7 +602,7 @@
     "typescript/prefer-ts-expect-error": "off",
     "typescript/promise-function-async": "error",
     "typescript/related-getter-setter-pairs": "error",
-    "typescript/require-array-sort-compare": "off",
+    "typescript/require-array-sort-compare": "error",
     "typescript/restrict-plus-operands": "error",
     "typescript/restrict-template-expressions": "error",
     "typescript/return-await": ["error", "in-try-catch"],

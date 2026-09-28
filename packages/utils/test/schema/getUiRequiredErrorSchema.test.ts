@@ -317,7 +317,7 @@ describe('getUiRequiredErrorSchema()', () => {
     };
     const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}, {}]);
     const errors = toErrorList(errorSchema)
-      .map((e) => e.property)
+      .map((e) => e.property ?? '')
       .sort();
     expect(errors).toEqual(['.0.first', '.1.second']);
   });
