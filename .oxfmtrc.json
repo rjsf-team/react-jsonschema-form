@@ -4,6 +4,14 @@
   "jsxSingleQuote": true,
   "printWidth": 120,
   "sortPackageJson": false,
+  "ignorePatterns": ["packages/docs/versioned_docs/**"],
+  "overrides": [
+    {
+      // A docs snippet is often a fragment, not a full program, and formatting it as one changes what it shows
+      "files": ["**/*.md", "**/*.mdx"],
+      "options": { "embeddedLanguageFormatting": "off" }
+    }
+  ],
   "sortImports": {
     "newlinesBetween": false,
     "customGroups": [

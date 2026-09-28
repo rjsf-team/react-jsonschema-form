@@ -21,8 +21,6 @@
   },
   "scripts": {
     "build": "tsdown -c ../../tsdown.base.mts",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
     "test": "vitest run",
     "test:update": "vitest run --update"
   },

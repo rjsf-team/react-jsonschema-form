@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `pnpm run build-serial` builds sequentially; use it if the parallel `pnpm run build` causes issues.
-- `pnpm run cs-check` / `pnpm run cs-format` check and apply oxfmt. CI does not run `cs-check` — only the pre-commit hook formats staged files — so run `cs-format` yourself when committing without the hook (fresh worktree, `--no-verify`).
+- `pnpm run cs-check` / `pnpm run cs-format` run oxfmt once from the root over every file type it supports (versioned docs excluded). CI does not run `cs-check` — only the pre-commit hook formats staged files — so run `cs-format` yourself when committing without the hook (fresh worktree, `--no-verify`).
 - `pnpm run test:update` fans out to the 9 packages that own snapshots; `cd packages/<pkg> && pnpm run test:update` updates one.
 
 CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.

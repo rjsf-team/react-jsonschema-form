@@ -5,8 +5,6 @@
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
     "build": "tsdown -c ../../tsdown.base.mts",
-    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx,js,jsx}\"",
-    "cs-format": "oxfmt \"src/**/*.{ts,tsx,js,jsx}\"",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "echo 'OK'",
     "test-coverage": "echo 'OK'"

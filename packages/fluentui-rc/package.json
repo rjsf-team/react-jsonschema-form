@@ -4,8 +4,6 @@
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
     "build": "tsdown -c ../../tsdown.base.mts",
-    "cs-check": "oxfmt --check \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
-    "cs-format": "oxfmt \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
     "test:update": "vitest run --update",

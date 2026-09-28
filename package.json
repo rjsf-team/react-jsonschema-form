@@ -12,8 +12,8 @@
     "lint": "oxlint",
     "typecheck": "tsc --build --builders 4 --checkers 1",
     "knip": "knip",
-    "cs-check": "nx run-many --target=cs-check",
-    "cs-format": "nx run-many --target=cs-format",
+    "cs-check": "oxfmt --check",
+    "cs-format": "oxfmt",
     "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && pnpm run build",
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
@@ -28,7 +28,7 @@
   "lint-staged": {
     "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'",
     "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}": "oxlint --fix --no-error-on-unmatched-pattern",
-    "packages/*/{src,test}/**/*.{ts,tsx}": "oxfmt"
+    "*": "oxfmt --no-error-on-unmatched-pattern"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",

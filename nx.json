@@ -14,14 +14,6 @@
       "//inputs": "the shared tsdown config lives outside project roots; without it a warm cache serves stale output when it changes",
       "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts"]
     },
-    "cs-check": {
-      "cache": true,
-      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json"]
-    },
-    "cs-format": {
-      "cache": true,
-      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json"]
-    },
     "test": {
       "cache": true,
       "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
