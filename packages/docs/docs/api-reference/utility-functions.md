@@ -1999,6 +1999,18 @@ If `time` is false, then the time portion of the string is removed.
 
 - string: The UTC date string
 
+### toDisplayString()
+
+Converts `value` to a string the way `String()` does for primitives, functions and errors, but spells other objects and arrays out as JSON, since `String()` would turn every object into the same `[object Object]`.
+
+#### Parameters
+
+- value: unknown - The value to convert
+
+#### Returns
+
+- string: The string form of `value`
+
 ### toErrorList&lt;T = unknown>()
 
 Converts an `errorSchema` into a list of `RJSFValidationErrors`
