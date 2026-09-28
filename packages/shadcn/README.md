@@ -26,10 +26,10 @@
 
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
-    - [Built With](#built-with)
+  - [Built With](#built-with)
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -132,23 +132,23 @@ npm install @radix-ui/react-direction --save
 
 1. Wrap your layout with DirectionProvider:
 
-    ```tsx
-    import {DirectionProvider as RadixDirectionProvider} from '@radix-ui/react-direction;
-    
-    function Layout({children, direction}) {
-        return (
-            <RadixDirectionProvider dir={direction}>
-                {children}
-            </RadixDirectionProvider>
-        );
-    }
-    ```
+   ```tsx
+   import {DirectionProvider as RadixDirectionProvider} from '@radix-ui/react-direction;
+
+   function Layout({children, direction}) {
+       return (
+           <RadixDirectionProvider dir={direction}>
+               {children}
+           </RadixDirectionProvider>
+       );
+   }
+   ```
 
 2. Set HTML direction attribute:
 
-    ```html
-    <html dir="rtl" lang="en">
-    ```
+   ```html
+   <html dir="rtl" lang="en">
+   ```
 
 3. You can refer to `direction-context.tsx`, `direction-provider.tsx` and `rtl-toggle.tsx` from demo repository for
    implementation.
@@ -180,23 +180,13 @@ repository: [https://github.com/rjsf-team/react-jsonschema-form](https://github.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
-
 [build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
-
 [contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg
-
 [contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
-
 [license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
-
 [license-url]: https://choosealicense.com/licenses/apache-2.0/
-
 [npm-shield]: https://img.shields.io/npm/v/@rjsf/shadcn/latest.svg?style=flat-square
-
 [npm-url]: https://www.npmjs.com/package/@rjsf/shadcn
-
 [npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/shadcn.svg?style=flat-square
-
 [npm-dl-url]: https://www.npmjs.com/package/@rjsf/shadcn
-
 [product-screenshot]: https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/59a8206e148474bea854bbb004f624143fbcbac8/packages/shadcn/screenshot.png

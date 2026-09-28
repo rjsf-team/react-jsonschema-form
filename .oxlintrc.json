@@ -13,11 +13,7 @@
     "commonjs": true,
     "es2026": true
   },
-  "ignorePatterns": [
-    "**/*.d.ts",
-    "**/docs/**",
-    "**/harness/*.cjs"
-  ],
+  "ignorePatterns": ["**/*.d.ts", "**/docs/**", "**/harness/*.cjs"],
   // These are all the `airbnb-typescript` rules, converted to their respective OxLint equivalents
   "rules": {
     "array-callback-return": ["error", { "allowImplicit": true }],

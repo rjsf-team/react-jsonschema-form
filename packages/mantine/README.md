@@ -39,7 +39,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Optional Mantine Theme properties](#optional-mantine-theme-properties)
-    - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
+  - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)

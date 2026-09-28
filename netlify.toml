@@ -1,10 +1,10 @@
 [build]
-  base = ""
-  publish = "packages/playground/dist"
-  command = "corepack enable && pnpm run build-serial"
-  # Ignore dependabot PRs for deploy previews
-  ignore = "./netlify-ignore.sh"
+base = ""
+publish = "packages/playground/dist"
+command = "corepack enable && pnpm run build-serial"
+# Ignore dependabot PRs for deploy previews
+ignore = "./netlify-ignore.sh"
 
 [build.environment]
-  VITE_SHOW_NETLIFY_BADGE = "true"
-  NODE_VERSION = "18"
+VITE_SHOW_NETLIFY_BADGE = "true"
+NODE_VERSION = "18"
