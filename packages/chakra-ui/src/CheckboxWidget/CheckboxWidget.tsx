@@ -37,10 +37,11 @@ export default function CheckboxWidget<
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
+  // Duck-typed rather than `instanceof HTMLInputElement`, which is false for inputs rendered inside an iframe.
   const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
-    onBlur(id, target instanceof HTMLInputElement ? target.checked : undefined);
+    onBlur(id, 'checked' in target ? target.checked : undefined);
   const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
-    onFocus(id, target instanceof HTMLInputElement ? target.checked : undefined);
+    onFocus(id, 'checked' in target ? target.checked : undefined);
 
   const chakraProps = getChakra({ uiSchema });
 
