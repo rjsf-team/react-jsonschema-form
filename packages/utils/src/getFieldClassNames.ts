@@ -16,7 +16,7 @@ export default function getFieldClassNames<S extends StrictRJSFSchema = RJSFSche
   hasErrors: boolean,
   uiClassNames?: string,
 ): string {
-  const classNames = ['rjsf-field', `rjsf-field-${getSchemaType<S>(schema)}`];
+  const classNames = ['rjsf-field', `rjsf-field-${String(getSchemaType<S>(schema))}`];
   if (hasErrors) {
     classNames.push('rjsf-field-error');
   }

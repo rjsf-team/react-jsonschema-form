@@ -669,7 +669,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    className: `rjsf-field rjsf-field-array rjsf-field-array-of-${itemsSchema.type}${extraClass}`,
+    className: `rjsf-field rjsf-field-array rjsf-field-array-of-${String(itemsSchema.type)}${extraClass}`,
     disabled,
     id,
     uiSchema,

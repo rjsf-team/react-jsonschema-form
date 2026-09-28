@@ -940,7 +940,7 @@ export default function getDefaultFormState<
   }: GetDefaultFormStateProps<T, S, F>,
 ) {
   if (!isObject(theSchema)) {
-    throw new Error(`Invalid schema: ${theSchema}`);
+    throw new Error(`Invalid schema: ${String(theSchema)}`);
   }
   // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
   const emptyFormData = isEmptyFormData(formData);
