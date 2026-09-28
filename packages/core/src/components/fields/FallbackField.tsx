@@ -198,7 +198,6 @@ function getValueUiSchema<
 ): UiSchema<T, S, F> {
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
-  // oxlint-disable-next-line typescript/no-unnecessary-type-assertion -- without it the spread widens past `UiSchema`
   const valueUiSchema = { ...(uiSchema ?? ({} as UiSchema<T, S, F>)) };
   delete valueUiSchema[HELP_UI_KEY];
   delete valueUiSchema[UI_FIELD_KEY];

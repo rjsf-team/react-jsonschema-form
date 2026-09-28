@@ -1,4 +1,4 @@
-import type { FormContextType, RJSFSchema, StrictUiSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
+import type { StrictUiSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -187,7 +187,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
   });
 
   it('narrows widgets per field type on a recursive, nested form-data shape', () => {
-    type Checked = StrictUiSchema<ReferencesFormData, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<ExampleChecks, ReferencesFormData>;
 
     const ui: Checked = {
       tree: {
@@ -216,8 +216,28 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect([badWidget, badRawOption]).toHaveLength(2);
   });
 
+  it("types a `ui:definitions` entry by the referenced field's data, not the root form's", () => {
+    const ui = {
+      'ui:definitions': {
+        '#/$defs/str': { 'ui:widget': 'ExampleTextWidget' },
+        '#/$defs/addr': { city: { 'ui:placeholder': 'City' } },
+      },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+
+    expect(ui['ui:definitions']['#/$defs/str']['ui:widget']).toBe('ExampleTextWidget');
+  });
+
+  it('passes an object literal checked with `satisfies` on to the open UiSchema that Form takes', () => {
+    const strict = {
+      tree: { name: { 'ui:widget': 'ExampleTextWidget' } },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+    const open: UiSchema<ReferencesFormData> = strict;
+
+    expect(open.tree?.name?.['ui:widget']).toBe('ExampleTextWidget');
+  });
+
   it('allows every name Checks declares, and nothing else, when the form data has no type', () => {
-    type Untyped = StrictUiSchema<unknown, RJSFSchema, FormContextType, ExampleChecks>;
+    type Untyped = StrictUiSchema<ExampleChecks>;
 
     const ui: Untyped = { 'ui:widget': 'ExampleRangeWidget', 'ui:placeholder': 'any string check applies' };
     // @ts-expect-error a name no Checks member declares is still rejected
@@ -228,7 +248,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
   });
 
   it('allows the names of every Checks member matching part of a union field type', () => {
-    type Checked = StrictUiSchema<{ amount: string | number }, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<ExampleChecks, { amount: string | number }>;
 
     const asText: Checked = { amount: { 'ui:widget': 'ExampleTextWidget' } };
     const asRange: Checked = { amount: { 'ui:widget': 'ExampleRangeWidget' } };
@@ -239,7 +259,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
   });
 
   it('supports both the `ui:optionName` and `ui:options: { optionName }` forms in a StrictUiSchema', () => {
-    type Checked = StrictUiSchema<{ bio: string }, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<ExampleChecks, { bio: string }>;
 
     const viaPrefix: Checked = { bio: { 'ui:placeholder': 'Tell us about yourself' } };
     const viaOptions: Checked = { bio: { 'ui:options': { placeholder: 'Tell us about yourself' } } };
@@ -255,7 +275,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
       lastName: string;
       [dynamicKey: string]: string;
     }
-    type Checked = StrictUiSchema<PatternPropsFormData, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<ExampleChecks, PatternPropsFormData>;
 
     const ui: Checked = {
       firstName: { 'ui:autofocus': true },
@@ -274,7 +294,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     type MyThemeChecks =
       | UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>
       | UiOptionsCheck<number, { widget?: 'SliderWidget' }>;
-    type Checked = StrictUiSchema<{ active: boolean }, RJSFSchema, FormContextType, MyThemeChecks>;
+    type Checked = StrictUiSchema<MyThemeChecks, { active: boolean }>;
 
     const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
 

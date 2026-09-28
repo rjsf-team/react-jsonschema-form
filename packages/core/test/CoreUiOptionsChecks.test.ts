@@ -17,7 +17,7 @@ interface ReferencesFormData {
 
 describe('CoreUiOptionsChecks', () => {
   it("narrows ui:widget/ui:field/ui:options to @rjsf/core's real widget and field names", () => {
-    type Checked = StrictUiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData, any, any>;
 
     const ui: Checked = {
       'ui:order': ['billing_address', 'contact', 'tree'],
@@ -49,7 +49,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('closes the ui: namespace to just the options CoreUiOptionsChecks declares', () => {
-    type Checked = StrictUiSchema<{ bio: string }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }, any, any>;
 
     const bad: Checked = {
       bio: {
@@ -62,7 +62,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('keeps type-agnostic options (template overrides, global options) available under Checks', () => {
-    type Checked = StrictUiSchema<{ bio: string }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }, any, any>;
 
     const ui: Checked = {
       'ui:label': false,
@@ -75,7 +75,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('accepts the lowercase widget aliases getWidget resolves, alongside the PascalCase component names', () => {
-    type Checked = StrictUiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData, any, any>;
 
     const ui: Checked = {
       contact: {
@@ -88,7 +88,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('allows hiding an array or object field, but only via the alias ObjectField/SchemaField actually check', () => {
-    type Checked = StrictUiSchema<ReferencesFormData, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData, any, any>;
 
     const hiddenArray: Checked = { tree: { children: { 'ui:widget': 'HiddenWidget' } } };
     const hiddenObject: Checked = { tree: { 'ui:widget': 'hidden' } };
@@ -130,7 +130,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('makes emptyValue/placeholder/inline/filePreview available on every type that actually reads them', () => {
-    type Checked = StrictUiSchema<{ age: number; agree: boolean; tags: string[] }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { age: number; agree: boolean; tags: string[] }, any, any>;
 
     const ui: Checked = {
       age: { 'ui:emptyValue': 0, 'ui:placeholder': 'Age', 'ui:options': { inline: true } },
@@ -144,10 +144,10 @@ describe('CoreUiOptionsChecks', () => {
 
   it('offers the enum options, optgroups included, on every type whose widgets read them', () => {
     type Checked = StrictUiSchema<
+      CoreUiOptionsChecks,
       { pet: string; rank: number; agree: boolean; tags: string[]; home: { city: string } },
       any,
-      any,
-      CoreUiOptionsChecks
+      any
     >;
 
     const ui: Checked = {
@@ -170,7 +170,7 @@ describe('CoreUiOptionsChecks', () => {
       length: number;
       title: string;
     }
-    type Checked = StrictUiSchema<{ tags: readonly string[]; track: Track }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { tags: readonly string[]; track: Track }, any, any>;
 
     const ui: Checked = {
       tags: { 'ui:options': { orderable: false } },
@@ -187,7 +187,7 @@ describe('CoreUiOptionsChecks', () => {
 
   it('does not widen the vocabulary for a Checks member that declares no widget/field key', () => {
     type NoWidgetCheck = UiOptionsCheck<string, { placeholder: string }>;
-    type Checked = StrictUiSchema<{ bio: string }, any, any, CoreUiOptionsChecks | NoWidgetCheck>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks | NoWidgetCheck, { bio: string }, any, any>;
 
     const bad: Checked = {
       bio: {

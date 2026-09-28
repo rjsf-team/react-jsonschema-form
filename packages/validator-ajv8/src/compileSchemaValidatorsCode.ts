@@ -46,5 +46,9 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     extenderFn,
   );
 
-  return standaloneCode.default(ajv);
+  // ajv's CommonJS entry is the function with a `default` property pointing back at it. Node's ESM interop types the
+  // default import as the module object and a bundler types it as the function, so call `default` through a type that
+  // holds under both.
+  // oxlint-disable-next-line typescript/no-unnecessary-type-assertion -- unnecessary under nodenext only; see above
+  return (standaloneCode as unknown as { default: (instance: typeof ajv) => string }).default(ajv);
 }

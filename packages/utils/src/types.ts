@@ -1614,8 +1614,8 @@ type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? any : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
-type StrictUiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType, Checks> =
-  IsAny<V> extends true ? any : StrictUiSchema<V, S, F, Checks>;
+type StrictUiSchemaChild<Checks, V, S extends StrictRJSFSchema, F extends FormContextType> =
+  IsAny<V> extends true ? any : StrictUiSchema<Checks, V, S, F>;
 
 /** @internal The keys `UiSchema` and `StrictUiSchema` share that don't nest another uiSchema */
 interface UiSchemaSharedKeys {
@@ -1637,6 +1637,36 @@ interface UiSchemaSharedKeys {
   classNames?: string;
 }
 
+/** @internal The keys through which a uiSchema holds further uiSchemas, shared by `UiSchema` and `StrictUiSchema`.
+ * `Node`, `ItemNode` and `AdditionalNode` are the uiSchema types for the same data, for one array element, and for one
+ * `additionalProperties` value; `Definition` is the uiSchema type of a `$ref` definition.
+ */
+interface UiSchemaNestingKeys<Node, ItemNode, AdditionalNode, Definition, ItemData, F extends FormContextType> {
+  /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
+   * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
+   * based on the item's data and index.
+   * When using a function, it receives the item data, index, and optionally the form context as parameters.
+   */
+  items?: ItemNode | ItemNode[] | Bivariant<[itemData: ItemData, index: number, formContext?: F], ItemNode>;
+  /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
+   * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
+   */
+  additionalProperties?: AdditionalNode;
+  /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
+  additionalItems?: ItemNode;
+  /** The uiSchema for each subschema of an `anyOf`, positionally */
+  anyOf?: Node[];
+  /** The uiSchema for each subschema of a `oneOf`, positionally */
+  oneOf?: Node[];
+  /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
+   * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
+   * applied and merged with any local uiSchema overrides at that path.
+   * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address'). A definition applies to whichever
+   * field references it, so its form-data type is unknown rather than the root form's.
+   */
+  'ui:definitions'?: Record<string, Definition>;
+}
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
  * the opt-in form that narrows them to a `Checks` vocabulary.
@@ -1647,66 +1677,45 @@ export type UiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & UiSchemaSharedKeys & {
-    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
-     * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
-     * based on the item's data and index.
-     * When using a function, it receives the item data, index, and optionally the form context as parameters.
-     */
-    items?:
-      | UiSchema<ArrayElement<T>, S, F>
-      | UiSchema<ArrayElement<T>, S, F>[]
-      | Bivariant<[itemData: ArrayElement<T>, index: number, formContext?: F], UiSchema<ArrayElement<T>, S, F>>;
-    /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
-     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
-     */
-    additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F>;
-    /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
-    additionalItems?: UiSchema<ArrayElement<T>, S, F>;
-    /** The uiSchema for each subschema of an `anyOf`, positionally */
-    anyOf?: UiSchema<T, S, F>[];
-    /** The uiSchema for each subschema of a `oneOf`, positionally */
-    oneOf?: UiSchema<T, S, F>[];
-    /** An object containing uiSchema definitions keyed by JSON Schema `$ref` paths.
-     * When a schema with a `$ref` is resolved, the corresponding uiSchema definition is automatically
-     * applied and merged with any local uiSchema overrides at that path.
-     * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address').
-     */
-    'ui:definitions'?: UiSchemaDefinitions<T, S, F>;
-  };
+} & MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & UiSchemaSharedKeys &
+  UiSchemaNestingKeys<
+    UiSchema<T, S, F>,
+    UiSchema<ArrayElement<T>, S, F>,
+    UiSchema<AdditionalPropertyData<T>, S, F>,
+    UiSchema<unknown, S, F>,
+    ArrayElement<T>,
+    F
+  >;
 
 /** The opt-in, stricter form of `UiSchema`: `ui:widget`/`ui:field` are narrowed to only the names a `Checks` union (of
  * `UiOptionsCheck`) declares valid for each field's form-data type, and the `ui:` namespace is closed to just the
  * options it declares - see `UiOptionsCheck`. `@rjsf/utils` has no widgets of its own, so it doesn't export a `Checks`
- * union to pass; use a theme's, e.g. `@rjsf/core`'s `CoreUiOptionsChecks`. A well-formed `StrictUiSchema` is still
- * assignable to the `UiSchema` that `Form` takes.
+ * union to pass; use a theme's, e.g. `@rjsf/core`'s `CoreUiOptionsChecks`. `Checks` comes first because it is the one
+ * argument that has no sensible default.
  *
- * A separate type rather than a `Checks` parameter on `UiSchema`: a conditional on that parameter inside every
- * `UiSchema` kept TypeScript from measuring `UiSchema`'s variance cheaply, which slowed down typechecking every
- * package, including ones that never pass `Checks`.
+ * Its declared type is not assignable to the `UiSchema` that `Form` takes, since its closed `ui:options` has no index
+ * signature; check an object literal against it with `satisfies` instead, which leaves the literal's own type in place.
+ *
+ * It is a separate type rather than a `Checks` parameter on `UiSchema` because a conditional on such a parameter inside
+ * `UiSchema` keeps TypeScript from measuring `UiSchema`'s variance cheaply, for every `UiSchema` in every package.
  */
 export type StrictUiSchema<
+  Checks,
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  Checks = never,
 > = {
-  [K in keyof UiSchemaChildData<T>]?: StrictUiSchemaChild<UiSchemaChildData<T>[K], S, F, Checks>;
+  [K in keyof UiSchemaChildData<T>]?: StrictUiSchemaChild<Checks, UiSchemaChildData<T>[K], S, F>;
 } & StrictUiVocabulary<T, S, F, Checks> &
-  UiSchemaSharedKeys & {
-    items?:
-      | StrictUiSchema<ArrayElement<T>, S, F, Checks>
-      | StrictUiSchema<ArrayElement<T>, S, F, Checks>[]
-      | Bivariant<
-          [itemData: ArrayElement<T>, index: number, formContext?: F],
-          StrictUiSchema<ArrayElement<T>, S, F, Checks>
-        >;
-    additionalProperties?: StrictUiSchema<AdditionalPropertyData<T>, S, F, Checks>;
-    additionalItems?: StrictUiSchema<ArrayElement<T>, S, F, Checks>;
-    anyOf?: StrictUiSchema<T, S, F, Checks>[];
-    oneOf?: StrictUiSchema<T, S, F, Checks>[];
-    'ui:definitions'?: Record<string, StrictUiSchema<T, S, F, Checks>>;
-  };
+  UiSchemaSharedKeys &
+  UiSchemaNestingKeys<
+    StrictUiSchema<Checks, T, S, F>,
+    StrictUiSchema<Checks, ArrayElement<T>, S, F>,
+    StrictUiSchema<Checks, AdditionalPropertyData<T>, S, F>,
+    StrictUiSchema<Checks, unknown, S, F>,
+    ArrayElement<T>,
+    F
+  >;
 
 /** A `CustomValidator` function takes in a `formData`, `errors`, `uiSchema` and `errorSchema` objects and returns the given `errors`
  * object back, while potentially adding additional messages to the `errors`
