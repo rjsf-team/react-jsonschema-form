@@ -9,6 +9,39 @@ import { createFormComponent, getSelectedOptionValue, submitForm } from './testU
 const user = userEvent.setup();
 
 describe('anyOf', () => {
+  it("should restore an option's object default when switching away from it and back (#4476)", async () => {
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        runner: {
+          type: 'object',
+          default: { name },
+          properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+        },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { anyOf: [optionFor('a'), optionFor('b')] },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__anyof_select');
+
+    await user.selectOptions($select!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b', ratio: 0 } } }),
+      'root__anyof_select',
+    );
+
+    await user.selectOptions($select!, '0');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'a', runner: { name: 'a', ratio: 0 } } }),
+      'root__anyof_select',
+    );
+  });
+
   it('should not render a select element if the anyOf keyword is not present', () => {
     const schema: RJSFSchema = {
       type: 'object',
