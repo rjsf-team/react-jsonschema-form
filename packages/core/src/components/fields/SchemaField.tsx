@@ -553,7 +553,7 @@ function SchemaFieldRender<
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
   }
 
-  const { __errors, ...fieldErrorSchema } = errorSchema || {};
+  const { __errors, ...fieldErrorSchema } = errorSchema ?? {};
 
   const fieldComponent = (
     <FieldComponent

@@ -50,11 +50,10 @@ export default function BaseInputTemplate<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const handleNumberChange = (nextValue: number | null) =>
-    onChange(nextValue === null ? options.emptyValue : nextValue);
+  const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
 
   const handleTextChange =
-    onChangeOverride ||
+    onChangeOverride ??
     (({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);

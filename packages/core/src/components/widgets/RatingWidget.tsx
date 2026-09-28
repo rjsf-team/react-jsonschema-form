@@ -35,7 +35,7 @@ export default function RatingWidget<
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
-  const min = schema.minimum || 0;
+  const min = schema.minimum ?? 0;
 
   /** Handles clicking on a star to set the rating */
   const handleStarClick = useCallback(

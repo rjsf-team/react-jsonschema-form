@@ -100,9 +100,7 @@ export default class AJV8Validator<
       if (schema[ID_KEY]) {
         compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
       }
-      if (compiledValidator === undefined) {
-        compiledValidator = this.ajv.compile(schema);
-      }
+      compiledValidator ??= this.ajv.compile(schema);
       compiledValidator(formData);
     } catch (err) {
       compilationError = err as Error;
@@ -115,7 +113,7 @@ export default class AJV8Validator<
       // Guard with compiledValidator === undefined so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
       if (compiledValidator === undefined) {
-        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : schema);
+        this.ajv.removeSchema(schema[ID_KEY] ?? schema);
       }
     }
 
@@ -161,7 +159,7 @@ export default class AJV8Validator<
           }
         });
       }
-      errors = compiledValidator.errors || undefined;
+      errors = compiledValidator.errors ?? undefined;
 
       // Clear errors to prevent persistent errors, see #1104
       compiledValidator.errors = null;
@@ -252,16 +250,13 @@ export default class AJV8Validator<
       // that lives in the rootSchema but not in the schema in question.
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
       schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
-      let compiledValidator: ValidateFunction | undefined;
-      compiledValidator = this.ajv.getSchema(schemaId);
-      if (compiledValidator === undefined) {
-        // Add schema by an explicit ID so it can be fetched later
-        // Fall back to using compile if necessary
-        // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
-        compiledValidator =
-          this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ||
-          this.ajv.compile(schemaWithIdRefPrefix);
-      }
+      // Add schema by an explicit ID so it can be fetched later
+      // Fall back to using compile if necessary
+      // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
+      const compiledValidator =
+        this.ajv.getSchema(schemaId) ??
+        this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
+        this.ajv.compile(schemaWithIdRefPrefix);
       compiled = true;
       const result = compiledValidator(formData);
       return result;

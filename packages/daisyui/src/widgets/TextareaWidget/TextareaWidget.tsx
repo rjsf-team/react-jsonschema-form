@@ -57,7 +57,7 @@ export default function TextareaWidget<
   );
 
   // Extract rows and other textarea-specific props from options
-  const rows = options?.rows || 5;
+  const rows = options?.rows ?? 5;
 
   return (
     <div className='form-control'>

@@ -137,7 +137,7 @@ export default class AJV8PrecompiledValidator<
     if (typeof this.localizer === 'function') {
       this.localizer(this.mainValidator.errors);
     }
-    const errors = this.mainValidator.errors || undefined;
+    const errors = this.mainValidator.errors ?? undefined;
 
     // Clear errors to prevent persistent errors, see #1104
     this.mainValidator.errors = null;

@@ -160,7 +160,7 @@ export default function BaseInputTemplate<
         {...rest}
         value={value || value === 0 ? value : ''}
         error={hasVisibleErrors({ rawErrors, hideError })}
-        onChange={onChangeOverride || handleChange}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}

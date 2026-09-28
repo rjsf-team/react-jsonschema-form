@@ -96,7 +96,7 @@ export default function BaseInputTemplate<
           list: hasExamples ? examplesId(id) : undefined,
         }}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         aria-describedby={ariaDescribedByIds(id, hasExamples)}

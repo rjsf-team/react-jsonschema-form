@@ -220,10 +220,10 @@ export default function DemoFrame(props: DemoFrameProps) {
       <FrameContextConsumer>
         {({ document: frameDoc }) => {
           const jssContainer =
-            frameDoc?.getElementById(DEMO_FRAME_JSS) || instanceRef.current.contentWindow[DEMO_FRAME_JSS];
+            frameDoc?.getElementById(DEMO_FRAME_JSS) ?? instanceRef.current.contentWindow[DEMO_FRAME_JSS];
           return (
             <>
-              <AntdPopupPatcher frameDoc={frameDoc || instanceRef.current.contentDocument} />
+              <AntdPopupPatcher frameDoc={frameDoc ?? instanceRef.current.contentDocument} />
               <AntdStyleProvider container={jssContainer}>
                 <ConfigProvider getPopupContainer={() => jssContainer.parentElement}>{children}</ConfigProvider>
               </AntdStyleProvider>

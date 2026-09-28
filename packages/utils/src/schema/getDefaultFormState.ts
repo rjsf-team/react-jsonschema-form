@@ -204,7 +204,7 @@ function maybeAddDefaultToObject<T = unknown>(
   } else if (emptyObjectFields !== 'skipDefaults') {
     // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
     // the field key itself in the `requiredField` list
-    const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
+    const isSelfOrParentRequired = isParentRequired ?? requiredFields.includes(key);
 
     if (isObject(computedDefault)) {
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
@@ -295,7 +295,7 @@ export function computeDefaults<
   let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
-  let defaults: T | T[] | undefined = parentDefaults;
+  let defaults: T | T[] | null | undefined = parentDefaults;
   const preferParentDefaults = defaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
@@ -486,7 +486,7 @@ export function computeDefaults<
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
   if (shouldMergeDefaultsIntoFormData) {
-    const { arrayMinItems = {} } = defaultFormStateBehavior || {};
+    const { arrayMinItems = {} } = defaultFormStateBehavior ?? {};
     const { mergeExtraDefaults } = arrayMinItems;
 
     const matchingFormData = ensureFormDataMatchingSchema(context, schema, rootSchema, rawFormData);
@@ -595,7 +595,7 @@ export function getObjectDefaults<
       ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData)
       : schema;
     const parentConst = retrievedSchema[CONST_KEY];
-    const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
+    const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
         const propertySchema = getPropertySchema<S>(retrievedSchema, key);
         // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
@@ -820,7 +820,7 @@ export function getArrayDefaults<
   if (ignoreMinItemsFlagSet && !required) {
     // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
     // return form data/defaults
-    return defaults || undefined;
+    return defaults;
   }
 
   let arrayDefault: T[] | undefined;
@@ -833,7 +833,7 @@ export function getArrayDefaults<
     // we don't want undefined defaults unless it is both not required or not required as root
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
-    const defaultEntries: T[] = defaults || [];
+    const defaultEntries: T[] = defaults ?? [];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
     const fillerDefault = fillerSchema.default;
 
@@ -978,7 +978,7 @@ export default function getDefaultFormState<
   // If the formData is an object or an array, add additional properties from formData and override formData with
   // defaults since the defaults are already merged with formData.
   if (isObject(formData) || Array.isArray(formData)) {
-    const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior || {};
+    const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
     const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(context, schema, rootSchema ?? schema, formData);
     const result = mergeDefaultsWithFormData<T | T[]>(

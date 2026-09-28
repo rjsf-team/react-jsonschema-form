@@ -53,7 +53,7 @@ export default function TextareaWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      rows={options.rows || 4}
+      rows={options.rows ?? 4}
       style={INPUT_STYLE}
       value={value}
       {...extraProps}

@@ -98,11 +98,8 @@ export default function getInputProps<
     // their own terms, so they go on reading `schema.type` exactly as they did before
     if (schemaType === 'integer') {
       inputProps.type = 'number';
-      // Only add step if one isn't already defined
-      if (inputProps.step === undefined) {
-        // Since this is integer, you always want to step up or down in multiples of 1
-        inputProps.step = 1;
-      }
+      // Since this is integer, you always want to step up or down in multiples of 1
+      inputProps.step ??= 1;
     } else {
       // Native number inputs reject a locale decimal separator other than '.' and can discard it
       // while typing, so fall back to a text input in locales that use one.

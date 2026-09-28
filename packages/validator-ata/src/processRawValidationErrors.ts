@@ -88,7 +88,7 @@ export function transformRJSFValidationErrors<
 
     const p = params as Record<string, any>;
     const rawPropertyNames: string[] = [
-      ...((p?.deps as string | undefined)?.split(', ') || []),
+      ...((p?.deps as string | undefined)?.split(', ') ?? []),
       p?.missingProperty,
       p?.property,
     ].filter((item) => Boolean(item));

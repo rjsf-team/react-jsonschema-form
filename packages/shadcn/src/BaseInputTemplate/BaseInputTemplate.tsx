@@ -93,7 +93,7 @@ export default function BaseInputTemplate<
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         aria-describedby={ariaDescribedByIds(id, hasExamples)}

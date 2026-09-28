@@ -15,7 +15,7 @@ export type ChakraUiSchema = UiSchema & {
 type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraField.RootProps };
 
 export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps {
-  const chakraProps = uiSchema['ui:options']?.chakra || {};
+  const chakraProps = uiSchema['ui:options']?.chakra ?? {};
 
   /**
    * Leveraging `shouldForwardProp` to remove props
