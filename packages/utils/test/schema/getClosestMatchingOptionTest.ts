@@ -107,6 +107,17 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         ),
       ).toEqual(0);
     });
+    it('scores a falsy const the way it scores a truthy one', () => {
+      const schema: RJSFSchema = { properties: { flag: { type: 'boolean', const: false } } };
+      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { flag: false })).toEqual(2);
+      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { flag: true })).toEqual(0);
+    });
+    it('scores a nested oneOf holding a falsy value the way it scores a truthy one', () => {
+      const schema: RJSFSchema = { properties: { value: { oneOf: [{ type: 'string' }, { type: 'number' }] } } };
+      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { value: 0 })).toEqual(
+        calculateIndexScore(testValidator, oneOfSchema, schema, { value: 5 }),
+      );
+    });
   });
   describe('oneOfMatchingOption', () => {
     it('oneOfSchema, oneOfData data, no options, returns -1', () => {

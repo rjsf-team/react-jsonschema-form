@@ -78,7 +78,7 @@ export function calculateIndexScore<
           return score + calculateIndexScore<T, S, F>(validator, rootSchema, newSchema, formValue, customMergeAllOf);
         }
         const xxxOfKey = getXxxOfKey<S>(value as S);
-        if (xxxOfKey && formValue) {
+        if (xxxOfKey && formValue !== undefined) {
           const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
           return (
             score +
@@ -109,7 +109,7 @@ export function calculateIndexScore<
             // If the schema contains a readonly default value score the value that matches the default higher and
             // any non-matching value lower
             newScore += formValue === value.default ? 1 : -1;
-          } else if (value.const) {
+          } else if (value.const !== undefined) {
             // If the schema contains a const value score the value that matches the default higher and
             // any non-matching value lower
             newScore += formValue === value.const ? 1 : -1;
