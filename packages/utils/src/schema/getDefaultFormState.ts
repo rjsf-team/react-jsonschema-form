@@ -378,10 +378,9 @@ export function computeDefaults<
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
-    const defaultFormData: T = {
-      ...getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults),
-      ...formData,
-    };
+    const schemaDefaults = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
+    const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
+    const defaultFormData: T = { ...objectDefaults, ...formData };
     const resolvedSchema = resolveDependencies<T, S, F>(
       validator,
       schema,
@@ -1047,9 +1046,10 @@ export default function getDefaultFormState<
     uiSchemaDefinitions,
   });
 
-  if (schema.type !== 'object' && isObject(schema.default)) {
+  const objectDefaults: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
+  if (schema.type !== 'object' && isObject(schema.default) && objectDefaults) {
     return {
-      ...defaults,
+      ...objectDefaults,
       ...formData,
     } as T;
   }

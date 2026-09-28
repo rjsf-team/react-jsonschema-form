@@ -4451,6 +4451,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual(1);
       });
+      it('should prefer a non-object const over an object default on a non-object schema', () => {
+        const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
+        expect(getDefaultFormState(testValidator, schema)).toEqual('x');
+        expect(getDefaultFormState(testValidator, schema, 'y')).toEqual('y');
+      });
+      it('should prefer an array const over an object default', () => {
+        expect(getDefaultFormState(testValidator, { const: [1, 2], default: { a: 1 } })).toEqual([1, 2]);
+      });
+      it('should compute array defaults for an array schema with dependencies', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: { type: 'string', default: 'x' },
+          minItems: 2,
+          dependencies: { a: ['b'] },
+        };
+        expect(getDefaultFormState(testValidator, schema)).toEqual(['x', 'x']);
+      });
     });
     describe('nested default', () => {
       it('should map schema object prop default to form state', () => {

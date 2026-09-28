@@ -1,5 +1,19 @@
-import type { BoxProps, FormHelperTextProps, GridProps, PaperProps, SxProps, TypographyProps } from '@mui/material';
+import type {
+  BoxProps,
+  FormHelperTextProps,
+  GridProps,
+  PaperProps,
+  SxProps,
+  Theme,
+  TypographyProps,
+} from '@mui/material';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
+
+type SystemStyleObject = Exclude<SxProps<Theme>, readonly unknown[] | ((...args: never[]) => unknown)>;
+
+function isSxArray(sx: SxProps<Theme>): sx is Extract<SxProps<Theme>, readonly unknown[]> {
+  return Array.isArray(sx);
+}
 
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
@@ -34,32 +48,36 @@ export function getMuiProps<
  * Merges default `sx` props with any `sx` provided on a MUI component's props, returning a value
  * suitable for passing directly to the MUI `sx` prop.
  *
- * When `muiProps.sx` is an array (only valid for `GridProps`), the default sx object is prepended
- * to produce an `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
+ * When `muiProps.sx` is an array or a theme callback, the default sx object is prepended to produce
+ * an `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
  * shallow-merged, with `muiProps.sx` taking precedence over the `sxProps`.
  *
- * If `muiProps` is omitted the `sxProps`` are returned as-is.
+ * If `muiProps` or its `sx` is omitted the `sxProps` are returned as-is.
  *
  * @param sxProps - The default sx styles to apply
  * @param [muiProps] - The MUI component props that may contain a user-supplied `sx`
  * @returns - The merged sx value
  */
 export function computeSxProps<MuiProps extends GridProps>(
-  sxProps: SxProps,
+  sxProps: SystemStyleObject,
   muiProps: MuiProps & { sx: any[] },
 ): MuiProps['sx'] | MuiProps['sx'][];
 export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
-  sxProps: SxProps,
+  sxProps: SystemStyleObject,
   muiProps?: MuiProps,
 ): MuiProps['sx'];
 export function computeSxProps<
   MuiProps extends BoxProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
->(sxProps: SxProps, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
-  if (!muiProps) {
+>(sxProps: SystemStyleObject, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
+  const sx: SxProps<Theme> | undefined = muiProps?.sx;
+  if (sx === undefined) {
     return sxProps;
   }
-  if (Array.isArray(muiProps?.sx)) {
-    return [sxProps, ...muiProps.sx];
+  if (isSxArray(sx)) {
+    return [sxProps, ...sx];
   }
-  return { ...sxProps, ...muiProps?.sx } as MuiProps['sx'];
+  if (typeof sx === 'function') {
+    return [sxProps, sx];
+  }
+  return { ...sxProps, ...sx };
 }

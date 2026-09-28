@@ -553,7 +553,7 @@
       "error",
       { "checksConditionals": true, "checksSpreads": true, "checksVoidReturn": false }
     ],
-    "typescript/no-misused-spread": "off", // Consider restoring ["error", {"allow": []}],
+    "typescript/no-misused-spread": "error",
     "typescript/no-mixed-enums": "error",
     "typescript/no-namespace": ["error", { "allowDeclarations": false, "allowDefinitionFiles": true }],
     "typescript/no-non-null-asserted-nullish-coalescing": "error",
