@@ -78,13 +78,13 @@ pnpm run test
 ### Snapshot testing
 
 All the themes, including `core` use snapshot testing (NOTE: `core` also has extensive non-snapshot tests).
-The source-code of these snapshot tests reside in the `core` package in the `testSnap` directory and are shared with all the themes.
+The source-code of these snapshot tests resides in the `snapshot-tests` package and is shared with all the themes. `core`'s own snapshot tests live in `packages/snapshot-tests/test`, since `snapshot-tests` depends on `core`.
 In order to support the various themes, the code for the tests are actually functions that take two parameters:
 
 - `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
 - `[customOptions]`: \{ [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
 
-There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
+There are functions in the `snapshot-tests` package: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
 
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
@@ -100,7 +100,7 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `pnpm run test` from the root directory to update all the snapshots.
+Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `snapshot-tests` package and do `pnpm run test` from the root directory to update all the snapshots.
 If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
 For example:
 

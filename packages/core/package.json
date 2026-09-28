@@ -55,7 +55,6 @@
     }
   },
   "devDependencies": {
-    "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
@@ -84,21 +83,5 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
-  },
-  "nx": {
-    "targets": {
-      "build": {
-        "dependsOn": [
-          {
-            "//": "Break the dependency cycle between @rjsf/core and @rjsf/snapshot-tests by explicitly listing the dependencies needed for build",
-            "projects": [
-              "@rjsf/utils",
-              "@rjsf/validator-ajv8"
-            ],
-            "target": "build"
-          }
-        ]
-      }
-    }
   }
 }
