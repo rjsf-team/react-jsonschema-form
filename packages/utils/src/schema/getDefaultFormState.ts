@@ -819,8 +819,8 @@ export function getArrayDefaults<
   }
   if (ignoreMinItemsFlagSet && !required) {
     // If no form data exists or defaults are set leave the field empty/non-existent, otherwise
-    // return form data/defaults
-    return defaults;
+    // return form data/defaults. A `default: null` array schema reaches here despite the type, and stays omitted
+    return defaults ?? undefined;
   }
 
   let arrayDefault: T[] | undefined;
