@@ -82,4 +82,5 @@ export default function DateWidget<
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
  * "generator" function.
  */
-DateWidget.getPopupContainerCallback = () => (node: any) => node.parentNode;
+DateWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentNode as HTMLElement;

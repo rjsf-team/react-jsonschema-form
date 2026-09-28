@@ -18,7 +18,10 @@ export default function createErrorHandler<T = unknown>(formData: T): FormValida
     },
   };
   if (Array.isArray(formData)) {
-    return formData.reduce((acc, value, key) => ({ ...acc, [key]: createErrorHandler(value) }), handler);
+    return formData.reduce<FormValidation<T>>(
+      (acc, value: unknown, key) => ({ ...acc, [key]: createErrorHandler(value) }),
+      handler as FormValidation<T>,
+    );
   }
   if (isPlainObject(formData)) {
     return Object.keys(formData).reduce(

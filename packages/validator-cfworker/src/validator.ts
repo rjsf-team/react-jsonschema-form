@@ -40,7 +40,7 @@ export function normalizeFormDataForValidation<D>(data: D): D {
     return null as D;
   }
   if (Array.isArray(data)) {
-    return data.map((value) => normalizeFormDataForValidation(value)) as D;
+    return data.map((value: unknown) => normalizeFormDataForValidation(value)) as D;
   }
   if (data !== null && typeof data === 'object') {
     const normalized = Object.fromEntries(

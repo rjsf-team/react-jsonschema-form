@@ -673,7 +673,7 @@ describe('AJV8Validator', () => {
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -1168,7 +1168,7 @@ describe('AJV8Validator', () => {
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -2306,7 +2306,7 @@ describe('AJV8Validator', () => {
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },

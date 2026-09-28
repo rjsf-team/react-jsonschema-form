@@ -39,7 +39,7 @@ import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
-  resolveWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
+  resolveWidget: vi.fn().mockImplementation((_schema: unknown, widget: unknown, widgets: Record<string, unknown>) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // Picks the registry widget directly, so the test controls which one renders without resolving the schema
     return { Widget: widgets[widgetToUse] };

@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import type {
   FormContextType,
-  GenericObjectType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
   RJSFSchema,
@@ -10,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { canExpand, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
+import type { RowProps } from 'antd';
 import classNames from 'classnames';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -45,7 +45,11 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
+  const {
+    colSpan = 24,
+    labelAlign = 'right',
+    rowGutter = 24,
+  } = formContext as { colSpan?: number | Record<string, number>; labelAlign?: string; rowGutter?: RowProps['gutter'] };
 
   const findSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): S => element.content.props.schema;
 

@@ -102,7 +102,7 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
     const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
-    const custom = vi.fn((_data, errors) => errors);
+    const custom = vi.fn<CustomValidator>((_data, errors) => errors);
     validator.validateFormData({}, schema, custom, undefined, uiSchema);
     expect(custom).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
   });

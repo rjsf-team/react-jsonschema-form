@@ -18,11 +18,11 @@ const NO_MATCH = Symbol('no match');
  * @returns The value to use for the select element's `value` attribute
  */
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
-  value: any,
+  value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: boolean,
   format: OptionValueFormat = 'indexed',
-  emptyValue?: any,
+  emptyValue?: unknown,
 ): any {
   // A single value that equals `emptyValue` still counts as a selection when an option carries it, since widgets pick
   // sentinels like `null` or `''` that a `oneOf`/`anyOf` of constants can legitimately offer as an option of its own
@@ -38,7 +38,7 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   if (format === 'realValue') {
     // Encoded the same way as the options' values so they match, e.g. `null` is its option's index on both sides
     const encodeValue = realValueEncoder<S>(enumOptions);
-    const encode = (item: any, noMatch: any) => {
+    const encode = (item: unknown, noMatch: unknown) => {
       const encoded = encodeValue(item);
       // Only a value encoded as its index needs the scan that searches for one
       if (encoded !== undefined) {

@@ -2,7 +2,7 @@ import type { EnumOptionsType } from '../src/index.ts';
 import { enumOptionsDeselectValue } from '../src/index.ts';
 import { ALL_OPTIONS } from './testUtils/testData.ts';
 
-const ALL_VALUES = ALL_OPTIONS.map((opt) => opt.value);
+const ALL_VALUES = ALL_OPTIONS.map((opt): unknown => opt.value);
 
 describe('enumOptionsDeselectValue()', () => {
   let selected: EnumOptionsType['value'][];

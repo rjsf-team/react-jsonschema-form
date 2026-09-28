@@ -156,4 +156,5 @@ export default function SelectWidget<
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
  * "generator" function.
  */
-SelectWidget.getPopupContainerCallback = () => (node: any) => node.parentElement;
+SelectWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentElement as HTMLElement;

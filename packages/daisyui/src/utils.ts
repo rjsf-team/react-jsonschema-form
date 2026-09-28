@@ -28,7 +28,7 @@ export function getDaisy<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({ uiSchema }: GetDaisyProps<T, S, F>): DaisyProps {
-  return uiSchema?.['ui:options']?.daisy || {};
+  return (uiSchema?.['ui:options']?.daisy as DaisyProps | undefined) || {};
 }
 
 interface GroupProps {

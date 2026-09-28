@@ -130,7 +130,9 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
     if (Array.isArray(subSchema)) {
       result = {
         ...result,
-        [key]: subSchema.map((item) => (isObject(item) ? makeAllReferencesAbsolute(item as S, currentURI) : item)),
+        [key]: subSchema.map((item: unknown) =>
+          isObject(item) ? makeAllReferencesAbsolute(item as S, currentURI) : item,
+        ),
       };
     } else if (isObject(subSchema)) {
       result = { ...result, [key]: makeAllReferencesAbsolute(subSchema as S, currentURI) };
@@ -147,7 +149,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
  * @returns - An array with the first value being the object minus the `key` element and the second element being the
  *      value from `object[key]`
  */
-export function splitKeyElementFromObject(key: string, object: GenericObjectType) {
+export function splitKeyElementFromObject(key: string, object: GenericObjectType): [GenericObjectType, unknown] {
   const { [key]: value, ...remaining } = object;
   return [remaining, value];
 }
@@ -209,8 +211,8 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       const circularPath = [...restRefs, ref, firstRef].join(' -> ');
       throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
     }
-    const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref], currentBaseURI);
+    const [remaining] = splitKeyElementFromObject(REF_KEY, current);
+    const subSchema = findSchemaDefinitionRecursive<S>(nextRef, rootSchema, [...recurseList, ref], currentBaseURI);
     if (Object.keys(remaining).length > 0) {
       if (
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||

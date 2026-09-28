@@ -576,7 +576,7 @@
     "typescript/no-unsafe-declaration-merging": "error",
     "typescript/no-unsafe-enum-comparison": "error",
     "typescript/no-unsafe-function-type": "error",
-    "typescript/no-unsafe-return": "off", // Consider turning this back on
+    "typescript/no-unsafe-return": "error",
     "typescript/no-unsafe-unary-minus": "error",
     "typescript/no-unused-vars": "off", // Consider turning this back on
     "typescript/no-useless-default-assignment": "error",

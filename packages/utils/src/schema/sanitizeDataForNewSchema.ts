@@ -10,7 +10,7 @@ import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
-function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): any[] | undefined {
+function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
   if (Array.isArray(schema.enum)) {
     return schema.enum;
   }

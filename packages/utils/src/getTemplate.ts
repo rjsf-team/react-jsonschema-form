@@ -26,8 +26,8 @@ export default function getTemplate<
   ) {
     const key = uiOptions[name];
     // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent
-    // To avoid that, we cast templates to `any` before accessing the key field
-    return (templates as any)[key];
+    // To avoid that, we widen templates to a string-keyed record before accessing the key field
+    return (templates as Record<string, unknown>)[key] as TemplatesType<T, S, F>[Name];
   }
   return (
     // Evaluating uiOptions[name] results in TS2590: Expression produces a union type that is too complex to represent

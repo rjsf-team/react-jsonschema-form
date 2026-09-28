@@ -26,7 +26,7 @@ export default function getTestIds(): TestIdShape {
     return {};
   }
 
-  const ids = new Map();
+  const ids = new Map<string | symbol, string>();
   return new Proxy(
     {},
     {
