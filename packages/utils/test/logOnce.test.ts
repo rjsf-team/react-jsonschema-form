@@ -47,7 +47,7 @@ describe('logOnce()', () => {
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
   it('remembers a message, without throwing, when the error cannot be converted for comparison', () => {
-    const nullPrototype = Object.assign(Object.create(null), { a: 1 });
+    const nullPrototype = Object.assign(Object.create(null), { a: 1n });
     const unprintableError = new Error('boom');
     unprintableError.toString = () => {
       throw new Error('no string for you');

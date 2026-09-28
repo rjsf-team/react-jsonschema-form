@@ -1,3 +1,5 @@
+import toDisplayString from './toDisplayString.ts';
+
 /** The console methods `logOnce()` can log through */
 export type LogOnceLevel = 'warn' | 'error';
 
@@ -44,7 +46,10 @@ export default function logOnce(message: string, level: LogOnceLevel = 'warn', e
   try {
     // The control characters keep these three cases apart: no error at all, an error that converted (so `logOnce(m)`
     // and `logOnce(m, 'warn', '')` are two messages), and one that didn't
-    key = error === undefined ? `${level}\u0000${message}` : `${level}\u0000${message}\u0000\u0002${String(error)}`;
+    key =
+      error === undefined
+        ? `${level}\u0000${message}`
+        : `${level}\u0000${message}\u0000\u0002${toDisplayString(error)}`;
   } catch {
     // Logging must never throw: `error` came out of a `catch`, so converting it can throw whatever a user's code threw.
     // `typeof` can't throw, and still keeps the message from being logged on every render, at the cost of not telling

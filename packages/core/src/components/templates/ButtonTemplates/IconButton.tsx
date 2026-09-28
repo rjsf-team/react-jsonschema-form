@@ -10,7 +10,7 @@ function IconButtonFn<
   const { iconType = 'default', icon, className, uiSchema, registry, ...otherProps } = props;
   return (
     <button type='button' className={`btn btn-${iconType} ${className}`} {...otherProps}>
-      <i className={`glyphicon glyphicon-${icon}`} />
+      {typeof icon === 'object' ? icon : <i className={`glyphicon glyphicon-${icon}`} />}
     </button>
   );
 }
