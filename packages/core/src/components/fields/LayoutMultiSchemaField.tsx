@@ -205,7 +205,7 @@ export default function LayoutMultiSchemaField<
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
+  const hideFieldError = uiSchemaHideError ?? hideError;
 
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;

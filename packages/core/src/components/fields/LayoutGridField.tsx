@@ -717,7 +717,7 @@ function LayoutGridFieldComponent<
     let requiredForField = isRequired;
     if (optionsInfo?.hasDiscriminator) {
       const { required: uiRequired } = getUiOptions<T, S, F>(fieldUiSchema);
-      requiredForField = uiRequired !== undefined ? Boolean(uiRequired) : isRequired;
+      requiredForField = uiRequired ?? isRequired;
     }
     const namePath = toPath(name);
 

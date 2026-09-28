@@ -39,7 +39,7 @@ export default function getDisplayLabel<
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
-  let displayLabel = Boolean(label);
+  let displayLabel = label;
   if (displayLabel) {
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);

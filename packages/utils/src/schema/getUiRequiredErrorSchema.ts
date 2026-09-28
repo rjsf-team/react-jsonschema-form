@@ -156,7 +156,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isWholeValueSelect<S>(resolvedSchema)) {
     return;
   }
-  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  const effectiveRequired = fieldUiRequired ?? required;
   // An Optional Data Control hides what it holds until the user opts in, so a `ui:required` field beneath it isn't
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
   // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null` and `{}`. MultiSchemaField renders
@@ -169,7 +169,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
   const { required: branchUiRequired } = getUiOptions<T, S, F>(branchUiSchema);
-  const branchRequired = branchUiRequired !== undefined ? Boolean(branchUiRequired) : effectiveRequired;
+  const branchRequired = branchUiRequired ?? effectiveRequired;
   if (
     path.length > 0 &&
     !isFormDataAvailable(formData) &&

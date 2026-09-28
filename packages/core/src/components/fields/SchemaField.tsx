@@ -491,7 +491,7 @@ function SchemaFieldRender<
     initialValue: fieldInitialValue,
     emptyValue: fieldEmptyValue,
   } = getUiOptions<T, S, F>(uiSchema);
-  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  const effectiveRequired = fieldUiRequired ?? required;
   if (
     fieldUiRequired === false &&
     required &&
@@ -512,7 +512,7 @@ function SchemaFieldRender<
   }
   const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
+  const hideError = uiSchemaHideError ?? props.hideError;
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
