@@ -65,11 +65,13 @@ function getDefaultValue<
       return false;
     case 'null':
       return null;
+    case 'integer':
     case 'number':
       return 0;
     case 'object':
       return {};
     case 'string':
+    case undefined:
     default:
       // We don't have a datatype for some reason (perhaps additionalProperties was true)
       return translateString(TranslatableString.NewStringDefault);

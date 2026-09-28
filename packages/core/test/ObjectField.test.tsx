@@ -1616,6 +1616,17 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: [] }, 'root');
     });
 
+    it('should add a numeric default for an integer additionalProperties schema', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: 'integer' } },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+    });
+
     it('should add a string item if additionalProperties is true', async () => {
       // Specify that additionalProperties is true
       const customSchema: RJSFSchema = {
