@@ -2627,7 +2627,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             Object.assign(allProperties, schema.properties);
           }
           if (schema.allOf) {
-            schema.allOf.forEach((subSchema: any) => {
+            (schema.allOf as RJSFSchema[]).forEach((subSchema) => {
               if (subSchema.properties) {
                 Object.assign(allProperties, subSchema.properties);
               }
@@ -2803,7 +2803,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             Object.assign(allProperties, schema.properties);
           }
           if (schema.allOf) {
-            schema.allOf.forEach((subSchema: any) => {
+            (schema.allOf as RJSFSchema[]).forEach((subSchema) => {
               if (subSchema.properties) {
                 Object.assign(allProperties, subSchema.properties);
               }

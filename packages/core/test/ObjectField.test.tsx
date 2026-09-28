@@ -115,12 +115,15 @@ describe('ObjectField', () => {
             <div>
               {properties.map((property) => property.content)}
               <ul className='object-template-errors'>
-                {!hideError && errorSchema?.bar?.__errors?.map((error: string) => <li key={error}>{error}</li>)}
+                {!hideError &&
+                  (errorSchema as ErrorSchema<{ bar?: string }> | undefined)?.bar?.__errors?.map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
               </ul>
             </div>
           );
         }
-        function addPropertyError(_: any | undefined, errors: FormValidation) {
+        function addPropertyError(_: unknown, errors: FormValidation<{ foo?: { bar?: string } }>) {
           errors.foo?.bar?.addError('property error');
           return errors;
         }

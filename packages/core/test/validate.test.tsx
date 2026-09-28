@@ -316,10 +316,13 @@ describeOwnerships('Validation', (createFormComponent) => {
           { pass1: 'a', pass2: 'a' },
         ];
 
-        function customValidate(formData: FormProps['formData'], errors: FormValidation) {
+        function customValidate(
+          formData: FormProps['formData'],
+          errors: FormValidation<{ pass1?: string; pass2?: string }[]>,
+        ) {
           (formData as GenericObjectType[]).forEach(({ pass1, pass2 }: GenericObjectType, i: number) => {
             if (pass1 !== pass2) {
-              (errors as GenericObjectType)[i].pass2.addError("Passwords don't match");
+              errors[i]?.pass2?.addError("Passwords don't match");
             }
           });
           return errors;

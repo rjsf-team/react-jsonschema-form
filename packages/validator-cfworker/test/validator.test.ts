@@ -1,5 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
@@ -87,8 +87,8 @@ describe('CFWorkerValidator', () => {
     const transform = vi.fn((errors: RJSFValidationError[]) =>
       errors.map((error) => ({ ...error, message: 'transformed' })),
     );
-    const custom = vi.fn((_data, errors) => {
-      errors.value.addError('custom');
+    const custom = vi.fn((_data: unknown, errors: FormValidation<{ value?: string }>) => {
+      errors.value?.addError('custom');
       return errors;
     });
     const result = validator.validateFormData<{ value?: string }>({}, schema, custom, transform, {});

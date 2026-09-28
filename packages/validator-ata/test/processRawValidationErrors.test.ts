@@ -1,4 +1,11 @@
-import type { ErrorSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  ValidatorType,
+} from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import customizeValidator from '../src/customizeValidator.ts';
@@ -268,7 +275,7 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the transformErrors hook and returns transformed output', () => {
-    const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
+    const transform = vi.fn((errs: RJSFValidationError[]) => errs.map((e) => ({ ...e, message: 'transformed' })));
     const out = processRawValidationErrors(
       { validator: stubValidator },
       { errors: [ataError()] },
@@ -282,8 +289,8 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the customValidate hook and merges the user errorSchema', () => {
-    const customValidate = vi.fn((_data, errorHandler) => {
-      errorHandler.x.addError('user error');
+    const customValidate = vi.fn((_data: unknown, errorHandler: FormValidation<{ x?: string }>) => {
+      errorHandler.x?.addError('user error');
       return errorHandler;
     });
     const out = processRawValidationErrors(

@@ -41,13 +41,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onBlur,
     onChange,
     onFocus,
-    options,
     readonly,
     registry,
     required = false,
     schema,
     uiSchema,
   } = props;
+  const options = props.options as S[];
   const { schemaUtils } = registry;
 
   // Hash formData by value so the memo only invalidates when data actually changes, not on every
@@ -57,7 +57,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // retrievedOptions is purely derived from options — useMemo handles re-derivation automatically
   // when options, schemaUtils, or formData's value changes, with no render-phase dispatch needed.
   const retrievedOptions = useMemo(
-    () => options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData)),
+    () => options.map((opt) => schemaUtils.retrieveSchema(opt, formData)),
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- formDataHash is the value-stable proxy for formData
     [options, schemaUtils, formDataHash],
   );
@@ -241,7 +241,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ? TranslatableString.TitleOptionPrefix
     : TranslatableString.OptionPrefix;
   const translateParams = title ? [title] : [];
-  const enumOptions = retrievedOptions.map((opt: { title?: string }, index: number) => {
+  const enumOptions = retrievedOptions.map((opt, index) => {
     const { title: uiTitle = opt.title } = getUiOptions<T, S, F>(optionsUiSchema[index]);
     return {
       label: uiTitle || translateString(translateEnum, translateParams.concat(String(index + 1))),

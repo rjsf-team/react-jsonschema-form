@@ -190,7 +190,7 @@ describe('ArrayField', () => {
 
   const CustomSelectComponent = (props: WidgetProps) => (
     <select>
-      {props.value.map((item: any, index: number) => (
+      {(props.value as string[]).map((item, index) => (
         // oxlint-disable-next-line react/no-array-index-key
         <option key={index} id='custom-select'>
           {item}
@@ -2754,7 +2754,7 @@ describe('ArrayField', () => {
         },
       },
     };
-    function customValidate(_: any | undefined, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation<{ foo?: { bar?: string }[] }>) {
       errors.foo?.[0]?.bar?.addError('test');
       errors.foo?.[1]?.bar?.addError('test');
       return errors;
@@ -2805,7 +2805,7 @@ describe('ArrayField', () => {
           </div>
         );
       }
-      function addArrayError(_: any | undefined, errors: FormValidation) {
+      function addArrayError(_: unknown, errors: FormValidation<{ foo?: string[] }>) {
         errors.foo?.addError('array error');
         return errors;
       }
@@ -2854,7 +2854,7 @@ describe('ArrayField', () => {
           recordTemplateProps(props);
           return <div>{props.items}</div>;
         }
-        function addItemError(_formData: any | undefined, errors: FormValidation) {
+        function addItemError(_formData: unknown, errors: FormValidation<{ foo?: string[] }>) {
           errors.foo?.[0]?.addError('item error');
           return errors;
         }

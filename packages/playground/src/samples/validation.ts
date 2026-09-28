@@ -1,12 +1,12 @@
-import type { CustomValidator, ErrorTransformer } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, FormValidation } from '@rjsf/utils';
 import { isObject } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
-const customValidate: CustomValidator = (formData, errors) => {
+const customValidate: CustomValidator = (formData, errors: FormValidation<{ pass2?: string }>) => {
   const { pass1, pass2 } = isObject(formData) ? formData : {};
   if (pass1 !== pass2) {
-    errors.pass2.addError("Passwords don't match.");
+    errors.pass2?.addError("Passwords don't match.");
   }
   return errors;
 };

@@ -39,7 +39,7 @@ export default function RadioWidget<
   return (
     <div className='mb-0'>
       <RadioGroup
-        defaultValue={value?.toString()}
+        defaultValue={value == null ? undefined : String(value)}
         required={required}
         disabled={disabled || readonly}
         onValueChange={(e: string) => {

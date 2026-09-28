@@ -16,7 +16,7 @@ describe('ui:hideError', () => {
     type: 'object',
     properties: { userId: { oneOf: [{ type: 'number' }, { type: 'string' }] } },
   };
-  function addUserIdError(_: any, errors: FormValidation) {
+  function addUserIdError(_: unknown, errors: FormValidation<{ userId?: number | string }>) {
     errors.userId?.addError('test');
     return errors;
   }

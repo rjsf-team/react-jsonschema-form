@@ -28,12 +28,7 @@ export default function mergeObjects(
       } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
         let toMerge = right;
         if (concatArrays === 'preventDuplicates') {
-          toMerge = right.reduce((result, value) => {
-            if (!left.includes(value)) {
-              result.push(value);
-            }
-            return result;
-          }, []);
+          toMerge = right.filter((value) => !left.includes(value));
         }
         merged = left.concat(toMerge);
       }

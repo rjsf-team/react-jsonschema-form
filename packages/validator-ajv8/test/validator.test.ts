@@ -602,7 +602,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
+          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -666,7 +666,12 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: any,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: any,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }
@@ -1092,7 +1097,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
+          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -1156,7 +1161,12 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: any,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: any,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }
@@ -2225,7 +2235,7 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
+          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
             if (formData.pass1 !== formData.pass2) {
               errors.pass2!.addError('passwords don`t match.');
             }
@@ -2289,7 +2299,12 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: any,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: any,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
                   errors.pass1!.addError('custom error from customValidate');
                 }

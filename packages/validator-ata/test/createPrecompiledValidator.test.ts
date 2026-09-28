@@ -8,15 +8,16 @@ import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 vi.mock('../src/precompiledValidator');
 
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
+function loadModule(code: string): ValidatorFunctions {
+  const module = { exports: {} as ValidatorFunctions };
   // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
+  const load = new Function('module', 'exports', code) as (m: typeof module, e: ValidatorFunctions) => void;
+  load(module, module.exports);
   return module.exports;
 }
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
-const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema)) as ValidatorFunctions;
+const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema));
 const mockedValidator = vi.mocked(ATAPrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {

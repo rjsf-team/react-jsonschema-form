@@ -1223,7 +1223,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           Start?: number;
           End?: number;
         }
-        const customValidate = (formData: unknown, errors: FormValidation) => {
+        const customValidate = (formData: unknown, errors: FormValidation<StartEnd>) => {
           const { Start, End } = (formData ?? {}) as StartEnd;
           if (Start !== undefined && End !== undefined && Start > End) {
             errors.Start?.addError('Validate error: Test should be LE than End');

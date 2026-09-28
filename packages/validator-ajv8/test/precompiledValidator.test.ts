@@ -297,7 +297,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
+          validate = vi.fn((formData: any, errors: FormValidation<{ passwords?: { pass2?: string } }>) => {
             if (formData.passwords.pass1 !== formData.passwords.pass2) {
               errors.passwords!.pass2!.addError('passwords don`t match.');
             }

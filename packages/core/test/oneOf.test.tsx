@@ -2195,7 +2195,7 @@ describe('oneOf', () => {
       },
     };
 
-    function customValidate(_: any, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation<{ userId?: number | string }>) {
       errors.userId?.addError('test');
       return errors;
     }

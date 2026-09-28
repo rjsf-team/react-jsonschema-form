@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
@@ -133,7 +133,7 @@ describe('ATAValidator', () => {
     it('runs the user-supplied transformErrors hook', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'string', minLength: 5 };
-      const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
+      const transform = vi.fn((errs: RJSFValidationError[]) => errs.map((e) => ({ ...e, message: 'transformed' })));
       const { errors } = v.validateFormData('abc', schema, undefined, transform);
       expect(transform).toHaveBeenCalled();
       expect(errors[0].message).toBe('transformed');
@@ -145,8 +145,8 @@ describe('ATAValidator', () => {
         type: 'object',
         properties: { x: { type: 'string' } },
       };
-      const customValidate = vi.fn((_data, errorHandler) => {
-        errorHandler.x.addError('custom error');
+      const customValidate = vi.fn((_data: unknown, errorHandler: FormValidation<{ x?: string }>) => {
+        errorHandler.x?.addError('custom error');
         return errorHandler;
       });
       const { errorSchema } = v.validateFormData({ x: 'a' }, schema, customValidate);

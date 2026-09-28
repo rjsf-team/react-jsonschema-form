@@ -258,8 +258,8 @@ export function findChildrenAndProps<
     const { children: elements, className: toMapClassNames, ...otherProps } = children as ConfigObject;
     children = elements;
     if (toMapClassNames) {
-      const classes = toMapClassNames.split(' ');
-      const className = classes.map((ele: string) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
+      const classes = (toMapClassNames as string).split(' ');
+      const className = classes.map((ele) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
       gridProps = { ...otherProps, className };
     } else {
       gridProps = otherProps;

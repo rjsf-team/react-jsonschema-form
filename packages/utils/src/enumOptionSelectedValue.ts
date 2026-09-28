@@ -54,8 +54,8 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
     // value is matched as a one-item selection, as the `indexed` format does. An entry that is encoded as its index but
     // matches no option is left out, since any value standing in for it could be one an option encodes as
     return (Array.isArray(value) ? value : [value])
-      .map((item: any) => encode(item, NO_MATCH))
-      .filter((encoded: any) => encoded !== NO_MATCH);
+      .map((item) => encode(item, NO_MATCH))
+      .filter((encoded) => encoded !== NO_MATCH);
   }
 
   const indexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

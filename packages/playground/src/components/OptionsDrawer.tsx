@@ -34,15 +34,15 @@ function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChi
   );
 }
 
-function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<any> }) {
+function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<Form | null> }) {
   const submitClick = useCallback(() => {
-    playGroundFormRef.current.submit();
+    playGroundFormRef.current?.submit();
   }, [playGroundFormRef]);
   const validateClick = useCallback(() => {
-    playGroundFormRef.current.validateForm();
+    playGroundFormRef.current?.validateForm();
   }, [playGroundFormRef]);
   const resetClick = useCallback(() => {
-    playGroundFormRef.current.reset();
+    playGroundFormRef.current?.reset();
   }, [playGroundFormRef]);
   return (
     <>
@@ -299,7 +299,7 @@ interface OptionsDrawerProps {
   validators: Record<string, ValidatorType>;
   validator: string;
   liveSettings: LiveSettings;
-  playGroundFormRef: RefObject<any>;
+  playGroundFormRef: RefObject<Form | null>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;

@@ -1,4 +1,4 @@
-import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
@@ -183,8 +183,8 @@ describe('processRawValidationErrors()', () => {
 
   it('merges custom validation errors', () => {
     const validator = customizeValidator();
-    const customValidate = vi.fn((_data, errors) => {
-      errors.value.addError('custom error');
+    const customValidate = vi.fn((_data: unknown, errors: FormValidation<{ value?: string }>) => {
+      errors.value?.addError('custom error');
       return errors;
     });
     const result = processRawValidationErrors({ validator }, { errors: [] }, { value: 'ok' }, schema, customValidate);

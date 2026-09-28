@@ -2,6 +2,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, Generi
 import { ariaDescribedByIds, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 
 const DATE_PICKER_STYLE = {
   width: '100%',
@@ -41,7 +42,7 @@ export default function DateWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
-  const handleChange = (nextValue: any) => {
+  const handleChange = (nextValue: Dayjs | null) => {
     if (!nextValue) {
       onChange(nextValue);
     } else if (isIsoDateTime) {
