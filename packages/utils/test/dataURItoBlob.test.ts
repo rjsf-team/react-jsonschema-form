@@ -43,6 +43,12 @@ describe('dataURItoBlob()', () => {
     );
   });
 
+  it('should attach the decoding error as the cause', () => {
+    expect(() => dataURItoBlob('data:text/plain;base64,Hello%20World')).toThrow(
+      expect.objectContaining({ cause: expect.objectContaining({ message: 'Invalid character' }) }),
+    );
+  });
+
   it('should return the name of the file if present', () => {
     const { blob, name } = dataURItoBlob('data:image/png;name=test.png;base64,VGVzdC5wbmc=');
     expect(name).toEqual('test.png');

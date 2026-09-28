@@ -40,6 +40,6 @@ export default function dataURItoBlob(dataURILike: string) {
 
     return { blob, name };
   } catch (error) {
-    throw new Error(`File is invalid: ${(error as Error).message}`);
+    throw new Error(`File is invalid: ${(error as Error).message}`, { cause: error });
   }
 }

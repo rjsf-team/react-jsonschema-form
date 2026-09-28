@@ -416,6 +416,7 @@
     "prefer-rest-params": "error",
     "prefer-spread": "error",
     "prefer-template": "error",
+    "preserve-caught-error": "error",
     "radix": "error",
     "react-perf/jsx-no-jsx-as-prop": "error",
     "react-perf/jsx-no-new-array-as-prop": "error",
