@@ -177,8 +177,10 @@ export default function formDataForNewOption<
       }
     } else if (
       // An option that is not an object declares its value on the option itself, so the same rules apply to the
-      // whole value rather than per key. The value has to stop matching more often than the fill has nothing to
-      // write, so it is tested first
+      // whole value rather than per key. In practice that means an array: `sanitizeDataForNewSchema()` carries
+      // nothing else across, so a switch between two options of any other type arrives here already cleared and
+      // is refilled below. The value has to stop matching more often than the fill has nothing to write, so it
+      // is tested first
       newFormData !== undefined &&
       oldOptionForDefaults &&
       declaresOwnValue<S>(newOptionForDefaults) &&
