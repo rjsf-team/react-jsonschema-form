@@ -2175,9 +2175,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     });
 
     it('should pass rawHelp for a ui:help given as a React element, so a template can gate on it', () => {
-      let seenRawHelp: FieldTemplateProps['rawHelp'];
+      const seeRawHelp = vi.fn<(rawHelp: FieldTemplateProps['rawHelp']) => void>();
       function RawHelpProbe(props: FieldTemplateProps) {
-        seenRawHelp = props.rawHelp;
+        seeRawHelp(props.rawHelp);
         return <div>{props.children}</div>;
       }
       createFormComponent({
@@ -2186,13 +2186,13 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         templates: { FieldTemplate: RawHelpProbe },
       });
 
-      expect(seenRawHelp).toStrictEqual(<strong>element help</strong>);
+      expect(seeRawHelp.mock.lastCall?.[0]).toStrictEqual(<strong>element help</strong>);
     });
 
     it('should pass rawHelp for a ui:help inherited from ui:globalOptions', () => {
-      let seenRawHelp: FieldTemplateProps['rawHelp'];
+      const seeRawHelp = vi.fn<(rawHelp: FieldTemplateProps['rawHelp']) => void>();
       function RawHelpProbe(props: FieldTemplateProps) {
-        seenRawHelp = props.rawHelp;
+        seeRawHelp(props.rawHelp);
         return <div>{props.children}</div>;
       }
       createFormComponent({
@@ -2201,7 +2201,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         templates: { FieldTemplate: RawHelpProbe },
       });
 
-      expect(seenRawHelp).toBe('global help');
+      expect(seeRawHelp.mock.lastCall?.[0]).toBe('global help');
     });
   });
 
