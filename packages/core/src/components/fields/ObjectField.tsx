@@ -35,7 +35,7 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
@@ -266,7 +266,7 @@ export default function ObjectField<
     registry,
     title,
   } = props;
-  const uiSchema = useMemo((): UiSchema<T, S, F> => rawUiSchema ?? {}, [rawUiSchema]);
+  const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
@@ -345,7 +345,7 @@ export default function ObjectField<
    */
   const getAvailableKey = useCallback(
     (preferredKey: string, existingFormData?: T) => {
-      const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+      const { duplicateKeySuffixSeparator = '-' } = uiOptions;
 
       let index = 0;
       let newKey = preferredKey;
@@ -355,7 +355,7 @@ export default function ObjectField<
       }
       return newKey;
     },
-    [uiSchema, globalUiOptions],
+    [uiOptions],
   );
 
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new

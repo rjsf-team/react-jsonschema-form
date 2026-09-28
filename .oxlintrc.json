@@ -3,7 +3,7 @@
   "plugins": ["typescript", "react", "jsx-a11y", "import"],
   "options": {
     "typeAware": true,
-    "maxWarnings": 0
+    "denyWarnings": true
   },
   "env": {
     "builtin": true,
@@ -414,10 +414,9 @@
     "react/checked-requires-onchange-or-readonly": "error",
     "react/display-name": "off",
     "react/forward-ref-uses-ref": "error",
-    // The React Compiler rules flag rjsf's registry/getTemplate component lookups, latest-value refs and prop-sync effects
-    "react/globals": "off",
+    "react/globals": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/hook-use-state": "error",
-    "react/immutability": "off",
+    "react/immutability": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
     "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never" }],
     "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
@@ -456,16 +455,16 @@
     "react/no-will-update-set-state": "error",
     "react/prefer-es6-class": ["error", "always"],
     "react/prefer-function-component": "off",
-    "react/preserve-manual-memoization": "off",
-    "react/purity": "off",
+    "react/preserve-manual-memoization": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/purity": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/react-in-jsx-scope": "off",
-    "react/refs": "off",
+    "react/refs": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/require-render-return": "error",
     "react/rules-of-hooks": "error",
     "react/self-closing-comp": ["error", { "component": true, "html": true }],
-    "react/set-state-in-effect": "off",
+    "react/set-state-in-effect": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/state-in-constructor": ["error", "always"],
-    "react/static-components": "off",
+    "react/static-components": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/style-prop-object": "error",
     "react/void-dom-elements-no-children": "error",
     "require-yield": "error",
@@ -690,7 +689,6 @@
         "react/display-name": "off",
         "typescript/method-signature-style": "off",
         "typescript/no-confusing-void-expression": "off",
-        "typescript/no-deprecated": "off",
         "typescript/no-explicit-any": "off",
         "typescript/no-misused-promises": "off",
         "typescript/no-misused-spread": "off",

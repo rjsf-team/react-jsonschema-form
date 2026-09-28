@@ -165,6 +165,7 @@ describe('StringField', () => {
     it('should default submit value to undefined', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: { type: 'string' },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);
@@ -1118,6 +1119,7 @@ describe('StringField', () => {
           default: datetime,
         },
         uiSchema,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);
@@ -1150,6 +1152,7 @@ describe('StringField', () => {
           format: 'date',
         },
         initialFormData: datetime,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);

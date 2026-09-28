@@ -74,6 +74,7 @@ describe('state derivation', () => {
     });
     expect(errorListMessages(node)).toEqual(['must NOT have fewer than 8 characters']);
 
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
     rerender({ ...props, noValidate: true });
     expect(errorListMessages(node)).toEqual([]);
 

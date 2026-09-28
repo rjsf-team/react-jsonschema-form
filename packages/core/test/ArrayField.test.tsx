@@ -1127,6 +1127,7 @@ describe('ArrayField', () => {
         uiSchema,
         initialFormData: {},
         liveValidate: 'onChange',
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(form.node, user);
@@ -1138,6 +1139,7 @@ describe('ArrayField', () => {
         uiSchema,
         initialFormData: {},
         liveValidate: 'onChange',
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: false,
       });
       await submitForm(form.node, user);

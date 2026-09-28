@@ -152,7 +152,7 @@ export function transformRJSFValidationErrors<
         stack = `'${uiSchemaTitle}' ${message}`.trim();
         uiTitle = uiSchemaTitle;
       } else {
-        const parentSchemaTitle = getByPath<string | undefined>(parentSchema, ['title']);
+        const parentSchemaTitle = getByPath<string | undefined>(parentSchema, 'title');
 
         if (parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();

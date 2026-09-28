@@ -215,6 +215,7 @@ describe('NumberField', () => {
         const { node, onSubmit } = createFormComponent({
           schema: { type: 'number' },
           uiSchema,
+          // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
           noValidate: true,
         });
 
@@ -612,6 +613,7 @@ describe('NumberField', () => {
           enum: [1, 2],
           default: 1,
         },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
 

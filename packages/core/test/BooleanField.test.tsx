@@ -269,6 +269,7 @@ describe('BooleanField', () => {
   it('formData should default to undefined', async () => {
     const { node, onSubmit } = createFormComponent({
       schema: { type: 'boolean' },
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     });
     await submitForm(node, user);

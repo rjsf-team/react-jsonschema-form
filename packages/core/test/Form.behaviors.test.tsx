@@ -139,6 +139,7 @@ describe('Live validation onBlur', () => {
       schema,
       onBlur,
       liveValidate: 'onBlur',
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     });
     const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
@@ -1500,6 +1501,7 @@ describe('Async errors', () => {
 
     const props: NoValFormProps = {
       schema,
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     };
 
