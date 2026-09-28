@@ -449,6 +449,7 @@
       { "allowAllCaps": true, "allowLeadingUnderscore": false, "allowNamespace": true }
     ],
     "react/jsx-props-no-spread-multi": "error",
+    "react/memo-dependencies": "error",
     "react/no-array-index-key": "error",
     "react/no-children-prop": "error",
     "react/no-danger": "error",
