@@ -29,7 +29,10 @@ const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
 const rows = head.slice(0, 60).map((c) => {
   const b = base.get(c.name);
   const diff = b ? c.size - b.size : null;
-  const delta = diff === null ? 'new' : Math.abs(diff) < 5 ? '=' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
+  let delta = diff === null ? 'new' : `${diff > 0 ? '+' : '-'}${fmt(Math.abs(diff))}`;
+  if (diff !== null && Math.abs(diff) < 5) {
+    delta = '=';
+  }
   const status = c.passed === false ? ' :x:' : '';
   return `| \`${safe(c.name)}\`${status} | ${b ? fmt(b.size) : '—'} | ${fmt(c.size)} | ${delta} |`;
 });

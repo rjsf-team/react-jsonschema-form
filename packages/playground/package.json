@@ -8,19 +8,11 @@
     "cs-check": "oxfmt --check \"src/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"src/**/*.{ts,tsx}\"",
     "build": "rimraf build && cross-env NODE_ENV=production vite build",
-    "lint": "oxlint src",
-    "precommit": "lint-staged",
     "publish-to-gh-pages": "pnpm run build && gh-pages --dist build/",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "start": "vite --force",
     "preview": "vite preview",
     "test": "vitest run"
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
   },
   "files": [
     "dist",

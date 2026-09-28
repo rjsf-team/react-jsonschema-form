@@ -25,15 +25,7 @@
     "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
     "test": "vitest run"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
   },
   "dependencies": {
     "ata-validator": "^1.7.1"

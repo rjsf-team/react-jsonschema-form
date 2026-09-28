@@ -19,16 +19,8 @@
     "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
     "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
     "test": "vitest run",
     "test:update": "vitest run --update"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
   },
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"

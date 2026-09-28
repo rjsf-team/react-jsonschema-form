@@ -6,19 +6,11 @@
     "build": "tsdown -c ../../tsdown.base.mts",
     "cs-check": "oxfmt --check \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
     "cs-format": "oxfmt \"{src,test,testSnap}/**/*.{ts,tsx,js,jsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
     "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx,js,jsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

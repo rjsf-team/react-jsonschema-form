@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
-    "lint": "nx run-many --parallel=2 --target=lint",
+    "lint": "oxlint",
     "typecheck": "tsc --build --builders 4 --checkers 1",
     "knip": "knip",
     "cs-check": "nx run-many --target=cs-check",
@@ -18,8 +18,6 @@
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
     "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",
-    "pre-commit:husky": "nx run-many --parallel=1 --target=precommit",
-    "pre-commit:lockfile": "lint-staged",
     "prepare": "is-ci || husky",
     "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run lint && pnpm run build && pnpm run test",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
@@ -28,7 +26,9 @@
     "sanity-check": "pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
   },
   "lint-staged": {
-    "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'"
+    "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'",
+    "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}": "oxlint --fix --no-error-on-unmatched-pattern",
+    "packages/*/{src,test,testSnap}/**/*.{ts,tsx,js,jsx}": "oxfmt"
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",

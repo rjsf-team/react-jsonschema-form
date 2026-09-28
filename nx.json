@@ -22,11 +22,6 @@
       "cache": true,
       "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json"]
     },
-    "lint": {
-      "cache": true,
-      "//inputs": "the root oxlint config lives outside project roots, and type-aware rules read dependencies' types; without these a warm cache serves stale results",
-      "inputs": ["default", "^default", "{workspaceRoot}/.oxlintrc.json"]
-    },
     "test": {
       "cache": true,
       "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
@@ -37,9 +32,6 @@
       "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:watch": {
-      "cache": true
-    },
-    "precommit": {
       "cache": true
     },
     "publish-to-npm": {

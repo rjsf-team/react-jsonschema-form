@@ -782,6 +782,16 @@
       }
     },
     {
+      // Node tooling scripts: CommonJS `require` and module-scope functions are correct there, and printing is their output
+      "files": [".github/**", "scripts/**", "**/tailwind.config.js"],
+      "rules": {
+        "no-console": "off",
+        "no-implicit-globals": "off",
+        "typescript/no-var-requires": "off",
+        "typescript/unbound-method": "off"
+      }
+    },
+    {
       "files": ["packages/shadcn/src/components/ui/**"],
       "rules": {
         "import/consistent-type-specifier-style": "off"
