@@ -365,4 +365,18 @@ describe('useAltDateWidgetProps()', () => {
     // onChange was not called due to disabled
     expect(PROPS.onChange).not.toHaveBeenCalled();
   });
+  test('re-parses the elements when the value or time prop changes', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
+    rerender({ ...PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
+    );
+    rerender({ ...TIME_PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
+    );
+  });
 });

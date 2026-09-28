@@ -453,6 +453,7 @@
     "react/no-children-prop": "error",
     "react/no-danger": "error",
     "react/no-danger-with-children": "error",
+    "react/no-deriving-state-in-effects": "error",
     "react/no-did-mount-set-state": "error",
     "react/no-did-update-set-state": "error",
     "react/no-direct-mutation-state": "error",
