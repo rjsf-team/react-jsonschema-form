@@ -806,7 +806,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // so setProperty treats all keys in the object value as optional.
         const schema: RJSFSchema = {
           type: 'object',
-          properties: { flexible: true as any },
+          properties: { flexible: true },
         };
         // All values in flexible are optional-and-empty → flexible is pruned.
         expect(omitExtraData(testValidator, schema, schema, { flexible: { nested: '' } })).toEqual({});
@@ -1126,7 +1126,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {
           type: 'object',
           additionalProperties: false,
-          if: { type: 'object' } as any,
+          if: { type: 'object' },
           then: { properties: { extra: { type: 'string' } } },
         };
         const formData = { extra: 'keep' };
@@ -1142,7 +1142,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {
           type: 'object',
           properties: { foo: { type: 'string' } },
-          if: { type: 'object' } as any,
+          if: { type: 'object' },
           then: true,
         };
         const formData = { foo: 'hello', extra: 'drop' };

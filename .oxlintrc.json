@@ -526,8 +526,7 @@
     "typescript/method-signature-style": "off", // Consider setting this to ["error", "property"],
     "typescript/no-confusing-non-null-assertion": "error",
     "typescript/no-array-delete": "error",
-    // Schema values are `unknown` and deliberately stringified into keys and messages
-    "typescript/no-base-to-string": "off",
+    "typescript/no-base-to-string": "off", // TODO: off until its violations are fixed in a follow-up PR
     "typescript/no-confusing-void-expression": "off",
     "typescript/no-deprecated": "error",
     "typescript/no-duplicate-enum-values": "error",
@@ -600,7 +599,7 @@
     "typescript/related-getter-setter-pairs": "error",
     "typescript/require-array-sort-compare": "off",
     "typescript/restrict-plus-operands": "error",
-    "typescript/restrict-template-expressions": "off",
+    "typescript/restrict-template-expressions": "off", // TODO: off until its violations are fixed in a follow-up PR
     "typescript/return-await": ["error", "in-try-catch"],
     "typescript/triple-slash-reference": "error",
     "typescript/unbound-method": "error",

@@ -48,9 +48,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             allOfSchema,
             allOfSchema,
             { foo: 'a value' },
-            {
-              allOf: 'populateDefaults',
-            },
+            { allOf: 'populateDefaults' },
           ),
         ).toEqual({ foo: 'a value' });
       });
