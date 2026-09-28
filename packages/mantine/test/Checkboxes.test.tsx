@@ -37,7 +37,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onFocus: () => undefined,
     ...props,
     options: { enumOptions, ...props.options },
-  } as unknown as WidgetProps;
+  };
 }
 
 function renderWidget(props: Partial<WidgetProps> = {}) {

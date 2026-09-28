@@ -43,9 +43,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           properties: { foo: undefined },
         } as unknown as RJSFSchema;
         expect(
-          ensureFormDataMatchingSchema(testValidator, allOfSchema, allOfSchema, { foo: 'a value' }, {
-            allOf: 'populateDefaults',
-          } as DefaultFormStateBehavior),
+          ensureFormDataMatchingSchema(
+            testValidator,
+            allOfSchema,
+            allOfSchema,
+            { foo: 'a value' },
+            { allOf: 'populateDefaults' },
+          ),
         ).toEqual({ foo: 'a value' });
       });
     });

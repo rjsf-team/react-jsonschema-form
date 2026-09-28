@@ -3,8 +3,6 @@ import { defaultSystem } from '@chakra-ui/react';
 import shouldForwardProp from '@emotion/is-prop-valid';
 import type { UiSchema } from '@rjsf/utils';
 
-const { isValidProperty } = defaultSystem;
-
 /** A `UiSchema` whose `ui:options` are known to carry the theme's `chakra` prop bag.
  *
  * NOTE: intersects rather than using `Omit`, whose `keyof UiSchema` includes `UiSchema`'s string index signature and so
@@ -26,6 +24,6 @@ export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps 
    * Filtered into a copy, since `chakraProps` belongs to the caller's uiSchema.
    */
   return Object.fromEntries(
-    Object.entries(chakraProps).filter(([key]) => isValidProperty(key) && !shouldForwardProp(key)),
-  ) as ChakraField.RootProps;
+    Object.entries(chakraProps).filter(([key]) => defaultSystem.isValidProperty(key) && !shouldForwardProp(key)),
+  );
 }

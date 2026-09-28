@@ -27,7 +27,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onBlur: () => undefined,
     onFocus: () => undefined,
     ...props,
-  } as unknown as WidgetProps;
+  };
 }
 
 /** Renders the widget inside a `MantineProvider`, which its components require */

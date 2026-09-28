@@ -24,18 +24,8 @@
   },
   "scripts": {
     "build": "tsdown -c ../../tsdown.base.mts",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
     "test": "vitest run",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
   },
   "peerDependencies": {
     "react": ">=19"

@@ -63,7 +63,6 @@ describe('useFileWidgetProps()', () => {
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
     windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
       return {
-        // oxlint-disable-next-line no-unused-vars
         set onload(fn: (event: any) => void) {
           fn(FN_RESULT);
         },

@@ -60,7 +60,7 @@ describe('AJV8PrecompiledValidator', () => {
             },
           ],
           [RJSF_REF_KEY]: '#/definitions/foo',
-        } as RJSFSchema;
+        };
 
         expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
       });
@@ -76,7 +76,7 @@ describe('AJV8PrecompiledValidator', () => {
             },
           ],
           [RJSF_REF_KEY]: '#/definitions/foo',
-        } as RJSFSchema;
+        };
 
         expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
       });

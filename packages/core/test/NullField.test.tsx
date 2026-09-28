@@ -44,6 +44,7 @@ describe('NullField', () => {
           type: 'null',
         },
         formData: 3,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
 

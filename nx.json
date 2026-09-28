@@ -14,15 +14,6 @@
       "//inputs": "the shared tsdown config lives outside project roots; without it a warm cache serves stale output when it changes",
       "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts"]
     },
-    "cs-check": {
-      "cache": true
-    },
-    "cs-format": {
-      "cache": true
-    },
-    "lint": {
-      "cache": true
-    },
     "test": {
       "cache": true,
       "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
@@ -33,9 +24,6 @@
       "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.ts"]
     },
     "test:watch": {
-      "cache": true
-    },
-    "precommit": {
       "cache": true
     },
     "publish-to-npm": {

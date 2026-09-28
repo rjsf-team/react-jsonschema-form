@@ -76,7 +76,7 @@ export const SelectItem = ({ item, children, ref, ...rest }: ComponentProps<type
 );
 
 interface SelectValueTextProps extends Omit<ComponentProps<typeof ChakraSelect.ValueText>, 'children'> {
-  children?(items: CollectionItem[]): React.ReactNode;
+  children?: (items: CollectionItem[]) => React.ReactNode;
 }
 
 /**

@@ -171,7 +171,7 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
     if (newFormData !== 'Appie') {
       newErrorSchema = {
         __errors: ['Value must be "Appie"'],
-      } as ErrorSchema<unknown[]>;
+      };
     }
     props.onChange(newFormData as unknown[], path, newErrorSchema, id);
   };
@@ -179,11 +179,9 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
 };
 
 const mockFileReader = {
-  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 
@@ -1127,6 +1125,7 @@ describe('ArrayField', () => {
         uiSchema,
         initialFormData: {},
         liveValidate: 'onChange',
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(form.node, user);
@@ -1138,6 +1137,7 @@ describe('ArrayField', () => {
         uiSchema,
         initialFormData: {},
         liveValidate: 'onChange',
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: false,
       });
       await submitForm(form.node, user);

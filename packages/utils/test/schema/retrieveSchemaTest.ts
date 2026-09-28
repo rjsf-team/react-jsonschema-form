@@ -1856,7 +1856,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             title: 'Anything',
             $defs: { name: { type: 'string' } },
             definitions: { other: { type: 'number' } },
-          } as RJSFSchema,
+          },
         };
         const formData = { foo: 'a', bar: 1 };
 

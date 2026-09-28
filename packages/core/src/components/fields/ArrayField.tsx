@@ -35,6 +35,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import { EMPTY_UI_SCHEMA } from '../constants.ts';
+
 /** An item of the `formData` paired with its stable React key */
 interface KeyedFormDataType<T> {
   key: string;
@@ -586,7 +588,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
 ) {
   const {
     schema,
-    uiSchema = {},
+    uiSchema = EMPTY_UI_SCHEMA,
     errorSchema,
     fieldPath,
     id,
@@ -698,7 +700,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 ) {
   const {
     schema,
-    uiSchema = {},
+    uiSchema = EMPTY_UI_SCHEMA,
     formData,
     errorSchema,
     fieldPath,

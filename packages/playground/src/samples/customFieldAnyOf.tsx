@@ -25,9 +25,9 @@ function UiField(props: FieldProps) {
   const cityPath = toFieldPath(cityKey, fieldPath);
   const latPath = toFieldPath(latKey, fieldPath);
   const lonPath = toFieldPath(lonKey, fieldPath);
-  const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {} as RJSFSchema);
-  const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {} as RJSFSchema);
-  const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {} as RJSFSchema);
+  const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {});
+  const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {});
+  const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {});
 
   const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'keyName' | 'id' | 'fieldPath' | 'children'> = {
     registry,

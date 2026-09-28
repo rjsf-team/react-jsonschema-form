@@ -172,7 +172,7 @@ describe('antd specific tests', () => {
         schema={schema}
         uiSchema={uiSchema}
         validator={validator}
-        extraErrors={{ name: { __errors: ['a field error'] } } as ErrorSchema}
+        extraErrors={{ name: { __errors: ['a field error'] } }}
       />,
     );
 
@@ -200,7 +200,7 @@ describe('antd specific tests', () => {
         schema={schema}
         uiSchema={{ name: { 'ui:help': 'some help text' } }}
         validator={validator}
-        extraErrors={{ name: { __errors: ['a field error'] } } as ErrorSchema}
+        extraErrors={{ name: { __errors: ['a field error'] } }}
       />,
     );
 

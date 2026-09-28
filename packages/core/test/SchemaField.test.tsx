@@ -495,7 +495,7 @@ describe('SchemaField', () => {
 
     const uiSchema: UiSchema = {
       'ui:field': (props) => {
-        const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
+        const { uiSchema, ...fieldProps } = props;
         return <SchemaField {...fieldProps} />;
       },
     };
@@ -625,7 +625,7 @@ describe('SchemaField', () => {
       const customFieldError = (props: FieldErrorProps) => <div className='custom-field-error'>{props.errors}</div>;
       const uiSchema: UiSchema = {
         'ui:field': (props) => {
-          const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
+          const { uiSchema, ...fieldProps } = props;
           return <SchemaField {...fieldProps} uiSchema={{ foo: { 'ui:FieldErrorTemplate': customFieldError } }} />;
         },
       };
@@ -746,7 +746,7 @@ describe('SchemaField', () => {
       const hideUiSchema = {
         'ui:hideError': true,
         'ui:field': (props: FieldProps) => {
-          const { uiSchema, ...fieldProps } = props; //oxlint-disable-line
+          const { uiSchema, ...fieldProps } = props;
           // Pass the children schema in after removing the global one
           return <SchemaField {...fieldProps} uiSchema={{ 'ui:hideError': false }} />;
         },

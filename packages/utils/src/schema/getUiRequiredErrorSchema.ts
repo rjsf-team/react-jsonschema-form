@@ -81,7 +81,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     customMergeAllOf,
   );
   return {
-    schema: mergeSchemas(remaining as S, options[index] as S) as S,
+    schema: mergeSchemas(remaining, options[index] as S) as S,
     uiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, index) ?? {},
   };
 }
@@ -269,7 +269,7 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
   if (!isObject(node)) {
     return false;
   }
-  if (getUiOptions<T, S, F>(node as UiSchema<T, S, F>).required !== undefined) {
+  if (getUiOptions<T, S, F>(node).required !== undefined) {
     return true;
   }
   return Object.entries(node).some(([key, value]) => {

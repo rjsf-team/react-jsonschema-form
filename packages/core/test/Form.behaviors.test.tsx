@@ -139,6 +139,7 @@ describe('Live validation onBlur', () => {
       schema,
       onBlur,
       liveValidate: 'onBlur',
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     });
     const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
@@ -1500,6 +1501,7 @@ describe('Async errors', () => {
 
     const props: NoValFormProps = {
       schema,
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     };
 
@@ -3391,7 +3393,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
       ref: formRef,
       schema,
       fields: { StringField: RaisingField },
-      extraErrors: { foo: { __errors: ['extra!'] } } as ErrorSchema,
+      extraErrors: { foo: { __errors: ['extra!'] } },
     });
     // A submit puts a real validation error into `schemaValidationErrorSchema`, which is the base the custom-error
     // path re-merges onto

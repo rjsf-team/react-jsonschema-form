@@ -120,7 +120,6 @@ function SelectWidget<
         uiSchema={uiSchema}
         value={value}
       />
-      {/* oxlint-disable-next-line jsx-a11y/no-autofocus */}
       <select
         id={id}
         name={htmlName || id}

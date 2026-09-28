@@ -7,6 +7,5 @@ export interface TestValidatorParams<T = unknown> {
 }
 
 export interface TestValidatorType extends ValidatorType {
-  // oxlint-disable-next-line no-unused-vars
   setReturnValues(params?: TestValidatorParams): void;
 }

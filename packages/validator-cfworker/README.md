@@ -38,12 +38,12 @@ const validator = customizeValidator({
 
 Unknown keywords are annotations to the underlying engine, so unsupported extensions are not validation constraints.
 
-| Keyword or extension | Status | Notes |
-| --- | --- | --- |
+| Keyword or extension             | Status      | Notes                                                                                              |
+| -------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
 | `$dynamicRef` / `$dynamicAnchor` | Unsupported | Tracked upstream in [`cfworker/json-schema#150`](https://github.com/cfworker/cfworker/issues/150). |
-| AJV `$data` references | Unsupported | AJV-specific extension; use literal schema values. |
-| OpenAPI `discriminator` | Unsupported | Use standard `oneOf` constraints without discriminator semantics. |
-| `errorMessage` from `ajv-errors` | Unsupported | Use RJSF's `transformErrors` hook instead. |
+| AJV `$data` references           | Unsupported | AJV-specific extension; use literal schema values.                                                 |
+| OpenAPI `discriminator`          | Unsupported | Use standard `oneOf` constraints without discriminator semantics.                                  |
+| `errorMessage` from `ajv-errors` | Unsupported | Use RJSF's `transformErrors` hook instead.                                                         |
 
 Precompiled-validator mode is intentionally outside this initial package. Runtime error messages also differ from AJV, and there is no `ajv-i18n` equivalent.
 

@@ -72,7 +72,7 @@ const widgetProps: WidgetProps = {
   readonly: false,
   required: false,
   fieldPath: ROOT_FIELD_PATH,
-  schema: {} as RJSFSchema,
+  schema: {},
   uiSchema: {},
   options: {},
   value: undefined,

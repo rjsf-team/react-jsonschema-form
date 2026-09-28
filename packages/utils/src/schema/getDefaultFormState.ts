@@ -337,10 +337,10 @@ export function computeDefaults<
     // Skip this for anyOf/oneOf/$ref schemas - they need special handling.
     if (preferParentDefaults) {
       // Use schema.default as the base and only override values that are defined in parent defaults.
-      defaults = mergeObjects(schema.default as GenericObjectType, defaults) as T;
+      defaults = mergeObjects(schema.default, defaults) as T;
     } else {
       // Only override parent defaults that are defined in schema.default.
-      defaults = mergeObjects(defaults, schema.default as GenericObjectType) as T;
+      defaults = mergeObjects(defaults, schema.default) as T;
     }
   } else if (
     DEFAULT_KEY in schema &&

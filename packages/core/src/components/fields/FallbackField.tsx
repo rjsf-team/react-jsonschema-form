@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import type {
-  ErrorSchema,
   FallbackFieldProps,
   FormContextType,
   RegistryWidgetsType,
@@ -192,6 +191,7 @@ function getValueUiSchema<
 ): UiSchema<T, S, F> {
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
+  // oxlint-disable-next-line typescript/no-unnecessary-type-assertion -- without it the spread widens past `UiSchema`
   const valueUiSchema = { ...(uiSchema ?? ({} as UiSchema<T, S, F>)) };
   delete valueUiSchema[HELP_UI_KEY];
   if (!keepsWidget) {
@@ -357,7 +357,7 @@ function FallbackUiField<
   // describes the value — so that one option is all it is given
   const typeSelectorUiSchema = useMemo(() => {
     const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-    return label === false ? ({ [UI_OPTIONS_KEY]: { label } } as UiSchema<T, S, F>) : undefined;
+    return label === false ? { [UI_OPTIONS_KEY]: { label } } : undefined;
   }, [uiSchema, globalUiOptions]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so
@@ -387,7 +387,7 @@ function FallbackUiField<
       onChange(
         castToNewType<T>(formData as T, newType as JSONSchema7TypeName),
         fieldPath,
-        hasErrorsToClear ? ({} as ErrorSchema<T>) : undefined,
+        hasErrorsToClear ? {} : undefined,
         id,
       );
     }

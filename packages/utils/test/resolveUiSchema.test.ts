@@ -202,7 +202,7 @@ describe('resolveUiSchema()', () => {
     const definitions = { '#/$defs/node': { name: { 'ui:placeholder': 'Node name' } } };
     const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
     const local: UiSchema = { 'ui:widget': 'textarea' };
-    expect(resolveUiSchema({ type: 'string' } as RJSFSchema, local, reg)).toEqual(local);
+    expect(resolveUiSchema({ type: 'string' }, local, reg)).toEqual(local);
   });
 
   it('returns local uiSchema when $ref has no matching definition', () => {

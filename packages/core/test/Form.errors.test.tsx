@@ -320,6 +320,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         it('should not update errorSchema when the formData changes', async () => {
           const { node, onChange } = createFormComponent({
             schema,
+            // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
             noValidate: true,
             liveValidate: 'onChange',
           });
@@ -334,6 +335,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         it('should not update errorSchema when the formData changes', async () => {
           const { node, onSubmit } = createFormComponent({
             schema,
+            // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
             noValidate: true,
           });
 

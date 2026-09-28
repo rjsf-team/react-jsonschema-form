@@ -52,7 +52,7 @@ export default function RatingWidget<
     (event: FocusEvent<HTMLSpanElement>) => {
       if (onFocus) {
         // Get the star value from the data attribute
-        const starValue = Number((event.target as HTMLElement).dataset.value);
+        const starValue = Number(event.target.dataset.value);
         onFocus(id, starValue);
       }
     },
@@ -64,7 +64,7 @@ export default function RatingWidget<
     (event: FocusEvent<HTMLSpanElement>) => {
       if (onBlur) {
         // Get the star value from the data attribute
-        const starValue = Number((event.target as HTMLElement).dataset.value);
+        const starValue = Number(event.target.dataset.value);
         onBlur(id, starValue);
       }
     },

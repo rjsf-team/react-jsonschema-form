@@ -24,7 +24,6 @@ export function input(container: HTMLElement, id: string) {
   return container.querySelector<HTMLInputElement>(`#${id}`)!;
 }
 
-// oxlint-disable-next-line no-unused-vars
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
 export interface FormComponentResult {
   container: HTMLElement;

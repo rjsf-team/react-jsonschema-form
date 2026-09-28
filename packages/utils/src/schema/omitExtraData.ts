@@ -254,7 +254,7 @@ export default function omitExtraData<
     }
     // validator.isValid signature: (schema, formData, rootSchema)
     const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(condition as S, source as T, rootSchema)
+      ? validator.isValid(condition as S, source, rootSchema)
       : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
@@ -425,7 +425,6 @@ export default function omitExtraData<
         : [];
       for (const key of Object.keys(afterConditions)) {
         if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
-          // oxlint-disable-next-line no-param-reassign
           delete afterConditions[key];
         }
       }

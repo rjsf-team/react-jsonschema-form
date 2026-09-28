@@ -1,4 +1,4 @@
-import type { OutputUnit, Schema, Validator } from '@cfworker/json-schema';
+import type { OutputUnit, Validator } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -124,7 +124,7 @@ export default class CFWorkerValidator<
       return cached.validator;
     }
 
-    const validator = createCfworkerInstance(schema as Schema, this.options, rootSchema as Schema | undefined);
+    const validator = createCfworkerInstance(schema, this.options, rootSchema);
     this.validators.set(id, { validator, schema, rootSchema });
     return validator;
   }

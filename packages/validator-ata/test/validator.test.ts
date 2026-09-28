@@ -256,9 +256,9 @@ describe('ATAValidator', () => {
     it('is invoked with the constructed validator', () => {
       const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
-      v.isValid({ type: 'string' } as RJSFSchema, 'a', {
+      v.isValid({ type: 'string' }, 'a', {
         type: 'string',
-      } as RJSFSchema);
+      });
       expect(extenderFn).toHaveBeenCalled();
     });
   });
@@ -322,9 +322,9 @@ describe('ATAValidator', () => {
     it('passes the constructed Validator through extenderFn', () => {
       const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
-      v.isValid({ type: 'string' } as RJSFSchema, 'a', {
+      v.isValid({ type: 'string' }, 'a', {
         type: 'string',
-      } as RJSFSchema);
+      });
       expect(extenderFn).toHaveBeenCalled();
     });
   });

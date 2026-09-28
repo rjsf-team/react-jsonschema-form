@@ -38,7 +38,7 @@ export default function FileWidget<
       // Mantine's `FileInput` hands back a `File[]` when `multiple` and a lone `File` otherwise, and `null` when cleared
       const selected = Array.isArray(files) ? files : [files].filter((file) => file !== null);
       // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
-      // oxlint-disable-next-line no-floating-promises, no-void
+      // oxlint-disable-next-line no-void
       void handleChange(selected);
     },
     [handleChange],

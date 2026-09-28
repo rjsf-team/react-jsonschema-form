@@ -16,7 +16,7 @@ describe('validationDataMerge()', () => {
     };
     const errors = ['custom errors'];
     const customErrors = [{ property: '.', message: errors[0], stack: `. ${errors[0]}` }];
-    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors } as ErrorSchema;
+    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors };
     const expected = {
       errorSchema,
       errors: customErrors,
@@ -26,12 +26,12 @@ describe('validationDataMerge()', () => {
   it('Returns merged data when additionalErrorSchema is passed', () => {
     const oldError = 'ajv error';
     const validationData: ValidationData<any> = {
-      errorSchema: { [ERRORS_KEY]: [oldError] } as ErrorSchema,
+      errorSchema: { [ERRORS_KEY]: [oldError] },
       errors: [{ stack: oldError, name: 'foo', schemaPath: '.foo' }],
     };
     const errors = ['custom errors'];
     const customErrors = [{ property: '.', message: errors[0], stack: `. ${errors[0]}` }];
-    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors } as ErrorSchema;
+    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors };
     const expected = {
       errorSchema: { [ERRORS_KEY]: [oldError, ...errors] },
       errors: [...validationData.errors, ...customErrors],
@@ -41,12 +41,12 @@ describe('validationDataMerge()', () => {
   it('Returns merged data when additionalErrorSchema is passed, prevent duplicates', () => {
     const oldError = 'ajv error';
     const validationData: ValidationData<any> = {
-      errorSchema: { [ERRORS_KEY]: [oldError] } as ErrorSchema,
+      errorSchema: { [ERRORS_KEY]: [oldError] },
       errors: [{ stack: oldError, name: 'foo', schemaPath: '.foo' }],
     };
     const errors = ['custom errors'];
     const customErrors = [{ property: '.', message: errors[0], stack: `. ${errors[0]}` }];
-    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors } as ErrorSchema;
+    const errorSchema: ErrorSchema = { [ERRORS_KEY]: errors };
     const expected = {
       errorSchema: { [ERRORS_KEY]: [oldError, ...errors] },
       errors: [...validationData.errors, ...customErrors],

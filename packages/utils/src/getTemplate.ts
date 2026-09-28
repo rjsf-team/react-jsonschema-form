@@ -22,7 +22,7 @@ export default function getTemplate<
   if (
     Object.hasOwn(uiOptions, name) &&
     typeof uiOptions[name] === 'string' &&
-    Object.hasOwn(templates, uiOptions[name] as string)
+    Object.hasOwn(templates, uiOptions[name])
   ) {
     const key = uiOptions[name];
     // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent

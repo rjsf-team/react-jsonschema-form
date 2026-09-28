@@ -114,7 +114,7 @@ export function resolveCondition<
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
-  const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
+  const conditionValue = validator.isValid(expression as S, formData || {}, rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
@@ -407,7 +407,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const { $ref, ...localSchema } = resolvedSchema;
     // Check for a recursive reference and stop the loop
     if (recurseList.includes($ref!)) {
-      return markCycleOnDetection ? ({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } as S) : resolvedSchema;
+      return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
@@ -753,7 +753,7 @@ export function retrieveSchemaInternal<
         rootSchema,
         expandAllBranches,
         recurseList,
-        rawFormData as T,
+        rawFormData,
         customMergeAllOf,
         preserveDependencies,
       );
@@ -820,7 +820,7 @@ export function retrieveSchemaInternal<
         validator,
         resolvedSchema,
         rootSchema,
-        rawFormData as T,
+        rawFormData,
         customMergeAllOf,
       );
     }
@@ -988,10 +988,7 @@ export function processDependencies<
       (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
       (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
     ) {
-      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
-        dependencyKey,
-        dependencies as GenericObjectType,
-      );
+      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, dependencies);
       if (Array.isArray(dependencyValue)) {
         schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
       } else if (isObject(dependencyValue)) {

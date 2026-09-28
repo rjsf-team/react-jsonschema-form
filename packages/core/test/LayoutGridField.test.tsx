@@ -655,7 +655,6 @@ const DEFAULT_ID = 'test-id';
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
 // The registry causes an infinite loop and hasFormData & optionalObjectNode are tested elsewhere
 function stringifyProps(props: Partial<FieldProps>) {
-  // oxlint-disable-next-line no-unused-vars
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
   return sortedJSONStringify({ ...otherProps, otherUIOptions });
@@ -684,7 +683,6 @@ function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProp
   );
 }
 
-// oxlint-disable-next-line no-unused-vars
 const LOOKUP_MAP: Record<string, string | ((props: FieldProps) => ReactElement)> = {
   FooClass: 'Foo',
   BarClass: 'Bar',

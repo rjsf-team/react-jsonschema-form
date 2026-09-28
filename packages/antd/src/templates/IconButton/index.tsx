@@ -1,4 +1,3 @@
-import type { MouseEventHandler } from 'react';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -26,7 +25,7 @@ export default function IconButton<
   const { iconType = 'default', icon, onClick, uiSchema, registry, color, ...otherProps } = props;
   return (
     <Button
-      onClick={onClick as MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>}
+      onClick={onClick}
       // @ts-expect-error TS2322, Because even casting as `ButtonProps['type']` has issues
       type={iconType}
       icon={icon}

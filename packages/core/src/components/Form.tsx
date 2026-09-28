@@ -1105,9 +1105,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // In this case, pass undefined to deriveFormData to trigger fresh default computation.
   // Only do this when the previous formData was null/undefined (switching FROM null).
   const hasOnlyUndefinedValues =
-    isObject(formData) &&
-    Object.keys(formData as object).length > 0 &&
-    Object.values(formData as object).every((v) => v === undefined);
+    isObject(formData) && Object.keys(formData).length > 0 && Object.values(formData).every((v) => v === undefined);
   const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
   const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
 

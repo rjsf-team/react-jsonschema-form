@@ -20,7 +20,7 @@ export function evalValidatorCode(code: string): ValidatorFunctions {
   const validateFns = {};
   // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
   new Function('exports', 'require', code)(validateFns, require);
-  return validateFns as ValidatorFunctions;
+  return validateFns;
 }
 
 /** Compiles superSchema into standalone-validator code and loads it, entirely in memory. */
