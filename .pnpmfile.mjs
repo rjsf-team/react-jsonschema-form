@@ -6,13 +6,25 @@ const TYPES_FOR_PEER = {
 };
 
 function readPackage(pkg) {
-  for (const [peer, types] of Object.entries(TYPES_FOR_PEER)) {
-    if (pkg.peerDependencies?.[peer] && !pkg.peerDependencies[types] && !pkg.dependencies?.[types]) {
-      pkg.peerDependencies[types] = '*';
-      pkg.peerDependenciesMeta = { ...pkg.peerDependenciesMeta, [types]: { optional: true } };
-    }
+  // Workspace packages already reach @types/react through the root node_modules; adding the peer to them would
+  // record @types/react as a dependency of the published @rjsf/* packages in the lockfile.
+  if (pkg.name?.startsWith('@rjsf/')) {
+    return pkg;
   }
-  return pkg;
+  const missing = Object.entries(TYPES_FOR_PEER).filter(
+    ([peer, types]) => pkg.peerDependencies?.[peer] && !pkg.peerDependencies[types] && !pkg.dependencies?.[types],
+  );
+  if (missing.length === 0) {
+    return pkg;
+  }
+  return {
+    ...pkg,
+    peerDependencies: { ...pkg.peerDependencies, ...Object.fromEntries(missing.map(([, types]) => [types, '*'])) },
+    peerDependenciesMeta: {
+      ...pkg.peerDependenciesMeta,
+      ...Object.fromEntries(missing.map(([, types]) => [types, { optional: true }])),
+    },
+  };
 }
 
 export const hooks = { readPackage };

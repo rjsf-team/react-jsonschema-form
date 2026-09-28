@@ -2,12 +2,6 @@ import Form from '@rjsf/core';
 
 import { gridTests } from '../src/index.ts';
 
-// gridTests' own mock of getTestIds only reaches modules imported after it, and @rjsf/core is imported first here.
-vi.mock('@rjsf/utils', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getTestIds: vi.fn(() => ({})),
-}));
-
 gridTests(Form, {
   ColumnWidthAll: { className: 'col-xs-12' },
   ColumnWidth4: { className: 'col-xs-4' },

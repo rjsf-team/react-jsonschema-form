@@ -169,7 +169,7 @@ overrides:
 
 packageExtensionsChecksum: sha256-og1hEpEpL7sIhW33i8d7xs+fsSg/YbRRmW2NDg/52mU=
 
-pnpmfileChecksum: sha256-32Y47JTxO/+3QO/pUMOiPqjoz0dAXYwUABpyXB/X7Ds=
+pnpmfileChecksum: sha256-P920nXHhqu38bJLClwRddBx5pDKnRjtcKSGDyqzlQBQ=
 
 importers:
 
@@ -256,9 +256,6 @@ importers:
 
   packages/antd:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -299,9 +296,6 @@ importers:
       '@emotion/weak-memoize':
         specifier: ^0.4.0
         version: 0.4.0
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(@types/react@19.3.0)(react@19.3.0)
@@ -336,9 +330,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -376,9 +367,6 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.3.1
         version: 3.3.1(@fortawesome/fontawesome-svg-core@7.2.0)(@types/react@19.3.0)(react@19.3.0)
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -444,9 +432,6 @@ importers:
 
   packages/fluentui-rc:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -475,9 +460,6 @@ importers:
 
   packages/mantine:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       dayjs:
         specifier: ^1.11.21
         version: 1.11.21
@@ -509,9 +491,6 @@ importers:
 
   packages/mui:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -673,9 +652,6 @@ importers:
       '@react-icons/all-files':
         specifier: ^4.1.0
         version: 4.1.0(@types/react@19.3.0)(react@19.3.0)
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -722,9 +698,6 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.2.0
         version: 1.2.4(@types/react@19.3.0)(react@19.3.0)
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -762,9 +735,6 @@ importers:
       '@testing-library/jest-dom':
         specifier: ^7.0.1
         version: 7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11)
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       react:
         specifier: '>=19'
         version: 19.3.0
@@ -787,9 +757,6 @@ importers:
 
   packages/utils:
     dependencies:
-      '@types/react':
-        specifier: '*'
-        version: 19.3.0
       '@x0k/json-schema-merge':
         specifier: ^1.0.6
         version: 1.0.6

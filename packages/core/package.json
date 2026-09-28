@@ -7,7 +7,6 @@
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks",
-    "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
   },
