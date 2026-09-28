@@ -1,4 +1,4 @@
-import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import type { CustomValidator, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 

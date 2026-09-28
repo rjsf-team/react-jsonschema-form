@@ -1,5 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import type { CustomValidator, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
