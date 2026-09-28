@@ -682,12 +682,9 @@ function LayoutGridFieldComponent<
     [registry, gridSchema],
   );
   const { name, UIComponent, uiProps } = uiComponentProps;
-  const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = getSchemaDetailsForField<T, S, F>(
-    registry,
-    name,
-    initialSchema,
-    formData,
-    parentFieldPath,
+  const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = useMemo(
+    () => getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, parentFieldPath),
+    [registry, name, initialSchema, formData, parentFieldPath],
   );
   // Memoized so the cell's `SchemaField` keeps its uiSchema reference while nothing it is built from changed
   const { fieldUiSchema, uiReadonly } = useMemo(
