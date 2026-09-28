@@ -1,0 +1,16 @@
+{
+  // The whole repo as one program, resolving @rjsf/* imports to source: TypeScript resolves the shared
+  // T/S/F type graph once, where one program per package re-resolved it in every one of them.
+  "extends": "./tsconfig.test.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "customConditions": ["@rjsf/source"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"]
+  },
+  "include": ["packages/*/src", "packages/*/test", "packages/playground/*.ts", "testing"],
+  // chakra-ui needs "bundler" resolution, so it has its own program in tsconfig.typecheck-chakra.json
+  "exclude": ["packages/chakra-ui", "packages/docs", "packages/primereact", "packages/semantic-ui", "**/lib"]
+}

@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.
 
-Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It only transpiles; `pnpm run typecheck` (`tsc --build`) is the typecheck, and tsc never emits JavaScript. Its `--builders 4 --checkers 1` flags are load-bearing: a plain cold `tsc --build` runs past a CI runner's memory. Most of that cost is the `SlotComponent` (`@rjsf/utils`) and `Uninferred` (`Form.tsx`) types, not the `unknown` generic defaults.
+Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It only transpiles; `pnpm run typecheck` is the typecheck, and tsc never emits JavaScript. It checks the whole repo as one program (`tsconfig.typecheck.json`, resolving `@rjsf/*` to source through the `@rjsf/source` condition) plus a second for chakra-ui, which needs `bundler` resolution (`tsconfig.typecheck-chakra.json`). Don't go back to one program per package: each one re-resolves the variance of the shared `T`/`S`/`F` type graph (`UiSchema` → `SlotComponent<…Props>` → `Registry` → `FieldProps` → `UiSchema`), about 1.5s apiece, which made the per-package `tsc --build` over twice as slow and past a CI runner's memory. The per-package tsconfigs still drive tsdown's declarations and editors.
 
 ## Architecture
 
