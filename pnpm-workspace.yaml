@@ -5,12 +5,10 @@ overrides:
   'sockjs>uuid': ^14.0.0
   # Fixes security issues in form-data by overriding to safe version
   'form-data': ^4.0.6
-  'axios>form-data': ^4.0.6
   # Fixes security issues in tmp by overriding to safe version
   'nx>tmp': ^0.2.7
   # Fixes security issues in dompurify by overriding to safe version
   'dompurify': ^3.4.11
-  'monaco-editor>dompurify': ^3.4.11
   # Fixes security issues in undici by overriding to safe version
   'undici': ^7.28.0
   # Fixes security issues in serialize-javascript by overriding to safe version
@@ -18,26 +16,9 @@ overrides:
   # Fixes security issues in http-proxy-middleware by overriding to safe version
   'http-proxy-middleware': ^2.0.10
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - ata-validator
-  - core-js
-  - esbuild
-  - nx
-
 allowBuilds:
   '@parcel/watcher': true
   ata-validator: true
   core-js: true
   esbuild: true
   nx: true
-
-minimumReleaseAgeExclude:
-  - '@mantine/core@9.6.3'
-  - '@mantine/dates@9.6.3'
-  - '@mantine/hooks@9.6.3'
-  - '@types/react-dom@19.3.0'
-  - '@types/react@19.3.0'
-  - react-dom@19.3.0
-  - react@19.3.0
-  - scheduler@0.28.0
