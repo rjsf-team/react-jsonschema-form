@@ -429,7 +429,7 @@
     "react/globals": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/hook-use-state": "error",
     "react/iframe-missing-sandbox": "error",
-    "react/immutability": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/immutability": "error",
     "react/incompatible-library": "error",
     "react/invariant": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
