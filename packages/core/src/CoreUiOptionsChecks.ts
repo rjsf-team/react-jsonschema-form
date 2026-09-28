@@ -25,7 +25,7 @@ type NonBuiltInObject = object & {
 
 /** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
  * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Pass it as
- * `UiSchema`'s fourth type parameter (`Checks`) to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
+ * `StrictUiSchema`'s `Checks` type parameter to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
  * vocabulary; union it with a `Checks` union of your own to extend it, since it isn't included automatically.
  *
  * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not

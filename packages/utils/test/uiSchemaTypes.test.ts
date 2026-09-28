@@ -1,4 +1,4 @@
-import type { FormContextType, RJSFSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
+import type { FormContextType, RJSFSchema, StrictUiSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -177,8 +177,8 @@ type ExampleChecks =
   | UiOptionsCheck<number, { widget?: 'ExampleRangeWidget' }>
   | UiOptionsCheck<unknown[], { widget?: 'ExampleListWidget'; orderable?: boolean }>;
 
-describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
-  it('leaves UiSchema fully open when Checks is omitted, same as ever - passing a Checks union is what narrows it', () => {
+describe('StrictUiSchema (vocabulary narrowing)', () => {
+  it('leaves UiSchema fully open - StrictUiSchema with a Checks union is what narrows it', () => {
     const ui: UiSchema<ReferencesFormData> = {
       tree: { name: { 'ui:widget': 'AnyStringWhatsoever' } },
     };
@@ -187,7 +187,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
   });
 
   it('narrows widgets per field type on a recursive, nested form-data shape', () => {
-    type Checked = UiSchema<ReferencesFormData, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<ReferencesFormData, RJSFSchema, FormContextType, ExampleChecks>;
 
     const ui: Checked = {
       tree: {
@@ -217,7 +217,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
   });
 
   it('allows every name Checks declares, and nothing else, when the form data has no type', () => {
-    type Untyped = UiSchema<unknown, RJSFSchema, FormContextType, ExampleChecks>;
+    type Untyped = StrictUiSchema<unknown, RJSFSchema, FormContextType, ExampleChecks>;
 
     const ui: Untyped = { 'ui:widget': 'ExampleRangeWidget', 'ui:placeholder': 'any string check applies' };
     // @ts-expect-error a name no Checks member declares is still rejected
@@ -228,7 +228,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
   });
 
   it('allows the names of every Checks member matching part of a union field type', () => {
-    type Checked = UiSchema<{ amount: string | number }, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<{ amount: string | number }, RJSFSchema, FormContextType, ExampleChecks>;
 
     const asText: Checked = { amount: { 'ui:widget': 'ExampleTextWidget' } };
     const asRange: Checked = { amount: { 'ui:widget': 'ExampleRangeWidget' } };
@@ -238,8 +238,8 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
     expect([asText, asRange, bad]).toHaveLength(3);
   });
 
-  it('supports both the `ui:optionName` and `ui:options: { optionName }` forms once Checks is supplied', () => {
-    type Checked = UiSchema<{ bio: string }, RJSFSchema, FormContextType, ExampleChecks>;
+  it('supports both the `ui:optionName` and `ui:options: { optionName }` forms in a StrictUiSchema', () => {
+    type Checked = StrictUiSchema<{ bio: string }, RJSFSchema, FormContextType, ExampleChecks>;
 
     const viaPrefix: Checked = { bio: { 'ui:placeholder': 'Tell us about yourself' } };
     const viaOptions: Checked = { bio: { 'ui:options': { placeholder: 'Tell us about yourself' } } };
@@ -255,7 +255,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
       lastName: string;
       [dynamicKey: string]: string;
     }
-    type Checked = UiSchema<PatternPropsFormData, RJSFSchema, FormContextType, ExampleChecks>;
+    type Checked = StrictUiSchema<PatternPropsFormData, RJSFSchema, FormContextType, ExampleChecks>;
 
     const ui: Checked = {
       firstName: { 'ui:autofocus': true },
@@ -274,7 +274,7 @@ describe('UiSchema Checks parameter (vocabulary narrowing)', () => {
     type MyThemeChecks =
       | UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>
       | UiOptionsCheck<number, { widget?: 'SliderWidget' }>;
-    type Checked = UiSchema<{ active: boolean }, RJSFSchema, FormContextType, MyThemeChecks>;
+    type Checked = StrictUiSchema<{ active: boolean }, RJSFSchema, FormContextType, MyThemeChecks>;
 
     const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
 
