@@ -15,8 +15,8 @@ export default function UpDownWidget<
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target?.value);
+  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
+  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 
