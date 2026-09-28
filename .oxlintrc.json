@@ -14,13 +14,7 @@
     "es2026": true
   },
   "ignorePatterns": [
-    "**/node_modules/**",
-    "**/lib/**",
-    "**/lib-test/**",
-    "**/dist/**",
-    "**/coverage/**",
     "**/*.d.ts",
-    "**/docs/build/**",
     "**/docs/**",
     "**/harness/*.cjs"
   ],
@@ -748,12 +742,6 @@
       }
     },
     {
-      "files": ["**/docs/**"],
-      "rules": {
-        "react/no-array-index-key": "off"
-      }
-    },
-    {
       "files": [
         "**/components/widgets/*.tsx",
         "**/components/templates/*.tsx",
@@ -773,7 +761,7 @@
       }
     },
     {
-      "files": ["packages/shadcn/src/components/ui/**"],
+      "files": ["packages/shadcn/src/components/ui/**", "packages/shadcn/src/lib/**"],
       "rules": {
         "import/consistent-type-specifier-style": "off"
       }
