@@ -15,6 +15,7 @@ const FluentWrapper = (props: { children: ReactNode; targetDocument?: HTMLDocume
   );
 };
 
-export const __createFluentUIRCFrameProvider =
-  (props: any) =>
-  ({ document }: any) => <FluentWrapper targetDocument={document}>{props.children}</FluentWrapper>;
+export const __createFluentUIRCFrameProvider = (props: any) =>
+  function FluentUIRCFrame({ document }: any) {
+    return <FluentWrapper targetDocument={document}>{props.children}</FluentWrapper>;
+  };

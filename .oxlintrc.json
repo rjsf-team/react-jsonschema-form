@@ -421,7 +421,7 @@
     "react/button-has-type": "error",
     "react/capitalized-calls": "error",
     "react/checked-requires-onchange-or-readonly": "error",
-    "react/display-name": "off",
+    "react/display-name": "error",
     "react/error-boundaries": "error",
     "react/exhaustive-deps": "error",
     "react/exhaustive-effect-dependencies": "error",
