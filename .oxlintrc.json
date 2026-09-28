@@ -457,6 +457,7 @@
     "react/prefer-es6-class": ["error", "always"],
     "react/prefer-function-component": "off",
     "react/preserve-manual-memoization": "off",
+    "react/purity": "off",
     "react/react-in-jsx-scope": "off",
     "react/refs": "off",
     "react/require-render-return": "error",
