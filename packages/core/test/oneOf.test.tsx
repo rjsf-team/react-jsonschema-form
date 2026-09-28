@@ -196,38 +196,84 @@ describe('oneOf', () => {
     );
   });
 
-  it('should keep a value matching the old default when the new option does not default that property', async () => {
+  describe('keeps a value matching the old default when the new option does not declare one', () => {
     // The value cannot be told apart from one the user typed that happens to equal the default, so dropping it when
-    // nothing would refill it would lose data that survived the switch before
-    const schema: RJSFSchema = {
+    // the new option declares nothing to refill it with would lose data that survived the switch before. The
+    // computed defaults of the new option are no guide here: they also carry a nested object's leaf defaults, `[]`
+    // for a required array and `false` for a required boolean, none of which the option declares for the key
+    const kindFor = (name: string): RJSFSchema => ({ type: 'string', const: name, default: name });
+    const schemaFor = (oldProperty: RJSFSchema, newProperty: RJSFSchema, required?: string[]): RJSFSchema => ({
       oneOf: [
-        {
-          title: 'a',
-          type: 'object',
-          properties: {
-            kind: { type: 'string', const: 'a', default: 'a' },
-            name: { type: 'string', default: 'Anon' },
-          },
-        },
-        {
-          title: 'b',
-          type: 'object',
-          properties: { kind: { type: 'string', const: 'b', default: 'b' }, name: { type: 'string' } },
-        },
+        { title: 'a', type: 'object', required, properties: { kind: kindFor('a'), value: oldProperty } },
+        { title: 'b', type: 'object', required, properties: { kind: kindFor('b'), value: newProperty } },
       ],
-    };
-    const { node, onChange } = createFormComponent({ schema });
+    });
 
-    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+    it('keeps a scalar', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: schemaFor({ type: 'string', default: 'Anon' }, { type: 'string' }),
+      });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { kind: 'b', name: 'Anon' } }),
-      'root__oneof_select',
-    );
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', value: 'Anon' } }),
+        'root__oneof_select',
+      );
+    });
+
+    it('keeps an object the new option only gives leaf defaults', async () => {
+      const properties: RJSFSchema['properties'] = {
+        name: { type: 'string' },
+        ratio: { type: 'number', default: 0 },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: schemaFor({ type: 'object', default: { name: 'a' }, properties }, { type: 'object', properties }),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', value: { name: 'a', ratio: 0 } } }),
+        'root__oneof_select',
+      );
+    });
+
+    it('keeps a required array the new option would compute as empty', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: schemaFor(
+          { type: 'array', items: { type: 'number' }, default: [1] },
+          { type: 'array', items: { type: 'number' } },
+          ['value'],
+        ),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', value: [1] } }),
+        'root__oneof_select',
+      );
+    });
+
+    it('keeps a required boolean the new option would compute as false', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: schemaFor({ type: 'boolean', default: true }, { type: 'boolean' }, ['value']),
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', value: true } }),
+        'root__oneof_select',
+      );
+    });
   });
 
-  it("should restore an option's object default when switching away from it and back (#4476)", async () => {
-    const optionFor = (name: string): RJSFSchema => ({
+  it("should restore an option's object and array defaults when switching away from it and back (#4476)", async () => {
+    // An array default takes a different route through both halves of the switch than an object one does, so the
+    // issue's `arr` and `runners` are covered alongside its `runner`
+    const optionFor = (name: string, ratio: number): RJSFSchema => ({
       title: name,
       type: 'object',
       properties: {
@@ -239,17 +285,70 @@ describe('oneOf', () => {
           default: { name, extra: 'never-emitted' },
           properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
         },
+        arr: { type: 'array', items: { type: 'number' }, default: [ratio] },
+        runners: {
+          type: 'array',
+          default: [{ name: `${name}-runner-1`, ratio }],
+          items: { type: 'object', properties: { name: { type: 'string' }, ratio: { type: 'number' } } },
+        },
       },
     });
     const { node, onChange } = createFormComponent({
-      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+      schema: { oneOf: [optionFor('a', 1), optionFor('b', 2)] },
     });
     const $select = node.querySelector<HTMLSelectElement>('#root__oneof_select');
 
     await user.selectOptions($select!, '1');
 
     expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b', ratio: 0 } } }),
+      expect.objectContaining({
+        formData: {
+          kind: 'b',
+          runner: { name: 'b', ratio: 0 },
+          arr: [2],
+          runners: [{ name: 'b-runner-1', ratio: 2 }],
+        },
+      }),
+      'root__oneof_select',
+    );
+
+    await user.selectOptions($select!, '0');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: {
+          kind: 'a',
+          runner: { name: 'a', ratio: 0 },
+          arr: [1],
+          runners: [{ name: 'a-runner-1', ratio: 1 }],
+        },
+      }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should apply the new option's default when the two options declare the property differently", async () => {
+    // Sanitize rewrites the carried-over value when the options' nested shapes differ, dropping a property the new
+    // option does not declare and injecting a leaf default it does, so staleness has to be judged against the data
+    // as it arrived rather than against what sanitize left behind
+    const optionFor = (name: string, properties: RJSFSchema['properties']): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        runner: { type: 'object', default: { name }, properties },
+      },
+    });
+    const withRatio: RJSFSchema['properties'] = { name: { type: 'string' }, ratio: { type: 'number', default: 0 } };
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', withRatio), optionFor('b', { name: { type: 'string' } })] },
+    });
+    const $select = node.querySelector<HTMLSelectElement>('#root__oneof_select');
+
+    await user.selectOptions($select!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b' } } }),
       'root__oneof_select',
     );
 
@@ -257,6 +356,63 @@ describe('oneOf', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { kind: 'a', runner: { name: 'a', ratio: 0 } } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should apply the new option's default to a readOnly property edited away from the old one", async () => {
+    // Sanitize clears a readOnly value that no longer matches its option's default rather than replacing it, so the
+    // key reaches the fill holding `undefined` and the new option's default only lands once the key is removed
+    const optionFor = (kind: string, license: string): RJSFSchema => ({
+      title: kind,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: kind, default: kind },
+        license: { type: 'string', default: license, readOnly: true },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', 'MIT'), optionFor('b', 'Apache')] },
+      formData: { kind: 'a', license: 'custom' },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', license: 'Apache' } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should apply the new option's default to a property whose type it changed", async () => {
+    // Sanitize clears a value the new option cannot hold by assigning `undefined`, which is a value as far as the
+    // fill is concerned, so the key has to be removed for the new option's default to land
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          title: 'a',
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: 'a', default: 'a' },
+            runner: { type: 'object', properties: { name: { type: 'string' } } },
+          },
+        },
+        {
+          title: 'b',
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: 'b', default: 'b' },
+            runner: { type: 'string', default: 'solo' },
+          },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', runner: { name: 'typed' } } });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', runner: 'solo' } }),
       'root__oneof_select',
     );
   });
