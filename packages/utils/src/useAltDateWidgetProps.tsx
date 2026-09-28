@@ -1,7 +1,7 @@
 'use client';
 
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -114,11 +114,12 @@ export default function useAltDateWidgetProps<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
-  const [state, setState] = useState(parseDateString(value, time));
-
-  useEffect(() => {
+  const [state, setState] = useState(() => parseDateString(value, time));
+  const [parsedFrom, setParsedFrom] = useState({ value, time });
+  if (parsedFrom.value !== value || parsedFrom.time !== time) {
+    setParsedFrom({ value, time });
     setState(parseDateString(value, time));
-  }, [time, value]);
+  }
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: string) => {

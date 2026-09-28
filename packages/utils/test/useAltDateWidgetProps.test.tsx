@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import type { ChangeEvent, MouseEvent } from 'react';
-import { render, renderHook } from '@testing-library/react';
+import { act, render, renderHook } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
 
@@ -144,6 +144,31 @@ describe('useAltDateWidgetProps()', () => {
     // onChange was called with the date cleared
     expect(PROPS.onChange).toHaveBeenCalledWith(undefined);
     expect(simulatedEvent.preventDefault).toHaveBeenCalled();
+  });
+  test('re-parses the elements when the value or time props change', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    rerender({ ...PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
+    );
+    rerender({ ...TIME_PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
+    );
+  });
+  test('discards a partial selection when the value prop changes', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    act(() => result.current.handleChange('year', '2020'));
+    expect(PROPS.onChange).not.toHaveBeenCalled();
+    expect(result.current.elements[0].value).toBe('2020');
+    rerender({ ...PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
+    );
   });
   test('time is false, value undefined, testing DateElements', async () => {
     const { result, rerender: rerenderHook } = renderHook(() => useAltDateWidgetProps(PROPS));

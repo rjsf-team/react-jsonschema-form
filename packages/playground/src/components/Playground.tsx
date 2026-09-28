@@ -79,7 +79,8 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
 };
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
-  const [loaded, setLoaded] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+  const [loadError, setLoadError] = useState<unknown>();
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
@@ -224,28 +225,28 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [load, liveSettings, theme, validator],
   );
 
-  useEffect(() => {
-    const hash = document.location.hash.match(/#(.*)/);
-
-    if (hash && typeof hash[1] === 'string' && hash[1].length > 0 && !loaded) {
+  if (!initialized) {
+    setInitialized(true);
+    const hash = document.location.hash.match(/#(.*)/)?.[1];
+    if (hash) {
       try {
-        const decoded = base64.decode(hash[1]);
-        load(JSON.parse(decoded));
-        setLoaded(true);
+        load(JSON.parse(base64.decode(hash)));
       } catch (error) {
-        // oxlint-disable-next-line no-alert
-        alert('Unable to load form setup data.');
-        console.error(error);
+        setLoadError(error);
       }
-
-      return;
+    } else {
+      onThemeSelected(theme, themes[theme]);
+      setShowForm(true);
     }
+  }
 
-    // initialize theme
-    onThemeSelected(theme, themes[theme]);
-
-    setShowForm(true);
-  }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
+  useEffect(() => {
+    if (loadError !== undefined) {
+      // oxlint-disable-next-line no-alert
+      alert('Unable to load form setup data.');
+      console.error(loadError);
+    }
+  }, [loadError]);
 
   const onFormDataChange = useCallback(
     (event: IChangeEvent, id?: string) => {
