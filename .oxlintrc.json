@@ -3,14 +3,15 @@
   "plugins": ["typescript", "react", "jsx-a11y", "import"],
   "options": {
     "typeAware": true,
-    "denyWarnings": true
+    "denyWarnings": true,
+    "reportUnusedDisableDirectives": "error"
   },
   "env": {
     "builtin": true,
     "browser": true,
     "node": true,
     "commonjs": true,
-    "es2020": true
+    "es2026": true
   },
   "ignorePatterns": [
     "**/node_modules/**",

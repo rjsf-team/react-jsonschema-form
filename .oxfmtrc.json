@@ -4,7 +4,6 @@
   "jsxSingleQuote": true,
   "printWidth": 120,
   "sortPackageJson": false,
-  "ignorePatterns": [],
   "sortImports": {
     "newlinesBetween": false,
     "customGroups": [

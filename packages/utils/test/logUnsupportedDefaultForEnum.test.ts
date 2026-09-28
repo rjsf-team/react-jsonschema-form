@@ -7,7 +7,6 @@ describe('logUnsupportedDefaultForEnum()', () => {
   let consoleErrorSpy: MockInstance;
 
   beforeEach(() => {
-    // oxlint-disable-next-line no-empty-function
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(noop);
   });
 

@@ -425,7 +425,6 @@ export default function omitExtraData<
         : [];
       for (const key of Object.keys(afterConditions)) {
         if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
-          // oxlint-disable-next-line no-param-reassign
           delete afterConditions[key];
         }
       }

@@ -103,7 +103,7 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     // Some pickers re-fire `change` with an empty FileList on cancel; an empty list would clear the value
     if (event.target.files?.length) {
       // handleChange is async; DOM event handlers are void-returning, so we intentionally don't await
-      // oxlint-disable-next-line no-floating-promises, no-void
+      // oxlint-disable-next-line no-void
       void handleChange(event.target.files);
     }
   };

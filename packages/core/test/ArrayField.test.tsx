@@ -179,11 +179,9 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
 };
 
 const mockFileReader = {
-  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 

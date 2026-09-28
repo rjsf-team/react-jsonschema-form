@@ -15,13 +15,17 @@
       "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts"]
     },
     "cs-check": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json"]
     },
     "cs-format": {
-      "cache": true
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json"]
     },
     "lint": {
-      "cache": true
+      "cache": true,
+      "//inputs": "the root oxlint config lives outside project roots, and type-aware rules read dependencies' types; without these a warm cache serves stale results",
+      "inputs": ["default", "^default", "{workspaceRoot}/.oxlintrc.json"]
     },
     "test": {
       "cache": true,
