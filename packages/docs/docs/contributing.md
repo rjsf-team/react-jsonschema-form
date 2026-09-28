@@ -51,10 +51,10 @@ When building in environments with limited memory, such as Netlify, it's recomme
 
 ## Coding style
 
-All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
-Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
+All the JavaScript/Typescript code in this project is formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter) and linted with [oxlint](https://oxc.rs/docs/guide/usage/linter).
+Staged files are automatically formatted upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `pnpm cs-format` within any package directory you are changing.
+You can also run `pnpm cs-format` from the repository root.
 
 ## Documentation
 
