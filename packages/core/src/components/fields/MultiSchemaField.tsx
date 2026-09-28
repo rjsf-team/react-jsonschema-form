@@ -18,31 +18,6 @@ import {
 
 import formDataForNewOption from './formDataForNewOption.ts';
 
-/** Returns the schema this field renders for `option`, which carries the `required` the parent `schema` declares
- * and, for an option that does not state one, the parent's `type`. Propagating the type matters when the parent
- * constrains it (e.g. `{ type: 'string', oneOf: [{ pattern: '...' }, { pattern: '...' }] }`) and the option
- * sub-schemas omit it — without it `getSchemaType()` returns undefined and the option renders as `FallbackField`
- * rather than the right widget.
- *
- * @param schema - The schema holding the `oneOf`/`anyOf`
- * @param [option] - The option to merge the parent's properties into
- * @returns - The rendered schema for `option`, or undefined when there is no option
- */
-function asRenderedOption<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option?: S | null): S | undefined {
-  if (!option) {
-    return undefined;
-  }
-  const { required: schemaRequired, type: schemaType } = schema;
-  const parentProps: Partial<S> = {};
-  if (schemaRequired) {
-    parentProps.required = schemaRequired as S['required'];
-  }
-  if (schemaType !== undefined && !('type' in option)) {
-    parentProps.type = schemaType;
-  }
-  return Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
-}
-
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
@@ -188,7 +163,25 @@ function AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
-  const optionSchema = asRenderedOption<S>(schema, option);
+  let optionSchema: S | undefined | null;
+
+  if (option) {
+    const { required: schemaRequired, type: schemaType } = schema;
+    const parentProps: Partial<S> = {};
+    if (schemaRequired) {
+      parentProps.required = schemaRequired as S['required'];
+    }
+    // Propagate the parent schema type to options that don't define their own.
+    // This is necessary when the parent constrains the type (e.g. { type: 'string',
+    // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
+    // omit the type — without it, getSchemaType returns undefined and the option
+    // renders as FallbackField instead of the correct widget (e.g. StringField).
+    if (schemaType !== undefined && !('type' in option)) {
+      parentProps.type = schemaType;
+    }
+    // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
+    optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
+  }
 
   // First we will check to see if there is an anyOf/oneOf override for the UI schema
   let optionsUiSchema: UiSchema<T, S, F>[] = [];

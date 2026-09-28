@@ -457,6 +457,84 @@ describe('oneOf', () => {
     });
   });
 
+  describe("applies the new option's default when the option itself is not an object", () => {
+    // An option that is an array or a scalar declares its default on the option rather than on a property, so the
+    // whole value is what goes stale
+    it('replaces an array default', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'a', type: 'array', items: { type: 'number' }, default: [1] },
+          { title: 'b', type: 'array', items: { type: 'number' }, default: [2] },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [2] }), 'root__oneof_select');
+    });
+
+    it('replaces an array-of-objects default', async () => {
+      const optionFor = (name: string): RJSFSchema => ({
+        title: name,
+        type: 'array',
+        default: [{ name: `${name}1` }],
+        items: { type: 'object', properties: { name: { type: 'string' } } },
+      });
+      const { node, onChange } = createFormComponent({ schema: { oneOf: [optionFor('a'), optionFor('b')] } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: [{ name: 'b1' }] }),
+        'root__oneof_select',
+      );
+    });
+
+    it('keeps an array the user edited away from the old default', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'a', type: 'array', items: { type: 'number' }, default: [1] },
+          { title: 'b', type: 'array', items: { type: 'number' }, default: [2] },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: [7, 8] });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [7, 8] }), 'root__oneof_select');
+    });
+  });
+
+  it('should replace an object supplied in formData that equals the old default', async () => {
+    // Intended, and the cost of the fix rather than an oversight: a value equal to the old option's default cannot
+    // be told apart from one the default wrote, and the form's own fill writes it at mount, so refusing to replace
+    // a supplied value would leave #4476 unfixed for the case it was reported against
+    const optionFor = (name: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: {
+        kind: { type: 'string', const: name, default: name },
+        runner: {
+          type: 'object',
+          default: { name },
+          properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+        },
+      },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a'), optionFor('b')] },
+      formData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', runner: { name: 'b', ratio: 0 } } }),
+      'root__oneof_select',
+    );
+  });
+
   it('should apply an option-level default when switching options', async () => {
     // A `default` on the option itself populates its keys exactly as a property-level one does, so it has to count
     // as the new option declaring a value for them
