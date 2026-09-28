@@ -22,3 +22,11 @@ allowBuilds:
   core-js: true
   esbuild: true
   nx: true
+
+# @mantine/hooks imports react-dom without declaring it, which a bundler can't resolve from the global virtual store.
+packageExtensions:
+  '@mantine/hooks':
+    peerDependencies:
+      react-dom: '*'
+
+virtualStoreType: global
