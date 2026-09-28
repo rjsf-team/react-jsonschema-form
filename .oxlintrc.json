@@ -426,7 +426,7 @@
     "react/exhaustive-deps": "error",
     "react/exhaustive-effect-dependencies": "error",
     "react/forward-ref-uses-ref": "error",
-    "react/globals": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/globals": "error",
     "react/hook-use-state": "error",
     "react/iframe-missing-sandbox": "error",
     "react/immutability": "error",
