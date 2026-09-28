@@ -16,7 +16,6 @@ export function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {
 }
 
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
-  // oxlint-disable-next-line typescript/no-var-requires
   additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
   customFormats: {
     'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,

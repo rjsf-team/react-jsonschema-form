@@ -41,6 +41,7 @@ minimumReleaseAgeExclude:
   - react-dom@19.3.0
   - react@19.3.0
   - scheduler@0.28.0
+  # oxlint 1.86.0 / oxfmt 0.71.0 bindings: remove once they are past the 1-day release-age window (2026-09-29T10:34Z)
   - '@oxfmt/binding-android-arm-eabi@0.71.0'
   - '@oxfmt/binding-android-arm64@0.71.0'
   - '@oxfmt/binding-darwin-arm64@0.71.0'
