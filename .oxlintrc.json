@@ -592,7 +592,7 @@
     "typescript/prefer-find": "error",
     "typescript/prefer-for-of": "off", // Consider turning this back on
     "typescript/prefer-function-type": "error",
-    "typescript/prefer-includes": "off",
+    "typescript/prefer-includes": "error",
     "typescript/prefer-literal-enum-member": "error",
     "typescript/prefer-namespace-keyword": "error",
     "typescript/prefer-nullish-coalescing": ["error", { "ignorePrimitives": { "boolean": true, "string": true } }],
