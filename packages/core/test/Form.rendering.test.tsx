@@ -1672,6 +1672,36 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     it('should pass rawHelp as a string', () => {
       expect(node.querySelector('.raw-help')).toHaveTextContent('this is help rendered from the raw format');
     });
+
+    it('should pass rawHelp for a ui:help given as a React element, so a template can gate on it', () => {
+      let seenRawHelp: FieldTemplateProps['rawHelp'];
+      function RawHelpProbe(props: FieldTemplateProps) {
+        seenRawHelp = props.rawHelp;
+        return <div>{props.children}</div>;
+      }
+      createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:help': <strong>element help</strong> } },
+        templates: { FieldTemplate: RawHelpProbe },
+      });
+
+      expect(seenRawHelp).toStrictEqual(<strong>element help</strong>);
+    });
+
+    it('should pass rawHelp for a ui:help inherited from ui:globalOptions', () => {
+      let seenRawHelp: FieldTemplateProps['rawHelp'];
+      function RawHelpProbe(props: FieldTemplateProps) {
+        seenRawHelp = props.rawHelp;
+        return <div>{props.children}</div>;
+      }
+      createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': { help: 'global help' } },
+        templates: { FieldTemplate: RawHelpProbe },
+      });
+
+      expect(seenRawHelp).toBe('global help');
+    });
   });
 
   describe('ui options submitButtonOptions', () => {

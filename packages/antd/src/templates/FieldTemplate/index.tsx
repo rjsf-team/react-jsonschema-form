@@ -69,12 +69,23 @@ export default function FieldTemplate<
       break;
   }
   const isCheckbox = uiOptions.widget === 'checkbox';
+  // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
+  // nothing, so each one is gated on whether it has anything to say
+  const helpNode = rawHelp ? help : undefined;
+  const errorNode = hasError ? errors : undefined;
+  const explainNode =
+    errorNode || helpNode ? (
+      <>
+        {errorNode}
+        {helpNode}
+      </>
+    ) : undefined;
   return (
     <WrapIfAdditionalTemplate {...props}>
       <Form.Item
         colon={colon}
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (hasError ? errors : undefined)}
+        help={explainNode}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}

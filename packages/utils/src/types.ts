@@ -748,10 +748,10 @@ export type FieldTemplateProps<
   errorSchema?: ErrorSchema<T>;
   /** A component instance rendering any `ui:help` uiSchema directive defined */
   help?: ReactElement;
-  /** A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed
-   * `ui:help` is a React element instead of a string
+  /** The `ui:help` uiSchema directive as it was given, resolved the same way as the `help` component that renders it,
+   * so it is a truthy check for whether this field has any help at all
    */
-  rawHelp?: string;
+  rawHelp?: string | ReactElement;
   /** A boolean value stating if the field should be hidden */
   hidden?: boolean;
   /** A boolean value stating if the field is required */

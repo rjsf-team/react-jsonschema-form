@@ -7,6 +7,7 @@ import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate/index.tsx';
 import ErrorList from './ErrorList/index.tsx';
 import DescriptionField from './FieldDescriptionTemplate/index.tsx';
 import FieldErrorTemplate from './FieldErrorTemplate/index.tsx';
+import FieldHelpTemplate from './FieldHelpTemplate/index.tsx';
 import FieldTemplate from './FieldTemplate/index.tsx';
 import GridTemplate from './GridTemplate/index.tsx';
 import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton/index.tsx';
@@ -35,6 +36,7 @@ export function createTemplates() {
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
+    FieldHelpTemplate,
     FieldTemplate,
     GridTemplate,
     MultiSchemaFieldTemplate,
