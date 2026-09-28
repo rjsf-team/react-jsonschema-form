@@ -1,13 +1,33 @@
-import type { FormContextType, GenericObjectType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
-import { CONST_KEY, DEFAULT_KEY, deepEquals, getPropertySchema, isPlainObject } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import { CONST_KEY, DEFAULT_KEY, deepEquals, getPropertySchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
 
-/** Determines whether `option` declares a value of its own for `key`, meaning the fill at the end of
- * `formDataForNewOption()` will put something there once the key is out of the way. Only a declared `default` or
- * `const` counts: the computed defaults also contain a nested object's leaf defaults, `[]` for a required array and
- * `false` for a required boolean, none of which is the option saying what the key should hold.
+/** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
+ * populates a key at all under an `experimental_defaultFormStateBehavior` keyed off `required`. A schema's defaults
+ * have to be computed from this rather than from the option alone, or the same data behaves differently depending
+ * on whether `required` was written on the option or on the schema holding the `oneOf`/`anyOf`.
+ *
+ * The parent's `type` is deliberately not merged in. `asRenderedOption()` propagates it so an option that omits a
+ * type still picks the right widget, but a type the option never stated tells `getDefaultFormState()` to build a
+ * value that the option does not describe.
+ *
+ * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
+ * @param [option] - The option to merge the parent's `required` into
+ * @returns - The option with the parent's `required`, or undefined when there is no option
+ */
+function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: S, option?: S): S | undefined {
+  if (!option || !parentSchema?.required) {
+    return option;
+  }
+  return mergeSchemas({ required: parentSchema.required } as Partial<S>, option) as S;
+}
+
+/** Determines whether `option` declares a value of its own for `key`, either on the property or in the option's own
+ * `default` object. The computed defaults are no guide on their own: they also contain a nested object's leaf
+ * defaults, `[]` for a required array and `false` for a required boolean, none of which is the option saying what
+ * the key should hold.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve the property schema with
- * @param option - The option whose property declaration is being tested
+ * @param option - The option whose declaration is being tested
  * @param key - The name of the property to test
  * @returns - True when the option declares a `default` or `const` for `key`
  */
@@ -17,40 +37,49 @@ function optionDeclaresValueFor<T = any, S extends StrictRJSFSchema = RJSFSchema
   key: string,
 ): boolean {
   const propertySchema = schemaUtils.retrieveSchema(getPropertySchema<S>(option, key));
-  return DEFAULT_KEY in propertySchema || CONST_KEY in propertySchema;
+  if (DEFAULT_KEY in propertySchema || CONST_KEY in propertySchema) {
+    return true;
+  }
+  const optionDefault = option[DEFAULT_KEY];
+  return isPlainObject(optionDefault) && key in optionDefault;
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.
  *
  * `sanitizeDataForNewSchema()` drops what the new option cannot hold, and `getDefaultFormState()` fills in what it
  * declares, but neither lets the new option's `default` reach a key that already holds something, so a value the old
- * option's `default` put there survives the switch and switching back no longer restores it
- * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). The same happens to a key whose value
+ * option's `default` put there outlasts the switch and switching back does not restore it
+ * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). The same is true of a key whose value
  * sanitize discarded, because it clears by assigning `undefined` rather than by removing the key, and
  * `getDefaultFormState()` populates an absent key but leaves one explicitly set to `undefined` alone. Deleting either
  * kind of key outright is what lets the fill below reach it.
  *
- * A key sanitize cleared is only deleted when it held a value for sanitize to discard. `Form` reads an option's data
- * consisting only of `undefined` values as a switch away from a `null` option and recomputes the defaults from the
- * root schema, which is the only way a default declared above the option can be restored; filling one of those keys
- * here would take that away without being able to replace it. Being absent is not an exemption in itself: the old
- * defaults hold `undefined` for a property the old option declares without a default of its own, so an absent key
- * matches them and the new option's default does reach it.
+ * A key qualifies only when all of the following hold, which between them keep the deletion from stranding data the
+ * user or the caller supplied:
  *
- * A key is only deleted when `newOption` declares a `default` or `const` for it, so the fill is certain to put
- * something back. A value equal to the old default cannot be told apart from one the user or the caller supplied that
- * happens to equal it, and the computed defaults say more than the option declares — they also carry a nested
- * object's leaf defaults, `[]` for a required array and `false` for a required boolean — so deleting on either of
- * those would strand data that used to survive the switch.
+ * - It carried a value over. A key that arrived empty has nothing stale in it, and emptying it further would rob
+ *   `Form` of the all-`undefined` payload it reads as a switch away from a `null` option, which is the only way a
+ *   default declared above the option is restored.
+ * - The new option declares a value for it, as a property `default`/`const` or through the option's own `default`
+ *   object. The computed defaults say more than an option declares, so honoring them alone would delete a nested
+ *   object's leaf defaults, a required array's `[]` or a required boolean's `false` — none of which the option
+ *   asked for.
+ * - The new option's computed defaults also hold something for it, so the fill is certain to put a value back.
+ *   What an option declares and what `computeDefaults()` acts on are not the same set: a `default` reached through
+ *   `allOf` or `if`/`then` resolves here but is not filled, and a `const` is skipped entirely under
+ *   `constAsDefaults: 'never'`. Deleting on the declaration alone would empty those keys for good.
+ * - Sanitize discarded the value, or the old option declares one and the key still holds it. Only the second of
+ *   those compares anything, so only it needs the old option's declaration: a value sanitize threw away is gone
+ *   whoever declared it, and leaving the key holding `undefined` only blocks the fill.
  *
  * Staleness is judged against `formData` as it arrived, not against the sanitized copy: sanitize rewrites a nested
  * value whenever the two options declare different properties for it, adding an `undefined` key for one the new
  * option drops and a leaf default for one it adds, and the rewritten value no longer resembles the default it came
- * from. The old defaults use `excludeObjectChildren`, the flag the fill below uses, so the two describe the same
- * thing; computing them any other way makes them disagree under an `experimental_defaultFormStateBehavior` that
- * suppresses object defaults. They describe what an earlier switch through here wrote, which is the case this is
- * for, rather than every default the form holds — `Form` fills the root with `includeUndefinedValues: false`. That
- * divergence only stops a key from matching, so the worst it costs is that the replacement does not happen.
+ * from. Both sets of defaults use `excludeObjectChildren`, the flag the fill below uses, so all three describe the
+ * same thing; computing them any other way makes them disagree under an `experimental_defaultFormStateBehavior`
+ * that suppresses object defaults. They describe what an earlier switch through here wrote rather than every default
+ * the form holds — `Form` fills the root with `includeUndefinedValues: false`. That divergence only stops a key from
+ * qualifying, so the worst it costs is that the replacement does not happen.
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -65,29 +94,53 @@ export default function formDataForNewOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(schemaUtils: SchemaUtilsType<T, S, F>, formData: T | undefined, newOption?: S, oldOption?: S): T | undefined {
+>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  formData: T | undefined,
+  newOption?: S,
+  oldOption?: S,
+  parentSchema?: S,
+): T | undefined {
   let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-  if (newOption && isPlainObject(newFormData)) {
-    const sanitizedData = newFormData as GenericObjectType;
-    const oldData: GenericObjectType = isPlainObject(formData) ? (formData as GenericObjectType) : {};
-    const oldDefaults = oldOption
-      ? schemaUtils.getDefaultFormState(oldOption, undefined, 'excludeObjectChildren')
-      : undefined;
-    const oldDefaultsData: GenericObjectType = isPlainObject(oldDefaults) ? (oldDefaults as GenericObjectType) : {};
-    const withoutBlockedKeys: GenericObjectType = { ...sanitizedData };
-    Object.keys(sanitizedData).forEach((key) => {
-      const wasClearedBySanitize = sanitizedData[key] === undefined && oldData[key] !== undefined;
-      const holdsOldDefault = key in oldDefaultsData && deepEquals(oldDefaultsData[key], oldData[key]);
-      if ((wasClearedBySanitize || holdsOldDefault) && optionDeclaresValueFor(schemaUtils, newOption, key)) {
-        delete withoutBlockedKeys[key];
+  const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
+  if (newOptionForDefaults) {
+    if (isPlainObject(newFormData)) {
+      const sanitizedData = newFormData;
+      const oldData: Record<string, unknown> = isPlainObject(formData) ? formData : {};
+      // Each test below costs more than the one before it, so they run in that order: only a key that carried a
+      // value over can be holding something stale, and that much is free to check
+      const carriedKeys = Object.keys(sanitizedData).filter((key) => oldData[key] !== undefined);
+      if (carriedKeys.length > 0) {
+        const newDefaults = schemaUtils.getDefaultFormState(newOptionForDefaults, undefined, 'excludeObjectChildren');
+        const newDefaultsData: Record<string, unknown> = isPlainObject(newDefaults) ? newDefaults : {};
+        // `retrieveSchema()` sends a key holding a nested `oneOf` through the validator, so it is only worth asking
+        // what the option declares once the fill is known to have something to write
+        const refillableKeys = carriedKeys.filter(
+          (key) => newDefaultsData[key] !== undefined && optionDeclaresValueFor(schemaUtils, newOptionForDefaults, key),
+        );
+        if (refillableKeys.length > 0) {
+          const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);
+          const oldDefaults = oldOptionForDefaults
+            ? schemaUtils.getDefaultFormState(oldOptionForDefaults, undefined, 'excludeObjectChildren')
+            : undefined;
+          const oldDefaultsData: Record<string, unknown> = isPlainObject(oldDefaults) ? oldDefaults : {};
+          refillableKeys.forEach((key) => {
+            const holdsOldDefault =
+              !!oldOptionForDefaults &&
+              optionDeclaresValueFor(schemaUtils, oldOptionForDefaults, key) &&
+              deepEquals(oldDefaultsData[key], oldData[key]);
+            if (sanitizedData[key] === undefined || holdsOldDefault) {
+              // Deleting in place is safe because `sanitizeDataForNewSchema()` builds a new object for a
+              // plain-object result rather than handing back the data it was given
+              delete sanitizedData[key];
+            }
+          });
+        }
       }
-    });
-    newFormData = withoutBlockedKeys as T;
-  }
-  if (newOption) {
+    }
     // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
     // so that only the root objects themselves are created without adding undefined children properties
-    newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
+    newFormData = schemaUtils.getDefaultFormState(newOptionForDefaults, newFormData, 'excludeObjectChildren') as T;
   }
   return newFormData;
 }

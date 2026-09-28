@@ -169,7 +169,7 @@ export default function LayoutMultiSchemaField<
     const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
     const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
 
-    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption);
+    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema);
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
