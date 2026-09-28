@@ -1473,6 +1473,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           required: ['country', 'state'],
         });
       });
+      it.each([
+        { type: 'integer', value: 0 },
+        { type: 'boolean', value: false },
+        { type: 'string', value: '' },
+      ] as const)('evaluates the condition against a falsy $type value', ({ type, value }) => {
+        const schema: RJSFSchema = {
+          type,
+          if: { const: value },
+          then: { title: 'matched' },
+          else: { title: 'unmatched' },
+        };
+        expect(retrieveSchema(testValidator, schema, {}, value)).toEqual({ type, title: 'matched' });
+      });
       it('overrides the base schema with a conditional branch when merged', () => {
         const schema: RJSFSchema = {
           type: 'object',
