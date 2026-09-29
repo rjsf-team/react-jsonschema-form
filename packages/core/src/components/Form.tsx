@@ -29,6 +29,7 @@ import {
   toPath,
   unsetByPath,
   createSchemaUtils,
+  deepEquals,
   ErrorSchemaBuilder,
   getChangedFields,
   getTemplate,
@@ -302,6 +303,11 @@ export interface FormState<
    * a derivation can tell they changed by comparing with the committed state, functions by identity
    */
   validationProps: ValidationProps<T, S, F>;
+  /** `defaultFormStateBehavior` as the derivation saw it, kept in the render context so a later one can tell the
+   * settings that decide the defaults changed. Compared the way `doesSchemaUtilsDiffer()` compares it, since it is
+   * the same question, so a rebuilt object holding the same settings is not read as a change
+   */
+  defaultsBehavior?: DefaultFormStateBehavior;
 }
 
 /** The validation callbacks, the only validation inputs the schema utilities are not built from */
@@ -392,6 +398,7 @@ type RenderContext<T, S extends StrictRJSFSchema, F extends FormContextType> = P
   | 'hasNestedConditionalSchema'
   | 'registry'
   | 'validationProps'
+  | 'defaultsBehavior'
 >;
 
 /** Keeps the previous `schemaUtils` unless the props it was built from changed, in which case both it and the
@@ -432,9 +439,15 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
   prev: RenderContext<T, S, F> | undefined,
   resolved: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'>,
 ): RenderContext<T, S, F> {
-  const { uiSchema = {}, customValidate, transformErrors } = props;
+  const { uiSchema = {}, customValidate, transformErrors, defaultFormStateBehavior } = props;
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
+  // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
+  // `computeSkipPopulate` written inline would then make every render look like a change of the settings
+  const defaultsBehavior =
+    prev && deepEquals(prev.defaultsBehavior, defaultFormStateBehavior)
+      ? prev.defaultsBehavior
+      : defaultFormStateBehavior;
   return replaceEqualDeep(prev, {
     schemaUtils,
     schema: rootSchema,
@@ -443,6 +456,7 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
     hasNestedConditionalSchema,
     registry: buildRegistry(props, rootSchema, schemaUtils),
     validationProps: { customValidate, transformErrors },
+    defaultsBehavior,
   });
 }
 
@@ -1461,12 +1475,20 @@ export default class Form<
       return replaceEqualDeep(state, deriveControlledState(state, props));
     }
     const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
-    if (context.schemaUtils !== state.schemaUtils || context.uiSchema !== state.uiSchema) {
+    const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
+    // Rebuilt schema utilities are not on their own a reason to rerun value initialization: they are rebuilt for a
+    // recreated `validator` or `customMergeAllOf` as well, which parents commonly write inline, and re-deriving there
+    // replaces data the user cleared or switched away from with the very default it came from (#5294). Only the props
+    // that decide what the data should be do: the schema, the uiSchema, whose `ui:initialValue`/`ui:emptyValue` the
+    // defaults are computed from, and the settings that decide how they are computed
+    if (isSchemaChanged || context.uiSchema !== state.uiSchema || context.defaultsBehavior !== state.defaultsBehavior) {
       return replaceEqualDeep(state, deriveOwnedState(state, state.formData, props));
     }
     const errors = reconcileErrors(state, props, context, state.formData, {
-      mustValidate: mustLiveValidate(props, state.edit, context.validationProps !== state.validationProps),
-      validationSchema: state.retrievedSchema,
+      mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
+      // Utilities rebuilt for a recreated validator resolved no schema of their own here, since the data they would
+      // resolve it for is unchanged; validating against the root lets the new validator resolve it
+      validationSchema: context.schemaUtils === state.schemaUtils ? state.retrievedSchema : undefined,
     });
     return replaceEqualDeep(state, { ...context, ...errors });
   }

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ata",
-  "version": "6.10.0",
+  "version": "6.11.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
@@ -26,7 +26,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "ata-validator": "^1.7.1"
+    "ata-validator": "^1.23.0"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^"

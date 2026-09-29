@@ -19,6 +19,7 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import formDataForNewOption from './formDataForNewOption.ts';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -168,21 +169,17 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
       const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
 
-      let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-      if (newOption) {
-        // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
-        // so that only the root objects themselves are created without adding undefined children properties
-        // `uiSchemaDefinitions` comes from the registry since `newOptionUiSchema` is only the selected option's own
-        // sub-uiSchema and never carries the root's `ui:definitions` itself.
-        newFormData = schemaUtils.getDefaultFormState(
-          newOption,
-          newFormData,
-          'excludeObjectChildren',
-          undefined,
-          newOptionUiSchema,
-          uiSchemaDefinitions,
-        ) as T;
-      }
+      // `uiSchemaDefinitions` comes from the registry since `newOptionUiSchema` is only the selected option's own
+      // sub-uiSchema and never carries the root's `ui:definitions` itself.
+      const newFormData = formDataForNewOption<T, S, F>(
+        schemaUtils,
+        formData,
+        newOption,
+        oldOption,
+        schema,
+        newOptionUiSchema,
+        uiSchemaDefinitions,
+      );
 
       setSelectedOption(intOption);
       optionSwitchProposal.current = { formData: newFormData };
@@ -194,6 +191,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       retrievedOptions,
       disabled,
       readonly,
+      schema,
       schemaUtils,
       formData,
       fieldPath,

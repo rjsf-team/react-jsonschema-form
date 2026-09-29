@@ -159,6 +159,13 @@ export interface DefaultFormStateBehavior {
    * - `ancestorWins`: The outermost (ancestor) default value definition takes precedence over any descendant's defaults.
    */
   nestedDefaultsPrecedence?: 'descendantWins' | 'ancestorWins';
+  /** Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default`
+   * of its own, is populated with `false`, defaulting to `populateFalse`.
+   * - `populateFalse`: A required boolean with no `default` is set to `false`
+   * - `skip`: No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains
+   *        a validation concern
+   */
+  requiredBooleanDefault?: 'populateFalse' | 'skip';
 }
 
 /** Optional function that allows for custom merging of `allOf` schemas

@@ -563,6 +563,46 @@ describe('LayoutMultiSchemaField', () => {
     // OnChange was called with the correct event
     expect(props.onChange).toHaveBeenCalledWith(undefined, props.fieldPath, undefined, DEFAULT_ID);
   });
+  test("replaces the old option's defaults when switching options", async () => {
+    // This field picks `oldOption` out of `formData` by its selector value rather than from a selected index, and
+    // writes the selector back after the defaults are filled in, so it exercises the switch differently than
+    // `MultiSchemaField` does
+    const optionFor = (answer: string): RJSFSchema => ({
+      title: `Choice ${answer}`,
+      type: 'object',
+      properties: {
+        answer: { type: 'string', default: answer, readOnly: true },
+        runner: {
+          type: 'object',
+          default: { name: `runner-${answer}` },
+          properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+        },
+      },
+    });
+    const schema: RJSFSchema = {
+      title: 'Simple',
+      type: 'object',
+      discriminator: { propertyName: 'answer' },
+      oneOf: [optionFor('1'), optionFor('2')],
+    };
+    const props = getProps({
+      schema,
+      options: schema[ONE_OF_KEY],
+      formData: { answer: '1', runner: { name: 'runner-1', ratio: 0 } },
+    });
+
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const radios = within(screen.getByTestId(SelectWidgetTestId)).getAllByRole('radio');
+    await user.click(radios[1]);
+
+    expect(props.onChange).toHaveBeenCalledWith(
+      { answer: '2', runner: { name: 'runner-2', ratio: 0 } },
+      props.fieldPath,
+      undefined,
+      DEFAULT_ID,
+    );
+  });
   test('no options for radio widget, ui:hideError true, props.hideError false, no errors to hide', () => {
     const props = getProps({
       options: [],

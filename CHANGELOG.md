@@ -16,6 +16,25 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.11.0
+
+## @rjsf/core
+
+- Fixed a `schema` prop change being silently dropped when it adds a property with a `default`, either as the parent's reply to `onChange` or at any point after a change to an uncontrolled form. The guard that keeps a oneOf/anyOf option switch from reverting now only applies when the form re-derives its own `formData` (an uncontrolled form, or a parent holding what `onChange` emitted, including when it reshaped the emitted value by spreading it, storing `undefined` as `null` or round-tripping it through JSON) with the same `schema` and `experimental_defaultFormStateBehavior`, and it keeps only that `formData` rather than dropping the rest of the prop update, fixing [#5294](https://github.com/rjsf-team/react-jsonschema-form/issues/5294)
+- Fixed switching between `oneOf`/`anyOf` options keeping a value the previous option's `default` put there, so a property whose value still matches that default, or a whole option that does, now picks up the new option's `default` the way a scalar property already did, and switching back to an option restores its own defaults. A property the new option cannot hold as it stands now picks the new `default` up as well instead of arriving empty — one whose type differs between the options, or a `readOnly` one edited away from its default. Values are compared whole, so a nested object the user has partly edited keeps the rest of the old option's defaults, and a value equal to the old default is replaced no matter who supplied it, including one passed in `formData`, since the two cannot be told apart, fixing [#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)
+
+## @rjsf/utils
+
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `requiredBooleanDefault` option, and updated `getDefaultFormState()` to honor it: `skip` turns off the `false` populated for a required boolean with no `default` (introduced in 6.9.0 by [#5170](https://github.com/rjsf-team/react-jsonschema-form/pull/5170)), so a form that models an unanswered boolean as its own state can keep it `undefined` and let `required` report it. The default, `populateFalse`, keeps the 6.9.0+ behavior
+
+## @rjsf/validator-ata
+
+- Updated `ata-validator` from `^1.7.1` to `^1.23.0`, picking up the corrected error shape for `unevaluatedProperties` (the error now carries `params.unevaluatedProperty`), the removal of a quadratic in `additionalProperties: false` schemas with many properties, a fix for a hang on truncated JSON input, and enforced strict-mode schema checks ([#5293](https://github.com/rjsf-team/react-jsonschema-form/pull/5293))
+
+## Dev / docs / playground
+
+- Documented the `requiredBooleanDefault` option in `form-props.md` and `internals.md`, and added a selector for it to the playground
+
 # 6.10.1
 
 ## @rjsf/core
@@ -23,10 +42,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a `dependencies`/`if` branch switch nested inside an object property never sanitizing a sibling field's now-invalid value. The check gating sanitization only compared the root retrieved schema, which never reflects a conditional resolved deeper in the tree, so it always skipped sanitizing in that case, fixing ([#5250](https://github.com/rjsf-team/react-jsonschema-form/issues/5250))
 - Fixed `NumberField` losing or misinterpreting decimal input in comma-decimal locales, and passing a locale-formatted string instead of a `number` to custom and format-registered widgets, fixing [#5199](https://github.com/rjsf-team/react-jsonschema-form/issues/5199) and [#5241](https://github.com/rjsf-team/react-jsonschema-form/issues/5241)
 - Fixed `NumberField` still comma-formatting the displayed value for a `text` widget with an explicit `ui:options.inputType` override in a comma-decimal locale; `getInputProps()` gives that override priority over the locale-based `text` fallback, so it rendered a native, locale-unaware `<input type="number">` that rejected the comma-formatted string
-- Fixed `liveValidate: 'onBlur'` validating whenever the form derived state from new props, rather than only when a field was left, so replacing the form data from outside showed the errors before any blur; the same conflation also merged every `extraErrors` entry in twice on that path
-- Fixed live validation dropping every `extraErrors` entry when the form derived state from new props, so a server-supplied error disappeared as soon as a controlled parent replaced the form data
-- Fixed `extraErrors` and `customErrors` being merged into the errors a second time whenever the form derived state from new props under `liveValidate: 'onChange'` without re-validating, so a re-render changing only `className` duplicated every server-supplied error, the duplication half of [#4408](https://github.com/rjsf-team/react-jsonschema-form/issues/4408) (the clearing half was fixed by `getDerivedStateFromProps` in v6)
-- Fixed a changed `validator`, `customMergeAllOf` or `defaultFormStateBehavior` leaving the previously retrieved schema in state, so live validation and sanitization kept running against a schema the old settings had resolved
 
 ## @rjsf/mantine
 
@@ -46,8 +61,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Upgraded `@x0k/json-schema-merge` to `^1.0.6`, which now preserves Symbol-keyed properties (e.g. `Symbol(__rjsf_ref)`) when merging `allOf` schemas and no longer collapses distinct `allOf.contains` branches into one over-constrained schema; removed the corresponding Symbol-preservation and `contains`-extraction workarounds from `retrieveSchemaInternal()`, fixing ([#5146](https://github.com/rjsf-team/react-jsonschema-form/issues/5146))
 - Fixed defaults from a dependency subschema being omitted when `getDefaultFormState()` is called without form data or with an empty object, fixing [#5198](https://github.com/rjsf-team/react-jsonschema-form/issues/5198)
 - Fixed `computeDefaults()` to merge a non-object schema's `allOf` when `experimental_defaultFormStateBehavior.allOf` is set to `populateDefaults`, so a `$ref` wrapped in a single-element `allOf` now populates the same defaults as the bare `$ref` does, fixing [#5177](https://github.com/rjsf-team/react-jsonschema-form/issues/5177)
-- Removed the `jsonpointer` dependency; `findSchemaDefinition()` now resolves JSON pointer fragments through `getByPath()`, so a `#/__proto__` ref finds nothing instead of `Object.prototype`, unless the schema has a genuine own `__proto__` key
-- Removed the `fast-uri` dependency; `findSchemaDefinition()` now resolves and compares `$ref`/`$id` URIs with the platform `URL` parser. Relative `$ref`s against a relative or fragment base (a root without `$id`, or a nested relative `$id`) now follow RFC 3986 resolution, so some refs that previously failed to resolve, such as `../other.json`, now do; comparison decodes every percent-encoded unreserved character (`%2E` matches `.` as well as `%7E` matching `~`); and `urn:` namespace identifiers are compared case-sensitively
 
 ## Dev / docs / playground
 
@@ -79,6 +92,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `sanitizeDataForNewSchema()` clearing existing arrays or preserving stale `undefined` values instead of retaining data or applying defaults for properties newly defined by the incoming schema ([#3736](https://github.com/rjsf-team/react-jsonschema-form/issues/3736))
 - Added `autocapitalize` UI option handling to `getInputProps()` and its public input prop types ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
 
+## Dev / docs / playground
+
+- Documented `ui:autocapitalize`, added it to the simple playground sample, and added cross-theme regression coverage ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
+
 ## @rjsf/validator-ajv8
 
 - Changed the `standaloneCode` import to name the file, `ajv/dist/standalone/index.js`, instead of the directory subpath `ajv/dist/standalone`. A `tsc-alias` replacer used to patch this into the emitted output; the source now says what it means. No public API changed
@@ -95,7 +112,6 @@ should change the heading of the (upcoming) version to include a major version b
 - `build:ts` is now plain `tsc -b`. The old `rimraf ./lib` also deleted the build-info, forcing a full rebuild every time; the build-info is now an Nx `build` output alongside `lib/` so cache restores stay coherent
 - Added `"type": "module"` to `@rjsf/snapshot-tests`, which publishes ESM `.js` files
 - Enabled `verbatimModuleSyntax`, so type-only imports must be written as `import type`. The one import it affected, `React` in `@rjsf/utils`'s `shouldRender.ts`, is now type-only, so emitted output is unchanged
-- Documented `ui:autocapitalize`, added it to the simple playground sample, and added cross-theme regression coverage ([#2187](https://github.com/rjsf-team/react-jsonschema-form/issues/2187))
 
 # 6.9.0
 
