@@ -3209,6 +3209,30 @@ describe('oneOf', () => {
             ...colorsByTier,
           },
         ],
+        [
+          'a property the oneOf of a oneOf option declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [{ oneOf: [{ properties: { plan } }] }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property the closest-matching option of a nested oneOf declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [
+              {
+                oneOf: [{ properties: { size: { type: 'number' } }, required: ['size'] }, { properties: { plan } }],
+              },
+            ],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
       ])('should sanitize for %s', async (_, schema) => {
         const { node, onChange } = createFormComponent({
           schema,

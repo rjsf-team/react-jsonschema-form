@@ -752,6 +752,16 @@ describe('optionsList()', () => {
       'free',
     ]);
   });
+  it('should reorder an enum value by the entry equal to it before one that only shares its string', () => {
+    const schema: RJSFSchema = { enum: [1, '1', { tier: 1 }] };
+    const uiSchema = { 'ui:enumOrder': [1, { tier: 2 }, '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([1, '1', { tier: 1 }]);
+  });
+  it('should list an enum value several ui:enumOrder entries find only once', () => {
+    const schema: RJSFSchema = { enum: [1, 2, { tier: 1 }] };
+    const uiSchema = { 'ui:enumOrder': ['2', 2, { tier: 1 }, { tier: 1 }, '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([2, { tier: 1 }, 1]);
+  });
   describe('anyOf and oneOf together', () => {
     it('should read anyOf, the list isSelect() reads, when both are constants', () => {
       const schema: RJSFSchema = {

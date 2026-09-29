@@ -1125,13 +1125,14 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
 }
 
 /** Returns the schema of the `property` of an object `schema` as it is rendered: the schema's own, or else that of the
- * `oneOf`/`anyOf` option `MultiSchemaField` renders for `formData`, which it picks as the closest match to it
+ * `oneOf`/`anyOf` option `MultiSchemaField` renders for `formData`, which it picks as the closest match to it, looked up
+ * the same way
  *
  * @param schemaUtils - The schema utilities to retrieve the options and pick among them with
  * @param schema - The object schema, retrieved for `formData`
  * @param property - The name of the property
  * @param formData - The object's data
- * @returns - The property's schema, or undefined when neither the schema nor the option declares it
+ * @returns - The property's schema, or undefined when neither the schema nor any option it renders declares it
  */
 function getPropertySchemaAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -1146,8 +1147,9 @@ function getPropertySchemaAt<T, S extends StrictRJSFSchema, F extends FormContex
   }
   const options = schema[xxxOfKey]!.map((option) => schemaUtils.retrieveSchema(option as S, formData));
   const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-  const optionIndex = schemaUtils.getClosestMatchingOption(formData, options, 0, discriminator);
-  return options[optionIndex]?.properties?.[property] as S | undefined;
+  const option = options[schemaUtils.getClosestMatchingOption(formData, options, 0, discriminator)];
+  // The option is rendered by a `SchemaField` of its own, which renders the option's own `oneOf`/`anyOf` in turn
+  return option && getPropertySchemaAt<T, S, F>(schemaUtils, option, property, formData);
 }
 
 /** Whether the field at `path` is a select over object or array constants. Changing one sets a single value, the way

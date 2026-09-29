@@ -19,18 +19,31 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
   order: EnumValue[],
 ): EnumOptionsType<S>[] {
-  const optionsByValue = new Map(
-    options.filter((opt) => !isContainerValue(opt.value)).map((opt) => [String(opt.value), opt]),
-  );
+  // Built from the last option back, so the first of any options sharing a key is the one found
+  const primitiveOptions = options.filter((opt) => !isContainerValue(opt.value)).reverse();
+  const optionsByValue = new Map(primitiveOptions.map((opt) => [opt.value, opt]));
+  const optionsByString = new Map(primitiveOptions.map((opt) => [String(opt.value), opt]));
   const findOption = (entry: unknown) => {
+    if (entry === '*') {
+      return undefined;
+    }
     // `String()` spells every object `[object Object]`, so an object or array entry is found by deep equality instead
     if (isContainerValue(entry)) {
       return options.find((opt) => deepEquals(opt.value, entry));
     }
-    return entry === '*' ? undefined : optionsByValue.get(String(entry));
+    // An option equal to the entry wins over one that only shares its string, as `'1'` does `1`'s
+    return optionsByValue.get(entry) ?? optionsByString.get(String(entry));
   };
-  const orderedOptions = order.map(findOption);
-  const listed = new Set(orderedOptions);
+  const listed = new Set<EnumOptionsType<S>>();
+  // An option several entries find is listed at the first of them only, so it isn't rendered twice
+  const orderedOptions = order.map((entry) => {
+    const opt = findOption(entry);
+    if (!opt || listed.has(opt)) {
+      return undefined;
+    }
+    listed.add(opt);
+    return opt;
+  });
   const rest = options.filter((opt) => !listed.has(opt));
 
   return order.flatMap((entry, index) => {
