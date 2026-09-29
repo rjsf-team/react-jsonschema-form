@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "6.10.0",
+  "version": "6.11.0",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

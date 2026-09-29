@@ -219,6 +219,23 @@ const liveSettingsBooleanSchema: RJSFSchema = {
             },
           ],
         },
+        requiredBooleanDefault: {
+          type: 'string',
+          title: 'Required boolean default',
+          default: 'populateFalse',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'A required boolean with no default is set to false',
+              enum: ['populateFalse'],
+            },
+            {
+              type: 'string',
+              title: 'A required boolean with no default stays undefined until answered',
+              enum: ['skip'],
+            },
+          ],
+        },
       },
     },
     idPrefix: { type: 'string', title: 'ID prefix', default: DEFAULT_ID_PREFIX },

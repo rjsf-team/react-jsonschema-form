@@ -19,6 +19,7 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import formDataForNewOption from './formDataForNewOption.ts';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -130,8 +131,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
 
   // First we will check to see if there is an anyOf/oneOf override for the UI schema. Computed here, ahead of
-  // `onOptionChange`, so that callback can pass the newly-selected option's own uiSchema (rather than none at all)
-  // to `getDefaultFormState`, letting `ui:initialValue`/`ui:emptyValue` on that option's fields apply on selection.
+  // `onOptionChange`, so that callback can pass the old and new options' own uiSchemas to `formDataForNewOption`,
+  // letting `ui:initialValue`/`ui:emptyValue` on those options' fields apply on selection.
   // Memoized so the common case (no `uiSchema.oneOf`/`anyOf` override) doesn't hand `onOptionChange`'s `useCallback`
   // a fresh `[]` on every render, which would otherwise break its memoization.
   const optionsUiSchema = useMemo<UiSchema<T, S, F>[]>(() => {
@@ -148,6 +149,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
     return [];
   }, [schema, uiSchema, id, fieldPath]);
+
+  // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
+  const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -166,23 +170,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       }
       const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
       const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
-      const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
 
-      let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-      if (newOption) {
-        // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
-        // so that only the root objects themselves are created without adding undefined children properties
-        // `uiSchemaDefinitions` comes from the registry since `newOptionUiSchema` is only the selected option's own
-        // sub-uiSchema and never carries the root's `ui:definitions` itself.
-        newFormData = schemaUtils.getDefaultFormState(
-          newOption,
-          newFormData,
-          'excludeObjectChildren',
-          undefined,
-          newOptionUiSchema,
-          uiSchemaDefinitions,
-        ) as T;
-      }
+      // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
+      // never carries the root's `ui:definitions` itself.
+      const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+        newOptionUiSchema: selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption),
+        oldOptionUiSchema: optionUiSchema,
+        uiSchemaDefinitions,
+      });
 
       setSelectedOption(intOption);
       optionSwitchProposal.current = { formData: newFormData };
@@ -194,12 +189,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       retrievedOptions,
       disabled,
       readonly,
+      schema,
       schemaUtils,
       formData,
       fieldPath,
       onChange,
       fieldId,
       optionsUiSchema,
+      optionUiSchema,
       uiSchema,
       uiSchemaDefinitions,
     ],
@@ -245,9 +242,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
     optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
   }
-
-  // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
-  const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix
