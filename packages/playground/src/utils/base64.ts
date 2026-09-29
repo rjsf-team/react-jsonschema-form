@@ -22,7 +22,7 @@ const base64 = (function base64() {
       return btoa(safeFromCharCode(encoder, text));
     },
     decode(text: string): string {
-      let decoder: TextDecoder;
+      let decoder: { decode(input: Uint8Array): string };
       if (typeof TextDecoder !== 'undefined') {
         decoder = new TextDecoder();
       } else {
