@@ -14,6 +14,7 @@ import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
+import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -57,27 +58,26 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   validator: ValidatorType<S, F>,
   rootSchema: S,
   schema: S,
+  { key, options }: XxxOfOptions<S>,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): SelectedBranch<T, S, F> {
-  const xxxOf = getXxxOfOptions<S>(schema);
-  if (!xxxOf) {
-    return { schema, uiSchema };
-  }
-  const { [xxxOf.key]: options, ...remaining } = schema;
+  // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either, so a
+  // leftover `oneOf` beside the `anyOf` read must not decide the option's Optional Data Controls type
+  const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...remaining } = schema;
   const index = getClosestMatchingOption<T, S, F>(
     validator,
     rootSchema,
     formData as T,
-    options as S[],
+    options,
     0,
     getDiscriminatorFieldFromSchema<S>(schema),
     customMergeAllOf,
   );
   return {
-    schema: mergeSchemas(remaining, options![index] as S) as S,
-    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, xxxOf.key, index) ?? {},
+    schema: mergeSchemas(remaining, options[index]) as S,
+    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {},
   };
 }
 
@@ -162,34 +162,32 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return;
   }
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
-  // Plain object/array Optional Data Controls hide their real fields (rendering only the "Add" control) whenever
-  // `!isFormDataAvailable(formData)` — also true for `null` and `{}`, not just `undefined` — matching ObjectField's
-  // and ArrayField's own `hasFormData` gate exactly. `anyOf`/`oneOf`-typed nodes are different: MultiSchemaField
-  // always renders the selected branch's own fields unconditionally (there's no `hasFormData` gate on
-  // `optionsSchemaField`), so `{}` there isn't "hidden" the way it is for a plain object/array — only a genuinely
-  // absent (`undefined`) value is. An empty option list renders no MultiSchemaField options, so such a node is gated
-  // like a plain object/array. Read from the resolved schema, the one `isOptionalDataControlsType()` checks, so an
-  // `allOf` that merges into an `anyOf`/`oneOf` is gated as the option list it renders.
-  const isXxxOf = getXxxOfOptions<S>(resolvedSchema) !== undefined;
-  const optedOut = isXxxOf ? formData === undefined : !isFormDataAvailable(formData);
+  // An Optional Data Control hides what it holds until the user opts in, so a `ui:required` field beneath it isn't
+  // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
+  // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null` and `{}`. MultiSchemaField renders
+  // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
+  // field is gated.
+  const xxxOf = getXxxOfOptions<S>(resolvedSchema);
+  const { schema: retrieved, uiSchema: branchUiSchema } = xxxOf
+    ? resolveSelectedBranch<T, S, F>(validator, rootSchema, resolvedSchema, xxxOf, uiSchema, formData, customMergeAllOf)
+    : { schema: resolvedSchema, uiSchema };
+  // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
+  // fields rather than an Add button
+  const { required: branchUiRequired } = getUiOptions<T, S, F>(branchUiSchema);
+  const branchRequired = branchUiRequired !== undefined ? Boolean(branchUiRequired) : effectiveRequired;
   if (
     path.length > 0 &&
-    optedOut &&
-    !effectiveRequired &&
-    isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)
+    !isFormDataAvailable(formData) &&
+    !branchRequired &&
+    isOptionalDataControlsType<T, S, F>(retrieved, branchUiSchema, globalUiOptions) &&
+    // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
+    // showing the properties it shares with the option unless the node is a control that hides them as well
+    (!xxxOf ||
+      getSchemaType<S>(resolvedSchema) !== 'object' ||
+      (!effectiveRequired && isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)))
   ) {
-    // This node isn't rendered (or its own fields aren't) until the user opts in, so a `ui:required` field beneath it
-    // isn't visible for the user to fill in or correct either.
     return;
   }
-  const { schema: retrieved, uiSchema: branchUiSchema } = resolveSelectedBranch<T, S, F>(
-    validator,
-    rootSchema,
-    resolvedSchema,
-    uiSchema,
-    formData,
-    customMergeAllOf,
-  );
   if (getSchemaType<S>(retrieved) === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched

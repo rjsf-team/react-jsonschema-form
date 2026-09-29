@@ -7,7 +7,6 @@ import type {
 } from '@rjsf/utils';
 import {
   getOptionalDataControlsType,
-  getSchemaType,
   getTemplate,
   getUiOptions,
   isFormDataAvailable,
@@ -74,10 +73,8 @@ export default function OptionalDataControlsField<
         );
         if (newFormData === undefined) {
           // getDefaultFormState() returns undefined for an optional array (and can for an object), so Add has to supply
-          // the empty container itself. A declared type names it outright; an `anyOf`/`oneOf` without one takes the
-          // type its options share
-          const schemaType = getSchemaType<S>(schema) ?? getOptionalDataControlsType<S>(schema);
-          newFormData = schemaType === 'array' ? [] : {};
+          // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
+          newFormData = getOptionalDataControlsType<S>(schema) === 'array' ? [] : {};
         }
         onChange(newFormData as T, fieldPath, errorSchema);
       };

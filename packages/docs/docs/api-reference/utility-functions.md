@@ -788,7 +788,7 @@ A `pattern` that the value fails is reported by the browser as a bare "Please ma
 
 ### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema has no `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), read from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides; otherwise it is the schema's own type. An empty `anyOf: []`/`oneOf: []` counts as no option list (see `getXxxOfOptions()`), so such a schema returns its own type.
+Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema has no `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), read from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides, and `undefined` when no option names a type; otherwise it is the schema's own type. An empty `anyOf: []`/`oneOf: []` counts as no option list, so such a schema returns its own type.
 `shouldRenderOptionalField()` decides whether to render the controls from this type, and `OptionalDataControlsField` uses it to pick the empty value it adds, so the two always agree.
 
 The type of an `anyOf`/`oneOf` schema whose options name no type of their own is provisional: it may come to take the parent's `type` into account ([#5360](https://github.com/rjsf-team/react-jsonschema-form/issues/5360)).
@@ -799,7 +799,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 #### Returns
 
-- string | string[] | undefined: The type of the field, or the unique list of its `anyOf`/`oneOf` options' types
+- string | string[] | undefined: The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither names one
 
 ### getOptionMatchingSimpleDiscriminator()
 
@@ -1019,20 +1019,6 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 #### Returns
 
 - `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
-
-### getXxxOfOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Returns the `anyOf`/`oneOf` options that are rendered for the `schema`, along with the keyword `getXxxOfKey()` reads them from.
-An empty list offers no option to render, take defaults from or take a type from, so it returns `undefined` for one, and the schema is handled through its own type, the same as a schema without either keyword.
-`getDefaultFormState()`, `getUiRequiredErrorSchema()` and `getOptionalDataControlsType()` read the options through it, so they agree on when an empty list counts as none.
-
-#### Parameters
-
-- schema: S - The schema that may carry an `anyOf` or a `oneOf`
-
-#### Returns
-
-- \{ key: `'anyOf'` | `'oneOf'`, options: S[] } | undefined: The keyword and its non-empty list of options, or `undefined` when there is no such list
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

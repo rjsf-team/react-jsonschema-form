@@ -2,6 +2,12 @@ import type { ANY_OF_KEY, ONE_OF_KEY } from './constants.ts';
 import getXxxOfKey from './getXxxOfKey.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
+/** The `anyOf`/`oneOf` options of a schema, along with the keyword they are read from */
+export interface XxxOfOptions<S extends StrictRJSFSchema = RJSFSchema> {
+  key: typeof ANY_OF_KEY | typeof ONE_OF_KEY;
+  options: S[];
+}
+
 /** Returns the `anyOf`/`oneOf` options that are rendered for the `schema`, along with the keyword they are read from,
  * as `getXxxOfKey()` picks it. An empty list offers no option to render, pick defaults from or take a type from, so the
  * schema is handled through its own type instead, the same as one without either keyword.
@@ -11,7 +17,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function getXxxOfOptions<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-): { key: typeof ANY_OF_KEY | typeof ONE_OF_KEY; options: S[] } | undefined {
+): XxxOfOptions<S> | undefined {
   const key = getXxxOfKey<S>(schema);
   const options = key && (schema[key] as S[]);
   return options && options.length > 0 ? { key, options } : undefined;

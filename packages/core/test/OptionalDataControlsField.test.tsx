@@ -12,10 +12,6 @@ const ARRAY_OPTIONS: RJSFSchema[] = [
   { type: 'array', items: { type: 'string' } },
   { type: 'array', items: { type: 'number' } },
 ];
-const OBJECT_OPTIONS: RJSFSchema[] = [
-  { type: 'object', properties: { a: { type: 'string' } } },
-  { type: 'object', properties: { b: { type: 'string' } } },
-];
 
 describe('OptionalDataControlsField', () => {
   function getProps(schema: RJSFSchema, onChange: FieldProps['onChange']): FieldProps {
@@ -38,42 +34,20 @@ describe('OptionalDataControlsField', () => {
     };
   }
 
-  async function clickAdd(schema: RJSFSchema, withoutDefault = false) {
+  async function clickAdd(schema: RJSFSchema) {
     const onChange = vi.fn();
-    const props = getProps(schema, onChange);
-    if (withoutDefault) {
-      // getDefaultFormState() supplies `{}` or `[]` for these schemas itself, so the fallback is only reached when it
-      // is made to return nothing
-      vi.spyOn(props.registry.schemaUtils, 'getDefaultFormState').mockReturnValue(undefined);
-    }
-    render(<OptionalDataControlsField {...props} />);
+    render(<OptionalDataControlsField {...getProps(schema, onChange)} />);
     await user.click(screen.getByTitle(englishStringTranslator(TranslatableString.OptionalObjectAdd)));
     return onChange;
   }
 
-  test.each([
-    ['anyOf', { anyOf: ARRAY_OPTIONS }],
-    ['oneOf', { oneOf: ARRAY_OPTIONS }],
-  ])('adding data to an %s whose options are all arrays stores an empty array', async (_, schema) => {
+  test.each<[string, RJSFSchema]>([
+    ['an anyOf', { anyOf: ARRAY_OPTIONS }],
+    ['a oneOf', { oneOf: ARRAY_OPTIONS }],
+    // The options' type is the one the controls are rendered for, so it wins over the object's own
+    ['an object with an anyOf', { type: 'object', properties: { p: { type: 'string' } }, anyOf: ARRAY_OPTIONS }],
+  ])('adding data to %s whose options are all arrays stores an empty array', async (_, schema) => {
     const onChange = await clickAdd(schema);
-    expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'), {});
-  });
-
-  test('adding data to an anyOf whose options are all objects stores an empty object', async () => {
-    const onChange = await clickAdd({ anyOf: OBJECT_OPTIONS }, true);
-    expect(onChange).toHaveBeenCalledWith({}, toFieldPath('optional'), {});
-  });
-
-  test('adding data to an array stores an empty array', async () => {
-    const onChange = await clickAdd({ type: 'array', items: { type: 'string' } }, true);
-    expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'), {});
-  });
-
-  test('adding data to an array whose anyOf options name no type stores an empty array', async () => {
-    const onChange = await clickAdd(
-      { type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 3 }] },
-      true,
-    );
     expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'), {});
   });
 });

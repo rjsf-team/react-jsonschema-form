@@ -30,18 +30,23 @@ export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema has no
- * `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), read
- * from the list `getXxxOfOptions()` picks; otherwise, including for an empty `anyOf: []`/`oneOf: []`, it is the
- * schema's own type.
+ * `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), and
+ * `undefined` when no option names one; otherwise, including for an empty `anyOf: []`/`oneOf: []`, it is the schema's
+ * own type.
  *
  * @param schema - The schema for the field
- * @returns - The type of the field, or the unique list of its `anyOf`/`oneOf` options' types
+ * @returns - The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither
+ *            names one
  */
 export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
 ): string | string[] | undefined {
   const xxxOf = getXxxOfOptions<S>(schema);
-  return xxxOf ? getSchemaTypesForXxxOf<S>(xxxOf.options) : getSchemaType<S>(schema);
+  if (!xxxOf) {
+    return getSchemaType<S>(schema);
+  }
+  const optionTypes = getSchemaTypesForXxxOf<S>(xxxOf.options);
+  return Array.isArray(optionTypes) && optionTypes.length === 0 ? undefined : optionTypes;
 }
 
 /** Determines whether the type of the field for `schema` is one that `enableOptionalDataFieldForType` turns the Optional

@@ -96,11 +96,11 @@ describe('getOptionalDataControlsType()', () => {
   test('a schema without a type or anyOf/oneOf returns undefined', () => {
     expect(getOptionalDataControlsType({})).toBeUndefined();
   });
-  test('an anyOf schema returns the type its options share', () => {
-    expect(getOptionalDataControlsType(ANY_OF_SCHEMA_ARRAY)).toEqual('array');
-  });
-  test('a oneOf schema returns the type its options share', () => {
-    expect(getOptionalDataControlsType(ONE_OF_SCHEMA_ARRAY)).toEqual('array');
+  test.each([
+    ['anyOf', ANY_OF_SCHEMA_ARRAY],
+    ['oneOf', ONE_OF_SCHEMA_ARRAY],
+  ])('an %s schema returns the type its options share', (_, schema) => {
+    expect(getOptionalDataControlsType(schema)).toEqual('array');
   });
   test('a schema with both anyOf and oneOf returns the type of its anyOf options', () => {
     expect(getOptionalDataControlsType({ ...ONE_OF_SCHEMA_OBJECT, ...ANY_OF_SCHEMA_ARRAY })).toEqual('array');
@@ -110,6 +110,12 @@ describe('getOptionalDataControlsType()', () => {
   });
   test('a oneOf schema with mixed-type options returns every type', () => {
     expect(getOptionalDataControlsType(ONE_OF_SCHEMA_MIXED)).toEqual(['object', 'array', 'string']);
+  });
+  test.each<[string, RJSFSchema]>([
+    ['unresolved $ref options', { anyOf: [{ $ref: '#/definitions/list' }] }],
+    ['typeless options beside a type of its own', { type: 'array', anyOf: [{ minItems: 1 }] }],
+  ])('a schema whose options name no type returns undefined, for %s', (_, schema) => {
+    expect(getOptionalDataControlsType(schema)).toBeUndefined();
   });
 });
 

@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '../../src/index.ts';
+import type { GlobalUISchemaOptions, RJSFSchema, UiSchema } from '../../src/index.ts';
 import { getUiRequiredErrorSchema, toErrorList } from '../../src/index.ts';
 import getTestValidator from '../testUtils/getTestValidator.ts';
 
@@ -640,6 +640,8 @@ describe('getUiRequiredErrorSchema()', () => {
   });
 
   describe('Optional Data Controls', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+
     it('does not fire for a field inside an unselected anyOf branch configured as an Optional Data Control', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -653,7 +655,6 @@ describe('getUiRequiredErrorSchema()', () => {
         },
       };
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
         testValidator,
         schema,
@@ -679,7 +680,6 @@ describe('getUiRequiredErrorSchema()', () => {
         },
       };
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
         testValidator,
         schema,
@@ -698,19 +698,18 @@ describe('getUiRequiredErrorSchema()', () => {
         properties: {
           thing: {
             anyOf: [
-              { type: 'object', properties: { aField: { type: 'string' } } },
+              { type: 'object', properties: { aField: { type: 'string' }, aOther: { type: 'string' } } },
               { type: 'object', properties: { bField: { type: 'string' } } },
             ],
           },
         },
       };
       const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
         testValidator,
         schema,
         uiSchema,
-        { thing: {} },
+        { thing: { aOther: 'x' } },
         undefined,
         undefined,
         globalUiOptions,
@@ -730,7 +729,6 @@ describe('getUiRequiredErrorSchema()', () => {
           },
         };
         const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-        const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
         const errorSchema = getUiRequiredErrorSchema(
           testValidator,
           schema,
@@ -744,47 +742,76 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     );
 
-    it.each(['anyOf', 'oneOf'])(
-      'does not fire for a field inside an object Optional Data Control with an empty %s whose own value is {}, matching ObjectField',
-      (keyword) => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            thing: { type: 'object', properties: { aField: { type: 'string' } }, [keyword]: [] },
-          },
-        };
-        const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
-        const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
-        const errorSchema = getUiRequiredErrorSchema(
+    const objectOption: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    const aRequired: UiSchema = { thing: { a: { 'ui:required': true } } };
+    const errorsAtEmptyObject = (thing: RJSFSchema) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
           testValidator,
-          schema,
-          uiSchema,
+          { type: 'object', properties: { thing } },
+          aRequired,
           { thing: {} },
           undefined,
           undefined,
           globalUiOptions,
-        );
-        expect(toErrorList(errorSchema)).toEqual([]);
-      },
-    );
+        ),
+      );
 
-    it('still fires inside an allOf that resolves to an anyOf Optional Data Control whose own value is {}, since its option is rendered', () => {
+    it.each<[string, RJSFSchema]>([
+      ['an object beside an empty anyOf', { ...objectOption, anyOf: [] }],
+      ['an object beside an empty oneOf', { ...objectOption, oneOf: [] }],
+      ['the object option selected in an anyOf', { anyOf: [objectOption] }],
+      ['the object option selected in a oneOf', { oneOf: [objectOption] }],
+      [
+        'the object option selected in an anyOf beside a oneOf whose options name no type',
+        { anyOf: [objectOption], oneOf: [{ minProperties: 0 }] },
+      ],
+      ['the object option selected in an allOf that resolves to an anyOf', { allOf: [{ anyOf: [objectOption] }] }],
+      [
+        'the object option selected in an if/then/else that resolves to an anyOf',
+        { if: { required: ['zzz'] }, then: {}, else: { anyOf: [objectOption] } },
+      ],
+    ])('does not fire at {} for a field of %s, since the field is hidden behind its Add button', (_, thing) => {
+      expect(errorsAtEmptyObject(thing)).toEqual([]);
+    });
+
+    it("still fires for a field of the selected option whose value is {} when the option's own uiSchema does not enable the controls, since the option then renders its fields", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { thing: { anyOf: [objectOption] } } };
+      const uiSchema: UiSchema = {
+        thing: { 'ui:enableOptionalDataFieldForType': ['object'], anyOf: [{ a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} }));
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it("still fires for a field of the selected option whose value is {} when the option's own uiSchema makes it ui:required, since a required option renders its fields", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { thing: { anyOf: [objectOption] } } };
+      const uiSchema: UiSchema = { thing: { anyOf: [{ 'ui:required': true, a: { 'ui:required': true } }] } };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} }, undefined, undefined, globalUiOptions),
+      );
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it("still fires at {} for a property of a ui:required object whose option is not, since the object's own ObjectField renders it", () => {
       const schema: RJSFSchema = {
         type: 'object',
-        properties: { thing: { allOf: [{ anyOf: [{ type: 'object', properties: { a: { type: 'string' } } }] }] } },
+        properties: { thing: { ...objectOption, anyOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
       };
-      const uiSchema: UiSchema = { thing: { a: { 'ui:required': true } } };
-      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
-      const errorSchema = getUiRequiredErrorSchema(
-        testValidator,
-        schema,
-        uiSchema,
-        { thing: {} },
-        undefined,
-        undefined,
-        globalUiOptions,
+      const uiSchema: UiSchema = {
+        thing: { 'ui:required': true, anyOf: [{ 'ui:required': false, a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} }, undefined, undefined, globalUiOptions),
       );
-      const errors = toErrorList(errorSchema);
+      expect(errors).toHaveLength(1);
+      expect(errors[0].property).toBe('.thing.a');
+    });
+
+    it("still fires at {} for a property of an object whose anyOf options name no type, since the object's own ObjectField renders it", () => {
+      const errors = errorsAtEmptyObject({ ...objectOption, anyOf: [{ minProperties: 0 }, { maxProperties: 5 }] });
       expect(errors).toHaveLength(1);
       expect(errors[0].property).toBe('.thing.a');
     });
@@ -797,7 +824,6 @@ describe('getUiRequiredErrorSchema()', () => {
         },
       };
       const uiSchema: UiSchema = { thing: { 'ui:required': true } };
-      const globalUiOptions = { enableOptionalDataFieldForType: ['object'] as ('object' | 'array')[] };
       const errorSchema = getUiRequiredErrorSchema(
         testValidator,
         schema,

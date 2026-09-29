@@ -1,4 +1,4 @@
-import { getXxxOfOptions } from '../src/index.ts';
+import getXxxOfOptions from '../src/getXxxOfOptions.ts';
 import type { RJSFSchema } from '../src/index.ts';
 
 describe('getXxxOfOptions()', () => {

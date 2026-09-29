@@ -57,7 +57,6 @@ import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
-import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
@@ -214,7 +213,6 @@ export {
   getVisibleErrors,
   getWidget,
   getXxxOfKey,
-  getXxxOfOptions,
   groupEnumOptions,
   guessType,
   hasByPath,
