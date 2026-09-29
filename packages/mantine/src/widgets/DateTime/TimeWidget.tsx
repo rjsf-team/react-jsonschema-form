@@ -24,7 +24,7 @@ export default function TimeWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     placeholder,
     required,
     disabled,
@@ -77,7 +77,7 @@ export default function TimeWidget<
   return (
     <TimeInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={displayValue || ''}
       placeholder={placeholder || undefined}
       required={required}

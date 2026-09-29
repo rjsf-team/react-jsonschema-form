@@ -316,7 +316,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                       </div>
                       <input
-                        name="person.birth_date"
+                        name="root_person_birth_date"
                         type="hidden"
                         value=""
                       />
@@ -3218,7 +3218,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                       </div>
                       <input
-                        name="person.birth_date"
+                        name="root_person_birth_date"
                         type="hidden"
                         value=""
                       />
@@ -6164,7 +6164,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                       </div>
                       <input
-                        name="person.birth_date"
+                        name="root_person_birth_date"
                         type="hidden"
                         value=""
                       />
@@ -7803,7 +7803,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="m_8fb7ebe7 mantine-Input-input mantine-Textarea-input"
                                     data-variant="default"
                                     id="root_employment_description"
-                                    name="employment.description"
+                                    name="root_employment_description"
                                     required=""
                                     rows="6"
                                   />
@@ -8158,7 +8158,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                       </div>
                       <input
-                        name="person.birth_date"
+                        name="root_person_birth_date"
                         type="hidden"
                         value=""
                       />
@@ -11003,7 +11003,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   </div>
                 </div>
                 <input
-                  name="person.birth_date"
+                  name="root_person_birth_date"
                   type="hidden"
                   value=""
                 />
@@ -12562,7 +12562,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   </div>
                 </div>
                 <input
-                  name="person.birth_date"
+                  name="root_person_birth_date"
                   type="hidden"
                   value=""
                 />

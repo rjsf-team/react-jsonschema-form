@@ -17,7 +17,7 @@ export default function FileWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -65,7 +65,7 @@ export default function FileWidget<
   return (
     <FileInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={value || null}
       placeholder={placeholder || undefined}
       required={required}

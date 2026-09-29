@@ -179,6 +179,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a Mantine widget's errors running together on one line ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed widgets ignoring `descriptionProps` from `ui:options` and the Mantine theme ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - **BREAKING CHANGE** Fixed a `oneOf`/`anyOf` selector referencing no error and `CheckboxWidget` reading its error twice: Mantine's error element now has the field's error id (`<id>__error`), and `FieldErrorTemplate` renders nothing. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Fixed `RangeWidget` and `AltDateWidget` never marking their inputs invalid or rendering a `success` option ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Fixed `AltDateTimeWidget` showing a zero hour, minute or second as empty, and `AltDateWidget` and `AltDateTimeWidget` leaving their Now and Clear buttons enabled when disabled or read-only and ignoring `autofocus`, `onBlur` and `onFocus` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- **BREAKING CHANGE** Fixed `RangeWidget`, `PasswordWidget`, `TimeWidget`, `ColorWidget`, `FileWidget` and `DateTimeInput` ignoring `nameGenerator`. They, `TextareaWidget` and `CheckboxWidget` now fall back to the field's id rather than the bare property name, as the other widgets do. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/mui
 

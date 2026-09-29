@@ -17,7 +17,6 @@ export default function TextareaWidget<
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
-    name,
     htmlName,
     value,
     placeholder,
@@ -66,7 +65,7 @@ export default function TextareaWidget<
   return (
     <Textarea
       id={id}
-      name={htmlName || name}
+      name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}

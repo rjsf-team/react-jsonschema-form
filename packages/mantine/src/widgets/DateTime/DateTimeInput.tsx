@@ -57,7 +57,7 @@ export default function DateTimeInput<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -107,7 +107,7 @@ export default function DateTimeInput<
   return (
     <DateInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={parsedValue}
       dateParser={(v) => dateParser(v, displayFormat as string)}
       placeholder={placeholder || undefined}

@@ -18,7 +18,7 @@ export default function PasswordWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -66,7 +66,7 @@ export default function PasswordWidget<
   return (
     <PasswordInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}

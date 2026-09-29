@@ -15,7 +15,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
-import { cleanupOptions, useFieldWrapperProps } from '../utils.tsx';
+import { cleanupOptions, useFieldWrapperProps, useShownSuccessId } from '../utils.tsx';
 
 /** The Mantine input and `InputWrapper` props `Slider` doesn't take, such as a `ui:globalOptions` meant for the text
  * inputs, which it would pass on to its root element as unknown attributes
@@ -62,6 +62,23 @@ const sliderExcludedKeyRecord: Record<SliderExcludedKey, true> = {
 };
 const sliderExcludedKeys = Object.keys(sliderExcludedKeyRecord);
 
+/** A `Slider` whose thumb is also described by the success message of the `Input.Wrapper` it is rendered in, while
+ * Mantine renders it. Every other prop, including the ref and handlers a single-child `inputContainer` such as `Tooltip`
+ * adds, is passed on to the `Slider`.
+ */
+function RangeSlider({ successId, thumbProps, ...props }: SliderProps & { successId: string }) {
+  const shownSuccessId = useShownSuccessId(successId);
+  return (
+    <Slider
+      {...props}
+      thumbProps={{
+        ...thumbProps,
+        'aria-describedby': [thumbProps?.['aria-describedby'], shownSuccessId].filter(Boolean).join(' '),
+      }}
+    />
+  );
+}
+
 /** The `RangeWidget` component renders a Mantine `Slider` inside `Input.Wrapper`, which renders the field's title,
  * description and errors.
  *
@@ -72,11 +89,12 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, name, value, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus, schema } = props;
+  const { id, htmlName, value, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus, schema } =
+    props;
 
   const themeProps = cleanupOptions(options, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
-  const { wrapperProps, hiddenTitle } = useFieldWrapperProps(props);
+  const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props);
   const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
     'Slider',
     {},
@@ -108,9 +126,9 @@ export default function RangeWidget<
     <>
       {hiddenTitle}
       <Input.Wrapper {...wrapperProps}>
-        <Slider
+        <RangeSlider
           id={id}
-          name={name}
+          name={htmlName || id}
           value={value}
           max={max}
           min={min}
@@ -121,9 +139,11 @@ export default function RangeWidget<
           onBlur={handleBlur}
           onFocus={handleFocus}
           {...themeProps}
+          successId={successId}
           thumbProps={{
             ...thumbProps,
             'aria-describedby': [ariaDescribedByIds(id), thumbProps?.['aria-describedby']].filter(Boolean).join(' '),
+            'aria-invalid': thumbProps?.['aria-invalid'] ?? (invalid || undefined),
             // Mantine names the thumb by `thumbLabel`, which `thumbProps` can override, through `aria-label`, which
             // `aria-labelledby` would override in turn
             'aria-labelledby':

@@ -18,7 +18,6 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
-    name,
     htmlName,
     value = false,
     required,
@@ -84,7 +83,7 @@ export default function CheckboxWidget<
       )}
       <Checkbox
         id={id}
-        name={htmlName || name}
+        name={htmlName || id}
         label={
           !hideLabel && label ? (
             <>

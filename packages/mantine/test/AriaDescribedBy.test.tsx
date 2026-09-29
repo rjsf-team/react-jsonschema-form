@@ -322,17 +322,27 @@ describe('aria-describedby', () => {
     });
 
     test.each([
-      ['no successProps id', { success: 'Looks good' }],
-      ['a successProps id', { success: 'Looks good', successProps: { id: 'shared' } }],
-    ])('describes each alt-date part by its own success message with %s', (_, defaultProps) => {
-      const { container } = renderThemed({ Select: { defaultProps } }, { type: 'string' }, { 'ui:widget': 'alt-date' });
+      ['the theme InputWrapper', { InputWrapper: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
+      ['the theme Input', { Input: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
+      [
+        'a theme successProps id',
+        { InputWrapper: { defaultProps: { success: 'Looks good', successProps: { id: 'shared' } } } },
+        'shared',
+      ],
+      ['the theme Select, which only a part would render', { Select: { defaultProps: { success: 'Looks good' } } }, ''],
+    ])(
+      'renders at most one alt-date success message, for the field, given a success from %s',
+      (_, components, successId) => {
+        const { container } = renderThemed(components, { type: 'string' }, { 'ui:widget': 'alt-date' });
 
-      const successIds = [...container.querySelectorAll('[id$="-success"]')].map((el) => el.id);
-      expect(successIds).toEqual(['root_year-success', 'root_month-success', 'root_day-success']);
-      expect(describedByValues(container)).toEqual(
-        successIds.map((successId) => `${ariaDescribedByIds('root')} ${successId}`),
-      );
-    });
+        expect(Array.from(container.querySelectorAll('.mantine-InputWrapper-success'), (el) => el.id)).toEqual(
+          successId ? [successId] : [],
+        );
+        expect(describedByValues(container)).toEqual(
+          Array(3).fill([ariaDescribedByIds('root'), successId].filter(Boolean).join(' ')),
+        );
+      },
+    );
 
     test('describes a radio group, which is otherwise left undescribed', () => {
       renderThemed({}, enumSchema, { 'ui:widget': 'radio', 'ui:options': { success: 'Looks good' } });

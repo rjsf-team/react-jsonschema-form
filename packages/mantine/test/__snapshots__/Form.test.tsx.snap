@@ -44,7 +44,7 @@ exports[`format iso-date-time 1`] = `
         </div>
       </div>
       <input
-        name=""
+        name="root"
         type="hidden"
         value=""
       />
@@ -106,7 +106,7 @@ exports[`format iso-time 1`] = `
             class="m_468e7eda m_8fb7ebe7 mantine-Input-input mantine-TimeInput-input"
             data-variant="default"
             id="root"
-            name=""
+            name="root"
             step="60"
             type="time"
             value=""
@@ -6028,7 +6028,7 @@ exports[`single fields > checkbox field 1`] = `
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
-              name=""
+              name="root"
               type="checkbox"
             />
             <svg
@@ -6120,7 +6120,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
-              name=""
+              name="root"
               type="checkbox"
             />
             <svg
@@ -6211,7 +6211,7 @@ exports[`single fields > checkbox field with label 1`] = `
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
-              name=""
+              name="root"
               type="checkbox"
             />
             <svg
@@ -6310,7 +6310,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
-              name=""
+              name="root"
               type="checkbox"
             />
             <svg
@@ -6417,7 +6417,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
-              name=""
+              name="root"
               type="checkbox"
             />
             <svg
@@ -7726,7 +7726,7 @@ exports[`single fields > format color 1`] = `
             class="m_8fb7ebe7 mantine-Input-input mantine-ColorInput-input"
             data-variant="default"
             id="root"
-            name=""
+            name="root"
             spellcheck="false"
             value=""
           />
@@ -7797,7 +7797,7 @@ exports[`single fields > format date 1`] = `
         </div>
       </div>
       <input
-        name=""
+        name="root"
         type="hidden"
         value=""
       />
@@ -7866,7 +7866,7 @@ exports[`single fields > format datetime 1`] = `
         </div>
       </div>
       <input
-        name=""
+        name="root"
         type="hidden"
         value=""
       />
@@ -7928,7 +7928,7 @@ exports[`single fields > format time 1`] = `
             class="m_468e7eda m_8fb7ebe7 mantine-Input-input mantine-TimeInput-input"
             data-variant="default"
             id="root"
-            name=""
+            name="root"
             step="60"
             type="time"
             value=""
@@ -14176,7 +14176,7 @@ exports[`single fields > password field 1`] = `
               autocomplete="off"
               class="m_f2d85dd2 mantine-PasswordInput-innerInput"
               id="root"
-              name=""
+              name="root"
               type="password"
               value=""
             />
@@ -14639,7 +14639,7 @@ exports[`single fields > required checkbox field 1`] = `
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"
                       id="root_agree"
-                      name="agree"
+                      name="root_agree"
                       type="checkbox"
                     />
                     <svg
@@ -14758,7 +14758,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"
                       id="root_agree"
-                      name="agree"
+                      name="root_agree"
                       type="checkbox"
                     />
                     <svg
@@ -18333,7 +18333,7 @@ exports[`single fields > slider field 1`] = `
             </div>
           </div>
           <input
-            name=""
+            name="root"
             type="hidden"
             value="75"
           />
@@ -18705,7 +18705,7 @@ exports[`single fields > string field > format data-url 1`] = `
       class="rjsf-field rjsf-field-string"
     >
       <input
-        name=""
+        name="root"
         style="display: none;"
         type="file"
       />
@@ -19326,7 +19326,7 @@ exports[`single fields > textarea field 1`] = `
             class="m_8fb7ebe7 mantine-Input-input mantine-Textarea-input"
             data-variant="default"
             id="root"
-            name=""
+            name="root"
           />
         </div>
       </div>

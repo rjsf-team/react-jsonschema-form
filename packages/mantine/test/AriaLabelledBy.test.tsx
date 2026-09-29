@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createTheme, MantineProvider, Tooltip } from '@mantine/core';
+import { createTheme, MantineProvider, STYLE_PROPS_DATA, Tooltip } from '@mantine/core';
 import type { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -482,20 +482,72 @@ describe('aria-labelledby', () => {
     },
   );
 
-  test('alt-date widget renders no style or style element on its field wrapper for the InputWrapper theme style props', () => {
-    const styleProps = { mt: 'xl', w: 10, bg: 'red', c: 'blue', bd: '1px solid red', fz: 'lg', lightHidden: true };
+  // `useFieldWrapperProps` keeps the theme's `InputWrapper` root props off the alt-date field wrapper by passing values
+  // that render nothing, chosen by each style prop's type in Mantine's `STYLE_PROPS_DATA`. These tests fail when a Mantine
+  // release adds a style prop type, makes a resolver reject those values, or otherwise lets a theme root prop through.
+  const styleValueByType: Record<string, unknown> = {
+    border: '1px solid red',
+    color: 'red',
+    fontFamily: 'mono',
+    fontSize: 'lg',
+    identity: 'inherit',
+    lineHeight: 'md',
+    radius: 'md',
+    size: 10,
+    spacing: 'md',
+    textColor: 'blue',
+  };
+
+  test("covers every style prop type in Mantine's STYLE_PROPS_DATA", () => {
+    const types = new Set(Object.values(STYLE_PROPS_DATA).map(({ type }) => type));
+
+    expect(Object.keys(styleValueByType).sort()).toEqual([...types].sort());
+  });
+
+  test('alt-date widget keeps every InputWrapper theme root prop off its field wrapper, and on each part wrapper', () => {
+    const rootProps = {
+      ...Object.fromEntries(
+        Object.entries(STYLE_PROPS_DATA).map(([name, { type }]) => [name, styleValueByType[type] ?? 'unknown type']),
+      ),
+      hiddenFrom: 'xs',
+      visibleFrom: 'xs',
+      lightHidden: true,
+      darkHidden: true,
+      className: 'theme-root',
+      style: { outline: '1px solid red' },
+      mod: { theme: true },
+      classNames: { root: 'theme-root-slot' },
+      styles: { root: { cursor: 'pointer' } },
+      attributes: { root: { 'data-theme-slot': true } },
+    };
     const baseline = render(titledForm('alt-date', { type: 'string' }, 'ui:options', {}));
     const baselineStyleCount = baseline.container.querySelectorAll('style').length;
     baseline.unmount();
 
-    const { container } = render(titledForm('alt-date', { type: 'string' }, 'theme', styleProps));
+    const { container } = render(titledForm('alt-date', { type: 'string' }, 'theme', rootProps));
 
     const fieldWrapper = container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)!;
     expect(fieldWrapper).not.toHaveAttribute('style');
     expect(Array.from(fieldWrapper.classList).filter((name) => !name.startsWith('m_'))).toEqual([
       'mantine-InputWrapper-root',
     ]);
+    expect(Array.from(fieldWrapper.attributes, ({ name }) => name).filter((name) => name.startsWith('data-'))).toEqual(
+      [],
+    );
     expect(container.querySelectorAll('style')).toHaveLength(baselineStyleCount);
+
+    const partWrappers = Array.from(container.querySelectorAll<HTMLElement>('.mantine-InputWrapper-root')).filter(
+      (wrapper) => wrapper !== fieldWrapper,
+    );
+    expect(partWrappers).toHaveLength(3);
+    for (const wrapper of partWrappers) {
+      expect(wrapper).toHaveClass('theme-root', 'theme-root-slot', 'mantine-light-hidden');
+      expect(wrapper).toHaveAttribute('data-theme');
+      expect(wrapper).toHaveAttribute('data-theme-slot');
+      expect(wrapper.style.marginTop).not.toBe('');
+      expect(wrapper.style.outline).not.toBe('');
+      expect(wrapper.style.cursor).toBe('pointer');
+    }
   });
 
   test.each(titledWidgets)(
