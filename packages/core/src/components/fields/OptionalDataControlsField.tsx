@@ -6,6 +6,7 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  getOptionalDataControlsType,
   getSchemaType,
   getTemplate,
   getUiOptions,
@@ -61,8 +62,7 @@ export default function OptionalDataControlsField<
     } else {
       id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
-        // If it has form data, store an empty object, otherwise get the default form state and use it. Passes
-        // uiSchema/uiSchemaDefinitions so a ui:initialValue on a field beneath this control applies immediately,
+        // Passes uiSchema/uiSchemaDefinitions so a ui:initialValue on a field beneath this control applies immediately,
         // the same as it would if the field had been present since the initial render.
         let newFormData: unknown = schemaUtils.getDefaultFormState(
           schema,
@@ -73,8 +73,11 @@ export default function OptionalDataControlsField<
           uiSchemaDefinitions,
         );
         if (newFormData === undefined) {
-          // If new form data ended up being undefined, and we have pushed the add button we need to actually add data
-          newFormData = getSchemaType<S>(schema) === 'array' ? [] : {};
+          // getDefaultFormState() returns undefined for an optional array (and can for an object), so Add has to supply
+          // the empty container itself. A declared type names it outright; an `anyOf`/`oneOf` without one takes the
+          // type its options share
+          const schemaType = getSchemaType<S>(schema) ?? getOptionalDataControlsType<S>(schema);
+          newFormData = schemaType === 'array' ? [] : {};
         }
         onChange(newFormData as T, fieldPath, errorSchema);
       };

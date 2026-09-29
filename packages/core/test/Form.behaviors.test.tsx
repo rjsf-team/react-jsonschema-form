@@ -2922,6 +2922,28 @@ describe('optionalDataControls', () => {
     expect(ids).toContain(objectControlAddId);
     expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
   });
+  it('renders the controls for an object and an array with an empty option list, and adds the empty value', async () => {
+    const emptyOptionsSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: { ...(schema.properties!.nestedObjectOptional as RJSFSchema), oneOf: [] },
+        nestedArrayOptional: { ...(schema.properties!.nestedArrayOptional as RJSFSchema), anyOf: [] },
+      },
+    };
+    const { node, onChange } = createFormComponent({ schema: emptyOptionsSchema, uiSchema: bothOnUiSchema });
+
+    expect(node.querySelector(`#${objectId}_test`)).toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).toEqual(null);
+
+    await user.click(node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`)!);
+    await user.click(node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`)!);
+
+    expectToHaveBeenCalledWithFormData(onChange, { nestedObjectOptional: {}, nestedArrayOptional: [] }, arrayId);
+    expect(node.querySelector(`#${objectControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${objectId}_test`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).not.toEqual(null);
+  });
 });
 
 describe('nameGenerator', () => {

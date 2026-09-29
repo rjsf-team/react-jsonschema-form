@@ -13,7 +13,7 @@ import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
-import getXxxOfKey from '../getXxxOfKey.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -21,7 +21,7 @@ import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
-import { getSchemaTypesForXxxOf } from '../shouldRenderOptionalField.ts';
+import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
   CustomMergeAllOf,
   ErrorSchema,
@@ -61,14 +61,11 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   formData: unknown,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): SelectedBranch<T, S, F> {
-  const keyword = getXxxOfKey<S>(schema);
-  if (!keyword) {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  if (!xxxOf) {
     return { schema, uiSchema };
   }
-  const { [keyword]: options, ...remaining } = schema;
-  if (options!.length === 0) {
-    return { schema, uiSchema };
-  }
+  const { [xxxOf.key]: options, ...remaining } = schema;
   const index = getClosestMatchingOption<T, S, F>(
     validator,
     rootSchema,
@@ -80,25 +77,8 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   );
   return {
     schema: mergeSchemas(remaining, options![index] as S) as S,
-    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, index) ?? {},
+    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, xxxOf.key, index) ?? {},
   };
-}
-
-/** Determines whether `schema` (resolved, but with `anyOf`/`oneOf` left intact, matching what `SchemaField` itself
- * checks against) is configured as an Optional Data Control — the same check `shouldRenderOptionalField()` makes,
- * minus the `isRootSchema` guard, which the walk's callers never need since a root is never checked this way.
- */
-function isOptionalDataControlType<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schema: S,
-  uiSchema: UiSchema<T, S, F>,
-  globalUiOptions?: GlobalUISchemaOptions,
-): boolean {
-  const xxxOfKey = getXxxOfKey<S>(schema);
-  const schemaType = xxxOfKey ? getSchemaTypesForXxxOf<S>(schema[xxxOfKey] as S[]) : getSchemaType<S>(schema);
-  const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  return (
-    !!schemaType && !Array.isArray(schemaType) && !!enableOptionalDataFieldForType.find((val) => val === schemaType)
-  );
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -187,14 +167,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // and ArrayField's own `hasFormData` gate exactly. `anyOf`/`oneOf`-typed nodes are different: MultiSchemaField
   // always renders the selected branch's own fields unconditionally (there's no `hasFormData` gate on
   // `optionsSchemaField`), so `{}` there isn't "hidden" the way it is for a plain object/array — only a genuinely
-  // absent (`undefined`) value is.
-  const isXxxOf = ONE_OF_KEY in schema || ANY_OF_KEY in schema;
+  // absent (`undefined`) value is. An empty option list renders no MultiSchemaField options, so such a node is gated
+  // like a plain object/array. Read from the resolved schema, the one `isOptionalDataControlsType()` checks, so an
+  // `allOf` that merges into an `anyOf`/`oneOf` is gated as the option list it renders.
+  const isXxxOf = getXxxOfOptions<S>(resolvedSchema) !== undefined;
   const optedOut = isXxxOf ? formData === undefined : !isFormDataAvailable(formData);
   if (
     path.length > 0 &&
     optedOut &&
     !effectiveRequired &&
-    isOptionalDataControlType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)
+    isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)
   ) {
     // This node isn't rendered (or its own fields aren't) until the user opts in, so a `ui:required` field beneath it
     // isn't visible for the user to fill in or correct either.

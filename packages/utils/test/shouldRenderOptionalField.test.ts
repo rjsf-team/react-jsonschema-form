@@ -1,6 +1,10 @@
 import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
 import { createSchemaUtils, englishStringTranslator, shouldRenderOptionalField } from '../src/index.ts';
-import { getSchemaTypesForXxxOf } from '../src/shouldRenderOptionalField.ts';
+import {
+  getOptionalDataControlsType,
+  getSchemaTypesForXxxOf,
+  isOptionalDataControlsType,
+} from '../src/shouldRenderOptionalField.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -82,6 +86,54 @@ describe('getSchemaTypesForXxxOf', () => {
   });
   test('only null options', () => {
     expect(getSchemaTypesForXxxOf([{ const: null }, { type: 'null' }])).toEqual('null');
+  });
+});
+
+describe('getOptionalDataControlsType()', () => {
+  test('a schema without anyOf/oneOf returns its own type', () => {
+    expect(getOptionalDataControlsType({ type: 'object' })).toEqual('object');
+  });
+  test('a schema without a type or anyOf/oneOf returns undefined', () => {
+    expect(getOptionalDataControlsType({})).toBeUndefined();
+  });
+  test('an anyOf schema returns the type its options share', () => {
+    expect(getOptionalDataControlsType(ANY_OF_SCHEMA_ARRAY)).toEqual('array');
+  });
+  test('a oneOf schema returns the type its options share', () => {
+    expect(getOptionalDataControlsType(ONE_OF_SCHEMA_ARRAY)).toEqual('array');
+  });
+  test('a schema with both anyOf and oneOf returns the type of its anyOf options', () => {
+    expect(getOptionalDataControlsType({ ...ONE_OF_SCHEMA_OBJECT, ...ANY_OF_SCHEMA_ARRAY })).toEqual('array');
+  });
+  test.each(['anyOf', 'oneOf'])('a schema with an empty %s returns its own type', (keyword) => {
+    expect(getOptionalDataControlsType({ type: 'array', items: { type: 'string' }, [keyword]: [] })).toEqual('array');
+  });
+  test('a oneOf schema with mixed-type options returns every type', () => {
+    expect(getOptionalDataControlsType(ONE_OF_SCHEMA_MIXED)).toEqual(['object', 'array', 'string']);
+  });
+});
+
+describe('isOptionalDataControlsType()', () => {
+  const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
+  test('a type in enableOptionalDataFieldForType returns true', () => {
+    expect(isOptionalDataControlsType(ANY_OF_SCHEMA_ARRAY, {}, globalUiOptions)).toBe(true);
+  });
+  test('a type not in enableOptionalDataFieldForType returns false', () => {
+    expect(isOptionalDataControlsType(ONE_OF_SCHEMA_OBJECT, {}, globalUiOptions)).toBe(false);
+  });
+  test('a list of several types returns false even when one of them is enabled', () => {
+    expect(isOptionalDataControlsType(ONE_OF_SCHEMA_MIXED, {}, globalUiOptions)).toBe(false);
+  });
+  test('no enabled types returns false', () => {
+    expect(isOptionalDataControlsType({ type: 'array' }, {}, {})).toBe(false);
+  });
+  test('no type returns false', () => {
+    expect(isOptionalDataControlsType({}, {}, globalUiOptions)).toBe(false);
+  });
+  test('the uiSchema options take effect without any global UI options', () => {
+    expect(isOptionalDataControlsType({ type: 'array' }, { 'ui:enableOptionalDataFieldForType': ['array'] })).toBe(
+      true,
+    );
   });
 });
 

@@ -6027,6 +6027,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({});
       });
+      it('should populate defaults from the schema itself beside an empty oneOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string', default: 'a', oneOf: [] },
+            nested: { type: 'object', properties: { b: { type: 'string', default: 'b' } }, oneOf: [] },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({ name: 'a', nested: { b: 'b' } });
+      });
       it('should populate defaults for oneOf', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -6285,6 +6295,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({});
+      });
+      it('should populate defaults from the schema itself beside an empty anyOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string', default: 'a', anyOf: [] },
+            nested: { type: 'object', properties: { b: { type: 'string', default: 'b' } }, anyOf: [] },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({ name: 'a', nested: { b: 'b' } });
+      });
+      it('should merge a default beside an empty anyOf with its parent default, as it would without the anyOf', () => {
+        const child: RJSFSchema = {
+          type: 'object',
+          default: { b: 2 },
+          properties: { a: { type: 'number' }, b: { type: 'number' } },
+        };
+        const withParent = (c: RJSFSchema): RJSFSchema => ({
+          type: 'object',
+          properties: { p: { type: 'object', default: { c: { a: 1 } }, properties: { c } } },
+        });
+        const expected = getDefaultFormState(testValidator, withParent(child), {});
+        expect(expected).toEqual({ p: { c: { a: 1, b: 2 } } });
+        expect(getDefaultFormState(testValidator, withParent({ ...child, anyOf: [] }), {})).toEqual(expected);
       });
       it('should populate defaults for anyOf', () => {
         const schema: RJSFSchema = {
