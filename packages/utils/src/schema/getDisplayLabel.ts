@@ -1,4 +1,4 @@
-import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import isCustomWidget from '../isCustomWidget.ts';
@@ -60,7 +60,10 @@ export default function getDisplayLabel<
     if (schemaType === 'object') {
       displayLabel = addedByAdditionalProperty || isWholeValueSelect<S>(schema);
     }
-    if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
+    // A boolean left to its default widget is a checkbox, which draws its own label, so the template renders none.
+    // The reduced options rather than the `ui:widget` key, so that naming a widget through `ui:options.widget` — the
+    // other spelling of the same choice — reaches the same answer as naming it through `ui:widget`
+    if (schemaType === 'boolean' && uiSchema && !uiOptions.widget) {
       displayLabel = false;
     }
     if (uiSchema?.[UI_FIELD_KEY]) {

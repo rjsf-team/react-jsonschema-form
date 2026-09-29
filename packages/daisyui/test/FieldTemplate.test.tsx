@@ -156,6 +156,40 @@ describe('FieldTemplate', () => {
     });
   });
 
+  // The label a widget renders for itself is the only one the field has, so the marker for a required field has to
+  // travel with it
+  describe('the required marker', () => {
+    const required = { type: 'object' as const, required: ['agree'] };
+
+    test('is rendered by the widget whose own label replaces the template one', () => {
+      render(
+        <Form
+          schema={{ ...required, properties: { agree: { type: 'string', title: 'Agree' } } }}
+          uiSchema={{ agree: { 'ui:widget': 'toggle' } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByText('Agree').parentElement).toHaveTextContent('Agree*');
+    });
+
+    // `false` answers a boolean whose schema accepts it, so a required one is already answered and is marked no more
+    // than a field the user has filled in; the attribute that would have the browser refuse the submit is left off for
+    // the same reason
+    test('is left off a boolean whose false is an answer the schema accepts', () => {
+      render(<Form schema={{ ...required, properties: { agree } }} validator={validator} />);
+
+      expect(screen.getByText('Agree').parentElement).not.toHaveTextContent('*');
+      expect(screen.getByRole('checkbox')).not.toHaveAttribute('required');
+    });
+
+    test('is rendered for a boolean that has to be true', () => {
+      render(<Form schema={{ ...required, properties: { agree: { ...agree, const: true } } }} validator={validator} />);
+
+      expect(screen.getByText('Agree').parentElement).toHaveTextContent('Agree*');
+    });
+  });
+
   describe('field descriptions', () => {
     const described: RJSFSchema = { ...agree, description: 'Whether you agree' };
 
@@ -198,12 +232,12 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
     });
 
-    // `BooleanField` reports `hideLabel` from `ui:options.label` while the template's `displayLabel` comes from
-    // `getDisplayLabel()`, which suppresses a boolean's label unless the `ui:widget` key itself is set. The two
-    // therefore disagree for this spelling, and the group would be left pointing at a label that was never rendered
+    // The group is named by pointing at the template's label, so the two spellings of the same widget choice have to
+    // agree about whether that label is rendered at all
     test('still has a name when the widget is set through ui:options.widget', () => {
-      renderForm({ agree: { 'ui:options': { widget: 'radio' } } });
+      const { templateLabel } = renderForm({ agree: { 'ui:options': { widget: 'radio' } } });
 
+      expect(templateLabel()).toHaveTextContent('Agree');
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Agree');
     });
 
@@ -235,7 +269,7 @@ describe('FieldTemplate', () => {
 
     test('keeps the deprecated decoration the template adds', () => {
       renderForm(
-        { agree: { 'ui:widget': 'radio' }, 'ui:options': { deprecatedHandling: 'label' } },
+        { agree: { 'ui:widget': 'radio', 'ui:options': { deprecatedHandling: 'label' } } },
         { ...agree, deprecated: true },
       );
 

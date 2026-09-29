@@ -503,7 +503,8 @@ Return a consistent `id` for the expand button of a cyclic schema's expand contr
 ### fieldLabelId()
 
 Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
-A widget that cannot be named by a `label htmlFor` — a group of controls, or a `button` whose own contents are its value — points `aria-labelledby` at this id, so its accessible name is the text the user actually sees.
+A widget that a `label htmlFor` cannot name — a group of controls, since the association reaches a single control rather than the element wrapping them — points `aria-labelledby` at this id, so its accessible name is the text the user actually sees.
+A single control, including a `button` a picker opens from, is named by the label's `htmlFor` alone: an `aria-labelledby` pointing here outranks that association, so under a `FieldTemplate` that renders no label with this id it would leave the control named by its own contents, or by nothing at all.
 Note that this cannot be [titleId()](#titleid), which `TitleFieldTemplate` already claims for the same field.
 
 #### Parameters

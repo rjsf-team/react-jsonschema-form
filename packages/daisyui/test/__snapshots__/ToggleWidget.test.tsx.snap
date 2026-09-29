@@ -24,6 +24,11 @@ exports[`ToggleWidget > renders correctly 1`] = `
         class="label-text"
       >
         Sample Field Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
       </span>
     </label>
   </div>
@@ -55,6 +60,11 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
         class="label-text"
       >
         Sample Field Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
       </span>
     </label>
   </div>
@@ -85,6 +95,11 @@ exports[`ToggleWidget > renders with custom label 1`] = `
         class="label-text"
       >
         Custom Toggle Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
       </span>
     </label>
   </div>

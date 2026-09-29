@@ -28,7 +28,9 @@ exports[`format iso-date-time 1`] = `
               <span
                 class="text-base-content/50"
                 id="root__value"
-              />
+              >
+                Select a date
+              </span>
               <svg
                 aria-hidden="true"
                 class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
@@ -1024,7 +1026,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     class="form-control"
                   >
                     <div
-                      aria-label="choices"
                       aria-labelledby="root_choices__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_choices"
@@ -1465,7 +1466,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     class="form-control"
                   >
                     <div
-                      aria-label="option"
                       aria-labelledby="root_option__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_option"
@@ -4611,7 +4611,6 @@ exports[`single fields > checkboxes field 1`] = `
           class="form-control"
         >
           <div
-            aria-label="An enum list rendered as checkboxes"
             aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
@@ -4734,7 +4733,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           class="form-control"
         >
           <div
-            aria-label="Checkbox Group"
             aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
@@ -4857,7 +4855,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           class="form-control"
         >
           <div
-            aria-label="Required Checkbox Group"
             aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"
@@ -5418,7 +5415,9 @@ exports[`single fields > format date 1`] = `
               <span
                 class="text-base-content/50"
                 id="root__value"
-              />
+              >
+                Select a date
+              </span>
               <svg
                 aria-hidden="true"
                 class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
@@ -5484,7 +5483,9 @@ exports[`single fields > format datetime 1`] = `
               <span
                 class="text-base-content/50"
                 id="root__value"
-              />
+              >
+                Select a date
+              </span>
               <svg
                 aria-hidden="true"
                 class="svg-inline--fa fa-calendar ml-2 h-4 w-4 text-primary"
@@ -11216,7 +11217,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           class="form-control"
         >
           <div
-            aria-label="test"
             aria-labelledby="root__label"
             class="flex flex-col gap-2 mt-1"
             id="root"

@@ -65,9 +65,14 @@ export function ariaDescribedByIds(id: string, includeExamples = false) {
 }
 
 /** Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control, so a widget that
- * cannot be named by a `label htmlFor` — a group of controls, or a `button` whose own contents are its value — can
- * point `aria-labelledby` at the text the user actually sees. It cannot be `titleId()`, which `TitleFieldTemplate`
- * already claims for the same field, so an `additionalProperties` object would carry that id twice.
+ * a `label htmlFor` cannot name — a group of controls, since the association reaches a single control rather than the
+ * element wrapping them — can point `aria-labelledby` at the text the user actually sees. It cannot be `titleId()`,
+ * which `TitleFieldTemplate` already claims for the same field, so an `additionalProperties` object would carry that
+ * id twice.
+ *
+ * A single control, including a `button` a picker opens from, is named by the label's `htmlFor` alone and needs no
+ * reference of its own: an `aria-labelledby` pointing here outranks that association, so under a `FieldTemplate` that
+ * renders no label with this id it would leave the control named by its own contents, or by nothing at all.
  *
  * Two labels end up with this id wherever two `FieldTemplate`s render for one field id, which already gives that
  * control two `label htmlFor` of its own: a `oneOf` of constants, whose selected option renders again inside the

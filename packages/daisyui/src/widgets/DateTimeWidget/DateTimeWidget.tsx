@@ -1,15 +1,13 @@
 import type { ChangeEvent } from 'react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, triggerValueId } from '@rjsf/utils';
+import { getDateTimeLocalValue } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { getTriggerDescribedBy } from '../../utils.ts';
-import { useClickOutside, useCommitDate, useDatePickerState } from '../datePickerHooks.ts';
+import { useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import DatePickerTrigger from '../DatePickerTrigger.tsx';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -139,15 +137,9 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, onChange, onFocus, onBlur, schema } =
-    props;
-  const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
-  // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
-  // is optional), or a UTC ISO string otherwise.
-  const formatDate = useCallback(
-    (date: Date) => (isIsoDateTime ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : date.toISOString()),
-    [isIsoDateTime],
-  );
+  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const { localValue } = getDateTimeLocalValue(schema, value);
+  const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
   // carry an offset is stripped first, so it's parsed as the naive wall-clock time it represents instead of
   // being converted to the browser's local zone. An unparsable stored value (e.g. left over from a schema
@@ -161,63 +153,41 @@ export default function DateTimeWidget<
     const date = new Date(localValue);
     return isValid(date) ? date : undefined;
   }, [localValue]);
-  const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
+  const {
+    isOpen,
+    month,
+    localDate,
+    containerRef,
+    triggerRef,
+    chooseDate,
+    handleMonthChange,
+    togglePicker,
+    handleFocus,
+    handleBlur,
+    handleDone,
+  } = useDatePicker({ ...props, initialDate, formatDate, emptyValue: options.emptyValue });
 
-  // When the parent's value changes externally, update local state.
-  useEffect(() => {
-    setLocalDate(initialDate);
-  }, [initialDate]);
-
-  const { isOpen, setIsOpen, month, setMonth } = useDatePickerState(initialDate);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLButtonElement>(null);
-
-  // The empty value rather than `''`, which is no more a `date-time` than it is a date: committing it fails the format
-  // of a field the user never filled in
-  const commitDate = useCommitDate({ localDate, value, formatDate, emptyValue: options.emptyValue, onChange });
-
-  /** Close the popup, committing the instant it holds, which every way out of it but Escape does
-   */
-  const closePicker = useCallback(() => {
-    setIsOpen(false);
-    commitDate();
-    // Manually invoke the blur handler to ensure blur event is triggered
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  }, [commitDate, id, onBlur, setIsOpen, value]);
-
-  // Close the popup when clicking outside and commit changes.
-  useClickOutside(containerRef, inputRef, () => {
-    if (isOpen) {
-      closePicker();
-    }
-  });
-
-  // When the local date changes, update the displayed month.
-  useEffect(() => {
-    if (localDate) {
-      setMonth(localDate);
-    }
-  }, [localDate, setMonth]);
-
-  // Update the month when the user navigates the calendar.
-  const handleMonthChange = useCallback((date: Date) => setMonth(date), [setMonth]);
-
-  // Update local state on day selection (but do not commit immediately).
+  // Take the day the user picked, keeping the time the popup already holds.
   const handleSelect = useCallback(
     (date: Date | undefined) => {
       if (date) {
         if (localDate) {
-          date.setHours(localDate.getHours(), localDate.getMinutes());
+          // Down to the milliseconds, which the time input cannot show: the user picked a day, not a time, and a
+          // stored value may carry seconds this widget has no way to put back
+          date.setHours(
+            localDate.getHours(),
+            localDate.getMinutes(),
+            localDate.getSeconds(),
+            localDate.getMilliseconds(),
+          );
         }
-        setLocalDate(date);
+        chooseDate(date);
       }
     },
-    [localDate],
+    [chooseDate, localDate],
   );
 
-  // Update local state on time change.
+  // Take the time the user typed, on the day the popup already holds.
   const handleTimeChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (localDate) {
@@ -228,109 +198,38 @@ export default function DateTimeWidget<
         // instead, so the input re-renders the time it still holds and the user can carry on editing it; an
         // `Invalid Date` in this state throws from the calendar's month caption before it can be corrected
         if (isValid(newDate)) {
-          setLocalDate(newDate);
+          chooseDate(newDate);
         }
       }
     },
-    [localDate],
+    [chooseDate, localDate],
   );
-
-  // Toggle popup visibility.
-  const togglePicker = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (isOpen) {
-        // The one way out of the popup that is a press on the trigger itself, or on the label pointing at it, which
-        // `useClickOutside` leaves alone so that press does not close and reopen in one gesture
-        closePicker();
-        return;
-      }
-      setIsOpen(true);
-      if (onFocus) {
-        onFocus(id, value);
-      }
-    },
-    [closePicker, isOpen, id, onFocus, setIsOpen, value],
-  );
-
-  // Handle focus event
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [id, onFocus, value]);
-
-  // Handle blur event
-  const handleBlur = useCallback(() => {
-    if (!isOpen && onBlur) {
-      onBlur(id, value);
-    }
-  }, [id, onBlur, value, isOpen]);
 
   // Prevent event propagation for popup container
   const handleContainerClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
 
-  /** Close the popup without committing, which Escape does: a date the user was trying out in the calendar is not one
-   * they asked to store. The local state goes back to the stored value as well, so the trigger stops showing a time
-   * the form does not hold and the next close does not commit it on the user's behalf
-   */
-  const cancelPicker = useCallback(() => {
-    setLocalDate(initialDate);
-    setIsOpen(false);
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  }, [id, initialDate, onBlur, setIsOpen, value]);
-
-  // Close popup on escape key
-  useEffect(() => {
-    const handleEscape = (e: React.KeyboardEvent | KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        cancelPicker();
-      }
-    };
-
-    // Need to use native DOM events since we're attaching to document
-    document.addEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
-    return () => document.removeEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
-  }, [cancelPicker, isOpen]);
-
-  // Add the handleDoneClick callback near the top of the component, with the other event handlers
-  /** Handle clicking the "Done" button
-   */
-  const handleDoneClick = useCallback(() => {
-    closePicker();
-    inputRef.current?.focus();
-  }, [closePicker]);
-
   const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP p') : undefined;
-  const describedBy = getTriggerDescribedBy({ id, label, hideLabel, hasValue: !!formattedValue });
 
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
-        <button
-          type='button'
+        <DatePickerTrigger<T, S, F>
           id={id}
-          className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
-            isOpen ? 'ring-2 ring-primary/50' : ''
-          }`}
-          disabled={disabled || readonly}
+          label={label}
+          hideLabel={hideLabel}
+          placeholder={placeholder}
+          formattedValue={formattedValue}
+          isOpen={isOpen}
+          disabled={disabled}
+          readonly={readonly}
+          triggerRef={triggerRef}
           onClick={togglePicker}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          aria-haspopup='true'
-          aria-expanded={isOpen}
-          aria-describedby={describedBy}
-          ref={inputRef}
-        >
-          <span id={triggerValueId(id)} className={formattedValue ? '' : 'text-base-content/50'}>
-            {formattedValue ?? (placeholder || label)}
-          </span>
-          <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
-        </button>
+          registry={registry}
+        />
         {isOpen && (
           <div
             role='presentation'
@@ -347,7 +246,7 @@ export default function DateTimeWidget<
               onTimeChange={handleTimeChange}
             />
             <div className='p-3 flex justify-end border-t border-base-300'>
-              <button type='button' className='btn btn-sm btn-primary' onClick={handleDoneClick}>
+              <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
                 Done
               </button>
             </div>

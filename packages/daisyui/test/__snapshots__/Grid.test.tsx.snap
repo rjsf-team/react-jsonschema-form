@@ -316,7 +316,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -1996,7 +1995,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -3676,7 +3674,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -5356,7 +5353,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="form-control"
                   >
                     <div
-                      aria-label="Race"
                       aria-labelledby="root_person_race__label"
                       class="flex flex-col gap-2 mt-1"
                       id="root_person_race"
@@ -7025,7 +7021,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="form-control"
                 >
                   <div
-                    aria-label="Race"
                     aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"
@@ -8531,7 +8526,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="form-control"
                 >
                   <div
-                    aria-label="Race"
                     aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2 mt-1"
                     id="root_person_race"

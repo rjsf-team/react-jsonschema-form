@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getSchemaType, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
 
 interface BooleanInputProps<
   T = unknown,
@@ -53,6 +53,10 @@ export default function BooleanInput<
   );
   const description = options.description || schema.description;
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
+  // than a field the user has already filled in. On any other schema an unchecked box answers nothing, and this
+  // widget's own label is the only one rendered, so the marker has nowhere else to come from
+  const marksRequired = required && (trueValueRequired || getSchemaType(schema) !== 'boolean');
 
   /** Handle change events
    *
@@ -120,7 +124,7 @@ export default function BooleanInput<
           <span className='mr-2'>{input}</span>
           <span className='label-text'>
             {label}
-            {trueValueRequired && <span className='text-error ml-1'>*</span>}
+            {marksRequired && <span className='text-error ml-1'>*</span>}
           </span>
         </label>
       )}

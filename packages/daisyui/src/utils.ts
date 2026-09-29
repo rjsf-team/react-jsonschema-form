@@ -35,7 +35,6 @@ interface GroupProps {
   id: string;
   role: 'group' | 'radiogroup';
   'aria-labelledby'?: string;
-  'aria-label'?: string;
 }
 
 interface GetGroupProps {
@@ -57,6 +56,9 @@ interface GetGroupProps {
  * where the two disagree in the other direction: the template falls back to the property name and renders a label,
  * while the widget's `label` is empty, so the group goes unnamed rather than pointing at an element that is there.
  *
+ * A reference is all a group has: nothing outside a `FieldTemplate` rendering `fieldLabelId()` can name it, so a
+ * replacement one that renders no such label leaves these widgets unnamed. That is what the id is exported for.
+ *
  * @param id - The widget's `id`, which the label's `htmlFor` targets and `fieldLabelId()` derives the label's id from
  * @param label - The field's label, empty when it has no title
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
@@ -67,14 +69,7 @@ export function getGroupProps({ id, label, hideLabel, role }: GetGroupProps): Gr
   if (hideLabel || !label) {
     return { id, role };
   }
-  // Both, because the widget cannot see whether the template rendered a label to point at. `aria-labelledby` wins
-  // wherever it resolves, so wherever there is a label on the screen the name is its text and the `aria-label` is
-  // dead; the `aria-label` is therefore only ever read where nothing visible names the group, which is a `boolean`
-  // whose widget is set through `ui:options.widget` rather than `ui:widget`, where `getDisplayLabel()` suppresses the
-  // template's label while `BooleanField` still reports `hideLabel: false`. Being unable to contradict text that is on
-  // the screen is what makes the fallback safe rather than a second name; it is worth dropping once `getDisplayLabel()`
-  // reads the reduced ui options instead of only the `ui:widget` spelling, which `SchemaField` also works around
-  return { id, role, 'aria-labelledby': fieldLabelId(id), 'aria-label': label };
+  return { id, role, 'aria-labelledby': fieldLabelId(id) };
 }
 
 interface GetTriggerDescribedBy {

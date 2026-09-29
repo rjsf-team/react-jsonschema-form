@@ -82,8 +82,8 @@ describe('CheckboxesWidget', () => {
     await user.click(boxes[0]);
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
-    // The browser refused this submit while every box carried the attribute, and RJSF never heard about it: neither
-    // callback fired, so the form simply did nothing
+    // Constraint validation weighs each box on its own, so the attribute on every one of them asks for all of them:
+    // the browser refuses a submit with one checked, and refuses it silently, with neither callback firing
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit.mock.calls[0]?.[0].formData).toEqual({ choices: ['a'] });
   });

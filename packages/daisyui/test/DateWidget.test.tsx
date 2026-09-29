@@ -16,38 +16,29 @@ async function openPicker(container: HTMLElement) {
   await user.click(container.querySelector('button[aria-haspopup]')!);
 }
 
+/** Picks a day other than the stored one, since closing the picker stores what it holds only where the user chose it.
+ * A day cell is a button named by its full date, e.g. "Sunday, May 17th, 2020"
+ *
+ * @param [year=2020] - The year the calendar is showing, which is the current one for a field holding no date
+ */
+async function pickTheSeventeenth(year = 2020) {
+  await user.click(screen.getByRole('button', { name: new RegExp(`17th, ${year}`) }));
+}
+
 describe('DateWidget', () => {
   // These assertions are the timezone-robust half: `toISOString()` never produces a `YYYY-MM-DD` string, so they
   // fail in every zone, where the display assertions below only failed in a zone behind UTC
   describe('the value it commits', () => {
-    test('commits the selected day as a date, not a UTC date-time', async () => {
+    test.each([
+      ['the Done button', async () => user.click(screen.getByText('Done'))],
+      ['a click outside', async () => user.click(document.body)],
+    ])('commits the selected day as a date, not a UTC date-time, when closed by %s', async (_, close) => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />);
 
       await openPicker(container);
-      await user.click(screen.getByText('Done'));
-
-      expect(onChange).toHaveBeenCalledWith('2020-05-03');
-    });
-
-    test('commits the same shape when the popup closes from a click outside', async () => {
-      const onChange = vi.fn();
-      const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />);
-
-      await openPicker(container);
-      await user.click(document.body);
-
-      expect(onChange).toHaveBeenCalledWith('2020-05-03');
-    });
-
-    test('commits the day the user picks rather than one derived from an instant', async () => {
-      const onChange = vi.fn();
-      const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />);
-
-      await openPicker(container);
-      // A day cell is a button named by its full date, e.g. "Sunday, May 17th, 2020"
-      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
-      await user.click(screen.getByText('Done'));
+      await pickTheSeventeenth();
+      await close();
 
       expect(onChange).toHaveBeenCalledWith('2020-05-17');
     });
@@ -61,6 +52,26 @@ describe('DateWidget', () => {
 
       // `''` is not a `date`, so committing it would fail the format of a field the user never filled in
       expect(onChange).toHaveBeenCalledWith(undefined);
+    });
+
+    // Reported as a change, an open and a dismiss the user made no edit in would show up in a dirty-state check, an
+    // autosave or an analytics hook as one they never made
+    // A field holding nothing is already empty, whatever `ui:emptyValue` would spell that as — including the `''` that
+    // dismissing a picker exists to replace
+    test.each([
+      ['no ui:emptyValue', {}],
+      ['an empty string ui:emptyValue', { emptyValue: '' }],
+      ['a null ui:emptyValue', { emptyValue: null }],
+    ])('reports no change at all for a field holding nothing, with %s', async (_, options) => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <DateWidget {...makeWidgetMockProps({ value: undefined, onChange, schema, options })} />,
+      );
+
+      await openPicker(container);
+      await user.click(screen.getByText('Done'));
+
+      expect(onChange).not.toHaveBeenCalled();
     });
 
     test('honors an explicit ui:emptyValue when there is no date', async () => {
@@ -83,10 +94,10 @@ describe('DateWidget', () => {
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
     });
 
-    // A value carrying a time is read one of two ways, and each shape of stored value only goes wrong on one side of
-    // UTC, so both of these pin a zone. Without pinning they would pass in CI's UTC and catch nothing. Assigning `TZ`
-    // is enough under vitest's default `forks` pool, where Node re-reads it per call; in a `worker_threads` worker
-    // `process.env` is a copy and the assignment would do nothing, which the `not.toBe()` below catches
+    // Each shape of stored value only goes wrong on one side of UTC, so both of these pin a zone. Without pinning they
+    // would pass in CI's UTC and catch nothing. Assigning `TZ` is enough under vitest's default `forks` pool, where
+    // Node re-reads it per call; in a `worker_threads` worker `process.env` is a copy and the assignment would do
+    // nothing, which the `not.toBe()` below catches
     describe.each([
       ['ahead of UTC', 'Europe/Berlin'],
       ['behind UTC', 'America/Los_Angeles'],
@@ -107,79 +118,72 @@ describe('DateWidget', () => {
         }
       });
 
-      test('names the day a UTC instant that is a local midnight stands for', async () => {
+      test('names the day a UTC instant that is a local midnight stands for', () => {
         // A picked 3 May stored as the `toISOString()` of local midnight, so a time of day that is not UTC midnight,
         // and in a zone ahead of UTC a different date than the one the user picked
         const localMidnight = new Date(2020, 4, 3).toISOString();
-        const onChange = vi.fn();
-        const { container } = render(
-          <DateWidget {...makeWidgetMockProps({ value: localMidnight, onChange, schema })} />,
-        );
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: localMidnight, schema })} />);
 
         // Pinning `TZ` is what makes this a different instant from UTC midnight, and so a different reading rule
         expect(localMidnight).not.toBe('2020-05-03T00:00:00.000Z');
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
-
-        await openPicker(container);
-        await user.click(screen.getByText('Done'));
-
-        expect(onChange).toHaveBeenCalledWith('2020-05-03');
       });
 
-      test('names the calendar day a UTC midnight value stands for', async () => {
-        // What a backend emits for a date, and what this widget committed for a user in UTC. Read as an instant it
-        // would name the previous day everywhere behind UTC
-        const onChange = vi.fn();
-        const { container } = render(
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00.000Z', onChange, schema })} />,
-        );
+      // Read as an instant these would each name the previous day somewhere: a UTC midnight everywhere behind UTC,
+      // and a noon one far enough east. The day each of them names is the one its own text spells
+      test.each([
+        // What a backend emits for a date, and what this widget committed for a user in UTC
+        ['a UTC midnight value', '2020-05-03T00:00:00.000Z'],
+        // RFC 3339 also allows a space where the `T` goes, which is what an SQL backend emits by default
+        ['a UTC midnight value with a space separator', '2020-05-03 00:00:00Z'],
+        // The convention a backend storing a day as an instant uses to keep it clear of both zone edges
+        ['a midday UTC value', '2020-05-03T12:00:00Z'],
+        // A zone of its own is one this widget never writes — `toISOString()` only ever writes `Z`
+        ['a value stamped with its own zone offset', '2020-05-03T00:00:00+02:00'],
+      ])('names the calendar day %s stands for', (_, value) => {
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value, schema })} />);
 
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
-
-        await openPicker(container);
-        await user.click(screen.getByText('Done'));
-
-        expect(onChange).toHaveBeenCalledWith('2020-05-03');
       });
 
-      // RFC 3339 also allows a space where the `T` goes, which is what an SQL backend emits by default. Read as an
-      // instant it names the previous day everywhere behind UTC, and dismissing the picker then stores that day
-      test('names the calendar day a UTC midnight value with a space separator stands for', async () => {
+      // Opening the picker and dismissing it is not an edit, and the day it reads out of a date-time is not always the
+      // day the instant lands on where it is read: writing it back would move the stored day for readers far enough
+      // from the zone it was written in
+      test.each([
+        ['the Done button', async () => user.click(screen.getByText('Done'))],
+        ['a click outside', async () => user.click(document.body)],
+      ])('leaves a stored date-time alone when the picker is dismissed by %s', async (_, close) => {
         const onChange = vi.fn();
         const { container } = render(
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03 00:00:00Z', onChange, schema })} />,
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T12:00:00Z', onChange, schema })} />,
         );
 
-        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
-
         await openPicker(container);
-        await user.click(screen.getByText('Done'));
+        await close();
 
-        expect(onChange).toHaveBeenCalledWith('2020-05-03');
+        expect(onChange).not.toHaveBeenCalled();
       });
 
-      // The `-05` at the end of a `YYYY-MM` value looks like an offset of `-05:00` to anything matching one loosely,
-      // which would send it down the writer's-zone path and, finding no day in its text, fall back to its instant
+      // Picking a day is the request to store one, and this field's format has no room for the time the old value
+      // carried
+      test('rewrites a stored date-time as a date once the user picks a day', async () => {
+        const onChange = vi.fn();
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T12:00:00Z', onChange, schema })} />,
+        );
+
+        await openPicker(container);
+        await pickTheSeventeenth();
+        await user.click(screen.getByText('Done'));
+
+        expect(onChange).toHaveBeenCalledWith('2020-05-17');
+      });
+
+      // Its text names no day at all, so the day is the one the `Date` constructor resolves it to
       test('names the first of the month for a value that stops at the month', () => {
         const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05', schema })} />);
 
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 1, 2020');
-      });
-
-      // A zone of its own is a day this widget never wrote — `toISOString()` only ever writes `Z` — so it is the
-      // writer's day, not the instant's day where it is read
-      test('names the calendar day a value stamped with its own zone offset stands for', async () => {
-        const onChange = vi.fn();
-        const { container } = render(
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00+02:00', onChange, schema })} />,
-        );
-
-        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
-
-        await openPicker(container);
-        await user.click(screen.getByText('Done'));
-
-        expect(onChange).toHaveBeenCalledWith('2020-05-03');
       });
     });
 
@@ -251,11 +255,28 @@ describe('DateWidget', () => {
     expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
     expect(onChange).not.toHaveBeenCalled();
 
-    // The discarded day would otherwise still be in local state, and the next close commits whatever that holds
+    // The discarded day would otherwise still be in local state, and the next close would store whatever that holds
     await openPicker(container);
     await user.click(document.body);
 
-    expect(onChange.mock.calls[0]?.[0].formData).toEqual({ birthday: '2020-05-03' });
+    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  // Reopening on the month the user just left would show them the calendar they discarded rather than the one the
+  // stored value names — and for an empty field the month is never reset by the stored day, since there is none
+  test('reopens on the current month after Escape discards a month the user navigated to', async () => {
+    const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '', schema })} />);
+    const thisYear = String(new Date().getFullYear());
+
+    await openPicker(container);
+    const [, yearBefore] = [...document.querySelectorAll('select')];
+    await user.selectOptions(yearBefore, '2000');
+    await user.keyboard('{Escape}');
+    await openPicker(container);
+
+    const [, yearAfter] = [...document.querySelectorAll('select')];
+    expect(yearAfter).toHaveValue(thisYear);
   });
 
   // Nothing about the picker is read-only in itself, so the trigger is the only place either flag can be honored
@@ -274,6 +295,21 @@ describe('DateWidget', () => {
       expect(screen.queryByText('Done')).not.toBeInTheDocument();
       expect(onChange).not.toHaveBeenCalled();
     });
+  });
+
+  // A date the user cannot change is still one they read, and the `disabled` attribute would take the button holding
+  // it out of the tab order
+  test('leaves a read-only field reachable by keyboard, where a disabled one is not', () => {
+    const { container: readOnly } = render(
+      <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, readonly: true })} />,
+    );
+    const { container: disabled } = render(
+      <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, disabled: true })} />,
+    );
+
+    expect(readOnly.querySelector('button[aria-haspopup]')).not.toBeDisabled();
+    expect(readOnly.querySelector('button[aria-haspopup]')).toHaveAttribute('aria-disabled', 'true');
+    expect(disabled.querySelector('button[aria-haspopup]')).toBeDisabled();
   });
 
   // The trigger's name comes partly from the label `FieldTemplate` renders, so these go through a `Form`
@@ -396,6 +432,43 @@ describe('DateWidget', () => {
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit.mock.calls[0][0].formData.when).toBeUndefined();
+  });
+
+  // `widgetMap` resolves `ui:widget: 'date'` on any string schema, whatever `format` it declares, so this widget can
+  // be asked to fill a field a day on its own does not satisfy
+  describe('a field whose format is not date', () => {
+    test.each([
+      ['date-time', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/],
+      ['iso-date-time', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/],
+    ])('commits the shape a %s field declares, and so submits without error', async (formatName, shape) => {
+      const onSubmit = vi.fn();
+      const onError = vi.fn();
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { when: { type: 'string', format: formatName, title: 'When' } } }}
+          uiSchema={{ when: { 'ui:widget': 'date' } }}
+          validator={validator}
+          onSubmit={onSubmit}
+          onError={onError}
+        />,
+      );
+
+      await openPicker(container);
+      await pickTheSeventeenth(new Date().getFullYear());
+      await user.click(screen.getByText('Done'));
+      await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+      expect(onError).not.toHaveBeenCalled();
+      expect(onSubmit.mock.calls[0][0].formData.when).toMatch(shape);
+    });
+  });
+
+  // A field with no title leaves `FieldTemplate` no label to render, so the trigger has neither a name from outside nor
+  // contents of its own to be named by
+  test('names an untitled field with no value by the translated prompt', () => {
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('button[aria-haspopup]')).toHaveAccessibleName('Select a date');
   });
 
   test('the committed value satisfies the field format, so submitting reports no error', async () => {
