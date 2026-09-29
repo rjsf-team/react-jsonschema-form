@@ -10,6 +10,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
+  enumOptionsValueForIndex,
   enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
@@ -18,6 +19,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
@@ -80,13 +82,13 @@ export default function SelectWidget<
   const optionValueFormat = getOptionValueFormat(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
-  const handleFancyFocus = () => {
-    onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
-  };
-
-  const handleFancyBlur = () => {
-    onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, optEmptyValue));
-  };
+  const { handleFocus: handleFancyFocus, handleBlur: handleFancyBlur } = useSelectFocusHandlers<T, S, F>({
+    id,
+    value,
+    options,
+    onFocus,
+    onBlur,
+  });
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
     value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, optionValueFormat),
@@ -135,8 +137,10 @@ export default function SelectWidget<
           items={items}
           sections={sections}
           selected={value}
-          onValueChange={(values) => {
-            onChange(enumOptionValueDecoder<S>(values.map(String), enumOptions, optionValueFormat, optEmptyValue));
+          onValueChange={(indexes) => {
+            // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
+            // resolved as indexes rather than decoded as DOM values
+            onChange(enumOptionsValueForIndex<S>(indexes.map(String), enumOptions, optEmptyValue));
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

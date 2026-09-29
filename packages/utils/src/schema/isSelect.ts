@@ -1,4 +1,4 @@
-import isConstant from '../isConstant.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType, CustomMergeAllOf } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
@@ -16,12 +16,5 @@ export default function isSelect<
   F extends FormContextType = FormContextType,
 >(validator: ValidatorType<S, F>, theSchema: S, rootSchema: S = {} as S, customMergeAllOf?: CustomMergeAllOf<S>) {
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, customMergeAllOf);
-  const altSchemas = schema.oneOf || schema.anyOf;
-  if (Array.isArray(schema.enum)) {
-    return true;
-  }
-  if (Array.isArray(altSchemas)) {
-    return altSchemas.every((altSchema) => typeof altSchema !== 'boolean' && isConstant(altSchema));
-  }
-  return false;
+  return isConstantSelect<S>(schema, true);
 }

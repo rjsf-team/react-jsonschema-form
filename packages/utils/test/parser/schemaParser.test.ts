@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '../../src/index.ts';
 import { schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
@@ -16,6 +17,87 @@ import {
 } from '../testUtils/testData.ts';
 
 describe('schemaParser()', () => {
+  it('parses the oneOf options of a schema whose anyOf is resolved first', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        both: {
+          anyOf: [{ type: 'string' }, { type: 'number' }],
+          oneOf: [
+            { minLength: 1, title: 'filled' },
+            { maxLength: 0, title: 'empty' },
+          ],
+        },
+      },
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('filled');
+    expect(titles).toContain('empty');
+  });
+
+  it('parses the properties an option declares that its parent does not', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            x: {
+              anyOf: [
+                { type: 'string', minLength: 3, title: 'text' },
+                { type: 'number', minimum: 7, title: 'count' },
+              ],
+            },
+          },
+        },
+      ],
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('text');
+    expect(titles).toContain('count');
+  });
+
+  it('parses the items an option declares that its parent does not', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          type: 'array',
+          items: {
+            anyOf: [
+              { type: 'string', minLength: 3, title: 'text' },
+              { type: 'number', minimum: 7, title: 'count' },
+            ],
+          },
+        },
+      ],
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('text');
+    expect(titles).toContain('count');
+  });
+
+  it.each(['anyOf', 'oneOf'])('parses the properties and items of a schema with an empty %s', (key) => {
+    const itemOptions: RJSFSchema = {
+      anyOf: [
+        { type: 'string', minLength: 3, title: 'text' },
+        { type: 'number', minimum: 7, title: 'count' },
+      ],
+    };
+    const propertyOptions: RJSFSchema = {
+      anyOf: [
+        { type: 'string', maxLength: 3, title: 'code' },
+        { type: 'number', maximum: 7, title: 'size' },
+      ],
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      [key]: [],
+      properties: { x: propertyOptions },
+      items: itemOptions,
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toEqual(expect.arrayContaining(['text', 'count', 'code', 'size']));
+  });
+
   it('parses property dependencies properly', () => {
     const schemaMap = schemaParser(PROPERTY_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();

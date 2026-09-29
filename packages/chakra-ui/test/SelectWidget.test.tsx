@@ -1,9 +1,12 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 // Ark UI's Select content is always mounted (just visually hidden until opened), so these
 // tests can check the rendered structure without driving the popover's real open interaction
@@ -61,22 +64,7 @@ describe('SelectWidget optgroups', () => {
     consoleError.mockRestore();
   });
 
-  test('skips options that encode to an empty value when optionValueFormat is realValue', () => {
-    const uiSchema: UiSchema = {
-      'ui:options': {
-        optionValueFormat: 'realValue',
-      },
-    };
-
-    const { container } = render(
-      <Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />,
-    );
-
-    const options = container.querySelectorAll('[role="option"]');
-    expect(Array.from(options).map((option) => option.textContent)).toEqual(['foo', 'bar']);
-  });
-
-  test('omits a group whose options all encode to an empty value when optionValueFormat is realValue', () => {
+  test('offers an empty string option and its group when optionValueFormat is realValue', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
         optionValueFormat: 'realValue',
@@ -87,9 +75,37 @@ describe('SelectWidget optgroups', () => {
       },
     };
 
-    render(<Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />);
+    const { container } = render(
+      <Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />,
+    );
 
-    expect(screen.getByText('Group A')).toBeInTheDocument();
-    expect(screen.queryByText('Empty Group')).not.toBeInTheDocument();
+    expect(screen.getByText('Empty Group')).toBeInTheDocument();
+    expect(container.querySelectorAll('[role="option"]')).toHaveLength(3);
   });
+});
+
+describe('SelectWidget focus and blur', () => {
+  test.each(['indexed', 'realValue'] as const)(
+    'reports the form data value on focus and blur in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'number', enum: [10, 20] }}
+          uiSchema={{ 'ui:options': { optionValueFormat } }}
+          formData={20}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', 20);
+      expect(onBlur).toHaveBeenCalledWith('root', 20);
+    },
+  );
 });

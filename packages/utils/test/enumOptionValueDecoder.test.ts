@@ -1,4 +1,4 @@
-import { enumOptionValueDecoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX, enumOptionValueDecoder } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
@@ -12,6 +12,12 @@ const numericOptions: EnumOptionsType[] = [
 ];
 
 const booleanOptions: EnumOptionsType[] = [
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' },
+];
+
+const nullableOptions: EnumOptionsType[] = [
+  { value: null, label: 'Unknown' },
   { value: true, label: 'Yes' },
   { value: false, label: 'No' },
 ];
@@ -53,11 +59,51 @@ describe('enumOptionValueDecoder', () => {
     it('finds boolean false from string', () => {
       expect(enumOptionValueDecoder('false', booleanOptions, 'realValue')).toBe(false);
     });
-    it('finds object value by index fallback', () => {
-      expect(enumOptionValueDecoder('0', objectOptions, 'realValue')).toEqual({ name: 'NY' });
-    });
     it('returns emptyValue for empty string', () => {
       expect(enumOptionValueDecoder('', stringOptions, 'realValue', '')).toBe('');
+    });
+    it('finds null by its prefixed index', () => {
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, nullableOptions, 'realValue', 'empty')).toBeNull();
+    });
+    it('finds object value by its prefixed index', () => {
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, objectOptions, 'realValue')).toEqual({
+        name: 'LA',
+      });
+    });
+    it('keeps a null option apart from a primitive option spelled as its index', () => {
+      const options: EnumOptionsType[] = [
+        { value: null, label: 'None' },
+        { value: 0, label: 'Zero' },
+        { value: '0', label: 'Zero string' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBeNull();
+      expect(enumOptionValueDecoder('0', options, 'realValue')).toBe(0);
+    });
+    it('finds an empty string option by its prefixed index, and reads the empty string as no selection', () => {
+      const options: EnumOptionsType[] = [
+        { value: 'a', label: 'A' },
+        { value: '', label: 'Empty' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, options, 'realValue', 'none')).toBe('');
+      expect(enumOptionValueDecoder('', options, 'realValue', 'none')).toBe('none');
+    });
+    it('keeps an object option apart from a string option spelled as its prefixed index', () => {
+      const options: EnumOptionsType[] = [
+        { value: `${ENUM_OPTION_INDEX_PREFIX}1`, label: 'Prefixed string' },
+        { value: { a: 1 }, label: 'Object' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, options, 'realValue')).toEqual({ a: 1 });
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBe(
+        `${ENUM_OPTION_INDEX_PREFIX}1`,
+      );
+    });
+    it('returns emptyValue for empty string when an option is null', () => {
+      expect(enumOptionValueDecoder('', nullableOptions, 'realValue', 'empty')).toBe('empty');
+    });
+    it('does not resolve a bare index as the option at that position', () => {
+      expect(enumOptionValueDecoder('1', stringOptions, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('1', numericOptions, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('0', objectOptions, 'realValue', 'empty')).toBe('empty');
     });
     it('handles array of real values', () => {
       expect(enumOptionValueDecoder(['foo', 'bar'], stringOptions, 'realValue')).toEqual(['foo', 'bar']);

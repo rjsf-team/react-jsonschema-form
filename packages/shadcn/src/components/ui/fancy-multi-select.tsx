@@ -2,7 +2,7 @@
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { deepEquals } from '@rjsf/utils';
+import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
 
@@ -142,18 +142,23 @@ export function FancyMultiSelect({
   );
 
   function renderItem(item: FancySelectItem) {
+    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk searches
+    // its `value`, which stays text spelled the way an untitled option is labelled, and its `keywords`, which carry the
+    // label so a titled option is found by what it shows
+    const itemId = `${id}-${item.index}-command-item`;
     return (
       <CommandItem
         disabled={item.disabled}
-        key={`${item.value}-command-item`}
-        value={String(item.value)}
+        key={item.index}
+        value={enumOptionValueLabel(item.value)}
+        keywords={[item.label]}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
-        aria-controls={`${item.value}-command-item`}
-        aria-labelledby={`${item.value}-command-item`}
-        id={`${item.value}-command-item`}
+        aria-controls={itemId}
+        aria-labelledby={itemId}
+        id={itemId}
         onSelect={() => handleSelect(item)}
         className='cursor-pointer'
       >
@@ -183,7 +188,7 @@ export function FancyMultiSelect({
       >
         <div className='flex gap-1 flex-wrap'>
           {selectedItems.map((item) => (
-            <Badge key={item.value} variant='secondary'>
+            <Badge key={item.index} variant='secondary'>
               {item.label}
               <button
                 type='button'

@@ -1,5 +1,6 @@
 import { ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
@@ -28,15 +29,17 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       recurseList.push(localSchema);
       const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, localSchema, rootSchema, true);
       allOptions.forEach((s) => {
-        if (PROPERTIES_KEY in s && s[PROPERTIES_KEY]) {
-          for (const value of Object.values(localSchema[PROPERTIES_KEY] ?? {})) {
-            parseSchema<T, S, F>(validator, recurseList, rootSchema, value as S);
-          }
+        // A schema with both keywords resolves one at a time, leaving the other on each option to be parsed in turn
+        if (s !== localSchema && getXxxOfKey<S>(s)) {
+          parseSchema<T, S, F>(validator, recurseList, rootSchema, s);
+        }
+        for (const value of Object.values(s[PROPERTIES_KEY] ?? {})) {
+          parseSchema<T, S, F>(validator, recurseList, rootSchema, value as S);
+        }
+        if (ITEMS_KEY in s && !Array.isArray(s.items) && typeof s.items !== 'boolean') {
+          parseSchema<T, S, F>(validator, recurseList, rootSchema, s.items as S);
         }
       });
-      if (ITEMS_KEY in localSchema && !Array.isArray(localSchema.items) && typeof localSchema.items !== 'boolean') {
-        parseSchema<T, S, F>(validator, recurseList, rootSchema, localSchema.items as S);
-      }
     }
   });
 }

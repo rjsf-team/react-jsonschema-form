@@ -1,6 +1,8 @@
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
-import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
+import enumOptionValueEncoder, { encodesAsIndex } from './enumOptionValueEncoder.ts';
 import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types.ts';
+
+const NO_MATCH = Symbol('no match');
 
 /** Computes the value to pass to a select element's `value` attribute.
  *
@@ -34,19 +36,25 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   }
 
   if (format === 'realValue') {
-    // Encoded the same way as the options' values so they match, e.g. `null` is `''` rather than `'null'` on both sides
+    // Encoded the same way as the options' values so they match, e.g. `null` is its option's index on both sides
     const encode = (item: any, noMatch: any) => {
-      // Only a non-null object is encoded as its index, so every other value skips the scan that searches for one
-      if (typeof item !== 'object' || item === null) {
+      // Only a value encoded as its index needs the scan that searches for one
+      if (!encodesAsIndex(item)) {
         return enumOptionValueEncoder(item, 0, format);
       }
       const index = enumOptionsIndexForValue<S>(item, enumOptions);
-      // An object with no matching option has no index to encode, which would otherwise render as the string `NaN`
+      // A value with no matching option has no index to encode, which would otherwise render as the string `NaN`
       return index === undefined ? noMatch : enumOptionValueEncoder(item, Number(index), format);
     };
-    // `emptyValue` describes the whole selection, so an unmatched entry of a multiple selection uses the empty string
-    // that `enumOptionValueEncoder()` gives a single empty option instead
-    return multiple ? value.map((item: any) => encode(item, '')) : encode(value, emptyValue);
+    if (!multiple) {
+      return encode(value, emptyValue);
+    }
+    // Form data for a multiple widget isn't guaranteed to be an array (e.g. `null` for a nullable array type), so a lone
+    // value is matched as a one-item selection, as the `indexed` format does. An entry that is encoded as its index but
+    // matches no option is left out, since any value standing in for it could be one an option encodes as
+    return (Array.isArray(value) ? value : [value])
+      .map((item: any) => encode(item, NO_MATCH))
+      .filter((encoded: any) => encoded !== NO_MATCH);
   }
 
   const indexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

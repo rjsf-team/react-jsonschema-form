@@ -6,6 +6,7 @@ import type {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  ONE_OF_KEY,
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -22,13 +23,15 @@ import {
   getTemplate,
   getUiOptions,
   getUnionTypes,
+  getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
   hasVisibleErrors,
   isConstant,
+  isConstantOptionList,
+  isConstantSelect,
   isFormDataAvailable,
   logOnce,
-  ONE_OF_KEY,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
@@ -36,6 +39,7 @@ import {
   toConstant,
   toFieldPath,
   TranslatableString,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
@@ -54,13 +58,10 @@ const COMPONENT_TYPES: Record<string, string> = {
   null: 'NullField',
 };
 
-/** The types `guessType()` returns for the constant values that a select can represent */
-const SELECT_CONSTANT_TYPES = ['string', 'number', 'boolean', 'null'];
-
-/** Reduces the `guessType()` results of a constant option list to the single `type` whose field can show all of them.
+/** Reduces the `guessType()` results of a constant option list to the single `type` that describes all of them.
  * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
  * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
- * `string` can represent either.
+ * `string` can represent any of them.
  *
  * @param types - The distinct `guessType()` results of the constants in one option list
  * @returns - The `type` to give a select over those constants
@@ -70,45 +71,128 @@ function selectTypeForConstants(types: string[]): string {
   return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
 }
 
-/** A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the schema's `type`.
- * JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be resolved, so infer it
- * from the constant values. Only primitive constants are inferred since those are what a select can represent.
+/** Whether any of a constant option list's labels comes from somewhere other than its values: an option's own
+ * `title`, its `ui:title` in the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry, or `ui:enumNames`
  *
- * @param schema - The retrieved schema for the field
- * @returns - The `schema`, with an inferred `type` when it is a typeless select, along with the `widget` name to
- *        default the `uiSchema` to when the field for that type wouldn't render a select on its own
+ * @param options - The constant options of the keyword being rendered
+ * @param keyword - The keyword the `options` came from
+ * @param uiSchema - The resolved `uiSchema` for the field
+ * @returns - True when at least one option is labelled
  */
-function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { schema: S; widget?: string } {
-  if (getSchemaType<S>(schema) !== undefined) {
-    return { schema };
+function hasOptionLabels<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(options: S[], keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY, uiSchema: UiSchema<T, S, F>): boolean {
+  const { enumNames } = getUiOptions<T, S, F>(uiSchema);
+  if (enumNames && Object.keys(enumNames).length > 0) {
+    return true;
   }
-  const oneOfOptions = Array.isArray(schema[ONE_OF_KEY]) ? schema[ONE_OF_KEY] : [];
-  const anyOfOptions = Array.isArray(schema[ANY_OF_KEY]) ? schema[ANY_OF_KEY] : [];
-  const options = [...oneOfOptions, ...anyOfOptions];
-  // `toConstant()` throws for an option that isn't a constant, so the options it maps are checked directly
-  if (options.length === 0 || !options.every((option) => isObject(option) && isConstant<S>(option as S))) {
-    return { schema };
+  const optionUiSchemas = uiSchema[keyword];
+  return options.some(
+    (option, index) =>
+      Boolean(option.title) ||
+      (Array.isArray(optionUiSchemas) && Boolean(getUiOptions<T, S, F>(optionUiSchemas[index]).title)),
+  );
+}
+
+/** What `SchemaField` needs to know about a retrieved schema that may be a select */
+interface SelectSchemaInfo<S extends StrictRJSFSchema> {
+  /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
+  schema: S;
+  /** Whether the `type` was inferred rather than declared */
+  hasInferredType: boolean;
+  /** The keyword the schema's options are read from, if it has any */
+  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined;
+  /** The non-empty constant options of that keyword, when they all are constants */
+  constantOptions: S[] | undefined;
+  /** Whether the schema is an `enum` or a `oneOf`/`anyOf` of constants, empty or not, see `isConstantSelect()` */
+  isSelectSchema: boolean;
+  /** Whether that select offers at least one option */
+  hasConstantOptions: boolean;
+}
+
+/** Works out whether a retrieved schema is a select, reading its options from the same keyword `isSelect()` and
+ * `optionsList()` read. A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the
+ * schema's `type`, but JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be
+ * resolved, so it is inferred from the constant values.
+ *
+ * @param retrievedSchema - The retrieved schema for the field
+ * @returns - The `SelectSchemaInfo` for the schema
+ */
+function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
+  const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
+  const options = xxxOfKey && retrievedSchema[xxxOfKey];
+  const constantOptions = isConstantOptionList<S>(options, true) ? options : undefined;
+  let schema = retrievedSchema;
+  if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
+    // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
+    const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
+    schema = { ...retrievedSchema, type: selectTypeForConstants(types) };
   }
-  const constantTypes = (list: typeof options) => [
-    ...new Set(list.map((option) => guessType(toConstant<S>(option as S)))),
-  ];
-  const oneOfTypes = constantTypes(oneOfOptions);
-  const anyOfTypes = constantTypes(anyOfOptions);
-  if (![...oneOfTypes, ...anyOfTypes].every((type) => SELECT_CONSTANT_TYPES.includes(type))) {
-    return { schema };
+  return {
+    schema,
+    hasInferredType: schema !== retrievedSchema,
+    xxxOfKey,
+    constantOptions,
+    // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve
+    // it again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf` still counts as a select, so it renders as a
+    // select with nothing to choose rather than as an option selector with no options. A list already found to be all
+    // constants isn't scanned again, which a long one makes worth skipping
+    isSelectSchema: constantOptions !== undefined || isConstantSelect<S>(schema, true),
+    hasConstantOptions: constantOptions !== undefined || isConstantSelect<S>(schema),
+  };
+}
+
+/** Returns the widget to default the `uiSchema` of a `oneOf`/`anyOf` select to when the field for its `type` wouldn't
+ * render a select on its own. That is only ever BooleanField, which defaults to a checkbox, and a checkbox ignores
+ * `enumOptions` and so drops the option labels. Defaulting the widget rather than the type keeps `schema.type` truthful
+ * for custom fields, templates and widgets.
+ *
+ * @param selectSchemaInfo - The `SelectSchemaInfo` of the retrieved schema for the field
+ * @param uiSchema - The resolved `uiSchema` for the field, which may label the options
+ * @returns - The widget name, or undefined when the field's own default suits the select
+ */
+function inferSelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(selectSchemaInfo: SelectSchemaInfo<S>, uiSchema: UiSchema<T, S, F>): string | undefined {
+  const { schema, hasInferredType, xxxOfKey: keyword, constantOptions: options } = selectSchemaInfo;
+  if (!keyword || !options || getSchemaType<S>(schema) !== 'boolean') {
+    return undefined;
   }
-  const oneOfType = oneOfOptions.length > 0 ? selectTypeForConstants(oneOfTypes) : undefined;
-  const anyOfType = anyOfOptions.length > 0 ? selectTypeForConstants(anyOfTypes) : undefined;
-  // `isSelect()` reads `oneOf` first while `optionsList()` reads `anyOf` first, so a schema carrying both only gets a
-  // type when the two lists infer the same one; otherwise it would describe whichever list the reader didn't pick
-  if (oneOfType !== undefined && anyOfType !== undefined && oneOfType !== anyOfType) {
-    return { schema };
+  // An inferred boolean is a select, since nothing asked for a checkbox. A declared one keeps its checkbox unless a
+  // label would be dropped, since a single option is how a checkbox that must be checked is spelled, and unlabelled
+  // `true`/`false` options are exactly what a checkbox shows. A `null` option, which a nullable boolean can offer, is
+  // one a checkbox has no state for, so it gets the select too. So does a type list naming `boolean` first among other
+  // non-null types: `getFieldComponent()` renders it through StringField, and without a widget `getDisplayLabel()`
+  // would still hide the label the way it does for a checkbox
+  const needsSelect =
+    hasInferredType ||
+    (options.length > 1 &&
+      (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
+        options.some((option) => toConstant<S>(option) === null) ||
+        (Array.isArray(schema.type) && selectTypeForConstants(schema.type) !== 'boolean')));
+  return needsSelect ? 'select' : undefined;
+}
+
+/** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
+ * `getFieldComponent()` renders in place of the field for the schema's type.
+ *
+ * @param field - The `field` from the UI options
+ * @param fields - The registered fields
+ * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered
+ */
+function getUiFieldComponent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
+  if (typeof field === 'function') {
+    return field;
   }
-  const type = (anyOfType ?? oneOfType)!;
-  // BooleanField defaults to a checkbox, which ignores `enumOptions` and so drops the option titles. Defaulting the
-  // widget rather than the type keeps `schema.type` truthful for custom fields, templates and widgets
-  const widget = type === 'boolean' ? 'select' : undefined;
-  return { schema: { ...schema, type }, widget };
+  return typeof field === 'string' && field in fields ? fields[field] : undefined;
 }
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
@@ -118,7 +202,9 @@ function inferSelectType<S extends StrictRJSFSchema = RJSFSchema>(schema: S): { 
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
  * @param registry - The registry from which fields and templates are obtained
- * @param isSelectSchema - Whether the `schema` is a `oneOf`/`anyOf` that represents a select
+ * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
+ * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
+ * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
  * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
  *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
  */
@@ -130,23 +216,37 @@ function getFieldComponent<
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   registry: Registry<T, S, F>,
+  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
+  hasConstantOptions: boolean,
 ): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean } {
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
-  if (typeof field === 'function') {
-    return { FieldComponent: field, rendersFallbackUi: false };
-  }
-  if (typeof field === 'string' && field in fields) {
-    return { FieldComponent: fields[field], rendersFallbackUi: false };
+  const uiFieldComponent = getUiFieldComponent<T, S, F>(field, fields);
+  if (uiFieldComponent) {
+    return { FieldComponent: uiFieldComponent, rendersFallbackUi: false };
   }
 
   const schemaType = getSchemaType(schema);
-  const type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
+  let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
+  // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
+  // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
+  // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
+  // the way NumberField turns `true` into `1`
+  if (isSelectSchema && Array.isArray(schema.type)) {
+    type = selectTypeForConstants(schema.type);
+  }
 
   const schemaId = schema.$id;
 
   let componentName = COMPONENT_TYPES[type];
+  // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
+  // array constants, spelled as an `enum` or a `oneOf`/`anyOf`, is rendered by the field that renders every other
+  // select, while `schema.type` stays as declared. An empty list offers nothing to choose, so the object or array is
+  // still edited through its own field
+  if ((type === 'object' || type === 'array') && hasConstantOptions) {
+    componentName = 'StringField';
+  }
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
@@ -188,7 +288,7 @@ function getFieldComponent<
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
   // FallbackField is excluded alongside ObjectField: it renders the option selector within its own value field, for
   // the type currently chosen, so returning nothing here would drop the type selector and the options with it.
-  if ((schema.anyOf || schema.oneOf) && !isSelectSchema && componentName !== 'ObjectField' && !rendersFallbackUi) {
+  if (xxxOfKey && !isSelectSchema && componentName !== 'ObjectField' && !rendersFallbackUi) {
     return { FieldComponent: () => null, rendersFallbackUi: false };
   }
 
@@ -244,25 +344,42 @@ function SchemaFieldRender<
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
   );
-  // A schema tagged as a `$ref` cycle returns below before either value is read, so it is left unretrieved
-  const { schema, widget: inferredWidget } = useMemo(() => {
-    if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
-      return { schema: _schema, widget: undefined };
-    }
-    return inferSelectType<S>(schemaUtils.retrieveSchema(_schema, formData));
-  }, [_schema, formData, schemaUtils]);
+  // A schema tagged as a `$ref` cycle returns below before either value is read, so it is left unretrieved. Retrieving
+  // is kept apart from inferring the select type so that a `uiSchema` rebuilt on every render doesn't retrieve again
+  const isRefCycle = Boolean((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+  const retrievedSchema = useMemo(
+    () => (isRefCycle ? _schema : schemaUtils.retrieveSchema(_schema, formData)),
+    [isRefCycle, _schema, formData, schemaUtils],
+  );
+  // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
+  // hand a typeless select a new `schema` each time
+  const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
+  const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
+  const inferredWidget = useMemo(
+    () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
+    [selectSchemaInfo, resolvedUiSchema],
+  );
   // An inferred widget is only a default, so a widget the caller named through either spelling is written back
   // unchanged. `ui:widget` is always the key that carries it because `getDisplayLabel()` reads only that spelling to
   // decide a boolean keeps its label, and spreading leaves an existing key where the caller put it, so the order
   // `getUiOptions()` reduces in — and with it `ui:widget` against `ui:options.widget` — is untouched either way.
-  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
+  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes. The
+  // widget is only ever inferred for a boolean, whose BooleanField reads it, so a different field the `ui:field` key
+  // names is handed the caller's `uiSchema` without a widget it never chose, which a field following BooleanField's
+  // lead would otherwise render in place of its own default. Only that key is checked because it is the one spelling
+  // `getDisplayLabel()` hides the label for, so leaving the widget out costs no label; a field named through
+  // `ui:options` keeps the widget, and with it the label a boolean select shows
   const uiSchema = useMemo(() => {
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
+    const uiFieldComponent = getUiFieldComponent<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    if (uiFieldComponent && uiFieldComponent !== fields.BooleanField) {
+      return resolvedUiSchema;
+    }
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
     return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
-  }, [inferredWidget, resolvedUiSchema]);
+  }, [inferredWidget, resolvedUiSchema, fields]);
   // See #439: consumed class names and style must not reach child components. Copied only when there is something
   // to strip. `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => {
@@ -307,10 +424,15 @@ function SchemaFieldRender<
   );
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  // `isSelect()` resolves the schema on every call, so compute it once, and only for the `oneOf`/`anyOf` it applies to
-  const isSelectSchema = (ANY_OF_KEY in schema || ONE_OF_KEY in schema) && schemaUtils.isSelect(schema);
 
-  const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(schema, uiOptions, registry, isSelectSchema);
+  const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(
+    schema,
+    uiOptions,
+    registry,
+    xxxOfKey,
+    isSelectSchema,
+    hasConstantOptions,
+  );
 
   const isDeprecated = Boolean(schema.deprecated);
   const deprecatedHandling = isDeprecated ? (uiOptions.deprecatedHandling ?? 'label') : undefined;
@@ -363,8 +485,7 @@ function SchemaFieldRender<
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
-  const rendersOptionSelector =
-    (ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !isSelectSchema;
+  const rendersOptionSelector = xxxOfKey !== undefined && !isReplacingAnyOrOneOf && !isSelectSchema;
   // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
   // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
   // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
@@ -377,17 +498,10 @@ function SchemaFieldRender<
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose
   if (rendersOptionSelector && !rendersFallbackUi) {
-    if (schema[ANY_OF_KEY]) {
-      XxxOfField = _AnyOfField;
-      XxxOfOptions = schema[ANY_OF_KEY].map((xxxOfSchema) =>
-        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-      );
-    } else if (schema[ONE_OF_KEY]) {
-      XxxOfField = _OneOfField;
-      XxxOfOptions = schema[ONE_OF_KEY].map((xxxOfSchema) =>
-        schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-      );
-    }
+    XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
+    XxxOfOptions = schema[xxxOfKey]!.map((xxxOfSchema) =>
+      schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
+    );
     // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
     // rendering of the same data address by the `XxxOfField`
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);

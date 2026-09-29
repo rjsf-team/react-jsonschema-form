@@ -18,6 +18,7 @@ import {
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import logOnce from '../logOnce.ts';
@@ -464,19 +465,12 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (resolveAnyOfOrOneOfRefs) {
-    let key: 'anyOf' | 'oneOf' | undefined;
-    let schemas: S[] | undefined;
-    if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-      key = ANY_OF_KEY;
-      schemas = resolvedSchema[ANY_OF_KEY] as S[];
-    } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-      key = ONE_OF_KEY;
-      schemas = resolvedSchema[ONE_OF_KEY] as S[];
-    }
-    if (key && schemas) {
+    // Read from the resolved schema, which is what every reader of its options picks the keyword from
+    const key = getXxxOfKey<S>(resolvedSchema);
+    if (key) {
       resolvedSchema = {
         ...resolvedSchema,
-        [key]: schemas.map((s: S) =>
+        [key]: (resolvedSchema[key] as S[]).map((s: S) =>
           resolveAllReferences(s, rootSchema, recurseList, currentBaseURI, resolveAnyOfOrOneOfRefs),
         ),
       };
@@ -846,14 +840,20 @@ export function resolveAnyOrOneOfSchemas<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(validator: ValidatorType<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
-  let anyOrOneOf: S[] | undefined;
-  const { oneOf, anyOf, ...remaining } = schema;
-  if (Array.isArray(oneOf)) {
-    anyOrOneOf = oneOf as S[];
-  } else if (Array.isArray(anyOf)) {
-    anyOrOneOf = anyOf as S[];
-  }
-  if (anyOrOneOf) {
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (xxxOfKey) {
+    const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...withoutOptions } = schema;
+    const otherKey = xxxOfKey === ANY_OF_KEY ? ONE_OF_KEY : ANY_OF_KEY;
+    // The schema parser walks every branch a precompiled validator must cover, so when expanding them all the keyword
+    // that isn't read stays on each result for it to reach. A rendered schema drops it, since what is rendered from the
+    // result is its own options, and one that kept the other keyword would render those instead
+    const remaining =
+      expandAllBranches && otherKey in schema ? { ...withoutOptions, [otherKey]: schema[otherKey] } : withoutOptions;
+    let anyOrOneOf = schema[xxxOfKey] as S[];
+    // An empty list has no option to merge in, so what the schema declares besides it stands on its own
+    if (anyOrOneOf.length === 0) {
+      return [remaining as S];
+    }
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);

@@ -22,15 +22,19 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import isConstant from '../isConstant.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
 import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
+import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
@@ -320,6 +324,9 @@ export function computeDefaults<
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
+  // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
+  let isWholeValue: boolean | undefined;
+  const xxxOfKey = getXxxOfKey<S>(schema);
   if (
     schema[CONST_KEY] !== undefined &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -331,10 +338,12 @@ export function computeDefaults<
     isObject(schema.default) &&
     !schema[ANY_OF_KEY] &&
     !schema[ONE_OF_KEY] &&
-    !schema[REF_KEY]
+    !schema[REF_KEY] &&
+    !isWholeValueSelect<S>(schema)
   ) {
     // For object defaults, merge defaults by precedence setting.
-    // Skip this for anyOf/oneOf/$ref schemas - they need special handling.
+    // Skip this for anyOf/oneOf/$ref schemas, which need special handling, and for a select over object constants,
+    // whose own default and inherited default each name a whole constant, so a blend of them names none.
     if (preferParentDefaults) {
       // Use schema.default as the base and only override values that are defined in parent defaults.
       defaults = mergeObjects(schema.default, defaults) as T;
@@ -410,48 +419,64 @@ export function computeDefaults<
         uiSchemaDefinitions,
       }),
     ) as T[];
-  } else if (ONE_OF_KEY in schema) {
-    const { oneOf, ...remaining } = schema;
-    if (oneOf!.length === 0) {
+  } else if (xxxOfKey) {
+    const { [xxxOfKey]: options, ...remaining } = schema;
+    if (options!.length === 0) {
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const { type = 'null' } = remaining;
-    if (!Array.isArray(type) && PRIMITIVE_TYPES.includes(type) && dfsb_to_compute?.constAsDefaults === 'skipOneOf') {
-      // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
+    // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
+    // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
+    // taken whole
+    isWholeValue = isWholeValueSelect<S>(schema);
+    const picksWholeOption = isWholeValue && isConstantOptionList<S>(options, true);
+    // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
+    if (
+      ONE_OF_KEY in schema &&
+      !Array.isArray(type) &&
+      (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
+      dfsb_to_compute?.constAsDefaults === 'skipOneOf'
+    ) {
+      // If we are in a oneOf of a primitive type, or of whole object or array values, then we want to pass
+      // constAsDefaults as 'never' for the recursion
       dfsb_to_compute = {
         ...dfsb_to_compute,
         constAsDefaults: 'never',
       };
     }
-    const oneOfIndex = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema,
-      rawFormData ?? (schema.default as T),
-      oneOf as S[],
-      0,
-      discriminator,
-      customMergeAllOf,
-    );
-    schemaToCompute = mergeSchemas(remaining, oneOf![oneOfIndex] as S) as S;
-    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ONE_OF_KEY, oneOfIndex);
-  } else if (ANY_OF_KEY in schema) {
-    const { anyOf, ...remaining } = schema;
-    if (anyOf!.length === 0) {
-      return undefined;
+    // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick
+    const inheritedDefault = preferParentDefaults ? defaults : (schema.default ?? defaults);
+    const valueToMatch = rawFormData ?? ((picksWholeOption ? inheritedDefault : schema.default) as T);
+    // A constant option equal to the value is the one it picked, whatever the validator makes of the others
+    const equalOptionIndex = picksWholeOption
+      ? options.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
+      : -1;
+    const optionIndex =
+      equalOptionIndex !== -1
+        ? equalOptionIndex
+        : getClosestMatchingOption<T, S, F>(
+            validator,
+            rootSchema,
+            valueToMatch,
+            options as S[],
+            0,
+            discriminator,
+            customMergeAllOf,
+          );
+    // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant is
+    // taken as a whole: filling in its properties or items would reduce it to an empty value no option allows. The
+    // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults.
+    // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
+    // `getDefaultBasedOnSchemaType()`
+    if (picksWholeOption) {
+      if (rawFormData === undefined && dfsb_to_compute?.constAsDefaults !== 'never') {
+        defaults = toConstant<S>(options[optionIndex]) as T;
+      }
+    } else {
+      schemaToCompute = mergeSchemas(remaining, options![optionIndex] as S) as S;
+      branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, optionIndex);
     }
-    const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const anyOfIndex = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema,
-      rawFormData ?? (schema.default as T),
-      anyOf as S[],
-      0,
-      discriminator,
-      customMergeAllOf,
-    );
-    schemaToCompute = mergeSchemas(remaining, anyOf![anyOfIndex] as S) as S;
-    branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, ANY_OF_KEY, anyOfIndex);
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
@@ -493,7 +518,13 @@ export function computeDefaults<
     }
   }
 
-  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
+  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
+    validator,
+    schema,
+    computeDefaultsProps,
+    defaults,
+    isWholeValue,
+  );
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
@@ -910,6 +941,7 @@ export function getArrayDefaults<
  * @param rawSchema - The schema for which the default state is desired
  * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
+ * @param [isWholeValue] - Whether `rawSchema` is a select over whole object or array values, when already known
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 export function getDefaultBasedOnSchemaType<
@@ -921,7 +953,14 @@ export function getDefaultBasedOnSchemaType<
   rawSchema: S,
   computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
+  isWholeValue = isWholeValueSelect<S>(rawSchema),
 ): T | T[] | undefined {
+  // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
+  // and an empty object or array would be a value none of its options allow. A value already picked is kept as it is,
+  // since the form data is merged over the defaults key by key, which would blend it with the default constant
+  if (isWholeValue) {
+    return computeDefaultsProps.rawFormData !== undefined ? computeDefaultsProps.rawFormData : defaults;
+  }
   switch (getSchemaType<S>(rawSchema)) {
     // We need to recurse for object schema inner default values.
     case 'object': {

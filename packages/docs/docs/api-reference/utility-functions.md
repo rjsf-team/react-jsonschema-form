@@ -300,7 +300,8 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 ### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Computes the value to pass to a select element's `value` attribute.
-When `format` is `'realValue'`, converts form data values to strings.
+When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
+A lone non-array value of a `multiple` selection is encoded as a one-item selection.
 When `format` is `'indexed'` (the default), resolves to index-based values via `enumOptionsIndexForValue`.
 Returns `emptyValue` when the current value is empty.
 
@@ -320,7 +321,8 @@ Returns `emptyValue` when the current value is empty.
 
 Returns the index(es) of the options in `allEnumOptions` whose value(s) match the ones in `value`.
 All the `enumOptions` are filtered based on whether they are a "selected" `value` and the index of each selected one is then stored in an array.
-If `multiple` is true, that array is returned, otherwise the first element in the array is returned.
+If `multiple` is true, that array is returned.
+Otherwise the index of an option whose value is the whole `value` is returned, such as an array option's for an array `value`, falling back to the first element in that array.
 
 #### Parameters
 
@@ -335,20 +337,23 @@ If `multiple` is true, that array is returned, otherwise the first element in th
 ### enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Determines whether the given `value` is (one of) the `selected` value(s).
+An array `selected` is read as a list of selections unless `multiple` is `false`, which a single-select widget passes so that an array is compared whole, as the selection of an option whose value is an array, e.g. the `[2]` of a `{ const: [2] }` constant.
 
 #### Parameters
 
 - value: EnumOptionsType&lt;S>["value"] - The value being checked to see if it is selected
 - selected: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The current selected value or list of values
-- [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
+- [multiple]: boolean | undefined - Whether `selected` is a list of selections; when omitted, an array `selected` is one
 
 #### Returns
 
-- boolean: true if the `value` is one of the `selected` ones, false otherwise
+- boolean: true if the `value` is the `selected` one, or one of them for a list of selections, false otherwise
 
 ### enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
+Values are compared by deep equality, so an object or array option finds its place whether or not `selected` holds the option's own instance.
+A value already selected isn't added again, and a selected value that matches no option keeps its place after the ones that do.
 
 #### Parameters
 
@@ -379,8 +384,8 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the enum option whose `String(value)` matches the input string and returns the original typed value.
-For object/array values that were encoded as indices, falls back to index resolution.
+When `format` is `'realValue'`, does a reverse lookup: finds the first enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, including object, array and `null` values, which are encoded as their prefixed index. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value and decode to the first of them.
+A bare index is not an option's position here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with `enumOptionsValueForIndex()` instead.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
 #### Parameters
@@ -398,7 +403,9 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to the index since `String()` would produce `"[object Object]"`.
+Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
+So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
+The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters
@@ -410,6 +417,19 @@ When `format` is `'indexed'` (the default), returns the index as a string.
 #### Returns
 
 - string: The string to use as the DOM value attribute
+
+### enumOptionValueLabel()
+
+Returns the label for an enum option with no title of its own: its value, with an object or array spelled out as JSON,
+since `String()` would label every one of them `[object Object]`
+
+#### Parameters
+
+- value: unknown - The option's value
+
+#### Returns
+
+- string: The text to label the option with
 
 ### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -954,7 +974,8 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
-schema type and `widget` name. If no widget component can be found an `Error` is thrown.
+schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
+object constants, or one whose `type` list starts with `null`, renders with. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
@@ -969,6 +990,20 @@ schema type and `widget` name. If no widget component can be found an `Error` is
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords, unless its list is empty and the `oneOf`'s is not.
+Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
+the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
+
+#### Parameters
+
+- schema: S - The schema that may carry an `anyOf` or a `oneOf`
+
+#### Returns
+
+- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1123,6 +1158,40 @@ This happens when either the schema has an `enum` array with a single value or t
 
 - boolean: True if the `schema` has a single constant value, false otherwise
 
+### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
+as a select. An empty list passes unless `nonEmpty` is set, since every one of its options is vacuously a constant but
+it offers nothing to select.
+
+#### Parameters
+
+- options: unknown - The `anyOf` or `oneOf` list, or anything else
+- [nonEmpty=false]: boolean - Whether an empty list is rejected
+
+#### Returns
+
+- boolean: True if `options` is an array whose every entry is a constant schema object, and which has at least one entry
+  when `nonEmpty` is set
+
+### isConstantSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether the value of `schema` is picked from a list of constants, whatever its `type`: an `enum`, or an
+`anyOf`/`oneOf` of constants read from the keyword `getXxxOfKey()` picks. An `object` or `array` schema that passes is a
+select for its whole value (see `isWholeValueSelect()`) rather than a container whose contents are edited, pruned or
+sanitized. An empty list offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
+otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is not resolved first.
+
+#### Parameters
+
+- schema: S - The already-resolved schema to check
+- [allowEmpty=false]: boolean - Whether an empty `enum` or `anyOf`/`oneOf` counts as a select
+
+#### Returns
+
+- boolean: True if `schema` offers a list of constant values to choose from, which is non-empty unless `allowEmpty` is
+  set
+
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
@@ -1228,6 +1297,21 @@ Returns true when a form value is considered empty: `null`, `undefined`, or `''`
 #### Returns
 
 - boolean: True if the value is considered empty, false otherwise
+
+### isWholeValueSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether `schema` is a select over object or array constants, which holds one of them as a whole rather than
+being a container whose contents are edited, filled in with defaults, pruned or sanitized. That is a non-empty select
+(see `isConstantSelect()`) whose `type` is `object` or `array`, or which declares no `type` and offers an object or
+array constant, since `SchemaField` renders a typeless select over such values as a select too.
+
+#### Parameters
+
+- schema: S - The already-resolved schema to check
+
+#### Returns
+
+- boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
 ### labelValue()
 
@@ -1407,10 +1491,9 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
 The labels for the options will be extracted from `ui:enumNames` in the `uiSchema` if provided, otherwise the label will be the same as the `value`. If `ui:enumOrder` is provided, the options will be reordered accordingly.
 
-If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is the list of either:
 
--
-- The `const` values from the schema if present
+- The `const` values from the schema if present, labelled with the option's `title`, or its value (as JSON for an object or array) when it has none. When the options aren't all constants, there is no list and `undefined` is returned
 - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
   provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
   objects containing `ui:title` then the UI schema values will replace the values from the schema.
@@ -1422,7 +1505,7 @@ If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 
 #### Returns
 
-- \{ schema?: S, label: string, value: any }: The list of options from the schema
+- \{ schema?: S, label: string, value: any }[] | undefined: The list of options from the schema, or `undefined` when it has none
 
 ### orderProperties()
 
@@ -1875,6 +1958,22 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
 
+### useSelectFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Hook which builds the focus and blur handlers of a select widget whose focused element carries no option value of its
+own, such as a trigger button or a custom combobox. The widget's `value` is already form data rather than a DOM value,
+so it's reported as it is, with no selection read as the `emptyValue` option the way a native select reports its
+decoded empty selection. To be used by theme specific `SelectWidget` implementations.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'value' | 'options' | 'onFocus' | 'onBlur'> - The `id`, `value`,
+  `options`, `onFocus` and `onBlur` from the `WidgetProps` of the `SelectWidget`
+
+#### Returns
+
+- UseSelectFocusHandlersResult: The `handleFocus` and `handleBlur` callbacks that report the widget's form data value
+
 ### useTimeWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Hook which encapsulates the logic needed to compute the local (offset-free) display value of a `time` widget, and to
@@ -2012,6 +2111,7 @@ The closest match is determined using the number of matching properties, and mor
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants renders as one select for the whole value, so it keeps its label.
 
 #### Parameters
 
@@ -2127,7 +2227,8 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select
+Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
+When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
 
 #### Parameters
 

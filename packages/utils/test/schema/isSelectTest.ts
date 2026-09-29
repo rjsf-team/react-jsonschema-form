@@ -25,6 +25,24 @@ export default function isSelectTest(testValidator: TestValidatorType) {
         expect(isSelect(testValidator, schema)).toBe(true);
       });
     });
+    describe('schema has both anyOf and oneOf', () => {
+      it('should be false when the anyOf options are not all constants', () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          anyOf: [{ minLength: 1 }],
+          oneOf: [{ const: 'a' }, { const: 'b' }],
+        };
+        expect(isSelect(testValidator, schema)).toBe(false);
+      });
+      it('should be true when only the anyOf options are all constants', () => {
+        const schema: RJSFSchema = {
+          type: 'string',
+          anyOf: [{ const: 'a' }, { const: 'b' }],
+          oneOf: [{ minLength: 1 }],
+        };
+        expect(isSelect(testValidator, schema)).toBe(true);
+      });
+    });
     it('should retrieve reference schema definitions', () => {
       const schema: RJSFSchema = {
         definitions: {

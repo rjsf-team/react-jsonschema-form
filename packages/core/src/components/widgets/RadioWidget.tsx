@@ -51,7 +51,7 @@ function RadioWidget<
     <div className='field-radio-group' id={id} role='radiogroup'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
-          const checked = enumOptionsIsSelected<S>(option.value, value);
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
@@ -78,11 +78,13 @@ function RadioWidget<
           );
 
           return inline ? (
-            <label key={String(option.value)} className={`radio-inline ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <label key={i} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={String(option.value)} className={`radio ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={i} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

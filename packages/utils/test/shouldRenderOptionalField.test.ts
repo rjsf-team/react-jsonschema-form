@@ -113,6 +113,11 @@ describe('shouldRenderOptionalField()', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
     expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_OBJECT, false)).toBe(true);
   });
+  test('schemaType for a single-type oneOf beside an empty anyOf IS in enableOptionalDataFieldForType returns true', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    const schema: RJSFSchema = { ...ONE_OF_SCHEMA_OBJECT, anyOf: [] };
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, schema, false)).toBe(true);
+  });
   test('schemaType for single-type anyOf IS in enableOptionalDataFieldForType returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
     expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ANY_OF_SCHEMA_ARRAY, false)).toBe(true);

@@ -24,6 +24,24 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     it('object type from additionalProperty', () => {
       expect(getDisplayLabel(testValidator, { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true })).toEqual(true);
     });
+    it('object type with constant options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }),
+      ).toEqual(true);
+    });
+    it('object type with an enum', () => {
+      expect(getDisplayLabel(testValidator, { type: 'object', enum: [{ a: 1 }, { a: 2 }] })).toEqual(true);
+    });
+    it('object type with an empty list of options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', properties: { a: { type: 'string' } }, oneOf: [] }),
+      ).toEqual(false);
+    });
+    it('object type with non-constant options', () => {
+      expect(
+        getDisplayLabel(testValidator, { type: 'object', anyOf: [{ properties: { a: { type: 'string' } } }] }),
+      ).toEqual(false);
+    });
     it('boolean type without widget', () => {
       expect(getDisplayLabel(testValidator, { type: 'boolean' })).toEqual(false);
     });
@@ -42,8 +60,23 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       it('items', () => {
         expect(getDisplayLabel(testValidator, { type: 'array', items: { type: 'string' } }, {})).toEqual(false);
       });
-      it('items enum', () => {
-        expect(getDisplayLabel(testValidator, { type: 'array', enum: ['NW', 'NE', 'SW', 'SE'] }, {})).toEqual(false);
+      it('enum of whole array values', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', enum: [[1], [2]] }, {})).toEqual(true);
+      });
+      it('empty enum', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', items: { type: 'string' }, enum: [] }, {})).toEqual(
+          false,
+        );
+      });
+      it('constant options', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', anyOf: [{ const: [1] }, { const: [2] }] }, {})).toEqual(
+          true,
+        );
+      });
+      it('empty list of options', () => {
+        expect(getDisplayLabel(testValidator, { type: 'array', items: { type: 'string' }, anyOf: [] }, {})).toEqual(
+          false,
+        );
       });
       it('files type', () => {
         expect(getDisplayLabel(testValidator, { type: 'array' }, { 'ui:widget': 'files' })).toEqual(true);

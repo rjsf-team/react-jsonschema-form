@@ -2,6 +2,7 @@ import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../consta
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import isCustomWidget from '../isCustomWidget.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -45,16 +46,19 @@ export default function getDisplayLabel<
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 
+    // An `enum` or a constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is
+    // labelled like any other select rather than left to the fields of its contents
     if (schemaType === 'array') {
       displayLabel =
         addedByAdditionalProperty ||
+        isWholeValueSelect<S>(schema) ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
         isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, customMergeAllOf) ||
         isCustomWidget(uiSchema);
     }
 
     if (schemaType === 'object') {
-      displayLabel = addedByAdditionalProperty;
+      displayLabel = addedByAdditionalProperty || isWholeValueSelect<S>(schema);
     }
     if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
       displayLabel = false;

@@ -110,7 +110,8 @@ export default function CheckboxesWidget<
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
                 control={checkbox}
-                key={String(option.value)}
+                // oxlint-disable-next-line react/no-array-index-key
+                key={index}
                 label={option.label}
               />
             );

@@ -32,14 +32,15 @@ export default function RadioWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
-          const checked = enumOptionsIsSelected<S>(option.value, value);
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
 
           const radio = (
             <Form.Check
               inline={inline}
               label={option.label}
               id={optionId(id, index)}
-              key={String(option.value)}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
               name={htmlName || id}
               type='radio'
               disabled={disabled || itemDisabled || readonly}

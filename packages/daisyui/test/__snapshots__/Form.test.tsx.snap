@@ -1084,7 +1084,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         <input
                           class="checkbox"
                           data-index="0"
-                          id="root_choices-foo"
+                          id="root_choices-0"
                           name="root[choices][]"
                           type="checkbox"
                           value="0"
@@ -1101,7 +1101,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         <input
                           class="checkbox"
                           data-index="1"
-                          id="root_choices-bar"
+                          id="root_choices-1"
                           name="root[choices][]"
                           type="checkbox"
                           value="1"
@@ -1118,7 +1118,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         <input
                           class="checkbox"
                           data-index="2"
-                          id="root_choices-baz"
+                          id="root_choices-2"
                           name="root[choices][]"
                           type="checkbox"
                           value="2"
@@ -1560,7 +1560,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         <input
                           class="radio"
                           data-index="0"
-                          id="root_option-foo"
+                          id="root_option-0"
                           name="root[option]"
                           type="radio"
                           value="0"
@@ -1577,7 +1577,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         <input
                           class="radio"
                           data-index="1"
-                          id="root_option-bar"
+                          id="root_option-1"
                           name="root[option]"
                           type="radio"
                           value="1"
@@ -4857,7 +4857,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="checkbox"
                 data-index="0"
-                id="root-foo"
+                id="root-0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -4874,7 +4874,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="checkbox"
                 data-index="1"
-                id="root-bar"
+                id="root-1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -4891,7 +4891,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="checkbox"
                 data-index="2"
-                id="root-fuzz"
+                id="root-2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -4908,7 +4908,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="checkbox"
                 data-index="3"
-                id="root-qux"
+                id="root-3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -4976,7 +4976,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 checked=""
                 class="checkbox"
                 data-index="0"
-                id="root-option1"
+                id="root-0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -4993,7 +4993,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               <input
                 class="checkbox"
                 data-index="1"
-                id="root-option2"
+                id="root-1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -5010,7 +5010,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               <input
                 class="checkbox"
                 data-index="2"
-                id="root-option3"
+                id="root-2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -5093,7 +5093,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               <input
                 class="checkbox"
                 data-index="0"
-                id="root-red"
+                id="root-0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -5110,7 +5110,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               <input
                 class="checkbox"
                 data-index="1"
-                id="root-green"
+                id="root-1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -5127,7 +5127,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               <input
                 class="checkbox"
                 data-index="2"
-                id="root-blue"
+                id="root-2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -11742,7 +11742,7 @@ exports[`single fields > radio field 1`] = `
               <input
                 class="radio"
                 data-index="0"
-                id="root-true"
+                id="root-0"
                 name="root"
                 type="radio"
                 value="0"
@@ -11759,7 +11759,7 @@ exports[`single fields > radio field 1`] = `
               <input
                 class="radio"
                 data-index="1"
-                id="root-false"
+                id="root-1"
                 name="root"
                 type="radio"
                 value="1"
@@ -11816,7 +11816,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <input
                 class="radio"
                 data-index="0"
-                id="root-true"
+                id="root-0"
                 name="root"
                 type="radio"
                 value="0"
@@ -11833,7 +11833,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <input
                 class="radio"
                 data-index="1"
-                id="root-false"
+                id="root-1"
                 name="root"
                 type="radio"
                 value="1"
@@ -12645,7 +12645,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="checkbox"
                 data-index="0"
-                id="root-foo"
+                id="root-0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -12662,7 +12662,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="checkbox"
                 data-index="1"
-                id="root-bar"
+                id="root-1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -12679,7 +12679,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="checkbox"
                 data-index="2"
-                id="root-fuzz"
+                id="root-2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -12696,7 +12696,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="checkbox"
                 data-index="3"
-                id="root-qux"
+                id="root-3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -13144,7 +13144,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <input
                 class="radio"
                 data-index="0"
-                id="root-foo"
+                id="root-0"
                 name="root"
                 type="radio"
                 value="0"
@@ -13161,7 +13161,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <input
                 class="radio"
                 data-index="1"
-                id="root-bar"
+                id="root-1"
                 name="root"
                 type="radio"
                 value="1"
@@ -13228,7 +13228,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 class="radio"
                 data-index="0"
                 disabled=""
-                id="root-foo"
+                id="root-0"
                 name="root"
                 type="radio"
                 value="0"
@@ -13246,7 +13246,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 class="radio"
                 data-index="1"
                 disabled=""
-                id="root-bar"
+                id="root-1"
                 name="root"
                 type="radio"
                 value="1"
@@ -13735,7 +13735,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 class="radio"
                 data-index="0"
                 disabled=""
-                id="root-foo"
+                id="root-0"
                 name="root"
                 type="radio"
                 value="0"
@@ -13753,7 +13753,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 class="radio"
                 data-index="1"
                 disabled=""
-                id="root-bar"
+                id="root-1"
                 name="root"
                 type="radio"
                 value="1"

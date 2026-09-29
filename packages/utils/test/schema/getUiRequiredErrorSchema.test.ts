@@ -403,6 +403,29 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.thing.aField');
   });
 
+  it.each<[string, RJSFSchema, UiSchema, unknown]>([
+    [
+      'object',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        oneOf: [{ const: { b: 1 } }, { const: { b: 2 } }],
+      },
+      { a: { 'ui:required': true } },
+      { b: 1 },
+    ],
+    [
+      'array',
+      { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } }, enum: [[{ b: 1 }], []] },
+      { items: { a: { 'ui:required': true } } },
+      [{ b: 1 }],
+    ],
+  ])('does not walk into the fields of an %s select over constants, which renders none', (_, v, vUiSchema, value) => {
+    const schema: RJSFSchema = { type: 'object', properties: { v } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, { v: vUiSchema }, { v: value });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
   it('reports a ui:required field inside the selected anyOf branch', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -420,6 +443,23 @@ describe('getUiRequiredErrorSchema()', () => {
     const errors = toErrorList(errorSchema);
     expect(errors).toHaveLength(1);
     expect(errors[0].property).toBe('.thing.bField');
+  });
+
+  it('reports a ui:required field inside the selected anyOf branch of a schema that also has a oneOf', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [{ type: 'object', properties: { aField: { type: 'string' } } }],
+          oneOf: [{ type: 'object', properties: { oField: { type: 'string' } } }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, { thing: {} });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
   });
 
   it('enforces a ui:required field declared inside uiSchema.oneOf[i] for the branch matching formData', () => {

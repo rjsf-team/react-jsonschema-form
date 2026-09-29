@@ -32,10 +32,13 @@ import {
   deepEquals,
   ErrorSchemaBuilder,
   getChangedFields,
+  getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
+  getXxxOfKey,
   hashObject,
   isObject,
+  isWholeValueSelect,
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
@@ -743,9 +746,11 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
 }
 
 /** How one data pass differs from the default, which just fills in the missing defaults */
-interface DeriveDataOptions {
-  /** Attempt to sanitize the data for a retrieved schema that changed */
-  shouldSanitize?: boolean;
+interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  /** Attempt to sanitize the data for a retrieved schema that changed. A function decides it only once the retrieved
+   * schema is known to have changed, so a check it makes costs nothing on the passes that never sanitize
+   */
+  shouldSanitize?: boolean | ((schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, formData: T) => boolean);
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
    * instance has generated defaults before
    */
@@ -765,7 +770,7 @@ interface DeriveDataOptions {
 function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
-  options: DeriveDataOptions,
+  options: DeriveDataOptions<T, S, F>,
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
   const { shouldSanitize = false, isReset = false } = options;
@@ -789,19 +794,22 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let retrievedSchema: S;
   let wasSanitized = false;
   const preventInfiniteSanitize: string[] = [];
+  let sanitize = shouldSanitize;
   do {
     formData = replaceEqualDeep(
       shareBase,
       schemaUtils.getDefaultFormState(rootSchema, defaultsFormData, false, initialDefaultsGenerated, uiSchema) as T,
     );
-    // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
-    const formHash = shouldSanitize ? hashObject({ formData }) : '';
     retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
-    if (
-      shouldSanitize &&
-      !preventInfiniteSanitize.includes(formHash) &&
-      (hasNestedConditionalSchema || retrievedSchema !== current?.retrievedSchema)
-    ) {
+    const mayNeedSanitizing = hasNestedConditionalSchema || retrievedSchema !== current?.retrievedSchema;
+    if (mayNeedSanitizing && typeof sanitize === 'function') {
+      // Asked once, since it decides about the change rather than about the data each pass settles
+      sanitize = sanitize(schemaUtils, retrievedSchema, formData);
+    }
+    const isSanitizing = mayNeedSanitizing && sanitize === true;
+    // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
+    const formHash = isSanitizing ? hashObject({ formData }) : '';
+    if (isSanitizing && !preventInfiniteSanitize.includes(formHash)) {
       // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
       // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
       const sanitizedFormData = replaceEqualDeep(
@@ -1116,6 +1124,70 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
+/** Returns the schema of the `property` of an object `schema` as it is rendered: the schema's own, or else that of the
+ * `oneOf`/`anyOf` option `MultiSchemaField` renders for `formData`, which it picks as the closest match to it, looked up
+ * the same way
+ *
+ * @param schemaUtils - The schema utilities to retrieve the options and pick among them with
+ * @param schema - The object schema, retrieved for `formData`
+ * @param property - The name of the property
+ * @param formData - The object's data
+ * @returns - The property's schema, or undefined when neither the schema nor any option it renders declares it
+ */
+function getPropertySchemaAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  property: string,
+  formData: T,
+): S | undefined {
+  const ownSchema = schema.properties?.[property];
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (ownSchema !== undefined || !xxxOfKey) {
+    return ownSchema as S | undefined;
+  }
+  const options = schema[xxxOfKey]!.map((option) => schemaUtils.retrieveSchema(option as S, formData));
+  const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+  const option = options[schemaUtils.getClosestMatchingOption(formData, options, 0, discriminator)];
+  // The option is rendered by a `SchemaField` of its own, which renders the option's own `oneOf`/`anyOf` in turn
+  return option && getPropertySchemaAt<T, S, F>(schemaUtils, option, property, formData);
+}
+
+/** Whether the field at `path` is a select over object or array constants. Changing one sets a single value, the way
+ * changing a leaf does, rather than writing a container of values whose own fields raise their changes. The schema is
+ * retrieved at every step of the path, so a field an `allOf`, a condition or a `oneOf`/`anyOf` option declares is found
+ * as it is rendered, and an array index is followed through `items`.
+ *
+ * @param schemaUtils - The schema utilities to retrieve and search the schema with
+ * @param schema - The root schema, retrieved for `formData`
+ * @param path - The path of the changed field
+ * @param formData - The data the schema was retrieved for, which holds the field's new value
+ * @returns - True when the field is such a select
+ */
+function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  path: FieldPathList,
+  formData: T,
+): boolean {
+  let fieldSchema = schema;
+  let fieldData: unknown = formData;
+  for (const segment of path) {
+    let childSchema: S | undefined;
+    if (typeof segment === 'number') {
+      const { items, additionalItems } = fieldSchema;
+      childSchema = (Array.isArray(items) ? (items[segment] ?? additionalItems) : items) as S | undefined;
+    } else {
+      childSchema = getPropertySchemaAt<T, S, F>(schemaUtils, fieldSchema, segment, fieldData as T);
+    }
+    if (!isObject(childSchema)) {
+      return false;
+    }
+    fieldData = getByPath(fieldData, segment);
+    fieldSchema = schemaUtils.retrieveSchema(childSchema, fieldData as T);
+  }
+  return isWholeValueSelect<S>(fieldSchema);
+}
+
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
  * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
  * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
@@ -1216,10 +1288,13 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const shouldSanitize =
       current.retrievedSchema !== undefined &&
       !isRootPath &&
-      !isObject(newValue) &&
-      !Array.isArray(newValue) &&
       !disabled &&
-      !readonly;
+      !readonly &&
+      // An object or array is otherwise written by a container, whose own fields raise the changes to its values
+      (isObject(newValue) || Array.isArray(newValue)
+        ? (schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, changedData: T) =>
+            isWholeValueSelectAt<T, S, F>(schemaUtils, retrievedSchema, path, changedData)
+        : true);
     // Only the data and its context are derived here; the errors are reconciled below
     const derived = deriveFormData(current, inputForDefaults, { shouldSanitize }, props);
     formData = derived.formData;

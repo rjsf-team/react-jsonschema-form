@@ -88,8 +88,43 @@ describe('getWidget()', () => {
     expect(() => getWidget(schema)).toThrow(`Unsupported widget definition: undefined in schema: ${schemaStr}`);
   });
 
-  it('should fail if widget has no type property', () => {
-    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget for type 'object' in schema: ${schemaStr}`);
+  it('should fail for a type that is not a JSON Schema type', () => {
+    const unknownType = { type: 'foo' } as unknown as RJSFSchema;
+    expect(() => getWidget(unknownType, 'blabla')).toThrow(`No widget for type 'foo' in schema: {"type":"foo"}`);
+  });
+
+  it('should return `SelectWidget` for a null type, which a select that lists null first among its types renders with', () => {
+    const registry = { SelectWidget: TestWidget };
+    expect(getWidget({ type: ['null', 'object', 'string'] }, 'select', registry)).toBe(TestWidget);
+  });
+
+  it('should fail if the object type has no such widget', () => {
+    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget 'blabla' for type 'object' in schema: ${schemaStr}`);
+  });
+
+  it('should return `SelectWidget` for an object type, which a select over object constants renders with', () => {
+    const registry = { SelectWidget: TestWidget };
+    expect(getWidget(schema, 'select', registry)).toBe(TestWidget);
+  });
+
+  it('should return `RadioWidget` for an array select over whole array constants', () => {
+    const registry = { RadioWidget: TestWidget };
+    expect(getWidget({ type: 'array', oneOf: [{ const: [1] }, { const: [2] }] }, 'radio', registry)).toBe(TestWidget);
+    expect(getWidget({ type: 'array', enum: [[1], [2]] }, 'radio', registry)).toBe(TestWidget);
+  });
+
+  it.each(['checkboxes', 'files'])('should fail for %s on an array select over whole array constants', (widget) => {
+    const schema: RJSFSchema = { type: 'array', enum: [[1, 2], [3]] };
+    expect(() => getWidget(schema, widget, { CheckboxesWidget: TestWidget, FileWidget: TestWidget })).toThrow(
+      `No widget '${widget}' for type 'array' in schema: ${JSON.stringify(schema)}`,
+    );
+  });
+
+  it('should fail for a radio on a multi-select array, which would write one item in place of the list', () => {
+    const multiSelect: RJSFSchema = { type: 'array', uniqueItems: true, items: { enum: ['a', 'b'] } };
+    expect(() => getWidget(multiSelect, 'radio', { RadioWidget: TestWidget })).toThrow(
+      `No widget 'radio' for type 'array' in schema: ${JSON.stringify(multiSelect)}`,
+    );
   });
 
   it('should fail if schema `type` has no widget property', () => {

@@ -1,6 +1,6 @@
-import { ANY_OF_KEY, ONE_OF_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
+import getXxxOfKey from './getXxxOfKey.ts';
 import isObject from './isObject.ts';
 import isRootSchema from './isRootSchema.ts';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
@@ -38,14 +38,8 @@ export default function shouldRenderOptionalField<
   F extends FormContextType = FormContextType,
 >(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>): boolean {
   const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  let schemaType: ReturnType<typeof getSchemaType<S>>;
-  if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ANY_OF_KEY] as S[]);
-  } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf<S>(schema[ONE_OF_KEY] as S[]);
-  } else {
-    schemaType = getSchemaType<S>(schema);
-  }
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  const schemaType = xxxOfKey ? getSchemaTypesForXxxOf<S>(schema[xxxOfKey] as S[]) : getSchemaType<S>(schema);
   return (
     !isRootSchema<T, S, F>(registry, schema) &&
     !required &&

@@ -1,7 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Templates from '../src/templates/index.ts';
 import CheckboxesWidget from '../src/widgets/CheckboxesWidget.tsx';
@@ -77,4 +77,40 @@ describe('Checkboxes', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test.each([
+    ['indexed', ['bar']],
+    ['realValue', ['bar']],
+  ] as const)('checks the selected options in the %s format', (optionValueFormat, value) => {
+    renderWidget({ value: [...value], options: { optionValueFormat } });
+    expect(screen.getByRole('checkbox', { name: 'bar' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'foo' })).not.toBeChecked();
+  });
+
+  test.each(['indexed', 'realValue'] as const)(
+    'checks the selected object options in the %s format',
+    (optionValueFormat) => {
+      renderWidget({
+        value: [{ a: 2 }],
+        options: {
+          enumOptions: [
+            { label: 'One', value: { a: 1 } },
+            { label: 'Two', value: { a: 2 } },
+          ],
+          optionValueFormat,
+        },
+      });
+      expect(screen.getByRole('checkbox', { name: 'Two' })).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'One' })).not.toBeChecked();
+    },
+  );
+
+  test.each(['indexed', 'realValue'] as const)(
+    'renders with nothing checked for null form data in the %s format',
+    (optionValueFormat) => {
+      renderWidget({ value: null, options: { optionValueFormat } });
+      expect(screen.getAllByRole('checkbox')).toHaveLength(4);
+      screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).not.toBeChecked());
+    },
+  );
 });

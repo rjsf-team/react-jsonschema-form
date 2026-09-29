@@ -17,6 +17,7 @@ import enumOptionsSelectValue from './enumOptionsSelectValue.ts';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
+import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
 import {
   ROOT_FIELD_PATH,
@@ -55,6 +56,7 @@ import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget from './getWidget.tsx';
+import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
@@ -73,6 +75,8 @@ import {
   titleId,
 } from './idGenerators.ts';
 import isConstant from './isConstant.ts';
+import isConstantOptionList from './isConstantOptionList.ts';
+import isConstantSelect from './isConstantSelect.ts';
 import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
@@ -80,6 +84,7 @@ import isFormDataAvailable from './isFormDataAvailable.ts';
 import isObject from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
+import isWholeValueSelect from './isWholeValueSelect.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
@@ -119,6 +124,8 @@ import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidge
 import useAltDateWidgetProps, { DateElement } from './useAltDateWidgetProps.tsx';
 import type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps.ts';
 import useFileWidgetProps from './useFileWidgetProps.ts';
+import type { UseSelectFocusHandlersResult } from './useSelectFocusHandlers.ts';
+import useSelectFocusHandlers from './useSelectFocusHandlers.ts';
 import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
 import useTimeWidgetProps from './useTimeWidgetProps.ts';
 import utcToLocal from './utcToLocal.ts';
@@ -144,6 +151,7 @@ export type {
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
+  UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
   VisibleErrorsProps,
   WidgetAliasFor,
@@ -167,6 +175,7 @@ export {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  enumOptionValueLabel,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
@@ -202,6 +211,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getXxxOfKey,
   groupEnumOptions,
   guessType,
   hasByPath,
@@ -212,6 +222,8 @@ export {
   hashString,
   helpId,
   isConstant,
+  isConstantOptionList,
+  isConstantSelect,
   isCustomWidget,
   isEnumOptionsGroup,
   isFixedItems,
@@ -219,6 +231,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,
   localToUTC,
@@ -267,6 +280,7 @@ export {
   unwrapErrorHandler,
   useAltDateWidgetProps,
   useFileWidgetProps,
+  useSelectFocusHandlers,
   useTimeWidgetProps,
   utcToLocal,
   validationDataMerge,

@@ -113,9 +113,9 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       null,
       {
-        // `NullField` never calls `getWidget` (there's no widget map entry for the `null` schema type, and nothing to
-        // render), so `'HiddenWidget'` has no runtime effect here - only the literal `'hidden'`, checked the same way
-        // as the object branch below, actually hides a null field.
+        // `NullField` never calls `getWidget` (it has nothing to render), so `'HiddenWidget'` has no runtime effect
+        // here - only the literal `'hidden'`, checked the same way as the object branch below, actually hides a null
+        // field.
         widget?: 'hidden';
         field?: 'NullField';
       }
@@ -123,7 +123,17 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       readonly unknown[],
       {
-        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget' | 'HiddenWidget' | WidgetAliasFor<'array'>;
+        // A select over array constants picks one whole array, so `getWidget` offers the `'radio'` alias for it too. The
+        // type can't tell that select from a multi-select, which holds the same array, so the alias is offered for both
+        // and `getWidget` throws for it on a multi-select. `'RadioWidget'` is left out: a registered widget name is
+        // resolved before that check, so it would render a radio group on a multi-select too
+        widget?:
+          | 'CheckboxesWidget'
+          | 'SelectWidget'
+          | 'FileWidget'
+          | 'HiddenWidget'
+          | 'radio'
+          | WidgetAliasFor<'array'>;
         field?: 'ArrayField';
         addable?: boolean;
         orderable?: boolean;
@@ -142,11 +152,12 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       NonBuiltInObject,
       {
-        // Only the literal `'hidden'` has any runtime effect here: `ObjectField`/`SchemaField` decide to hide an
-        // object field via `uiOptions.widget === 'hidden'`, a strict comparison to that exact alias - unlike
-        // string/number/boolean/array fields, an object field never resolves `ui:widget` through `getWidget`, so
+        // `ObjectField`/`SchemaField` decide to hide an object field via `uiOptions.widget === 'hidden'`, a strict
+        // comparison to that exact alias - an object field never resolves `ui:widget` through `getWidget`, so
         // `'HiddenWidget'` (the PascalCase component name) does nothing for it and is deliberately not offered here.
-        widget?: 'hidden';
+        // An `enum` or `oneOf`/`anyOf` of object constants is rendered as a select instead, which does resolve its `ui:widget`
+        // through `getWidget`, so the select and radio widgets are offered for it.
+        widget?: 'SelectWidget' | 'RadioWidget' | WidgetAliasFor<'object'>;
         field?: 'ObjectField';
         optionsSchemaSelector?: string;
         order?: string[];

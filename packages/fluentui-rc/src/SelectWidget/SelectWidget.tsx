@@ -13,6 +13,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -57,21 +58,21 @@ function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  let selectedIndexesAsArray: string[] = [];
+  // One scan of the options finds the selection, which both the displayed labels and the selected options come from.
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is encoded in that format too
+  const matchedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectedOptionsWithIndex =
+    matchedIndexes === undefined || !enumOptions
+      ? []
+      : ([] as string[])
+          .concat(matchedIndexes)
+          .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
+  const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
+  const selectedOptions = selectedOptionsWithIndex.map((option) =>
+    enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+  );
 
-  if (typeof selectedIndexes === 'string') {
-    selectedIndexesAsArray = [selectedIndexes];
-  } else if (Array.isArray(selectedIndexes)) {
-    selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
-  }
-
-  const dropdownValue = selectedIndexesAsArray
-    .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
-    .join(', ');
-
-  const handleBlur = () => onBlur(id, selectedIndexes);
-  const handleFocus = () => onFocus(id, selectedIndexes);
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
   const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
@@ -108,7 +109,7 @@ function SelectWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         onOptionSelect={handleChange}
-        selectedOptions={selectedIndexesAsArray}
+        selectedOptions={selectedOptions}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}

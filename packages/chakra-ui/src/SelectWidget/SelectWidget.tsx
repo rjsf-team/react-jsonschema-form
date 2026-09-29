@@ -1,15 +1,7 @@
-import type { FocusEvent } from 'react';
 import { useCallback, useMemo, useRef } from 'react';
 import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
-import type {
-  FormContextType,
-  GroupedEnumOptionsType,
-  IndexedEnumOptionType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -23,6 +15,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -48,8 +41,6 @@ export default function SelectWidget<
     value,
     autofocus,
     onChange,
-    onBlur,
-    onFocus,
     schema,
     uiSchema,
   } = props;
@@ -64,11 +55,8 @@ export default function SelectWidget<
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  // The focused element is the trigger button, which carries no option value
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>(props);
 
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
@@ -81,19 +69,10 @@ export default function SelectWidget<
     [optionValueFormat],
   );
 
-  const groupedOptions = useMemo(() => {
-    // `realValue` encodes '' and null as '', which `enumOptionValueDecoder` reads as "no selection", so an option
-    // encoded that way can never be picked.
-    const isSelectable = (option: IndexedEnumOptionType<S>) =>
-      enumOptionValueEncoder(option.value, option.index, optionValueFormat) !== '';
-    return groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item): GroupedEnumOptionsType<S>[] => {
-      if (!isEnumOptionsGroup<S>(item)) {
-        return isSelectable(item) ? [item] : [];
-      }
-      const selectableOptions = item.options.filter(isSelectable);
-      return selectableOptions.length > 0 ? [{ ...item, options: selectableOptions }] : [];
-    });
-  }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumDisabled, enumOptions, optgroups],
+  );
 
   const isMultiple = typeof multiple !== 'undefined' && multiple && Boolean(enumOptions);
 
