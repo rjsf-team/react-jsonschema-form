@@ -4,11 +4,14 @@ import type {
   FieldTemplateProps,
   FormValidation,
   GenericObjectType,
+  MultiSchemaFieldTemplateProps,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
@@ -3010,5 +3013,132 @@ describe('oneOf', () => {
     await user.selectOptions(select!, '1');
 
     expect(select).toHaveValue('1');
+  });
+
+  it("gives the object's own errors to the option's field, not to the object the selector is rendered for", () => {
+    function RawErrorsObjectFieldTemplate({ id, properties, rawErrors }: ObjectFieldTemplateProps) {
+      return (
+        <div>
+          {properties.map((property) => property.content)}
+          {rawErrors?.map((error) => (
+            <p key={error} className='object-errors' data-id={id}>
+              {error}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', oneOf: [{ properties: { a: { type: 'string' } } }] },
+      templates: { ObjectFieldTemplate: RawErrorsObjectFieldTemplate },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    const errors = node.querySelectorAll('.object-errors');
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toHaveAttribute('data-id', 'root');
+  });
+
+  it('passes MultiSchemaFieldTemplate the id of the field whose option is selected', () => {
+    function IdMultiSchemaFieldTemplate({ id, selector, optionSchemaField }: MultiSchemaFieldTemplateProps) {
+      return (
+        <div className='multi' data-id={id}>
+          {selector}
+          {optionSchemaField}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+      templates: { MultiSchemaFieldTemplate: IdMultiSchemaFieldTemplate },
+    });
+
+    expect(node.querySelector('.multi')).toHaveAttribute('data-id', 'root_foo');
+  });
+
+  it.each([
+    ['rendered beside its selector', 'root_XxxOf__add'],
+    ['rendered as the selected option', 'root__add'],
+  ])('keeps the own errors of an array %s when it adds an item', async (_, addButtonId) => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 2,
+        oneOf: [{ items: { type: 'string' }, maxItems: 5 }],
+      },
+      uiSchema: { 'ui:field': 'ArrayField' },
+      initialFormData: [],
+      showErrorList: false,
+    });
+    await submitForm(node, user);
+
+    await user.click(node.querySelector(`[id="${addButtonId}"]`)!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.__errors).toEqual(['must NOT have fewer than 2 items']);
+  });
+
+  it('keeps the fields of an object beside its selector mounted as its own errors come and go', () => {
+    const props = {
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [{ properties: { a: { type: 'string' } } }],
+      } satisfies RJSFSchema,
+      showErrorList: false as const,
+    };
+    const { node, rerender } = createFormComponent(props);
+    const input = node.querySelector('#root_name');
+    expect(input).toBeInTheDocument();
+
+    rerender({ ...props, extraErrors: { __errors: ['Own error'] } });
+    expect(node.querySelector('#root_name')).toBe(input);
+    rerender(props);
+
+    expect(node.querySelector('#root_name')).toBe(input);
+  });
+
+  it('keeps the own errors of an object beside its selector out of the errors an array inside it raises', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string' } } },
+        oneOf: [{ required: ['list'] }],
+      },
+      initialFormData: { list: [] },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    await user.click(node.querySelector('button[id$="list__add"]')!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.list).toBeUndefined();
+  });
+
+  it('lets a ui:field rendered beside its selector clear an error it raised at its own path', async () => {
+    function RaisingField({ fieldPath, onChange }: FieldProps) {
+      return (
+        <>
+          <button type='button' onClick={() => onChange('b', fieldPath, { __errors: ['Custom error'] })}>
+            Raise
+          </button>
+          <button type='button' onClick={() => onChange('c', fieldPath, {})}>
+            Clear
+          </button>
+        </>
+      );
+    }
+    const { onChange } = createFormComponent({
+      schema: { type: 'string', oneOf: [{ minLength: 1 }, { maxLength: 5 }] },
+      // The options get their own uiSchema, so only the field beside the selector is the `ui:field`
+      uiSchema: { 'ui:field': RaisingField, oneOf: [{}, {}] },
+      initialFormData: 'a',
+    });
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({ __errors: ['Custom error'] });
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
   });
 });

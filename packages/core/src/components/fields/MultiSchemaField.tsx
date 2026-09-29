@@ -289,6 +289,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   return (
     <MultiSchemaFieldTemplate
+      id={id}
       schema={schema}
       registry={registry}
       uiSchema={uiSchema}

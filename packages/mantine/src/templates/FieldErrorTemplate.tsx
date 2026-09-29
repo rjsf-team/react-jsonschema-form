@@ -1,23 +1,28 @@
+import { useLayoutEffect, useRef } from 'react';
 import { Box, List } from '@mantine/core';
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { errorId } from '@rjsf/utils';
 
-/** The `FieldErrorTemplate` component renders the errors local to the particular field
- *
- * @param props - The `FieldErrorProps` for the errors being rendered
- */
-export default function FieldErrorTemplate<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->({ errors, id: fieldId }: FieldErrorProps<T, S, F>) {
-  if (!errors?.length) {
-    return null;
-  }
-  // In mantine, errors are handled directly in each component, so there is no need to render a separate error template.
-  const id = errorId(fieldId);
+/** The hidden copy of a field's errors, given the field's `errorId` only while no other element has it */
+function HiddenErrors({ id, errors }: { id: string; errors: NonNullable<FieldErrorProps['errors']> }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Without dependencies, since another element can take or give up the id without this one rendering again
+  useLayoutEffect(() => {
+    const box = ref.current;
+    if (!box?.isConnected) {
+      return;
+    }
+    // Scoped to the form, since another form on the page can use the same ids
+    const scope = box.closest('form') ?? (box.getRootNode() as Document | ShadowRoot);
+    const taken = Array.from(scope.querySelectorAll(`#${CSS.escape(id)}`)).some((element) => element !== box);
+    if (taken && box.id) {
+      box.removeAttribute('id');
+    } else if (!taken && box.id !== id) {
+      box.id = id;
+    }
+  });
   return (
-    <Box id={id} c='red' display='none'>
+    <Box ref={ref} c='red' display='none'>
       <List>
         {errors.map((error, index) => (
           // oxlint-disable-next-line react/no-array-index-key
@@ -26,4 +31,20 @@ export default function FieldErrorTemplate<
       </List>
     </Box>
   );
+}
+
+/** The `FieldErrorTemplate` component renders a hidden copy of the errors local to the particular field, for a custom
+ * widget or field that is described by the field's `errorId` but doesn't render its errors itself. Each Mantine widget,
+ * and an object's or array's template, renders the errors through Mantine's own error element with that id, which the
+ * copy would otherwise duplicate. Which component renders a field can't be told from here, so the rendered document
+ * decides.
+ *
+ * @param props - The `FieldErrorProps` for the errors being rendered
+ */
+export default function FieldErrorTemplate<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ errors, id }: FieldErrorProps<T, S, F>) {
+  return errors?.length ? <HiddenErrors id={errorId(id)} errors={errors} /> : null;
 }

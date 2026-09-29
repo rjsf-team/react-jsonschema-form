@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, use, useCallback, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ErrorSchema,
@@ -36,6 +36,7 @@ import {
 } from '@rjsf/utils';
 
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
+import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** An item of the `formData` paired with its stable React key */
 interface KeyedFormDataType<T> {
@@ -878,8 +879,11 @@ export default function ArrayField<
   const keyedFormDataRef = useRef(keyedFormData);
   keyedFormDataRef.current = keyedFormData;
   const errorSchemaRef = useRef(errorSchema);
-  // `SchemaField` hands the array's own errors over as `rawErrors`, so they go back in for the handlers to carry over
-  errorSchemaRef.current = rawErrors ? { ...errorSchema, [ERRORS_KEY]: rawErrors } : errorSchema;
+  const withheldErrors = use(WithheldErrorsContext);
+  // `SchemaField` hands the array's own errors over as `rawErrors`, or withholds them beside a `oneOf`/`anyOf`
+  // selector, so they go back in for the handlers to carry over
+  const ownErrors = rawErrors ?? (withheldErrors?.fieldPath === fieldPath ? withheldErrors.errors : undefined);
+  errorSchemaRef.current = ownErrors ? { ...errorSchema, [ERRORS_KEY]: ownErrors } : errorSchema;
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
    * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into

@@ -2,6 +2,8 @@ import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 
+import { useContainerErrors } from '../utils.tsx';
+
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateProps` props for the component
@@ -56,6 +58,8 @@ export default function ArrayFieldTemplate<
     />
   );
 
+  const errors = useContainerErrors(props);
+
   return (
     <Fieldset legend={legend} className={className} id={id}>
       {(uiOptions.description || schema.description) && (
@@ -84,6 +88,7 @@ export default function ArrayFieldTemplate<
           />
         </Group>
       )}
+      {errors}
     </Fieldset>
   );
 }

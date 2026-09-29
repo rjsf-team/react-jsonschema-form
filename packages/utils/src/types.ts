@@ -976,6 +976,11 @@ export type ContainerFieldTemplateProps<
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
+  /** An array of strings listing the field's own errors, which its `errorSchema` doesn't hold. Unlike
+   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does, so a template
+   * rendering an error state from it must pair the two through `hasVisibleErrors({ rawErrors, hideError })`
+   */
+  rawErrors?: string[];
   /** A string value containing the title for the array */
   title: string;
   /** The formData for this array */
@@ -998,11 +1003,6 @@ export type ArrayFieldTemplateProps<
   items: ReactElement[];
   /** A function that adds a new item to the end of the array */
   onAddClick: (event?: any) => void;
-  /** An array of strings listing all generated error messages from encountered errors for this widget. Unlike
-   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does, so a template
-   * rendering an error state from it must pair the two through `hasVisibleErrors({ rawErrors, hideError })`
-   */
-  rawErrors?: string[];
 };
 
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
@@ -1104,6 +1104,11 @@ export interface MultiSchemaFieldTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > extends RJSFBaseProps<T, S, F> {
+  /** The id of the field whose `oneOf`/`anyOf` option is selected, which the selected option's field shares, and whose
+   * own errors the `selector` is given. It is unset when `FallbackFieldTemplate` renders the template for its type
+   * selector, which isn't given them.
+   */
+  id?: string;
   /** The rendered widget used to select a schema option */
   selector: ReactNode;
   /** The rendered SchemaField for the selected schema option */

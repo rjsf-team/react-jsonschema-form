@@ -979,6 +979,7 @@ render(
 
 The following props are passed to the `MultiSchemaFieldTemplate`:
 
+- `id`: The id of the field whose option is selected, which the selected option's field shares, and whose own errors the `selector` is given. It is unset when the template renders `FallbackFieldTemplate`'s type selector, which isn't given them.
 - `selector`: The rendered Widget used to select a multischema option.
 - `optionSchemaField`: The rendered SchemaField representing the selected option.
 - `schema`: The schema object for the field.
@@ -1060,6 +1061,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `uiSchema`: The uiSchema object for this object field.
 - `id`: The id of the field in the hierarchy.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
+- `rawErrors`: An array of strings listing the object's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
 - `formData`: The form data for the object.
 - `registry`: The `registry` object.
 

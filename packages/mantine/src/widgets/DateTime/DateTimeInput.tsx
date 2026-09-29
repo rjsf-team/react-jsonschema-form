@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -57,7 +57,7 @@ export default function DateTimeInput<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -102,10 +102,13 @@ export default function DateTimeInput<
     ? offsetValueParser(value as string | undefined)
     : dateParser(localValue, valueFormat as string);
 
+  const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
+  const error = useVisibleErrors(props);
+
   return (
     <DateInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={parsedValue}
       dateParser={(v) => dateParser(v, displayFormat as string)}
       placeholder={placeholder || undefined}
@@ -116,10 +119,10 @@ export default function DateTimeInput<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrorText(props)}
+      error={error}
       {...themeProps}
+      {...ariaDescribedByProps}
       {...getDescriptionProps(props)}
-      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
       valueFormat={displayFormat}

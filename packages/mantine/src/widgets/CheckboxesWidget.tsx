@@ -1,18 +1,16 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
-import { Checkbox, Flex, Input } from '@mantine/core';
+import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
-  titleId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -24,21 +22,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    value,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    hideLabel,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, required, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -73,27 +57,23 @@ export default function CheckboxesWidget<
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
+  const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
+
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
-    <>
-      {!hideLabel && !!label && (
-        <Input.Label id={titleId(id)} required={required}>
-          {label}
-        </Input.Label>
-      )}
-      <Checkbox.Group
-        id={id}
-        value={selectedIndexes}
-        onChange={handleChange}
-        required={required}
-        readOnly={disabled || readonly}
-        error={visibleErrorText(props)}
-        aria-describedby={ariaDescribedByIds(id)}
-        {...themeProps}
-        {...getDescriptionProps(props)}
-      >
-        {Array.isArray(enumOptions) ? (
-          <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
-            {enumOptions.map((option, i) => (
+    <Checkbox.Group
+      id={id}
+      value={selectedIndexes}
+      onChange={handleChange}
+      required={required}
+      readOnly={disabled || readonly}
+      {...themeProps}
+      {...groupProps}
+      {...getDescriptionProps(props)}
+    >
+      <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
+        <GroupOptions optionProps={optionProps}>
+          {(describedOptionProps) =>
+            enumOptions.map((option, i) => (
               <Checkbox
                 key={String(option.value)}
                 id={optionId(id, i)}
@@ -104,11 +84,12 @@ export default function CheckboxesWidget<
                 autoFocus={i === 0 && autofocus}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
+                {...describedOptionProps}
               />
-            ))}
-          </Flex>
-        ) : null}
-      </Checkbox.Group>
-    </>
+            ))
+          }
+        </GroupOptions>
+      </Flex>
+    </Checkbox.Group>
   ) : null;
 }

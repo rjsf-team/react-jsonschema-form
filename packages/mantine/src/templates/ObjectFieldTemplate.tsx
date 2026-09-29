@@ -9,6 +9,8 @@ import type {
 } from '@rjsf/utils';
 import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
+import { useContainerErrors } from '../utils.tsx';
+
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
  * the properties.
@@ -50,6 +52,7 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
+  const errors = useContainerErrors(props);
 
   return (
     <Container id={id} p={0} fluid>
@@ -98,6 +101,7 @@ export default function ObjectFieldTemplate<
           />
         </Group>
       )}
+      {errors}
     </Container>
   );
 }

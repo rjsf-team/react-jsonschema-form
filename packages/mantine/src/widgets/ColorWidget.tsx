@@ -2,9 +2,9 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, visibleErrorText } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
@@ -17,7 +17,7 @@ export default function ColorWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -59,10 +59,13 @@ export default function ColorWidget<
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useAriaDescribedByProps('ColorInput', id, options);
+  const error = useVisibleErrors(props);
+
   return (
     <ColorInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}
@@ -72,10 +75,10 @@ export default function ColorWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrorText(props)}
+      error={error}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
+      {...ariaDescribedByProps}
       {...getDescriptionProps(props)}
     />
   );
