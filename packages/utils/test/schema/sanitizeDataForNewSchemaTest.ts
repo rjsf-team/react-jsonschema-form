@@ -518,6 +518,21 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         enumField: 'otherData',
       });
     });
+    it('keeps a value an option that is not a constant accepts', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'a' }, email: { type: 'string' } } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          k: { const: 'b' },
+          email: { type: 'string', anyOf: [{ const: 'none' }, { type: 'string', format: 'email' }] },
+        },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { k: 'a', email: 'x@y.z' })).toEqual({
+        k: 'b',
+        email: 'x@y.z',
+      });
+    });
     it('replaces invalid anyOf const data with the only allowed value', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',

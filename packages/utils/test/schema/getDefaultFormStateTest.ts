@@ -2097,6 +2097,51 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'never' }),
         ).toEqual({ p: { b: 2 } });
       });
+      it.each<[string, RJSFSchema]>([
+        ['a oneOf', { type: 'object', default: { a: 1 }, oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] }],
+        ['an enum', { type: 'object', default: { a: 1 }, enum: [{ a: 1 }, { b: 2 }] }],
+      ])('keeps the constant picked in %s select rather than blending its default into it', (_, choice) => {
+        const schema: RJSFSchema = { type: 'object', properties: { choice } };
+        expect(getDefaultFormState(testValidator, schema, { choice: { b: 2 } }, schema)).toEqual({ choice: { b: 2 } });
+      });
+      it('keeps the array picked in a select rather than padding it with its default', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { choice: { type: 'array', default: [1, 2, 3], enum: [[1, 2, 3], [4]] } },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, { choice: [4] }, schema, undefined, {
+            mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+            arrayMinItems: { mergeExtraDefaults: true },
+          }),
+        ).toEqual({ choice: [4] });
+      });
+      it('leaves an object oneOf select unfilled under skipOneOf, as a primitive one is', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['s', 'o'],
+          properties: {
+            s: { type: 'string', oneOf: [{ const: 'x' }, { const: 'y' }] },
+            o: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'skipOneOf' }),
+        ).toEqual({});
+      });
+      it('keeps a default the parent sets for an object select when constants are never defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { s: 'y', o: { b: 2 } },
+          properties: {
+            s: { type: 'string', oneOf: [{ const: 'x' }, { const: 'y' }] },
+            o: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, { constAsDefaults: 'never' }),
+        ).toEqual({ s: 'y', o: { b: 2 } });
+      });
       it('fills the minimum items of an array of object selects as it does for primitive selects', () => {
         const schema: RJSFSchema = {
           type: 'object',

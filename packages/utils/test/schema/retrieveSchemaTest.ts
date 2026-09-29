@@ -2162,10 +2162,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         ]);
       });
-      it('resolves the anyOf of a schema that also has a oneOf', () => {
+      it('resolves the anyOf of a schema that also has a oneOf, keeping the oneOf to resolve next', () => {
         const schema: RJSFSchema = { title: 'both', anyOf: [{ type: 'string' }], oneOf: [{ type: 'number' }] };
         expect(resolveAnyOrOneOfSchemas(testValidator, schema, schema, true)).toEqual([
-          { title: 'both', type: 'string' },
+          { title: 'both', type: 'string', oneOf: [{ type: 'number' }] },
         ]);
       });
       it('resolves oneOf with $ref for expandedAll elements, merging schemas', () => {

@@ -14,6 +14,7 @@ import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -176,6 +177,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     customMergeAllOf,
     ONE_OF_KEY in schema || ANY_OF_KEY in schema,
   );
+  // A select over object or array constants renders one control for its whole value, with no fields beneath it
+  const resolvedType = getSchemaType<S>(resolvedSchema);
+  if ((resolvedType === 'object' || resolvedType === 'array') && isConstantSelect<S>(resolvedSchema)) {
+    return;
+  }
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
   // Plain object/array Optional Data Controls hide their real fields (rendering only the "Add" control) whenever
   // `!isFormDataAvailable(formData)` — also true for `null` and `{}`, not just `undefined` — matching ObjectField's

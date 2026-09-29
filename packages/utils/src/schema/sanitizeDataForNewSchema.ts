@@ -3,6 +3,7 @@ import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import isConstantSelect from '../isConstantSelect.ts';
+import isObject from '../isObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   CustomMergeAllOf,
@@ -25,9 +26,14 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   if (!xxxOfKey) {
     return undefined;
   }
-  const options = schema[xxxOfKey] as S[];
+  const options = schema[xxxOfKey] as (S | boolean)[];
+  // An option with neither a `const` nor an `enum` accepts values beyond the listed ones, so a value outside them may
+  // still be valid and there is no list to check it by
+  if (!options.every((option) => isObject(option) && (CONST_KEY in option || Array.isArray(option.enum)))) {
+    return undefined;
+  }
 
-  const values = options
+  const values = (options as S[])
     .map((option) => {
       if (CONST_KEY in option) {
         return option[CONST_KEY];

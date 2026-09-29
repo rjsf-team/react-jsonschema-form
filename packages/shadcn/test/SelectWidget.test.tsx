@@ -301,6 +301,49 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Baz' })).toBeInTheDocument();
   });
 
+  test('multi-select: keys and highlights each object option on its own', async () => {
+    const user = userEvent.setup();
+    const consoleErrorSpy = vi.spyOn(console, 'error');
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          rawErrors: [],
+          value: [],
+          onChange,
+          options: {
+            enumOptions: [
+              { label: 'One', value: { id: 1 } },
+              { label: 'Two', value: { id: 2 } },
+            ],
+          },
+        })}
+      />,
+    );
+
+    // Moving the highlight scrolls the item into view with an API jsdom lacks
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(screen.getByPlaceholderText('Select ...'));
+      await user.keyboard('{ArrowDown}');
+      const highlighted = screen
+        .getAllByRole('option')
+        .filter((option) => option.getAttribute('aria-selected') === 'true');
+      expect(highlighted.map((option) => option.textContent)).toEqual(['Two']);
+      await user.click(screen.getByRole('option', { name: 'Two' }));
+
+      expect(onChange).toHaveBeenLastCalledWith([{ id: 2 }]);
+      expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+    } finally {
+      consoleErrorSpy.mockRestore();
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+
   test('multi-select: reports the picked values in the realValue format', async () => {
     const user = userEvent.setup();
     const seen: unknown[] = [];

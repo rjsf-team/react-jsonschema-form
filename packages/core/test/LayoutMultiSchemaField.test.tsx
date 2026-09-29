@@ -501,6 +501,33 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  test('applies ui:initialValue from uiSchema.anyOf[index] when the schema also has a oneOf (#5309)', async () => {
+    const selectorField = 'name';
+    const uiSchema = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
+      [UI_WIDGET_KEY]: 'select',
+      [ANY_OF_KEY]: [{}, { unique_to_second: { 'ui:initialValue': 42 } }],
+      [ONE_OF_KEY]: [{}, { unique_to_second: { 'ui:initialValue': 7 } }],
+    };
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: { ...oneOfSchema, [ANY_OF_KEY]: oneOfSchema[ONE_OF_KEY] } as RJSFSchema,
+      formData: { name: 'first_option', flag: true },
+      uiSchema,
+    });
+    render(<LayoutMultiSchemaField {...props} />);
+
+    await user.selectOptions(screen.getByRole('combobox'), '1');
+
+    await waitFor(() => {
+      expect(props.onChange).toHaveBeenCalledWith(
+        expect.objectContaining({ unique_to_second: 42 }),
+        props.fieldPath,
+        undefined,
+        DEFAULT_ID,
+      );
+    });
+  });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
     const selectorField = 'name';
     const props = getProps({

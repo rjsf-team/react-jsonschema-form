@@ -387,8 +387,8 @@ function SchemaFieldRender<
   // again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf` still counts as a select, so it renders as a select
   // with nothing to choose rather than as an option selector with no options
   const xxxOfKey = getXxxOfKey<S>(schema);
-  const hasConstantOptions = isConstantSelect<S>(schema);
-  const isSelectSchema = hasConstantOptions || isConstantSelect<S>(schema, true);
+  const isSelectSchema = isConstantSelect<S>(schema, true);
+  const hasConstantOptions = isSelectSchema && isConstantSelect<S>(schema);
 
   const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(
     schema,

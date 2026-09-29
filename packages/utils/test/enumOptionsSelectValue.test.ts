@@ -57,4 +57,14 @@ describe('enumOptionsSelectValue()', () => {
     ];
     expect(enumOptionsSelectValue(0, [1], nullableOptions)).toEqual([null, 1]);
   });
+  it('does not add a value that is already selected', () => {
+    expect(enumOptionsSelectValue(1, ['b'], [{ value: 'a' }, { value: 'b' }] as EnumOptionsType[])).toEqual(['b']);
+  });
+  it('keeps a selected value that matches no option after the ones that do', () => {
+    expect(enumOptionsSelectValue(0, ['stale', 'b'], [{ value: 'a' }, { value: 'b' }] as EnumOptionsType[])).toEqual([
+      'a',
+      'b',
+      'stale',
+    ]);
+  });
 });

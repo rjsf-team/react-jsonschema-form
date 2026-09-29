@@ -3,8 +3,6 @@ import { useCallback } from 'react';
 import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionsIndexForValue,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -65,7 +63,7 @@ export default function CheckboxesWidget<
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       id={id}
-      value={selectedIndexes}
+      value={selectedValues}
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}

@@ -3,8 +3,6 @@ import { useCallback } from 'react';
 import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  enumOptionsIndexForValue,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -80,6 +78,7 @@ export default function RadioWidget<
             {(describedOptionProps) =>
               enumOptions.map((option, i) => (
                 <Radio
+                  // oxlint-disable-next-line react/no-array-index-key
                   key={i}
                   id={optionId(id, i)}
                   value={enumOptionValueEncoder(option.value, i, optionValueFormat)}

@@ -421,35 +421,50 @@ export function computeDefaults<
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const { type = 'null' } = remaining;
+    const schemaType = getSchemaType<S>(schema);
+    // An object or array select holds one of its constants as a whole, the way a primitive select does
+    const isWholeValueSelect = (schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(schema);
     // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
     if (
       ONE_OF_KEY in schema &&
       !Array.isArray(type) &&
-      PRIMITIVE_TYPES.includes(type) &&
+      (PRIMITIVE_TYPES.includes(type) || isWholeValueSelect) &&
       dfsb_to_compute?.constAsDefaults === 'skipOneOf'
     ) {
-      // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
+      // If we are in a oneOf of a primitive type, or of whole object or array values, then we want to pass
+      // constAsDefaults as 'never' for the recursion
       dfsb_to_compute = {
         ...dfsb_to_compute,
         constAsDefaults: 'never',
       };
     }
-    const optionIndex = getClosestMatchingOption<T, S, F>(
-      validator,
-      rootSchema,
-      rawFormData ?? (schema.default as T),
-      options as S[],
-      0,
-      discriminator,
-      customMergeAllOf,
-    );
-    const schemaType = getSchemaType<S>(schema);
-    // An object or array select's option is a constant to take as a whole, as a primitive select's is, rather than a
-    // schema whose properties or items are filled in, which would reduce it to an empty value no option allows. Its own
-    // `default` is the constant it picks when it has one
-    if ((schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(schema)) {
-      if (schema.default !== undefined || dfsb_to_compute?.constAsDefaults === 'never') {
-        return schema.default as T;
+    const valueToMatch = rawFormData ?? (schema.default as T);
+    // A constant option equal to the value is the one it picked, whatever the validator makes of the others
+    const equalOptionIndex = isWholeValueSelect
+      ? (options as S[]).findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
+      : -1;
+    const optionIndex =
+      equalOptionIndex !== -1
+        ? equalOptionIndex
+        : getClosestMatchingOption<T, S, F>(
+            validator,
+            rootSchema,
+            valueToMatch,
+            options as S[],
+            0,
+            discriminator,
+            customMergeAllOf,
+          );
+    // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant is
+    // taken as a whole: filling in its properties or items would reduce it to an empty value no option allows. The
+    // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults
+    if (isWholeValueSelect) {
+      // The form data is merged over the defaults key by key, which would blend a picked constant with another one
+      if (rawFormData !== undefined) {
+        return rawFormData;
+      }
+      if (dfsb_to_compute?.constAsDefaults === 'never') {
+        return (defaults ?? schema.default) as T;
       }
       return toConstant<S>(options![optionIndex] as S) as T;
     }
@@ -927,9 +942,10 @@ export function getDefaultBasedOnSchemaType<
 ): T | T[] | undefined {
   const schemaType = getSchemaType<S>(rawSchema);
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
-  // and an empty object or array would be a value none of its options allow
+  // and an empty object or array would be a value none of its options allow. A value already picked is kept as it is,
+  // since the form data is merged over the defaults key by key, which would blend it with the default constant
   if ((schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(rawSchema)) {
-    return defaults;
+    return computeDefaultsProps.rawFormData !== undefined ? computeDefaultsProps.rawFormData : defaults;
   }
   switch (schemaType) {
     // We need to recurse for object schema inner default values.

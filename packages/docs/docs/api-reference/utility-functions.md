@@ -353,6 +353,7 @@ An array `selected` is read as a list of selections unless `multiple` is `false`
 
 Add the `value` to the list of `selected` values in the proper order as defined by `allEnumOptions`.
 Values are compared by deep equality, so an object or array option finds its place whether or not `selected` holds the option's own instance.
+A value already selected isn't added again, and a selected value that matches no option keeps its place after the ones that do.
 
 #### Parameters
 

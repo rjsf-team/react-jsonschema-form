@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '../../src/index.ts';
 import { schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
@@ -16,6 +17,24 @@ import {
 } from '../testUtils/testData.ts';
 
 describe('schemaParser()', () => {
+  it('parses the oneOf options of a schema whose anyOf is resolved first', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        both: {
+          anyOf: [{ type: 'string' }, { type: 'number' }],
+          oneOf: [
+            { minLength: 1, title: 'filled' },
+            { maxLength: 0, title: 'empty' },
+          ],
+        },
+      },
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('filled');
+    expect(titles).toContain('empty');
+  });
+
   it('parses property dependencies properly', () => {
     const schemaMap = schemaParser(PROPERTY_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();

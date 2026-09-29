@@ -841,8 +841,10 @@ export function resolveAnyOrOneOfSchemas<
   F extends FormContextType = FormContextType,
 >(validator: ValidatorType<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   const xxxOfKey = getXxxOfKey<S>(schema);
-  const { oneOf, anyOf, ...remaining } = schema;
   if (xxxOfKey) {
+    // Only the keyword read is resolved here, so the other one stays on each result for whatever resolves it next,
+    // such as the schema parser walking every branch a precompiled validator must cover
+    const { [xxxOfKey]: _resolvedOptions, ...remaining } = schema;
     let anyOrOneOf = schema[xxxOfKey] as S[];
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;

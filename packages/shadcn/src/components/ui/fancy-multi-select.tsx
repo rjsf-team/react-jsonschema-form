@@ -142,18 +142,21 @@ export function FancyMultiSelect({
   );
 
   function renderItem(item: FancySelectItem) {
+    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk also
+    // searches its `value`, so that stays text, with an object spelled as its JSON to keep each one distinct
+    const itemId = `${id}-${item.index}-command-item`;
     return (
       <CommandItem
         disabled={item.disabled}
-        key={`${item.value}-command-item`}
-        value={String(item.value)}
+        key={item.index}
+        value={typeof item.value === 'object' && item.value !== null ? JSON.stringify(item.value) : String(item.value)}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
-        aria-controls={`${item.value}-command-item`}
-        aria-labelledby={`${item.value}-command-item`}
-        id={`${item.value}-command-item`}
+        aria-controls={itemId}
+        aria-labelledby={itemId}
+        id={itemId}
         onSelect={() => handleSelect(item)}
         className='cursor-pointer'
       >
@@ -183,7 +186,7 @@ export function FancyMultiSelect({
       >
         <div className='flex gap-1 flex-wrap'>
           {selectedItems.map((item) => (
-            <Badge key={item.value} variant='secondary'>
+            <Badge key={item.index} variant='secondary'>
               {item.label}
               <button
                 type='button'
