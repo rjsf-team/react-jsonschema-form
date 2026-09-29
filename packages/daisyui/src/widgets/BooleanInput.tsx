@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
 
 interface BooleanInputProps<
   T = unknown,
@@ -97,6 +97,7 @@ export default function BooleanInput<
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={inputClassName}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 

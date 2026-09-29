@@ -1934,6 +1934,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       class="form-control"
                     >
                       <input
+                        aria-describedby="root_2__error root_2__description root_2__help"
                         checked=""
                         class="checkbox"
                         id="root_2"

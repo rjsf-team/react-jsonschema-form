@@ -1,13 +1,14 @@
-import type { RefObject } from 'react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { triggerValueId } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid, parseISO } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { getTriggerLabelledBy, triggerValueId } from '../../utils.ts';
+import { getTriggerDescribedBy } from '../../utils.ts';
+import { useClickOutside, useCommitDate, useDatePickerState } from '../datePickerHooks.ts';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -22,36 +23,6 @@ interface DatePickerProps {
   onMonthChange: (date: Date) => void;
   /** Handler for date selection */
   onSelect: (date: Date | undefined) => void;
-}
-
-/**
- * Custom hook to manage the picker's popup state and displayed month
- *
- * @param initialDate - Initial date to display, defaults to today
- * @returns State and handlers for the date picker
- */
-function useDatePickerState(initialDate?: Date) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState<Date>(initialDate ?? new Date());
-  return { isOpen, setIsOpen, month, setMonth };
-}
-
-/**
- * Custom hook to detect clicks outside an element and run a callback
- *
- * @param ref - React ref to the element to monitor
- * @param callback - Function to call when a click outside is detected
- */
-function useClickOutside(ref: RefObject<HTMLDivElement | null>, callback: () => void) {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ref, callback]);
 }
 
 /**
@@ -126,46 +97,83 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
 // Use React.memo to optimize re-renders
 const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
+/** A `date` proper: a calendar day with no time and no zone */
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+/** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
+const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
+/** An RFC 3339 numeric zone offset, which only ever follows a time — anchored to one so the `-05` of a `YYYY-MM` value
+ * is not read as an offset. Its minutes are optional because a backend may write just the hours
+ */
+const NUMERIC_OFFSET = /\d{2}:\d{2}(?::\d{2})?(?:\.\d+)?[+-](\d{2})(?::?(\d{2}))?$/;
+
+/** Whether a stored date-time carries a zone offset of its own that is not UTC, which no value this widget wrote can:
+ * `toISOString()` always writes `Z`. Whatever produced it named a day in that zone, so the day is the one in its own
+ * text rather than the one its instant happens to land on where it is read.
+ *
+ * @param text - The stored date-time
+ * @returns - True if it carries a numeric offset other than zero
+ */
+function carriesANonUtcOffset(text: string) {
+  const offset = NUMERIC_OFFSET.exec(text);
+  return !!offset && !(offset[1] === '00' && (offset[2] ?? '00') === '00');
+}
+
+/** The calendar day a date-time's own text names, read with `parseISO` rather than the `Date` constructor, which reads
+ * a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
+ *
+ * @param text - A date-time beginning with a `YYYY-MM-DD` day
+ * @returns - That day at local midnight, or `undefined` if the text does not begin with one
+ */
+function dayNamedBy(text: string) {
+  const [day] = LEADING_DAY.exec(text) ?? [];
+  if (!day) {
+    return undefined;
+  }
+  const parsed = parseISO(day);
+  return isValid(parsed) ? parsed : undefined;
+}
+
 /** Reads the stored value of a `format: 'date'` field as the calendar day it stands for.
  *
  * A `date` proper carries no time, and `parseISO` reads it as local midnight where `new Date()` would read UTC
  * midnight and so name the previous day once date-fns formats it locally.
  *
- * A value carrying a time is not a `date` at all, and which day it names depends on where it came from. An instant
- * landing exactly on UTC midnight names that calendar day — it is what a backend emits for a date, and what this
- * widget commits for a user in UTC. Any other time of day is the `toISOString()` of a local midnight, the shape older
- * daisyUI data holds, so it names the day it lands on in the reader's own zone. Reading every such value one way or
- * the other moves the day back by one for either the backend-written kind behind UTC or the daisyUI-written kind
- * ahead of it.
+ * A value carrying a time is not a `date` at all, and which day it names depends on where it came from. Two kinds name
+ * the day their own text spells: an instant landing exactly on UTC midnight, which is what a backend emits for a date
+ * and what this widget commits for a user in UTC, and a value stamped with a zone offset of its own, which a backend
+ * writing its local dates emits. What is left is an instant in UTC or in no zone at all, which is a local midnight
+ * elsewhere, so it names the day it lands on in the reader's own zone. Reading every such value one way or the other
+ * moves the day back by one for one of these kinds on one side of UTC.
  *
  * @param raw - The stored value
  * @returns - The day it names, or `undefined` for a value that cannot be parsed, which would otherwise become an
  *          `Invalid Date` that the calendar, its month caption and the trigger would each have to guard against
  */
 function parseDateValue(raw: string | number | Date) {
-  // Anything carrying a time goes to `Date`, which reads the lowercase separator and zone RFC 3339 also allows and
-  // `parseISO` rejects, as well as the epoch number that is not ISO text at all
-  if (typeof raw === 'string' && !/t/i.test(raw)) {
-    const dateOnly = parseISO(raw);
-    return isValid(dateOnly) ? dateOnly : undefined;
+  const text = typeof raw === 'string' ? raw.trim() : undefined;
+  if (text && DATE_ONLY.test(text)) {
+    const day = parseISO(text);
+    return isValid(day) ? day : undefined;
   }
+  // `Date` rather than `parseISO`, which rejects the lowercase separator and zone and the space separator RFC 3339 also
+  // allows, as well as the epoch number that is not ISO text at all
   const instant = new Date(raw);
   if (!isValid(instant)) {
     return undefined;
   }
-  const namesACalendarDay =
+  if (text && carriesANonUtcOffset(text)) {
+    return dayNamedBy(text) ?? instant;
+  }
+  const isUtcMidnight =
     instant.getUTCHours() === 0 &&
     instant.getUTCMinutes() === 0 &&
     instant.getUTCSeconds() === 0 &&
     instant.getUTCMilliseconds() === 0;
-  if (!namesACalendarDay) {
-    return instant;
+  if (isUtcMidnight) {
+    // Its own ISO text, which an epoch number has none of
+    return dayNamedBy(instant.toISOString()) ?? instant;
   }
-  // Through the day's own ISO text rather than the `Date` constructor, which reads a year below 100 as a two-digit one
-  // and would turn a stored year 50 into 1950
-  const [utcDay = ''] = instant.toISOString().split('T');
-  const day = parseISO(utcDay);
-  return isValid(day) ? day : instant;
+  return instant;
 }
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
@@ -184,7 +192,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, options, onChange, onFocus, onBlur } = props;
+  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, onChange, onFocus, onBlur } = props;
   const initialDate = useMemo(() => {
     // Anything else — an object, a boolean — names no day, and `Date` would read it as `Invalid Date`
     if (typeof value === 'string' || typeof value === 'number' || value instanceof Date) {
@@ -203,27 +211,25 @@ export default function DateWidget<
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLButtonElement>(null);
 
-  /** Commit the day the picker is holding, which closing it does whether or not the user chose one
+  // `DateWidget` only ever renders a `format: 'date'` field, so unlike `DateTimeWidget` it needs no format branch
+  const formatDate = useCallback((date: Date) => format(date, 'yyyy-MM-dd'), []);
+  const commitDate = useCommitDate({ localDate, value, formatDate, emptyValue: options.emptyValue, onChange });
+
+  /** Close the popup, committing the day it holds, which every way out of it but Escape does
    */
-  const commitDate = useCallback(() => {
-    if (localDate) {
-      onChange(format(localDate, 'yyyy-MM-dd'));
-    } else if (!value) {
-      // A stored value this widget could not read is left alone: the user dismissed the picker without choosing a
-      // day, which is not a request to throw that value away
-      onChange(options.emptyValue);
+  const closePicker = useCallback(() => {
+    setIsOpen(false);
+    commitDate();
+    // Manually invoke the blur handler to ensure blur event is triggered
+    if (onBlur) {
+      onBlur(id, value);
     }
-  }, [localDate, onChange, options.emptyValue, value]);
+  }, [commitDate, id, onBlur, setIsOpen, value]);
 
   // Close the popup when clicking outside and commit changes.
-  useClickOutside(containerRef, () => {
+  useClickOutside(containerRef, inputRef, () => {
     if (isOpen) {
-      setIsOpen(false);
-      commitDate();
-      // Manually invoke the blur handler to ensure blur event is triggered
-      if (onBlur) {
-        onBlur(id, value);
-      }
+      closePicker();
     }
   });
 
@@ -349,14 +355,20 @@ export default function DateWidget<
   const togglePicker = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsOpen((prev) => !prev);
-      if (!isOpen && onFocus) {
+      if (isOpen) {
+        // The one way out of the popup that is a press on the trigger itself, or on the label pointing at it, which
+        // `useClickOutside` leaves alone so that press does not close and reopen in one gesture
+        closePicker();
+        return;
+      }
+      setIsOpen(true);
+      if (onFocus) {
         onFocus(id, value);
       }
 
       // Position calculation will happen in the effect hook
     },
-    [isOpen, id, onFocus, setIsOpen, value],
+    [closePicker, isOpen, id, onFocus, setIsOpen, value],
   );
 
   // Handle focus event
@@ -373,35 +385,40 @@ export default function DateWidget<
     }
   }, [id, onBlur, value, isOpen]);
 
+  /** Close the popup without committing, which Escape does: a date the user was trying out in the calendar is not one
+   * they asked to store. The local state goes back to the stored value as well, so the trigger stops showing a day
+   * the form does not hold and the next close does not commit it on the user's behalf
+   */
+  const cancelPicker = useCallback(() => {
+    setLocalDate(initialDate);
+    setIsOpen(false);
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [id, initialDate, onBlur, setIsOpen, value]);
+
   // Close popup on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-        if (onBlur) {
-          onBlur(id, value);
-        }
+        cancelPicker();
       }
     };
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [id, isOpen, setIsOpen, onBlur, value]);
+  }, [cancelPicker, isOpen]);
 
   // Add the handleDoneClick callback near the top of the component, with the other event handlers
   /** Handle clicking the "Done" button
    */
   const handleDoneClick = useCallback(() => {
-    setIsOpen(false);
-    commitDate();
-    if (onBlur) {
-      onBlur(id, value);
-    }
+    closePicker();
     inputRef.current?.focus();
-  }, [commitDate, onBlur, id, value, setIsOpen]);
+  }, [closePicker]);
 
   const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP') : undefined;
-  const triggerLabelledBy = getTriggerLabelledBy({ id, label, hideLabel, hasValue: !!formattedValue });
+  const describedBy = getTriggerDescribedBy({ id, label, hideLabel, hasValue: !!formattedValue });
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -412,15 +429,16 @@ export default function DateWidget<
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
+          disabled={disabled || readonly}
           onClick={togglePicker}
           onFocus={handleFocus}
           onBlur={handleBlur}
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-labelledby={triggerLabelledBy}
+          aria-describedby={describedBy}
           ref={inputRef}
         >
-          <span id={triggerValueId(id)} className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
+          <span id={triggerValueId(id)} className={formattedValue ? '' : 'text-base-content/50'}>
             {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />

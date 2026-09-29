@@ -6,9 +6,9 @@ import type {
   RegistryWidgetsType,
   Widget,
 } from '@rjsf/utils';
-import { getSchemaType, getTemplate, getUiOptions, getWidget } from '@rjsf/utils';
+import { fieldLabelId, getSchemaType, getTemplate, getUiOptions, getWidget } from '@rjsf/utils';
 
-import { fieldLabelId, getDaisy } from '../../utils.ts';
+import { getDaisy } from '../../utils.ts';
 
 /** Whether the widget a field resolves to renders the field's label itself, which the checkbox and the toggle do,
  * after their input. The answer is the registry's own entry rather than this theme's component, so a consumer who
@@ -17,9 +17,10 @@ import { fieldLabelId, getDaisy } from '../../utils.ts';
  * here and gets the template's label too, which is the better way to be wrong — guessing the other way would leave a
  * control replaced by a label-less widget with no accessible name at all.
  *
- * Only a `boolean` can reach either widget, so nothing else is resolved: `getWidget()` reports a name it cannot
- * resolve by throwing an error built from a `JSON.stringify()` of the whole schema, and a `ui:widget` that a custom
- * `ui:field` consumes itself would pay for that on every render just to be told no.
+ * A registry key and a component both answer without the schema's type. Only an alias — `checkbox`, which reaches the
+ * checkbox for a `boolean` — is resolved through it, and that is the one spelling `getWidget()` reports it cannot
+ * resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a custom
+ * `ui:field` consumes itself would otherwise pay for on every render just to be told no.
  *
  * @param schema - The schema for the field
  * @param widget - The widget named by the field's ui options, if any
@@ -31,7 +32,8 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   widget: Widget<T, S, F> | string | undefined,
   registeredWidgets: RegistryWidgetsType<T, S, F>,
 ) {
-  if (!widget || getSchemaType(schema) !== 'boolean') {
+  const isAlias = typeof widget === 'string' && !(widget in registeredWidgets);
+  if (!widget || (isAlias && getSchemaType(schema) !== 'boolean')) {
     return false;
   }
   let resolved: Widget<T, S, F>;

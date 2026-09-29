@@ -1,14 +1,15 @@
-import type { ChangeEvent, RefObject } from 'react';
+import type { ChangeEvent } from 'react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, triggerValueId } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { getTriggerLabelledBy, triggerValueId } from '../../utils.ts';
+import { getTriggerDescribedBy } from '../../utils.ts';
+import { useClickOutside, useCommitDate, useDatePickerState } from '../datePickerHooks.ts';
 import 'react-day-picker/dist/style.css';
 
 /**
@@ -27,36 +28,6 @@ interface DateTimePickerProps {
   onSelect: (date: Date | undefined) => void;
   /** Handler for time input changes */
   onTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-
-/**
- * Custom hook to manage the picker's popup state and displayed month
- *
- * @param initialDate - Initial date to display, defaults to today
- * @returns State and handlers for the date picker
- */
-function useDatePickerState(initialDate?: Date) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState<Date>(initialDate ?? new Date());
-  return { isOpen, setIsOpen, month, setMonth };
-}
-
-/**
- * Custom hook to detect clicks outside an element and run a callback
- *
- * @param ref - React ref to the element to monitor
- * @param callback - Function to call when a click outside is detected
- */
-function useClickOutside(ref: RefObject<HTMLDivElement | null>, callback: () => void) {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ref, callback]);
 }
 
 /**
@@ -168,26 +139,20 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, options, onChange, onFocus, onBlur, schema } = props;
+  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, onChange, onFocus, onBlur, schema } =
+    props;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
   // Formats the committed date as a naive local date-time string for `iso-date-time` (that format's timezone
   // is optional), or a UTC ISO string otherwise.
-  const commitValue = useCallback(
-    (date: Date | undefined) => {
-      if (!date) {
-        // Not `''`, which is no more a `date-time` than it is a date: committing it fails the format of a field the
-        // user never filled in
-        return options.emptyValue;
-      }
-      return isIsoDateTime ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : date.toISOString();
-    },
-    [isIsoDateTime, options.emptyValue],
+  const formatDate = useCallback(
+    (date: Date) => (isIsoDateTime ? format(date, "yyyy-MM-dd'T'HH:mm:ss") : date.toISOString()),
+    [isIsoDateTime],
   );
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
   // carry an offset is stripped first, so it's parsed as the naive wall-clock time it represents instead of
   // being converted to the browser's local zone. An unparsable stored value (e.g. left over from a schema
   // change) normalizes to `undefined` here, rather than becoming an `Invalid Date` that every downstream
-  // consumer (the calendar's month caption, the time input, `commitValue`) would otherwise have to guard
+  // consumer (the calendar's month caption, the time input, the commit) would otherwise have to guard
   // against individually.
   const initialDate = useMemo(() => {
     if (!localValue) {
@@ -207,27 +172,25 @@ export default function DateTimeWidget<
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLButtonElement>(null);
 
-  /** Commit the instant the picker is holding, which closing it does whether or not the user chose one
+  // The empty value rather than `''`, which is no more a `date-time` than it is a date: committing it fails the format
+  // of a field the user never filled in
+  const commitDate = useCommitDate({ localDate, value, formatDate, emptyValue: options.emptyValue, onChange });
+
+  /** Close the popup, committing the instant it holds, which every way out of it but Escape does
    */
-  const commitDate = useCallback(() => {
-    if (localDate) {
-      onChange(commitValue(localDate));
-    } else if (!value) {
-      // A stored value this widget could not read is left alone: the user dismissed the picker without choosing a
-      // day, which is not a request to throw that value away
-      onChange(commitValue(undefined));
+  const closePicker = useCallback(() => {
+    setIsOpen(false);
+    commitDate();
+    // Manually invoke the blur handler to ensure blur event is triggered
+    if (onBlur) {
+      onBlur(id, value);
     }
-  }, [commitValue, localDate, onChange, value]);
+  }, [commitDate, id, onBlur, setIsOpen, value]);
 
   // Close the popup when clicking outside and commit changes.
-  useClickOutside(containerRef, () => {
+  useClickOutside(containerRef, inputRef, () => {
     if (isOpen) {
-      setIsOpen(false);
-      commitDate();
-      // Manually invoke the blur handler to ensure blur event is triggered
-      if (onBlur) {
-        onBlur(id, value);
-      }
+      closePicker();
     }
   });
 
@@ -276,12 +239,18 @@ export default function DateTimeWidget<
   const togglePicker = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsOpen((prev) => !prev);
-      if (!isOpen && onFocus) {
+      if (isOpen) {
+        // The one way out of the popup that is a press on the trigger itself, or on the label pointing at it, which
+        // `useClickOutside` leaves alone so that press does not close and reopen in one gesture
+        closePicker();
+        return;
+      }
+      setIsOpen(true);
+      if (onFocus) {
         onFocus(id, value);
       }
     },
-    [isOpen, id, onFocus, setIsOpen, value],
+    [closePicker, isOpen, id, onFocus, setIsOpen, value],
   );
 
   // Handle focus event
@@ -303,36 +272,41 @@ export default function DateTimeWidget<
     e.stopPropagation();
   }, []);
 
+  /** Close the popup without committing, which Escape does: a date the user was trying out in the calendar is not one
+   * they asked to store. The local state goes back to the stored value as well, so the trigger stops showing a time
+   * the form does not hold and the next close does not commit it on the user's behalf
+   */
+  const cancelPicker = useCallback(() => {
+    setLocalDate(initialDate);
+    setIsOpen(false);
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [id, initialDate, onBlur, setIsOpen, value]);
+
   // Close popup on escape key
   useEffect(() => {
     const handleEscape = (e: React.KeyboardEvent | KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-        if (onBlur) {
-          onBlur(id, value);
-        }
+        cancelPicker();
       }
     };
 
     // Need to use native DOM events since we're attaching to document
     document.addEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
     return () => document.removeEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
-  }, [id, isOpen, setIsOpen, onBlur, value]);
+  }, [cancelPicker, isOpen]);
 
   // Add the handleDoneClick callback near the top of the component, with the other event handlers
   /** Handle clicking the "Done" button
    */
   const handleDoneClick = useCallback(() => {
-    setIsOpen(false);
-    commitDate();
-    if (onBlur) {
-      onBlur(id, value);
-    }
+    closePicker();
     inputRef.current?.focus();
-  }, [commitDate, onBlur, id, value, setIsOpen]);
+  }, [closePicker]);
 
   const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP p') : undefined;
-  const triggerLabelledBy = getTriggerLabelledBy({ id, label, hideLabel, hasValue: !!formattedValue });
+  const describedBy = getTriggerDescribedBy({ id, label, hideLabel, hasValue: !!formattedValue });
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -343,15 +317,16 @@ export default function DateTimeWidget<
           className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
             isOpen ? 'ring-2 ring-primary/50' : ''
           }`}
+          disabled={disabled || readonly}
           onClick={togglePicker}
           onFocus={handleFocus}
           onBlur={handleBlur}
           aria-haspopup='true'
           aria-expanded={isOpen}
-          aria-labelledby={triggerLabelledBy}
+          aria-describedby={describedBy}
           ref={inputRef}
         >
-          <span id={triggerValueId(id)} className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
+          <span id={triggerValueId(id)} className={formattedValue ? '' : 'text-base-content/50'}>
             {formattedValue ?? (placeholder || label)}
           </span>
           <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />

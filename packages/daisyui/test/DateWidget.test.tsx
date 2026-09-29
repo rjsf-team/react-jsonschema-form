@@ -107,14 +107,17 @@ describe('DateWidget', () => {
         }
       });
 
-      test('names the day a value committed before this widget took the format seriously stands for', async () => {
-        // What the old code stored for a picked 3 May: the `toISOString()` of local midnight, so a time of day that is
-        // not UTC midnight, and in a zone ahead of UTC a different date than the one the user picked
-        const legacy = new Date(2020, 4, 3).toISOString();
+      test('names the day a UTC instant that is a local midnight stands for', async () => {
+        // A picked 3 May stored as the `toISOString()` of local midnight, so a time of day that is not UTC midnight,
+        // and in a zone ahead of UTC a different date than the one the user picked
+        const localMidnight = new Date(2020, 4, 3).toISOString();
         const onChange = vi.fn();
-        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: legacy, onChange, schema })} />);
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value: localMidnight, onChange, schema })} />,
+        );
 
-        expect(legacy).not.toBe('2020-05-03T00:00:00.000Z');
+        // Pinning `TZ` is what makes this a different instant from UTC midnight, and so a different reading rule
+        expect(localMidnight).not.toBe('2020-05-03T00:00:00.000Z');
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
 
         await openPicker(container);
@@ -129,6 +132,46 @@ describe('DateWidget', () => {
         const onChange = vi.fn();
         const { container } = render(
           <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00.000Z', onChange, schema })} />,
+        );
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+
+        await openPicker(container);
+        await user.click(screen.getByText('Done'));
+
+        expect(onChange).toHaveBeenCalledWith('2020-05-03');
+      });
+
+      // RFC 3339 also allows a space where the `T` goes, which is what an SQL backend emits by default. Read as an
+      // instant it names the previous day everywhere behind UTC, and dismissing the picker then stores that day
+      test('names the calendar day a UTC midnight value with a space separator stands for', async () => {
+        const onChange = vi.fn();
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03 00:00:00Z', onChange, schema })} />,
+        );
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+
+        await openPicker(container);
+        await user.click(screen.getByText('Done'));
+
+        expect(onChange).toHaveBeenCalledWith('2020-05-03');
+      });
+
+      // The `-05` at the end of a `YYYY-MM` value looks like an offset of `-05:00` to anything matching one loosely,
+      // which would send it down the writer's-zone path and, finding no day in its text, fall back to its instant
+      test('names the first of the month for a value that stops at the month', () => {
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05', schema })} />);
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 1, 2020');
+      });
+
+      // A zone of its own is a day this widget never wrote — `toISOString()` only ever writes `Z` — so it is the
+      // writer's day, not the instant's day where it is read
+      test('names the calendar day a value stamped with its own zone offset stands for', async () => {
+        const onChange = vi.fn();
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00+02:00', onChange, schema })} />,
         );
 
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
@@ -189,6 +232,50 @@ describe('DateWidget', () => {
     });
   });
 
+  // Escape is the one way out of the popup that does not commit, so the day the user was trying out has to go with it
+  test('discards the day Escape closes the picker on, and does not commit it later either', async () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { birthday: { ...schema, title: 'Birthday' } } }}
+        formData={{ birthday: '2020-05-03' }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await openPicker(container);
+    await user.click(screen.getByRole('button', { name: /May 17th/ }));
+    await user.keyboard('{Escape}');
+
+    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+    expect(onChange).not.toHaveBeenCalled();
+
+    // The discarded day would otherwise still be in local state, and the next close commits whatever that holds
+    await openPicker(container);
+    await user.click(document.body);
+
+    expect(onChange.mock.calls[0]?.[0].formData).toEqual({ birthday: '2020-05-03' });
+  });
+
+  // Nothing about the picker is read-only in itself, so the trigger is the only place either flag can be honored
+  describe.each([
+    ['disabled', { disabled: true }],
+    ['read-only', { readonly: true }],
+  ])('a %s field', (_, flags) => {
+    test('cannot be opened, so cannot be committed over', async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema, ...flags })} />,
+      );
+
+      await user.click(container.querySelector('button[aria-haspopup]')!);
+
+      expect(screen.queryByText('Done')).not.toBeInTheDocument();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
+
   // The trigger's name comes partly from the label `FieldTemplate` renders, so these go through a `Form`
   describe('the trigger it renders', () => {
     const dateSchema = { type: 'object' as const, properties: { birthday: { ...schema, title: 'Birthday' } } };
@@ -196,14 +283,39 @@ describe('DateWidget', () => {
     test('is named by the label once when no date is selected', () => {
       render(<Form schema={dateSchema} validator={validator} />);
 
-      // With no date the trigger's contents are the label, so naming it from the label *and* itself would say it twice
       expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
     });
 
-    test('is named by the label and the selected date once there is one', () => {
+    // The label names the button through `htmlFor`, which replaces the button's own contents, so the day it displays
+    // would otherwise never be announced
+    test('describes itself with the selected date, which its name replaces', () => {
       render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
 
-      expect(screen.getByRole('button', { name: /Birthday/ })).toHaveAccessibleName('Birthday May 3, 2020');
+      const trigger = screen.getByRole('button', { name: 'Birthday' });
+      expect(trigger).toHaveAccessibleName('Birthday');
+      expect(trigger).toHaveAccessibleDescription('May 3, 2020');
+    });
+
+    // Naming the trigger by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
+    // the button named by its own contents — the date alone — under any other one
+    test('is named by the label of a replacement FieldTemplate', () => {
+      render(
+        <Form
+          schema={dateSchema}
+          formData={{ birthday: '2020-05-03' }}
+          validator={validator}
+          templates={{
+            FieldTemplate: ({ id, label, children }) => (
+              <div>
+                <label htmlFor={id}>{label}</label>
+                {children}
+              </div>
+            ),
+          }}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleDescription('May 3, 2020');
     });
 
     // There is no label element to point at, so the trigger's contents are its whole name. Rendering nothing would
@@ -225,6 +337,37 @@ describe('DateWidget', () => {
       await user.click(container.querySelector('label[for="root_birthday"]')!);
 
       expect(screen.getByText('Done')).toBeInTheDocument();
+    });
+
+    // The browser forwards the label's click to the trigger, so a press treated as one outside the popup closes it
+    // first and the trigger opens it straight back: the label could never close it at all
+    test.each([
+      ['label', (container: HTMLElement) => container.querySelector('label[for="root_birthday"]')!],
+      ['trigger', (container: HTMLElement) => container.querySelector('button[aria-haspopup]')!],
+    ])('is closed again, committing its day, by a second click on the %s', async (_, press) => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} onChange={onChange} />,
+      );
+
+      await openPicker(container);
+      await user.click(screen.getByRole('button', { name: /May 17th/ }));
+      onChange.mockClear();
+      await user.click(press(container));
+
+      expect(screen.queryByText('Done')).not.toBeInTheDocument();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
+    });
+
+    // With no label element the trigger's contents are its own name, so referencing them as well would have the date
+    // announced twice — once as the name and once as the description
+    test('does not describe itself with its own name where there is no label', () => {
+      const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);
+
+      const trigger = container.querySelector('button[aria-haspopup]')!;
+      expect(trigger).toHaveAccessibleName('May 3, 2020');
+      expect(trigger.getAttribute('aria-describedby')).not.toContain('__value');
     });
 
     test('shows the label rather than the schema title, which ui:title overrides', () => {

@@ -500,6 +500,26 @@ Return a consistent `id` for the expand button of a cyclic schema's expand contr
 
 - string: The consistent id for the expand button from the given `id`
 
+### fieldLabelId()
+
+Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
+A widget that cannot be named by a `label htmlFor` — a group of controls, or a `button` whose own contents are its value — points `aria-labelledby` at this id, so its accessible name is the text the user actually sees.
+Note that this cannot be [titleId()](#titleid), which `TitleFieldTemplate` already claims for the same field.
+
+#### Parameters
+
+- id: string - The id of the field
+
+#### Returns
+
+- string: The consistent id for that field's label element
+
+#### Example
+
+```typescript
+fieldLabelId('root_birthday'); // 'root_birthday__label'
+```
+
 ### fieldPathEndsWithIndex()
 
 Determines whether the last segment of `fieldPath` is an array index, i.e. whether the path addresses an array element.
@@ -1927,6 +1947,25 @@ Only the grammar RJSF itself produces is supported: dots and brackets are always
 toPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
 toPath('a.0.b'); // ['a', '0', 'b']
 getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
+```
+
+### triggerValueId()
+
+Return a consistent `id` for the element inside a picker's trigger that displays the selected value.
+A trigger that is a `button` is named by the label pointing at it, which replaces its own contents, so the value it displays is only announced where something references this id — `aria-describedby`, the way a native control announces its value after its name.
+
+#### Parameters
+
+- id: string - The id of the trigger
+
+#### Returns
+
+- string: The consistent id for the element displaying its value
+
+#### Example
+
+```typescript
+triggerValueId('root_birthday'); // 'root_birthday__value'
 ```
 
 ### unsetByPath()

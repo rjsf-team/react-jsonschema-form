@@ -120,10 +120,13 @@ describe('FieldTemplate', () => {
     });
 
     test('leaves the label to the checkbox widget for a nullable boolean', () => {
-      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'checkbox' } }, {
-        type: ['boolean', 'null'],
-        title: 'Agree',
-      } as RJSFSchema);
+      const { templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'checkbox' } },
+        {
+          type: ['boolean', 'null'],
+          title: 'Agree',
+        },
+      );
 
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
@@ -141,6 +144,15 @@ describe('FieldTemplate', () => {
       renderForm({ agree: { 'ui:widget': 'hidden' } });
 
       expect(screen.queryByText('Agree')).not.toBeInTheDocument();
+    });
+
+    // The toggle is a registry key of this theme's own, so it reaches any schema type a consumer points it at, and it
+    // renders the label wherever it lands. Only an alias like `checkbox` is resolved through the schema's type
+    test('leaves the label to the toggle widget on a schema that is not a boolean', () => {
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'toggle' } }, { type: 'string', title: 'Agree' });
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
     });
   });
 
@@ -254,7 +266,7 @@ describe('FieldTemplate', () => {
     });
   });
 
-  test("a date widget's trigger is named by the label and its own selected value", () => {
+  test("a date widget's trigger is named by the label, and describes its own selected value", () => {
     render(
       <Form
         schema={{ type: 'object', properties: { birthday: { type: 'string', format: 'date', title: 'Birthday' } } }}
@@ -263,9 +275,12 @@ describe('FieldTemplate', () => {
       />,
     );
 
-    // The trigger's contents are the selected date, so naming it from the label alone would drop the value. The date
-    // is spelled out rather than read back off the element, which would pass for a wrong day as much as the right one
-    expect(screen.getByRole('button', { name: /Birthday/ })).toHaveAccessibleName('Birthday May 3, 2020');
+    // The label reaches the trigger through `htmlFor`, which replaces the trigger's own contents as its name, so the
+    // date is exposed as its description instead. It is spelled out rather than read back off the element, which would
+    // pass for a wrong day as much as the right one
+    const trigger = screen.getByRole('button', { name: 'Birthday' });
+    expect(trigger).toBe(screen.getByLabelText('Birthday'));
+    expect(trigger).toHaveAccessibleDescription('May 3, 2020');
   });
 
   // A named property falls back to its name for the label, so only a root field and an array item can end up with none

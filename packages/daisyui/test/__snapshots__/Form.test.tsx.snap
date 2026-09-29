@@ -18,6 +18,7 @@ exports[`format iso-date-time 1`] = `
             class="w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -242,6 +243,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
+                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="checkbox"
                                                 id="root_tasks_0_done"
                                                 name="root[tasks][0][done]"
@@ -443,6 +445,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
+                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 checked=""
                                                 class="checkbox"
                                                 id="root_tasks_1_done"
@@ -1815,6 +1818,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_active__error root_active__description root_active__help"
                           class="checkbox"
                           id="root_active"
                           name="root[active]"
@@ -2076,6 +2080,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
+                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="checkbox"
                                                 id="root_tasks_0_done"
                                                 name="root.tasks.0.done"
@@ -2277,6 +2282,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
+                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 checked=""
                                                 class="checkbox"
                                                 id="root_tasks_1_done"
@@ -3400,6 +3406,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_active__error root_active__description root_active__help"
                           class="checkbox"
                           id="root_active"
                           name="root.active"
@@ -4288,6 +4295,7 @@ exports[`single fields > checkbox field 1`] = `
           class="form-control"
         >
           <input
+            aria-describedby="root__error root__description root__help"
             class="checkbox"
             id="root"
             name="root"
@@ -4346,6 +4354,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               class="mr-2"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4401,6 +4410,7 @@ exports[`single fields > checkbox field with label 1`] = `
               class="mr-2"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4466,6 +4476,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
               class="mr-2"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4539,6 +4550,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               class="mr-2"
             >
               <input
+                aria-describedby="root__error root__description root__help"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -5396,6 +5408,7 @@ exports[`single fields > format date 1`] = `
             class="w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -5461,6 +5474,7 @@ exports[`single fields > format datetime 1`] = `
             class="w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -11311,6 +11325,7 @@ exports[`single fields > required checkbox field 1`] = `
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_agree__error root_agree__description root_agree__help"
                           class="checkbox"
                           id="root_agree"
                           name="root_agree"
@@ -11393,6 +11408,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_agree__error root_agree__description root_agree__help"
                           checked=""
                           class="checkbox"
                           id="root_agree"

@@ -247,9 +247,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
+                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         type="button"
@@ -330,7 +330,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="0"
                           id="root_person_race-0"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="0"
                         />
@@ -348,7 +347,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="1"
                           id="root_person_race-1"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="1"
                         />
@@ -366,7 +364,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="2"
                           id="root_person_race-2"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="2"
                         />
@@ -384,7 +381,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="3"
                           id="root_person_race-3"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="3"
                         />
@@ -402,7 +398,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="4"
                           id="root_person_race-4"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="4"
                         />
@@ -1932,9 +1927,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
+                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         type="button"
@@ -2015,7 +2010,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="0"
                           id="root_person_race-0"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="0"
                         />
@@ -2033,7 +2027,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="1"
                           id="root_person_race-1"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="1"
                         />
@@ -2051,7 +2044,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="2"
                           id="root_person_race-2"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="2"
                         />
@@ -2069,7 +2061,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="3"
                           id="root_person_race-3"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="3"
                         />
@@ -2087,7 +2078,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="4"
                           id="root_person_race-4"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="4"
                         />
@@ -3617,9 +3607,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
+                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         type="button"
@@ -3700,7 +3690,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="0"
                           id="root_person_race-0"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="0"
                         />
@@ -3718,7 +3707,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="1"
                           id="root_person_race-1"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="1"
                         />
@@ -3736,7 +3724,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="2"
                           id="root_person_race-2"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="2"
                         />
@@ -3754,7 +3741,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="3"
                           id="root_person_race-3"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="3"
                         />
@@ -3772,7 +3758,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="4"
                           id="root_person_race-4"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="4"
                         />
@@ -5302,9 +5287,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
+                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
-                        aria-labelledby="root_person_birth_date__label"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
                         type="button"
@@ -5385,7 +5370,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="0"
                           id="root_person_race-0"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="0"
                         />
@@ -5403,7 +5387,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="1"
                           id="root_person_race-1"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="1"
                         />
@@ -5421,7 +5404,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="2"
                           id="root_person_race-2"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="2"
                         />
@@ -5439,7 +5421,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="3"
                           id="root_person_race-3"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="3"
                         />
@@ -5457,7 +5438,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-index="4"
                           id="root_person_race-4"
                           name="root_person_race"
-                          required=""
                           type="checkbox"
                           value="4"
                         />
@@ -6976,9 +6956,9 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="w-full"
                   >
                     <button
+                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       type="button"
@@ -7059,7 +7039,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-index="0"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -7077,7 +7056,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-index="1"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -7095,7 +7073,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-index="2"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -7113,7 +7090,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-index="3"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -7131,7 +7107,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         data-index="4"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />
@@ -8487,9 +8462,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="w-full"
                   >
                     <button
+                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       aria-expanded="false"
                       aria-haspopup="true"
-                      aria-labelledby="root_person_birth_date__label"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
                       type="button"
@@ -8570,7 +8545,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-index="0"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -8588,7 +8562,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-index="1"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -8606,7 +8579,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-index="2"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -8624,7 +8596,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-index="3"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -8642,7 +8613,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         data-index="4"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />

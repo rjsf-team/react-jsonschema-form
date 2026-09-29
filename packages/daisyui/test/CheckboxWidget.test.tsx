@@ -63,4 +63,18 @@ describe('CheckboxWidget', () => {
       expect(checkbox).toHaveAttribute('required');
     });
   });
+
+  // The description sits above the input rather than inside its label, and the errors below it, so nothing associates
+  // either with the control unless the input points at them
+  test('is described by its own description, errors and help', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
+        uiSchema={{ agree: { 'ui:description': 'Whether you agree' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).toHaveAccessibleDescription('Whether you agree');
+  });
 });

@@ -657,6 +657,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_active__error root_active__description root_active__help"
                           checked=""
                           class="checkbox"
                           id="root_active"

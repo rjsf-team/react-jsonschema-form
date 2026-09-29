@@ -64,6 +64,35 @@ export function ariaDescribedByIds(id: string, includeExamples = false) {
   return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}${examples}`;
 }
 
+/** Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control, so a widget that
+ * cannot be named by a `label htmlFor` — a group of controls, or a `button` whose own contents are its value — can
+ * point `aria-labelledby` at the text the user actually sees. It cannot be `titleId()`, which `TitleFieldTemplate`
+ * already claims for the same field, so an `additionalProperties` object would carry that id twice.
+ *
+ * Two labels end up with this id wherever two `FieldTemplate`s render for one field id, which already gives that
+ * control two `label htmlFor` of its own: a `oneOf` of constants, whose selected option renders again inside the
+ * field, and a layout that places the same field twice. A reference resolves to the first, which is the field's own
+ * label rather than the option's.
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for that field's label element
+ */
+export function fieldLabelId(id: string) {
+  return `${id}__label`;
+}
+
+/** Return a consistent `id` for the element inside a picker's trigger that displays the selected value. A trigger that
+ * is a `button` is named by the label pointing at it, which replaces its own contents, so the value it displays is
+ * only announced where something references it — `aria-describedby`, the way a native control announces its value
+ * after its name.
+ *
+ * @param id - The id of the trigger
+ * @returns - The consistent id for the element displaying its value
+ */
+export function triggerValueId(id: string) {
+  return `${id}__value`;
+}
+
 /** Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders, so a theme can point a
  * label at the year, month or day control rather than rebuilding this shape itself. Note that the separator here is
  * always `_`, independent of the form's `idSeparator`
