@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema } from '../../src/index.ts';
+import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema } from '../../src/index.ts';
 import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
@@ -2155,6 +2155,89 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           arr: [undefined],
           strs: [undefined],
         });
+      });
+      it('defaults a typeless oneOf of object constants to its first constant, as a typed one is', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['p'],
+          properties: { p: { oneOf: [{ const: { a: 1, b: 1 } }, { const: { a: 2 } }] } },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ p: { a: 1, b: 1 } });
+      });
+      it('does not throw for an enum beside a oneOf of options that are not constants', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            choice: {
+              type: 'object',
+              enum: [{ a: 1 }, { b: 2 }],
+              anyOf: [{ required: ['a'] }, { required: ['b'] }],
+            },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({});
+      });
+      it.each<[string, RJSFSchema]>([
+        ['a typed', { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] }],
+        ['a typeless', { oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] }],
+      ])('applies ui:initialValue to %s object oneOf select', (_, choice) => {
+        const schema: RJSFSchema = { type: 'object', required: ['choice'], properties: { choice } };
+        const uiSchema: UiSchema = { choice: { 'ui:initialValue': { b: 2 } } };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ choice: { b: 2 } });
+      });
+      it('applies ui:emptyValue to an object oneOf select with nothing else to default to', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { choice: { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] } },
+        };
+        const uiSchema: UiSchema = { choice: { 'ui:emptyValue': { b: 2 } } };
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            { constAsDefaults: 'never' },
+            undefined,
+            undefined,
+            uiSchema,
+          ),
+        ).toEqual({ choice: { b: 2 } });
+      });
+      it('picks the constant an ancestor default names over its own default when ancestors win', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { plan: { tier: 2 } },
+          properties: {
+            plan: { type: 'object', default: { tier: 1 }, oneOf: [{ const: { tier: 1 } }, { const: { tier: 2 } }] },
+          },
+        };
+        expect(
+          getDefaultFormState(testValidator, schema, undefined, schema, undefined, {
+            nestedDefaultsPrecedence: 'ancestorWins',
+          }),
+        ).toEqual({ plan: { tier: 2 } });
+      });
+      it('picks the constant an ancestor default names for an object oneOf select', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { plan: { tier: 2 } },
+          properties: { plan: { type: 'object', oneOf: [{ const: { tier: 1 } }, { const: { tier: 2 } }] } },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ plan: { tier: 2 } });
       });
     });
 

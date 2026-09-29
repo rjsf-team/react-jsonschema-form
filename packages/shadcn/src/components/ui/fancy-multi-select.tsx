@@ -2,7 +2,7 @@
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { deepEquals } from '@rjsf/utils';
+import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
 
@@ -143,13 +143,13 @@ export function FancyMultiSelect({
 
   function renderItem(item: FancySelectItem) {
     // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk also
-    // searches its `value`, so that stays text, with an object spelled as its JSON to keep each one distinct
+    // searches its `value`, so that stays text, spelled the way an untitled option is labelled
     const itemId = `${id}-${item.index}-command-item`;
     return (
       <CommandItem
         disabled={item.disabled}
         key={item.index}
-        value={typeof item.value === 'object' && item.value !== null ? JSON.stringify(item.value) : String(item.value)}
+        value={enumOptionValueLabel(item.value)}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();

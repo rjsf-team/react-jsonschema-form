@@ -1,6 +1,18 @@
 import getSchemaType from './getSchemaType.ts';
-import isConstantSelect from './isConstantSelect.ts';
+import isWholeValueSelect from './isWholeValueSelect.ts';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
+
+/** The aliases of a select that picks one value as a whole: every select an `object` or `null` schema can be, and the
+ * aliases an `array` schema accepts in place of `widgetMap.array` when it is a select over whole array constants. A
+ * radio group suits one of those, where on a multi-select it would write a single item in place of the list, and the
+ * checkboxes and file widgets edit a list of values, which would read the picked array as several selections. Only the
+ * aliases are checked: a widget named by its registered name, such as `CheckboxesWidget`, is rendered as named.
+ */
+const wholeValueSelectWidgetMap = {
+  select: 'SelectWidget',
+  radio: 'RadioWidget',
+  hidden: 'HiddenWidget',
+} as const;
 
 /** The map of schema types to widget type to widget name. `as const` so its keys and values stay literal types,
  * letting `WidgetAliasFor` derive a per-type alias union from it directly instead of a hand-copied one that can
@@ -53,32 +65,14 @@ const widgetMap = {
     radio: 'RadioWidget',
     hidden: 'HiddenWidget',
   },
-  object: {
-    select: 'SelectWidget',
-    radio: 'RadioWidget',
-    hidden: 'HiddenWidget',
-  },
-  null: {
-    select: 'SelectWidget',
-    radio: 'RadioWidget',
-    hidden: 'HiddenWidget',
-  },
+  object: wholeValueSelectWidgetMap,
+  null: wholeValueSelectWidgetMap,
   array: {
     select: 'SelectWidget',
     checkboxes: 'CheckboxesWidget',
     files: 'FileWidget',
     hidden: 'HiddenWidget',
   },
-} as const;
-
-/** The aliases an `array` schema accepts in place of `widgetMap.array` when it is a select over whole array constants.
- * It picks one value, so a radio group suits it, where on a multi-select it would write a single item in place of the
- * list. The checkboxes and file widgets edit a list of values, which would read the picked array as several selections.
- */
-const wholeArraySelectWidgetMap = {
-  select: 'SelectWidget',
-  radio: 'RadioWidget',
-  hidden: 'HiddenWidget',
 } as const;
 
 /** The lowercase `ui:widget` alias names `getWidget` accepts for a given JSON Schema primitive `type`, e.g.
@@ -128,8 +122,8 @@ export default function getWidget<
     }
 
     const widgetsForType: Record<string, string> =
-      type === 'array' && isConstantSelect(schema)
-        ? wholeArraySelectWidgetMap
+      type === 'array' && isWholeValueSelect(schema)
+        ? wholeValueSelectWidgetMap
         : widgetMap[type as keyof typeof widgetMap];
     if (widget in widgetsForType) {
       const registeredWidget = registeredWidgets[widgetsForType[widget]];

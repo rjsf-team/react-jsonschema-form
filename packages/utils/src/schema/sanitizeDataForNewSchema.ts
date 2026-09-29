@@ -2,8 +2,8 @@ import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../co
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
-import isConstantSelect from '../isConstantSelect.ts';
 import isObject from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type {
   CustomMergeAllOf,
@@ -33,14 +33,7 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
     return undefined;
   }
 
-  const values = (options as S[])
-    .map((option) => {
-      if (CONST_KEY in option) {
-        return option[CONST_KEY];
-      }
-      return Array.isArray(option.enum) && option.enum.length === 1 ? option.enum[0] : NO_VALUE;
-    })
-    .filter((value) => value !== NO_VALUE);
+  const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
 }
@@ -74,7 +67,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *     - Get the types of the old and new keyed schemas and if the old doesn't exist or the old & new are the same then:
  *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
  *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
- *         over constants (see `isConstantSelect()`):
+ *         over object or array constants (see `isWholeValueSelect()`):
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
  *       - Otherwise, check for default, const or enum values:
  *         - Get the old and new `default` values from the schema and check:
@@ -95,7 +88,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   - If the type of the old and new schema `items` are a non-array objects:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the type is "object" and the items aren't a select over constants (see `isConstantSelect()`), then:
+ *       - If the type is "object" and the items aren't a select over object constants (see `isWholeValueSelect()`),
+ *         then:
  *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set
@@ -178,7 +172,7 @@ export default function sanitizeDataForNewSchema<
         // array constants holds one of them as a whole, so it's checked against its options like any other select
         const isContainer =
           (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) &&
-          !isConstantSelect<S>(newKeyedSchema);
+          !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
@@ -262,7 +256,7 @@ export default function sanitizeDataForNewSchema<
         const maxItems = newSchema.maxItems ?? -1;
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (newSchemaType === 'object' && !isConstantSelect<S>(newSchemaItems as S)) {
+        if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
           newFormData = data.reduce((newValue, aValue) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)

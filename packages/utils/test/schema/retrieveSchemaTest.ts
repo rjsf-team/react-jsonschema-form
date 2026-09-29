@@ -2151,6 +2151,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         { type: 'string', [RJSF_REF_KEY]: '#/definitions/name' },
       ]);
     });
+    it('resolveAllReferences() resolves the references of a oneOf a $ref brings beside an empty anyOf', () => {
+      const schema: RJSFSchema = {
+        definitions: { name: { type: 'string' }, named: { oneOf: [{ $ref: '#/definitions/name' }] } },
+        $ref: '#/definitions/named',
+        anyOf: [],
+      };
+      expect(resolveAllReferences(schema, schema, [], undefined, true).oneOf).toEqual([
+        { type: 'string', [RJSF_REF_KEY]: '#/definitions/name' },
+      ]);
+    });
     describe('resolveAnyOrOneOfSchemas()', () => {
       it('resolves anyOf with $ref for single element, merging schemas', () => {
         const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
@@ -2160,6 +2170,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             title: 'multi',
             [RJSF_REF_KEY]: '#/definitions/foo',
           },
+        ]);
+      });
+      it('resolves the anyOf of a schema that also has a oneOf, dropping both when not expanding every branch', () => {
+        const schema: RJSFSchema = { title: 'both', anyOf: [{ type: 'string' }], oneOf: [{ type: 'number' }] };
+        expect(resolveAnyOrOneOfSchemas(testValidator, schema, schema, false)).toEqual([
+          { title: 'both', type: 'string' },
         ]);
       });
       it('resolves the anyOf of a schema that also has a oneOf, keeping the oneOf to resolve next', () => {

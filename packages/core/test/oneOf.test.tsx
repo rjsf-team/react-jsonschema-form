@@ -3076,25 +3076,28 @@ describe('oneOf', () => {
 
     it('should check only the selected object constant in a radio group, with no duplicate keys', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error');
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          v: {
-            oneOf: [
-              { const: { a: 1 }, title: 'One' },
-              { const: { a: 2 }, title: 'Two' },
-            ],
+      try {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              oneOf: [
+                { const: { a: 1 }, title: 'One' },
+                { const: { a: 2 }, title: 'Two' },
+              ],
+            },
           },
-        },
-      };
-      const { node, onChange } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': 'radio' } } });
+        };
+        const { node, onChange } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': 'radio' } } });
 
-      await user.click(node.querySelector('input[type=radio][value="1"]')!);
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
-      const radios = node.querySelectorAll<HTMLInputElement>('input[type=radio]');
-      expect([...radios].map((radio) => radio.checked)).toEqual([false, true]);
-      expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
-      consoleErrorSpy.mockRestore();
+        await user.click(node.querySelector('input[type=radio][value="1"]')!);
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
+        const radios = node.querySelectorAll<HTMLInputElement>('input[type=radio]');
+        expect([...radios].map((radio) => radio.checked)).toEqual([false, true]);
+        expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
 
     it('should render a radio group for typed array constants and pick one whole array', async () => {
@@ -3142,6 +3145,98 @@ describe('oneOf', () => {
       expect(select).toBeInTheDocument();
       await user.selectOptions(select!, select!.options[2]);
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 1 } } }), 'root_v');
+    });
+
+    it('should fill a required null select typed null with null, as NullField does', async () => {
+      const schema: RJSFSchema = { type: 'object', required: ['v'], properties: { v: { type: 'null', enum: [null] } } };
+      const { node, onSubmit } = createFormComponent({ schema });
+
+      await submitForm(node, user);
+
+      expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: null } }), expect.anything());
+    });
+
+    describe('sanitizing the data a condition on an object constant select allows once another is picked', () => {
+      const plan: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { const: { tier: 1 }, title: 'Basic' },
+          { const: { tier: 2 }, title: 'Pro' },
+        ],
+      };
+      const colorsByTier: RJSFSchema = {
+        then: { properties: { color: { enum: ['red', 'green'] } } },
+        else: { properties: { color: { enum: ['blue'] } } },
+      };
+
+      it.each<[string, RJSFSchema]>([
+        [
+          'a property',
+          {
+            type: 'object',
+            properties: { plan, color: { type: 'string' } },
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property an allOf declares',
+          {
+            type: 'object',
+            allOf: [{ properties: { plan } }],
+            properties: { color: { type: 'string' } },
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+      ])('should sanitize for %s', async (_, schema) => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          initialFormData: { plan: { tier: 1 }, color: 'red' },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('select#root_plan')!, 'Pro');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { plan: { tier: 2 }, color: 'blue' } }),
+          'root_plan',
+        );
+      });
+
+      it('should sanitize for an array item', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { plans: { type: 'array', items: plan }, color: { type: 'string' } },
+          if: { properties: { plans: { items: { const: { tier: 1 } } } } },
+          ...colorsByTier,
+        };
+        const { node, onChange } = createFormComponent({
+          schema,
+          initialFormData: { plans: [{ tier: 1 }], color: 'red' },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('select#root_plans_0')!, 'Pro');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { plans: [{ tier: 2 }], color: 'blue' } }),
+          'root_plans_0',
+        );
+      });
+    });
+
+    it('should keep the schema a typeless select infers its type into when its uiSchema changes', () => {
+      const schemas: RJSFSchema[] = [];
+      const RecordingSelectWidget = (props: WidgetProps) => {
+        schemas.push(props.schema);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [{ const: 'a' }, { const: 'b' }] } } };
+      const widgets = { SelectWidget: RecordingSelectWidget };
+      const { rerender } = createFormComponent({ schema, widgets, uiSchema: { v: { 'ui:title': 'Pick' } } });
+      rerender({ schema, widgets, uiSchema: { v: { 'ui:title': 'Pick one' } } });
+
+      expect(schemas.length).toBeGreaterThan(1);
+      expect(new Set(schemas).size).toBe(1);
     });
 
     it('should not hand a custom ui:field the select widget inferred for labelled boolean consts', () => {

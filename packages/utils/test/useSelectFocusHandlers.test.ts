@@ -24,7 +24,6 @@ describe('useSelectFocusHandlers()', () => {
     result.current.handleFocus();
     result.current.handleBlur();
 
-    expect(result.current.reportedValue).toEqual({ a: 1 });
     expect(props.onFocus).toHaveBeenCalledWith('root', { a: 1 });
     expect(props.onBlur).toHaveBeenCalledWith('root', { a: 1 });
   });
@@ -38,6 +37,14 @@ describe('useSelectFocusHandlers()', () => {
 
     expect(props.onFocus).toHaveBeenCalledWith('root', 'EMPTY');
     expect(props.onBlur).toHaveBeenCalledWith('root', 'EMPTY');
+  });
+
+  it('should not throw when the widget is rendered without focus and blur handlers', () => {
+    const props = makeProps({ onFocus: undefined, onBlur: undefined });
+    const { result } = renderHook(() => useSelectFocusHandlers(props));
+
+    expect(() => result.current.handleFocus()).not.toThrow();
+    expect(() => result.current.handleBlur()).not.toThrow();
   });
 
   it('should report a falsy selection rather than the emptyValue', () => {

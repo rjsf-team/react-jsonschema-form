@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplate, getUiOptions, hasVisibleErrors, isWholeValueSelect } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -84,7 +84,7 @@ export default function FieldTemplate<
     <WrapIfAdditionalTemplate {...props}>
       <Form.Item
         colon={colon}
-        hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
+        hasFeedback={(schema.type !== 'array' && schema.type !== 'object') || isWholeValueSelect<S>(schema)}
         help={explainNode}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}

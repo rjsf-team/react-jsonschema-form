@@ -17,6 +17,7 @@ import enumOptionsSelectValue from './enumOptionsSelectValue.ts';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
+import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
 import {
   ROOT_FIELD_PATH,
@@ -83,6 +84,7 @@ import isFormDataAvailable from './isFormDataAvailable.ts';
 import isObject from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
+import isWholeValueSelect from './isWholeValueSelect.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
@@ -173,6 +175,7 @@ export {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
+  enumOptionValueLabel,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
@@ -228,6 +231,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,
   localToUTC,

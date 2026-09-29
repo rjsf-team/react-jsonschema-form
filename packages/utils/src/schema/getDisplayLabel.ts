@@ -1,8 +1,8 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY, UI_WIDGET_KEY } from '../constants.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
-import isConstantSelect from '../isConstantSelect.ts';
 import isCustomWidget from '../isCustomWidget.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
   FormContextType,
   GlobalUISchemaOptions,
@@ -51,14 +51,14 @@ export default function getDisplayLabel<
     if (schemaType === 'array') {
       displayLabel =
         addedByAdditionalProperty ||
-        isConstantSelect<S>(schema) ||
+        isWholeValueSelect<S>(schema) ||
         isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
         isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, customMergeAllOf) ||
         isCustomWidget(uiSchema);
     }
 
     if (schemaType === 'object') {
-      displayLabel = addedByAdditionalProperty || isConstantSelect<S>(schema);
+      displayLabel = addedByAdditionalProperty || isWholeValueSelect<S>(schema);
     }
     if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
       displayLabel = false;

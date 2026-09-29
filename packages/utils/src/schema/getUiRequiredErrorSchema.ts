@@ -14,10 +14,10 @@ import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
-import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
@@ -178,8 +178,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ONE_OF_KEY in schema || ANY_OF_KEY in schema,
   );
   // A select over object or array constants renders one control for its whole value, with no fields beneath it
-  const resolvedType = getSchemaType<S>(resolvedSchema);
-  if ((resolvedType === 'object' || resolvedType === 'array') && isConstantSelect<S>(resolvedSchema)) {
+  if (isWholeValueSelect<S>(resolvedSchema)) {
     return;
   }
   const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;

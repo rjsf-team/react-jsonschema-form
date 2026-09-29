@@ -404,8 +404,8 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
 Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
-So does `null`, since the empty string is the value of a select's empty placeholder.
-The prefix keeps that index from sharing a value with a primitive option spelled as the same number.
+So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
+The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters
@@ -417,6 +417,19 @@ When `format` is `'indexed'` (the default), returns the index as a string.
 #### Returns
 
 - string: The string to use as the DOM value attribute
+
+### enumOptionValueLabel()
+
+Returns the label for an enum option with no title of its own: its value, with an object or array spelled out as JSON,
+since `String()` would label every one of them `[object Object]`
+
+#### Parameters
+
+- value: unknown - The option's value
+
+#### Returns
+
+- string: The text to label the option with
 
 ### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1165,8 +1178,8 @@ it offers nothing to select.
 
 Checks whether the value of `schema` is picked from a list of constants, whatever its `type`: an `enum`, or an
 `anyOf`/`oneOf` of constants read from the keyword `getXxxOfKey()` picks. An `object` or `array` schema that passes is a
-select for its whole value rather than a container whose contents are edited, pruned or sanitized. An empty list offers
-no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
+select for its whole value (see `isWholeValueSelect()`) rather than a container whose contents are edited, pruned or
+sanitized. An empty list offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
 otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is not resolved first.
 
 #### Parameters
@@ -1284,6 +1297,21 @@ Returns true when a form value is considered empty: `null`, `undefined`, or `''`
 #### Returns
 
 - boolean: True if the value is considered empty, false otherwise
+
+### isWholeValueSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether `schema` is a select over object or array constants, which holds one of them as a whole rather than
+being a container whose contents are edited, filled in with defaults, pruned or sanitized. That is a non-empty select
+(see `isConstantSelect()`) whose `type` is `object` or `array`, or which declares no `type` and offers an object or
+array constant, since `SchemaField` renders a typeless select over such values as a select too.
+
+#### Parameters
+
+- schema: S - The already-resolved schema to check
+
+#### Returns
+
+- boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
 ### labelValue()
 
@@ -1944,7 +1972,7 @@ decoded empty selection. To be used by theme specific `SelectWidget` implementat
 
 #### Returns
 
-- UseSelectFocusHandlersResult: The `reportedValue`, and the `handleFocus` and `handleBlur` callbacks that report it
+- UseSelectFocusHandlersResult: The `handleFocus` and `handleBlur` callbacks that report the widget's form data value
 
 ### useTimeWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

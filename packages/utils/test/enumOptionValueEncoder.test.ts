@@ -38,5 +38,13 @@ describe('enumOptionValueEncoder', () => {
     it('falls back to index for null, keeping it distinct from the empty placeholder', () => {
       expect(enumOptionValueEncoder(null, 2, 'realValue')).toBe(`${ENUM_OPTION_INDEX_PREFIX}2`);
     });
+    it('falls back to index for the empty string, keeping it distinct from the empty placeholder', () => {
+      expect(enumOptionValueEncoder('', 3, 'realValue')).toBe(`${ENUM_OPTION_INDEX_PREFIX}3`);
+    });
+    it('falls back to index for a string spelled with the index prefix', () => {
+      expect(enumOptionValueEncoder(`${ENUM_OPTION_INDEX_PREFIX}1`, 0, 'realValue')).toBe(
+        `${ENUM_OPTION_INDEX_PREFIX}0`,
+      );
+    });
   });
 });

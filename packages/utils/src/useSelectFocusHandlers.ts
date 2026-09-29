@@ -5,11 +5,9 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 export interface UseSelectFocusHandlersResult {
-  /** The form data value focus and blur report: the `value` itself, or the `emptyValue` option when nothing is selected */
-  reportedValue: any;
-  /** Reports the `reportedValue` to the widget's `onFocus` */
+  /** Reports the widget's form data value to its `onFocus` */
   handleFocus: () => void;
-  /** Reports the `reportedValue` to the widget's `onBlur` */
+  /** Reports the widget's form data value to its `onBlur` */
   handleBlur: () => void;
 }
 
@@ -28,7 +26,8 @@ export default function useSelectFocusHandlers<
 >(props: Pick<WidgetProps<T, S, F>, 'id' | 'value' | 'options' | 'onFocus' | 'onBlur'>): UseSelectFocusHandlersResult {
   const { id, value, options, onFocus, onBlur } = props;
   const reportedValue = value === undefined ? options.emptyValue : value;
-  const handleFocus = useCallback(() => onFocus(id, reportedValue), [onFocus, id, reportedValue]);
-  const handleBlur = useCallback(() => onBlur(id, reportedValue), [onBlur, id, reportedValue]);
-  return { reportedValue, handleFocus, handleBlur };
+  // Guarded although `WidgetProps` requires both, since a custom field composing a theme's widget may leave them out
+  const handleFocus = useCallback(() => onFocus?.(id, reportedValue), [onFocus, id, reportedValue]);
+  const handleBlur = useCallback(() => onBlur?.(id, reportedValue), [onBlur, id, reportedValue]);
+  return { handleFocus, handleBlur };
 }

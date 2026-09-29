@@ -64,22 +64,7 @@ describe('SelectWidget optgroups', () => {
     consoleError.mockRestore();
   });
 
-  test('skips options that encode to an empty value when optionValueFormat is realValue', () => {
-    const uiSchema: UiSchema = {
-      'ui:options': {
-        optionValueFormat: 'realValue',
-      },
-    };
-
-    const { container } = render(
-      <Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />,
-    );
-
-    const options = container.querySelectorAll('[role="option"]');
-    expect(Array.from(options).map((option) => option.textContent)).toEqual(['foo', 'bar']);
-  });
-
-  test('omits a group whose options all encode to an empty value when optionValueFormat is realValue', () => {
+  test('offers an empty string option and its group when optionValueFormat is realValue', () => {
     const uiSchema: UiSchema = {
       'ui:options': {
         optionValueFormat: 'realValue',
@@ -90,10 +75,12 @@ describe('SelectWidget optgroups', () => {
       },
     };
 
-    render(<Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />);
+    const { container } = render(
+      <Form schema={{ type: 'string', enum: ['foo', '', 'bar'] }} uiSchema={uiSchema} validator={validator} />,
+    );
 
-    expect(screen.getByText('Group A')).toBeInTheDocument();
-    expect(screen.queryByText('Empty Group')).not.toBeInTheDocument();
+    expect(screen.getByText('Empty Group')).toBeInTheDocument();
+    expect(container.querySelectorAll('[role="option"]')).toHaveLength(3);
   });
 });
 

@@ -84,10 +84,9 @@ describe('enumOptionSelectedValue', () => {
     it('returns emptyValue for an object value that matches no option', () => {
       expect(enumOptionSelectedValue({ id: 2 }, mixedOptions, false, 'realValue', '')).toBe('');
     });
-    it('returns an empty string, not the whole-selection emptyValue, for an unmatched object of multiple values', () => {
+    it('leaves out an unmatched object of multiple values, as the indexed format does', () => {
       expect(enumOptionSelectedValue([{ id: 1 }, { id: 2 }], mixedOptions, true, 'realValue', [])).toEqual([
         `${ENUM_OPTION_INDEX_PREFIX}2`,
-        '',
       ]);
     });
     it('encodes multiple values the same way as the option values', () => {
@@ -96,11 +95,35 @@ describe('enumOptionSelectedValue', () => {
         `${ENUM_OPTION_INDEX_PREFIX}1`,
       ]);
     });
+    it('keeps an empty string option apart from the empty selection of a single select', () => {
+      const options: EnumOptionsType[] = [
+        { label: 'empty', value: '' },
+        { label: 'object', value: { a: 1 } },
+      ];
+      expect(enumOptionSelectedValue({ a: 2 }, options, false, 'realValue', '')).toBe('');
+      expect(enumOptionSelectedValue('', options, false, 'realValue', '')).toBe(`${ENUM_OPTION_INDEX_PREFIX}0`);
+    });
+    it('does not select an empty string option for an unmatched lone value of a multiple selection', () => {
+      const options: EnumOptionsType[] = [
+        { label: 'empty', value: '' },
+        { label: 'a', value: 'a' },
+      ];
+      expect(enumOptionSelectedValue(null, options, true, 'realValue', [])).toEqual([]);
+    });
+    it('encodes a selected string spelled with the index prefix as its option does', () => {
+      const options: EnumOptionsType[] = [
+        { label: 'Object', value: { a: 1 } },
+        { label: 'Prefixed string', value: `${ENUM_OPTION_INDEX_PREFIX}0` },
+      ];
+      expect(enumOptionSelectedValue(`${ENUM_OPTION_INDEX_PREFIX}0`, options, false, 'realValue')).toBe(
+        `${ENUM_OPTION_INDEX_PREFIX}1`,
+      );
+    });
     it('matches a lone non-array value of a multiple selection as a one-item selection', () => {
       expect(enumOptionSelectedValue(null, mixedOptions, true, 'realValue', [])).toEqual([
         `${ENUM_OPTION_INDEX_PREFIX}1`,
       ]);
-      expect(enumOptionSelectedValue(null, stringOptions, true, 'realValue', [])).toEqual(['']);
+      expect(enumOptionSelectedValue(null, stringOptions, true, 'realValue', [])).toEqual([]);
       expect(enumOptionSelectedValue('bar', stringOptions, true, 'realValue', [])).toEqual(['bar']);
     });
     it('returns String(value) for a single string value', () => {

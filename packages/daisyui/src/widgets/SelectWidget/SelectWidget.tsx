@@ -11,6 +11,7 @@ import type {
 import {
   enumOptionSelectedValue,
   enumOptionsDeselectValue,
+  enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
@@ -145,10 +146,8 @@ export default function SelectWidget<
     .filter((v) => v !== '');
 
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
-  // Looked up by encoded value, which is an option's index only in the `indexed` format
-  const selectedLabels = optionsList
-    .filter((option, index) => selectedValues.includes(enumOptionValueEncoder(option.value, index, optionValueFormat)))
-    .map((option) => option.label);
+  const selectedIndexes = [enumOptionsIndexForValue<S>(value, optionsList, isMultiple) ?? []].flat();
+  const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const encodedValue = enumOptionValueEncoder(option.value, option.index, optionValueFormat);

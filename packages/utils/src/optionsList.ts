@@ -1,4 +1,5 @@
 import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
+import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getUiOptions from './getUiOptions.ts';
@@ -7,13 +8,6 @@ import isConstantOptionList from './isConstantOptionList.ts';
 import { getByPath } from './pathUtils.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
-
-/** The label for an option with no title of its own: its value, with an object or array spelled out, since `String()`
- * would label every one of them `[object Object]`
- */
-function valueLabel(value: unknown): string {
-  return typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value);
-}
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
  * remaining options in their original order. Options not listed in `order` (and not covered by
@@ -66,8 +60,8 @@ export default function optionsList<
     }
     let options = schema.enum.map((value, i) => {
       const label = Array.isArray(enumNames)
-        ? enumNames[i] || valueLabel(value)
-        : enumNames?.[String(value)] || valueLabel(value);
+        ? enumNames[i] || enumOptionValueLabel(value)
+        : enumNames?.[String(value)] || enumOptionValueLabel(value);
       return { label, value };
     });
     if (enumOrder) {
@@ -99,10 +93,10 @@ export default function optionsList<
       const innerSchema = getPropertySchema<S>(aSchema, selectorField);
       value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
       // Use nullish coalescing so that an explicitly empty string title is preserved
-      label = label ?? innerSchema?.title ?? aSchema.title ?? valueLabel(value);
+      label = label ?? innerSchema?.title ?? aSchema.title ?? enumOptionValueLabel(value);
     } else {
       value = toConstant(aSchema);
-      label = label ?? aSchema.title ?? valueLabel(value);
+      label = label ?? aSchema.title ?? enumOptionValueLabel(value);
     }
     return {
       schema: aSchema,

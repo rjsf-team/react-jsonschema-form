@@ -465,7 +465,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (resolveAnyOfOrOneOfRefs) {
-    const key = getXxxOfKey<S>(schema);
+    // Read from the resolved schema, which is what every reader of its options picks the keyword from
+    const key = getXxxOfKey<S>(resolvedSchema);
     const schemas = key && (resolvedSchema[key] as S[] | undefined);
     if (key && schemas) {
       resolvedSchema = {
@@ -842,9 +843,13 @@ export function resolveAnyOrOneOfSchemas<
 >(validator: ValidatorType<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
-    // Only the keyword read is resolved here, so the other one stays on each result for whatever resolves it next,
-    // such as the schema parser walking every branch a precompiled validator must cover
-    const { [xxxOfKey]: _resolvedOptions, ...remaining } = schema;
+    const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...withoutOptions } = schema;
+    const otherKey = xxxOfKey === ANY_OF_KEY ? ONE_OF_KEY : ANY_OF_KEY;
+    // The schema parser walks every branch a precompiled validator must cover, so when expanding them all the keyword
+    // that isn't read stays on each result for it to reach. A rendered schema drops it, since what is rendered from the
+    // result is its own options, and one that kept the other keyword would render those instead
+    const remaining =
+      expandAllBranches && otherKey in schema ? { ...withoutOptions, [otherKey]: schema[otherKey] } : withoutOptions;
     let anyOrOneOf = schema[xxxOfKey] as S[];
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;

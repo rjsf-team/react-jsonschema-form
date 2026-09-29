@@ -35,6 +35,46 @@ describe('schemaParser()', () => {
     expect(titles).toContain('empty');
   });
 
+  it('parses the properties an option declares that its parent does not', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            x: {
+              anyOf: [
+                { type: 'string', minLength: 3, title: 'text' },
+                { type: 'number', minimum: 7, title: 'count' },
+              ],
+            },
+          },
+        },
+      ],
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('text');
+    expect(titles).toContain('count');
+  });
+
+  it('parses the items an option declares that its parent does not', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          type: 'array',
+          items: {
+            anyOf: [
+              { type: 'string', minLength: 3, title: 'text' },
+              { type: 'number', minimum: 7, title: 'count' },
+            ],
+          },
+        },
+      ],
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toContain('text');
+    expect(titles).toContain('count');
+  });
+
   it('parses property dependencies properly', () => {
     const schemaMap = schemaParser(PROPERTY_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();

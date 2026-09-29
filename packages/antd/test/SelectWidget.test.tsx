@@ -127,3 +127,25 @@ describe('SelectWidget focus and blur', () => {
     },
   );
 });
+
+describe('SelectWidget over object constants', () => {
+  it('shows the validation feedback of a typed object select, as for any other select', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        plan: {
+          type: 'object',
+          oneOf: [
+            { const: { tier: 1 }, title: 'Basic' },
+            { const: { tier: 2 }, title: 'Pro' },
+          ],
+        },
+        name: { type: 'string', enum: ['a', 'b'] },
+      },
+    };
+
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelectorAll('.ant-select-has-feedback')).toHaveLength(2);
+  });
+});

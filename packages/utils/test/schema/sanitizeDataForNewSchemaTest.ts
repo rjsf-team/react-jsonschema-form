@@ -571,7 +571,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { field: 2 })).toEqual({ field: 2 });
     });
-    it('keeps invalid data when oneOf does not provide enum-like values', () => {
+    it('clears data that no value of a multi-value enum option allows', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',
         properties: {
@@ -595,8 +595,24 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           enumField: 'oldData',
         }),
       ).toEqual({
-        enumField: 'oldData',
+        enumField: undefined,
       });
+    });
+    it('keeps data when the options offer no value at all', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { x: { type: 'string', oneOf: [{ enum: [] }] } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { x: 'b' })).toEqual({ x: 'b' });
+    });
+    it('keeps data that a multi-value enum option beside a const allows', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { x: { type: 'string', anyOf: [{ const: 'z' }, { enum: ['a', 'b'] }] } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { x: 'b' })).toEqual({ x: 'b' });
     });
     it('returns empty formData after resolving schema refs', () => {
       const rootSchema: RJSFSchema = {
