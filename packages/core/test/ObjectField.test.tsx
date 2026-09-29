@@ -137,6 +137,20 @@ describe('ObjectField', () => {
       },
     );
 
+    it('should pass its own errors down to a custom ObjectFieldTemplate as rawErrors', async () => {
+      function RawErrorsObjectFieldTemplate({ rawErrors }: ObjectFieldTemplateProps) {
+        return <div id='custom'>{rawErrors}</div>;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } }, minProperties: 1 },
+        templates: { ObjectFieldTemplate: RawErrorsObjectFieldTemplate },
+        showErrorList: false,
+      });
+      await submitForm(node, user);
+
+      expect(node.querySelector('#custom')).toHaveTextContent('must NOT have fewer than 1 properties');
+    });
+
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
 

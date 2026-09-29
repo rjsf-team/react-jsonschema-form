@@ -2842,7 +2842,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         data-label-position="right"
                       >
                         <input
-                          aria-describedby="root_2__description root_2__help"
+                          aria-describedby="root_2__error root_2__description root_2__help"
                           checked=""
                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                           data-with-error-styles="true"

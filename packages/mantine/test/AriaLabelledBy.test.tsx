@@ -642,7 +642,7 @@ describe('aria-labelledby', () => {
     );
 
     const error = screen.getByTestId('error');
-    expect(error).toHaveTextContent('First errorSecond error');
+    expect(error).toHaveTextContent('First error Second error');
     expect(error.querySelectorAll('br')).toHaveLength(1);
   });
 
@@ -808,6 +808,15 @@ describe('aria-labelledby', () => {
 
     expect(screen.getByRole('slider')).not.toHaveAttribute('aria-labelledby');
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  test('range widget names the slider thumb by the title when ui:options.thumbProps unsets the thumbLabel', () => {
+    renderField(
+      { type: 'integer', title: 'A title' },
+      { 'ui:widget': 'range', 'ui:options': { thumbLabel: 'Volume', thumbProps: { thumbLabel: undefined } } },
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('A title');
   });
 
   const selectWidgets: [string, RJSFSchema][] = [

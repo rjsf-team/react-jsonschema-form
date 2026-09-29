@@ -16,32 +16,32 @@ import { useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from
 interface AltDatePartProps {
   id: string;
   part: DateElementProp;
-  inputContainer: unknown;
-  wrapperOverrides: GenericObjectType;
+  ariaDescribedByProps: GenericObjectType;
   disabled?: boolean;
   autofocus?: boolean;
+  required?: boolean;
   invalid: boolean;
+  success: boolean;
   labelled: boolean;
-  fieldSuccessId: string;
   onChange: (property: keyof DateObject, value?: string) => void;
   onBlur: (id: string, value: unknown) => void;
   onFocus: (id: string, value: unknown) => void;
 }
 
-/** One part of the date, such as the year, as a `Select` with its own id, rendered inside the field's `Input.Wrapper`,
- * whose success message it is described by. The part is named by the field's title followed by its own `aria-label`,
- * which a self-reference in `aria-labelledby` resolves to, and which Mantine also gives the part's listbox.
+/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the field's title
+ * followed by its own `aria-label`, which a self-reference in `aria-labelledby` resolves to, and which Mantine also
+ * gives the part's listbox.
  */
 function AltDatePart({
   id,
   part,
-  inputContainer,
-  wrapperOverrides,
+  ariaDescribedByProps,
   disabled,
   autofocus,
+  required,
   invalid,
+  success,
   labelled,
-  fieldSuccessId,
   onChange,
   onBlur,
   onFocus,
@@ -57,13 +57,6 @@ function AltDatePart({
   );
   const handleBlur = useCallback(() => onBlur(partId, partValue), [onBlur, partId, partValue]);
   const handleFocus = useCallback(() => onFocus(partId, partValue), [onFocus, partId, partValue]);
-  const shownSuccessId = useShownSuccessId(fieldSuccessId);
-  const ariaDescribedByProps = useAriaDescribedByProps(
-    'Select',
-    id,
-    { inputContainer },
-    { alsoDescribedBy: shownSuccessId, wrapperOverrides },
-  );
   return (
     <Box>
       <Select
@@ -74,9 +67,11 @@ function AltDatePart({
         aria-labelledby={labelled ? `${titleId(id)} ${partId}` : undefined}
         disabled={disabled}
         autoFocus={autofocus}
+        // The parts are read-only while `searchable` is false, so this adds no constraint validation
+        required={required}
         // Booleans mark and style the part invalid or successful, without Mantine rendering the field's messages again
         error={invalid}
-        success={!!shownSuccessId}
+        success={success}
         data={data}
         value={partValue === undefined ? null : partValue.toString()}
         onChange={handleChange}
@@ -91,6 +86,44 @@ function AltDatePart({
   );
 }
 
+interface AltDatePartsProps extends Omit<AltDatePartProps, 'part' | 'ariaDescribedByProps' | 'success'> {
+  elements: DateElementProp[];
+  inputContainer: unknown;
+  wrapperOverrides: GenericObjectType;
+  fieldSuccessId: string;
+}
+
+/** The parts of the date, rendered inside the field's `Input.Wrapper`, whose success message they are described by
+ * while it is shown. Their aria props are the same for every part, so they are resolved once here.
+ */
+function AltDateParts({
+  elements,
+  autofocus,
+  inputContainer,
+  wrapperOverrides,
+  fieldSuccessId,
+  ...partProps
+}: AltDatePartsProps) {
+  const shownSuccessId = useShownSuccessId(fieldSuccessId);
+  const ariaDescribedByProps = useAriaDescribedByProps(
+    'Select',
+    partProps.id,
+    { inputContainer },
+    { alsoDescribedBy: shownSuccessId, wrapperOverrides },
+  );
+  return elements.map((part, i) => (
+    <AltDatePart
+      // oxlint-disable-next-line react/no-array-index-key
+      key={i}
+      part={part}
+      ariaDescribedByProps={ariaDescribedByProps}
+      autofocus={autofocus && i === 0}
+      success={!!shownSuccessId}
+      {...partProps}
+    />
+  ));
+}
+
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
@@ -99,7 +132,7 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, disabled, readonly, autofocus, label, options, registry, onBlur, onFocus } = props;
+  const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
   const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props, true);
@@ -121,24 +154,21 @@ export default function AltDateWidget<
       {hiddenTitle}
       <Input.Wrapper {...wrapperProps}>
         <Flex gap='xs' align='center' wrap='nowrap'>
-          {elements.map((part, i) => (
-            <AltDatePart
-              // oxlint-disable-next-line react/no-array-index-key
-              key={i}
-              id={id}
-              part={part}
-              inputContainer={inputContainer}
-              wrapperOverrides={wrapperOverrides}
-              disabled={disabled || readonly}
-              autofocus={autofocus && i === 0}
-              invalid={invalid}
-              labelled={!!label}
-              fieldSuccessId={successId}
-              onChange={handleChange}
-              onBlur={onBlur}
-              onFocus={onFocus}
-            />
-          ))}
+          <AltDateParts
+            id={id}
+            elements={elements}
+            inputContainer={inputContainer}
+            wrapperOverrides={wrapperOverrides}
+            disabled={disabled || readonly}
+            autofocus={autofocus}
+            required={required}
+            invalid={invalid}
+            labelled={!!label}
+            fieldSuccessId={successId}
+            onChange={handleChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+          />
           <Group wrap='nowrap' gap={3}>
             {!options.hideNowButton && (
               <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>

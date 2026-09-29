@@ -296,7 +296,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         data-label-position="right"
                                       >
                                         <input
-                                          aria-describedby="root_tasks_0_done__description root_tasks_0_done__help"
+                                          aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                           data-with-error-styles="true"
                                           id="root_tasks_0_done"
@@ -552,7 +552,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         data-label-position="right"
                                       >
                                         <input
-                                          aria-describedby="root_tasks_1_done__description root_tasks_1_done__help"
+                                          aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                           checked=""
                                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                           data-with-error-styles="true"
@@ -2385,7 +2385,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     data-label-position="right"
                   >
                     <input
-                      aria-describedby="root_active__description root_active__help"
+                      aria-describedby="root_active__error root_active__description root_active__help"
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"
                       id="root_active"
@@ -2704,7 +2704,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         data-label-position="right"
                                       >
                                         <input
-                                          aria-describedby="root_tasks_0_done__description root_tasks_0_done__help"
+                                          aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                           data-with-error-styles="true"
                                           id="root_tasks_0_done"
@@ -2960,7 +2960,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         data-label-position="right"
                                       >
                                         <input
-                                          aria-describedby="root_tasks_1_done__description root_tasks_1_done__help"
+                                          aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                           checked=""
                                           class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                           data-with-error-styles="true"
@@ -4366,7 +4366,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     data-label-position="right"
                   >
                     <input
-                      aria-describedby="root_active__description root_active__help"
+                      aria-describedby="root_active__error root_active__description root_active__help"
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"
                       id="root_active"
@@ -6024,7 +6024,7 @@ exports[`single fields > checkbox field 1`] = `
             data-label-position="right"
           >
             <input
-              aria-describedby="root__description root__help"
+              aria-describedby="root__error root__description root__help"
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
@@ -6116,7 +6116,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
             data-label-position="right"
           >
             <input
-              aria-describedby="root__description root__help"
+              aria-describedby="root__error root__description root__help"
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
@@ -6207,7 +6207,7 @@ exports[`single fields > checkbox field with label 1`] = `
             data-label-position="right"
           >
             <input
-              aria-describedby="root__description root__help"
+              aria-describedby="root__error root__description root__help"
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
@@ -6306,7 +6306,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
             data-label-position="right"
           >
             <input
-              aria-describedby="root__description root__help"
+              aria-describedby="root__error root__description root__help"
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
@@ -6413,7 +6413,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
             data-label-position="right"
           >
             <input
-              aria-describedby="root__description root__help"
+              aria-describedby="root__error root__description root__help"
               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
               data-with-error-styles="true"
               id="root"
@@ -14635,7 +14635,7 @@ exports[`single fields > required checkbox field 1`] = `
                     data-label-position="right"
                   >
                     <input
-                      aria-describedby="root_agree__description root_agree__help"
+                      aria-describedby="root_agree__error root_agree__description root_agree__help"
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"
                       id="root_agree"
@@ -14753,7 +14753,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                     data-label-position="right"
                   >
                     <input
-                      aria-describedby="root_agree__description root_agree__help"
+                      aria-describedby="root_agree__error root_agree__description root_agree__help"
                       checked=""
                       class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                       data-with-error-styles="true"

@@ -1,6 +1,8 @@
 import { Stack } from '@mantine/core';
 import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
+import { SelectedOptionProvider } from '../utils.tsx';
+
 export default function MultiSchemaFieldTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -9,7 +11,7 @@ export default function MultiSchemaFieldTemplate<
   return (
     <Stack style={{ marginBottom: '1rem' }}>
       {selector}
-      {optionSchemaField}
+      <SelectedOptionProvider>{optionSchemaField}</SelectedOptionProvider>
     </Stack>
   );
 }

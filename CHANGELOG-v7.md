@@ -130,6 +130,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed live validation dropping every `extraErrors` entry when the form derived state from new props, so a server-supplied error disappeared as soon as a controlled parent replaced the form data
 - Fixed `extraErrors` and `customErrors` being merged into the errors a second time whenever the form derived state from new props under `liveValidate: 'onChange'` without re-validating, so a re-render changing only `className` duplicated every server-supplied error, the duplication half of [#4408](https://github.com/rjsf-team/react-jsonschema-form/issues/4408) (the clearing half was fixed by `getDerivedStateFromProps` in v6)
 - Fixed a changed `validator`, `customMergeAllOf` or `defaultFormStateBehavior` leaving the previously retrieved schema in state, so live validation kept running against a schema the old settings had resolved
+- `ObjectField` passes the object's own errors to `ObjectFieldTemplate` as `rawErrors`, as `ArrayField` does to `ArrayFieldTemplate` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/daisyui
 
@@ -177,11 +178,12 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** Fixed Mantine widgets discarding `aria-describedby`: inputs are now described by the field's description, error and help ids. The Mantine peer dependency floor is now `>=9.6.3`. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - **BREAKING CHANGE** Fixed `CheckboxesWidget` and `RadioWidget` labelling their group by a label id that was never rendered, and gave `RangeWidget`'s thumb and each `AltDateWidget` date part an accessible name. `RangeWidget` and `AltDateWidget` now render their title, description and errors in Mantine's `Input.Wrapper`. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed a Mantine widget's errors running together on one line ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
-- Fixed widgets ignoring `descriptionProps` from `ui:options` and the Mantine theme ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
-- **BREAKING CHANGE** Fixed a `oneOf`/`anyOf` selector referencing no error and `CheckboxWidget` reading its error twice: Mantine's error element now has the field's error id (`<id>__error`), and `FieldErrorTemplate` renders nothing. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Fixed widgets other than `CheckboxWidget` ignoring `descriptionProps` from `ui:options` and the Mantine theme ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- **BREAKING CHANGE** Fixed a `oneOf`/`anyOf` selector referencing no error and `CheckboxWidget` reading its error twice: Mantine's error element and `CheckboxWidget`'s now have the field's error id (`<id>__error`), `FieldErrorTemplate` renders nothing, and `ObjectFieldTemplate` and `ArrayFieldTemplate` render the object's or array's own errors. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed `RangeWidget` and `AltDateWidget` never marking their inputs invalid or rendering a `success` option ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed `AltDateTimeWidget` showing a zero hour, minute or second as empty, and `AltDateWidget` and `AltDateTimeWidget` leaving their Now and Clear buttons enabled when disabled or read-only and ignoring `autofocus`, `onBlur` and `onFocus` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - **BREAKING CHANGE** Fixed `RangeWidget`, `PasswordWidget`, `TimeWidget`, `ColorWidget`, `FileWidget` and `DateTimeInput` ignoring `nameGenerator`. They, `TextareaWidget` and `CheckboxWidget` now fall back to the field's id rather than the bare property name, as the other widgets do. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Fixed `CheckboxWidget` and the options of `CheckboxesWidget` and `RadioWidget` never being marked invalid, the radios and `AltDateWidget`'s date parts never being marked required, and the checkbox and radio options not being described by a `success` message ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/mui
 
@@ -263,6 +265,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `FieldTemplateProps.rawHelp` is `string | ReactElement` and carries whatever `ui:help` resolved to, instead of being `string` and silently `undefined` for a `ui:help` passed as a React element. It is now a reliable truthy check for whether a field has any help, which is what a `FieldTemplate` gating on it wants; code that used it as a string (`rawHelp.length`, or passing it where a `string` is required) has to narrow it first ([#5326](https://github.com/rjsf-team/react-jsonschema-form/issues/5326))
 - Removed the `jsonpointer` dependency; `findSchemaDefinition()` now resolves JSON pointer fragments through `getByPath()`, so a `#/__proto__` ref finds nothing instead of `Object.prototype`, unless the schema has a genuine own `__proto__` key
 - Removed the `fast-uri` dependency; `findSchemaDefinition()` now resolves and compares `$ref`/`$id` URIs with the platform `URL` parser. Relative `$ref`s against a relative or fragment base (a root without `$id`, or a nested relative `$id`) now follow RFC 3986 resolution, so some refs that previously failed to resolve, such as `../other.json`, now do; comparison decodes every percent-encoded unreserved character (`%2E` matches `.` as well as `%7E` matching `~`); and `urn:` namespace identifiers are compared case-sensitively
+- Moved `rawErrors` from `ArrayFieldTemplateProps` to `ContainerFieldTemplateProps`, so `ObjectFieldTemplateProps` declares it too ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/validator-ajv8
 

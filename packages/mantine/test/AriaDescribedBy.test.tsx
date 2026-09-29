@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
-import { use } from 'react';
+import { createElement, use } from 'react';
 import { createTheme, InputWrapperContext, MantineProvider } from '@mantine/core';
-import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, helpId } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, errorId, helpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
+import { errorLines } from '../src/utils.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -31,11 +32,22 @@ function describedByValues(container: HTMLElement) {
 }
 
 const enumSchema: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
+const checkboxesSchema: RJSFSchema = { type: 'array', items: enumSchema, uniqueItems: true };
 
-function renderThemed(components: Record<string, { defaultProps: object }>, schema: RJSFSchema, uiSchema?: UiSchema) {
+function renderThemed(
+  components: Record<string, { defaultProps: object }>,
+  schema: RJSFSchema,
+  uiSchema?: UiSchema,
+  extraErrors?: ErrorSchema,
+) {
   return render(
     <MantineProvider theme={createTheme({ components })}>
-      <Form schema={{ description: 'A description', ...schema }} uiSchema={uiSchema} validator={validator} />
+      <Form
+        schema={{ description: 'A description', ...schema }}
+        uiSchema={uiSchema}
+        validator={validator}
+        extraErrors={extraErrors}
+      />
     </MantineProvider>,
   );
 }
@@ -344,10 +356,32 @@ describe('aria-describedby', () => {
       },
     );
 
-    test('describes a radio group, which is otherwise left undescribed', () => {
-      renderThemed({}, enumSchema, { 'ui:widget': 'radio', 'ui:options': { success: 'Looks good' } });
+    test.each([
+      ['radio', 'radiogroup', 'radio'],
+      ['checkboxes', 'group', 'checkbox'],
+    ] as const)('describes each %s option by it, leaving the group undescribed', (widget, groupRole, optionRole) => {
+      renderThemed({}, widget === 'radio' ? enumSchema : checkboxesSchema, {
+        'ui:widget': widget,
+        'ui:options': { success: 'Looks good' },
+      });
 
-      expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-describedby', 'root-success');
+      expect(screen.getByRole(groupRole)).not.toHaveAttribute('aria-describedby');
+      for (const option of screen.getAllByRole(optionRole)) {
+        expect(option).toHaveAttribute('aria-describedby', `${ariaDescribedByIds('root')} root-success`);
+      }
+    });
+
+    test('leaves the radio options described by the field ids alone while the field has errors', () => {
+      renderThemed(
+        {},
+        enumSchema,
+        { 'ui:widget': 'radio', 'ui:options': { success: 'Looks good' } },
+        { __errors: ['An error'] },
+      );
+
+      for (const option of screen.getAllByRole('radio')) {
+        expect(option).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+      }
     });
   });
 
@@ -388,5 +422,177 @@ describe('aria-describedby', () => {
 
     expect(screen.getByRole('slider')).toHaveFocus();
     expect(onFocus).toHaveBeenCalled();
+  });
+
+  test('checkbox widget renders its error with the field error id, which it is described by', () => {
+    const { container } = renderField({ type: 'boolean' });
+
+    expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
+    expect(container.querySelector('[id="root-error"]')).not.toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+  });
+
+  describe('invalid and required options', () => {
+    const optionWidgets: [string, RJSFSchema, UiSchema, string][] = [
+      ['radio', enumSchema, { 'ui:widget': 'radio' }, 'radio'],
+      ['checkboxes', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'checkbox'],
+      ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ];
+
+    test.each(optionWidgets)(
+      '%s widget marks each option invalid while the field has errors',
+      (_, schema, uiSchema, role) => {
+        renderField(schema, uiSchema);
+
+        for (const option of screen.getAllByRole(role)) {
+          expect(option).toHaveAttribute('aria-invalid', 'true');
+        }
+      },
+    );
+
+    test.each(optionWidgets)('%s widget leaves each option unmarked without errors', (_, schema, uiSchema, role) => {
+      renderThemed({}, schema, uiSchema);
+
+      for (const option of screen.getAllByRole(role)) {
+        expect(option).not.toHaveAttribute('aria-invalid');
+      }
+    });
+
+    test.each([
+      ['a required radio', 'radio', enumSchema, 'radio', ['field'], true],
+      ['an optional radio', 'radio', enumSchema, 'radio', [], false],
+      ['a required checkboxes', 'checkboxes', checkboxesSchema, 'checkbox', ['field'], false],
+    ] as const)(
+      'marks each option of %s field required only for a required radio',
+      (_, widget, schema, role, required, expected) => {
+        render(
+          <WrappedForm
+            schema={{ type: 'object', required: [...required], properties: { field: schema } }}
+            uiSchema={{ field: { 'ui:widget': widget } }}
+            validator={validator}
+          />,
+        );
+
+        for (const option of screen.getAllByRole(role)) {
+          expect((option as HTMLInputElement).required).toBe(expected);
+        }
+      },
+    );
+  });
+
+  test('renders the errors of objects and item-by-item arrays, which no widget renders, once each', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            list: { type: 'array', items: { type: 'string' } },
+            obj: { type: 'object', properties: { x: { type: 'string' } } },
+            tags: checkboxesSchema,
+            files: { type: 'array', items: { type: 'string', format: 'data-url' } },
+            custom: { type: 'array', items: { type: 'string' } },
+            text: { type: 'string' },
+          },
+        }}
+        uiSchema={{ custom: { 'ui:widget': ({ id }: WidgetProps) => <input id={id} /> } }}
+        validator={validator}
+        extraErrors={
+          {
+            list: { __errors: ['List error'] },
+            obj: { __errors: ['Obj error'] },
+            tags: { __errors: ['Tags error'] },
+            files: { __errors: ['Files error'] },
+            custom: { __errors: ['Custom error'] },
+            text: { __errors: ['Text error'] },
+          } as ErrorSchema
+        }
+        showErrorList={false}
+      />,
+    );
+
+    for (const [field, message] of [
+      ['list', 'List error'],
+      ['obj', 'Obj error'],
+      ['tags', 'Tags error'],
+      ['files', 'Files error'],
+      ['text', 'Text error'],
+    ]) {
+      const errors = container.querySelectorAll(`[id="${errorId(`root_${field}`)}"]`);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toHaveTextContent(message);
+    }
+    // A custom widget renders its own errors, as for any other type, which this one doesn't
+    expect(container.querySelector(`[id="${errorId('root_custom')}"]`)).not.toBeInTheDocument();
+  });
+
+  test.each([
+    ['oneOf', { oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }] }],
+    ['anyOf', { anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }] }],
+    [
+      'oneOf of arrays',
+      {
+        oneOf: [
+          { type: 'array', items: { type: 'string' } },
+          { type: 'array', items: { type: 'number' } },
+        ],
+      },
+    ],
+  ] as [string, RJSFSchema][])(
+    'renders the errors of a field with a %s once, through its option selector',
+    (_, schema) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', ...schema }}
+          validator={validator}
+          extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+          showErrorList={false}
+        />,
+      );
+
+      expect(screen.getAllByText('Own error')).toHaveLength(1);
+      expect(screen.getByRole('combobox')).toHaveAccessibleDescription(/Own error/);
+    },
+  );
+
+  test('renders the errors of fields inside the option a selector picked', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          oneOf: [{ properties: { list: { type: 'array', items: { type: 'string' } } } }],
+        }}
+        validator={validator}
+        extraErrors={{ list: { __errors: ['List error'] } } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(container.querySelector(`[id="${errorId('root_list')}"]`)).toHaveTextContent('List error');
+  });
+
+  test('leaves the errors of an object with a custom ui:field to that field', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string' } } }}
+        uiSchema={{ 'ui:field': ({ rawErrors }: FieldProps) => <div>{rawErrors?.join()}</div> }}
+        validator={validator}
+        extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(screen.getAllByText('Own error')).toHaveLength(1);
+  });
+
+  test('renders errors given as elements, each on its own line, without a missing key warning', () => {
+    const consoleError = vi.spyOn(console, 'error');
+    const { container } = render(
+      <div>{errorLines([createElement('b', null, 'First error'), createElement('b', null, 'Second error')])}</div>,
+    );
+
+    expect(container).toHaveTextContent('First error Second error');
+    expect(container.querySelectorAll('br')).toHaveLength(1);
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 });

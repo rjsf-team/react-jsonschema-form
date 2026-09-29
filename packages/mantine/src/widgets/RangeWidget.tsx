@@ -62,7 +62,7 @@ const sliderExcludedKeyRecord: Record<SliderExcludedKey, true> = {
 };
 const sliderExcludedKeys = Object.keys(sliderExcludedKeyRecord);
 
-interface RangeSliderProps extends Omit<SliderProps, 'thumbProps'> {
+interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   id: string;
   // Mantine's `Thumb` also reads a `thumbLabel` from it, which `SliderProps` doesn't type
   thumbProps?: GenericObjectType;
@@ -75,7 +75,7 @@ interface RangeSliderProps extends Omit<SliderProps, 'thumbProps'> {
  * message of the `Input.Wrapper` it is rendered in while Mantine renders it. Every other prop, including the ref and
  * handlers a single-child `inputContainer` such as `Tooltip` adds, is passed on to the `Slider`.
  */
-function RangeSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, ...props }: RangeSliderProps) {
+function FieldSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, ...props }: FieldSliderProps) {
   const shownSuccessId = useShownSuccessId(successId);
   return (
     <Slider
@@ -88,11 +88,13 @@ function RangeSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, .
           .filter(Boolean)
           .join(' '),
         'aria-invalid': thumbProps?.['aria-invalid'] ?? (invalid || undefined),
-        // Mantine names the thumb by `thumbLabel`, which `thumbProps` can override, through `aria-label`, which
-        // `aria-labelledby` would override in turn
+        // Mantine names the thumb by `thumbLabel` through `aria-label`, which `aria-labelledby` would override in turn.
+        // A `thumbLabel` key in `thumbProps` replaces it, even when `undefined`, since Mantine spreads `thumbProps` last.
         'aria-labelledby':
           thumbProps?.['aria-labelledby'] ??
-          (titled && !(thumbProps?.thumbLabel ?? thumbLabel) ? titleId(id) : undefined),
+          (titled && !(thumbProps && 'thumbLabel' in thumbProps ? thumbProps.thumbLabel : thumbLabel)
+            ? titleId(id)
+            : undefined),
       }}
     />
   );
@@ -145,7 +147,7 @@ export default function RangeWidget<
     <>
       {hiddenTitle}
       <Input.Wrapper {...wrapperProps}>
-        <RangeSlider
+        <FieldSlider
           id={id}
           name={htmlName || id}
           value={value}

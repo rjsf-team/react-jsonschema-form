@@ -10,7 +10,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -66,26 +66,29 @@ export default function CheckboxesWidget<
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={visibleErrors(props)}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}
     >
       <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
-        {enumOptions.map((option, i) => (
-          <Checkbox
-            key={String(option.value)}
-            id={optionId(id, i)}
-            name={htmlName || id}
-            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
-            label={option.label}
-            disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-            autoFocus={i === 0 && autofocus}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            {...optionProps}
-          />
-        ))}
+        <GroupOptions optionProps={optionProps}>
+          {(describedOptionProps) =>
+            enumOptions.map((option, i) => (
+              <Checkbox
+                key={String(option.value)}
+                id={optionId(id, i)}
+                name={htmlName || id}
+                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                label={option.label}
+                disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+                autoFocus={i === 0 && autofocus}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                {...describedOptionProps}
+              />
+            ))
+          }
+        </GroupOptions>
       </Flex>
     </Checkbox.Group>
   ) : null;

@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import { use, useCallback, useMemo } from 'react';
+import { createContext, Fragment, use, useCallback, useMemo } from 'react';
 import type { BoxProps, ElementProps, InputWrapperFactory, InputWrapperProps, StylesApiProps } from '@mantine/core';
 import {
   extractStyleProps,
   filterProps,
+  Input,
   InputWrapperContext,
   STYLE_PROPS_DATA,
   useInputProps,
@@ -19,6 +20,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
+  ANY_OF_KEY,
   ariaDescribedByIds,
   descriptionId,
   errorId,
@@ -26,6 +28,7 @@ import {
   getVisibleErrors,
   isObject,
   labelValue,
+  ONE_OF_KEY,
   titleId,
 } from '@rjsf/utils';
 
@@ -84,19 +87,75 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'WrapIfAdditionalTemplate',
 ];
 
-/** Builds the `error` prop Mantine's inputs render, from the errors the component should surface. Mantine's error
- * element doesn't keep line breaks, so the messages are separated by `<br>`s, and no errors has to be `undefined`, or
- * the input reserves the space for a message it will never show.
+/** Builds the `error` prop Mantine's inputs render from a list of errors. Mantine's error element doesn't keep line
+ * breaks, so the messages are separated by `<br>`s, each after a space, since a `<br>` adds no text to the accessible
+ * description the messages are read as. No errors has to be `undefined`, or the input reserves the space for a message
+ * it will never show.
+ *
+ * @param errors - The errors to render
+ * @returns - The errors to render, or undefined when there are none
+ */
+export function errorLines(errors: readonly ReactNode[]): ReactNode {
+  return errors.length
+    ? errors.map((error, index) => (
+        // oxlint-disable-next-line react/no-array-index-key
+        <Fragment key={index}>
+          {index > 0 && ' '}
+          {index > 0 && <br />}
+          {error}
+        </Fragment>
+      ))
+    : undefined;
+}
+
+/** Builds the `error` prop Mantine's inputs render, from the errors the component should surface
  *
  * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
  * @returns - The errors to render, or undefined when there are none
  */
 export function visibleErrors(props: VisibleErrorsProps): ReactNode {
-  const errors = getVisibleErrors(props);
-  return errors.length
-    ? // oxlint-disable-next-line react/no-array-index-key
-      errors.flatMap((error, index) => (index ? [<br key={index} />, error] : [error]))
-    : undefined;
+  return errorLines(getVisibleErrors(props));
+}
+
+// Whether the enclosing field is the option a `oneOf`/`anyOf` selector picked, whose own errors the selector renders
+const SelectedOptionContext = createContext(false);
+
+/** Marks `children` as the field of the option a `oneOf`/`anyOf` selector picked, which is given the same errors the
+ * selector renders
+ */
+export function SelectedOptionProvider({ children }: { children: ReactNode }) {
+  return <SelectedOptionContext value>{children}</SelectedOptionContext>;
+}
+
+/** Renders the content of an object or array template, whose fields render their own errors, even inside the option a
+ * selector picked
+ */
+export function ContainerContentProvider({ children }: { children: ReactNode }) {
+  return <SelectedOptionContext value={false}>{children}</SelectedOptionContext>;
+}
+
+/** A hook for the errors of an object, or an array rendered item by item, which no widget renders, for their template
+ * to render with the field's `errorId(id)`, inside a `ContainerContentProvider`. Every other field's widget renders its
+ * errors, so `FieldErrorTemplate` renders none. None are rendered where a `oneOf`/`anyOf` selector renders them: for
+ * the object whose schema has the `oneOf`/`anyOf`, and for the field of the option the selector picked, which is given
+ * the same errors.
+ *
+ * @param id - The id of the field
+ * @param schema - The schema of the field
+ * @param rawErrors - The field's own errors
+ * @param hideError - Whether the field's errors are hidden
+ * @returns - The error element to render, if any
+ */
+export function useContainerErrors(
+  id: string,
+  schema: StrictRJSFSchema,
+  rawErrors: string[] | undefined,
+  hideError: boolean | undefined,
+): ReactNode {
+  const selectedOption = use(SelectedOptionContext);
+  const errors = visibleErrors({ rawErrors, hideError });
+  const shownBySelector = selectedOption || ONE_OF_KEY in schema || ANY_OF_KEY in schema;
+  return errors && !shownBySelector ? <Input.Error id={errorId(id)}>{errors}</Input.Error> : undefined;
 }
 
 export function cleanupOptions<T extends object>(
@@ -177,7 +236,6 @@ const themeComponentNames = {
   DateInput: [...wrapperThemeNames, 'DateInput'],
 } satisfies Record<string, string[]>;
 
-/** The name of a Mantine input, as its `defaultProps` are keyed in the theme's `components` */
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
 function asObject(value: unknown): GenericObjectType | undefined {
@@ -204,29 +262,56 @@ export function useShownSuccessId(successId: string) {
   return isRendered(describedBy, successId) ? successId : undefined;
 }
 
+const GroupSuccessIdContext = createContext<string | undefined>(undefined);
+
 /** Replaces the aria ids in the `InputWrapper` context, keeping the id of the success message Mantine renders, which
  * rjsf has no element for. Mantine only puts that id in the context when the message is rendered. The context's
- * `labelId` is only replaced when one is given.
+ * `labelId` is only replaced when one is given. For a group, the success id is passed on to its options instead, like
+ * the field's other ids, since a screen reader doesn't read a group's description when focus moves to an option.
  */
 function InputWrapperAriaProvider({
   describedBy,
   labelId,
   successId,
+  successOnOptions,
   children,
 }: {
   describedBy?: string;
   labelId?: string;
   successId: string;
+  successOnOptions: boolean;
   children: ReactNode;
 }) {
   const inputWrapperContext = use(InputWrapperContext);
-  const successShown = isRendered(inputWrapperContext.describedBy, successId);
+  const shownSuccessId = isRendered(inputWrapperContext.describedBy, successId) ? successId : undefined;
   const value = {
     ...inputWrapperContext,
     ...(labelId && { labelId }),
-    describedBy: [describedBy, successShown && successId].filter(Boolean).join(' ') || undefined,
+    describedBy: [describedBy, !successOnOptions && shownSuccessId].filter(Boolean).join(' ') || undefined,
   };
-  return <InputWrapperContext value={value}>{children}</InputWrapperContext>;
+  const provider = <InputWrapperContext value={value}>{children}</InputWrapperContext>;
+  return successOnOptions ? <GroupSuccessIdContext value={shownSuccessId}>{provider}</GroupSuccessIdContext> : provider;
+}
+
+/** Renders the options of a group from `useGroupAriaProps`, giving each the `optionProps` it returned, plus the id of
+ * the group's success message while Mantine renders it, which is only known inside the group's wrapper
+ */
+export function GroupOptions({
+  optionProps,
+  children,
+}: {
+  optionProps: GenericObjectType;
+  children: (optionProps: GenericObjectType) => ReactNode;
+}): ReactNode {
+  const shownSuccessId = use(GroupSuccessIdContext);
+  const describedOptionProps = useMemo(
+    () =>
+      shownSuccessId
+        ? { ...optionProps, 'aria-describedby': `${optionProps['aria-describedby']} ${shownSuccessId}` }
+        : optionProps,
+    [optionProps, shownSuccessId],
+  );
+  return children(describedOptionProps);
 }
 
 interface AriaContainerOptions {
@@ -240,6 +325,7 @@ interface AriaContainerOptions {
   ownContainer?: unknown;
   wrapperObject?: GenericObjectType;
   before?: ReactNode;
+  successOnOptions?: boolean;
 }
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
@@ -260,15 +346,21 @@ function useAriaContainerProps({
   ownContainer,
   wrapperObject,
   before,
+  successOnOptions = false,
 }: AriaContainerOptions) {
   const container = useCallback(
     (children: ReactNode) => (
-      <InputWrapperAriaProvider describedBy={describedBy} labelId={labelId} successId={successId}>
+      <InputWrapperAriaProvider
+        describedBy={describedBy}
+        labelId={labelId}
+        successId={successId}
+        successOnOptions={successOnOptions}
+      >
         {before}
         {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
       </InputWrapperAriaProvider>
     ),
-    [describedBy, labelId, successId, before, ownContainer],
+    [describedBy, labelId, successId, successOnOptions, before, ownContainer],
   );
   return useMemo(() => {
     const descriptionProps = withDescriptionDiv(ownDescriptionProps);
@@ -354,7 +446,6 @@ function useHiddenTitle(id: string, label: ReactNode, hideLabel: boolean | undef
   );
 }
 
-/** The keys of `P` that aren't also keys of `Base` */
 export type OwnKeys<P, Base> = Exclude<keyof P, keyof Base>;
 
 /** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
@@ -378,6 +469,20 @@ const fieldWrapperOptionKeyRecord: Record<FieldWrapperOptionKey, true> = {
 };
 const fieldWrapperOptionKeys = Object.keys(fieldWrapperOptionKeyRecord) as FieldWrapperOptionKey[];
 const fieldWrapperPickedKeys = [...fieldWrapperOptionKeys, 'wrapperProps'];
+// The options an input's aria props override, and those a group's also do, as subsets of the field wrapper options
+const ariaOptionKeys = [
+  'descriptionProps',
+  'errorProps',
+  'inputContainer',
+  'successProps',
+] as const satisfies readonly FieldWrapperOptionKey[];
+const ariaPickedKeys = [...ariaOptionKeys, 'wrapperProps'];
+const groupOptionKeys = [
+  ...ariaOptionKeys,
+  'inputWrapperOrder',
+  'labelProps',
+] as const satisfies readonly FieldWrapperOptionKey[];
+const groupPickedKeys = [...groupOptionKeys, 'wrapperProps'];
 
 // Mantine's own default container, given explicitly, since an `undefined` one falls back to the theme's
 function renderChildren(children: ReactNode): ReactNode {
@@ -449,8 +554,6 @@ export function useFieldWrapperProps<
   };
 }
 
-const ariaPickedKeys = ['descriptionProps', 'errorProps', 'inputContainer', 'successProps', 'wrapperProps'];
-
 /**
  * A props hook that points a Mantine input's `aria-describedby` at the field's description, error and help ids.
  * Mantine's `Input` sets `aria-describedby` from the `InputWrapper` context after spreading the caller's props, so an
@@ -493,12 +596,7 @@ export function useAriaDescribedByProps(
   const resolved = useProps<GenericObjectType>(
     'InputWrapper',
     {},
-    {
-      descriptionProps: fromWrapper('descriptionProps'),
-      errorProps: fromWrapper('errorProps'),
-      inputContainer: fromWrapper('inputContainer'),
-      successProps: fromWrapper('successProps'),
-    },
+    Object.fromEntries(ariaOptionKeys.map((name) => [name, fromWrapper(name)])),
   );
   const ownSuccessProps = asObject(resolved.successProps);
   return useAriaContainerProps({
@@ -513,21 +611,12 @@ export function useAriaDescribedByProps(
   });
 }
 
-const groupOptionNames = [
-  'descriptionProps',
-  'errorProps',
-  'inputContainer',
-  'inputWrapperOrder',
-  'labelProps',
-  'successProps',
-] as const;
-const groupPickedKeys = [...groupOptionNames, 'wrapperProps'];
-
 /**
  * A props hook for `Checkbox.Group` and `Radio.Group`, which render the field's label and take their group element's
  * `aria-describedby` and `aria-labelledby` from the `InputWrapper` context. Each option input is described by the
- * field's ids, as in `@rjsf/core`, so the group is left undescribed rather than having a screen reader repeat the
- * description, error and help on entering it. The group is labelled by the field's title id: the shown label has that
+ * field's ids, as in `@rjsf/core`, and by the success message while Mantine renders it, so the group is left
+ * undescribed rather than having a screen reader repeat the description, error and help on entering it. Each option is
+ * also marked invalid while the field shows errors, and each radio required when the field is. The group is labelled by the field's title id: the shown label has that
  * id, and a label Mantine doesn't render, because it is hidden or left out of `inputWrapperOrder`, is still rendered
  * with it, `hidden`, since a group needs an accessible name. Mantine only labels the group by a label it renders itself.
  * The container, `labelProps`, `descriptionProps`, `errorProps`, `successProps` and `inputWrapperOrder` Mantine would
@@ -536,15 +625,17 @@ const groupPickedKeys = [...groupOptionNames, 'wrapperProps'];
  * field's `errorId(id)`, whatever `errorProps.id` says.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
- * @param widgetProps - The props of the widget, from which the label, its visibility and the options are derived
- * @returns - The `groupProps` to spread on the Mantine group, after the theme props, and the `optionProps` to spread on
- *   each of its option inputs
+ * @param widgetProps - The props of the widget, from which the label, its visibility, the errors and the options are
+ *   derived
+ * @returns - The `groupProps` to spread on the Mantine group, after the theme props, including the `error` it
+ *   renders, and the `optionProps` to give `GroupOptions`, which renders the option inputs
  */
 export function useGroupAriaProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(component: 'CheckboxGroup' | 'RadioGroup', { id, label, hideLabel, options }: WidgetProps<T, S, F>) {
+>(component: 'CheckboxGroup' | 'RadioGroup', widgetProps: WidgetProps<T, S, F>) {
+  const { id, label, hideLabel, required, options } = widgetProps;
   const props = useProps<GenericObjectType>(component, {}, pickOptions(options, groupPickedKeys));
   const wrapperObject = asObject(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
@@ -553,7 +644,7 @@ export function useGroupAriaProps<
     'InputWrapper',
     {},
     Object.fromEntries(
-      groupOptionNames.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
+      groupOptionKeys.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
     ),
   );
   const shownLabel = labelValue(label || undefined, hideLabel, false);
@@ -569,12 +660,26 @@ export function useGroupAriaProps<
     ownContainer: resolved.inputContainer,
     wrapperObject,
     before: hiddenLabel,
+    successOnOptions: true,
   });
-  const optionProps = useMemo(() => ({ 'aria-describedby': ariaDescribedByIds(id) }), [id]);
+  const error = visibleErrors(widgetProps);
+  const invalid = !!error;
+  // Mantine's `Checkbox` and `Radio` only style an `error`. Each radio is required, as in `@rjsf/core`, since checking
+  // any one of them satisfies it, where a required checkbox would have to be checked.
+  const optionRequired = component === 'RadioGroup' && required;
+  const optionProps = useMemo(
+    () => ({
+      'aria-describedby': ariaDescribedByIds(id),
+      'aria-invalid': invalid || undefined,
+      required: optionRequired || undefined,
+    }),
+    [id, invalid, optionRequired],
+  );
   return {
     groupProps: {
       label: shownLabel,
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id) },
+      error,
       ...containerProps,
     },
     optionProps,

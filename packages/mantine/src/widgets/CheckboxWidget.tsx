@@ -1,10 +1,10 @@
 import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
-import { Checkbox } from '@mantine/core';
+import { Checkbox, Input } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { descriptionId, getTemplate, helpId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { visibleErrors } from '../utils.tsx';
+import { getDescriptionProps, visibleErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -27,21 +27,12 @@ export default function CheckboxWidget<
     label,
     hideLabel,
     schema,
-    options,
     onChange,
     onBlur,
     onFocus,
-    registry,
-    uiSchema,
   } = props;
 
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
-
   const handleCheckboxChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && !readonly && onChange) {
@@ -69,18 +60,11 @@ export default function CheckboxWidget<
     [onFocus, id],
   );
 
-  const description = options.description || schema.description;
+  const { description } = getDescriptionProps(props);
+  const errors = visibleErrors(props);
   return (
     <>
-      {!hideLabel && !!description && (
-        <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
+      {description}
       <Checkbox
         id={id}
         name={htmlName || id}
@@ -101,11 +85,18 @@ export default function CheckboxWidget<
         onChange={handleCheckboxChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        error={visibleErrors(props)}
-        // Mantine's `Checkbox` puts its own error's id ahead of these, and ignores `errorProps`, so rjsf's `errorId(id)`
-        // would name no element
-        aria-describedby={`${descriptionId(id)} ${helpId(id)}`}
+        // Mantine's `Checkbox` would render a message as its own error, with an id derived from the input's rather than
+        // `errorId(id)`, so it only gets a boolean, for the error styling, and the errors are rendered below it. It
+        // doesn't set `aria-invalid` either.
+        error={!!errors}
+        aria-invalid={!!errors || undefined}
+        aria-describedby={ariaDescribedByIds(id)}
       />
+      {errors && (
+        <Input.Error id={errorId(id)} mt='calc(var(--mantine-spacing-xs) / 2)'>
+          {errors}
+        </Input.Error>
+      )}
     </>
   );
 }

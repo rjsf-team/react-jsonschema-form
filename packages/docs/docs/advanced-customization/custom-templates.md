@@ -1060,6 +1060,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `uiSchema`: The uiSchema object for this object field.
 - `id`: The id of the field in the hierarchy.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
+- `rawErrors`: An array of strings listing the object's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
 - `formData`: The form data for the object.
 - `registry`: The `registry` object.
 

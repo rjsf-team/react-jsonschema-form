@@ -10,7 +10,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useGroupAriaProps, visibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -67,26 +67,29 @@ export default function RadioWidget<
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={visibleErrors(props)}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}
     >
       {Array.isArray(enumOptions) ? (
         <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
-          {enumOptions.map((option, i) => (
-            <Radio
-              key={String(option.value)}
-              id={optionId(id, i)}
-              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
-              label={option.label}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              autoFocus={i === 0 && autofocus}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
-              {...optionProps}
-            />
-          ))}
+          <GroupOptions optionProps={optionProps}>
+            {(describedOptionProps) =>
+              enumOptions.map((option, i) => (
+                <Radio
+                  key={String(option.value)}
+                  id={optionId(id, i)}
+                  value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                  label={option.label}
+                  disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+                  autoFocus={i === 0 && autofocus}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
+                  {...describedOptionProps}
+                />
+              ))
+            }
+          </GroupOptions>
         </Flex>
       ) : null}
     </Radio.Group>
