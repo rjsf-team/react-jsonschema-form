@@ -3079,6 +3079,26 @@ describe('oneOf', () => {
     expect(onChange.mock.lastCall![0].errorSchema.__errors).toEqual(['must NOT have fewer than 2 items']);
   });
 
+  it('keeps the fields of an object beside its selector mounted as its own errors come and go', () => {
+    const props = {
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [{ properties: { a: { type: 'string' } } }],
+      } satisfies RJSFSchema,
+      showErrorList: false as const,
+    };
+    const { node, rerender } = createFormComponent(props);
+    const input = node.querySelector('#root_name');
+    expect(input).toBeInTheDocument();
+
+    rerender({ ...props, extraErrors: { __errors: ['Own error'] } });
+    expect(node.querySelector('#root_name')).toBe(input);
+    rerender(props);
+
+    expect(node.querySelector('#root_name')).toBe(input);
+  });
+
   it('keeps the own errors of an object beside its selector out of the errors an array inside it raises', async () => {
     const { node, onChange } = createFormComponent({
       schema: {

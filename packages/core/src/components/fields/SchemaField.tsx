@@ -285,6 +285,12 @@ function SchemaFieldRender<
     }
     return strippedUiSchema;
   }, [uiSchema]);
+  const ownErrors = errorSchema?.__errors;
+  // Memoized so that an `ArrayField` below, which reads it, isn't re-rendered past its `memo` by a new value each render
+  const withheldErrors = useMemo(
+    () => (ownErrors?.length ? { fieldPath, errors: ownErrors } : undefined),
+    [fieldPath, ownErrors],
+  );
 
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
   // The check must come after all hook calls to satisfy React's rules of hooks.
@@ -407,12 +413,10 @@ function SchemaFieldRender<
       rawErrors={XxxOfField ? undefined : __errors}
     />
   );
-  const field =
-    XxxOfField && __errors?.length ? (
-      <WithheldErrorsContext value={{ fieldPath, errors: __errors }}>{fieldComponent}</WithheldErrorsContext>
-    ) : (
-      fieldComponent
-    );
+  // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
+  const field = (
+    <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>{fieldComponent}</WithheldErrorsContext>
+  );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
   let label;
