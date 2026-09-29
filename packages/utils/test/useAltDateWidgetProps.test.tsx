@@ -145,7 +145,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(PROPS.onChange).toHaveBeenCalledWith(undefined);
     expect(simulatedEvent.preventDefault).toHaveBeenCalled();
   });
-  test('discards a partial selection when the value prop changes', () => {
+  test('discards a partial selection and re-parses when the value or time prop changes', () => {
     const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
       initialProps: PROPS,
     });
@@ -155,6 +155,10 @@ describe('useAltDateWidgetProps()', () => {
     rerender({ ...PROPS, value: DATE_STR });
     expect(result.current.elements).toEqual(
       getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
+    );
+    rerender({ ...TIME_PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
     );
   });
   test('time is false, value undefined, testing DateElements', async () => {
@@ -351,19 +355,5 @@ describe('useAltDateWidgetProps()', () => {
     handleChange('year', undefined);
     // onChange was not called due to disabled
     expect(PROPS.onChange).not.toHaveBeenCalled();
-  });
-  test('re-parses the elements when the value or time prop changes', () => {
-    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
-      initialProps: PROPS,
-    });
-    expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
-    rerender({ ...PROPS, value: DATE_STR });
-    expect(result.current.elements).toEqual(
-      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
-    );
-    rerender({ ...TIME_PROPS, value: DATE_STR });
-    expect(result.current.elements).toEqual(
-      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
-    );
   });
 });

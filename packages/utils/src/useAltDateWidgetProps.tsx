@@ -114,12 +114,11 @@ export default function useAltDateWidgetProps<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
-  const [state, setState] = useState(() => parseDateString(value, time));
-  const [parsedFrom, setParsedFrom] = useState({ value, time });
-  if (parsedFrom.value !== value || parsedFrom.time !== time) {
-    setParsedFrom({ value, time });
-    setState(parseDateString(value, time));
-  }
+  const parsed = useMemo(() => parseDateString(value, time), [value, time]);
+  // A selection that isn't complete yet, kept only for the `value` and `time` it was made against, so a new value from
+  // the parent replaces it instead of having to be copied into state
+  const [draft, setDraft] = useState<{ value: typeof value; time: boolean; state: DateObject }>();
+  const state = draft && draft.value === value && draft.time === time ? draft.state : parsed;
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: string) => {
@@ -131,10 +130,10 @@ export default function useAltDateWidgetProps<
       if (readyForChange(nextState)) {
         onChange(toDateString(nextState, time));
       } else {
-        setState(nextState);
+        setDraft({ value, time, state: nextState });
       }
     },
-    [state, onChange, time],
+    [state, onChange, time, value],
   );
 
   const handleClear = useCallback(
