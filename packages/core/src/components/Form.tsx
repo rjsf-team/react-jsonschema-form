@@ -746,8 +746,7 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
 /** How one data pass differs from the default, which just fills in the missing defaults */
 interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** Attempt to sanitize the data for a retrieved schema that changed. A function decides it only once the retrieved
-   * schema is known to have changed, so a check it makes costs nothing on the passes that never sanitize; it is asked
-   * at most once, with the schema utilities, the retrieved schema and the data it was retrieved for
+   * schema is known to have changed, so a check it makes costs nothing on the passes that never sanitize
    */
   shouldSanitize?: boolean | ((schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, formData: T) => boolean);
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
@@ -793,7 +792,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let retrievedSchema: S;
   let wasSanitized = false;
   const preventInfiniteSanitize: string[] = [];
-  let isSanitizeAllowed: boolean | undefined = typeof shouldSanitize === 'function' ? undefined : shouldSanitize;
+  let sanitize = shouldSanitize;
   do {
     formData = replaceEqualDeep(
       shareBase,
@@ -801,12 +800,14 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
     const mayNeedSanitizing = hasNestedConditionalSchema || retrievedSchema !== current?.retrievedSchema;
-    if (mayNeedSanitizing && typeof shouldSanitize === 'function') {
-      isSanitizeAllowed ??= shouldSanitize(schemaUtils, retrievedSchema, formData);
+    if (mayNeedSanitizing && typeof sanitize === 'function') {
+      // Asked once, since it decides about the change rather than about the data each pass settles
+      sanitize = sanitize(schemaUtils, retrievedSchema, formData);
     }
+    const isSanitizing = mayNeedSanitizing && sanitize === true;
     // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
-    const formHash = mayNeedSanitizing && isSanitizeAllowed ? hashObject({ formData }) : undefined;
-    if (formHash !== undefined && !preventInfiniteSanitize.includes(formHash)) {
+    const formHash = isSanitizing ? hashObject({ formData }) : '';
+    if (isSanitizing && !preventInfiniteSanitize.includes(formHash)) {
       // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
       // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
       const sanitizedFormData = replaceEqualDeep(
@@ -1127,7 +1128,7 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
  * as it is rendered, and an array index is followed through `items`.
  *
  * @param schemaUtils - The schema utilities to retrieve and search the schema with
- * @param schema - The retrieved root schema
+ * @param schema - The root schema, retrieved for `formData`
  * @param path - The path of the changed field
  * @param formData - The data the schema was retrieved for, which holds the field's new value
  * @returns - True when the field is such a select
@@ -1138,25 +1139,23 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
   path: FieldPathList,
   formData: T,
 ): boolean {
-  let fieldSchema: S | undefined = schema;
-  for (let index = 0; index < path.length; index++) {
-    const segment = path[index];
-    const parentSchema = schemaUtils.retrieveSchema(fieldSchema, getByPath<T>(formData, path.slice(0, index)));
+  let fieldSchema = schema;
+  let fieldData: unknown = formData;
+  for (const segment of path) {
+    let childSchema: S | undefined;
     if (typeof segment === 'number') {
-      const { items, additionalItems } = parentSchema;
-      fieldSchema = (Array.isArray(items) ? (items[segment] ?? additionalItems) : items) as S | undefined;
+      const { items, additionalItems } = fieldSchema;
+      childSchema = (Array.isArray(items) ? (items[segment] ?? additionalItems) : items) as S | undefined;
     } else {
-      fieldSchema = schemaUtils.findFieldInSchema(
-        parentSchema,
-        [segment],
-        getByPath<T>(formData, path.slice(0, index)),
-      ).field;
+      childSchema = schemaUtils.findFieldInSchema(fieldSchema, [segment], fieldData as T).field;
     }
-    if (!isObject(fieldSchema)) {
+    if (!isObject(childSchema)) {
       return false;
     }
+    fieldData = getByPath(fieldData, segment);
+    fieldSchema = schemaUtils.retrieveSchema(childSchema, fieldData as T);
   }
-  return isWholeValueSelect<S>(schemaUtils.retrieveSchema(fieldSchema, getByPath<T>(formData, path)));
+  return isWholeValueSelect<S>(fieldSchema);
 }
 
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the

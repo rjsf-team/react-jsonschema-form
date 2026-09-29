@@ -29,6 +29,7 @@ import {
   hasVisibleErrors,
   isConstant,
   isConstantOptionList,
+  isConstantSelect,
   isFormDataAvailable,
   logOnce,
   resolveUiSchema,
@@ -95,9 +96,7 @@ function hasOptionLabels<
   );
 }
 
-/** What `SchemaField` needs to know about a retrieved schema that may be a select, worked out in one pass over its
- * options, which a long list of constants makes worth scanning once
- */
+/** What `SchemaField` needs to know about a retrieved schema that may be a select */
 interface SelectSchemaInfo<S extends StrictRJSFSchema> {
   /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
   schema: S;
@@ -107,9 +106,9 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined;
   /** The non-empty constant options of that keyword, when they all are constants */
   constantOptions: S[] | undefined;
-  /** Whether the schema is an `enum` or a `oneOf`/`anyOf` of constants, empty or not, as `isSelect()` reports it */
+  /** Whether the schema is an `enum` or a `oneOf`/`anyOf` of constants, empty or not, see `isConstantSelect()` */
   isSelectSchema: boolean;
-  /** Whether that select offers at least one option, as `isConstantSelect()` reports it */
+  /** Whether that select offers at least one option */
   hasConstantOptions: boolean;
 }
 
@@ -124,9 +123,7 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
 function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
   const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
   const options = xxxOfKey && retrievedSchema[xxxOfKey];
-  const isConstantList = isConstantOptionList<S>(options);
-  const constantOptions = isConstantList && options.length > 0 ? options : undefined;
-  const { enum: enumValues } = retrievedSchema;
+  const constantOptions = isConstantOptionList<S>(options, true) ? options : undefined;
   let schema = retrievedSchema;
   if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
     // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
@@ -138,8 +135,12 @@ function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedS
     hasInferredType: schema !== retrievedSchema,
     xxxOfKey,
     constantOptions,
-    isSelectSchema: Array.isArray(enumValues) || isConstantList,
-    hasConstantOptions: (Array.isArray(enumValues) && enumValues.length > 0) || constantOptions !== undefined,
+    // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve
+    // it again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf` still counts as a select, so it renders as a
+    // select with nothing to choose rather than as an option selector with no options. A list already found to be all
+    // constants isn't scanned again, which a long one makes worth skipping
+    isSelectSchema: constantOptions !== undefined || isConstantSelect<S>(schema, true),
+    hasConstantOptions: constantOptions !== undefined || isConstantSelect<S>(schema),
   };
 }
 
@@ -351,10 +352,7 @@ function SchemaFieldRender<
     [isRefCycle, _schema, formData, schemaUtils],
   );
   // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
-  // hand a typeless select a new `schema` each time. The schema is already retrieved, so it's checked directly rather
-  // than through `isSelect()`, which would resolve it again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf`
-  // still counts as a select, so it renders as a select with nothing to choose rather than as an option selector with
-  // no options
+  // hand a typeless select a new `schema` each time
   const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
   const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
   const inferredWidget = useMemo(

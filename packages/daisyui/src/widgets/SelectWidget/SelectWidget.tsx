@@ -9,14 +9,11 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  enumOptionSelectedValue,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
-  enumOptionValueEncoder,
-  getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
@@ -70,7 +67,6 @@ export default function SelectWidget<
   uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
-  const optionValueFormat = getOptionValueFormat(options);
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
   // Without an `enum` the dropdown lists the schema's `examples`, so clicks and the selection are resolved against the
@@ -136,31 +132,22 @@ export default function SelectWidget<
     [reportFocus],
   );
 
-  // The custom dropdown iterates `selectedValues.includes(...)` per option, so
-  // it always needs a string array regardless of `multiple`. Flatten the
-  // helper's single/multiple return shape and strip the empty-single case.
-  const selectedValues: string[] = [
-    enumOptionSelectedValue<S>(value, optionsList, isMultiple, optionValueFormat, isMultiple ? [] : ''),
-  ]
-    .flat()
-    .filter((v) => v !== '');
-
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
   const selectedIndexes = [enumOptionsIndexForValue<S>(value, optionsList, isMultiple) ?? []].flat();
   const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
-    const encodedValue = enumOptionValueEncoder(option.value, option.index, optionValueFormat);
+    const isSelected = selectedIndexes.includes(String(option.index));
     return (
       <li
         key={option.index}
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role='option'
-        aria-selected={selectedValues.includes(encodedValue)}
+        aria-selected={isSelected}
         aria-disabled={option.disabled || undefined}
         tabIndex={option.disabled ? -1 : 0}
         className={`px-4 py-2 ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-base-200 cursor-pointer'} ${
-          selectedValues.includes(encodedValue) ? 'bg-primary/10' : ''
+          isSelected ? 'bg-primary/10' : ''
         }`}
         onClick={option.disabled ? undefined : handleOptionClick}
         onKeyDown={(e) =>
@@ -171,14 +158,7 @@ export default function SelectWidget<
         data-value={option.index}
       >
         <div className='flex items-center gap-2'>
-          {isMultiple && (
-            <input
-              type='checkbox'
-              className='checkbox checkbox-sm'
-              checked={selectedValues.includes(encodedValue)}
-              readOnly
-            />
-          )}
+          {isMultiple && <input type='checkbox' className='checkbox checkbox-sm' checked={isSelected} readOnly />}
           <span>{option.label}</span>
         </div>
       </li>

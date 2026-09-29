@@ -423,9 +423,9 @@ export function computeDefaults<
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const { type = 'null' } = remaining;
     // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
-    // checked first, since most option lists aren't constants and the check stops at the first that isn't, and since a
-    // non-empty `enum` makes the schema a select whatever they are, while only a constant can be taken whole
-    const picksWholeOption = isConstantOptionList<S>(options, true) && isWholeValueSelect<S>(schema);
+    // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
+    // taken whole
+    const picksWholeOption = isWholeValueSelect<S>(schema) && isConstantOptionList<S>(options, true);
     // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
     if (
       ONE_OF_KEY in schema &&

@@ -4,6 +4,10 @@ import isConstantSelect from './isConstantSelect.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
+function isContainerValue(value: unknown): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
 /** Checks whether `schema` is a select over object or array constants, which holds one of them as a whole rather than
  * being a container whose contents are edited, filled in with defaults, pruned or sanitized. That is a non-empty
  * select (see `isConstantSelect()`) whose `type` is `object` or `array`, or which declares no `type` and offers an
@@ -22,11 +26,9 @@ export default function isWholeValueSelect<S extends StrictRJSFSchema = RJSFSche
   if (isContainerType) {
     return true;
   }
-  const xxxOfKey = getXxxOfKey<S>(schema);
   // `isConstantSelect()` reads a non-empty `enum` before the `anyOf`/`oneOf`, which it has checked are all constants
-  const values =
-    Array.isArray(schema.enum) && schema.enum.length > 0
-      ? schema.enum
-      : (schema[xxxOfKey!] as S[]).map((option) => toConstant<S>(option));
-  return values.some((value) => typeof value === 'object' && value !== null);
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
+    return schema.enum.some(isContainerValue);
+  }
+  return (schema[getXxxOfKey<S>(schema)!] as S[]).some((option) => isContainerValue(toConstant<S>(option)));
 }
