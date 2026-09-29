@@ -289,4 +289,40 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: '0' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: '1' })).toBeInTheDocument();
   });
+
+  test('selects the clicked example when there is no enum', async () => {
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          schema: { type: 'string', examples: ['a', 'b'] },
+          options: {},
+          onChange,
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('option', { name: 'b' }));
+
+    expect(onChange).toHaveBeenLastCalledWith('b');
+  });
+
+  test('adds the clicked example to a multiple selection and labels it when there is no enum', async () => {
+    const onChange = vi.fn();
+    const props = makeWidgetMockProps({
+      value: ['a'],
+      multiple: true,
+      schema: { type: 'string', examples: ['a', 'b'] },
+      options: {},
+      onChange,
+    });
+    render(<SelectWidget {...props} />);
+
+    expect(screen.getByRole('option', { name: 'a' })).toHaveAttribute('aria-selected', 'true');
+    expect(within(screen.getByRole('button')).getByText('a')).toBeInTheDocument();
+    await user.click(screen.getByRole('option', { name: 'b' }));
+
+    expect(onChange).toHaveBeenLastCalledWith(['a', 'b']);
+  });
 });

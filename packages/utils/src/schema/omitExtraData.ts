@@ -2,6 +2,7 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isObject from '../isObject.ts';
 import type {
   CustomMergeAllOf,
@@ -399,7 +400,10 @@ export default function omitExtraData<
 
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
-    const type = getSchemaType<S>(localSchema);
+    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune
+    const schemaType = getSchemaType<S>(localSchema);
+    const type =
+      (schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(localSchema) ? undefined : schemaType;
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;

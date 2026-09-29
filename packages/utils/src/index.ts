@@ -75,6 +75,7 @@ import {
 } from './idGenerators.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
+import isConstantSelect from './isConstantSelect.ts';
 import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
@@ -121,6 +122,8 @@ import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidge
 import useAltDateWidgetProps, { DateElement } from './useAltDateWidgetProps.tsx';
 import type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps.ts';
 import useFileWidgetProps from './useFileWidgetProps.ts';
+import type { UseSelectFocusHandlersResult } from './useSelectFocusHandlers.ts';
+import useSelectFocusHandlers from './useSelectFocusHandlers.ts';
 import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
 import useTimeWidgetProps from './useTimeWidgetProps.ts';
 import utcToLocal from './utcToLocal.ts';
@@ -146,6 +149,7 @@ export type {
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
+  UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
   VisibleErrorsProps,
   WidgetAliasFor,
@@ -216,6 +220,7 @@ export {
   helpId,
   isConstant,
   isConstantOptionList,
+  isConstantSelect,
   isCustomWidget,
   isEnumOptionsGroup,
   isFixedItems,
@@ -271,6 +276,7 @@ export {
   unwrapErrorHandler,
   useAltDateWidgetProps,
   useFileWidgetProps,
+  useSelectFocusHandlers,
   useTimeWidgetProps,
   utcToLocal,
   validationDataMerge,

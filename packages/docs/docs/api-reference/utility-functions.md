@@ -1147,16 +1147,36 @@ This happens when either the schema has an `enum` array with a single value or t
 ### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
-as a select. An empty list passes, since every one of its options is vacuously a constant; a caller that needs an
-option to exist checks the length itself.
+as a select. An empty list passes unless `nonEmpty` is set, since every one of its options is vacuously a constant but
+it offers nothing to select.
 
 #### Parameters
 
 - options: unknown - The `anyOf` or `oneOf` list, or anything else
+- [nonEmpty=false]: boolean - Whether an empty list is rejected
 
 #### Returns
 
-- boolean: True if `options` is an array whose every entry is a constant schema object
+- boolean: True if `options` is an array whose every entry is a constant schema object, and which has at least one entry
+  when `nonEmpty` is set
+
+### isConstantSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Checks whether the value of `schema` is picked from a list of constants, whatever its `type`: an `enum`, or an
+`anyOf`/`oneOf` of constants read from the keyword `getXxxOfKey()` picks. An `object` or `array` schema that passes is a
+select for its whole value rather than a container whose contents are edited, pruned or sanitized. An empty list offers
+no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
+otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is not resolved first.
+
+#### Parameters
+
+- schema: S - The already-resolved schema to check
+- [allowEmpty=false]: boolean - Whether an empty `enum` or `anyOf`/`oneOf` counts as a select
+
+#### Returns
+
+- boolean: True if `schema` offers a list of constant values to choose from, which is non-empty unless `allowEmpty` is
+  set
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1908,6 +1928,22 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 #### Returns
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+
+### useSelectFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Hook which builds the focus and blur handlers of a select widget whose focused element carries no option value of its
+own, such as a trigger button or a custom combobox. The widget's `value` is already form data rather than a DOM value,
+so it's reported as it is, with no selection read as the `emptyValue` option the way a native select reports its
+decoded empty selection. To be used by theme specific `SelectWidget` implementations.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'value' | 'options' | 'onFocus' | 'onBlur'> - The `id`, `value`,
+  `options`, `onFocus` and `onBlur` from the `WidgetProps` of the `SelectWidget`
+
+#### Returns
+
+- UseSelectFocusHandlersResult: The `reportedValue`, and the `handleFocus` and `handleBlur` callbacks that report it
 
 ### useTimeWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

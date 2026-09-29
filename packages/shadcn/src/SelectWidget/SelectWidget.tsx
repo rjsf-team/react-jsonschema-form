@@ -19,6 +19,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
@@ -81,16 +82,13 @@ export default function SelectWidget<
   const optionValueFormat = getOptionValueFormat(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
-  // `value` is already form data rather than a DOM value, so it's reported as is, with `emptyValue` for no selection
-  // the way the other select widgets report it
-  const reportedValue = value === undefined ? optEmptyValue : value;
-  const handleFancyFocus = () => {
-    onFocus(id, reportedValue);
-  };
-
-  const handleFancyBlur = () => {
-    onBlur(id, reportedValue);
-  };
+  const { handleFocus: handleFancyFocus, handleBlur: handleFancyBlur } = useSelectFocusHandlers<T, S, F>({
+    id,
+    value,
+    options,
+    onFocus,
+    onBlur,
+  });
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
     value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, optionValueFormat),

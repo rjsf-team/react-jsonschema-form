@@ -7,6 +7,10 @@ describe('isConstantOptionList()', () => {
   it('accepts an empty list', () => {
     expect(isConstantOptionList([])).toBe(true);
   });
+  it('rejects an empty list when nonEmpty is set', () => {
+    expect(isConstantOptionList([], true)).toBe(false);
+    expect(isConstantOptionList([{ const: 'a' }], true)).toBe(true);
+  });
   it('rejects a list with a non-constant option', () => {
     expect(isConstantOptionList([{ const: 'a' }, { type: 'string' }])).toBe(false);
   });

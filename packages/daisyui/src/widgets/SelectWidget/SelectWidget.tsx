@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type {
   EnumOptionsType,
   FormContextType,
@@ -20,7 +20,21 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
+
+function getDisplayValue(val: any) {
+  if (val === undefined || val === null) {
+    return '';
+  }
+  if (typeof val === 'object') {
+    if (val.name) {
+      return val.name;
+    }
+    return val.label || JSON.stringify(val);
+  }
+  return String(val);
+}
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
  *
@@ -58,18 +72,16 @@ export default function SelectWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
-  const getDisplayValue = (val: any) => {
-    if (val === undefined || val === null) {
-      return '';
-    }
-    if (typeof val === 'object') {
-      if (val.name) {
-        return val.name;
-      }
-      return val.label || JSON.stringify(val);
-    }
-    return String(val);
-  };
+  // Without an `enum` the dropdown lists the schema's `examples`, so clicks and the selection are resolved against the
+  // same list the dropdown renders
+  const optionsList: EnumOptionsType<S>[] = useMemo(
+    () =>
+      enumOptions ||
+      (Array.isArray(schema.examples)
+        ? schema.examples.map((example) => ({ value: example, label: getDisplayValue(example) }))
+        : []),
+    [enumOptions, schema.examples],
+  );
 
   const handleOptionClick = useCallback(
     (event: React.MouseEvent<HTMLLIElement>) => {
@@ -80,57 +92,58 @@ export default function SelectWidget<
 
       // `data-value` is the option's index whatever the `optionValueFormat`, so it's resolved as one rather than
       // decoded as a DOM value
-      const optionValue = enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
+      const optionValue = enumOptionsValueForIndex<S>(String(index), optionsList, optEmptyVal);
       if (isMultiple) {
         const currentValue = Array.isArray(value) ? value : [];
         // Compared by value, since an object option in form data is rarely the same instance as the option's constant
         const newValue = enumOptionsIsSelected<S>(optionValue, currentValue, true)
-          ? enumOptionsDeselectValue<S>(index, currentValue, enumOptions)
-          : enumOptionsSelectValue<S>(index, currentValue, enumOptions);
+          ? enumOptionsDeselectValue<S>(index, currentValue, optionsList)
+          : enumOptionsSelectValue<S>(index, currentValue, optionsList);
         onChange(newValue);
       } else {
         onChange(optionValue);
       }
     },
-    [value, isMultiple, enumOptions, optEmptyVal, onChange],
+    [value, isMultiple, optionsList, optEmptyVal, onChange],
   );
 
-  const reportedValue = value === undefined ? optEmptyVal : value;
+  const { handleFocus: reportFocus, handleBlur: reportBlur } = useSelectFocusHandlers<T, S, F>({
+    id,
+    value,
+    options,
+    onFocus,
+    onBlur,
+  });
 
   // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
   // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
-        onBlur(id, reportedValue);
+        reportBlur();
       }
     },
-    [onBlur, id, reportedValue],
+    [reportBlur],
   );
 
   const handleFocus = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
-        onFocus(id, reportedValue);
+        reportFocus();
       }
     },
-    [onFocus, id, reportedValue],
+    [reportFocus],
   );
 
   // The custom dropdown iterates `selectedValues.includes(...)` per option, so
   // it always needs a string array regardless of `multiple`. Flatten the
   // helper's single/multiple return shape and strip the empty-single case.
   const selectedValues: string[] = [
-    enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
+    enumOptionSelectedValue<S>(value, optionsList, isMultiple, optionValueFormat, isMultiple ? [] : ''),
   ]
     .flat()
     .filter((v) => v !== '');
 
-  const optionsList: EnumOptionsType<S>[] =
-    enumOptions ||
-    (Array.isArray(schema.examples)
-      ? schema.examples.map((example) => ({ value: example, label: getDisplayValue(example) }))
-      : []);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
   // Looked up by encoded value, which is an option's index only in the `indexed` format
   const selectedLabels = optionsList

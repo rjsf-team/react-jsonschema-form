@@ -8,14 +8,12 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  ANY_OF_KEY,
   fieldPathToName,
   getUiOptions,
   getWidget,
+  getXxxOfKey,
   isConstant,
-  isConstantOptionList,
   isObject,
-  ONE_OF_KEY,
   optionsList,
   toConstant,
   TranslatableString,
@@ -84,14 +82,12 @@ function BooleanField<
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  // The options come from a constant `anyOf`, the keyword `isSelect()` and `optionsList()` read first, and otherwise
-  // from `oneOf`: a non-constant `anyOf` is rendered by `AnyOfField`, whose option carries the parent's `oneOf` along,
-  // so those labels still reach the widget. A `oneOf` that isn't made of constants gives `optionsList()` nothing to
-  // list, which leaves the widget without `enumOptions`
-  const anyOfSchemas = schema[ANY_OF_KEY];
-  const altKey = isConstantOptionList<S>(anyOfSchemas) && anyOfSchemas.length > 0 ? ANY_OF_KEY : ONE_OF_KEY;
-  const altSchemas = schema[altKey];
-  if (Array.isArray(altSchemas)) {
+  // The options are read from the keyword `isSelect()` and `optionsList()` read. A list that isn't made of constants,
+  // or that has no option schemas at all, gives `optionsList()` nothing to list, so the widget gets the options of the
+  // `enum`, or Yes/No, instead
+  const altKey = getXxxOfKey<S>(schema);
+  const altSchemas = altKey && schema[altKey];
+  if (altKey && altSchemas) {
     enumOptions = optionsList<T, S, F>(
       {
         [altKey]: altSchemas
@@ -119,7 +115,8 @@ function BooleanField<
       } as unknown as S,
       uiSchema,
     );
-  } else {
+  }
+  if (!enumOptions?.length) {
     const enums = schema.enum ?? [true, false];
     if (!enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
       enumOptions = [

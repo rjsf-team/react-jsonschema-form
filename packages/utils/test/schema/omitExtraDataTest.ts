@@ -261,6 +261,33 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
+    it.each<[string, RJSFSchema, unknown]>([
+      ['object oneOf', { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] }, { a: 1 }],
+      ['object enum', { type: 'object', enum: [{ a: 1 }, { b: 2 }] }, { a: 1 }],
+      [
+        'array oneOf',
+        {
+          type: 'array',
+          items: { type: 'object', properties: { x: { type: 'number' } } },
+          anyOf: [{ const: [{ x: 1, y: 2 }] }, { const: [] }],
+        },
+        [{ x: 1, y: 2 }],
+      ],
+    ])('should keep the whole value picked by a typed %s select', (_, choice, value) => {
+      const schema: RJSFSchema = { type: 'object', properties: { choice } };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, { choice: value })).toEqual({ choice: value });
+    });
+    it('should still prune a typed object whose oneOf is empty', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { choice: { type: 'object', properties: { a: { type: 'number' } }, oneOf: [] } },
+      };
+      const schemaUtils = createSchemaUtils(testValidator, schema);
+
+      expect(schemaUtils.omitExtraData(schema, { choice: { a: 1, b: 2 } })).toEqual({ choice: { a: 1 } });
+    });
     it('preserves properties from non-matching oneOf options when parent allows additionalProperties', () => {
       // When the parent schema has additionalProperties, keys not in the parent's own `properties`
       // are processed by additionalProperties at the parent level — including keys defined only in

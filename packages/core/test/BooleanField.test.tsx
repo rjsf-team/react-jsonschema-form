@@ -506,6 +506,30 @@ describe('BooleanField', () => {
     expect(labelsOf('#root')).toEqual(['Yes', 'No']);
   });
 
+  it.each<[string, RJSFSchema, UiSchema]>([
+    ['is empty', { type: 'boolean', anyOf: [] }, { 'ui:widget': 'radio' }],
+    [
+      'holds only boolean schemas',
+      { type: 'boolean', anyOf: [true, false] },
+      { 'ui:field': 'BooleanField', 'ui:fieldReplacesAnyOrOneOf': true, 'ui:widget': 'radio' },
+    ],
+  ])('should offer Yes/No for a boolean whose anyOf %s', (_, schema, uiSchema) => {
+    const { node } = createFormComponent({ schema, uiSchema });
+
+    const radios = [...node.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    expect(radios.map((radio) => radio.closest('label')?.textContent)).toEqual(['Yes', 'No']);
+  });
+
+  it('should offer Yes/No when rendered directly for a boolean whose anyOf is not made of constants', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'boolean', anyOf: [{ type: 'boolean' }] },
+      uiSchema: { 'ui:field': 'BooleanField', 'ui:fieldReplacesAnyOrOneOf': true, 'ui:widget': 'radio' },
+    });
+
+    const radios = [...node.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    expect(radios.map((radio) => radio.closest('label')?.textContent)).toEqual(['Yes', 'No']);
+  });
+
   describe('titled constant options (#5309)', () => {
     const titledSchema: RJSFSchema = {
       type: 'boolean',

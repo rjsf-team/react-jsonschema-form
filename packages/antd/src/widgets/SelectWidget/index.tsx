@@ -17,6 +17,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -62,12 +63,7 @@ export default function SelectWidget<
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
-  // `value` is already form data rather than a DOM value, so it's reported as it is
-  const reportedValue = value === undefined ? emptyValue : value;
-
-  const handleBlur = () => onBlur(id, reportedValue);
-
-  const handleFocus = () => onFocus(id, reportedValue);
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
     // A group is offered here before its own options are, and matching one keeps every option it holds, including the

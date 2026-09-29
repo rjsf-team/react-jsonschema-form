@@ -1,4 +1,5 @@
 import getSchemaType from './getSchemaType.ts';
+import isConstantSelect from './isConstantSelect.ts';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
 
 /** The map of schema types to widget type to widget name. `as const` so its keys and values stay literal types,
@@ -70,6 +71,16 @@ const widgetMap = {
   },
 } as const;
 
+/** The aliases an `array` schema accepts in place of `widgetMap.array` when it is a select over whole array constants.
+ * It picks one value, so a radio group suits it, where on a multi-select it would write a single item in place of the
+ * list. The checkboxes and file widgets edit a list of values, which would read the picked array as several selections.
+ */
+const wholeArraySelectWidgetMap = {
+  select: 'SelectWidget',
+  radio: 'RadioWidget',
+  hidden: 'HiddenWidget',
+} as const;
+
 /** The lowercase `ui:widget` alias names `getWidget` accepts for a given JSON Schema primitive `type`, e.g.
  * `WidgetAliasFor<'string'>` is `'text' | 'textarea' | 'password' | ...`. Used to keep a type-safe widget vocabulary
  * (like `@rjsf/core`'s `CoreUiOptionsChecks`) in sync with the aliases `getWidget` actually resolves.
@@ -116,9 +127,12 @@ export default function getWidget<
       throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 
-    const widgetsForType = widgetMap[type as keyof typeof widgetMap];
+    const widgetsForType: Record<string, string> =
+      type === 'array' && isConstantSelect(schema)
+        ? wholeArraySelectWidgetMap
+        : widgetMap[type as keyof typeof widgetMap];
     if (widget in widgetsForType) {
-      const registeredWidget = registeredWidgets[widgetsForType[widget as keyof typeof widgetsForType]];
+      const registeredWidget = registeredWidgets[widgetsForType[widget]];
       return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
     }
   }

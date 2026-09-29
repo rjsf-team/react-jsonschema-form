@@ -124,7 +124,17 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       readonly unknown[],
       {
-        widget?: 'CheckboxesWidget' | 'SelectWidget' | 'FileWidget' | 'HiddenWidget' | WidgetAliasFor<'array'>;
+        // A select over array constants picks one whole array, so `getWidget` offers the `'radio'` alias for it too. The
+        // type can't tell that select from a multi-select, which holds the same array, so the alias is offered for both
+        // and `getWidget` throws for it on a multi-select. `'RadioWidget'` is left out: a registered widget name is
+        // resolved before that check, so it would render a radio group on a multi-select too
+        widget?:
+          | 'CheckboxesWidget'
+          | 'SelectWidget'
+          | 'FileWidget'
+          | 'HiddenWidget'
+          | 'radio'
+          | WidgetAliasFor<'array'>;
         field?: 'ArrayField';
         addable?: boolean;
         orderable?: boolean;
@@ -146,7 +156,7 @@ export type CoreUiOptionsChecks =
         // `ObjectField`/`SchemaField` decide to hide an object field via `uiOptions.widget === 'hidden'`, a strict
         // comparison to that exact alias - an object field never resolves `ui:widget` through `getWidget`, so
         // `'HiddenWidget'` (the PascalCase component name) does nothing for it and is deliberately not offered here.
-        // A `oneOf`/`anyOf` of object constants is rendered as a select instead, which does resolve its `ui:widget`
+        // An `enum` or `oneOf`/`anyOf` of object constants is rendered as a select instead, which does resolve its `ui:widget`
         // through `getWidget`, so the select and radio widgets are offered for it.
         widget?: 'SelectWidget' | 'RadioWidget' | WidgetAliasFor<'object'>;
         field?: 'ObjectField';

@@ -3,7 +3,6 @@ import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionSelectedValue,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   enumOptionValueEncoder,
@@ -14,6 +13,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -58,32 +58,21 @@ function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  let selectedIndexesAsArray: string[] = [];
-
-  if (typeof selectedIndexes === 'string') {
-    selectedIndexesAsArray = [selectedIndexes];
-  } else if (Array.isArray(selectedIndexes)) {
-    selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
-  }
-
-  const dropdownValue = selectedIndexesAsArray
-    .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
-    .join(', ');
-
-  // The options' own values are encoded in the `optionValueFormat`, so the selection is compared in that encoding too
-  const selectedValues: string | string[] | undefined = enumOptionSelectedValue<S>(
-    value,
-    enumOptions,
-    multiple,
-    optionValueFormat,
+  // One scan of the options finds the selection, which both the displayed labels and the selected options come from.
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is encoded in that format too
+  const matchedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectedOptionsWithIndex =
+    matchedIndexes === undefined || !enumOptions
+      ? []
+      : ([] as string[])
+          .concat(matchedIndexes)
+          .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
+  const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
+  const selectedOptions = selectedOptionsWithIndex.map((option) =>
+    enumOptionValueEncoder(option.value, option.index, optionValueFormat),
   );
-  const selectedOptions = selectedValues === undefined ? [] : ([] as string[]).concat(selectedValues);
 
-  // Reported the way a native select reports its decoded selection, with no selection read as the empty value
-  const reportedValue = value === undefined ? optEmptyVal : value;
-  const handleBlur = () => onBlur(id, reportedValue);
-  const handleFocus = () => onFocus(id, reportedValue);
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
   const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
     return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));

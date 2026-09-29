@@ -24,6 +24,7 @@ import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import isConstant from '../isConstant.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject from '../isObject.ts';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
@@ -32,6 +33,7 @@ import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
+import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
@@ -441,6 +443,16 @@ export function computeDefaults<
       discriminator,
       customMergeAllOf,
     );
+    const schemaType = getSchemaType<S>(schema);
+    // An object or array select's option is a constant to take as a whole, as a primitive select's is, rather than a
+    // schema whose properties or items are filled in, which would reduce it to an empty value no option allows. Its own
+    // `default` is the constant it picks when it has one
+    if ((schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(schema)) {
+      if (schema.default !== undefined || dfsb_to_compute?.constAsDefaults === 'never') {
+        return schema.default as T;
+      }
+      return toConstant<S>(options![optionIndex] as S) as T;
+    }
     schemaToCompute = mergeSchemas(remaining, options![optionIndex] as S) as S;
     branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, optionIndex);
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
@@ -913,7 +925,13 @@ export function getDefaultBasedOnSchemaType<
   computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T | T[] | undefined {
-  switch (getSchemaType<S>(rawSchema)) {
+  const schemaType = getSchemaType<S>(rawSchema);
+  // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
+  // and an empty object or array would be a value none of its options allow
+  if ((schemaType === 'object' || schemaType === 'array') && isConstantSelect<S>(rawSchema)) {
+    return defaults;
+  }
+  switch (schemaType) {
     // We need to recurse for object schema inner default values.
     case 'object': {
       return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);

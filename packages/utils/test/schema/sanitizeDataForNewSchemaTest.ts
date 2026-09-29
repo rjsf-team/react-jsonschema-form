@@ -902,6 +902,66 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         }),
       ).toEqual({ foo: undefined });
     });
+    it('keeps an array constant picked by a select that both schemas share', () => {
+      const sizes: RJSFSchema = { type: 'array', oneOf: [{ const: [1, 2] }, { const: [3] }] };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { kind: { const: 'a' }, sizes } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { kind: { const: 'b' }, sizes } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { kind: 'a', sizes: [1, 2] })).toEqual({
+        kind: 'b',
+        sizes: [1, 2],
+      });
+    });
+    it('clears an object constant the new select does not offer', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { pick: { type: 'object', oneOf: [{ const: { x: 1 } }, { const: { x: 2 } }] } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { pick: { type: 'object', oneOf: [{ const: { y: 1 } }, { const: { y: 2 } }] } },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { pick: { x: 1 } })).toEqual({
+        pick: undefined,
+      });
+    });
+    it('keeps a read-only object select holding its default, compared by value', () => {
+      const sel: RJSFSchema = { type: 'object', readOnly: true, default: { a: 1 }, enum: [{ a: 1 }, { a: 2 }] };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'a' }, sel } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'b' }, sel } };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { k: 'a', sel: { a: 1 } })).toEqual({
+        k: 'b',
+        sel: { a: 1 },
+      });
+    });
+    it('replaces an untouched object default with the new default, compared by value', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { sel: { type: 'object', default: { a: 1 }, enum: [{ a: 1 }, { a: 2 }] } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { sel: { type: 'object', default: { a: 2 }, enum: [{ a: 1 }, { a: 2 }] } },
+      };
+
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { sel: { a: 1 } })).toEqual({
+        sel: { a: 2 },
+      });
+    });
+    it.each<[string, RJSFSchema]>([
+      ['an enum', { type: 'object', enum: [{ a: 1 }, { a: 2 }] }],
+      ['a oneOf of constants', { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }],
+    ])('keeps array items picked from object constants spelled as %s', (_, items) => {
+      const tags: RJSFSchema = { type: 'array', uniqueItems: true, items };
+      const oldSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'a' }, tags } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { k: { const: 'b' }, tags } };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { k: 'a', tags: [{ a: 1 }, { a: 3 }] }),
+      ).toEqual({ k: 'b', tags: [{ a: 1 }] });
+    });
     it('returns formData when the new schema has field that is not in the old schema', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',

@@ -22,6 +22,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -47,8 +48,6 @@ export default function SelectWidget<
     value,
     autofocus,
     onChange,
-    onBlur,
-    onFocus,
     schema,
     uiSchema,
   } = props;
@@ -63,12 +62,8 @@ export default function SelectWidget<
     return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
-  // The focused element is the trigger button, which carries no option value, so the form data value is reported as it is
-  const reportedValue = value === undefined ? emptyValue : value;
-
-  const handleBlur = () => onBlur(id, reportedValue);
-
-  const handleFocus = () => onFocus(id, reportedValue);
+  // The focused element is the trigger button, which carries no option value
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>(props);
 
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 

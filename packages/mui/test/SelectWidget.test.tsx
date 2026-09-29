@@ -131,3 +131,30 @@ describe('SelectWidget optgroups', () => {
     expect(onChange.mock.calls[0][0]).toEqual(expect.objectContaining({ formData: 'baz' }));
   });
 });
+
+describe('SelectWidget focus and blur', () => {
+  it.each(['indexed', 'realValue'] as const)(
+    'reports the form data value on focus and blur in the %s format',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'number', enum: [10, 20] }}
+          uiSchema={{ 'ui:options': { optionValueFormat } }}
+          formData={10}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      expect(screen.getByRole('combobox')).toHaveFocus();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenCalledWith('root', 10);
+      expect(onBlur).toHaveBeenCalledWith('root', 10);
+    },
+  );
+});

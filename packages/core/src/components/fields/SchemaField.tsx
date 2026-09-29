@@ -29,6 +29,7 @@ import {
   hasVisibleErrors,
   isConstant,
   isConstantOptionList,
+  isConstantSelect,
   isFormDataAvailable,
   logOnce,
   resolveUiSchema,
@@ -38,6 +39,7 @@ import {
   toConstant,
   toFieldPath,
   TranslatableString,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
@@ -111,7 +113,7 @@ function inferSelectType<
   const keyword = getXxxOfKey<S>(schema);
   const options = keyword && schema[keyword];
   // `toConstant()` throws for an option that isn't a constant, so the options it maps are checked directly
-  if (!keyword || !isConstantOptionList<S>(options) || options.length === 0) {
+  if (!keyword || !isConstantOptionList<S>(options, true)) {
     return { schema };
   }
   const schemaType = getSchemaType<S>(schema);
@@ -135,6 +137,24 @@ function inferSelectType<
   return { schema: { ...schema, type }, widget: type === 'boolean' ? 'select' : undefined };
 }
 
+/** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
+ * `getFieldComponent()` renders in place of the field for the schema's type.
+ *
+ * @param field - The `field` from the UI options
+ * @param fields - The registered fields
+ * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered
+ */
+function getUiFieldComponent<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
+  if (typeof field === 'function') {
+    return field;
+  }
+  return typeof field === 'string' && field in fields ? fields[field] : undefined;
+}
+
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
  * `schema`. The `uiOptions` are used to alter what potential `Field` implementation is actually returned. If no
  * appropriate `Field` implementation can be found then a wrapper around `UnsupportedFieldTemplate` is used.
@@ -143,7 +163,8 @@ function inferSelectType<
  * @param uiOptions - The UI Options that may affect the component decision
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
- * @param isSelectSchema - Whether the `schema` is a `oneOf`/`anyOf` that represents a select
+ * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
+ * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
  * @returns - The `Field` component that renders the actual field data, and whether it is the fallback UI taking the
  *            schema over, which `SchemaFieldRender` needs in order to leave the `anyOf`/`oneOf` to it
  */
@@ -157,14 +178,13 @@ function getFieldComponent<
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
+  hasConstantOptions: boolean,
 ): { FieldComponent: Field<T, S, F>; rendersFallbackUi: boolean } {
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
-  if (typeof field === 'function') {
-    return { FieldComponent: field, rendersFallbackUi: false };
-  }
-  if (typeof field === 'string' && field in fields) {
-    return { FieldComponent: fields[field], rendersFallbackUi: false };
+  const uiFieldComponent = getUiFieldComponent<T, S, F>(field, fields);
+  if (uiFieldComponent) {
+    return { FieldComponent: uiFieldComponent, rendersFallbackUi: false };
   }
 
   const schemaType = getSchemaType(schema);
@@ -181,9 +201,10 @@ function getFieldComponent<
 
   let componentName = COMPONENT_TYPES[type];
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
-  // array constants is rendered by the field that renders every other select, while `schema.type` stays as declared.
-  // An empty option list offers nothing to choose, so the object or array is still edited through its own field
-  if (isSelectSchema && xxxOfKey && schema[xxxOfKey]!.length > 0 && (type === 'object' || type === 'array')) {
+  // array constants, spelled as an `enum` or a `oneOf`/`anyOf`, is rendered by the field that renders every other
+  // select, while `schema.type` stays as declared. An empty list offers nothing to choose, so the object or array is
+  // still edited through its own field
+  if ((type === 'object' || type === 'array') && hasConstantOptions) {
     componentName = 'StringField';
   }
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
@@ -301,14 +322,23 @@ function SchemaFieldRender<
   // unchanged. `ui:widget` is always the key that carries it because `getDisplayLabel()` reads only that spelling to
   // decide a boolean keeps its label, and spreading leaves an existing key where the caller put it, so the order
   // `getUiOptions()` reduces in — and with it `ui:widget` against `ui:options.widget` — is untouched either way.
-  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
+  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes. The
+  // widget is only ever inferred for a boolean, whose BooleanField reads it, so a different field the `ui:field` key
+  // names is handed the caller's `uiSchema` without a widget it never chose, which a field following BooleanField's
+  // lead would otherwise render in place of its own default. Only that key is checked because it is the one spelling
+  // `getDisplayLabel()` hides the label for, so leaving the widget out costs no label; a field named through
+  // `ui:options` keeps the widget, and with it the label a boolean select shows
   const uiSchema = useMemo(() => {
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
+    const uiFieldComponent = getUiFieldComponent<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    if (uiFieldComponent && uiFieldComponent !== fields.BooleanField) {
+      return resolvedUiSchema;
+    }
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
     return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
-  }, [inferredWidget, resolvedUiSchema]);
+  }, [inferredWidget, resolvedUiSchema, fields]);
   // See #439: consumed class names and style must not reach child components. Copied only when there is something
   // to strip. `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => {
@@ -353,9 +383,12 @@ function SchemaFieldRender<
   );
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  // `isSelect()` resolves the schema on every call, so compute it once, and only for the `oneOf`/`anyOf` it applies to
+  // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve it
+  // again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf` still counts as a select, so it renders as a select
+  // with nothing to choose rather than as an option selector with no options
   const xxxOfKey = getXxxOfKey<S>(schema);
-  const isSelectSchema = xxxOfKey !== undefined && schemaUtils.isSelect(schema);
+  const hasConstantOptions = isConstantSelect<S>(schema);
+  const isSelectSchema = hasConstantOptions || isConstantSelect<S>(schema, true);
 
   const { FieldComponent, rendersFallbackUi } = getFieldComponent<T, S, F>(
     schema,
@@ -363,6 +396,7 @@ function SchemaFieldRender<
     registry,
     xxxOfKey,
     isSelectSchema,
+    hasConstantOptions,
   );
 
   const isDeprecated = Boolean(schema.deprecated);

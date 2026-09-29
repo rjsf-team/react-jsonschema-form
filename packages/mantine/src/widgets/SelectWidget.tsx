@@ -12,6 +12,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
@@ -47,8 +48,6 @@ export default function SelectWidget<
     schema,
     options,
     onChange,
-    onBlur,
-    onFocus,
   } = props;
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
@@ -66,20 +65,8 @@ export default function SelectWidget<
   );
 
   // The focused element is the search input, whose value is the selected option's label rather than an encoded option
-  // value, so the form data value is reported as it is
-  const reportedValue = value === undefined ? emptyValue : value;
-
-  const handleBlur = useCallback(() => {
-    if (onBlur) {
-      onBlur(id, reportedValue);
-    }
-  }, [onBlur, id, reportedValue]);
-
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, reportedValue);
-    }
-  }, [onFocus, id, reportedValue]);
+  // value
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>(props);
 
   const selectOptions = useMemo(() => {
     const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({
