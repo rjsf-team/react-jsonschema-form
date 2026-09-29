@@ -3189,6 +3189,26 @@ describe('oneOf', () => {
             ...colorsByTier,
           },
         ],
+        [
+          'a property beside an anyOf of required lists',
+          {
+            type: 'object',
+            properties: { plan, color: { type: 'string' } },
+            anyOf: [{ required: ['plan'] }, { required: ['color'] }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property a oneOf option declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [{ properties: { plan } }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
       ])('should sanitize for %s', async (_, schema) => {
         const { node, onChange } = createFormComponent({
           schema,

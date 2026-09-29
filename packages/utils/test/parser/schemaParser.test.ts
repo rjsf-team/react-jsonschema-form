@@ -75,6 +75,29 @@ describe('schemaParser()', () => {
     expect(titles).toContain('count');
   });
 
+  it.each(['anyOf', 'oneOf'])('parses the properties and items of a schema with an empty %s', (key) => {
+    const itemOptions: RJSFSchema = {
+      anyOf: [
+        { type: 'string', minLength: 3, title: 'text' },
+        { type: 'number', minimum: 7, title: 'count' },
+      ],
+    };
+    const propertyOptions: RJSFSchema = {
+      anyOf: [
+        { type: 'string', maxLength: 3, title: 'code' },
+        { type: 'number', maximum: 7, title: 'size' },
+      ],
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      [key]: [],
+      properties: { x: propertyOptions },
+      items: itemOptions,
+    };
+    const titles = Object.values(schemaParser(schema)).map((value) => value.title);
+    expect(titles).toEqual(expect.arrayContaining(['text', 'count', 'code', 'size']));
+  });
+
   it('parses property dependencies properly', () => {
     const schemaMap = schemaParser(PROPERTY_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();

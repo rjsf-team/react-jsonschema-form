@@ -736,6 +736,22 @@ describe('optionsList()', () => {
     const schema: RJSFSchema = { enum: [{ a: 1 }] };
     expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}']);
   });
+  it('should not label object or array enum values from a map-based enumNames', () => {
+    const schema: RJSFSchema = { enum: [{ tier: 1 }, [2], 'free'] };
+    const uiSchema: UiSchema = { 'ui:enumNames': { '[object Object]': 'Tier', '2': 'Two', free: 'Free' } };
+    expect(optionsList(schema, uiSchema)?.map(({ label }) => label)).toEqual(['{"tier":1}', '[2]', 'Free']);
+  });
+  it('should reorder object and array enum values by deep equality', () => {
+    const schema: RJSFSchema = { enum: [{ tier: 1 }, { tier: 2 }, [1, 2], [3], 'free'] };
+    const uiSchema = { 'ui:enumOrder': [{ tier: 2 }, [3], '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([
+      { tier: 2 },
+      [3],
+      { tier: 1 },
+      [1, 2],
+      'free',
+    ]);
+  });
   describe('anyOf and oneOf together', () => {
     it('should read anyOf, the list isSelect() reads, when both are constants', () => {
       const schema: RJSFSchema = {

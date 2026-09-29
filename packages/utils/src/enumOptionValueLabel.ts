@@ -1,3 +1,5 @@
+import isContainerValue from './isContainerValue.ts';
+
 /** Returns the label for an enum option with no title of its own: its value, with an object or array spelled out as
  * JSON, since `String()` would label every one of them `[object Object]`
  *
@@ -5,5 +7,5 @@
  * @returns - The text to label the option with
  */
 export default function enumOptionValueLabel(value: unknown): string {
-  return typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value);
+  return isContainerValue(value) ? JSON.stringify(value) : String(value);
 }

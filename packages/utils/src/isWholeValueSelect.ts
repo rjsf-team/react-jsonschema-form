@@ -1,12 +1,9 @@
 import getSchemaType from './getSchemaType.ts';
 import getXxxOfKey from './getXxxOfKey.ts';
 import isConstantSelect from './isConstantSelect.ts';
+import isContainerValue from './isContainerValue.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
-
-function isContainerValue(value: unknown): boolean {
-  return typeof value === 'object' && value !== null;
-}
 
 /** Checks whether `schema` is a select over object or array constants, which holds one of them as a whole rather than
  * being a container whose contents are edited, filled in with defaults, pruned or sanitized. That is a non-empty

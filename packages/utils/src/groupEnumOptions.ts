@@ -1,3 +1,4 @@
+import isContainerValue from './isContainerValue.ts';
 import type {
   EnumOptionsGroupType,
   EnumOptionsType,
@@ -7,8 +8,6 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from './types.ts';
-
-const isPrimitive = (value: unknown) => value === null || typeof value !== 'object';
 
 /** Groups `enumOptions` according to `optgroups`, tagging every option along the way with its original array
  * `index` (needed by `enumOptionValueEncoder` for the `'indexed'` `optionValueFormat`) and its `disabled` status
@@ -67,7 +66,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   };
   indexed.forEach((option) => {
     append(byValue, option.value, option);
-    if (isPrimitive(option.value)) {
+    if (!isContainerValue(option.value)) {
       append(byString, String(option.value), option);
     }
   });
@@ -76,7 +75,8 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   const findUnclaimed = (candidates: IndexedEnumOptionType<S>[] | undefined) =>
     candidates?.find((candidate) => !claimedIndices.has(candidate.index));
   const findOption = (value: unknown) =>
-    findUnclaimed(byValue.get(value)) ?? (isPrimitive(value) ? findUnclaimed(byString.get(String(value))) : undefined);
+    findUnclaimed(byValue.get(value)) ??
+    (isContainerValue(value) ? undefined : findUnclaimed(byString.get(String(value))));
 
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
     .map(([label, values]) => {

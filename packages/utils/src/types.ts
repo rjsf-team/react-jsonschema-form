@@ -72,7 +72,8 @@ export type TestIdShape = Record<string, string>;
  *   submission. Object, array and `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
  *   (e.g. `__rjsf_index:2`), which keeps them apart from a string option that happens to look like an index. The empty
  *   string, which a select's empty placeholder carries, and a string option that starts with the prefix are encoded as
- *   their index too.
+ *   their index too. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value, so an enum mixing
+ *   them needs the `'indexed'` format.
  */
 export type OptionValueFormat = 'indexed' | 'realValue';
 

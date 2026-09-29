@@ -32,8 +32,10 @@ import {
   deepEquals,
   ErrorSchemaBuilder,
   getChangedFields,
+  getDiscriminatorFieldFromSchema,
   getTemplate,
   getUiOptions,
+  getXxxOfKey,
   hashObject,
   isObject,
   isWholeValueSelect,
@@ -1122,6 +1124,32 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
+/** Returns the schema of the `property` of an object `schema` as it is rendered: the schema's own, or else that of the
+ * `oneOf`/`anyOf` option `MultiSchemaField` renders for `formData`, which it picks as the closest match to it
+ *
+ * @param schemaUtils - The schema utilities to retrieve the options and pick among them with
+ * @param schema - The object schema, retrieved for `formData`
+ * @param property - The name of the property
+ * @param formData - The object's data
+ * @returns - The property's schema, or undefined when neither the schema nor the option declares it
+ */
+function getPropertySchemaAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  property: string,
+  formData: T,
+): S | undefined {
+  const ownSchema = schema.properties?.[property];
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (ownSchema !== undefined || !xxxOfKey) {
+    return ownSchema as S | undefined;
+  }
+  const options = schema[xxxOfKey]!.map((option) => schemaUtils.retrieveSchema(option as S, formData));
+  const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+  const optionIndex = schemaUtils.getClosestMatchingOption(formData, options, 0, discriminator);
+  return options[optionIndex]?.properties?.[property] as S | undefined;
+}
+
 /** Whether the field at `path` is a select over object or array constants. Changing one sets a single value, the way
  * changing a leaf does, rather than writing a container of values whose own fields raise their changes. The schema is
  * retrieved at every step of the path, so a field an `allOf`, a condition or a `oneOf`/`anyOf` option declares is found
@@ -1147,7 +1175,7 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
       const { items, additionalItems } = fieldSchema;
       childSchema = (Array.isArray(items) ? (items[segment] ?? additionalItems) : items) as S | undefined;
     } else {
-      childSchema = schemaUtils.findFieldInSchema(fieldSchema, [segment], fieldData as T).field;
+      childSchema = getPropertySchemaAt<T, S, F>(schemaUtils, fieldSchema, segment, fieldData as T);
     }
     if (!isObject(childSchema)) {
       return false;

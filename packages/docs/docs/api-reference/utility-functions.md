@@ -384,7 +384,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, so object, array and `null` values, which are encoded as their prefixed index, round-trip too.
+When `format` is `'realValue'`, does a reverse lookup: finds the first enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, including object, array and `null` values, which are encoded as their prefixed index. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value and decode to the first of them.
 A bare index is not an option's position here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with `enumOptionsValueForIndex()` instead.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 

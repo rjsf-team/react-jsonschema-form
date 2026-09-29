@@ -1,10 +1,12 @@
 import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
+import deepEquals from './deepEquals.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfKey from './getXxxOfKey.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
+import isContainerValue from './isContainerValue.ts';
 import { getByPath } from './pathUtils.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
@@ -17,15 +19,25 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
   order: EnumValue[],
 ): EnumOptionsType<S>[] {
-  const optionsByValue = new Map(options.map((opt) => [String(opt.value), opt]));
-  const orderedKeys = new Set(order.filter((v) => v !== '*').map(String));
-  const rest = options.filter((opt) => !orderedKeys.has(String(opt.value)));
+  const optionsByValue = new Map(
+    options.filter((opt) => !isContainerValue(opt.value)).map((opt) => [String(opt.value), opt]),
+  );
+  const findOption = (entry: unknown) => {
+    // `String()` spells every object `[object Object]`, so an object or array entry is found by deep equality instead
+    if (isContainerValue(entry)) {
+      return options.find((opt) => deepEquals(opt.value, entry));
+    }
+    return entry === '*' ? undefined : optionsByValue.get(String(entry));
+  };
+  const orderedOptions = order.map(findOption);
+  const listed = new Set(orderedOptions);
+  const rest = options.filter((opt) => !listed.has(opt));
 
-  return order.flatMap((entry) => {
+  return order.flatMap((entry, index) => {
     if (entry === '*') {
       return rest;
     }
-    const opt = optionsByValue.get(String(entry));
+    const opt = orderedOptions[index];
     return opt ? [opt] : [];
   });
 }
@@ -59,10 +71,9 @@ export default function optionsList<
       enumOrder = uiEnumOrder;
     }
     let options = schema.enum.map((value, i) => {
-      const label = Array.isArray(enumNames)
-        ? enumNames[i] || enumOptionValueLabel(value)
-        : enumNames?.[String(value)] || enumOptionValueLabel(value);
-      return { label, value };
+      // A map is keyed by strings, which can't name an object or array value
+      const name = Array.isArray(enumNames) ? enumNames[i] : !isContainerValue(value) && enumNames?.[String(value)];
+      return { label: name || enumOptionValueLabel(value), value };
     });
     if (enumOrder) {
       options = applyEnumOrder(options, enumOrder);

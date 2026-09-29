@@ -142,14 +142,16 @@ export function FancyMultiSelect({
   );
 
   function renderItem(item: FancySelectItem) {
-    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk also
-    // searches its `value`, so that stays text, spelled the way an untitled option is labelled
+    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk searches
+    // its `value`, which stays text spelled the way an untitled option is labelled, and its `keywords`, which carry the
+    // label so a titled option is found by what it shows
     const itemId = `${id}-${item.index}-command-item`;
     return (
       <CommandItem
         disabled={item.disabled}
         key={item.index}
         value={enumOptionValueLabel(item.value)}
+        keywords={[item.label]}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();

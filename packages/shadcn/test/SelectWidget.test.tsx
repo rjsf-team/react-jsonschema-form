@@ -344,6 +344,32 @@ describe('SelectWidget', () => {
     }
   });
 
+  test('multi-select: finds an object option by typing its label', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          rawErrors: [],
+          value: [],
+          options: {
+            enumOptions: [
+              { label: 'Basic', value: { tier: 1 } },
+              { label: 'Pro', value: { tier: 2 } },
+            ],
+          },
+        })}
+      />,
+    );
+
+    await user.type(screen.getByPlaceholderText('Select ...'), 'Pro');
+
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['Pro']);
+  });
+
   test('multi-select: reports the picked values in the realValue format', async () => {
     const user = userEvent.setup();
     const seen: unknown[] = [];

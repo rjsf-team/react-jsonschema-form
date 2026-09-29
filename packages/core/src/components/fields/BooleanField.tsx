@@ -86,32 +86,29 @@ function BooleanField<
   // or that has no option schemas at all, gives `optionsList()` nothing to list, so the widget gets the options of the
   // `enum`, or Yes/No, instead
   const altKey = getXxxOfKey<S>(schema);
-  const altSchemas = altKey && schema[altKey];
-  if (altKey && altSchemas) {
+  if (altKey) {
     enumOptions = optionsList<T, S, F>(
       {
-        [altKey]: altSchemas
-          .map((option, index) => {
-            if (isObject(option)) {
-              // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const`
-              // spelling
-              const constant = isConstant(option) ? toConstant(option) : undefined;
-              return {
-                ...option,
-                // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and
-                // so would otherwise be dropped by taking this path at all. Both of its spellings are honored: an
-                // array by position and a record by value. Only a boolean constant gets a Yes/No label after that;
-                // `optionsList()` falls back to the value for the rest, so a `null` option reads as `null` rather than
-                // sharing `false`'s label
-                title:
-                  option.title ||
-                  (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
-                  booleanConstantTitle(constant, yes, no),
-              };
-            }
-            return undefined;
-          })
-          .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
+        [altKey]: schema[altKey]!.map((option, index) => {
+          if (isObject(option)) {
+            // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const`
+            // spelling
+            const constant = isConstant(option) ? toConstant(option) : undefined;
+            return {
+              ...option,
+              // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and
+              // so would otherwise be dropped by taking this path at all. Both of its spellings are honored: an
+              // array by position and a record by value. Only a boolean constant gets a Yes/No label after that;
+              // `optionsList()` falls back to the value for the rest, so a `null` option reads as `null` rather than
+              // sharing `false`'s label
+              title:
+                option.title ||
+                (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
+                booleanConstantTitle(constant, yes, no),
+            };
+          }
+          return undefined;
+        }).filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
       } as unknown as S,
       uiSchema,
     );

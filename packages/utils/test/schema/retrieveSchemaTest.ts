@@ -2178,6 +2178,27 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { title: 'both', type: 'string' },
         ]);
       });
+      it.each([false, true])(
+        'resolves an empty anyOf to the schema without it, expanding every branch: %s',
+        (expand) => {
+          const schema: RJSFSchema = { type: 'string', title: 'empty', anyOf: [] };
+          expect(resolveAnyOrOneOfSchemas(testValidator, schema, schema, expand)).toEqual([
+            { type: 'string', title: 'empty' },
+          ]);
+        },
+      );
+      it('retrieves a schema with dependencies beside an empty anyOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          anyOf: [],
+          properties: { a: { type: 'string' } },
+          dependencies: { a: { properties: { b: { type: 'number' } } } },
+        };
+        expect(retrieveSchema(testValidator, schema, schema, { a: 'x' })).toEqual({
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'number' } },
+        });
+      });
       it('resolves the anyOf of a schema that also has a oneOf, keeping the oneOf to resolve next', () => {
         const schema: RJSFSchema = { title: 'both', anyOf: [{ type: 'string' }], oneOf: [{ type: 'number' }] };
         expect(resolveAnyOrOneOfSchemas(testValidator, schema, schema, true)).toEqual([

@@ -851,6 +851,10 @@ export function resolveAnyOrOneOfSchemas<
     const remaining =
       expandAllBranches && otherKey in schema ? { ...withoutOptions, [otherKey]: schema[otherKey] } : withoutOptions;
     let anyOrOneOf = schema[xxxOfKey] as S[];
+    // An empty list has no option to merge in, so what the schema declares besides it stands on its own
+    if (anyOrOneOf.length === 0) {
+      return [remaining as S];
+    }
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);

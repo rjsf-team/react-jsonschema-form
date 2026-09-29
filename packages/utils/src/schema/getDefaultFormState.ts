@@ -324,6 +324,8 @@ export function computeDefaults<
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
+  // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
+  let isWholeValue: boolean | undefined;
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (
     schema[CONST_KEY] !== undefined &&
@@ -425,7 +427,8 @@ export function computeDefaults<
     // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
     // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
     // taken whole
-    const picksWholeOption = isWholeValueSelect<S>(schema) && isConstantOptionList<S>(options, true);
+    isWholeValue = isWholeValueSelect<S>(schema);
+    const picksWholeOption = isWholeValue && isConstantOptionList<S>(options, true);
     // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
     if (
       ONE_OF_KEY in schema &&
@@ -513,7 +516,13 @@ export function computeDefaults<
     }
   }
 
-  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
+  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
+    validator,
+    schema,
+    computeDefaultsProps,
+    defaults,
+    isWholeValue,
+  );
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
@@ -930,6 +939,7 @@ export function getArrayDefaults<
  * @param rawSchema - The schema for which the default state is desired
  * @param computeDefaultsProps - Optional props for this function
  * @param defaults - Optional props for this function
+ * @param [isWholeValue] - Whether `rawSchema` is a select over whole object or array values, when already known
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 export function getDefaultBasedOnSchemaType<
@@ -941,11 +951,12 @@ export function getDefaultBasedOnSchemaType<
   rawSchema: S,
   computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
+  isWholeValue = isWholeValueSelect<S>(rawSchema),
 ): T | T[] | undefined {
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
   // and an empty object or array would be a value none of its options allow. A value already picked is kept as it is,
   // since the form data is merged over the defaults key by key, which would blend it with the default constant
-  if (isWholeValueSelect<S>(rawSchema)) {
+  if (isWholeValue) {
     return computeDefaultsProps.rawFormData !== undefined ? computeDefaultsProps.rawFormData : defaults;
   }
   switch (getSchemaType<S>(rawSchema)) {
