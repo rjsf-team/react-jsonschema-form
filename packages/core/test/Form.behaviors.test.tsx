@@ -303,6 +303,9 @@ describe('Error state consistency when deriving from new props', () => {
    * way a custom root `Field` does
    */
   const captureRootField = vi.fn<(fieldProps: FieldProps) => void>();
+  beforeEach(() => {
+    captureRootField.mockClear();
+  });
   function rootField() {
     const fieldProps = captureRootField.mock.lastCall?.[0];
     if (!fieldProps) {
