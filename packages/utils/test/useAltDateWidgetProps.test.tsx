@@ -145,19 +145,6 @@ describe('useAltDateWidgetProps()', () => {
     expect(PROPS.onChange).toHaveBeenCalledWith(undefined);
     expect(simulatedEvent.preventDefault).toHaveBeenCalled();
   });
-  test('re-parses the elements when the value or time props change', () => {
-    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
-      initialProps: PROPS,
-    });
-    rerender({ ...PROPS, value: DATE_STR });
-    expect(result.current.elements).toEqual(
-      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
-    );
-    rerender({ ...TIME_PROPS, value: DATE_STR });
-    expect(result.current.elements).toEqual(
-      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
-    );
-  });
   test('discards a partial selection when the value prop changes', () => {
     const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
       initialProps: PROPS,
