@@ -73,7 +73,8 @@ function selectTypeForConstants(types: string[]): string {
 }
 
 /** Whether any of a constant option list's labels comes from somewhere other than its values: an option's own
- * `title`, its `ui:title` in the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry, or `ui:enumNames`
+ * `title` or its `ui:title` in the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry. `ui:enumNames` names only `enum`
+ * values, so it doesn't label these options
  *
  * @param options - The constant options of the keyword being rendered
  * @param keyword - The keyword the `options` came from
@@ -85,10 +86,6 @@ function hasOptionLabels<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(options: S[], keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY, uiSchema: UiSchema<T, S, F>): boolean {
-  const { enumNames } = getUiOptions<T, S, F>(uiSchema);
-  if (enumNames && Object.keys(enumNames).length > 0) {
-    return true;
-  }
   const optionUiSchemas = uiSchema[keyword];
   return options.some(
     (option, index) =>

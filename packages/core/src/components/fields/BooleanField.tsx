@@ -8,16 +8,19 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  ANY_OF_KEY,
+  deepEquals,
   fieldPathToName,
   getUiOptions,
   getWidget,
+  getXxxOfKey,
   isConstantOptionList,
-  ONE_OF_KEY,
+  logOnce,
   optionsList,
   toConstant,
   TranslatableString,
 } from '@rjsf/utils';
+
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 
 /** Returns the label a boolean constant gets when its option has no title of its own, or `undefined` for any other
  * constant so that `optionsList()` falls back to the value itself.
@@ -82,49 +85,43 @@ function BooleanField<
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  // The options come from the first of `anyOf` and `oneOf` that lists constants. Unlike `getXxxOfKey()`, which stops at
-  // any `anyOf` array, this looks past an empty or non-constant `anyOf` to a constant `oneOf`, since that `anyOf` has no
-  // values to offer. Without either, the `enum`, or `true` and `false` without one, supplies the options; with an
-  // `enum`, no `AnyOfField` or `OneOfField` renders non-constant alternatives, so they can't label the options either
-  const altKey = ([ANY_OF_KEY, ONE_OF_KEY] as const).find((key) => isConstantOptionList<S>(schema[key], true));
-  if (altKey) {
+  // Read from the keyword `isSelect()` and `optionsList()` read, so this field and `SchemaField` agree on the list
+  const altKey = getXxxOfKey<S>(schema);
+  const altSchemas = altKey ? schema[altKey] : undefined;
+  if (altKey && isConstantOptionList<S>(altSchemas, true)) {
+    // The `enum` still constrains the value, so an option it rules out could only ever fail validation
+    const allowed = schema.enum;
     enumOptions = optionsList<T, S, F>(
       {
-        [altKey]: (schema[altKey] as S[]).map((option, index) => {
+        [altKey]: altSchemas.map((option) => {
           // Read the same way `optionsList()` reads it, so a single-value `enum` is labelled like the `const` spelling
           const constant = toConstant(option);
           return {
             ...option,
-            // An option's own title wins, then `ui:enumNames`, which `optionsList()` applies only to an `enum` and so
-            // would otherwise be dropped by taking this path at all. Both of its spellings are honored: an array by
-            // position and a record by value. Only a boolean constant gets a Yes/No label after that; `optionsList()`
-            // falls back to the value for the rest, so a `null` option reads as `null` rather than sharing `false`'s
-            // label
-            title:
-              option.title ||
-              (Array.isArray(enumNames) ? enumNames[index] : enumNames?.[String(constant)]) ||
-              booleanConstantTitle(constant, yes, no),
+            // An option's own title wins, even an empty one. `ui:enumNames` names only `enum` values, so it doesn't
+            // label these options
+            title: option.title ?? booleanConstantTitle(constant, yes, no),
           };
         }),
       } as unknown as S,
       uiSchema,
-    );
+    )?.filter(({ value }) => !allowed || allowed.some((allowedValue) => deepEquals(allowedValue, value)));
   } else {
-    const enums = schema.enum ?? [true, false];
-    if (!enumNames && enums.length === 2 && enums.every((v: any) => typeof v === 'boolean')) {
-      enumOptions = [
-        {
-          value: enums[0],
-          label: enums[0] ? yes : no,
-        },
-        {
-          value: enums[1],
-          label: enums[1] ? yes : no,
-        },
-      ];
-    } else {
-      enumOptions = optionsList<T, S, F>({ enum: enums } as S, uiSchema);
+    // `ui:enumNames` already labels the options, and a checkbox shows no option labels at all
+    if (schema.enum && altSchemas?.length && !enumNames && widget !== 'checkbox') {
+      logOnce(
+        `${fieldLabelForLog(fieldId, fieldPath)} has an enum beside a ${altKey} whose options aren't all \`const\` ` +
+          `schemas, so its options come from the enum and the ${altKey} titles aren't shown. Label the enum values ` +
+          `with ui:enumNames, or make every ${altKey} option a \`const\` schema.`,
+      );
     }
+    const enums = schema.enum ?? [true, false];
+    enumOptions = optionsList<T, S, F>({ enum: enums } as S, uiSchema)?.map((option) => {
+      const enumName = Array.isArray(enumNames)
+        ? enumNames[enums.indexOf(option.value)]
+        : enumNames?.[String(option.value)];
+      return enumName ? option : { ...option, label: booleanConstantTitle(option.value, yes, no) ?? option.label };
+    });
   }
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
