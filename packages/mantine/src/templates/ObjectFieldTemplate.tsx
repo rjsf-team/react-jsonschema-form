@@ -36,8 +36,6 @@ export default function ObjectFieldTemplate<
     id,
     formData,
     registry,
-    rawErrors,
-    hideError,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
@@ -54,7 +52,7 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
-  const errors = useContainerErrors(id, rawErrors, hideError);
+  const errors = useContainerErrors(props);
 
   return (
     <Container id={id} p={0} fluid>

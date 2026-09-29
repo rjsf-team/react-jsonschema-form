@@ -4,7 +4,7 @@ import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, visibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
@@ -60,6 +60,7 @@ export default function ColorWidget<
   );
 
   const ariaDescribedByProps = useAriaDescribedByProps('ColorInput', id, options);
+  const error = useVisibleErrors(props);
 
   return (
     <ColorInput
@@ -74,7 +75,7 @@ export default function ColorWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrors(props)}
+      error={error}
       {...themeProps}
       popoverProps={{ withinPortal: false }}
       {...ariaDescribedByProps}

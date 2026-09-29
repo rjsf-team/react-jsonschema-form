@@ -106,15 +106,6 @@ export function errorLines(errors: readonly ReactNode[]): ReactNode {
     : undefined;
 }
 
-/** Builds the `error` prop Mantine's inputs render, from the errors the component should surface
- *
- * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
- * @returns - The errors to render, or undefined when there are none
- */
-export function visibleErrors(props: VisibleErrorsProps): ReactNode {
-  return errorLines(getVisibleErrors(props));
-}
-
 // The id of the field whose `oneOf`/`anyOf` selector renders its own errors, which the selected option's field shares
 const SelectorErrorsIdContext = createContext<string | undefined>(undefined);
 
@@ -125,20 +116,27 @@ export function SelectorErrorsIdProvider({ id, children }: { id?: string; childr
   return <SelectorErrorsIdContext value={id}>{children}</SelectorErrorsIdContext>;
 }
 
-/** A hook for the own errors of an object, or an array rendered item by item, which no widget renders, for their
- * template to render with the field's `errorId(id)`. Every other field's widget renders its errors, so
- * `FieldErrorTemplate` renders none. Where a `oneOf`/`anyOf` selector renders them, `@rjsf/core` gives the object with
- * the `oneOf`/`anyOf` no `rawErrors`, and the selected option's field, which has the same id, doesn't render them.
+/** A hook for the `error` prop Mantine's inputs render, from the errors a widget or template shows, which are none for the field a `oneOf`/`anyOf` selector renders
+ * the errors of, since the selected option's field has the same id and is given the same errors. The fields inside the
+ * option have their own ids, and so their own errors.
  *
- * @param id - The id of the field
- * @param rawErrors - The field's own errors
- * @param hideError - Whether the field's errors are hidden
+ * @param props - The props of the widget or template, from which `id`, `rawErrors` and `hideError` are read
+ * @returns - The errors to render, or undefined when there are none
+ */
+export function useVisibleErrors(props: VisibleErrorsProps & { id: string }): ReactNode {
+  const selectorErrorsId = use(SelectorErrorsIdContext);
+  return props.id === selectorErrorsId ? undefined : errorLines(getVisibleErrors(props));
+}
+
+/** A hook for the own errors of an object, or an array rendered item by item, which no widget renders, for their
+ * template to render with the field's `errorId(id)`. Every other field's widget renders its errors.
+ *
+ * @param props - The props of the template, from which `id`, `rawErrors` and `hideError` are read
  * @returns - The error element to render, if any
  */
-export function useContainerErrors(id: string, rawErrors: string[] | undefined, hideError: boolean | undefined) {
-  const selectorErrorsId = use(SelectorErrorsIdContext);
-  const errors = visibleErrors({ rawErrors, hideError });
-  return errors && id !== selectorErrorsId ? <Input.Error id={errorId(id)}>{errors}</Input.Error> : undefined;
+export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
+  const errors = useVisibleErrors(props);
+  return errors ? <Input.Error id={errorId(props.id)}>{errors}</Input.Error> : undefined;
 }
 
 export function cleanupOptions<T extends object>(
@@ -515,7 +513,7 @@ export function useFieldWrapperProps<
     ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))
     : resolved;
   const hiddenTitle = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
-  const error = visibleErrors(widgetProps);
+  const error = useVisibleErrors(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = successIdOf(id, ownSuccessProps);
   return {
@@ -645,7 +643,7 @@ export function useGroupAriaProps<
     before: hiddenLabel,
     successOnOptions: true,
   });
-  const error = visibleErrors(widgetProps);
+  const error = useVisibleErrors(widgetProps);
   const invalid = !!error;
   // Mantine's `Checkbox` and `Radio` only style an `error`. Each radio is required, as in `@rjsf/core`, since checking
   // any one of them satisfies it, where a required checkbox would have to be checked.

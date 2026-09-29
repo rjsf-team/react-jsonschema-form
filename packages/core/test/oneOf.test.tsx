@@ -11,6 +11,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
@@ -3054,5 +3055,70 @@ describe('oneOf', () => {
     });
 
     expect(node.querySelector('.multi')).toHaveAttribute('data-id', 'root_foo');
+  });
+
+  it.each([
+    ['rendered beside its selector', 'root_XxxOf__add'],
+    ['rendered as the selected option', 'root__add'],
+  ])('keeps the own errors of an array %s when it adds an item', async (_, addButtonId) => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 2,
+        oneOf: [{ items: { type: 'string' }, maxItems: 5 }],
+      },
+      uiSchema: { 'ui:field': 'ArrayField' },
+      initialFormData: [],
+      showErrorList: false,
+    });
+    await submitForm(node, user);
+
+    await user.click(node.querySelector(`[id="${addButtonId}"]`)!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.__errors).toEqual(['must NOT have fewer than 2 items']);
+  });
+
+  it('keeps the own errors of an object beside its selector out of the errors an array inside it raises', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string' } } },
+        oneOf: [{ required: ['list'] }],
+      },
+      initialFormData: { list: [] },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    await user.click(node.querySelector('button[id$="list__add"]')!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.list).toBeUndefined();
+  });
+
+  it('lets a ui:field rendered beside its selector clear an error it raised at its own path', async () => {
+    function RaisingField({ fieldPath, onChange }: FieldProps) {
+      return (
+        <>
+          <button type='button' onClick={() => onChange('b', fieldPath, { __errors: ['Custom error'] })}>
+            Raise
+          </button>
+          <button type='button' onClick={() => onChange('c', fieldPath, {})}>
+            Clear
+          </button>
+        </>
+      );
+    }
+    const { onChange } = createFormComponent({
+      schema: { type: 'string', oneOf: [{ minLength: 1 }, { maxLength: 5 }] },
+      // The options get their own uiSchema, so only the field beside the selector is the `ui:field`
+      uiSchema: { 'ui:field': RaisingField, oneOf: [{}, {}] },
+      initialFormData: 'a',
+    });
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({ __errors: ['Custom error'] });
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
   });
 });

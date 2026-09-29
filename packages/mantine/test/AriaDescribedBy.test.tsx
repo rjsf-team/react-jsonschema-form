@@ -27,6 +27,11 @@ function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
   );
 }
 
+/** The elements with the text that aren't inside a hidden element, such as `FieldErrorTemplate`'s hidden copy */
+function shownWithText(text: string) {
+  return screen.queryAllByText(text).filter((element) => !element.closest('[style*="display: none"]'));
+}
+
 function describedByValues(container: HTMLElement) {
   return Array.from(container.querySelectorAll('[aria-describedby]'), (el) => el.getAttribute('aria-describedby'));
 }
@@ -494,7 +499,11 @@ describe('aria-describedby', () => {
             text: { type: 'string' },
           },
         }}
-        uiSchema={{ custom: { 'ui:widget': ({ id }: WidgetProps) => <input id={id} /> } }}
+        uiSchema={{
+          custom: {
+            'ui:widget': ({ id }: WidgetProps) => <input id={id} aria-describedby={ariaDescribedByIds(id)} />,
+          },
+        }}
         validator={validator}
         extraErrors={
           {
@@ -521,8 +530,10 @@ describe('aria-describedby', () => {
       expect(errors).toHaveLength(1);
       expect(errors[0]).toHaveTextContent(message);
     }
-    // A custom widget renders its own errors, as for any other type, which this one doesn't
-    expect(container.querySelector(`[id="${errorId('root_custom')}"]`)).not.toBeInTheDocument();
+    // A custom widget that doesn't render its errors is described by `FieldErrorTemplate`'s hidden copy of them
+    expect(container.querySelectorAll(`[id="${errorId('root_custom')}"]`)).toHaveLength(1);
+    expect(container.querySelector('#root_custom')).toHaveAccessibleDescription(/Custom error/);
+    expect(screen.getByText('Custom error')).not.toBeVisible();
   });
 
   test.each([
@@ -549,10 +560,83 @@ describe('aria-describedby', () => {
         />,
       );
 
-      expect(screen.getAllByText('Own error')).toHaveLength(1);
+      expect(shownWithText('Own error')).toHaveLength(1);
       expect(screen.getByRole('combobox')).toHaveAccessibleDescription(/Own error/);
     },
   );
+
+  test.each([
+    ['string', { type: 'string' }, 'textbox'],
+    ['boolean', { type: 'boolean' }, 'checkbox'],
+  ] as [string, RJSFSchema, string][])(
+    'renders the errors of a field with a oneOf of a %s once, through its option selector',
+    (_, option, role) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { foo: { oneOf: [option, { type: 'number' }] } } }}
+          validator={validator}
+          extraErrors={{ foo: { __errors: ['Own error'] } } as ErrorSchema}
+          showErrorList={false}
+        />,
+      );
+
+      expect(shownWithText('Own error')).toHaveLength(1);
+      expect(screen.getByRole('combobox')).toHaveAccessibleDescription(/Own error/);
+      expect(screen.getByRole(role)).not.toHaveAttribute('aria-invalid');
+    },
+  );
+
+  test("renders the errors of an optional object's oneOf through its option while no selector renders", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { foo: { type: 'object', oneOf: [{ properties: { a: { type: 'string' } } }] } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        validator={validator}
+        extraErrors={{ foo: { __errors: ['Own error'] } } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(shownWithText('Own error')).toHaveLength(1);
+  });
+
+  test.each([
+    ['a custom ui:field', { type: 'string' }, { 'ui:field': ({ id }: FieldProps) => <input id={id} /> }],
+    ['a field of an unsupported type', { type: 'bogus' }, {}],
+  ] as [string, RJSFSchema, UiSchema][])('keeps the errors of %s in their hidden copy, once', (_, schema, uiSchema) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: schema } }}
+        uiSchema={{ x: uiSchema }}
+        validator={validator}
+        extraErrors={{ x: { __errors: ['X error'] } } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    const copies = container.querySelectorAll(`[id="${errorId('root_x')}"]`);
+    expect(copies).toHaveLength(1);
+    expect(copies[0]).toHaveTextContent('X error');
+  });
+
+  test("describes a widget that leaves 'error' out of inputWrapperOrder by the hidden copy of its errors", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:options': { inputWrapperOrder: ['label', 'input'] } }}
+        validator={validator}
+        extraErrors={{ __errors: ['An error'] } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(screen.getByText('An error')).not.toBeVisible();
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
+  });
 
   test('renders the errors of fields inside the option a selector picked', () => {
     const { container } = render(
@@ -581,7 +665,7 @@ describe('aria-describedby', () => {
       />,
     );
 
-    expect(screen.getAllByText('Own error')).toHaveLength(1);
+    expect(shownWithText('Own error')).toHaveLength(1);
   });
 
   test('renders errors given as elements, each on its own line, without a missing key warning', () => {

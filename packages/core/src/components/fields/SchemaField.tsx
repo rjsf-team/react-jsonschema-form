@@ -41,6 +41,7 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -388,7 +389,7 @@ function SchemaFieldRender<
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
 
-  const field = (
+  const fieldComponent = (
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
@@ -406,6 +407,12 @@ function SchemaFieldRender<
       rawErrors={XxxOfField ? undefined : __errors}
     />
   );
+  const field =
+    XxxOfField && __errors?.length ? (
+      <WithheldErrorsContext value={{ fieldPath, errors: __errors }}>{fieldComponent}</WithheldErrorsContext>
+    ) : (
+      fieldComponent
+    );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
   let label;

@@ -27,8 +27,6 @@ export default function ArrayFieldTemplate<
     uiSchema,
     title,
     registry,
-    rawErrors,
-    hideError,
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -60,7 +58,7 @@ export default function ArrayFieldTemplate<
     />
   );
 
-  const errors = useContainerErrors(id, rawErrors, hideError);
+  const errors = useContainerErrors(props);
 
   return (
     <Fieldset legend={legend} className={className} id={id}>

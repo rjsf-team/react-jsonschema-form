@@ -4,7 +4,7 @@ import { Checkbox, Input } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { getDescriptionProps, visibleErrors } from '../utils.tsx';
+import { getDescriptionProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -61,7 +61,7 @@ export default function CheckboxWidget<
   );
 
   const { description } = getDescriptionProps(props);
-  const errors = visibleErrors(props);
+  const errors = useVisibleErrors(props);
   return (
     <>
       {description}

@@ -11,7 +11,8 @@ export default function MultiSchemaFieldTemplate<
   return (
     <Stack style={{ marginBottom: '1rem' }}>
       {selector}
-      <SelectorErrorsIdProvider id={id}>{optionSchemaField}</SelectorErrorsIdProvider>
+      {/* Without a selector, such as while an optional field has no data, the option's field renders the errors */}
+      <SelectorErrorsIdProvider id={selector ? id : undefined}>{optionSchemaField}</SelectorErrorsIdProvider>
     </Stack>
   );
 }
