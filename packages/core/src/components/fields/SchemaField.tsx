@@ -182,7 +182,9 @@ function inferSelectWidget<
  *
  * @param field - The `field` from the UI options
  * @param fields - The registered fields
- * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered
+ * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered. Looked up as an own
+ *            property, so a name such as `constructor` or `toString` resolves to nothing rather than to something off
+ *            `Object.prototype`, which rendered as a component threw "Objects are not valid as a React child"
  */
 function getUiFieldComponent<
   T = unknown,
@@ -192,7 +194,7 @@ function getUiFieldComponent<
   if (typeof field === 'function') {
     return field;
   }
-  return typeof field === 'string' && field in fields ? fields[field] : undefined;
+  return typeof field === 'string' && Object.hasOwn(fields, field) ? fields[field] : undefined;
 }
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
@@ -227,9 +229,9 @@ function getFieldComponent<
   const { field, widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
   /** `FallbackField` is the fallback UI only with the opt-in on; without it the component renders the unsupported field
-   * template, which takes no `anyOf`/`oneOf` over. Read from the component rather than from the name that reached it,
-   * so that every way of arriving at it — the type the schema names having no field, the opt-in diverting a union, a
-   * `ui:field` naming it — gives the same answer
+   * template, which takes no `anyOf`/`oneOf` over. Takes the component rather than a name, since the several ways of
+   * arriving at it — the type the schema names having no field, the opt-in diverting a union, a `ui:field` naming it —
+   * reach it under different names and must all give the same answer
    */
   const rendersFallbackUiAs = (FieldComponent: Field<T, S, F>) =>
     FieldComponent === fields.FallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
@@ -241,18 +243,15 @@ function getFieldComponent<
    * One naming the fallback UI is not a field the options can give way to either: it renders them itself, against the
    * schema with its type pinned, so they are rendered whatever the directive asks for
    */
+  const namedFieldRendersFallbackUi = namedField !== undefined && rendersFallbackUiAs(namedField);
   const optionsGiveWayToField =
-    namedField !== undefined && !rendersFallbackUiAs(namedField) && uiOptions.fieldReplacesAnyOrOneOf === true;
+    namedField !== undefined && !namedFieldRendersFallbackUi && uiOptions.fieldReplacesAnyOrOneOf === true;
   /** An `anyOf`/`oneOf` that represents a select is rendered by the field for the schema's type as one control, rather
    * than by an option selector
    */
   const rendersOptionSelector = xxxOfKey !== undefined && !isSelectSchema && !optionsGiveWayToField;
   if (namedField !== undefined) {
-    return {
-      FieldComponent: namedField,
-      rendersFallbackUi: rendersFallbackUiAs(namedField),
-      rendersOptionSelector,
-    };
+    return { FieldComponent: namedField, rendersFallbackUi: namedFieldRendersFallbackUi, rendersOptionSelector };
   }
 
   const schemaType = getSchemaType(schema);
@@ -303,7 +302,7 @@ function getFieldComponent<
   if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }
-  if (schemaId && schemaId in fields) {
+  if (schemaId && Object.hasOwn(fields, schemaId)) {
     componentName = schemaId;
   }
 
@@ -327,7 +326,7 @@ function getFieldComponent<
   // `FallbackField`, since nothing else can render it. The flag is read from the component the name resolves to, so it
   // describes that way in as well as the diverted one, and it is read after the return above so that the options of
   // such a schema still supply its types
-  const FieldComponent = componentName in fields ? fields[componentName] : fields.FallbackField;
+  const FieldComponent = Object.hasOwn(fields, componentName) ? fields[componentName] : fields.FallbackField;
   return { FieldComponent, rendersFallbackUi: rendersFallbackUiAs(FieldComponent), rendersOptionSelector };
 }
 

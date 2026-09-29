@@ -1553,6 +1553,26 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val')).toBeInTheDocument();
     });
 
+    it('renders the help of a ui:globalOptions once for a union the fallback UI renders', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'number'], title: 'VAL' } },
+        },
+        uiSchema: { 'ui:globalOptions': { help: 'HELPTEXT' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // A global entry reaches every field in the form, so the field around the value shadows it on both uiSchemas it
+      // hands down: the value field renders for the same `id`, which would put a second copy of the help under the DOM
+      // id the first one's `aria-describedby` names, and the selector is a control within the field rather than a field
+      // whose own help this is
+      const fieldHelp = node.querySelectorAll('[id="root_val__help"]');
+      expect(fieldHelp).toHaveLength(1);
+      expect(fieldHelp[0]).toHaveTextContent('HELPTEXT');
+      expect(node.querySelector('#root_val___internal_type_selector__help')).not.toBeInTheDocument();
+    });
+
     it('renders one of each selector for a ui:globalOptions field naming the fallback field itself', () => {
       const { node } = createFormComponent({
         schema: {
@@ -1565,8 +1585,13 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // A global option reaches every field in the form, so the `field` has to be shadowed on both of the uiSchemas
       // this field hands down rather than dropped from the one the caller wrote: the value field routes straight back
-      // here without it, and so does the type selector, which is a `SchemaField` like any other
+      // here without it, and so does the type selector, which is a `SchemaField` like any other.
+      // The root is the second of the two selectors, since the global entry reaches it as well. It offers the one type
+      // that schema names rather than all seven, so choosing from it cannot cast the whole form's data to a type the
+      // schema rejects
       expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(2);
+      const rootTypeSelect = node.querySelector<HTMLSelectElement>('#root___internal_type_selector')!;
+      expect(Array.from(rootTypeSelect.options).map((o) => o.textContent)).toEqual(['object']);
       expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
       expect(node.querySelector('#root_val')).toBeInTheDocument();
     });
@@ -1584,10 +1609,18 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The options supply no type, so each one is left with the unrecognized one the parent propagates and gets the
       // selector for it, rather than the parent getting one that every option would then be rendered within
-      expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+      const optionSelect = node.querySelector('#root_val__anyof_select')!;
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(optionSelect).toBeInTheDocument();
       expect(typeSelect).toBeInTheDocument();
       expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual([...JSON_SCHEMA_TYPES]);
+
+      // Both selectors take their id from the same `fieldPath`, so which one wraps the other shows only in the order
+      // they render in: the option selector comes first because the type selector renders within the chosen option
+      const selectsInOrder = Array.from(node.querySelectorAll('select'));
+      expect(selectsInOrder.indexOf(optionSelect as HTMLSelectElement)).toBeLessThan(
+        selectsInOrder.indexOf(typeSelect),
+      );
     });
   });
 
