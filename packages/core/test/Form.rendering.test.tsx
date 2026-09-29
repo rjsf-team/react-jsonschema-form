@@ -1622,6 +1622,49 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         selectsInOrder.indexOf(typeSelect),
       );
     });
+
+    it.each([
+      ['off', false, 0],
+      ['on', true, 1],
+    ] satisfies [string, boolean, number][])(
+      'renders the options of a $id naming the fallback field with the fallback UI %s',
+      (_, optIn, typeSelectors) => {
+        const { node } = createFormComponent({
+          schema: { $id: 'FallbackField', type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] },
+          useFallbackUiForUnsupportedType: optIn,
+        });
+
+        // A `$id` naming the field reaches it whatever the opt-in says, but the field renders the options within its
+        // own value field only as the fallback UI: without the opt-in it renders the unsupported field template, which
+        // renders nothing of them, so they are rendered here instead of being given away to a field that drops them
+        expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(typeSelectors);
+        expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+        expect(node.querySelector('#root')).toBeInTheDocument();
+        expect(node.querySelectorAll('.unsupported-field')).toHaveLength(0);
+      },
+    );
+
+    it.each([
+      ['an enum of one type', { enum: ['a', 'b'] }, ['string']],
+      ['an enum of several', { enum: ['a', 1] }, ['string', 'number']],
+      ['a const', { const: 5 }, ['number']],
+      ['an unrecognized type', { type: 'someUnsupportedType' }, [...JSON_SCHEMA_TYPES]],
+    ] as [string, RJSFSchema, string[]][])(
+      'offers the types %s allows to a schema the fallback field is named for',
+      (_, val, types) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { val } },
+          uiSchema: { val: { 'ui:field': 'FallbackField' } },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        // A value pinned by an `enum` or a `const` is one of the types those values have whichever type is chosen, so
+        // offering the rest would offer types the schema rejects and cast the pinned value into one of them. A schema
+        // that names an unrecognized type pins nothing, so it is still free to hold anything
+        const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(types);
+      },
+    );
   });
 
   describe('on component creation', () => {

@@ -179,7 +179,8 @@ If the flag is omitted or set to `false`, your custom field will be wrapped by `
 
 The flag needs a `ui:field` that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
-A `ui:field` naming `FallbackField` does not take them away either, since the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
+A `ui:field` naming `FallbackField` does not take them away either while [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) is on, since the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
+With that prop off the same name renders the unsupported-field template, which renders nothing of the schema, so the flag takes the options away there as it does for any other field.
 
 ### `ui:options`
 

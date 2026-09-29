@@ -13,6 +13,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  CONST_KEY,
   getKnownTypes,
   getTemplate,
   getUiOptions,
@@ -40,9 +41,13 @@ import type { JSONSchema7TypeName } from 'json-schema';
  * `['null']` renders as the `null` it is. A schema naming one type offers that one, which only arises when something
  * other than the type sent the schema here — a `ui:field` or a `$id` naming this field — since the type a schema names
  * is otherwise rendered by the field for it: offering the other six would be offering types the schema rejects, and
- * choosing one of them would cast the value to something the validator then refuses. One with no usable type at all —
- * an unrecognized type on its own, or an `additionalProperties` entry the schema puts no constraint on, whose type is
- * guessed from the data rather than named — is free to hold anything, so it offers every JSON Schema type.
+ * choosing one of them would cast the value to something the validator then refuses. A schema naming no type but
+ * pinning its value with an `enum` or a `const` offers the types those values have, for the same reason: the value is
+ * one of them whichever type is chosen. The `enum` values are read here rather than through `getSchemaType()`, which
+ * answers `string` for any typeless `enum` and so would offer `string` alone for an `enum` holding a number. One with
+ * no usable type at all — an unrecognized type on its own, or an `additionalProperties` entry the schema puts no
+ * constraint on, whose type is guessed from the data rather than named — is free to hold anything, so it offers every
+ * JSON Schema type.
  * @param schema - The schema being rendered by the fallback UI.
  */
 function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): JSONSchema7TypeName[] {
@@ -50,9 +55,19 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
   if (listedTypes.length > 0) {
     return listedTypes;
   }
-  const { type } = schema;
-  if (!(GUESSED_TYPE_FLAG in schema) && typeof type === 'string' && JSON_SCHEMA_TYPES.includes(type)) {
+  if (GUESSED_TYPE_FLAG in schema) {
+    return [...JSON_SCHEMA_TYPES];
+  }
+  const { type, enum: enumValues, const: constValue } = schema;
+  if (typeof type === 'string' && JSON_SCHEMA_TYPES.includes(type)) {
     return [type];
+  }
+  if (Array.isArray(enumValues) && enumValues.length > 0) {
+    return [...new Set(enumValues.map((value) => guessType(value)))];
+  }
+  // `undefined` is a legal `const`, so the key being there is what says the value is pinned, as `isConstant()` reads it
+  if (CONST_KEY in schema) {
+    return [guessType(constValue)];
   }
   return [...JSON_SCHEMA_TYPES];
 }

@@ -306,28 +306,32 @@ function getFieldComponent<
     componentName = schemaId;
   }
 
+  const hasFieldOfItsOwn = Object.hasOwn(fields, componentName);
+  const FieldComponent = hasFieldOfItsOwn ? fields[componentName] : fields.FallbackField;
+  const rendersFallbackUi = rendersFallbackUiAs(FieldComponent);
+  /** Whether the fallback UI renders this schema's options itself, within the value field for the type it has pinned,
+   * rather than having been fallen back to for want of any field for the type the schema names
+   */
+  const rendersOptionsItself = rendersFallbackUi && hasFieldOfItsOwn;
+
   // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
   // let the MultiSchemaField component handle the form display entirely.
   // ObjectField is excluded: it renders shared properties (defined at the parent schema
   // level) alongside the XxxOfField option selector.
   // All other field types — including primitives and arrays — have no shared renderable
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
-  // A union diverted to the fallback UI is excluded alongside ObjectField: it renders the option selector within its
-  // own value field, for the type currently chosen, so returning nothing here would drop the type selector and the
-  // options with it. A schema with no field of its own is not excluded, even though it reaches `FallbackField` through
-  // the fallthrough below: the option selector is already the choice a type selector would offer, and an option naming
-  // a type of its own would override the type the fallback UI pins, leaving the screen as it was while the value was
-  // cast on every switch, so the options are what supplies the types for such a schema
-  if (rendersOptionSelector && componentName !== 'ObjectField' && componentName !== 'FallbackField') {
+  // A schema whose options the fallback UI renders is excluded alongside ObjectField, since returning nothing here
+  // would drop its type selector and the options with it. A schema with no field of its own is not excluded, even
+  // though the fallback UI renders it too: the option selector is already the choice a type selector would offer, and
+  // an option naming a type of its own would override the type the fallback UI pins, leaving the screen as it was
+  // while the value was cast on every switch, so the options are what supplies the types for such a schema.
+  // A schema that lists its types keeps its selector even though a typed option overrides it there too, which is the
+  // asymmetry #5390 is about
+  if (rendersOptionSelector && componentName !== 'ObjectField' && !rendersOptionsItself) {
     return { FieldComponent: () => null, rendersFallbackUi: false, rendersOptionSelector };
   }
 
-  // A schema the `COMPONENT_TYPES` name no field for — an unrecognized `type`, or no type at all — is rendered by
-  // `FallbackField`, since nothing else can render it. The flag is read from the component the name resolves to, so it
-  // describes that way in as well as the diverted one, and it is read after the return above so that the options of
-  // such a schema still supply its types
-  const FieldComponent = Object.hasOwn(fields, componentName) ? fields[componentName] : fields.FallbackField;
-  return { FieldComponent, rendersFallbackUi: rendersFallbackUiAs(FieldComponent), rendersOptionSelector };
+  return { FieldComponent, rendersFallbackUi, rendersOptionSelector };
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
