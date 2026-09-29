@@ -6,12 +6,6 @@ import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-vi.mock('@rjsf/utils', async (importOriginal) => ({
-  ...(await importOriginal()),
-  // Disable the getTestIds within the snapshot tests by returning an empty object
-  getTestIds: vi.fn(() => ({})),
-}));
-
 export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
     describe('string field', () => {

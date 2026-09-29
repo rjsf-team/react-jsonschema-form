@@ -71,6 +71,16 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out, and the mock has to be registered before your `Form` is imported, so add the package's setup file to your vitest config:
+
+```ts
+export default defineConfig({
+  test: {
+    setupFiles: ['node_modules/@rjsf/snapshot-tests/lib/setup.js'],
+  },
+});
+```
+
 <!-- ROADMAP -->
 
 ## Roadmap
