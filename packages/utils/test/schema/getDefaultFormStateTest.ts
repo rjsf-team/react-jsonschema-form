@@ -2239,6 +2239,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ plan: { tier: 2 } });
       });
+      it.each<[string, DefaultFormStateBehavior | undefined, Record<string, unknown>]>([
+        ['its own default', undefined, { tier: 1 }],
+        ['the ancestor default when ancestors win', { nestedDefaultsPrecedence: 'ancestorWins' }, { color: 'red' }],
+      ])('picks %s for an enum select over object constants rather than blending the two', (_, behavior, expected) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { plan: { color: 'red' } },
+          properties: {
+            plan: { type: 'object', default: { tier: 1 }, enum: [{ tier: 1 }, { color: 'red' }] },
+          },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema, undefined, behavior)).toEqual({
+          plan: expected,
+        });
+      });
     });
 
     describe('array schemas', () => {

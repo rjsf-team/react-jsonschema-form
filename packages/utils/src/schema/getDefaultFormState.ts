@@ -338,10 +338,12 @@ export function computeDefaults<
     isObject(schema.default) &&
     !schema[ANY_OF_KEY] &&
     !schema[ONE_OF_KEY] &&
-    !schema[REF_KEY]
+    !schema[REF_KEY] &&
+    !isWholeValueSelect<S>(schema)
   ) {
     // For object defaults, merge defaults by precedence setting.
-    // Skip this for anyOf/oneOf/$ref schemas - they need special handling.
+    // Skip this for anyOf/oneOf/$ref schemas, which need special handling, and for a select over object constants,
+    // whose own default and inherited default each name a whole constant, so a blend of them names none.
     if (preferParentDefaults) {
       // Use schema.default as the base and only override values that are defined in parent defaults.
       defaults = mergeObjects(schema.default, defaults) as T;

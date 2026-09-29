@@ -467,11 +467,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   if (resolveAnyOfOrOneOfRefs) {
     // Read from the resolved schema, which is what every reader of its options picks the keyword from
     const key = getXxxOfKey<S>(resolvedSchema);
-    const schemas = key && (resolvedSchema[key] as S[] | undefined);
-    if (key && schemas) {
+    if (key) {
       resolvedSchema = {
         ...resolvedSchema,
-        [key]: schemas.map((s: S) =>
+        [key]: (resolvedSchema[key] as S[]).map((s: S) =>
           resolveAllReferences(s, rootSchema, recurseList, currentBaseURI, resolveAnyOfOrOneOfRefs),
         ),
       };
