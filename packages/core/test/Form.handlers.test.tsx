@@ -1,5 +1,5 @@
 import { createRef, useEffect } from 'react';
-import type { GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, waitFor } from '@testing-library/react';
@@ -493,7 +493,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         const { node, rerender } = createFormComponent({ schema, defaultFormStateBehavior });
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
-        rerender({ schema, defaultFormStateBehavior, disabled: true });
+        rerender({ schema, defaultFormStateBehavior, uiSchema: { 'ui:disabled': true } });
 
         expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
         expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toBeDisabled();
@@ -508,7 +508,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
         await user.type(node.querySelector<HTMLInputElement>('#root_other')!, 'x');
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')!, '1');
-        rerender({ schema: nestedSchema, defaultFormStateBehavior, disabled: true });
+        rerender({ schema: nestedSchema, defaultFormStateBehavior, uiSchema: { 'ui:disabled': true } });
 
         expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toHaveValue('1');
         expect(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')).toBeDisabled();
@@ -538,7 +538,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
         const errorsBeforeTheChange = ref.current!.state.errors;
-        rerender({ ...props, disabled: true });
+        rerender({ ...props, uiSchema: { 'ui:disabled': true } });
 
         expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
         expect(ref.current!.state.errors).toEqual(errorsBeforeTheChange);
@@ -650,6 +650,14 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
           defaultFormStateBehavior,
           customMergeAllOf: (allOfSchema: RJSFSchema) => allOfSchema,
         });
+
+        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+      });
+      it('defaultFormStateBehavior going from unset to empty', async () => {
+        const { node, rerender } = createFormComponent({ schema });
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+        rerender({ schema, defaultFormStateBehavior: {} });
 
         expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
       });
@@ -952,14 +960,51 @@ describe('Form: the prop changes a self-owned form re-derives its data for', () 
 
     expect(node.querySelector<HTMLInputElement>('#root_nested_foo')).toHaveValue('bar');
   });
+  // A re-derive refills the root default a switch to the null option cleared, so the switch shows whether one ran
+  const nullOptionSchema: RJSFSchema = {
+    type: 'object',
+    oneOf: [
+      { type: 'object', properties: { types: { const: 'advanced' } }, required: ['types'] },
+      { title: 'No Configuration', type: 'null' },
+    ],
+    default: { types: 'advanced' },
+  };
+  const switchToNullOption = (node: Element) =>
+    user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+  it('should apply a changed ui:emptyValue to the data it holds', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const { node, rerender } = createFormComponent({ schema });
+
+    rerender({ schema, uiSchema: { name: { 'ui:emptyValue': 'empty' } } });
+
+    expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('empty');
+  });
+  it('should not re-derive it for a uiSchema holding a function written inline', async () => {
+    const uiSchema = (): UiSchema => ({ 'ui:options': { onSomething: () => undefined } });
+    const { node, rerender } = createFormComponent({ schema: nullOptionSchema, uiSchema: uiSchema() });
+
+    await switchToNullOption(node);
+    rerender({ schema: nullOptionSchema, uiSchema: uiSchema() });
+
+    expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+  });
+  it('should not re-derive it for a defaultFormStateBehavior spelling an unset key out as undefined', async () => {
+    const { node, rerender } = createFormComponent({ schema: nullOptionSchema, defaultFormStateBehavior: {} });
+
+    await switchToNullOption(node);
+    rerender({ schema: nullOptionSchema, defaultFormStateBehavior: { requiredBooleanDefault: undefined } });
+
+    expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
+  });
   it('should not re-derive it for a defaultFormStateBehavior rebuilt with the same settings', async () => {
-    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'preset' } } };
-    const defaultFormStateBehavior = { emptyObjectFields: 'populateAllDefaults' } as const;
-    const { node, rerender } = createFormComponent({ schema, defaultFormStateBehavior });
+    // The settings hold a function written inline, which only `deepEquals()` sees as unchanged
+    const settings = (): DefaultFormStateBehavior => ({ arrayMinItems: { computeSkipPopulate: () => false } });
+    const { node, rerender } = createFormComponent({ schema: nullOptionSchema, defaultFormStateBehavior: settings() });
 
-    await user.clear(node.querySelector<HTMLInputElement>('#root_name')!);
-    rerender({ schema, defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' } });
+    await switchToNullOption(node);
+    rerender({ schema: nullOptionSchema, defaultFormStateBehavior: settings() });
 
-    expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('');
+    expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
   });
 });

@@ -304,8 +304,8 @@ export interface FormState<
    */
   validationProps: ValidationProps<T, S, F>;
   /** `defaultFormStateBehavior` as the derivation saw it, kept in the render context so a later one can tell the
-   * settings that decide the defaults changed. Compared the way `doesSchemaUtilsDiffer()` compares it, since it is
-   * the same question, so a rebuilt object holding the same settings is not read as a change
+   * settings that decide the defaults changed. Compared deeply, functions included, and with an `undefined` setting
+   * counting as unset, so a rebuilt object holding the same settings is not read as a change
    */
   defaultsBehavior?: DefaultFormStateBehavior;
 }
@@ -422,6 +422,55 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   return { schemaUtils, hasNestedConditionalSchema: schemaHasNestedConditional(rootSchema, rootSchema) };
 }
 
+/** `value` without its `undefined` entries, at any depth, so settings that spell a key out as `undefined` compare equal
+ * to settings leaving it out, which `deepEquals()` alone does not see
+ *
+ * @param value - The settings to compare
+ * @returns - `value` with every `undefined` entry of a plain object dropped
+ */
+function withoutUndefinedEntries(value: unknown): unknown {
+  if (!isPlainObject(value)) {
+    return value;
+  }
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([, entry]) => entry !== undefined)
+      .map(([key, entry]) => [key, withoutUndefinedEntries(entry)]),
+  );
+}
+
+const UI_EMPTY_VALUE_KEY = 'ui:emptyValue';
+
+/** The `ui:emptyValue`s of `uiSchema`, each where it sits: the one part of a uiSchema the defaults of a re-derive are
+ * computed from, since `ui:initialValue` applies on mount and `reset()` only. Anything else it holds, a title or a
+ * widget written inline, leaves the data as it is (#5294)
+ *
+ * @param uiSchema - The uiSchema, or the part of one, to collect from
+ * @returns - An object mirroring `uiSchema` down to each `emptyValue`, or undefined when it has none
+ */
+function emptyValuesOf(uiSchema: unknown): unknown {
+  // ponytail: a function-form `items` is skipped, so an `emptyValue` it returns never triggers a re-derive
+  if (!isPlainObject(uiSchema) && !Array.isArray(uiSchema)) {
+    return undefined;
+  }
+  const found: GenericObjectType = {};
+  // Read the way `getDefaultFormState()` reads it, so the two cannot disagree about where an `emptyValue` is
+  const { emptyValue } = Array.isArray(uiSchema) ? {} : getUiOptions(uiSchema as UiSchema);
+  if (emptyValue !== undefined) {
+    found[UI_EMPTY_VALUE_KEY] = emptyValue;
+  }
+  Object.entries(uiSchema).forEach(([key, value]) => {
+    if (key === UI_EMPTY_VALUE_KEY || key === UI_OPTIONS_KEY) {
+      return;
+    }
+    const nested = emptyValuesOf(value);
+    if (nested !== undefined) {
+      found[key] = nested;
+    }
+  });
+  return Object.keys(found).length > 0 ? found : undefined;
+}
+
 /** Derives the `RenderContext` for the given `props` and resolved schema. The result is shared against `prev`, so a
  * value the parent rebuilt but did not change keeps the reference the fields already hold, functions included: a
  * changed template, widget or field is not mistaken for the old one, and the validator's compiled-schema cache and
@@ -439,13 +488,15 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
   prev: RenderContext<T, S, F> | undefined,
   resolved: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'>,
 ): RenderContext<T, S, F> {
-  const { uiSchema = {}, customValidate, transformErrors, defaultFormStateBehavior } = props;
+  // Defaulted the way `doesSchemaUtilsDiffer()` defaults it, so going from no settings to `{}` is not a change either
+  const { uiSchema = {}, customValidate, transformErrors, defaultFormStateBehavior = {} } = props;
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
   // `computeSkipPopulate` written inline would then make every render look like a change of the settings
   const defaultsBehavior =
-    prev && deepEquals(prev.defaultsBehavior, defaultFormStateBehavior)
+    prev &&
+    deepEquals(withoutUndefinedEntries(prev.defaultsBehavior), withoutUndefinedEntries(defaultFormStateBehavior))
       ? prev.defaultsBehavior
       : defaultFormStateBehavior;
   return replaceEqualDeep(prev, {
@@ -912,9 +963,10 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
 }
 
 /** The state of a self-owned form: on construction from its seed, and afterwards from the data it holds whenever the
- * schema or the uiSchema changed, since those are the props whose change transforms the data (a default it did not
- * have before, a branch that no longer applies). No other prop change runs this: an unrelated re-render must not rerun
- * value initialization, so `getDerivedStateFromProps` re-derives the render context alone for those.
+ * schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose change transforms
+ * the data (a default it did not have before, a branch that no longer applies). No other prop change runs this: an
+ * unrelated re-render must not rerun value initialization, so `getDerivedStateFromProps` re-derives the render context
+ * alone for those.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The seed on construction, the held data afterwards
@@ -1459,8 +1511,8 @@ export default class Form<
    * commit in between. Nothing is remembered about the previous props: every derived member is shared against the
    * committed state, so an unchanged input hands back the reference the fields already hold and a changed one is
    * recognized by the new reference. A parent-owned form derives its render context and errors for the `formData`
-   * prop; a self-owned form derives its render context, transforming the data it holds only for a schema or uiSchema
-   * change, since an unrelated re-render must not rerun value initialization.
+   * prop; a self-owned form derives its render context, transforming the data it holds only for a schema,
+   * `ui:emptyValue` or `defaultFormStateBehavior` change, since an unrelated re-render must not rerun value initialization.
    *
    * @param props - The current props
    * @param state - The current state
@@ -1479,18 +1531,24 @@ export default class Form<
     // Rebuilt schema utilities are not on their own a reason to rerun value initialization: they are rebuilt for a
     // recreated `validator` or `customMergeAllOf` as well, which parents commonly write inline, and re-deriving there
     // replaces data the user cleared or switched away from with the very default it came from (#5294). Only the props
-    // that decide what the data should be do: the schema, the uiSchema, whose `ui:initialValue`/`ui:emptyValue` the
-    // defaults are computed from, and the settings that decide how they are computed
-    if (isSchemaChanged || context.uiSchema !== state.uiSchema || context.defaultsBehavior !== state.defaultsBehavior) {
+    // that decide what the data should be do: the schema, the uiSchema's `ui:emptyValue`s, and the settings that decide
+    // how the defaults are computed
+    const isEmptyValueChanged =
+      context.uiSchema !== state.uiSchema &&
+      !deepEquals(emptyValuesOf(context.uiSchema), emptyValuesOf(state.uiSchema));
+    if (isSchemaChanged || isEmptyValueChanged || context.defaultsBehavior !== state.defaultsBehavior) {
       return replaceEqualDeep(state, deriveOwnedState(state, state.formData, props));
     }
-    const errors = reconcileErrors(state, props, context, state.formData, {
+    // Resolved only once it is known the data is not re-derived, which resolves it itself
+    const resolvedContext = {
+      ...context,
+      retrievedSchema: resolveRetrievedSchema(state, context.schemaUtils, state.formData),
+    };
+    const errors = reconcileErrors(state, props, resolvedContext, state.formData, {
       mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
-      // Utilities rebuilt for a recreated validator resolved no schema of their own here, since the data they would
-      // resolve it for is unchanged; validating against the root lets the new validator resolve it
-      validationSchema: context.schemaUtils === state.schemaUtils ? state.retrievedSchema : undefined,
+      validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
     });
-    return replaceEqualDeep(state, { ...context, ...errors });
+    return replaceEqualDeep(state, { ...resolvedContext, ...errors });
   }
 
   /** Constructs the `Form` from the `props`, deciding once who owns the data: the parent when `formData` is defined,

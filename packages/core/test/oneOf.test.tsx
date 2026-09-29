@@ -557,6 +557,26 @@ describe('oneOf', () => {
     );
   });
 
+  it("should replace a value the old option's own uiSchema filled in", async () => {
+    const optionFor = (name: string, mode: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: { kind: { type: 'string', const: name, default: name }, mode: { type: 'string', default: mode } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', 'x'), optionFor('b', 'y')] },
+      uiSchema: { oneOf: [{ mode: { 'ui:initialValue': 'A0' } }, {}] },
+      initialFormData: { kind: 'a', mode: 'A0' },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', mode: 'y' } }),
+      'root__oneof_select',
+    );
+  });
+
   it('should switch the same way wherever required is declared', async () => {
     // The field renders each option merged with the parent's `required` and `type`, so the defaults compared here
     // have to come from that same schema or the two placements disagree about what the old option had written

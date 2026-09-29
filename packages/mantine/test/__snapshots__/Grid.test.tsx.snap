@@ -26,7 +26,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"
@@ -43,7 +43,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -84,7 +84,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -249,7 +249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -625,7 +625,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -653,7 +653,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
-                        style="padding: calc(0.25rem * var(--mantine-scale));"
+                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -815,7 +815,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="m_7485cace mantine-Container-root"
                               data-fluid="true"
                               data-strategy="block"
-                              style="padding: calc(0.25rem * var(--mantine-scale));"
+                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -1709,7 +1709,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="m_7485cace mantine-Container-root"
                       data-fluid="true"
                       data-strategy="block"
-                      style="padding: calc(0.25rem * var(--mantine-scale));"
+                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -2910,7 +2910,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"
@@ -2927,7 +2927,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -2968,7 +2968,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -3133,7 +3133,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -3509,7 +3509,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -3537,7 +3537,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
-                        style="padding: calc(0.25rem * var(--mantine-scale));"
+                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -3699,7 +3699,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="m_7485cace mantine-Container-root"
                               data-fluid="true"
                               data-strategy="block"
-                              style="padding: calc(0.25rem * var(--mantine-scale));"
+                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -4593,7 +4593,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="m_7485cace mantine-Container-root"
                       data-fluid="true"
                       data-strategy="block"
-                      style="padding: calc(0.25rem * var(--mantine-scale));"
+                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -5837,7 +5837,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"
@@ -5854,7 +5854,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -5895,7 +5895,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -6060,7 +6060,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -6436,7 +6436,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -6464,7 +6464,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
-                        style="padding: calc(0.25rem * var(--mantine-scale));"
+                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -6626,7 +6626,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="m_7485cace mantine-Container-root"
                               data-fluid="true"
                               data-strategy="block"
-                              style="padding: calc(0.25rem * var(--mantine-scale));"
+                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -7520,7 +7520,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="m_7485cace mantine-Container-root"
                       data-fluid="true"
                       data-strategy="block"
-                      style="padding: calc(0.25rem * var(--mantine-scale));"
+                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -7816,7 +7816,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"
@@ -7833,7 +7833,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -7874,7 +7874,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -8039,7 +8039,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -8415,7 +8415,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="m_7485cace mantine-Container-root"
               data-fluid="true"
               data-strategy="block"
-              style="padding: calc(0.25rem * var(--mantine-scale));"
+              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
             >
               <style
                 data-mantine-styles="inline"
@@ -8443,7 +8443,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
-                        style="padding: calc(0.25rem * var(--mantine-scale));"
+                        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                       >
                         <style
                           data-mantine-styles="inline"
@@ -8605,7 +8605,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="m_7485cace mantine-Container-root"
                               data-fluid="true"
                               data-strategy="block"
-                              style="padding: calc(0.25rem * var(--mantine-scale));"
+                              style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                             >
                               <style
                                 data-mantine-styles="inline"
@@ -9499,7 +9499,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="m_7485cace mantine-Container-root"
                       data-fluid="true"
                       data-strategy="block"
-                      style="padding: calc(0.25rem * var(--mantine-scale));"
+                      style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
                     >
                       <style
                         data-mantine-styles="inline"
@@ -10700,7 +10700,7 @@ exports[`Three even column grid > renders person and address in three columns, n
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"
@@ -12248,7 +12248,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
-        style="padding: calc(0.25rem * var(--mantine-scale));"
+        style="margin-inline: 0rem; padding: calc(0.25rem * var(--mantine-scale)); width: 100%;"
       >
         <style
           data-mantine-styles="inline"

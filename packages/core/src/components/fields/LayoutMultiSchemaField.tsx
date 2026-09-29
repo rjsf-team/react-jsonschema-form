@@ -33,6 +33,26 @@ import {
 
 import formDataForNewOption from './formDataForNewOption.ts';
 
+/** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
+ *
+ * @param options - The list of schemas each representing a choice in the `oneOf`
+ * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
+ * @param value - The current value of the selector field from the data
+ * @returns - The index of the selected option, or -1 when none matches
+ */
+function getSelectedOptionIndex<S extends StrictRJSFSchema = RJSFSchema>(
+  options: EnumOptionsType<S>[],
+  selectorField: string,
+  value: unknown,
+): number {
+  const defaultValue = '!@#!@$@#$!@$#';
+  return options.findIndex(({ schema: option }) => {
+    const selector = option![PROPERTIES_KEY]?.[selectorField];
+    const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
+    return result === value;
+  });
+}
+
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.
  *
@@ -45,13 +65,7 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
   selectorField: string,
   value: unknown,
 ): S | undefined {
-  const defaultValue = '!@#!@$@#$!@$#';
-  const schemaOptions: S[] = options.map(({ schema }) => schema!);
-  return schemaOptions.find((option) => {
-    const selector = option[PROPERTIES_KEY]?.[selectorField];
-    const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
-    return result === value;
-  });
+  return options[getSelectedOptionIndex<S>(options, selectorField, value)]?.schema;
 }
 
 /** Computes the `enumOptions` array from the schema and options.
@@ -175,8 +189,10 @@ export default function LayoutMultiSchemaField<
     if (disabled || readonly) {
       return;
     }
-    const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
-    const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
+    const newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
+    const oldOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption);
+    const newOption = enumOptions[newOptionIndex]?.schema;
+    const oldOption = enumOptions[oldOptionIndex]?.schema;
 
     // The newly-selected option's own uiSchema is resolved the same way AnyOfField's optionsUiSchema/optionUiSchema
     // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling
@@ -185,16 +201,11 @@ export default function LayoutMultiSchemaField<
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
     const keyword = ONE_OF_KEY in schema ? ONE_OF_KEY : ANY_OF_KEY;
-    const newOptionIndex = enumOptions.findIndex(({ schema: enumOptionSchema }) => enumOptionSchema === newOption);
-    const newFormData = formDataForNewOption<T, S, F>(
-      schemaUtils,
-      formData,
-      newOption,
-      oldOption,
-      schema,
-      getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
+    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+      newOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
+      oldOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex),
       uiSchemaDefinitions,
-    );
+    });
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }

@@ -328,7 +328,7 @@ An explicit schema `default`, a parent default and an existing `formData` value 
 
 #### Example
 
-In the following example, `agree` is required but has no `default`. By default it would start as `false`, and the form would report `{ agree: false }` through `onChange` on mount. With `requiredBooleanDefault` set to `skip`, `formData` stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -350,7 +350,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       requiredBooleanDefault: 'skip',
     }}
   />,

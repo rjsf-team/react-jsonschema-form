@@ -1836,6 +1836,41 @@ describe('Deriving state from changed props', () => {
   });
 });
 
+describe('a self-owned form whose customMergeAllOf changes', () => {
+  it('validates a blur against the schema the new customMergeAllOf resolves', async () => {
+    const allOfSchema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { a: { type: 'string', minLength: 5 } } }, { properties: { a: { type: 'string' } } }],
+    };
+    const firstWins: FormProps['customMergeAllOf'] = (s) => s.allOf![0] as RJSFSchema;
+    const lastWins: FormProps['customMergeAllOf'] = (s) => s.allOf![1] as RJSFSchema;
+    function MergeParent() {
+      const [merge, setMerge] = useState(() => firstWins);
+      return (
+        <>
+          <button type='button' onClick={() => setMerge(() => lastWins)}>
+            swap
+          </button>
+          <Form
+            schema={allOfSchema}
+            validator={validator}
+            initialFormData={{ a: 'abc' }}
+            liveValidate='onBlur'
+            customMergeAllOf={merge}
+          />
+        </>
+      );
+    }
+    const { container } = render(<MergeParent />);
+
+    await user.click(container.querySelector('button')!);
+    await user.click(container.querySelector('#root_a')!);
+    await user.tab();
+
+    expect(container.querySelector('.error-detail')).toBeNull();
+  });
+});
+
 describe('Calling reset from ref object', () => {
   it('Reset API test', async () => {
     const schema: RJSFSchema = {
