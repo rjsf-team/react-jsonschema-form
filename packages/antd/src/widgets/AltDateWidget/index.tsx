@@ -13,7 +13,10 @@ export default function AltDateWidget<
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
     ...props,
     autofocus,
+    disabled,
     options,
+    readonly,
+    time,
   });
 
   return (

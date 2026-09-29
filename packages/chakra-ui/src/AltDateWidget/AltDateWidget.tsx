@@ -13,7 +13,10 @@ function AltDateWidget<
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
     ...props,
+    disabled,
     options,
+    readonly,
+    time,
   });
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
