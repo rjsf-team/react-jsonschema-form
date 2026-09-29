@@ -20,7 +20,6 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  ANY_OF_KEY,
   ariaDescribedByIds,
   descriptionId,
   errorId,
@@ -28,7 +27,6 @@ import {
   getVisibleErrors,
   isObject,
   labelValue,
-  ONE_OF_KEY,
   titleId,
 } from '@rjsf/utils';
 
@@ -117,45 +115,30 @@ export function visibleErrors(props: VisibleErrorsProps): ReactNode {
   return errorLines(getVisibleErrors(props));
 }
 
-// Whether the enclosing field is the option a `oneOf`/`anyOf` selector picked, whose own errors the selector renders
-const SelectedOptionContext = createContext(false);
+// The id of the field whose `oneOf`/`anyOf` selector renders its own errors, which the selected option's field shares
+const SelectorErrorsIdContext = createContext<string | undefined>(undefined);
 
-/** Marks `children` as the field of the option a `oneOf`/`anyOf` selector picked, which is given the same errors the
- * selector renders
+/** Provides the id of the field whose `oneOf`/`anyOf` selector renders its own errors to the selected option's field,
+ * which shares that id and is given the same errors
  */
-export function SelectedOptionProvider({ children }: { children: ReactNode }) {
-  return <SelectedOptionContext value>{children}</SelectedOptionContext>;
+export function SelectorErrorsIdProvider({ id, children }: { id?: string; children: ReactNode }) {
+  return <SelectorErrorsIdContext value={id}>{children}</SelectorErrorsIdContext>;
 }
 
-/** Renders the content of an object or array template, whose fields render their own errors, even inside the option a
- * selector picked
- */
-export function ContainerContentProvider({ children }: { children: ReactNode }) {
-  return <SelectedOptionContext value={false}>{children}</SelectedOptionContext>;
-}
-
-/** A hook for the errors of an object, or an array rendered item by item, which no widget renders, for their template
- * to render with the field's `errorId(id)`, inside a `ContainerContentProvider`. Every other field's widget renders its
- * errors, so `FieldErrorTemplate` renders none. None are rendered where a `oneOf`/`anyOf` selector renders them: for
- * the object whose schema has the `oneOf`/`anyOf`, and for the field of the option the selector picked, which is given
- * the same errors.
+/** A hook for the own errors of an object, or an array rendered item by item, which no widget renders, for their
+ * template to render with the field's `errorId(id)`. Every other field's widget renders its errors, so
+ * `FieldErrorTemplate` renders none. Where a `oneOf`/`anyOf` selector renders them, `@rjsf/core` gives the object with
+ * the `oneOf`/`anyOf` no `rawErrors`, and the selected option's field, which has the same id, doesn't render them.
  *
  * @param id - The id of the field
- * @param schema - The schema of the field
  * @param rawErrors - The field's own errors
  * @param hideError - Whether the field's errors are hidden
  * @returns - The error element to render, if any
  */
-export function useContainerErrors(
-  id: string,
-  schema: StrictRJSFSchema,
-  rawErrors: string[] | undefined,
-  hideError: boolean | undefined,
-): ReactNode {
-  const selectedOption = use(SelectedOptionContext);
+export function useContainerErrors(id: string, rawErrors: string[] | undefined, hideError: boolean | undefined) {
+  const selectorErrorsId = use(SelectorErrorsIdContext);
   const errors = visibleErrors({ rawErrors, hideError });
-  const shownBySelector = selectedOption || ONE_OF_KEY in schema || ANY_OF_KEY in schema;
-  return errors && !shownBySelector ? <Input.Error id={errorId(id)}>{errors}</Input.Error> : undefined;
+  return errors && id !== selectorErrorsId ? <Input.Error id={errorId(id)}>{errors}</Input.Error> : undefined;
 }
 
 export function cleanupOptions<T extends object>(
@@ -219,9 +202,9 @@ type InputContainer = (children: ReactNode) => ReactNode;
 const inputBaseThemeNames = ['InputBase', 'Input', 'InputWrapper'];
 const wrapperThemeNames = ['Input', 'InputWrapper'];
 
-/** The Mantine theme components whose `defaultProps` an input's `inputContainer` and `wrapperProps` resolve from, lowest
- * precedence first. An input built on `InputBase` or `PillsInput` passes its own resolved props down explicitly, so
- * those components' defaults only apply where the outer component's are unset.
+/** The Mantine theme components whose `defaultProps` an input's `inputContainer` and `wrapperProps` resolve from,
+ * lowest precedence first. An input built on `InputBase` or `PillsInput` passes its own resolved props down explicitly,
+ * so those components' defaults only apply where the outer component's are unset.
  */
 const themeComponentNames = {
   TextInput: [...inputBaseThemeNames, 'TextInput'],
@@ -283,7 +266,7 @@ function InputWrapperAriaProvider({
   children: ReactNode;
 }) {
   const inputWrapperContext = use(InputWrapperContext);
-  const shownSuccessId = isRendered(inputWrapperContext.describedBy, successId) ? successId : undefined;
+  const shownSuccessId = useShownSuccessId(successId);
   const value = {
     ...inputWrapperContext,
     ...(labelId && { labelId }),
@@ -331,9 +314,9 @@ interface AriaContainerOptions {
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
  * `ownContainer`, the container Mantine would otherwise render, after anything in `before`. The error element Mantine
  * renders is given the field's `errorId(id)`, the id the input is described by, the success message the known
- * `successId`, since Mantine's components derive it differently, and the description is rendered as a `div`. These
- * are set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two
- * a different precedence for inputs and groups.
+ * `successId`, since Mantine's components derive it differently, and the description is rendered as a `div`. These are
+ * set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two a
+ * different precedence for inputs and groups.
  */
 function useAriaContainerProps({
   id,
@@ -616,13 +599,13 @@ export function useAriaDescribedByProps(
  * `aria-describedby` and `aria-labelledby` from the `InputWrapper` context. Each option input is described by the
  * field's ids, as in `@rjsf/core`, and by the success message while Mantine renders it, so the group is left
  * undescribed rather than having a screen reader repeat the description, error and help on entering it. Each option is
- * also marked invalid while the field shows errors, and each radio required when the field is. The group is labelled by the field's title id: the shown label has that
- * id, and a label Mantine doesn't render, because it is hidden or left out of `inputWrapperOrder`, is still rendered
- * with it, `hidden`, since a group needs an accessible name. Mantine only labels the group by a label it renders itself.
- * The container, `labelProps`, `descriptionProps`, `errorProps`, `successProps` and `inputWrapperOrder` Mantine would
- * otherwise apply are resolved as Mantine's groups resolve them: the widget's options or the group's theme
- * `defaultProps`, then `wrapperProps`, then `InputWrapper`'s theme `defaultProps`. The error element is given the
- * field's `errorId(id)`, whatever `errorProps.id` says.
+ * also marked invalid while the field shows errors, and each radio required when the field is. The group is labelled by
+ * the field's title id: the shown label has that id, and a label Mantine doesn't render, because it is hidden or left
+ * out of `inputWrapperOrder`, is still rendered with it, `hidden`, since a group needs an accessible name. Mantine only
+ * labels the group by a label it renders itself. The container, `labelProps`, `descriptionProps`, `errorProps`,
+ * `successProps` and `inputWrapperOrder` Mantine would otherwise apply are resolved as Mantine's groups resolve them:
+ * the widget's options or the group's theme `defaultProps`, then `wrapperProps`, then `InputWrapper`'s theme
+ * `defaultProps`. The error element is given the field's `errorId(id)`, whatever `errorProps.id` says.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility, the errors and the options are

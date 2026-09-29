@@ -979,6 +979,7 @@ render(
 
 The following props are passed to the `MultiSchemaFieldTemplate`:
 
+- `id`: The id of the field whose option is selected, which the selected option's field shares, and whose own errors the `selector` is given. It is unset when the template renders `FallbackFieldTemplate`'s type selector, which isn't given them.
 - `selector`: The rendered Widget used to select a multischema option.
 - `optionSchemaField`: The rendered SchemaField representing the selected option.
 - `schema`: The schema object for the field.

@@ -68,4 +68,19 @@ describe('PasswordWidget', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test.each([
+    ['marks the input invalid while it shows errors', ['An error'], {}, true],
+    ['leaves the input unmarked without errors', [], {}, false],
+    ['leaves the input unmarked while its errors are hidden', ['An error'], { hideError: true }, false],
+  ])('%s', (_, rawErrors, extraProps, invalid) => {
+    const { container } = renderWidget({ rawErrors, ...extraProps });
+
+    const input = container.querySelector('input[type="password"]');
+    if (invalid) {
+      expect(input).toHaveAttribute('aria-invalid', 'true');
+    } else {
+      expect(input).not.toHaveAttribute('aria-invalid');
+    }
+  });
 });

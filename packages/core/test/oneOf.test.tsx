@@ -4,6 +4,8 @@ import type {
   FieldTemplateProps,
   FormValidation,
   GenericObjectType,
+  MultiSchemaFieldTemplateProps,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
   WidgetProps,
@@ -3010,5 +3012,47 @@ describe('oneOf', () => {
     await user.selectOptions(select!, '1');
 
     expect(select).toHaveValue('1');
+  });
+
+  it("gives the object's own errors to the option's field, not to the object the selector is rendered for", () => {
+    function RawErrorsObjectFieldTemplate({ id, properties, rawErrors }: ObjectFieldTemplateProps) {
+      return (
+        <div>
+          {properties.map((property) => property.content)}
+          {rawErrors?.map((error) => (
+            <p key={error} className='object-errors' data-id={id}>
+              {error}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', oneOf: [{ properties: { a: { type: 'string' } } }] },
+      templates: { ObjectFieldTemplate: RawErrorsObjectFieldTemplate },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    const errors = node.querySelectorAll('.object-errors');
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toHaveAttribute('data-id', 'root');
+  });
+
+  it('passes MultiSchemaFieldTemplate the id of the field whose option is selected', () => {
+    function IdMultiSchemaFieldTemplate({ id, selector, optionSchemaField }: MultiSchemaFieldTemplateProps) {
+      return (
+        <div className='multi' data-id={id}>
+          {selector}
+          {optionSchemaField}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+      templates: { MultiSchemaFieldTemplate: IdMultiSchemaFieldTemplate },
+    });
+
+    expect(node.querySelector('.multi')).toHaveAttribute('data-id', 'root_foo');
   });
 });

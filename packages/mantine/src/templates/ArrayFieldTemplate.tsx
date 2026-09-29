@@ -2,7 +2,7 @@ import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
 
-import { ContainerContentProvider, useContainerErrors } from '../utils.tsx';
+import { useContainerErrors } from '../utils.tsx';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -60,39 +60,37 @@ export default function ArrayFieldTemplate<
     />
   );
 
-  const errors = useContainerErrors(id, schema, rawErrors, hideError);
+  const errors = useContainerErrors(id, rawErrors, hideError);
 
   return (
-    <ContainerContentProvider>
-      <Fieldset legend={legend} className={className} id={id}>
-        {(uiOptions.description || schema.description) && (
-          <ArrayFieldDescriptionTemplate
-            description={uiOptions.description || schema.description}
-            id={id}
-            schema={schema}
+    <Fieldset legend={legend} className={className} id={id}>
+      {(uiOptions.description || schema.description) && (
+        <ArrayFieldDescriptionTemplate
+          description={uiOptions.description || schema.description}
+          id={id}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <Box className='row rjsf-array-item-list'>
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+        {items}
+      </Box>
+      {canAdd && (
+        <Group justify='flex-end'>
+          <AddButton
+            id={buttonId(id, 'add')}
+            className='rjsf-array-item-add'
+            disabled={disabled || readonly}
+            onClick={onAddClick}
             uiSchema={uiSchema}
             registry={registry}
+            iconType='md'
           />
-        )}
-        <Box className='row rjsf-array-item-list'>
-          {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-          {items}
-        </Box>
-        {canAdd && (
-          <Group justify='flex-end'>
-            <AddButton
-              id={buttonId(id, 'add')}
-              className='rjsf-array-item-add'
-              disabled={disabled || readonly}
-              onClick={onAddClick}
-              uiSchema={uiSchema}
-              registry={registry}
-              iconType='md'
-            />
-          </Group>
-        )}
-        {errors}
-      </Fieldset>
-    </ContainerContentProvider>
+        </Group>
+      )}
+      {errors}
+    </Fieldset>
   );
 }

@@ -595,4 +595,42 @@ describe('aria-describedby', () => {
     expect(consoleError).not.toHaveBeenCalled();
     consoleError.mockRestore();
   });
+
+  test('renders the errors of an object reached through a layout grid inside the option a selector picked', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          oneOf: [{ properties: { inner: { type: 'object', properties: { a: { type: 'string' } } } } }],
+        }}
+        uiSchema={{
+          oneOf: [{ 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['inner'] }] } }],
+        }}
+        validator={validator}
+        extraErrors={{ inner: { __errors: ['Inner error'] } } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(container.querySelector(`[id="${errorId('root_inner')}"]`)).toHaveTextContent('Inner error');
+  });
+
+  test('renders the errors of an object whose ui:field replaces its oneOf, which renders no selector', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ required: ['a'] }, { required: ['b'] }],
+        }}
+        uiSchema={{ 'ui:field': 'ObjectField', 'ui:fieldReplacesAnyOrOneOf': true }}
+        validator={validator}
+        extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+        showErrorList={false}
+      />,
+    );
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
+  });
 });

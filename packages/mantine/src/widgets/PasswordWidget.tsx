@@ -63,6 +63,7 @@ export default function PasswordWidget<
 
   const ariaDescribedByProps = useAriaDescribedByProps('PasswordInput', id, options);
 
+  const error = visibleErrors(props);
   return (
     <PasswordInput
       id={id}
@@ -76,7 +77,9 @@ export default function PasswordWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={visibleErrors(props)}
+      error={error}
+      // Mantine's `PasswordInput` renders its input without the `aria-invalid` the other inputs get from `Input`
+      aria-invalid={!!error || undefined}
       {...themeProps}
       {...ariaDescribedByProps}
       {...getDescriptionProps(props)}

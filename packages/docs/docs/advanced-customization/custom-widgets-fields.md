@@ -394,7 +394,7 @@ A field component will always be passed the following props:
 - `readonly`: A boolean value stating if the field is read-only;
 - `autofocus`: A boolean value stating if the field should autofocus;
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone. It is unset for a field rendered beside a `oneOf`/`anyOf` option selector, which is given the errors instead
 - `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
 - `onChange`: The field change event handler; called with the updated field value, the optional change path for the value (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;

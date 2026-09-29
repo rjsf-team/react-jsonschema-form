@@ -1104,6 +1104,11 @@ export interface MultiSchemaFieldTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > extends RJSFBaseProps<T, S, F> {
+  /** The id of the field whose `oneOf`/`anyOf` option is selected, which the selected option's field shares, and whose
+   * own errors the `selector` is given. It is unset when `FallbackFieldTemplate` renders the template for its type
+   * selector, which isn't given them.
+   */
+  id?: string;
   /** The rendered widget used to select a schema option */
   selector: ReactNode;
   /** The rendered SchemaField for the selected schema option */

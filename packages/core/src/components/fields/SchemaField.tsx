@@ -401,7 +401,9 @@ function SchemaFieldRender<
       hideError={hideError}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
-      rawErrors={__errors}
+      // The `XxxOfField` renders the field's own errors whenever it renders, which is also why `FieldErrorTemplate`
+      // is skipped then
+      rawErrors={XxxOfField ? undefined : __errors}
     />
   );
 

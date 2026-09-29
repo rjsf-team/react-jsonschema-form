@@ -131,6 +131,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `extraErrors` and `customErrors` being merged into the errors a second time whenever the form derived state from new props under `liveValidate: 'onChange'` without re-validating, so a re-render changing only `className` duplicated every server-supplied error, the duplication half of [#4408](https://github.com/rjsf-team/react-jsonschema-form/issues/4408) (the clearing half was fixed by `getDerivedStateFromProps` in v6)
 - Fixed a changed `validator`, `customMergeAllOf` or `defaultFormStateBehavior` leaving the previously retrieved schema in state, so live validation kept running against a schema the old settings had resolved
 - `ObjectField` passes the object's own errors to `ObjectFieldTemplate` as `rawErrors`, as `ArrayField` does to `ArrayFieldTemplate` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- `SchemaField` no longer passes a field's own errors as `rawErrors` to the field it renders beside a `oneOf`/`anyOf` option selector, such as an object's `ObjectField` or a `ui:field` that doesn't replace the selector, since the selector is given them, and `FieldErrorTemplate` is already skipped then. `MultiSchemaField` passes the field's `id` to `MultiSchemaFieldTemplate` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/daisyui
 
@@ -183,7 +184,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `RangeWidget` and `AltDateWidget` never marking their inputs invalid or rendering a `success` option ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed `AltDateTimeWidget` showing a zero hour, minute or second as empty, and `AltDateWidget` and `AltDateTimeWidget` leaving their Now and Clear buttons enabled when disabled or read-only and ignoring `autofocus`, `onBlur` and `onFocus` ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - **BREAKING CHANGE** Fixed `RangeWidget`, `PasswordWidget`, `TimeWidget`, `ColorWidget`, `FileWidget` and `DateTimeInput` ignoring `nameGenerator`. They, `TextareaWidget` and `CheckboxWidget` now fall back to the field's id rather than the bare property name, as the other widgets do. See the v7 upgrade guide ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
-- Fixed `CheckboxWidget` and the options of `CheckboxesWidget` and `RadioWidget` never being marked invalid, the radios and `AltDateWidget`'s date parts never being marked required, and the checkbox and radio options not being described by a `success` message ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Fixed `CheckboxWidget`, `PasswordWidget` and the options of `CheckboxesWidget` and `RadioWidget` never being marked invalid, the radios and `AltDateWidget`'s date parts never being marked required, and the checkbox and radio options not being described by a `success` message ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/mui
 
@@ -266,6 +267,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Removed the `jsonpointer` dependency; `findSchemaDefinition()` now resolves JSON pointer fragments through `getByPath()`, so a `#/__proto__` ref finds nothing instead of `Object.prototype`, unless the schema has a genuine own `__proto__` key
 - Removed the `fast-uri` dependency; `findSchemaDefinition()` now resolves and compares `$ref`/`$id` URIs with the platform `URL` parser. Relative `$ref`s against a relative or fragment base (a root without `$id`, or a nested relative `$id`) now follow RFC 3986 resolution, so some refs that previously failed to resolve, such as `../other.json`, now do; comparison decodes every percent-encoded unreserved character (`%2E` matches `.` as well as `%7E` matching `~`); and `urn:` namespace identifiers are compared case-sensitively
 - Moved `rawErrors` from `ArrayFieldTemplateProps` to `ContainerFieldTemplateProps`, so `ObjectFieldTemplateProps` declares it too ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
+- Added an optional `id` to `MultiSchemaFieldTemplateProps`: the id of the field whose option is selected, which the selected option's field shares ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 
 ## @rjsf/validator-ajv8
 

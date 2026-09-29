@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
 
-import { ContainerContentProvider, useContainerErrors } from '../utils.tsx';
+import { useContainerErrors } from '../utils.tsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -54,58 +54,56 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
-  const errors = useContainerErrors(id, schema, rawErrors, hideError);
+  const errors = useContainerErrors(id, rawErrors, hideError);
 
   return (
-    <ContainerContentProvider>
-      <Container id={id} p={0} fluid>
-        {title && (
-          <TitleFieldTemplate
-            id={titleId(id)}
-            title={title}
-            required={required}
-            schema={schema}
+    <Container id={id} p={0} fluid>
+      {title && (
+        <TitleFieldTemplate
+          id={titleId(id)}
+          title={title}
+          required={required}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
+        />
+      )}
+      {description && (
+        <DescriptionFieldTemplate
+          id={descriptionId(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <SimpleGrid
+        cols={gridCols}
+        spacing={gridSpacing as MantineSpacing | undefined}
+        verticalSpacing={gridVerticalSpacing as MantineSpacing | undefined}
+        mb='sm'
+      >
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+        {properties
+          .filter((e) => !e.hidden)
+          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
+            <Box key={element.name}>{element.content}</Box>
+          ))}
+      </SimpleGrid>
+      {canExpand(schema, uiSchema, formData) && (
+        <Group mt='xs' justify='flex-end'>
+          <AddButton
+            id={buttonId(id, 'add')}
+            disabled={disabled || readonly}
+            onClick={onAddProperty}
+            className='rjsf-object-property-expand'
             uiSchema={uiSchema}
             registry={registry}
-            optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
           />
-        )}
-        {description && (
-          <DescriptionFieldTemplate
-            id={descriptionId(id)}
-            description={description}
-            schema={schema}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        )}
-        <SimpleGrid
-          cols={gridCols}
-          spacing={gridSpacing as MantineSpacing | undefined}
-          verticalSpacing={gridVerticalSpacing as MantineSpacing | undefined}
-          mb='sm'
-        >
-          {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-          {properties
-            .filter((e) => !e.hidden)
-            .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
-              <Box key={element.name}>{element.content}</Box>
-            ))}
-        </SimpleGrid>
-        {canExpand(schema, uiSchema, formData) && (
-          <Group mt='xs' justify='flex-end'>
-            <AddButton
-              id={buttonId(id, 'add')}
-              disabled={disabled || readonly}
-              onClick={onAddProperty}
-              className='rjsf-object-property-expand'
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          </Group>
-        )}
-        {errors}
-      </Container>
-    </ContainerContentProvider>
+        </Group>
+      )}
+      {errors}
+    </Container>
   );
 }
