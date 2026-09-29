@@ -34,6 +34,7 @@ export default function CheckboxesWidget<
 >({
   id,
   htmlName,
+  name,
   disabled,
   options,
   value,
@@ -90,7 +91,7 @@ export default function CheckboxesWidget<
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
-      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, hideLabel, role: 'group' })}>
+      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
         {enumOptions?.map((option, index) => (
           // oxlint-disable-next-line react/no-array-index-key
           <label key={index} className='flex items-center cursor-pointer gap-2'>

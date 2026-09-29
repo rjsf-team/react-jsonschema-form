@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { format, isSameDay, isToday, isValid, parseISO, startOfDay } from 'date-fns';
+import { format, isSameDay, isToday, isValid, startOfDay } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { readDateOnly, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
 import 'react-day-picker/dist/style.css';
 
@@ -94,35 +94,35 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
 // Use React.memo to optimize re-renders
 const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
-/** A `date` proper: a calendar day with no time and no zone */
-const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
 
-/** The calendar day a date-time's own text names, read with `parseISO` rather than the `Date` constructor, which reads
- * a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
+/** A zone offset spelled as hours from UTC, which `Z` is not. It has to follow a time to count, so a bare `YYYY-MM`
+ * is not read as May with a five-hour offset
+ */
+const NUMERIC_OFFSET = /\d{2}:\d{2}(:\d{2})?(\.\d+)?[+-]\d{2}(:?\d{2})?$/;
+
+/** The calendar day a date-time's own text names, read as a day in its own right rather than through the `Date`
+ * constructor, which reads a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
  *
  * @param text - A date-time beginning with a `YYYY-MM-DD` day
  * @returns - That day at local midnight, or `undefined` if the text does not begin with one
  */
 function dayNamedBy(text: string) {
   const [day] = LEADING_DAY.exec(text) ?? [];
-  if (!day) {
-    return undefined;
-  }
-  const parsed = parseISO(day);
-  return isValid(parsed) ? parsed : undefined;
+  return day ? readDateOnly(day) : undefined;
 }
 
 /** Reads the stored value of a date field as the calendar day it stands for.
  *
- * A `date` proper carries no time, and `parseISO` reads it as local midnight where `new Date()` would read UTC
- * midnight and so name the previous day once date-fns formats it locally.
- *
  * A value carrying a time is not a `date` at all, and the day it names is the one its own text spells: whatever wrote
  * `2020-01-03T12:00:00Z` meant the third, and reading the instant where the calendar day differs would show the fourth
- * to a reader far enough east. The exception is an instant landing on local midnight, which is the shape this widget
- * itself used to store — the day the user picked, in the zone they picked it in — so that day is the one they named.
+ * to a reader far enough east.
+ *
+ * The exception is the shape this widget stores for a field declaring a date-time: `toISOString()` of the midnight
+ * beginning the day the user picked, in the zone they picked it in, whose text names the day before to everyone ahead
+ * of UTC. It is told apart by its zone — a value stamped with an offset of its own came from somewhere else, and is
+ * read as its text reads however that offset resolves here.
  *
  * @param raw - The stored value
  * @returns - The day it names, or `undefined` for a value that cannot be parsed, which would otherwise become an
@@ -130,32 +130,31 @@ function dayNamedBy(text: string) {
  */
 function parseDateValue(raw: string | number | Date) {
   const text = typeof raw === 'string' ? raw.trim() : undefined;
-  if (text && DATE_ONLY.test(text)) {
-    const day = parseISO(text);
-    return isValid(day) ? day : undefined;
+  const dateOnly = text ? readDateOnly(text) : undefined;
+  if (dateOnly) {
+    return dateOnly;
   }
   // `Date` rather than `parseISO`, which rejects the lowercase separator and zone and the space separator RFC 3339 also
   // allows, as well as the epoch number that is not ISO text at all
   const instant = new Date(raw);
+  const dayInItsOwnText = text ? dayNamedBy(text) : undefined;
   if (!isValid(instant)) {
-    return undefined;
+    // Every one of those shapes is optional for an engine to accept, so a text naming a day outright is read as that
+    // day rather than thrown away along with the instant no engine agreed on
+    return dayInItsOwnText;
   }
-  // The shape this widget itself used to store: the day the user picked, at midnight in the zone they picked it in
-  if (instant.getTime() === startOfDay(instant).getTime()) {
+  const writtenByThisWidget =
+    !(text && NUMERIC_OFFSET.test(text)) && instant.getTime() === startOfDay(instant).getTime();
+  if (writtenByThisWidget) {
     return instant;
   }
-  const dayInItsOwnText = text ? dayNamedBy(text) : undefined;
   if (dayInItsOwnText) {
     return dayInItsOwnText;
   }
   // Left with a value whose text names no day at all — a `YYYY-MM`, or an epoch number that is not text to begin with.
   // A UTC midnight names the day `Date` resolved it to; anything else names only the day its instant lands on here
-  const isUtcMidnight =
-    instant.getUTCHours() === 0 &&
-    instant.getUTCMinutes() === 0 &&
-    instant.getUTCSeconds() === 0 &&
-    instant.getUTCMilliseconds() === 0;
-  return (isUtcMidnight ? dayNamedBy(instant.toISOString()) : undefined) ?? instant;
+  const iso = instant.toISOString();
+  return (iso.endsWith('T00:00:00.000Z') ? dayNamedBy(iso) : undefined) ?? instant;
 }
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
@@ -174,7 +173,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
   const initialDate = useMemo(() => {
     // Anything else — an object, a boolean — names no day, and `Date` would read it as `Invalid Date`
     if (typeof value === 'string' || typeof value === 'number' || value instanceof Date) {
@@ -306,7 +305,7 @@ export default function DateWidget<
     };
   }, [isOpen, renderCalendar]);
 
-  const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP') : undefined;
+  const formattedValue = localDate ? format(localDate, 'PP') : undefined;
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -314,6 +313,7 @@ export default function DateWidget<
         <DatePickerTrigger<T, S, F>
           id={id}
           label={label}
+          name={name}
           hideLabel={hideLabel}
           placeholder={placeholder}
           formattedValue={formattedValue}

@@ -298,6 +298,95 @@ describe('FieldTemplate', () => {
 
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
     });
+
+    test('names each of its selects with the label and the value that select is showing', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { agree: { type: 'string', format: 'date', title: 'Agree' } } }}
+          uiSchema={{ agree: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } } }}
+          formData={{ agree: '2020-05-03' }}
+          validator={validator}
+        />,
+      );
+
+      // Each label would otherwise replace the contents that display the value. The values are spelled out rather than
+      // read back off the elements, which would pass for the wrong value as readily as the right one
+      expect(screen.getByRole('button', { name: 'year 2020' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'month 05' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'day 03' })).toBeInTheDocument();
+    });
+  });
+
+  // The dropdown button carries the selected option as its contents, which a label naming it from outside would
+  // otherwise replace, so it names itself with that label and its own value — the select-only combobox pattern
+  describe("a select widget's dropdown button", () => {
+    test('is named by the label and the option it displays', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'green'] } } }}
+          formData={{ color: 'green' }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: 'Color green' })).toBe(screen.getByLabelText('Color'));
+    });
+
+    test('is named by the label alone while it displays no option', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'green'] } } }}
+          validator={validator}
+        />,
+      );
+
+      // The contents it falls back to are the label itself, so referencing them would announce the label twice
+      expect(screen.getByRole('button', { name: 'Color' })).toBeInTheDocument();
+    });
+
+    // The template labels the field's own control, not this selector, so nothing outside the button names it and its
+    // contents are its whole name
+    test('is named by the option it displays alone where no label points at it', () => {
+      render(
+        <Form
+          schema={{
+            type: 'object',
+            properties: {
+              region: {
+                title: 'Region',
+                oneOf: [
+                  { title: 'None', type: 'null' },
+                  { title: 'Europe', type: 'string', enum: ['DE', 'FR'] },
+                ],
+              },
+            },
+          }}
+          formData={{ region: 'DE' }}
+          validator={validator}
+        />,
+      );
+
+      const selector = document.getElementById('root_region__oneof_select')!;
+      expect(selector).toHaveAccessibleName('Europe');
+      expect(selector).toHaveAccessibleDescription('');
+    });
+
+    // Its own label already spells the key out, so referencing the key it displays would announce it twice
+    test('keeps the name its own label gives it for an additionalProperties entry', () => {
+      render(
+        <Form
+          schema={{
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            propertyNames: { enum: ['alpha', 'beta'] },
+          }}
+          formData={{ alpha: 'a' }}
+          validator={validator}
+        />,
+      );
+
+      expect(document.getElementById('root_alpha-key')).toHaveAccessibleName('alpha Key');
+    });
   });
 
   test("a date widget's trigger is named by the label, and describes its own selected value", () => {
@@ -335,6 +424,34 @@ describe('FieldTemplate', () => {
 
       expect(templateLabelFor(container, 'root_0')).toBeNull();
       expect(screen.queryByText('*')).not.toBeInTheDocument();
+    });
+  });
+
+  // `SchemaField` falls back to the property name for the label it hands the template, so the template renders one,
+  // while the `label` a widget is handed keeps the empty `title` it was given
+  describe("a field whose title is ''", () => {
+    test('names a group of controls with the label the template renders from the property name', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { agree: { type: 'boolean', title: '' } } }}
+          uiSchema={{ agree: { 'ui:widget': 'radio' } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('agree');
+    });
+
+    test("describes a date widget's trigger with the date it displays", () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { when: { type: 'string', format: 'date', title: '' } } }}
+          formData={{ when: '2020-05-03' }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: 'when' })).toHaveAccessibleDescription('May 3, 2020');
     });
   });
 

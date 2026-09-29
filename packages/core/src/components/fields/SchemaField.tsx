@@ -360,15 +360,10 @@ function SchemaFieldRender<
     [selectSchemaInfo, resolvedUiSchema],
   );
   // An inferred widget is only a default, so a widget the caller named through either spelling is written back
-  // unchanged. `ui:widget` is always the key that carries it because `getDisplayLabel()` reads only that spelling to
-  // decide a boolean keeps its label, and spreading leaves an existing key where the caller put it, so the order
-  // `getUiOptions()` reduces in — and with it `ui:widget` against `ui:options.widget` — is untouched either way.
-  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes. The
-  // widget is only ever inferred for a boolean, whose BooleanField reads it, so a different field the `ui:field` key
-  // names is handed the caller's `uiSchema` without a widget it never chose, which a field following BooleanField's
-  // lead would otherwise render in place of its own default. Only that key is checked because it is the one spelling
-  // `getDisplayLabel()` hides the label for, so leaving the widget out costs no label; a field named through
-  // `ui:options` keeps the widget, and with it the label a boolean select shows
+  // unchanged. `ui:widget` is the key that carries it because that is where the inferred default has to land, and
+  // spreading leaves an existing key where the caller put it, so the order `getUiOptions()` reduces in — and with it
+  // `ui:widget` against `ui:options.widget` — is untouched either way.
+  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
   const uiSchema = useMemo(() => {
     if (!inferredWidget) {
       return resolvedUiSchema;

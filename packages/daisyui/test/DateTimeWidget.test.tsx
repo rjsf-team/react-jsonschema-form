@@ -6,6 +6,7 @@ import { vi } from 'vitest';
 import Form from '../src/index.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+import pinTimeZone from './helpers/pinTimeZone.ts';
 
 const user = userEvent.setup();
 
@@ -170,6 +171,37 @@ describe('DateTimeWidget', () => {
 
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit.mock.calls[0][0].formData.when).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  // A `date` carries no time and no zone, so reading it as an instant makes it UTC midnight — the evening before to
+  // everyone behind UTC, and the day this picker would then commit back over a value the user only meant to edit the
+  // time of
+  describe('a stored value that is a date rather than a date-time', () => {
+    const dateSchema = { type: 'string' as const, format: 'date' };
+
+    pinTimeZone('America/Los_Angeles');
+
+    test('displays the day it names, at the start of that day', () => {
+      const { container } = render(
+        <DateTimeWidget {...makeWidgetMockProps({ value: '2020-05-03', schema: dateSchema })} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
+    });
+
+    test('keeps that day when the user edits only the time', async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <DateTimeWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema: dateSchema })} />,
+      );
+
+      await openPicker(container);
+      await user.clear(screen.getByLabelText('Time'));
+      await user.type(screen.getByLabelText('Time'), '14:30');
+      await user.click(screen.getByText('Done'));
+
+      expect(onChange).toHaveBeenCalledWith('2020-05-03');
+    });
   });
 
   // A field with no title leaves `FieldTemplate` no label to render, so the trigger has neither a name from outside nor

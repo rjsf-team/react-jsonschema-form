@@ -15,6 +15,8 @@ interface DatePickerTriggerProps<
   id: string;
   /** The field's label, empty when it has no title */
   label?: string;
+  /** The field's property name, which the label naming this button falls back to */
+  name?: string;
   /** Whether the label is hidden, in which case the template renders none */
   hideLabel?: boolean;
   /** The field's placeholder, displayed where it holds no date */
@@ -55,6 +57,7 @@ export default function DatePickerTrigger<
 >({
   id,
   label,
+  name,
   hideLabel,
   placeholder,
   formattedValue,
@@ -67,7 +70,7 @@ export default function DatePickerTrigger<
   onBlur,
   registry,
 }: DatePickerTriggerProps<T, S, F>) {
-  const describedBy = getTriggerDescribedBy({ id, label, hideLabel, hasValue: !!formattedValue });
+  const describedBy = getTriggerDescribedBy({ id, label, name, hideLabel, hasValue: !!formattedValue });
   const text = formattedValue || placeholder || label || registry.translateString(TranslatableString.AriaDateLabel);
 
   return (

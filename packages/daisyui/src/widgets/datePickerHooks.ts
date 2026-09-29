@@ -1,19 +1,47 @@
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
+
+/** A `date` proper: a calendar day with no time and no zone */
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+
+/** The shapes either picker knows how to commit, and so the ones it takes from the schema rather than from its own
+ * fallback: any other format is one neither picker can spell
+ */
+const KNOWN_FORMATS = ['date', 'date-time', 'iso-date-time'];
+
+/** Reads a stored value that is a `date` proper as the day it names, at local midnight. The `Date` constructor reads
+ * a day with no zone as UTC midnight, which names the day before to every reader behind UTC once date-fns formats it
+ * in their own zone.
+ *
+ * @param text - The stored value's text
+ * @returns - That day at local midnight, or `undefined` where the text is not a day on its own
+ */
+export function readDateOnly(text: string) {
+  if (!DATE_ONLY.test(text)) {
+    return undefined;
+  }
+  const day = parseISO(text);
+  return isValid(day) ? day : undefined;
+}
 
 /** Builds the formatter that turns the date a picker is holding into the text the field stores. Either picker can be
  * pointed at either kind of field — `widgetMap` resolves `ui:widget: 'date'` and `'date-time'` on any `string` schema,
  * whatever `format` it declares — and a value in the other shape fails the field's own format check, so the schema
  * decides the shape rather than the widget that happens to be rendering it.
  *
+ * A format neither picker knows is one it cannot spell any better than the widget's own fallback can, so the widget
+ * decides those: a custom `date` dialect registered with ajv is far likelier to accept the day a `date` picker writes
+ * than the instant a `date-time` one does.
+ *
  * @param schema - The schema for the field, whose `format` names the shape it stores
  * @param fallback - The shape to commit where the schema declares no format either picker knows
  * @returns - The formatter for the field's committed value
  */
 export function useDateFormatter<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fallback: 'date' | 'date-time') {
-  const schemaFormat = typeof schema.format === 'string' ? schema.format : undefined;
+  const schemaFormat =
+    typeof schema.format === 'string' && KNOWN_FORMATS.includes(schema.format) ? schema.format : undefined;
   return useCallback(
     (date: Date) => {
       switch (schemaFormat ?? fallback) {
@@ -53,7 +81,12 @@ function pressOpensThePopup(target: EventTarget | null, trigger: HTMLElement | n
  */
 function useLatest<A extends unknown[]>(callback: (...args: A) => void) {
   const ref = useRef(callback);
-  ref.current = callback;
+  // In an effect rather than during render, which React forbids writing a ref in: a render that is discarded, as a
+  // transition or a Suspense retry can be, would otherwise leave the listeners holding a callback closed over state
+  // the form never committed. A layout effect, so the ref is current before the effect below binds them
+  useLayoutEffect(() => {
+    ref.current = callback;
+  }, [callback]);
   return ref;
 }
 

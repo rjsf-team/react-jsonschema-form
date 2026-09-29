@@ -75,6 +75,12 @@ const widgetMap = {
   },
 } as const;
 
+/** The registry key a `boolean` resolves to when nothing names a widget for it, which is the widget that renders the
+ * field's label itself. Taken from the map rather than written out again, so re-registering that key cannot leave a
+ * caller naming the same widget explicitly treated as naming another one
+ */
+export const DEFAULT_BOOLEAN_WIDGET = widgetMap.boolean.checkbox;
+
 /** The lowercase `ui:widget` alias names `getWidget` accepts for a given JSON Schema primitive `type`, e.g.
  * `WidgetAliasFor<'string'>` is `'text' | 'textarea' | 'password' | ...`. Used to keep a type-safe widget vocabulary
  * (like `@rjsf/core`'s `CoreUiOptionsChecks`) in sync with the aliases `getWidget` actually resolves.

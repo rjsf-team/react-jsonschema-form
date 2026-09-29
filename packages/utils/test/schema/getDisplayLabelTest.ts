@@ -48,6 +48,18 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     it('boolean type with widget', () => {
       expect(getDisplayLabel(testValidator, { type: 'boolean' }, { 'ui:widget': 'test' })).toEqual(true);
     });
+    it('boolean type with widget named through ui:options', () => {
+      expect(getDisplayLabel(testValidator, { type: 'boolean' }, { 'ui:options': { widget: 'test' } })).toEqual(true);
+    });
+    it.each([
+      ['ui:widget', { 'ui:widget': 'CheckboxWidget' }],
+      ['ui:options', { 'ui:options': { widget: 'CheckboxWidget' } }],
+    ])('boolean type naming the checkbox it already resolves to, through %s', (_, uiSchema) => {
+      expect(getDisplayLabel(testValidator, { type: 'boolean' }, uiSchema)).toEqual(false);
+    });
+    it('boolean type naming the checkbox by its alias, which a FieldTemplate lays out itself', () => {
+      expect(getDisplayLabel(testValidator, { type: 'boolean' }, { 'ui:widget': 'checkbox' })).toEqual(true);
+    });
     it('with ui:field', () => {
       const schema: RJSFSchema = { type: 'string' };
       const schemaUtils = createSchemaUtils(testValidator, schema);

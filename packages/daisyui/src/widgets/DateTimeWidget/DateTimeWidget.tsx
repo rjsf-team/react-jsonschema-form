@@ -6,7 +6,7 @@ import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { readDateOnly, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
 import 'react-day-picker/dist/style.css';
 
@@ -108,7 +108,7 @@ function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect,
             id={id}
             type='time'
             className='input input-bordered w-full'
-            value={selectedDate && isValid(selectedDate) ? format(selectedDate, 'HH:mm') : ''}
+            value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
             onChange={onTimeChange}
             onClick={handleClick}
           />
@@ -137,7 +137,7 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
@@ -150,7 +150,7 @@ export default function DateTimeWidget<
     if (!localValue) {
       return undefined;
     }
-    const date = new Date(localValue);
+    const date = readDateOnly(localValue) ?? new Date(localValue);
     return isValid(date) ? date : undefined;
   }, [localValue]);
   const {
@@ -210,7 +210,7 @@ export default function DateTimeWidget<
     e.stopPropagation();
   }, []);
 
-  const formattedValue = localDate && isValid(localDate) ? format(localDate, 'PP p') : undefined;
+  const formattedValue = localDate ? format(localDate, 'PP p') : undefined;
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -218,6 +218,7 @@ export default function DateTimeWidget<
         <DatePickerTrigger<T, S, F>
           id={id}
           label={label}
+          name={name}
           hideLabel={hideLabel}
           placeholder={placeholder}
           formattedValue={formattedValue}

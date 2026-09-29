@@ -9,15 +9,18 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
+  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
+  fieldLabelId,
   groupEnumOptions,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  triggerValueId,
   useSelectFocusHandlers,
 } from '@rjsf/utils';
 
@@ -55,6 +58,7 @@ export default function SelectWidget<
   id,
   options,
   label,
+  hideLabel,
   disabled,
   placeholder,
   readonly,
@@ -135,6 +139,7 @@ export default function SelectWidget<
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
   const selectedIndexes = [enumOptionsIndexForValue<S>(value, optionsList, isMultiple) ?? []].flat();
   const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
+  const hasValue = selectedLabels.length > 0;
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
@@ -186,9 +191,22 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
+          aria-describedby={ariaDescribedByIds(id)}
+          /* The select-only combobox naming: the label that names this button, then the button's own value. A name
+             from outside an element replaces its contents, so the selected option would otherwise be dropped from
+             everything a screen reader says about the control. Referencing the label by id rather than asking whether
+             one was rendered leaves the button no label points at — the `oneOf` option selector, which the template
+             labels the field's own control instead — named by its own value, since a reference to a missing element
+             contributes nothing.
+
+             Claimed only where the template renders the label this points at, so a widget labelled by something else
+             keeps the name that gives it: the `additionalProperties` key select, whose own label already spells the
+             key out. And only where the button displays a value, since the text it falls back to otherwise is the
+             label itself, which would have the label announced twice. */
+          aria-labelledby={hasValue && !hideLabel ? `${fieldLabelId(id)} ${triggerValueId(id)}` : undefined}
         >
-          <span className='truncate'>
-            {selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
+          <span id={triggerValueId(id)} className='truncate'>
+            {hasValue ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
           </span>
           <span className='ml-2'>▼</span>
         </button>

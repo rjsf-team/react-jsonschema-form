@@ -1,6 +1,7 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
+import { DEFAULT_BOOLEAN_WIDGET } from '../getWidget.tsx';
 import isCustomWidget from '../isCustomWidget.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
@@ -60,10 +61,13 @@ export default function getDisplayLabel<
     if (schemaType === 'object') {
       displayLabel = addedByAdditionalProperty || isWholeValueSelect<S>(schema);
     }
-    // A boolean left to its default widget is a checkbox, which draws its own label, so the template renders none.
-    // The reduced options rather than the `ui:widget` key, so that naming a widget through `ui:options.widget` — the
-    // other spelling of the same choice — reaches the same answer as naming it through `ui:widget`
-    if (schemaType === 'boolean' && uiSchema && !uiOptions.widget) {
+    // A boolean is drawn by a checkbox, which renders the field's label itself after its input, so the template
+    // renders none. Naming that same widget by the key it is registered under changes nothing about who draws that
+    // label — read from the reduced options, so naming one through `ui:options.widget` reaches the same answer as
+    // naming it through `ui:widget`. The `checkbox` alias is deliberately not matched here: a theme's `FieldTemplate`
+    // keys its own checkbox layout on that exact spelling, taking over the field's description along with its label.
+    // Matching a widget by name at all is provisional; resolving it against the registry is #5389
+    if (schemaType === 'boolean' && uiSchema && (!uiOptions.widget || uiOptions.widget === DEFAULT_BOOLEAN_WIDGET)) {
       displayLabel = false;
     }
     if (uiSchema?.[UI_FIELD_KEY]) {

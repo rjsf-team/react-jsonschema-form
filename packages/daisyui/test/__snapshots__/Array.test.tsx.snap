@@ -437,6 +437,7 @@ exports[`array fields > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -444,6 +445,7 @@ exports[`array fields > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
@@ -1720,6 +1722,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -1727,6 +1730,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
@@ -4053,6 +4057,7 @@ exports[`with title and description > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4060,6 +4065,7 @@ exports[`with title and description > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>
@@ -4882,6 +4888,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4889,6 +4896,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
@@ -5711,6 +5719,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -5718,6 +5727,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
@@ -6449,6 +6459,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -6456,6 +6467,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>

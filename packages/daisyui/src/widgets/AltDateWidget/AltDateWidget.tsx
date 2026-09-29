@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, fieldLabelId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -38,12 +38,18 @@ export default function AltDateWidget<
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
-    <div className='space-y-3' {...getGroupProps({ id, label, hideLabel, role: 'group' })}>
+    <div className='space-y-3' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
-            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
+            {/* The id the select looks for when it names itself, so the value it displays is announced after this
+                label rather than replaced by it */}
+            <label
+              id={fieldLabelId(dateElementId(id, elemProps.type))}
+              htmlFor={dateElementId(id, elemProps.type)}
+              className='label'
+            >
               <span className='label-text capitalize'>{elemProps.type}</span>
             </label>
             <DateElement

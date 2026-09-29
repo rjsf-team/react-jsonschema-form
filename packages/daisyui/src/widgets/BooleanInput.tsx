@@ -120,7 +120,7 @@ export default function BooleanInput<
         input
       ) : (
         <label className={labelClassName}>
-          {/* A `<span>` rather than a `<div>`, since a `<label>` only permits phrasing content */}
+          {/* A `<label>` permits only phrasing content, so the input's wrapper cannot be a block element */}
           <span className='mr-2'>{input}</span>
           <span className='label-text'>
             {label}

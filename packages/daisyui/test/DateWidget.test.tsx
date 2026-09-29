@@ -6,6 +6,7 @@ import { vi } from 'vitest';
 import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+import pinTimeZone from './helpers/pinTimeZone.ts';
 
 const user = userEvent.setup();
 
@@ -102,21 +103,7 @@ describe('DateWidget', () => {
       ['ahead of UTC', 'Europe/Berlin'],
       ['behind UTC', 'America/Los_Angeles'],
     ])('in a timezone %s', (_, timeZone) => {
-      const realTZ = process.env.TZ;
-
-      beforeAll(() => {
-        process.env.TZ = timeZone;
-      });
-
-      afterAll(() => {
-        // `process.env.TZ = undefined` assigns the *string* `'undefined'`, which leaves the process running as UTC for
-        // every later test file in this vitest worker
-        if (realTZ === undefined) {
-          delete process.env.TZ;
-        } else {
-          process.env.TZ = realTZ;
-        }
-      });
+      pinTimeZone(timeZone);
 
       test('names the day a UTC instant that is a local midnight stands for', () => {
         // A picked 3 May stored as the `toISOString()` of local midnight, so a time of day that is not UTC midnight,
@@ -140,6 +127,9 @@ describe('DateWidget', () => {
         ['a midday UTC value', '2020-05-03T12:00:00Z'],
         // A zone of its own is one this widget never writes — `toISOString()` only ever writes `Z`
         ['a value stamped with its own zone offset', '2020-05-03T00:00:00+02:00'],
+        // 22:00Z, which is midnight in Berlin on the *fourth*: the shape the local-midnight rule exists for looks
+        // exactly like this one from here, and the offset is what tells them apart
+        ['a value whose own offset lands on local midnight here', '2020-05-03T18:00:00-04:00'],
       ])('names the calendar day %s stands for', (_, value) => {
         const { container } = render(<DateWidget {...makeWidgetMockProps({ value, schema })} />);
 
@@ -214,6 +204,18 @@ describe('DateWidget', () => {
       ['an epoch instant', Date.UTC(2020, 4, 3)],
       ['a Date of its own', new Date(2020, 4, 3)],
     ])('reads a value with %s as the day it names', (_, value) => {
+      const { container } = render(<DateWidget {...makeWidgetMockProps({ value, schema })} />);
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+    });
+
+    // Every shape above the `T` is optional for an engine to accept, and an offset given as hours alone is one no
+    // engine here parses, so the day has to come from the text rather than from the instant nobody could build
+    test('names the day the text spells where the engine cannot read the value as an instant', () => {
+      const value = '2020-05-03T20:00:00-04';
+
+      expect(new Date(value).toString()).toBe('Invalid Date');
+
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value, schema })} />);
 
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
@@ -440,6 +442,9 @@ describe('DateWidget', () => {
     test.each([
       ['date-time', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/],
       ['iso-date-time', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/],
+      // A format neither picker can spell is one this widget has no better answer for than its own shape, which is
+      // the likelier of the two to satisfy a dialect of `date` somebody registered with ajv under another name
+      ['full-date', /^\d{4}-\d{2}-\d{2}$/],
     ])('commits the shape a %s field declares, and so submits without error', async (formatName, shape) => {
       const onSubmit = vi.fn();
       const onError = vi.fn();
