@@ -123,6 +123,20 @@ describe('AltDateWidget', () => {
     }
   });
 
+  test('calls onFocus and onBlur with an undefined value for an unset part, as @rjsf/core does', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    const { getAllByRole } = renderWidget({ onFocus, onBlur });
+
+    // Tabbing, since a click opens the part's dropdown, which calls `scrollIntoView`, which jsdom lacks
+    await user.tab();
+    expect(getAllByRole('combobox')[0]).toHaveFocus();
+    await user.tab();
+
+    expect(onFocus).toHaveBeenCalledWith('root_year', undefined);
+    expect(onBlur).toHaveBeenCalledWith('root_year', undefined);
+  });
+
   test('focuses the first part when autofocus is set', () => {
     const { getAllByRole } = renderWidget({ autofocus: true });
 
