@@ -25,6 +25,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     afterAll(() => {
       consoleWarnSpy.mockRestore();
     });
+    // A fresh spy on a view of `testValidator`, since `vi.spyOn()` on the utils mock's own `vi.fn()` would count the
+    // calls of earlier tests and reset its implementation on restore
+    function withIsValidSpy() {
+      const isValid = vi.fn<TestValidatorType['isValid']>((...args) => testValidator.isValid(...args));
+      const validator: TestValidatorType = Object.assign(Object.create(testValidator) as TestValidatorType, {
+        isValid,
+      });
+      return { validator, isValid };
+    }
     describe('an explicitly undefined property schema', () => {
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
       const schema = {
@@ -4450,6 +4459,63 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             noneValue,
           ),
         ).toEqual(1);
+      });
+      it('should prefer a non-object const over an object default on a non-object schema', () => {
+        const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
+        expect(getDefaultFormState(testValidator, schema)).toEqual('x');
+        expect(getDefaultFormState(testValidator, schema, 'y')).toEqual('y');
+      });
+      it('should not spread a primitive form data value into an object default', () => {
+        const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
+        expect(getDefaultFormState(testValidator, schema, 'zz')).toEqual({ a: 1 });
+      });
+      it.each([
+        ['number', 5],
+        ['boolean', true],
+      ] as const)('should keep %s form data on a schema with an object default', (type, value) => {
+        expect(getDefaultFormState(testValidator, { type, default: { a: 1 } }, value)).toEqual(value);
+      });
+      it('should keep array form data on a root array schema with an object default', () => {
+        const schema: RJSFSchema = { type: 'array', default: {}, items: { type: 'string' } };
+        expect(getDefaultFormState(testValidator, schema, ['q'])).toEqual(['q']);
+      });
+      it('should prefer an array const over an object default', () => {
+        expect(getDefaultFormState(testValidator, { const: [1, 2], default: { a: 1 } })).toEqual([1, 2]);
+      });
+      it('should compute array defaults for an array schema with dependencies', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: { type: 'string', default: 'x' },
+          minItems: 2,
+          dependencies: { a: ['b'] },
+        };
+        expect(getDefaultFormState(testValidator, schema)).toEqual(['x', 'x']);
+      });
+      it('should compute the item defaults of an array schema with dependencies only once', () => {
+        // Each computation of the item's defaults validates its `oneOf` dependency once
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { a: { type: 'string', default: 'x' } },
+            dependencies: { a: { oneOf: [{ properties: { a: { const: 'x' } } }] } },
+          },
+          minItems: 1,
+          dependencies: { b: ['c'] },
+        };
+        const { validator, isValid } = withIsValidSpy();
+        computeDefaults(validator, schema, { rootSchema: schema });
+        expect(isValid).toHaveBeenCalledTimes(1);
+      });
+      it('should resolve dependencies against the inherited default of a whole-value select with an array type', () => {
+        const schema: RJSFSchema = {
+          type: ['array', 'object'],
+          enum: [{ a: 1 }, { a: 2 }],
+          dependencies: { a: { oneOf: [{ properties: { a: { const: 1 } } }] } },
+        };
+        const { validator, isValid } = withIsValidSpy();
+        computeDefaults(validator, schema, { rootSchema: schema, parentDefaults: { a: 1 } });
+        expect(isValid).toHaveBeenCalled();
       });
     });
     describe('nested default', () => {

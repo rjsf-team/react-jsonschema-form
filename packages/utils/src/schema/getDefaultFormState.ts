@@ -378,10 +378,14 @@ export function computeDefaults<
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
-    const defaultFormData: T = {
-      ...getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults),
-      ...formData,
-    };
+    // An array type's defaults are discarded below, so skip building every `minItems` entry. A whole-value select keeps
+    // the call, since it can resolve to an object default inherited from its parent
+    const schemaDefaults =
+      getSchemaType<S>(schema) === 'array' && !isWholeValueSelect<S>(schema)
+        ? undefined
+        : getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
+    const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
+    const defaultFormData: T = { ...objectDefaults, ...formData };
     const resolvedSchema = resolveDependencies<T, S, F>(
       validator,
       schema,
@@ -1047,10 +1051,12 @@ export default function getDefaultFormState<
     uiSchemaDefinitions,
   });
 
-  if (schema.type !== 'object' && isObject(schema.default)) {
+  const objectDefaults: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
+  // Array form data takes the merge path below, which knows how to combine it with the defaults
+  if (schema.type !== 'object' && isObject(schema.default) && objectDefaults && !Array.isArray(formData)) {
     return {
-      ...defaults,
-      ...formData,
+      ...objectDefaults,
+      ...(isObject(formData) ? formData : undefined),
     } as T;
   }
 

@@ -1,4 +1,6 @@
-import { getMuiProps } from '../src/util.ts';
+import type { Theme } from '@mui/material';
+
+import { computeSxProps, getMuiProps } from '../src/util.ts';
 
 describe('getMuiProps', () => {
   it('should extract mui props from uiOptions', () => {
@@ -50,5 +52,35 @@ describe('getMuiProps', () => {
     expect(result.rjsfSlotProps).toEqual({ arrayPaper: { elevation: 10 } });
     expect(result.variant).toBeUndefined();
     expect(result.sx).toBeUndefined();
+  });
+});
+
+describe('computeSxProps', () => {
+  it('returns the default sx when there are no mui props', () => {
+    expect(computeSxProps({ mt: 1 })).toEqual({ mt: 1 });
+  });
+
+  it('returns the default sx when the mui props have no sx', () => {
+    expect(computeSxProps({ mt: 1 }, { component: 'div' })).toEqual({ mt: 1 });
+  });
+
+  it('shallow-merges an object sx over the default sx', () => {
+    expect(computeSxProps({ mt: 1, mb: 1 }, { sx: { mt: 2 } })).toEqual({ mt: 2, mb: 1 });
+  });
+
+  it('prepends the default sx to an array sx', () => {
+    const sx = [{ mt: 2 }, { mb: 2 }];
+    expect(computeSxProps({ mt: 1 }, { sx })).toEqual([{ mt: 1 }, { mt: 2 }, { mb: 2 }]);
+  });
+
+  it('keeps a theme callback sx by composing it after the default sx', () => {
+    const sx = (theme: Theme) => ({ color: theme.palette.primary.main });
+    expect(computeSxProps({ mt: 1 }, { sx })).toEqual([{ mt: 1 }, sx]);
+  });
+
+  it('composes a theme callback or array default sx with the mui sx', () => {
+    const defaults = (theme: Theme) => ({ color: theme.palette.primary.main });
+    expect(computeSxProps(defaults, { sx: { mt: 2 } })).toEqual([defaults, { mt: 2 }]);
+    expect(computeSxProps([{ mt: 1 }, defaults], { sx: [{ mb: 2 }] })).toEqual([{ mt: 1 }, defaults, { mb: 2 }]);
   });
 });
