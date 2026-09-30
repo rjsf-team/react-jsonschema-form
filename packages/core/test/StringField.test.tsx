@@ -171,6 +171,15 @@ describe('StringField', () => {
       expect([...options].map((option) => option.value)).toEqual(['a']);
     });
 
+    it('should not suggest an undefined example as the string "undefined"', () => {
+      const { node } = createFormComponent({
+        // JSON can't hold `undefined`, but a schema built in code can
+        schema: { type: 'string', examples: ['a', undefined] as unknown as string[] },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
     it('should include default in datalist when types mismatch and values differ', () => {
       const { node } = createFormComponent({
         schema: {

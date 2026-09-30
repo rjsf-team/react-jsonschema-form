@@ -1293,19 +1293,19 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       value=""
                     />
                     <option
-                      id="red"
+                      id="root_color-0"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
+                      id="root_color-1"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
+                      id="root_color-2"
                       value="2"
                     >
                       blue
@@ -2543,19 +2543,19 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       value=""
                     />
                     <option
-                      id="red"
+                      id="root_color-0"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
+                      id="root_color-1"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
+                      id="root_color-2"
                       value="2"
                     >
                       blue
@@ -2754,13 +2754,13 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         name="root_region__oneof_select"
                       >
                         <option
-                          id="None"
+                          id="root_region__oneof_select-0"
                           value="0"
                         >
                           None
                         </option>
                         <option
-                          id="Europe"
+                          id="root_region__oneof_select-1"
                           value="1"
                         >
                           Europe
@@ -2790,13 +2790,13 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               value=""
                             />
                             <option
-                              id="France"
+                              id="root_region-0"
                               value="0"
                             >
                               France
                             </option>
                             <option
-                              id="Germany"
+                              id="root_region-1"
                               value="1"
                             >
                               Germany
@@ -2848,7 +2848,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             value=""
           />
           <option
-            id="Subscribed"
+            id="root-0"
             value="0"
           >
             Subscribed
@@ -2891,19 +2891,19 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             value=""
           />
           <option
-            id="Never"
+            id="root-0"
             value="0"
           >
             Never
           </option>
           <option
-            id="Once"
+            id="root-1"
             value="1"
           >
             Once
           </option>
           <option
-            id="Unlimited"
+            id="root-2"
             value="2"
           >
             Unlimited
@@ -2946,19 +2946,19 @@ exports[`select widget from oneOf boolean constants with a null option without a
             value=""
           />
           <option
-            id="Unknown"
+            id="root-0"
             value="0"
           >
             Unknown
           </option>
           <option
-            id="Yes"
+            id="root-1"
             value="1"
           >
             Yes
           </option>
           <option
-            id="No"
+            id="root-2"
             value="2"
           >
             No
@@ -3001,13 +3001,13 @@ exports[`select widget from oneOf constants without a type 1`] = `
             value=""
           />
           <option
-            id="Foo"
+            id="root-0"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
+            id="root-1"
             value="1"
           >
             Bar
@@ -3050,13 +3050,13 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             value=""
           />
           <option
-            id="Yes"
+            id="root-0"
             value="0"
           >
             Yes
           </option>
           <option
-            id="No"
+            id="root-1"
             value="1"
           >
             No
@@ -5181,19 +5181,19 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
+                          id="root_optionalObjectWithOneofs__oneof_select-0"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
+                          id="root_optionalObjectWithOneofs__oneof_select-1"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
+                          id="root_optionalObjectWithOneofs__oneof_select-2"
                           value="2"
                         >
                           Option 3
@@ -5295,19 +5295,19 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
+                          id="root_optionalArrayWithAnyofs__anyof_select-0"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
+                          id="root_optionalArrayWithAnyofs__anyof_select-1"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
+                          id="root_optionalArrayWithAnyofs__anyof_select-2"
                           value="2"
                         >
                           Option 3
@@ -6156,19 +6156,19 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
+                          id="root_optionalObjectWithOneofs__oneof_select-0"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
+                          id="root_optionalObjectWithOneofs__oneof_select-1"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
+                          id="root_optionalObjectWithOneofs__oneof_select-2"
                           value="2"
                         >
                           Option 3
@@ -6271,19 +6271,19 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
+                          id="root_optionalArrayWithAnyofs__anyof_select-0"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
+                          id="root_optionalArrayWithAnyofs__anyof_select-1"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
+                          id="root_optionalArrayWithAnyofs__anyof_select-2"
                           value="2"
                         >
                           Option 3
@@ -9677,13 +9677,13 @@ exports[`single fields > select field 1`] = `
             value=""
           />
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
@@ -9724,25 +9724,25 @@ exports[`single fields > select field multiple choice 1`] = `
           name="root"
         >
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
+            id="root-2"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
+            id="root-3"
             value="3"
           >
             qux
@@ -9783,26 +9783,26 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           name="root"
         >
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
+            id="root-2"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
+            id="root-3"
             value="3"
           >
             qux
@@ -9949,25 +9949,25 @@ exports[`single fields > select field multiple choice formData 1`] = `
           name="root"
         >
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
+            id="root-2"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
+            id="root-3"
             value="3"
           >
             qux
@@ -10008,19 +10008,19 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           name="root"
         >
           <option
-            id="Blue"
+            id="root-0"
             value="0"
           >
             Blue
           </option>
           <option
-            id="Red"
+            id="root-1"
             value="1"
           >
             Red
           </option>
           <option
-            id="Green"
+            id="root-2"
             value="2"
           >
             Green
@@ -10063,14 +10063,14 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             value=""
           />
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
@@ -10255,13 +10255,13 @@ exports[`single fields > select field single choice formData 1`] = `
             value=""
           />
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
@@ -10307,13 +10307,13 @@ exports[`single fields > select field single choice optgroups 1`] = `
             label="Group A"
           >
             <option
-              id="foo"
+              id="root-0"
               value="0"
             >
               foo
             </option>
             <option
-              id="bar"
+              id="root-1"
               value="1"
             >
               bar
@@ -10323,14 +10323,14 @@ exports[`single fields > select field single choice optgroups 1`] = `
             label="Group B"
           >
             <option
-              id="baz"
+              id="root-2"
               value="2"
             >
               baz
             </option>
           </optgroup>
           <option
-            id="qux"
+            id="root-3"
             value="3"
           >
             qux
@@ -10376,14 +10376,14 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             label="Group A"
           >
             <option
-              id="foo"
+              id="root-0"
               value="0"
             >
               foo
             </option>
             <option
               disabled=""
-              id="bar"
+              id="root-1"
               value="1"
             >
               bar
@@ -10393,14 +10393,14 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             label="Group B"
           >
             <option
-              id="baz"
+              id="root-2"
               value="2"
             >
               baz
             </option>
           </optgroup>
           <option
-            id="qux"
+            id="root-3"
             value="3"
           >
             qux
@@ -10516,13 +10516,13 @@ exports[`single fields > select widget with description in schema and FieldTempl
             value=""
           />
           <option
-            id="Yes"
+            id="root-0"
             value="0"
           >
             Yes
           </option>
           <option
-            id="No"
+            id="root-1"
             value="1"
           >
             No
@@ -10577,13 +10577,13 @@ exports[`single fields > select widget with selected oneOf option description 1`
             value=""
           />
           <option
-            id="Foo"
+            id="root-0"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
+            id="root-1"
             value="1"
           >
             Bar
@@ -10630,13 +10630,13 @@ exports[`single fields > select widget with selected oneOf option description an
             value=""
           />
           <option
-            id="Foo"
+            id="root-0"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
+            id="root-1"
             value="1"
           >
             Bar
@@ -11528,13 +11528,13 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       value=""
                     />
                     <option
-                      id="Yes"
+                      id="root_answer-0"
                       value="0"
                     >
                       Yes
                     </option>
                     <option
-                      id="No"
+                      id="root_answer-1"
                       value="1"
                     >
                       No

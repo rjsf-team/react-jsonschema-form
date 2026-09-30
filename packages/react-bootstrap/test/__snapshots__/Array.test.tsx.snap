@@ -435,19 +435,19 @@ exports[`array fields > checkboxes 1`] = `
           name="root"
         >
           <option
-            id="a"
+            id="root-0"
             value="0"
           >
             a
           </option>
           <option
-            id="b"
+            id="root-1"
             value="1"
           >
             b
           </option>
           <option
-            id="c"
+            id="root-2"
             value="2"
           >
             c
@@ -1480,19 +1480,19 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
           name="root"
         >
           <option
-            id="foo"
+            id="root-0"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
+            id="root-1"
             value="1"
           >
             bar
           </option>
           <option
-            id="baz"
+            id="root-2"
             value="2"
           >
             baz
@@ -3596,19 +3596,19 @@ exports[`with title and description > checkboxes 1`] = `
           name="root"
         >
           <option
-            id="a"
+            id="root-0"
             value="0"
           >
             a
           </option>
           <option
-            id="b"
+            id="root-1"
             value="1"
           >
             b
           </option>
           <option
-            id="c"
+            id="root-2"
             value="2"
           >
             c
@@ -4295,19 +4295,19 @@ exports[`with title and description from both > checkboxes 1`] = `
           name="root"
         >
           <option
-            id="a"
+            id="root-0"
             value="0"
           >
             a
           </option>
           <option
-            id="b"
+            id="root-1"
             value="1"
           >
             b
           </option>
           <option
-            id="c"
+            id="root-2"
             value="2"
           >
             c
@@ -4994,19 +4994,19 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           name="root"
         >
           <option
-            id="a"
+            id="root-0"
             value="0"
           >
             a
           </option>
           <option
-            id="b"
+            id="root-1"
             value="1"
           >
             b
           </option>
           <option
-            id="c"
+            id="root-2"
             value="2"
           >
             c
@@ -5611,19 +5611,19 @@ exports[`with title and description with global label off > checkboxes 1`] = `
           name="root"
         >
           <option
-            id="a"
+            id="root-0"
             value="0"
           >
             a
           </option>
           <option
-            id="b"
+            id="root-1"
             value="1"
           >
             b
           </option>
           <option
-            id="c"
+            id="root-2"
             value="2"
           >
             c

@@ -20,11 +20,10 @@ export default function SchemaExamples<S extends StrictRJSFSchema = RJSFSchema>(
   if (!Array.isArray(examples)) {
     return null;
   }
-  // `String()` spells `null` as a `'null'` a user could pick, and an object or array as nothing a user could type
+  // `String()` spells `null` and `undefined` as a `'null'` or `'undefined'` a user could pick, and an object or array as
+  // nothing a user could type
   const suggestions = new Set(
-    (schemaDefault === undefined ? examples : [...examples, schemaDefault])
-      .filter((example) => typeof example !== 'object')
-      .map(String),
+    [...examples, schemaDefault].filter((example) => example !== undefined && typeof example !== 'object').map(String),
   );
   return (
     <datalist key={`datalist_${id}`} id={examplesId(id)}>

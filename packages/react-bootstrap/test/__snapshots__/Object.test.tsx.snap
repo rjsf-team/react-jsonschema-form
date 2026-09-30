@@ -1797,19 +1797,19 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       name="root_foo-key"
                     >
                       <option
-                        id="foo"
+                        id="root_foo-key-0"
                         value="0"
                       >
                         foo
                       </option>
                       <option
-                        id="bar"
+                        id="root_foo-key-1"
                         value="1"
                       >
                         bar
                       </option>
                       <option
-                        id="baz"
+                        id="root_foo-key-2"
                         value="2"
                       >
                         baz
@@ -2647,19 +2647,19 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       name="root_foo-key"
                     >
                       <option
-                        id="foo"
+                        id="root_foo-key-0"
                         value="0"
                       >
                         foo
                       </option>
                       <option
-                        id="bar"
+                        id="root_foo-key-1"
                         value="1"
                       >
                         bar
                       </option>
                       <option
-                        id="baz"
+                        id="root_foo-key-2"
                         value="2"
                       >
                         baz
@@ -2807,19 +2807,19 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       name="root_foo-key"
                     >
                       <option
-                        id="foo"
+                        id="root_foo-key-0"
                         value="0"
                       >
                         foo
                       </option>
                       <option
-                        id="bar"
+                        id="root_foo-key-1"
                         value="1"
                       >
                         bar
                       </option>
                       <option
-                        id="baz"
+                        id="root_foo-key-2"
                         value="2"
                       >
                         baz

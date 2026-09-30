@@ -11,6 +11,7 @@ import {
   hasVisibleErrors,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
+  optionId,
   SelectedOptionDescription,
 } from '@rjsf/utils';
 import { FormSelect } from 'react-bootstrap';
@@ -69,7 +70,7 @@ export default function SelectWidget<
     return (
       <option
         key={option.index}
-        id={option.label}
+        id={optionId(id, option.index)}
         value={enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat)}
         disabled={option.disabled}
       >
