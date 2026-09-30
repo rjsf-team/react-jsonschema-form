@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
@@ -130,6 +130,32 @@ function useLatest<A extends unknown[]>(callback: (...args: A) => void) {
   return ref;
 }
 
+/** What the popup holds while it is open, tagged with the stored value it was seeded from */
+interface PickerDraft {
+  basis: { date: Date | undefined };
+  date: Date | undefined;
+  month: Date;
+  /** Whether the user chose `date`, which is what makes closing the popup store it */
+  picked: boolean;
+}
+
+/** The month to display for `date`, keeping `current` where `date` is in it or names no day: handing the calendar a
+ * fresh `Date` naming the same month would rebuild the whole calendar, its day grid and its year dropdown, for a
+ * caption that does not change
+ */
+function monthFor(current: Date, date: Date | undefined) {
+  return date && !isSameMonth(current, date) ? date : current;
+}
+
+/** `saved`, where it was made against `basis`. A draft made against a value the parent has since replaced is discarded
+ * with it: a value that arrived from outside is not one the user was in the middle of choosing
+ */
+function draftFor(saved: PickerDraft, basis: PickerDraft['basis']): PickerDraft {
+  return saved.basis === basis
+    ? saved
+    : { basis, date: basis.date, month: monthFor(saved.month, basis.date), picked: false };
+}
+
 interface UseDatePickerProps<V> {
   /** The field's `id`, which is also the trigger's */
   id: string;
@@ -172,38 +198,29 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState<Date>(() => initialDate ?? new Date());
-  const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
-  const pickedADate = useRef(false);
+  // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
+  // replaces and then restores must not revive a draft made against it
+  const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
+  const [savedDraft, setSavedDraft] = useState<PickerDraft>(() => ({
+    basis,
+    date: initialDate,
+    month: initialDate ?? new Date(),
+    picked: false,
+  }));
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // When the parent's value changes externally, update local state. Anything the popup was holding is discarded with
-  // it: a value that arrived from outside is not one the user was in the middle of choosing
-  useEffect(() => {
-    setLocalDate(initialDate);
-    pickedADate.current = false;
-  }, [initialDate]);
-
-  // When the local date changes, update the displayed month — keeping the month already displayed where the new date
-  // is in it, which every pick within the visible calendar and every keystroke in a time input is. Handing the state a
-  // fresh `Date` naming the same month would rebuild the whole calendar, its day grid and its year dropdown, for a
-  // caption that does not change
-  useEffect(() => {
-    if (localDate) {
-      setMonth((current) => (isSameMonth(current, localDate) ? current : localDate));
-    }
-  }, [localDate]);
+  // Derived during render, so a new value costs no second render
+  const draft = useMemo(() => draftFor(savedDraft, basis), [basis, savedDraft]);
+  const localDate = draft.date;
 
   /** Take the value the form holds, discarding anything the popup was holding before: the date, the month displaying
    * it, and the fact that the user chose a date at all. Done on the way in rather than on each way out, so a way out
    * added later cannot forget it and leave the popup reopening on a date the form never took
    */
   const resetToStoredValue = useCallback(() => {
-    setLocalDate(initialDate);
-    setMonth(initialDate ?? new Date());
-    pickedADate.current = false;
-  }, [initialDate]);
+    setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
+  }, [basis]);
 
   /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
    * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
@@ -223,12 +240,12 @@ export function useDatePicker<V>({
    * could not read is not one the user asked to throw away by dismissing a picker they chose no date in
    */
   const commitDate = useCallback(() => {
-    if (pickedADate.current && localDate) {
-      onChange(formatDate(localDate));
+    if (draft.picked && draft.date) {
+      onChange(formatDate(draft.date));
     } else if (value === '' && value !== emptyValue) {
       onChange(emptyValue);
     }
-  }, [emptyValue, formatDate, localDate, onChange, value]);
+  }, [draft, emptyValue, formatDate, onChange, value]);
 
   /** Close the popup, storing the date it holds, which every way out of it but Escape does
    */
@@ -287,16 +304,23 @@ export function useDatePicker<V>({
    *
    * @param date - The date they chose
    */
-  const chooseDate = useCallback((date: Date) => {
-    pickedADate.current = true;
-    setLocalDate(date);
-  }, []);
+  const chooseDate = useCallback(
+    (date: Date) =>
+      setSavedDraft((saved) => {
+        const current = draftFor(saved, basis);
+        return { basis, date, month: monthFor(current.month, date), picked: true };
+      }),
+    [basis],
+  );
 
   /** Move the calendar to another month without choosing a date in it
    *
    * @param date - A date in the month to display
    */
-  const handleMonthChange = useCallback((date: Date) => setMonth(date), []);
+  const handleMonthChange = useCallback(
+    (date: Date) => setSavedDraft((saved) => ({ ...draftFor(saved, basis), month: date })),
+    [basis],
+  );
 
   /** Open the popup, or close it where a press on the trigger is the way out
    *
@@ -351,7 +375,7 @@ export function useDatePicker<V>({
 
   return {
     isOpen,
-    month,
+    month: draft.month,
     displayedDate,
     containerRef,
     triggerRef,

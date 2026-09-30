@@ -449,10 +449,12 @@
       { "allowAllCaps": true, "allowLeadingUnderscore": false, "allowNamespace": true }
     ],
     "react/jsx-props-no-spread-multi": "error",
+    "react/memo-dependencies": "error",
     "react/no-array-index-key": "error",
     "react/no-children-prop": "error",
     "react/no-danger": "error",
     "react/no-danger-with-children": "error",
+    "react/no-deriving-state-in-effects": "error",
     "react/no-did-mount-set-state": "error",
     "react/no-did-update-set-state": "error",
     "react/no-direct-mutation-state": "error",
@@ -477,7 +479,7 @@
     "react/require-render-return": "error",
     "react/rules-of-hooks": "error",
     "react/self-closing-comp": ["error", { "component": true, "html": true }],
-    "react/set-state-in-effect": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/set-state-in-effect": "error",
     "react/set-state-in-render": "error",
     "react/state-in-constructor": ["error", "always"],
     "react/static-components": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR

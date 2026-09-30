@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import type { ChangeEvent, MouseEvent } from 'react';
-import { render, renderHook } from '@testing-library/react';
+import { useState } from 'react';
+import { act, render, renderHook } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
 
@@ -144,6 +145,58 @@ describe('useAltDateWidgetProps()', () => {
     // onChange was called with the date cleared
     expect(PROPS.onChange).toHaveBeenCalledWith(undefined);
     expect(simulatedEvent.preventDefault).toHaveBeenCalled();
+  });
+  test('discards a partial selection and re-parses when the value or time prop changes', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    act(() => result.current.handleChange('year', '2020'));
+    expect(PROPS.onChange).not.toHaveBeenCalled();
+    expect(result.current.elements[0].value).toBe('2020');
+    rerender({ ...PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),
+    );
+    rerender({ ...TIME_PROPS, value: DATE_STR });
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
+    );
+  });
+  test('discards a partial selection when the value changes and then changes back', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    act(() => result.current.handleChange('year', '2020'));
+    rerender({ ...PROPS, value: DATE_STR });
+    rerender(PROPS);
+    expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
+  });
+  describe('with a parent that stores what it is sent', () => {
+    const CLEAR_EVENT = { preventDefault: vi.fn() } as unknown as MouseEvent;
+    const BLANK = getDateElementProps(parseDateString(), false, PROPS.options.yearsRange);
+
+    function renderControlled() {
+      return renderHook(() => {
+        const [value, setValue] = useState<unknown>();
+        return useAltDateWidgetProps({ ...PROPS, value, onChange: setValue });
+      });
+    }
+
+    test('Clear after completing a date leaves the widget blank', () => {
+      const { result } = renderControlled();
+      act(() => result.current.handleChange('year', '2020'));
+      act(() => result.current.handleChange('month', '5'));
+      act(() => result.current.handleChange('day', '1'));
+      act(() => result.current.handleClear(CLEAR_EVENT));
+      expect(result.current.elements).toEqual(BLANK);
+    });
+
+    test('Clear during a partial selection leaves the widget blank', () => {
+      const { result } = renderControlled();
+      act(() => result.current.handleChange('year', '2020'));
+      act(() => result.current.handleClear(CLEAR_EVENT));
+      expect(result.current.elements).toEqual(BLANK);
+    });
   });
   test('time is false, value undefined, testing DateElements', async () => {
     const { result, rerender: rerenderHook } = renderHook(() => useAltDateWidgetProps(PROPS));
