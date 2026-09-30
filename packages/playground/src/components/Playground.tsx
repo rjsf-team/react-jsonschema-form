@@ -151,7 +151,13 @@ export function loadedState(
   let formData = loadedFormData;
   try {
     // A sample passes the current validator and a shared link carries its own
-    const schemaUtils = createSchemaUtils(validators[knownValidator], schema, liveSettings.defaultFormStateBehavior);
+    const schemaUtils = createSchemaUtils(
+      {
+        validator: validators[knownValidator],
+        defaultFormStateBehavior: liveSettings.defaultFormStateBehavior,
+      },
+      schema,
+    );
     formData = schemaUtils.getDefaultFormState(schema, loadedFormData, false, false, uiSchema);
   } catch (error) {
     // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given

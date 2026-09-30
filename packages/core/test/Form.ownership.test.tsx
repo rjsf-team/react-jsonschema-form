@@ -261,7 +261,9 @@ describe('form data ownership', () => {
 
     it('a parent seeded with getDefaultFormState renders the defaults on the first render', () => {
       const onChange = vi.fn();
-      const seeded = createSchemaUtils(validator, withDefaults).getDefaultFormState(withDefaults, { a: 'given' });
+      const seeded = createSchemaUtils({ validator }, withDefaults).getDefaultFormState(withDefaults, {
+        a: 'given',
+      });
       const { container } = render(
         <Form schema={withDefaults} validator={validator} formData={seeded} onChange={onChange} />,
       );

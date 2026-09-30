@@ -6,7 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
+import { ErrorSchemaBuilder, mergeSchemas, noop } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -370,7 +370,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -401,7 +401,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -423,7 +423,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -456,7 +456,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -486,7 +486,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { nested: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -511,7 +511,7 @@ describe('AJV8Validator', () => {
               type: 'string',
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -541,8 +541,8 @@ describe('AJV8Validator', () => {
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
-          validator.validateFormData({ string: 'a' }, schema);
-          validator.validateFormData({ string: 'b' }, schema);
+          validator.validateFormData({ validator }, { string: 'a' }, schema);
+          validator.validateFormData({ validator }, { string: 'b' }, schema);
 
           expect(compileSpy).toHaveBeenCalledTimes(1);
         });
@@ -566,6 +566,7 @@ describe('AJV8Validator', () => {
           newErrorMessage = 'Better error message';
           transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
+            { validator },
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
@@ -612,7 +613,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -638,7 +639,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema, validate);
+            const result = validator.validateFormData({ validator }, formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -674,7 +675,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, {});
             errorSchema = result.errorSchema;
           });
 
@@ -697,7 +698,7 @@ describe('AJV8Validator', () => {
             const validate = vi.fn((_formData: any, errors: FormValidation) => errors);
             const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
             const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
-            validator.validateFormData({}, schema, validate, undefined, uiSchema);
+            validator.validateFormData({ validator }, {}, schema, validate, undefined, uiSchema);
             expect(validate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
           });
         });
@@ -717,14 +718,14 @@ describe('AJV8Validator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithoutName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
       });
@@ -742,7 +743,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -859,7 +860,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -890,7 +891,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -912,7 +913,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -945,7 +946,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -975,7 +976,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { nested: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1000,7 +1001,7 @@ describe('AJV8Validator', () => {
               type: 'string',
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -1031,8 +1032,8 @@ describe('AJV8Validator', () => {
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
-          validator.validateFormData({ string: 'a' }, schema);
-          validator.validateFormData({ string: 'b' }, schema);
+          validator.validateFormData({ validator }, { string: 'a' }, schema);
+          validator.validateFormData({ validator }, { string: 'b' }, schema);
 
           expect(compileSpy).toHaveBeenCalledTimes(1);
         });
@@ -1056,6 +1057,7 @@ describe('AJV8Validator', () => {
           newErrorMessage = 'Better error message';
           transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
+            { validator },
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
@@ -1102,7 +1104,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1128,7 +1130,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema, validate);
+            const result = validator.validateFormData({ validator }, formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1164,7 +1166,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, {});
             errorSchema = result.errorSchema;
           });
 
@@ -1198,14 +1200,14 @@ describe('AJV8Validator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithoutName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
       });
@@ -1223,7 +1225,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -1340,7 +1342,7 @@ describe('AJV8Validator', () => {
               [illFormedKey]: { type: 'string' },
             },
           };
-          const result = validator.validateFormData({ foo: 42, [illFormedKey]: 41 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42, [illFormedKey]: 41 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -1371,7 +1373,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -1393,7 +1395,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ price: 0.14 }, schema);
+          const result = validator.validateFormData({ validator }, { price: 0.14 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -1426,7 +1428,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1456,7 +1458,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { nested: { pass1: 'a' } };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1486,7 +1488,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { firstName: 'a', numberOfChildren: 'aa' };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1526,7 +1528,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1563,7 +1565,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { hasPet: true };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1602,7 +1604,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1644,7 +1646,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { hasPet: true };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1684,7 +1686,7 @@ describe('AJV8Validator', () => {
             const formData = {
               nested: { firstName: 'a', numberOfChildren: 'aa' },
             };
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1730,7 +1732,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { firstName: 'a', numberOfChildren: 'aa' };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1780,7 +1782,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { firstName: 'a' };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1831,7 +1833,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = { firstName: 'a' };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1899,7 +1901,7 @@ describe('AJV8Validator', () => {
                 state: 'California',
               },
             };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -1973,7 +1975,7 @@ describe('AJV8Validator', () => {
                 state: 'California',
               },
             };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2037,7 +2039,7 @@ describe('AJV8Validator', () => {
             const formData = {
               nested: { firstName: 'a', numberOfChildren: 'aa' },
             };
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2072,7 +2074,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema);
+            const result = validator.validateFormData({ validator }, formData, schema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2107,7 +2109,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2133,7 +2135,7 @@ describe('AJV8Validator', () => {
               type: 'string',
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -2164,8 +2166,8 @@ describe('AJV8Validator', () => {
           compileSpy.mockClear();
 
           // Call validateFormData twice with the same schema
-          validator.validateFormData({ string: 'a' }, schema);
-          validator.validateFormData({ string: 'b' }, schema);
+          validator.validateFormData({ validator }, { string: 'a' }, schema);
+          validator.validateFormData({ validator }, { string: 'b' }, schema);
 
           expect(compileSpy).toHaveBeenCalledTimes(1);
         });
@@ -2189,6 +2191,7 @@ describe('AJV8Validator', () => {
           newErrorMessage = 'Better error message';
           transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
           const result = validator.validateFormData(
+            { validator },
             { foo: 42, [illFormedKey]: 41 },
             schema,
             undefined,
@@ -2235,7 +2238,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a', pass2: 'b', foo: ['a'] };
-            const result = validator.validateFormData(formData, schema, validate, undefined, uiSchema);
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2261,7 +2264,7 @@ describe('AJV8Validator', () => {
               },
             };
             const formData = { pass1: 'a' };
-            const result = validator.validateFormData(formData, schema, validate);
+            const result = validator.validateFormData({ validator }, formData, schema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -2297,7 +2300,7 @@ describe('AJV8Validator', () => {
             };
 
             const formData = {};
-            const result = validator.validateFormData(formData, schema, validate, undefined, {});
+            const result = validator.validateFormData({ validator }, formData, schema, validate, undefined, {});
             errorSchema = result.errorSchema;
           });
 
@@ -2331,14 +2334,14 @@ describe('AJV8Validator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithoutName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData(formData, schema);
+          const result = validator.validateFormData({ validator }, formData, schema);
           expect(result.errors).toHaveLength(0);
         });
       });
@@ -2356,7 +2359,7 @@ describe('AJV8Validator', () => {
               },
             },
           };
-          const result = validator.validateFormData({ foo: 42 }, schema);
+          const result = validator.validateFormData({ validator }, { foo: 42 }, schema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -2399,7 +2402,7 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errors = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
       const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
@@ -2417,7 +2420,7 @@ describe('AJV8Validator', () => {
           },
           localizer,
         );
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2451,7 +2454,7 @@ describe('AJV8Validator', () => {
         validator = new AJV8Validator({
           additionalMetaSchemas: [metaSchemaDraft6],
         });
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2478,7 +2481,7 @@ describe('AJV8Validator', () => {
       });
       it('should not return a validation error if unknown string format is used', () => {
         const result = expectWarn(
-          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          () => validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema),
           expect.stringContaining('unknown format'),
         );
         expect(result.errors).toHaveLength(0);
@@ -2493,7 +2496,7 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+          const result = validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
@@ -2505,6 +2508,7 @@ describe('AJV8Validator', () => {
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
             const result = validator.validateFormData(
+              { validator },
               { phone: 'abc' },
               {
                 type: 'object',
@@ -2544,7 +2548,7 @@ describe('AJV8Validator', () => {
         };
       });
       it('should enclose missing properties with quotes', () => {
-        const errors = validator.validateFormData({}, schema);
+        const errors = validator.validateFormData({ validator }, {}, schema);
         const errMessage = "must have required property 'A'";
         expect(errors.errors[0].message).toEqual(errMessage);
         expect(errors.errors[0].stack).toEqual(errMessage);
@@ -2554,7 +2558,7 @@ describe('AJV8Validator', () => {
         expect(errors.errors[0].params.missingProperty).toEqual('a');
       });
       it('should handle the case when errors are not present', () => {
-        const errors = validator.validateFormData({ a: 'some kind of text' }, schema);
+        const errors = validator.validateFormData({ validator }, { a: 'some kind of text' }, schema);
         expect(errors.errors).toHaveLength(0);
       });
     });
@@ -2584,7 +2588,7 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errors = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
       const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
@@ -2603,7 +2607,7 @@ describe('AJV8Validator', () => {
           },
           localizer,
         );
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2638,7 +2642,7 @@ describe('AJV8Validator', () => {
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2019,
         });
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -2665,7 +2669,7 @@ describe('AJV8Validator', () => {
       });
       it('should not return a validation error if unknown string format is used', () => {
         const result = expectWarn(
-          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          () => validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema),
           expect.stringContaining('unknown format'),
         );
         expect(result.errors).toHaveLength(0);
@@ -2680,7 +2684,7 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+          const result = validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
@@ -2692,6 +2696,7 @@ describe('AJV8Validator', () => {
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
             const result = validator.validateFormData(
+              { validator },
               { phone: 'abc' },
               {
                 type: 'object',
@@ -2734,7 +2739,7 @@ describe('AJV8Validator', () => {
             creditCard: ['billingAddress'],
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema);
+        const errors = validator.validateFormData({ validator }, { creditCard: 1234567890 }, schema);
         const errMessage = "must have property 'billingAddress' when property 'creditCard' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
         expect(errors.errors[0].stack).toEqual(errMessage);
@@ -2763,7 +2768,7 @@ describe('AJV8Validator', () => {
             creditCard: ['holderName', 'billingAddress'],
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema);
+        const errors = validator.validateFormData({ validator }, { creditCard: 1234567890 }, schema);
         const errMessage = "must have properties 'holderName', 'billingAddress' when property 'creditCard' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
         expect(errors.errors[0].stack).toEqual(errMessage);
@@ -2794,7 +2799,7 @@ describe('AJV8Validator', () => {
             creditCard: ['billingAddress'],
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema);
+        const errors = validator.validateFormData({ validator }, { creditCard: 1234567890 }, schema);
         const errMessage = "must have property 'Billing address' when property 'Credit card' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
         expect(errors.errors[0].stack).toEqual(errMessage);
@@ -2826,7 +2831,7 @@ describe('AJV8Validator', () => {
             creditCard: ['holderName', 'billingAddress'],
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema);
+        const errors = validator.validateFormData({ validator }, { creditCard: 1234567890 }, schema);
         const errMessage =
           "must have properties 'Holder name', 'Billing address' when property 'Credit card' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
@@ -2864,7 +2869,14 @@ describe('AJV8Validator', () => {
             'ui:title': 'uiSchema Billing address',
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema, undefined, undefined, uiSchema);
+        const errors = validator.validateFormData(
+          { validator },
+          { creditCard: 1234567890 },
+          schema,
+          undefined,
+          undefined,
+          uiSchema,
+        );
         const errMessage =
           "must have property 'uiSchema Billing address' when property 'uiSchema Credit card' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
@@ -2905,7 +2917,14 @@ describe('AJV8Validator', () => {
             'ui:title': 'uiSchema Billing address',
           },
         };
-        const errors = validator.validateFormData({ creditCard: 1234567890 }, schema, undefined, undefined, uiSchema);
+        const errors = validator.validateFormData(
+          { validator },
+          { creditCard: 1234567890 },
+          schema,
+          undefined,
+          undefined,
+          uiSchema,
+        );
         const errMessage =
           "must have properties 'uiSchema Holder name', 'uiSchema Billing address' when property 'uiSchema Credit card' is present";
         expect(errors.errors[0].message).toEqual(errMessage);
@@ -2939,6 +2958,7 @@ describe('AJV8Validator', () => {
           },
         };
         const errors = validator.validateFormData(
+          { validator },
           {
             creditCard: 1234567890,
             holderName: 'Alice',
@@ -2975,7 +2995,7 @@ describe('AJV8Validator', () => {
       };
     });
     it('should return a validation error about meta schema when meta schema is not defined', () => {
-      const errors = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+      const errors = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
       const errMessage = 'no schema with key or ref "http://json-schema.org/draft-06/schema#"';
       expect(errors.errors).toEqual([{ stack: errMessage }]);
       expect(errors.errorSchema).toEqual({
@@ -2994,7 +3014,7 @@ describe('AJV8Validator', () => {
           },
           localizer,
         );
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -3029,7 +3049,7 @@ describe('AJV8Validator', () => {
           additionalMetaSchemas: [metaSchemaDraft6],
           AjvClass: Ajv2020,
         });
-        const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
+        const result = validator.validateFormData({ validator }, { datasetId: 'some kind of text' }, schema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -3056,7 +3076,7 @@ describe('AJV8Validator', () => {
       });
       it('should not return a validation error if unknown string format is used', () => {
         const result = expectWarn(
-          () => validator.validateFormData({ phone: '800.555.2368' }, schema),
+          () => validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema),
           expect.stringContaining('unknown format'),
         );
         expect(result.errors).toHaveLength(0);
@@ -3071,7 +3091,7 @@ describe('AJV8Validator', () => {
               'area-code': /\d{3}/,
             },
           });
-          const result = validator.validateFormData({ phone: '800.555.2368' }, schema);
+          const result = validator.validateFormData({ validator }, { phone: '800.555.2368' }, schema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
@@ -3083,6 +3103,7 @@ describe('AJV8Validator', () => {
         describe('prop updates with new custom formats are accepted', () => {
           beforeAll(() => {
             const result = validator.validateFormData(
+              { validator },
               { phone: 'abc' },
               {
                 type: 'object',
@@ -3146,5 +3167,39 @@ describe('AJV8Validator', () => {
     it('should accept an "iso-date-time" value with no timezone offset, for backwards compatibility', () => {
       expect(validator.isValid(isoDateTimeSchema, '2016-04-05T14:01:30', isoDateTimeSchema)).toBe(true);
     });
+  });
+});
+
+describe('validateFormData() with a SchemaContext', () => {
+  it('computes the data handed to customValidate with the customMergeAllOf and defaultFormStateBehavior of the context', () => {
+    const validator = new AJV8Validator({});
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
+      properties: { fixed: { type: 'string', const: 'constant' } },
+    };
+    const customMergeAllOf = vi.fn(
+      ({ allOf, ...rest }: RJSFSchema) => mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema,
+    );
+    const customValidate = vi.fn((_formData, errors) => errors);
+    validator.validateFormData(
+      { validator, customMergeAllOf, defaultFormStateBehavior: { constAsDefaults: 'never' } },
+      {},
+      schema,
+      customValidate,
+    );
+    expect(customMergeAllOf).toHaveBeenCalled();
+    expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
+  });
+
+  it('computes the data handed to customValidate with itself, whatever validator the context holds', () => {
+    const validator = new AJV8Validator({});
+    const otherValidator = { isValid: vi.fn(() => true), validateFormData: vi.fn(), rawValidation: vi.fn() };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } },
+    };
+    validator.validateFormData({ validator: otherValidator }, { choice: 'b' }, schema, (_formData, errors) => errors);
+    expect(otherValidator.isValid).not.toHaveBeenCalled();
   });
 });

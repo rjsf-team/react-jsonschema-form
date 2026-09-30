@@ -24,7 +24,6 @@ import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
-  CustomMergeAllOf,
   ErrorSchema,
   FieldPath,
   FormContextType,
@@ -32,10 +31,10 @@ import type {
   GlobalUISchemaOptions,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   UiSchemaDefinitions,
-  ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
@@ -55,25 +54,23 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: Readonly<SchemaContext<S, F>>,
   rootSchema: S,
   schema: S,
   { key, options }: XxxOfOptions<S>,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): SelectedBranch<T, S, F> {
   // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either, so a
   // leftover `oneOf` beside the `anyOf` read must not decide the option's Optional Data Controls type
   const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...remaining } = schema;
   const index = getClosestMatchingOption<T, S, F>(
-    validator,
+    context,
     rootSchema,
     formData as T,
     options,
     0,
     getDiscriminatorFieldFromSchema<S>(schema),
-    customMergeAllOf,
   );
   return {
     schema: mergeSchemas(remaining, options[index]) as S,
@@ -103,10 +100,9 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
 }
 
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
-  validator: ValidatorType<S, F>;
+  schemaContext: Readonly<SchemaContext<S, F>>;
   rootSchema: S;
   uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
-  customMergeAllOf?: CustomMergeAllOf<S>;
   globalUiOptions?: GlobalUISchemaOptions;
   formContext?: F;
   builder: ErrorSchemaBuilder<T>;
@@ -121,7 +117,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   required: boolean,
   parentPresent: boolean,
 ) {
-  const { validator, rootSchema, uiSchemaDefinitions, customMergeAllOf, globalUiOptions, formContext, builder } = ctx;
+  const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, builder } = ctx;
   // A repeated $ref is never expanded again for rendering either (see SchemaField/CyclicSchemaField) — without this,
   // a recursive $ref reached through `ui:definitions` (the only thing that disables the prune below) would have
   // `retrieveSchema()` re-resolve the same cycle forever.
@@ -150,11 +146,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // cyclic $ref for it), and resolveAnyOfOrOneOfRefs also disables that flagging for plain (non-xxxOf) object
   // properties, so passing it unconditionally would spin forever on an ordinary recursive $ref.
   const resolvedSchema = retrieveSchema<T, S, F>(
-    validator,
+    schemaContext,
     schema,
     rootSchema,
     formData as T,
-    customMergeAllOf,
     ONE_OF_KEY in schema || ANY_OF_KEY in schema,
   );
   // A select over object or array constants renders one control for its whole value, with no fields beneath it
@@ -169,7 +164,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // field is gated.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
   const { schema: retrieved, uiSchema: branchUiSchema } = xxxOf
-    ? resolveSelectedBranch<T, S, F>(validator, rootSchema, resolvedSchema, xxxOf, uiSchema, formData, customMergeAllOf)
+    ? resolveSelectedBranch<T, S, F>(schemaContext, rootSchema, resolvedSchema, xxxOf, uiSchema, formData)
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
@@ -312,11 +307,10 @@ export default function getUiRequiredErrorSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<S, F>,
+  context: Readonly<SchemaContext<S, F>>,
   rootSchema: S,
   uiSchema: UiSchema<T, S, F> | undefined,
   formData: T | undefined,
-  customMergeAllOf?: CustomMergeAllOf<S>,
   uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
   globalUiOptions?: GlobalUISchemaOptions,
   formContext?: F,
@@ -329,10 +323,9 @@ export default function getUiRequiredErrorSchema<
   }
   walk<T, S, F>(
     {
-      validator,
+      schemaContext: context,
       rootSchema,
       uiSchemaDefinitions: hasDefinitions ? uiSchemaDefinitions : undefined,
-      customMergeAllOf,
       globalUiOptions,
       formContext,
       builder,

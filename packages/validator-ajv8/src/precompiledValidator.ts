@@ -3,6 +3,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -100,11 +101,12 @@ export default class AJV8PrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
+   * @param [context] - The `SchemaContext` of the form, so the root schema resolves the way the form resolved it
    */
-  ensureSameRootSchema(schema: S, formData?: unknown) {
+  ensureSameRootSchema(schema: S, formData?: unknown, context: Readonly<SchemaContext<S, F>> = { validator: this }) {
     if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
-      const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
+      const resolvedRootSchema = retrieveSchema(context, this.rootSchema, this.rootSchema, formData);
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
@@ -119,10 +121,15 @@ export default class AJV8PrecompiledValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate, if any
+   * @param [context] - The `SchemaContext` of the form, used to check the `schema` against the root schema
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
-    this.ensureSameRootSchema(schema, formData);
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: unknown,
+    context?: Readonly<SchemaContext<S, F>>,
+  ): RawValidationErrorsType<Result> {
+    this.ensureSameRootSchema(schema, formData, context);
     this.mainValidator(formData);
 
     if (typeof this.localizer === 'function') {
@@ -141,6 +148,7 @@ export default class AJV8PrecompiledValidator<
    * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
    * transform them in what ever way it chooses.
    *
+   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
@@ -148,15 +156,17 @@ export default class AJV8PrecompiledValidator<
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData<T = unknown>(
+    context: Readonly<SchemaContext<S, F>>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const validationContext = { ...context, validator: this };
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData, validationContext);
     return processRawValidationErrors(
-      this,
+      validationContext,
       rawErrors,
       formData,
       schema,

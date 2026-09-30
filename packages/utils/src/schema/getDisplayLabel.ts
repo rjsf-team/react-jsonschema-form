@@ -9,10 +9,9 @@ import type {
   GlobalUISchemaOptions,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
-  CustomMergeAllOf,
 } from '../types.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
@@ -20,12 +19,11 @@ import isMultiSelect from './isMultiSelect.ts';
 /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
  * should be displayed in a UI.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which the display label flag is desired
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<
@@ -33,12 +31,11 @@ export default function getDisplayLabel<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<S, F>,
+  context: Readonly<SchemaContext<S, F>>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,
   globalOptions?: GlobalUISchemaOptions,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
@@ -53,8 +50,8 @@ export default function getDisplayLabel<
       displayLabel =
         addedByAdditionalProperty ||
         isWholeValueSelect<S>(schema) ||
-        isMultiSelect<T, S, F>(validator, schema, rootSchema, customMergeAllOf) ||
-        isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, customMergeAllOf) ||
+        isMultiSelect<T, S, F>(context, schema, rootSchema) ||
+        isFilesArray<T, S, F>(context, schema, uiSchema, rootSchema) ||
         isCustomWidget(uiSchema);
     }
 

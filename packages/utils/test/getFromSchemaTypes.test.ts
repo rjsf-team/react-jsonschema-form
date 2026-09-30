@@ -9,7 +9,7 @@ interface Data {
 describe('getFromSchema type', () => {
   it('resolves explicit type arguments with a schema default to the overload that returns the schema', () => {
     const getSchema = (validator: ValidatorType<StrictRJSFSchema>) =>
-      getFromSchema<Data, StrictRJSFSchema>(validator, {}, {}, 'name', {} as StrictRJSFSchema);
+      getFromSchema<Data, StrictRJSFSchema>({ validator }, {}, {}, 'name', {} as StrictRJSFSchema);
 
     expectTypeOf(getSchema).returns.toEqualTypeOf<StrictRJSFSchema>();
   });

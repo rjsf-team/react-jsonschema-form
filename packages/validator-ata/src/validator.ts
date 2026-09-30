@@ -3,6 +3,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -160,6 +161,7 @@ export default class ATAValidator<
    * pipeline (custom validation, transform hook, ui-title resolution).
    */
   validateFormData<T = unknown>(
+    context: Readonly<SchemaContext<S, F>>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -168,7 +170,7 @@ export default class ATAValidator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { ...context, validator: this },
       rawErrors,
       formData,
       schema,
