@@ -1,5 +1,6 @@
 /** @vitest-environment jsdom */
 import type { ChangeEvent, MouseEvent } from 'react';
+import { useState } from 'react';
 import { act, render, renderHook } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
@@ -160,6 +161,33 @@ describe('useAltDateWidgetProps()', () => {
     expect(result.current.elements).toEqual(
       getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
     );
+  });
+  describe('with a parent that stores what it is sent', () => {
+    const CLEAR_EVENT = { preventDefault: vi.fn() } as unknown as MouseEvent;
+    const BLANK = getDateElementProps(parseDateString(), false, PROPS.options.yearsRange);
+
+    function renderControlled() {
+      return renderHook(() => {
+        const [value, setValue] = useState<unknown>();
+        return useAltDateWidgetProps({ ...PROPS, value, onChange: setValue });
+      });
+    }
+
+    test('Clear after completing a date leaves the widget blank', () => {
+      const { result } = renderControlled();
+      act(() => result.current.handleChange('year', '2020'));
+      act(() => result.current.handleChange('month', '5'));
+      act(() => result.current.handleChange('day', '1'));
+      act(() => result.current.handleClear(CLEAR_EVENT));
+      expect(result.current.elements).toEqual(BLANK);
+    });
+
+    test('Clear during a partial selection leaves the widget blank', () => {
+      const { result } = renderControlled();
+      act(() => result.current.handleChange('year', '2020'));
+      act(() => result.current.handleClear(CLEAR_EVENT));
+      expect(result.current.elements).toEqual(BLANK);
+    });
   });
   test('time is false, value undefined, testing DateElements', async () => {
     const { result, rerender: rerenderHook } = renderHook(() => useAltDateWidgetProps(PROPS));

@@ -128,6 +128,7 @@ export default function useAltDateWidgetProps<
       };
 
       if (readyForChange(nextState)) {
+        setDraft(undefined);
         onChange(toDateString(nextState, time));
       } else {
         setDraft({ value, time, state: nextState });
@@ -142,6 +143,7 @@ export default function useAltDateWidgetProps<
       if (disabled || readonly) {
         return;
       }
+      setDraft(undefined);
       onChange(undefined);
     },
     [disabled, readonly, onChange],
@@ -154,6 +156,7 @@ export default function useAltDateWidgetProps<
         return;
       }
       const nextState = parseDateString(new Date().toJSON(), time);
+      setDraft(undefined);
       onChange(toDateString(nextState, time));
     },
     [disabled, readonly, time, onChange],
