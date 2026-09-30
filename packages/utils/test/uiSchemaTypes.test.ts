@@ -247,6 +247,14 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect(bad).toBeDefined();
   });
 
+  it('rejects form data passed where Checks goes', () => {
+    // @ts-expect-error TS2344, Data is not a UiOptionsCheck; Checks comes before the form data
+    type Swapped = StrictUiSchema<Data>;
+
+    const ui: Swapped = {};
+    expect(ui).toEqual({});
+  });
+
   it('allows the names of every Checks member matching part of a union field type', () => {
     type Checked = StrictUiSchema<ExampleChecks, { amount: string | number }>;
 

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.test.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "customConditions": ["@rjsf/source"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+  },
+  "include": ["packages/*/test", "packages/snapshot-tests/src", "testing"],
+  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
+}

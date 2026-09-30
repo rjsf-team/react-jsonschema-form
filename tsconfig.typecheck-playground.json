@@ -1,0 +1,16 @@
+{
+  // chakra-ui's tests and the playground, a Vite app, under a bundler's resolution; the Vite
+  // globals come from packages/playground/src/vite-env.d.ts
+  "extends": "./tsconfig.typecheck-test.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "include": [
+    "packages/chakra-ui/test",
+    "packages/playground/src",
+    "packages/playground/test",
+    "packages/playground/*.ts"
+  ],
+  "exclude": []
+}

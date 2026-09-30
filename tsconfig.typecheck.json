@@ -1,16 +1,24 @@
 {
-  // The whole repo as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type
-  // graph once rather than once per package.
-  "extends": "./tsconfig.test.json",
+  // Every package's src as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F
+  // type graph once rather than once per package. No `types`, so published code can't rely on Node, Vitest or Vite
+  // globals.
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": false,
     "incremental": true,
+    "noEmit": true,
     "resolveJsonModule": true,
     "customConditions": ["@rjsf/source"],
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"]
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
   },
-  "include": ["packages/*/src", "packages/*/test", "testing"],
-  // chakra-ui and the playground need "bundler" resolution, so they're in tsconfig.typecheck-bundler.json
-  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
+  "include": ["packages/*/src"],
+  // chakra-ui and the playground need "bundler" resolution, and the validators read files with Node's `fs`, so each has
+  // a program of its own; snapshot-tests is test code and is checked with the tests
+  "exclude": [
+    "packages/chakra-ui",
+    "packages/docs",
+    "packages/playground",
+    "packages/snapshot-tests",
+    "packages/validator-*"
+  ]
 }

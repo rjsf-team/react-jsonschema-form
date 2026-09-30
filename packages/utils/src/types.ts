@@ -1614,7 +1614,7 @@ type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? any : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
-type StrictUiSchemaChild<Checks, V, S extends StrictRJSFSchema, F extends FormContextType> =
+type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? any : StrictUiSchema<Checks, V, S, F>;
 
 /** @internal The keys `UiSchema` and `StrictUiSchema` share that don't nest another uiSchema */
@@ -1700,7 +1700,7 @@ export type UiSchema<
  * `UiSchema` keeps TypeScript from measuring `UiSchema`'s variance cheaply, for every `UiSchema` in every package.
  */
 export type StrictUiSchema<
-  Checks,
+  Checks extends UiOptionsCheck,
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
