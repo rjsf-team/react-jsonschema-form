@@ -177,6 +177,12 @@ This default behavior may be undesirable if your custom field already handles be
 By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
 If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
 
+The flag needs a `ui:field` that resolves to a field.
+A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
+A `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
+With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
+With it off the same name renders the unsupported-field template, which renders nothing of the schema, so there is nothing for the options to give way to and they are rendered in its place.
+
 ### `ui:options`
 
 The `ui:options` property cannot be nested inside itself and thus is the last exception.

@@ -1793,6 +1793,17 @@ describe('anyOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
+    it('should render the option selector when no field is registered under the name', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': 'MyFeild', 'ui:fieldReplacesAnyOrOneOf': true },
+      });
+
+      // The options give way to the field named alongside the directive, and a name no field is registered under names
+      // nothing for them to give way to: dropping them would leave the value of an option union with no way in
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelector('#root')).toBeInTheDocument();
+    });
   });
 
   describe('Boolean field value preservation', () => {
