@@ -2244,7 +2244,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
 
     describe('array schemas', () => {
-      test.each([false, 0, ''])('fills minItems with the item default when the array default is %j', (value) => {
+      test.each([false, 0, '', 'ab'])('fills minItems with the item default when the array default is %j', (value) => {
         const schema: RJSFSchema = {
           type: 'array',
           minItems: 2,
