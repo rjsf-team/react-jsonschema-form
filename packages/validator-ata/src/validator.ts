@@ -128,8 +128,16 @@ export default class ATAValidator<
   /** Runs raw validation against the given schema. Equivalent to
    * `AJV8Validator#rawValidation`: returns ata's error array (already in
    * AJV-compatible shape) plus any compilation error encountered.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
+   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: unknown,
+    _context?: SchemaContext<S, F>,
+  ): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
@@ -161,7 +169,7 @@ export default class ATAValidator<
    * pipeline (custom validation, transform hook, ui-title resolution).
    */
   validateFormData<T = unknown>(
-    context: Readonly<SchemaContext<S, F>>,
+    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -209,7 +217,7 @@ export default class ATAValidator<
   /** Boolean validation entrypoint. Returns false on validation failure or
    * compilation error. Mirrors `AJV8Validator#isValid` semantics.
    */
-  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S) {
+  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S) {
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {

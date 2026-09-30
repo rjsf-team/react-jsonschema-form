@@ -1,4 +1,10 @@
-import type { DefaultFormStateBehavior, RJSFSchema, SchemaUtilsType, ValidatorType } from '../src/index.ts';
+import type {
+  DefaultFormStateBehavior,
+  RJSFSchema,
+  SchemaContext,
+  SchemaUtilsType,
+  ValidatorType,
+} from '../src/index.ts';
 import {
   createSchemaUtils,
   ID_KEY,
@@ -116,6 +122,9 @@ describe('createSchemaUtils()', () => {
             {},
           ),
         ).toBe(false);
+      });
+      it('returns false when passing a falsy context, rather than throwing from a destructure', () => {
+        expect(schemaUtils.doesSchemaUtilsDiffer(undefined as unknown as SchemaContext, rootSchema)).toBe(false);
       });
       it('returns false when passing falsy rootSchema', () => {
         expect(

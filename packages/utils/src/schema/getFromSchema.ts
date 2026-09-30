@@ -16,7 +16,7 @@ function getFromSchemaInternal<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S, schema: S, path: SchemaFieldPath): T | S | undefined {
+>(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath): T | S | undefined {
   let fieldSchema = schema;
   // hasByPath instead of `in` because `schema` can be undefined at runtime when drilling past a non-matching xxxOf
   if (hasByPath(schema, REF_KEY)) {
@@ -48,18 +48,18 @@ export default function getFromSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: T): T;
+>(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: T): T;
 // `_T` keeps this overload's arity equal to the first one's, so explicit `<T, S, F>` type arguments can still reach it
 export default function getFromSchema<
   _T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: S): S;
+>(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: S): S;
 export default function getFromSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: T | S): T | S {
+>(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath, defaultValue: T | S): T | S {
   const result = getFromSchemaInternal<T, S, F>(context, rootSchema, schema, path);
   if (result === undefined) {
     return defaultValue;

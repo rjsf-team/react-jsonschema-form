@@ -19,7 +19,7 @@ export default function getFirstMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   formData: T | undefined,
   options: S[],
   rootSchema: S,

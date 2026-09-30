@@ -17,7 +17,7 @@ import ParserValidator from './ParserValidator.ts';
  * @param schema - The current schema element being parsed
  */
 function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   recurseList: S[],
   rootSchema: S,
   schema: S,

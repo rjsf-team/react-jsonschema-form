@@ -51,7 +51,7 @@ export default function retrieveSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S = {} as S,
   rawFormData?: T,
@@ -99,7 +99,7 @@ export function resolveCondition<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -247,7 +247,7 @@ export function resolveSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -327,7 +327,7 @@ export function resolveReference<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -582,7 +582,7 @@ export function stubExistingAdditionalProperties<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, theSchema: S, rootSchema?: S, aFormData?: T): S {
+>(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S, aFormData?: T): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -658,7 +658,7 @@ export function stubExistingAdditionalProperties<
  * @returns The schema with allOf schemas merged
  */
 export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
 ): S {
   return context.customMergeAllOf ? context.customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
@@ -686,7 +686,7 @@ export function retrieveSchemaInternal<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   rawFormData?: T,
@@ -801,7 +801,7 @@ export function resolveAnyOrOneOfSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+>(context: SchemaContext<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
     const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...withoutOptions } = schema;
@@ -883,7 +883,7 @@ export function resolveDependencies<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
@@ -930,7 +930,7 @@ export function processDependencies<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   dependencies: S['dependencies'],
   resolvedSchema: S,
   rootSchema: S,
@@ -1014,7 +1014,7 @@ export function withDependentSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,
@@ -1081,7 +1081,7 @@ export function withExactlyOneSubschema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S,
   dependencyKey: string,

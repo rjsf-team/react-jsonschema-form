@@ -134,9 +134,14 @@ export default class CFWorkerValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
+   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: unknown,
+    _context?: SchemaContext<S, F>,
+  ): RawValidationErrorsType<Result> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
@@ -161,7 +166,7 @@ export default class CFWorkerValidator<
    * @returns - The processed validation errors and error schema
    */
   validateFormData<T = unknown>(
-    context: Readonly<SchemaContext<S, F>>,
+    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -214,7 +219,7 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S): boolean {
+  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S): boolean {
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {

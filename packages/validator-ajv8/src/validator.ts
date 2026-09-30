@@ -91,10 +91,15 @@ export default class AJV8Validator<
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
+   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: unknown,
+    _context?: SchemaContext<S, F>,
+  ): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
@@ -187,7 +192,7 @@ export default class AJV8Validator<
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData<T = unknown>(
-    context: Readonly<SchemaContext<S, F>>,
+    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -240,7 +245,7 @@ export default class AJV8Validator<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S) {
+  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;

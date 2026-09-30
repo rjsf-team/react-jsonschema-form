@@ -31,7 +31,7 @@ export default function getDisplayLabel<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,

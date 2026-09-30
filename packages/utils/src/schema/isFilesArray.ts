@@ -14,7 +14,7 @@ export default function isFilesArray<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, schema: S, uiSchema: UiSchema<T, S, F> = {}, rootSchema?: S) {
+>(context: SchemaContext<S, F>, schema: S, uiSchema: UiSchema<T, S, F> = {}, rootSchema?: S) {
   if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }

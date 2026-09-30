@@ -13,7 +13,7 @@ export default function isSelect<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, theSchema: S, rootSchema: S = {} as S) {
+>(context: SchemaContext<S, F>, theSchema: S, rootSchema: S = {} as S) {
   const schema = retrieveSchema<T, S, F>(context, theSchema, rootSchema);
   return isConstantSelect<S>(schema, true);
 }

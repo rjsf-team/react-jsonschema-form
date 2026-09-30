@@ -247,6 +247,11 @@ interface ComputeDefaultsProps<
   // to the public shape cannot be silently dropped on the way into the recursion. `schema` and `formData` are omitted
   // because the recursion takes them as its own positional `rawSchema` and `rawFormData`
   extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
+  /** Optional `ui:definitions`, applied at every `$ref`-resolved node the same way `SchemaField` applies them. Unlike
+   * `getDefaultFormState()`, the recursion does not fall back to `uiSchema['ui:definitions']`: it is passed the root's
+   * definitions once and forwards that same value down, so a caller reaching this function directly has to supply them
+   */
+  uiSchemaDefinitions?: GetDefaultFormStateProps<T, S, F>['uiSchemaDefinitions'];
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
   /** The current formData, if any, onto which to provide any missing defaults */
@@ -275,11 +280,7 @@ export function computeDefaults<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  context: Readonly<SchemaContext<S, F>>,
-  rawSchema: S,
-  inputProps: ComputeDefaultsProps<T, S, F> = {},
-): T | T[] | undefined {
+>(context: SchemaContext<S, F>, rawSchema: S, inputProps: ComputeDefaultsProps<T, S, F> = {}): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const {
     parentDefaults,
@@ -375,14 +376,7 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    const resolvedSchema = resolveDependencies<T, S, F>(
-      context,
-      schema,
-      rootSchema,
-      false,
-      [],
-      defaultFormData,
-    );
+    const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
@@ -532,7 +526,7 @@ export function ensureFormDataMatchingSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
+>(context: SchemaContext<S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData) : schema;
@@ -579,7 +573,7 @@ export function getObjectDefaults<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rawSchema: S,
   {
     rawFormData,
@@ -742,7 +736,7 @@ export function getArrayDefaults<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rawSchema: S,
   {
     rawFormData,
@@ -885,7 +879,7 @@ export function getDefaultBasedOnSchemaType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rawSchema: S,
   computeDefaultsProps: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
@@ -933,7 +927,7 @@ export default function getDefaultFormState<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   {
     schema: theSchema,
     formData,

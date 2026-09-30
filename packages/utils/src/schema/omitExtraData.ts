@@ -4,6 +4,7 @@ import getSchemaType from '../getSchemaType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
+import logOnce from '../logOnce.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
@@ -43,7 +44,7 @@ export default function omitExtraData<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
+>(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
   const { validator } = context;
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
@@ -357,7 +358,16 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      localSchema = mergeAllOf<S, F>(context, localSchema);
+      try {
+        localSchema = mergeAllOf<S, F>(context, localSchema);
+      } catch (e) {
+        // A `customMergeAllOf` may throw on subschemas it considers irreconcilable. `retrieveSchemaInternal()` drops
+        // the `allOf` and carries on for the same failure, so omission has to agree with the schema the form rendered
+        // rather than propagate out of `Form`'s change and submit handlers
+        logOnce('could not merge subschemas in allOf:\n', 'warn', e);
+        const { allOf: unmergedAllOf, ...schemaWithoutAllOf } = localSchema;
+        localSchema = schemaWithoutAllOf as S;
+      }
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

@@ -101,7 +101,7 @@ export interface ArrayMinItems {
    * @returns A boolean indicating whether to skip populating the array with default values.
    */
   computeSkipPopulate?: <S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-    context: Readonly<SchemaContext<S, F>>,
+    context: SchemaContext<S, F>,
     schema: S,
     rootSchema?: S,
   ) => boolean;
@@ -1725,7 +1725,7 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
    */
   validateFormData<T = unknown>(
-    context: Readonly<SchemaContext<S, F>>,
+    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
@@ -1742,19 +1742,21 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S): boolean;
+  isValid(context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param [context] - The optional `SchemaContext` of the form, so a `rootSchema` this resolves is resolved the way
-   *        the form resolved it
+   *        the form resolved it. An implementation that resolves no schemas of its own ignores it, but should still
+   *        declare it, so that a validator wrapping or delegating to another one can forward it without knowing which
+   *        kind it holds
    */
   rawValidation<Result = any>(
     schema: S,
     formData?: unknown,
-    context?: Readonly<SchemaContext<S, F>>,
+    context?: SchemaContext<S, F>,
   ): { errors?: Result[]; validationError?: Error };
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
@@ -1790,7 +1792,7 @@ export interface SchemaUtilsType<
    *
    * @returns - The `SchemaContext`
    */
-  getSchemaContext(): Readonly<SchemaContext<S, F>>;
+  getSchemaContext(): SchemaContext<S, F>;
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *
    * @returns - The `ValidatorType`
@@ -1804,7 +1806,7 @@ export interface SchemaUtilsType<
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `context` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(context: Readonly<SchemaContext<S, F>>, rootSchema: S): boolean;
+  doesSchemaUtilsDiffer(context: SchemaContext<S, F>, rootSchema: S): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return.

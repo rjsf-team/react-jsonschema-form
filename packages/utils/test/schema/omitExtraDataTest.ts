@@ -924,6 +924,31 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(result).toEqual({ foo: 'hi', bar: 1 });
       });
 
+      it('drops the allOf and warns when customMergeAllOf throws, rather than propagating out of Form', () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+          allOf: [{ properties: { bar: { type: 'number' } } }],
+        };
+        const customMergeAllOf = vi.fn().mockImplementation(() => {
+          throw new Error('omission merge failed');
+        });
+        const formData = { foo: 'hi', extra: 'drop' };
+        // `retrieveSchema()` warns and carries on without the `allOf` for the same failure, so omission has to agree
+        // with the schema the form rendered instead of throwing from `Form`'s change and submit handlers
+        const result = omitExtraData(
+          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
+          schema,
+          schema,
+          formData,
+        );
+        expect(customMergeAllOf).toHaveBeenCalled();
+        expect(result).toEqual({ foo: 'hi' });
+        expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
+        consoleWarnSpy.mockRestore();
+      });
+
       // Regression test for https://github.com/rjsf-team/react-jsonschema-form/issues/5142
       // When allOf entries contain if/then/else, the merger can only hoist one triple to the
       // parent level; subsequent entries remain in allOf after merging. Without the fix those

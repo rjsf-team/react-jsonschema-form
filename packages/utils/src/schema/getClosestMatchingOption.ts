@@ -47,7 +47,7 @@ export function calculateIndexScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S, schema?: S, formData?: any): number {
+>(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: any): number {
   let totalScore = 0;
   if (schema) {
     if (isObject(schema.properties)) {
@@ -144,7 +144,7 @@ export default function getClosestMatchingOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   formData: T | undefined,
   options: S[],

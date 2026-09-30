@@ -41,7 +41,7 @@ class SchemaUtils<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > implements SchemaUtilsType<T, S, F> {
-  private readonly context: Readonly<SchemaContext<S, F>>;
+  private readonly context: SchemaContext<S, F>;
   rootSchema: S;
   /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
    * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
@@ -56,7 +56,7 @@ class SchemaUtils<
    * @param context - The `SchemaContext` that will be forwarded to all the APIs
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
-  constructor(context: Readonly<SchemaContext<S, F>>, rootSchema: S) {
+  constructor(context: SchemaContext<S, F>, rootSchema: S) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
     } else {
@@ -102,21 +102,18 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be compared against the current one
    * @returns - True if the `SchemaUtilsType` differs from the given `context` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(
-    { validator, defaultFormStateBehavior = {}, customMergeAllOf }: Readonly<SchemaContext<S, F>>,
-    rootSchema: S,
-  ): boolean {
-    // If either validator or rootSchema are falsy, return false to prevent the creation
-    // of a new SchemaUtilsType with incomplete properties.
-    if (!validator || !rootSchema) {
+  doesSchemaUtilsDiffer(context: SchemaContext<S, F>, rootSchema: S): boolean {
+    // If either validator or rootSchema are falsy, return false to prevent the creation of a new SchemaUtilsType with
+    // incomplete properties
+    if (!context?.validator || !rootSchema) {
       return false;
     }
 
     return (
-      this.context.validator !== validator ||
+      this.context.validator !== context.validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
-      !deepEquals(this.context.defaultFormStateBehavior ?? {}, defaultFormStateBehavior) ||
-      this.context.customMergeAllOf !== customMergeAllOf
+      !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
+      this.context.customMergeAllOf !== context.customMergeAllOf
     );
   }
 
@@ -377,6 +374,6 @@ export default function createSchemaUtils<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, rootSchema: S): SchemaUtilsType<T, S, F> {
+>(context: SchemaContext<S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(context, rootSchema);
 }

@@ -196,7 +196,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,

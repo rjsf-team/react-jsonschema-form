@@ -32,7 +32,7 @@ export default function findFieldInSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  context: Readonly<SchemaContext<S, F>>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,

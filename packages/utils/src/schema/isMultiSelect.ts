@@ -12,7 +12,7 @@ export default function isMultiSelect<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: Readonly<SchemaContext<S, F>>, schema: S, rootSchema?: S) {
+>(context: SchemaContext<S, F>, schema: S, rootSchema?: S) {
   if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
     return false;
   }

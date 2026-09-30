@@ -4389,25 +4389,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
       it('should prefer a non-object const over an object default on a non-object schema', () => {
         const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
-        expect(getDefaultFormState(testValidator, schema)).toEqual('x');
-        expect(getDefaultFormState(testValidator, schema, 'y')).toEqual('y');
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'y' })).toEqual('y');
       });
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
-        expect(getDefaultFormState(testValidator, schema, 'zz')).toEqual({ a: 1 });
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'zz' })).toEqual({ a: 1 });
       });
       it.each([
         ['number', 5],
         ['boolean', true],
       ] as const)('should keep %s form data on a schema with an object default', (type, value) => {
-        expect(getDefaultFormState(testValidator, { type, default: { a: 1 } }, value)).toEqual(value);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema: { type, default: { a: 1 } }, formData: value }),
+        ).toEqual(value);
       });
       it('should keep array form data on a root array schema with an object default', () => {
         const schema: RJSFSchema = { type: 'array', default: {}, items: { type: 'string' } };
-        expect(getDefaultFormState(testValidator, schema, ['q'])).toEqual(['q']);
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: ['q'] })).toEqual(['q']);
       });
       it('should prefer an array const over an object default', () => {
-        expect(getDefaultFormState(testValidator, { const: [1, 2], default: { a: 1 } })).toEqual([1, 2]);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema: { const: [1, 2], default: { a: 1 } } }),
+        ).toEqual([1, 2]);
       });
       it('should compute array defaults for an array schema with dependencies', () => {
         const schema: RJSFSchema = {
@@ -4416,7 +4420,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           minItems: 2,
           dependencies: { a: ['b'] },
         };
-        expect(getDefaultFormState(testValidator, schema)).toEqual(['x', 'x']);
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual(['x', 'x']);
       });
       it('should compute the item defaults of an array schema with dependencies only once', () => {
         // Each computation of the item's defaults validates its `oneOf` dependency once
@@ -4431,7 +4435,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           dependencies: { b: ['c'] },
         };
         const { validator, isValid } = withIsValidSpy();
-        computeDefaults(validator, schema, { rootSchema: schema });
+        computeDefaults({ validator }, schema, { rootSchema: schema });
         expect(isValid).toHaveBeenCalledTimes(1);
       });
       it('should resolve dependencies against the inherited default of a whole-value select with an array type', () => {
@@ -4441,7 +4445,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           dependencies: { a: { oneOf: [{ properties: { a: { const: 1 } } }] } },
         };
         const { validator, isValid } = withIsValidSpy();
-        computeDefaults(validator, schema, { rootSchema: schema, parentDefaults: { a: 1 } });
+        computeDefaults({ validator }, schema, { rootSchema: schema, parentDefaults: { a: 1 } });
         expect(isValid).toHaveBeenCalled();
       });
     });

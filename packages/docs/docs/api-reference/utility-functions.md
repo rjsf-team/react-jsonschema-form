@@ -2184,7 +2184,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The node within the JSON schema in which to search
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
@@ -2201,7 +2201,7 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
 - schema: S - The schema element in which to search for the selected anyOf/oneOf option
 - fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
@@ -2218,7 +2218,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs; its `defaultFormStateBehavior` controls how the defaults are computed, see the `Form` documentation for the [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) prop
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs; its `defaultFormStateBehavior` controls how the defaults are computed, see the `Form` documentation for the [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) prop
 - props: GetDefaultFormStateProps&lt;T, S, F> - The props for this function:
   - schema: S - The schema for which the default state is desired
   - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
@@ -2241,7 +2241,7 @@ The closest match is determined using the number of matching properties, and mor
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
@@ -2259,7 +2259,7 @@ An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants rende
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -2276,7 +2276,7 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The current node within the JSON schema recursion
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
@@ -2306,7 +2306,7 @@ Always returns the first option if there is nothing that matches.
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` whose `validator` is used to match the options
+- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `validator` is used to match the options
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
@@ -2323,7 +2323,7 @@ The schema handed to the validator is left untouched, so this behaves identicall
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema to walk
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema the `ui:required` flags are read from
 - [formData]: T - The current formData, whose missing values the errors are raised for
@@ -2341,7 +2341,7 @@ Checks to see if the `schema` and `uiSchema` combination represents an array of 
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which check for array of files flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to check the widget
 - [rootSchema]: S - The root schema, used primarily to look up `$ref`s
@@ -2356,7 +2356,7 @@ Checks to see if the `schema` combination represents a multi-select
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
@@ -2371,7 +2371,7 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 
@@ -2404,7 +2404,7 @@ potentially recursive resolution.
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
@@ -2472,7 +2472,7 @@ console.log(filteredFormData);
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - schema: S - The schema to use for filtering the formData
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The formData to filter
@@ -2492,7 +2492,7 @@ A new schema that declares a type of its own is the type the data has to satisfy
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
@@ -2511,7 +2511,7 @@ The resulting interface implementation will forward the `context` and `rootSchem
 
 #### Parameters
 
-- context: Readonly&lt;SchemaContext&lt;S, F>> - The `SchemaContext` that will be forwarded to all the APIs
+- context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 
 #### Returns

@@ -14,7 +14,7 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
   const validator = customizeValidator(options);
   return {
     validateFormData<T = unknown>(
-      context: Readonly<SchemaContext>,
+      context: SchemaContext,
       formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
@@ -22,14 +22,15 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
     ): ValidationData<T> {
       return validator.validateFormData(context, formData, schema, customValidate, transformErrors);
     },
-    isValid(context: Readonly<SchemaContext>, schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
+    isValid(context: SchemaContext, schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
       return validator.isValid(context, schema, formData, rootSchema);
     },
     rawValidation<Result = any>(
       schema: RJSFSchema,
       formData?: unknown,
+      context?: SchemaContext,
     ): { errors?: Result[]; validationError?: Error } {
-      return validator.rawValidation(schema, formData);
+      return validator.rawValidation(schema, formData, context);
     },
     // This is intentionally a no-op as we are using the real validator here
     setReturnValues() {
