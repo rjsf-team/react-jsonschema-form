@@ -30,10 +30,10 @@ import {
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
-  getWidget,
   noop,
   omitConsumedStyling,
   TranslatableString,
+  resolveWidget,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -201,7 +201,7 @@ export default function LayoutMultiSchemaField<
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
-  const Widget = getWidget<T, S, F>(optionSchema, widget, widgets);
+  const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children

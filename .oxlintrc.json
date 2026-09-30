@@ -482,7 +482,7 @@
     "react/set-state-in-effect": "error",
     "react/set-state-in-render": "error",
     "react/state-in-constructor": ["error", "always"],
-    "react/static-components": "error",
+    "react/static-components": "error", // Doesn't follow a destructure, and skips AnyOfField/LayoutMultiSchemaField (#5384)
     "react/style-prop-object": "error",
     "react/syntax": "error",
     "react/unsupported-syntax": "error",

@@ -141,8 +141,9 @@ export default function getWidget<
 }
 
 /** Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. A component
- * destructures `Widget` from it, so the widget it renders is read from an object rather than returned by a call made
- * during render, which React's static-components rule treats as a component created there.
+ * destructures `Widget` from it: React's static-components rule doesn't follow a destructure, so it accepts the widget
+ * where it reports the result of a `getWidget()` call. It can't check it either, so this relies on the widget being
+ * defined at module scope.
  *
  * @param schema - The schema for the field
  * @param [widget] - Either the name of the widget OR a `Widget` implementation to use

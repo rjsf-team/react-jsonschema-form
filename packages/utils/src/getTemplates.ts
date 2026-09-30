@@ -2,8 +2,11 @@ import getTemplate from './getTemplate.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate`
- * resolves it. Destructure the templates a component renders from the result so they are read from a map rather than
- * returned by a call made during render, which React's static-components rule treats as a component created there.
+ * resolves it. Only templates the registry already holds are resolved: an override for a name the registry lacks is
+ * left out, since `uiOptions` also holds non-template options. Destructure the templates a component renders from the
+ * result: React's static-components rule doesn't follow a destructure, so it accepts them where it reports the result
+ * of a `getTemplate()` call. It can't check them either, so this relies on the registry and `uiOptions` holding
+ * components defined at module scope.
  *
  * @param registry - The `Registry` from which to read the templates
  * @param [uiOptions={}] - The `UIOptionsType` from which to read alternate templates

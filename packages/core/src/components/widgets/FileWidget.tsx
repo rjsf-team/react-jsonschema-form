@@ -9,7 +9,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getTemplate, getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
+import { getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
 
 import RichDescription from '../RichDescription.tsx';
 
@@ -64,7 +64,9 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   }
   const { translateString } = registry;
 
-  const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
+  const {
+    ButtonTemplates: { RemoveButton },
+  } = getTemplates<T, S, F>(registry, options);
 
   return (
     <ul className='file-info'>

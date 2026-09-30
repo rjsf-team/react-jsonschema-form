@@ -1041,7 +1041,8 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate()`
-resolves it. Destructure the templates a component renders from the result, e.g.
+resolves it. Only templates the registry already holds are resolved: an override for a name the registry lacks is
+left out. Destructure the templates a component renders from the result, e.g.
 `const { FieldTemplate, FieldErrorTemplate } = getTemplates(registry, uiOptions)`.
 
 #### Parameters
@@ -1796,7 +1797,18 @@ The default is `select` when `schema` has enumerable options, the schema's `form
 
 - \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
 
-### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### resolveUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
+Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
+For schemas with `oneOf`/`anyOf` branches, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
+
+Resolution order (later sources override earlier):
+
+1. `ui:definitions[$ref]` - base definition from registry
+2. `localUiSchema` - local overrides at current path
+
+#### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. Destructure
 it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, registry.widgets)`.
@@ -1815,18 +1827,7 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 
 - An error if there is no `Widget` component that can be returned
 
-### resolveUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
-Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding uiSchema definition from `registry.uiSchemaDefinitions` and merges it with local overrides.
-For schemas with `oneOf`/`anyOf` branches, also populates `uiSchema[keyword][i]` for branches whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
-
-Resolution order (later sources override earlier):
-
-1. `ui:definitions[$ref]` - base definition from registry
-2. `localUiSchema` - local overrides at current path
-
-#### Parameters
+### Parameters
 
 - schema: S - The JSON schema (may contain `$ref` or `RJSF_REF_KEY`)
 - localUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema at the current path (local overrides)

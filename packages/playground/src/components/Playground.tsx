@@ -226,12 +226,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     }
   }, []);
 
-  const themedForms = useMemo(
-    () =>
-      Object.fromEntries(Object.entries(themes).map(([name, { theme: themeProps }]) => [name, withTheme(themeProps)])),
-    [themes],
-  );
-  const FormComponent = themedForms[theme];
+  const { FormComponent } = useMemo(() => ({ FormComponent: withTheme(themes[theme].theme) }), [themes, theme]);
 
   const onThemeSelected = useCallback(
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {

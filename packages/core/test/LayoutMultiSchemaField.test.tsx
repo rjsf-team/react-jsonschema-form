@@ -39,10 +39,10 @@ import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
-  getWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
+  resolveWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // The real implementation wraps the resulting widget in another component, so we'll just do the simple thing
-    return widgets[widgetToUse];
+    return { Widget: widgets[widgetToUse] };
   }),
 }));
 
