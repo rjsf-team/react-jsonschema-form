@@ -8,9 +8,7 @@
     "declarationMap": false,
     "rootDir": "packages",
     "outDir": "node_modules/.cache/typecheck/src",
-    "resolveJsonModule": true,
-    "customConditions": ["@rjsf/source"],
-    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+    "customConditions": ["@rjsf/source"]
   },
   "include": ["packages/*/src"],
   // chakra-ui and the playground need "bundler" resolution, and the validators read files with Node's `fs`, so each has

@@ -4,10 +4,13 @@
     "composite": false,
     "incremental": true,
     "resolveJsonModule": true,
-    "customConditions": ["@rjsf/source"],
-    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+    "customConditions": ["@rjsf/source"]
   },
-  "include": ["packages/*/test", "packages/snapshot-tests/src", "testing"],
+  "include": ["packages/*/test"],
   "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"],
-  "references": [{ "path": "./tsconfig.typecheck.json" }, { "path": "./tsconfig.typecheck-node.json" }]
+  "references": [
+    { "path": "./tsconfig.typecheck.json" },
+    { "path": "./tsconfig.typecheck-node.json" },
+    { "path": "./tsconfig.typecheck-shared.json" }
+  ]
 }

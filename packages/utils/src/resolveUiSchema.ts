@@ -50,7 +50,7 @@ export default function resolveUiSchema<
   if (!definitionUiSchema) {
     result = localUiSchema ?? {};
   } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
-    result = { ...definitionUiSchema };
+    result = { ...definitionUiSchema } as UiSchema<T, S, F>;
   } else {
     result = mergeObjects(definitionUiSchema, localUiSchema) as UiSchema<T, S, F>;
   }

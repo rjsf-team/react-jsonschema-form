@@ -46,9 +46,5 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     extenderFn,
   );
 
-  // ajv's CommonJS entry is the function with a `default` property pointing back at it. Node's ESM interop types the
-  // default import as the module object and a bundler types it as the function, so reach `default`, which exists at
-  // runtime under both, through `unknown`.
-  const standaloneModule: unknown = standaloneCode;
-  return (standaloneModule as { default: (instance: typeof ajv) => string }).default(ajv);
+  return standaloneCode.default(ajv);
 }

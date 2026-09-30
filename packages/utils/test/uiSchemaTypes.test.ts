@@ -223,8 +223,13 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
         '#/$defs/addr': { city: { 'ui:placeholder': 'City' } },
       },
     } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
+    const badWidget = {
+      // @ts-expect-error 'Nope' is not in ExampleChecks
+      'ui:definitions': { '#/$defs/str': { 'ui:widget': 'Nope' } },
+    } satisfies StrictUiSchema<ExampleChecks, ReferencesFormData>;
 
     expect(ui['ui:definitions']['#/$defs/str']['ui:widget']).toBe('ExampleTextWidget');
+    expect(badWidget).toBeDefined();
   });
 
   it('passes an object literal checked with `satisfies` on to the open UiSchema that Form takes', () => {

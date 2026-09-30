@@ -217,7 +217,7 @@ export interface GetDefaultFormStateProps<
    * Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is itself a sub-uiSchema (an array
    * item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that doesn't carry the root's own `ui:definitions`.
    */
-  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
 /** The interface representing a Date object that contains an optional time */
@@ -708,7 +708,7 @@ export interface Registry<
   /** The optional uiSchema definitions extracted from the root uiSchema, keyed by `$ref` paths.
    * Used to automatically apply uiSchema when a schema with a matching `$ref` is resolved.
    */
-  readonly uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+  readonly uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
 /** The properties that are passed to a `Field` implementation */
@@ -1562,8 +1562,8 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
 
 /** @internal The closed vocabulary of a `StrictUiSchema`: `ui:widget`/`ui:field` narrowed to only the names `Checks`
  * declares for the field's type, and the `ui:` namespace closed to just the options it declares plus
- * `CommonUiOptions`: every other key, including a typo like `ui:wigdet`, becomes a type error instead of only failing
- * at runtime. `@rjsf/utils` has no built-in vocabulary of its own to always include here - a theme's `Checks` union
+ * `CommonUiOptions`: for a known form-data type, every other key, including a typo like `ui:wigdet`, becomes a type error
+ * instead of only failing at runtime. An unknown one, such as a `ui:definitions` entry's, leaves the other keys open. `@rjsf/utils` has no built-in vocabulary of its own to always include here - a theme's `Checks` union
  * (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to be unioned in by whoever passes `Checks`.
  */
 type StrictUiVocabulary<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = MakeUIType<
@@ -1578,10 +1578,9 @@ type StrictUiVocabulary<T, S extends StrictRJSFSchema, F extends FormContextType
  * is automatically applied and merged with any local uiSchema overrides.
  */
 export type UiSchemaDefinitions<
-  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Record<string, UiSchema<T, S, F>>;
+> = Record<string, UiSchema<unknown, S, F>>;
 
 /** The members of `T` that can hold nested form fields: the object ones, minus arrays, which nest through `items`
  * rather than by key, and minus the atomic objects. A primitive member is dropped rather than left in, since `keyof`
@@ -1641,7 +1640,7 @@ interface UiSchemaSharedKeys {
  * `Node`, `ItemNode` and `AdditionalNode` are the uiSchema types for the same data, for one array element, and for one
  * `additionalProperties` value; `Definition` is the uiSchema type of a `$ref` definition.
  */
-interface UiSchemaNestingKeys<Node, ItemNode, AdditionalNode, Definition, ItemData, F extends FormContextType> {
+interface UiSchemaNestingKeys<Node, ItemNode, AdditionalNode, Definitions, ItemData, F extends FormContextType> {
   /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
    * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
    * based on the item's data and index.
@@ -1664,7 +1663,7 @@ interface UiSchemaNestingKeys<Node, ItemNode, AdditionalNode, Definition, ItemDa
    * Keys must be full `$ref` paths (e.g., '#/$defs/node', '#/definitions/address'). A definition applies to whichever
    * field references it, so its form-data type is unknown rather than the root form's.
    */
-  'ui:definitions'?: Record<string, Definition>;
+  'ui:definitions'?: Definitions;
 }
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
@@ -1682,7 +1681,7 @@ export type UiSchema<
     UiSchema<T, S, F>,
     UiSchema<ArrayElement<T>, S, F>,
     UiSchema<AdditionalPropertyData<T>, S, F>,
-    UiSchema<unknown, S, F>,
+    UiSchemaDefinitions<S, F>,
     ArrayElement<T>,
     F
   >;
@@ -1712,7 +1711,7 @@ export type StrictUiSchema<
     StrictUiSchema<Checks, T, S, F>,
     StrictUiSchema<Checks, ArrayElement<T>, S, F>,
     StrictUiSchema<Checks, AdditionalPropertyData<T>, S, F>,
-    StrictUiSchema<Checks, unknown, S, F>,
+    Record<string, StrictUiSchema<Checks, unknown, S, F>>,
     ArrayElement<T>,
     F
   >;
@@ -1883,7 +1882,7 @@ export interface SchemaUtilsType<
     includeUndefinedValues?: boolean | 'excludeObjectChildren',
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
-    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
@@ -1986,7 +1985,7 @@ export interface SchemaUtilsType<
   getUiRequiredErrorSchema(
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
-    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
   ): ErrorSchema<T>;

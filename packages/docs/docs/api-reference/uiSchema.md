@@ -1120,7 +1120,7 @@ const uiSchema: UiSchema = {
 
 ```ts
 import type { CoreUiOptionsChecks } from '@rjsf/core';
-import type { FormContextType, RJSFSchema, StrictUiSchema } from '@rjsf/utils';
+import type { StrictUiSchema } from '@rjsf/utils';
 
 interface FormData {
   age: number;
@@ -1144,7 +1144,7 @@ The widget/field names and options a `Checks` union declares are built from `UiO
 
 ```ts
 import type { CoreUiOptionsChecks } from '@rjsf/core';
-import type { FormContextType, RJSFSchema, StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
+import type { StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
 
 type MyThemeChecks = UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>;
 type MyUiSchema<T = unknown> = StrictUiSchema<CoreUiOptionsChecks | MyThemeChecks, T>;
@@ -1156,7 +1156,7 @@ const uiSchema: MyUiSchema<{ active: boolean }> = {
 
 ### Known gaps
 
-- With no form-data type (`T` defaulting to `unknown`), a `StrictUiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`, every one of them, since data of an unknown type could match any `when`. The nested keys of such a `StrictUiSchema` are not narrowed at all. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
+- With no form-data type (`T` defaulting to `unknown`), a `StrictUiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`, every one of them, since data of an unknown type could match any `when`. Its other keys are not narrowed at all, so a nested field, or a misspelled `ui:` key such as `ui:wigdet`, is not caught. Every `ui:definitions` entry falls into this gap, since a definition applies to whichever field references it and its data type can't be known from the `$ref` key; only its own `ui:widget`/`ui:field` names are checked. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.
 - A field whose form-data shape includes an index signature (e.g. from `additionalProperties`/`patternProperties`) only gets type-checking for its explicitly-declared keys; dynamic keys are type-checked but without narrowing beyond the index signature's value type.
 
 ### Applying it to an inline uiSchema with `satisfies`

@@ -176,7 +176,7 @@ class SchemaUtils<
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
-    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(this.context, {
       schema,
@@ -341,7 +341,7 @@ class SchemaUtils<
   getUiRequiredErrorSchema(
     uiSchema: UiSchema<T, S, F> | undefined,
     formData?: T,
-    uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
   ) {

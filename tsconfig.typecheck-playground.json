@@ -16,6 +16,7 @@
   "references": [
     { "path": "./tsconfig.typecheck.json" },
     { "path": "./tsconfig.typecheck-node.json" },
-    { "path": "./tsconfig.typecheck-bundler.json" }
+    { "path": "./tsconfig.typecheck-bundler.json" },
+    { "path": "./tsconfig.typecheck-shared.json" }
   ]
 }
