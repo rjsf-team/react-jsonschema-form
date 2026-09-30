@@ -378,7 +378,11 @@ export function computeDefaults<
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
-    const schemaDefaults = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
+    // Array defaults are discarded below, so skip building every `minItems` entry
+    const schemaDefaults =
+      getSchemaType<S>(schema) === 'array'
+        ? undefined
+        : getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
     const resolvedSchema = resolveDependencies<T, S, F>(
@@ -1050,7 +1054,7 @@ export default function getDefaultFormState<
   if (schema.type !== 'object' && isObject(schema.default) && objectDefaults) {
     return {
       ...objectDefaults,
-      ...formData,
+      ...(isObject(formData) ? formData : undefined),
     } as T;
   }
 

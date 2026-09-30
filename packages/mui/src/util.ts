@@ -15,10 +15,6 @@ function isSxArray(sx: SxProps<Theme>): sx is SxArray {
   return Array.isArray(sx);
 }
 
-function toSxArray(sx: SxProps<Theme>): SxArray {
-  return isSxArray(sx) ? sx : [sx];
-}
-
 /**
  * Extract props meant for MUI components from the `options` field of the `uiSchema`.
  * @param {UIOptionsType} options - The options from the uiSchema
@@ -78,7 +74,7 @@ export function computeSxProps<
     return sxProps;
   }
   if (isSxArray(sxProps) || isSxArray(sx) || typeof sxProps === 'function' || typeof sx === 'function') {
-    return [...toSxArray(sxProps), ...toSxArray(sx)];
+    return [sxProps, sx].flat();
   }
   return { ...sxProps, ...sx };
 }
