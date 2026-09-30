@@ -2244,6 +2244,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
 
     describe('array schemas', () => {
+      test.each([false, 0, ''])('fills minItems with the item default when the array default is %j', (value) => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          default: value,
+          items: { type: 'string', default: 'x' },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(['x', 'x']);
+      });
+
+      test('fills minItems with the item default when a parent default gives the array a falsy value', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          default: { tags: 0 },
+          properties: { tags: { type: 'array', minItems: 2, items: { type: 'string', default: 'x' } } },
+        };
+        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ tags: ['x', 'x'] });
+      });
+
       describe('array with defaults with no formData', () => {
         const schema: RJSFSchema = {
           type: 'array',

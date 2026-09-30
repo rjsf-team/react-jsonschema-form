@@ -78,7 +78,7 @@ export default function SelectWidget<
   // same list the dropdown renders
   const optionsList: EnumOptionsType<S>[] = useMemo(
     () =>
-      enumOptions ||
+      enumOptions ??
       (Array.isArray(schema.examples)
         ? schema.examples.map((example) => ({ value: example, label: getDisplayValue(example) }))
         : []),

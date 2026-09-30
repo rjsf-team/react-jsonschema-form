@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed object options in `RadioWidget` and object/array selects in `FieldTemplate`, and `SelectWidget` reports its form data value on focus and blur ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309), [#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - Fixed `AltDateWidget` never passing `time`, `disabled` and `readonly` to `useAltDateWidgetProps()`, so `alt-datetime` rendered no hour, minute or second selects and emitted a date-only value, and the Now and Clear buttons still changed a `readonly` or `disabled` field ([#5410](https://github.com/rjsf-team/react-jsonschema-form/pull/5410))
+- `TextareaWidget` passes a `ui:options.rows` of `0` through to the textarea instead of replacing it with the default of 4 rows
 
 ## @rjsf/chakra-ui
 
@@ -214,6 +215,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `AltDateWidget` names each of its selects by the date part it holds where the field has no property name, since the label it renders above each one points at it either way: a root field left that label replacing the year, month or day the select displays rather than being announced before it ([#5318](https://github.com/rjsf-team/react-jsonschema-form/issues/5318))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - **BREAKING CHANGE:** `FieldTemplate` applies `ui:classNames` and `ui:style` to the `WrapIfAdditionalTemplate` wrapper it renders every field in, the way `@rjsf/core` does, rather than repeating the classes on that wrapper and on its own inner `field-template` div while putting the style on the inner one alone. A `ui:classNames` border or padding was drawn twice, once nested inside the other, and a `ui:style` meant to go with those classes landed on a different element than they did. `ui:options.daisy`'s own `className`, `style` and `theme`, which belong to that inner div, are unaffected. `WrapIfAdditionalTemplate` takes the `style` that follows from this, and no longer interpolates an absent `classNames` into its class attribute, which produced a literal `undefined` class on every field rendered by a custom field that passes none. A custom `WrapIfAdditionalTemplate` registered for this theme is now what applies both, so one that renders `<div className={classNames}>` and ignores `style` drops every `ui:style`, where ignoring it was harmless before. See the upgrade guide ([#5327](https://github.com/rjsf-team/react-jsonschema-form/issues/5327))
+- `TextareaWidget` passes a `ui:options.rows` of `0` through to the textarea instead of replacing it with the default of 5 rows
 
 ## @rjsf/fluentui-rc
 

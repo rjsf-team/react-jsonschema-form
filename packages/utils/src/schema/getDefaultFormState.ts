@@ -833,7 +833,7 @@ export function getArrayDefaults<
     // we don't want undefined defaults unless it is both not required or not required as root
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
-    const defaultEntries: T[] = defaults ?? [];
+    const defaultEntries: T[] = Array.isArray(defaults) ? defaults : [];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
     const fillerDefault = fillerSchema.default;
 
@@ -883,7 +883,11 @@ export function getDefaultBasedOnSchemaType<
   // and an empty object or array would be a value none of its options allow. A value already picked is kept as it is,
   // since the form data is merged over the defaults key by key, which would blend it with the default constant
   if (isWholeValue) {
-    return computeDefaultsProps.rawFormData !== undefined ? computeDefaultsProps.rawFormData : defaults;
+    // A `null` value is one the user picked, so only a missing one falls back to the default
+    if (computeDefaultsProps.rawFormData === undefined) {
+      return defaults;
+    }
+    return computeDefaultsProps.rawFormData;
   }
   switch (getSchemaType<S>(rawSchema)) {
     // We need to recurse for object schema inner default values.
