@@ -36,7 +36,7 @@ import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
- * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
+ * resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
  * potentially recursive resolution.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -109,9 +109,7 @@ export function resolveCondition<
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
-  // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
-  // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
-  const conditionValue = context.validator.isValid(expression as S, formData || {}, rootSchema);
+  const conditionValue = context.validator.isValid(context, expression as S, formData || {}, rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
@@ -574,7 +572,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param theSchema - The schema for which the existing additional properties is desired
- * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
+ * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
  * @returns - The updated schema with additional properties stubbed
  */
@@ -649,17 +647,23 @@ export function stubExistingAdditionalProperties<
   return schema;
 }
 
-/**
- * Internal helper that merges allOf schemas using @x0k/json-schema-merge's shallow allOf merge
+/** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
+ * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise. Every `allOf` merge goes through here,
+ * so a new merge site cannot quietly default away a form's `customMergeAllOf`.
+ *
+ * @param context - The `SchemaContext` whose `customMergeAllOf`, if any, does the merging
  * @param schema - The schema containing an `allOf` keyword
  * @returns The schema with allOf schemas merged
  */
-function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  return shallowAllOfMerge(schema) as S;
+export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: Readonly<SchemaContext<S, F>>,
+  schema: S,
+): S {
+  return context.customMergeAllOf ? context.customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
 }
 
 /** Internal handler that retrieves an expanded schema that has had all of its conditions, additional properties,
- * references and dependencies resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData`
+ * references and dependencies resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData`
  * that is used to do the potentially recursive resolution. If `expandAllBranches` is true, then all possible branches
  * of the schema and its references, conditions and dependencies are returned.
  *
@@ -733,9 +737,7 @@ export function retrieveSchemaInternal<
             }
           }
         });
-        resolvedSchema = context.customMergeAllOf
-          ? context.customMergeAllOf(resolvedSchema)
-          : mergeAllOf(resolvedSchema);
+        resolvedSchema = mergeAllOf<S, F>(context, resolvedSchema);
         // Re-apply collected Symbol properties that the merge dropped.
         for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
           (resolvedSchema as any)[sym] = allOfSymbols[sym];
@@ -1098,7 +1100,7 @@ export function withExactlyOneSubschema<
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return context.validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
+      return context.validator.isValid(context, conditionSchema, formData, rootSchema) || expandAllBranches;
     }
     return false;
   });

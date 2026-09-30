@@ -44,7 +44,6 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  UiSchemaDefinitions,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import isMultiSelect from './isMultiSelect.ts';
@@ -243,18 +242,15 @@ interface ComputeDefaultsProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> {
+>
+  // The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so an option added
+  // to the public shape cannot be silently dropped on the way into the recursion. `schema` and `formData` are omitted
+  // because the recursion takes them as its own positional `rawSchema` and `rawFormData`
+  extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
-  /** The options root schema, used to primarily to look up `$ref`s */
-  rootSchema?: S;
   /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
-  /** Optional flag, if true, cause undefined values to be added as defaults.
-   *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
-   *          false when computing defaults for any nested object properties.
-   */
-  includeUndefinedValues?: boolean | 'excludeObjectChildren';
   /** The list of ref names currently being recursed, used to prevent infinite recursion */
   _recurseList?: string[];
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
@@ -265,12 +261,6 @@ interface ComputeDefaultsProps<
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
   shouldMergeDefaultsIntoFormData?: boolean;
-  /** Indicates whether initial defaults have been generated */
-  initialDefaultsGenerated?: boolean;
-  /** Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults */
-  uiSchema?: UiSchema<T, S, F>;
-  /** `ui:definitions` from the root uiSchema, applied at every `$ref`-resolved node like `SchemaField` does */
-  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -423,17 +413,17 @@ export function computeDefaults<
     const picksWholeOption = isWholeValue && isConstantOptionList<S>(options, true);
     // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
     // unless it is empty, which counts as no option list here as it does for the keyword read
-    if (
+    const skipsOneOfConstants =
       !!schema[ONE_OF_KEY]?.length &&
       !Array.isArray(type) &&
       (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
-      contextToCompute.defaultFormStateBehavior?.constAsDefaults === 'skipOneOf'
-    ) {
+      defaultFormStateBehavior?.constAsDefaults === 'skipOneOf';
+    if (skipsOneOfConstants) {
       // If we are in a oneOf of a primitive type, or of whole object or array values, then we want to pass
       // constAsDefaults as 'never' for the recursion
       contextToCompute = {
-        ...contextToCompute,
-        defaultFormStateBehavior: { ...contextToCompute.defaultFormStateBehavior, constAsDefaults: 'never' },
+        ...context,
+        defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' },
       };
     }
     // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick
@@ -453,7 +443,7 @@ export function computeDefaults<
     // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
     // `getDefaultBasedOnSchemaType()`
     if (picksWholeOption) {
-      if (rawFormData === undefined && contextToCompute.defaultFormStateBehavior?.constAsDefaults !== 'never') {
+      if (rawFormData === undefined && !skipsOneOfConstants && defaultFormStateBehavior?.constAsDefaults !== 'never') {
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {

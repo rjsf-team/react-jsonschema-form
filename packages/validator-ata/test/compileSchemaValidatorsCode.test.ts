@@ -30,8 +30,8 @@ describe('compileSchemaValidatorsCode', () => {
     const validateFns = loadModule(code);
     const validator = createPrecompiledValidator(validateFns, schema);
 
-    expect(validator.isValid(schema, { name: 'Mert' }, schema)).toBe(true);
-    expect(validator.isValid(schema, { name: 5 }, schema)).toBe(false);
+    expect(validator.isValid({ validator }, schema, { name: 'Mert' }, schema)).toBe(true);
+    expect(validator.isValid({ validator }, schema, { name: 5 }, schema)).toBe(false);
   });
 
   test('resolves cross-schema $ref in the compiled output', () => {
@@ -87,9 +87,9 @@ describe('compileSchemaValidatorsCode', () => {
     });
     const validator = createPrecompiledValidator(loadModule(code), fmtSchema);
 
-    expect(validator.isValid(fmtSchema, { code: 'AB12', tag: 'blue' }, fmtSchema)).toBe(true);
-    expect(validator.isValid(fmtSchema, { code: 'xy', tag: 'blue' }, fmtSchema)).toBe(false);
-    expect(validator.isValid(fmtSchema, { code: 'AB12', tag: 'Blue' }, fmtSchema)).toBe(false);
+    expect(validator.isValid({ validator }, fmtSchema, { code: 'AB12', tag: 'blue' }, fmtSchema)).toBe(true);
+    expect(validator.isValid({ validator }, fmtSchema, { code: 'xy', tag: 'blue' }, fmtSchema)).toBe(false);
+    expect(validator.isValid({ validator }, fmtSchema, { code: 'AB12', tag: 'Blue' }, fmtSchema)).toBe(false);
   });
 
   test('rejects a function custom format, which cannot be serialized into a bundle', () => {

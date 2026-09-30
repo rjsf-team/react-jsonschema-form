@@ -213,7 +213,7 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(schema: S, formData: unknown, rootSchema: S): boolean {
+  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S): boolean {
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {

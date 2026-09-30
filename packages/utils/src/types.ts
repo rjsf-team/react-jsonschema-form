@@ -194,9 +194,9 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
 
 /** The props for the `getDefaultFormState()` schema function */
 export interface GetDefaultFormStateProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > {
   /** The schema for which the default state is desired */
   schema: S;
@@ -1736,11 +1736,13 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
+   * @param context - The `SchemaContext` of the form, so a `rootSchema` this resolves is resolved the way the form
+   *        resolved it
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: unknown, rootSchema: S): boolean;
+  isValid(context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *

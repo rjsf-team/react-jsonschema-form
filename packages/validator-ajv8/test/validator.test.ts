@@ -42,7 +42,7 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, { foo: 'bar' }, schema)).toBe(true);
       });
       it('should return false if the data is not valid against the schema', () => {
         const schema: RJSFSchema = {
@@ -52,13 +52,13 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
+        expect(validator.isValid({ validator }, schema, { foo: 12345 }, schema)).toBe(false);
       });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
         const isValid = expectWarn(
-          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          () => validator.isValid({ validator }, schema, { foo: 'bar' }, schema),
           // The throw happens before the schema's id is known, so there is no schema to name
           'Error encountered compiling schema:',
           expect.any(Error),
@@ -78,7 +78,7 @@ describe('AJV8Validator', () => {
         const schema: RJSFSchema = { $id: 'throws-on-data', type: 'string', format: 'boom' };
 
         const isValid = expectWarn(
-          () => localValidator.isValid(schema, 'anything', { type: 'string' }),
+          () => localValidator.isValid({ validator: localValidator }, schema, 'anything', { type: 'string' }),
           'Error encountered validating form data against schema "throws-on-data":',
           expect.any(Error),
         );
@@ -101,7 +101,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, formData, rootSchema)).toBe(true);
       });
       it('Only compiles the schema once', () => {
         const schema: RJSFSchema = {
@@ -124,8 +124,8 @@ describe('AJV8Validator', () => {
         const addSchemaSpy = vi.spyOn(validator.ajv, 'addSchema');
 
         // Call isValid twice with the same schema
-        validator.isValid(schema, formData, rootSchema);
-        validator.isValid(schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
 
         // Root schema is added twice
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
@@ -169,8 +169,8 @@ describe('AJV8Validator', () => {
         // addSchema path to throw ("already exists"), which isValid warns about
         expectWarn(
           () => {
-            validator.isValid(schema, formData, rootSchema);
-            validator.isValid(schema, formData, rootSchema);
+            validator.isValid({ validator }, schema, formData, rootSchema);
+            validator.isValid({ validator }, schema, formData, rootSchema);
           },
           'Error encountered compiling schema "schema-id-2":',
           expect.any(Error),
@@ -274,7 +274,7 @@ describe('AJV8Validator', () => {
         const rootSchema: RJSFSchema = {};
 
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-        v.isValid(schema, {}, rootSchema);
+        v.isValid({ validator: v }, schema, {}, rootSchema);
         warnSpy.mockRestore();
 
         const result = v.rawValidation(schema, {});
@@ -287,8 +287,8 @@ describe('AJV8Validator', () => {
         const schema = null as unknown as RJSFSchema;
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
 
-        const result1 = v.isValid(schema, {}, schema);
-        const result2 = v.isValid(schema, {}, schema);
+        const result1 = v.isValid({ validator: v }, schema, {}, schema);
+        const result2 = v.isValid({ validator: v }, schema, {}, schema);
 
         warnSpy.mockRestore();
         expect(result1).toBe(false);
@@ -348,7 +348,7 @@ describe('AJV8Validator', () => {
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
 
         // Execution throw — isValid should return false but NOT evict the schema.
-        const result = v.isValid(schema, 'hello', rootSchema);
+        const result = v.isValid({ validator: v }, schema, 'hello', rootSchema);
         expect(result).toBe(false);
 
         // $id is preserved by withIdRefPrefix, so schemaId === schema.$id.
@@ -775,7 +775,7 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, { foo: 'bar' }, schema)).toBe(true);
       });
       it('should return false if the data is not valid against the schema', () => {
         const schema: RJSFSchema = {
@@ -785,13 +785,13 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
+        expect(validator.isValid({ validator }, schema, { foo: 12345 }, schema)).toBe(false);
       });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
         const isValid = expectWarn(
-          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          () => validator.isValid({ validator }, schema, { foo: 'bar' }, schema),
           'Error encountered compiling schema:',
           expect.any(Error),
         );
@@ -814,7 +814,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, formData, rootSchema)).toBe(true);
       });
       it('Only compiles the schema once', () => {
         const schema: RJSFSchema = {
@@ -838,8 +838,8 @@ describe('AJV8Validator', () => {
         addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
-        validator.isValid(schema, formData, rootSchema);
-        validator.isValid(schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
 
         // Root schema is added twice
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
@@ -1257,7 +1257,7 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 'bar' }, schema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, { foo: 'bar' }, schema)).toBe(true);
       });
       it('should return false if the data is not valid against the schema', () => {
         const schema: RJSFSchema = {
@@ -1267,13 +1267,13 @@ describe('AJV8Validator', () => {
           },
         };
 
-        expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
+        expect(validator.isValid({ validator }, schema, { foo: 12345 }, schema)).toBe(false);
       });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
         const isValid = expectWarn(
-          () => validator.isValid(schema, { foo: 'bar' }, schema),
+          () => validator.isValid({ validator }, schema, { foo: 'bar' }, schema),
           'Error encountered compiling schema:',
           expect.any(Error),
         );
@@ -1296,7 +1296,7 @@ describe('AJV8Validator', () => {
           name: 'John Doe',
         };
 
-        expect(validator.isValid(schema, formData, rootSchema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, formData, rootSchema)).toBe(true);
       });
       it('Only compiles the schema once', () => {
         const schema: RJSFSchema = {
@@ -1320,8 +1320,8 @@ describe('AJV8Validator', () => {
         addSchemaSpy.mockClear();
 
         // Call isValid twice with the same schema
-        validator.isValid(schema, formData, rootSchema);
-        validator.isValid(schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
+        validator.isValid({ validator }, schema, formData, rootSchema);
 
         // Root schema is added twice
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
@@ -3147,25 +3147,25 @@ describe('AJV8Validator', () => {
     const isoDateTimeSchema: RJSFSchema = { type: 'string', format: 'iso-date-time' };
 
     it('should accept a "time" value with a "Z" offset', () => {
-      expect(validator.isValid(timeSchema, '20:20:39Z', timeSchema)).toBe(true);
+      expect(validator.isValid({ validator }, timeSchema, '20:20:39Z', timeSchema)).toBe(true);
     });
     it('should accept a "time" value with a numeric offset', () => {
-      expect(validator.isValid(timeSchema, '20:20:39+05:30', timeSchema)).toBe(true);
+      expect(validator.isValid({ validator }, timeSchema, '20:20:39+05:30', timeSchema)).toBe(true);
     });
     it('should reject a "time" value with no timezone offset', () => {
-      expect(validator.isValid(timeSchema, '20:20:39', timeSchema)).toBe(false);
+      expect(validator.isValid({ validator }, timeSchema, '20:20:39', timeSchema)).toBe(false);
     });
     it('should accept a "date-time" value with a "Z" offset', () => {
-      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30.000Z', dateTimeSchema)).toBe(true);
+      expect(validator.isValid({ validator }, dateTimeSchema, '2016-04-05T14:01:30.000Z', dateTimeSchema)).toBe(true);
     });
     it('should reject a "date-time" value with no timezone offset', () => {
-      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30', dateTimeSchema)).toBe(false);
+      expect(validator.isValid({ validator }, dateTimeSchema, '2016-04-05T14:01:30', dateTimeSchema)).toBe(false);
     });
     it('should accept an "iso-time" value with no timezone offset, for backwards compatibility', () => {
-      expect(validator.isValid(isoTimeSchema, '20:20:39', isoTimeSchema)).toBe(true);
+      expect(validator.isValid({ validator }, isoTimeSchema, '20:20:39', isoTimeSchema)).toBe(true);
     });
     it('should accept an "iso-date-time" value with no timezone offset, for backwards compatibility', () => {
-      expect(validator.isValid(isoDateTimeSchema, '2016-04-05T14:01:30', isoDateTimeSchema)).toBe(true);
+      expect(validator.isValid({ validator }, isoDateTimeSchema, '2016-04-05T14:01:30', isoDateTimeSchema)).toBe(true);
     });
   });
 });

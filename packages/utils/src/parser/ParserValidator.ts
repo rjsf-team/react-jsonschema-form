@@ -90,7 +90,7 @@ export default class ParserValidator<
    * @param rootSchema - The root schema associated with the schema
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
-  isValid(schema: S, _formData: unknown, rootSchema: S): boolean {
+  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, _formData: unknown, rootSchema: S): boolean {
     if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }

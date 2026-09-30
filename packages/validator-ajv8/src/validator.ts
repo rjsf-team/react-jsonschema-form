@@ -239,7 +239,7 @@ export default class AJV8Validator<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: unknown, rootSchema: S) {
+  isValid(_context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;

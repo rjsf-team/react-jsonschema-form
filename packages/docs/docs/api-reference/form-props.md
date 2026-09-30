@@ -479,7 +479,7 @@ Only `undefined` means "not passed". `null`, `false`, `0` and `''` are values, s
 
 Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick are applied one after another, each to the value you stored for the previous one, so a value you transform or decline stays that way. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
 
-The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils(validator, schema).getDefaultFormState(schema, record)`, passing the same `defaultFormStateBehavior` you pass to the form.
+The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils({ validator, defaultFormStateBehavior }, schema).getDefaultFormState(schema, record)`, passing the same `defaultFormStateBehavior` you pass to the form.
 
 `reset()` on such a form clears its local errors only; the data is yours to reset by passing a new `formData`. For an editable form that should own its data, use [`initialFormData`](#initialformdata) instead.
 

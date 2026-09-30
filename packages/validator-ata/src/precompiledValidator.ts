@@ -34,6 +34,13 @@ export default class ATAPrecompiledValidator<
    */
   readonly rootSchema: S;
 
+  /** The `SchemaContext` naming this validator, used when a caller supplies none. Built once because `isValid()` calls
+   * `ensureSameRootSchema()` without one, and that runs for every node of the schema recursion
+   *
+   * @private
+   */
+  private readonly selfContext: Readonly<SchemaContext<S, F>> = Object.freeze({ validator: this });
+
   /** The `ValidatorFunctions` map used to construct this validator
    *
    * @private
@@ -103,7 +110,7 @@ export default class ATAPrecompiledValidator<
    * @param [formData] - The form data to validate if any
    * @param [context] - The `SchemaContext` of the form, so the root schema resolves the way the form resolved it
    */
-  ensureSameRootSchema(schema: S, formData?: unknown, context: Readonly<SchemaContext<S, F>> = { validator: this }) {
+  ensureSameRootSchema(schema: S, formData?: unknown, context: Readonly<SchemaContext<S, F>> = this.selfContext) {
     if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
       const resolvedRootSchema = retrieveSchema(context, this.rootSchema, this.rootSchema, formData);
@@ -187,8 +194,8 @@ export default class ATAPrecompiledValidator<
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator OR if there
    *        isn't a precompiled validator function associated with the schema
    */
-  isValid(schema: S, formData: unknown, rootSchema: S) {
-    this.ensureSameRootSchema(rootSchema, formData);
+  isValid(context: Readonly<SchemaContext<S, F>>, schema: S, formData: unknown, rootSchema: S) {
+    this.ensureSameRootSchema(rootSchema, formData, context);
     if (schema[ID_KEY] === JUNK_OPTION_ID) {
       return false;
     }

@@ -62,9 +62,12 @@ class SchemaUtils<
     } else {
       this.rootSchema = rootSchema;
     }
-    // Snapshot the context so a caller that mutates the object it passed can neither change how this instance behaves
-    // nor hide that change from `doesSchemaUtilsDiffer()`
-    this.context = { ...context };
+    // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
+    // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because `getSchemaContext()` hands
+    // the snapshot itself to the validator and to every `computeSkipPopulate()` callback. Only the context's own keys
+    // are covered: the settings objects reached through them stay the caller's, so mutating one in place still changes
+    // how this instance behaves and still reads as "no difference" — they are documented as owned by the caller
+    this.context = Object.freeze({ ...context });
   }
 
   /** Returns the `rootSchema` in the `SchemaUtilsType`

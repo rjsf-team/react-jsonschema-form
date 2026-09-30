@@ -76,7 +76,7 @@ describe('AJV8PrecompiledValidator', () => {
           [RJSF_REF_KEY]: '#/definitions/foo',
         };
 
-        expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
+        expect(validator.isValid({ validator }, schema, { name: 'bar' }, rootSchema)).toBe(true);
       });
       it('should return false if the data is not valid against the schema', () => {
         const schema: RJSFSchema = {
@@ -92,7 +92,7 @@ describe('AJV8PrecompiledValidator', () => {
           [RJSF_REF_KEY]: '#/definitions/foo',
         };
 
-        expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
+        expect(validator.isValid({ validator }, schema, { name: 12345 }, rootSchema)).toBe(false);
       });
       it('should return false if junk option id is passed', () => {
         const schema: RJSFSchema = {
@@ -102,12 +102,12 @@ describe('AJV8PrecompiledValidator', () => {
           },
           $id: JUNK_OPTION_ID,
         };
-        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
+        expect(validator.isValid({ validator }, schema, { name: 'foo' }, rootSchema)).toBe(false);
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
         const hash = hashForSchema(schema);
-        expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrow(
+        expect(() => validator.isValid({ validator }, schema, { name: 'bar' }, rootSchema)).toThrow(
           new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );
       });
@@ -118,7 +118,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.isValid(schema, { foo: { name: 'bar' } }, schema)).toThrow(
+        expect(() => validator.isValid({ validator }, schema, { foo: { name: 'bar' } }, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -492,5 +492,16 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
     expect(resolvedRootSchema.title).toBe('Custom merge');
     expect(validator.validateFormData(context, formData, resolvedRootSchema).errors).toEqual([]);
+  });
+
+  it('accepts that root schema through isValid(), which the schema functions reach while scoring options', () => {
+    const validator = new AJV8PrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
+      allOfSchema,
+    );
+    const context = { validator, customMergeAllOf };
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
+    expect(validator.isValid(context, allOfSchema, formData, resolvedRootSchema)).toBe(true);
   });
 });

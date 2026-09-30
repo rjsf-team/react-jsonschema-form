@@ -20,13 +20,13 @@ describe('ATAValidator', () => {
         type: 'object',
         properties: { name: { type: 'string' } },
       };
-      expect(v.isValid(schema, { name: 'Alice' }, schema)).toBe(true);
+      expect(v.isValid({ validator: v }, schema, { name: 'Alice' }, schema)).toBe(true);
     });
 
     it('returns false for invalid data', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'object', required: ['name'] };
-      expect(v.isValid(schema, {}, schema)).toBe(false);
+      expect(v.isValid({ validator: v }, schema, {}, schema)).toBe(false);
     });
 
     it('resolves $ref against rootSchema', () => {
@@ -36,8 +36,8 @@ describe('ATAValidator', () => {
         type: 'object',
         properties: { first: { $ref: '#/definitions/name' } },
       };
-      expect(v.isValid(rootSchema, { first: 'Al' }, rootSchema)).toBe(true);
-      expect(v.isValid(rootSchema, { first: 'A' }, rootSchema)).toBe(false);
+      expect(v.isValid({ validator: v }, rootSchema, { first: 'Al' }, rootSchema)).toBe(true);
+      expect(v.isValid({ validator: v }, rootSchema, { first: 'A' }, rootSchema)).toBe(false);
     });
 
     // ata is permissive on unrecognized `type` strings (treats them as
@@ -246,8 +246,8 @@ describe('ATAValidator', () => {
         customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ },
       });
       const schema: RJSFSchema = { type: 'string', format: 'phone-us' };
-      expect(v.isValid(schema, '(415) 555-0142', schema)).toBe(true);
-      expect(v.isValid(schema, 'not-a-phone', schema)).toBe(false);
+      expect(v.isValid({ validator: v }, schema, '(415) 555-0142', schema)).toBe(true);
+      expect(v.isValid({ validator: v }, schema, 'not-a-phone', schema)).toBe(false);
     });
 
     it('routes a function through to ata as a format checker', () => {
@@ -255,8 +255,8 @@ describe('ATAValidator', () => {
         customFormats: { 'starts-with-x': (s: string) => s.startsWith('x') },
       });
       const schema: RJSFSchema = { type: 'string', format: 'starts-with-x' };
-      expect(v.isValid(schema, 'xyz', schema)).toBe(true);
-      expect(v.isValid(schema, 'abc', schema)).toBe(false);
+      expect(v.isValid({ validator: v }, schema, 'xyz', schema)).toBe(true);
+      expect(v.isValid({ validator: v }, schema, 'abc', schema)).toBe(false);
     });
   });
 
@@ -264,7 +264,7 @@ describe('ATAValidator', () => {
     it('is invoked with the constructed validator', () => {
       const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
-      v.isValid({ type: 'string' }, 'a', {
+      v.isValid({ validator: v }, { type: 'string' }, 'a', {
         type: 'string',
       });
       expect(extenderFn).toHaveBeenCalled();
@@ -285,11 +285,11 @@ describe('ATAValidator', () => {
     it('clears the cached validator state', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = { type: 'string' };
-      v.isValid(schema, 'a', schema);
+      v.isValid({ validator: v }, schema, 'a', schema);
       v.reset();
       // After reset, repeating the call should still work without error
       // (and rebuilds the validator under the hood).
-      expect(v.isValid(schema, 'b', schema)).toBe(true);
+      expect(v.isValid({ validator: v }, schema, 'b', schema)).toBe(true);
     });
   });
 
@@ -300,7 +300,7 @@ describe('ATAValidator', () => {
       // isValid swallows it and returns false rather than propagating to RJSF.
       const broken = null as unknown as RJSFSchema;
       const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
-      expect(v.isValid(broken, {}, broken)).toBe(false);
+      expect(v.isValid({ validator: v }, broken, {}, broken)).toBe(false);
       // The throw happens before the schema's id is known, so there is no schema to name
       expect(warn).toHaveBeenCalledWith('Error encountered validating schema:', expect.any(Error));
       warn.mockRestore();
@@ -311,7 +311,7 @@ describe('ATAValidator', () => {
       // `structuredClone` rejects a function, so this throws after the id has been computed. The message names the
       // schema so two schemas failing with the same error text are reported separately rather than deduped into one
       const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
-      expect(v.isValid(schema, { fn: () => undefined }, { type: 'object' })).toBe(false);
+      expect(v.isValid({ validator: v }, schema, { fn: () => undefined }, { type: 'object' })).toBe(false);
       expect(warn).toHaveBeenCalledWith('Error encountered validating schema "has-an-id":', expect.any(Error));
       warn.mockRestore();
     });
@@ -324,13 +324,13 @@ describe('ATAValidator', () => {
       // Smoke check: validator constructs successfully and validates against
       // a schema that uses the registered meta-schema $id via $ref.
       const schema: RJSFSchema = { $ref: 'https://example.com/meta-schema' };
-      expect(v.isValid(schema, {}, schema)).toBe(true);
+      expect(v.isValid({ validator: v }, schema, {}, schema)).toBe(true);
     });
 
     it('passes the constructed Validator through extenderFn', () => {
       const extenderFn = vi.fn((validator) => validator);
       const v = customizeValidator({ extenderFn });
-      v.isValid({ type: 'string' }, 'a', {
+      v.isValid({ validator: v }, { type: 'string' }, 'a', {
         type: 'string',
       });
       expect(extenderFn).toHaveBeenCalled();
@@ -352,8 +352,8 @@ describe('customFormats option (extra spec shapes)', () => {
       customFormats: { 'lower-letters': '^[a-z]+$' },
     });
     const schema: RJSFSchema = { type: 'string', format: 'lower-letters' };
-    expect(v.isValid(schema, 'abc', schema)).toBe(true);
-    expect(v.isValid(schema, 'ABC', schema)).toBe(false);
+    expect(v.isValid({ validator: v }, schema, 'abc', schema)).toBe(true);
+    expect(v.isValid({ validator: v }, schema, 'ABC', schema)).toBe(false);
   });
 });
 
@@ -366,9 +366,9 @@ describe('handleSchemaUpdate', () => {
       [ID_KEY]: ROOT_SCHEMA_PREFIX,
       type: 'string',
     } as unknown as RJSFSchema;
-    expect(v.isValid(rootSchema, 'a', rootSchema)).toBe(true);
+    expect(v.isValid({ validator: v }, rootSchema, 'a', rootSchema)).toBe(true);
     // Second call with the same reference takes the early-return fast path.
-    expect(v.isValid(rootSchema, 'b', rootSchema)).toBe(true);
+    expect(v.isValid({ validator: v }, rootSchema, 'b', rootSchema)).toBe(true);
   });
 
   it('rebuilds the cached entry when a different rootSchema is provided', () => {
@@ -384,10 +384,10 @@ describe('handleSchemaUpdate', () => {
       type: 'object',
       properties: { x: { type: 'number' } },
     };
-    expect(v.isValid(a, { x: 'a' }, a)).toBe(true);
-    expect(v.isValid(b, { x: 1 }, b)).toBe(true);
+    expect(v.isValid({ validator: v }, a, { x: 'a' }, a)).toBe(true);
+    expect(v.isValid({ validator: v }, b, { x: 1 }, b)).toBe(true);
     // After the rebuild, the new shape applies, so a string in slot x fails.
-    expect(v.isValid(b, { x: 'a' }, b)).toBe(false);
+    expect(v.isValid({ validator: v }, b, { x: 'a' }, b)).toBe(false);
   });
 
   it('reuses the cached entry when a structurally-identical rootSchema arrives', () => {
@@ -403,8 +403,8 @@ describe('handleSchemaUpdate', () => {
       type: 'object',
       properties: { x: { type: 'string' } },
     };
-    expect(v.isValid(first, { x: 'a' }, first)).toBe(true);
-    expect(v.isValid(second, { x: 'b' }, second)).toBe(true);
+    expect(v.isValid({ validator: v }, first, { x: 'a' }, first)).toBe(true);
+    expect(v.isValid({ validator: v }, second, { x: 'b' }, second)).toBe(true);
   });
 });
 
@@ -436,7 +436,7 @@ describe('cloneForValidation', () => {
         type: 'object',
         properties: { x: { type: 'string' } },
       };
-      v.isValid(schema, { x: 'a' }, schema);
+      v.isValid({ validator: v }, schema, { x: 'a' }, schema);
       expect(spy).toHaveBeenCalled();
     } finally {
       if (original === undefined) {
@@ -455,8 +455,8 @@ describe('cloneForValidation', () => {
     const v = customizeValidator();
     // Primitive formData skips the clone path; verify validation still works.
     const schema: RJSFSchema = { type: 'string' };
-    expect(v.isValid(schema, 'hello', schema)).toBe(true);
-    expect(v.isValid(schema, undefined, schema)).toBe(false);
+    expect(v.isValid({ validator: v }, schema, 'hello', schema)).toBe(true);
+    expect(v.isValid({ validator: v }, schema, undefined, schema)).toBe(false);
   });
 });
 

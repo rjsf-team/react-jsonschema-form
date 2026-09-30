@@ -22,8 +22,8 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
     ): ValidationData<T> {
       return validator.validateFormData(context, formData, schema, customValidate, transformErrors);
     },
-    isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
-      return validator.isValid(schema, formData, rootSchema);
+    isValid(context: Readonly<SchemaContext>, schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
+      return validator.isValid(context, schema, formData, rootSchema);
     },
     rawValidation<Result = any>(
       schema: RJSFSchema,

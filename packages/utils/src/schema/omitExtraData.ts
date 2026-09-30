@@ -4,17 +4,9 @@ import getSchemaType from '../getSchemaType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
-import type {
-  CustomMergeAllOf,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  SchemaContext,
-  StrictRJSFSchema,
-} from '../types.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
-import shallowAllOfMerge from './shallowAllOfMerge.ts';
+import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -35,17 +27,6 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
-/** Merges an `allOf` schema into a single flat schema, delegating to `customMergeAllOf`
- * when provided or falling back to the module-level `shallowAllOfMerge` otherwise.
- *
- * @param schema - A schema containing an `allOf` array to be merged
- * @param [customMergeAllOf] - Optional custom merge function; see `Form` documentation
- * @returns - The merged schema with `allOf` resolved into a single schema object
- */
-function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S, customMergeAllOf?: CustomMergeAllOf<S>): S {
-  return customMergeAllOf ? customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
-}
-
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
  * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
@@ -63,7 +44,7 @@ export default function omitExtraData<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: Readonly<SchemaContext<S, F>>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
-  const { validator, customMergeAllOf } = context;
+  const { validator } = context;
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -249,7 +230,7 @@ export default function omitExtraData<
     }
     // validator.isValid signature: (schema, formData, rootSchema)
     const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(condition as S, source, rootSchema)
+      ? validator.isValid(context, condition as S, source, rootSchema)
       : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
@@ -377,7 +358,7 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      localSchema = doMergeAllOf<S>(localSchema, customMergeAllOf);
+      localSchema = mergeAllOf<S, F>(context, localSchema);
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.
