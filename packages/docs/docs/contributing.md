@@ -96,6 +96,16 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.ts` also lists the shared setup file. Without it the tests still pass, but the snapshots pick up numbered `data-testid` values that the other themes don't produce:
+
+```ts
+export default mergeConfig(base, {
+  test: {
+    setupFiles: ['../snapshot-tests/src/setup.ts'],
+  },
+});
+```
+
 Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `snapshot-tests` package and do `pnpm run test:update` from the root directory to update all the snapshots.
 If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
 For example:
