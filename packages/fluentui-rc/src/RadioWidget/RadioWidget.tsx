@@ -73,7 +73,7 @@ export default function RadioWidget<
               <Radio
                 id={optionId(id, index)}
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}
                 disabled={disabled || itemDisabled || readonly}

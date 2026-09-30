@@ -222,6 +222,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -250,6 +251,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -278,6 +280,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -306,6 +309,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -334,6 +338,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"
@@ -1135,6 +1140,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -1163,6 +1169,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -1191,6 +1198,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -1219,6 +1227,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -1247,6 +1256,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"
@@ -2077,6 +2087,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -2105,6 +2116,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -2133,6 +2145,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -2161,6 +2174,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -2189,6 +2203,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"
@@ -2839,6 +2854,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -2867,6 +2883,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -2895,6 +2912,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -2923,6 +2941,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -2951,6 +2970,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"
@@ -3752,6 +3772,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -3780,6 +3801,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -3808,6 +3830,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -3836,6 +3859,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -3864,6 +3888,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"
@@ -4331,6 +4356,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="0"
                     />
                     <div
                       aria-hidden="true"
@@ -4359,6 +4385,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="1"
                     />
                     <div
                       aria-hidden="true"
@@ -4387,6 +4414,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="2"
                     />
                     <div
                       aria-hidden="true"
@@ -4415,6 +4443,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="3"
                     />
                     <div
                       aria-hidden="true"
@@ -4443,6 +4472,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       name="root_person_race"
                       required=""
                       type="checkbox"
+                      value="4"
                     />
                     <div
                       aria-hidden="true"

@@ -146,6 +146,31 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
     });
 
+    it('should render examples that share a String() as one option, without duplicate keys (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          default: 'true',
+          examples: [1, '1', true, 2],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['1', 'true', '2']);
+      expect(consoleErrorSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not suggest a null default or example as the string "null"', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: ['string', 'null'],
+          default: null,
+          examples: ['a', null],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
     it('should include default in datalist when types mismatch and values differ', () => {
       const { node } = createFormComponent({
         schema: {

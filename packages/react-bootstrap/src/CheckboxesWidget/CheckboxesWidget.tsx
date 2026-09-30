@@ -3,6 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
@@ -61,6 +62,7 @@ export default function CheckboxesWidget<
               inline={inline}
               required={required}
               checked={checked}
+              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
               className='bg-transparent border-0'
               type='checkbox'
               id={optionId(id, index)}

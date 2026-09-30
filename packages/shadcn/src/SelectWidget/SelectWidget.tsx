@@ -91,7 +91,7 @@ export default function SelectWidget<
   });
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
-    value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+    value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
     label: option.label,
     index: option.index,
     disabled: option.disabled,

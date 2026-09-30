@@ -405,7 +405,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the first enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, including object, array and `null` values, which are encoded as their prefixed index. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value and decode to the first of them.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, including object, array and `null` values and options that share a `String()`, which are encoded as their prefixed index.
 A bare index is not an option's position here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with `enumOptionsValueForIndex()` instead.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
@@ -420,19 +420,21 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 
 - unknown: The original typed enum value(s)
 
-### enumOptionValueEncoder()
+### enumOptionValueEncoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Encodes an enum option value into a string for a DOM value attribute.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
 Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
+Options of `enumOptions` whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own. A widget passes the same list it decodes with, since `enumOptionValueDecoder()` and `enumOptionSelectedValue()` encode against it.
 When `format` is `'indexed'` (the default), returns the index as a string.
 
 #### Parameters
 
 - value: unknown - The typed enum value
 - index: number - The option's position in the enumOptions array
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options, which keep options that share a `String()` apart; the same list the widget decodes with
 - [format='indexed']: OptionValueFormat - How to encode the value for the DOM attribute
 
 #### Returns

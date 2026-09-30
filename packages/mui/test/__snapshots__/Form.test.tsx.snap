@@ -4056,6 +4056,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-0"
                         name="root[choices][]"
                         type="checkbox"
+                        value="0"
                       />
                       <svg
                         aria-hidden="true"
@@ -4088,6 +4089,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-1"
                         name="root[choices][]"
                         type="checkbox"
+                        value="1"
                       />
                       <svg
                         aria-hidden="true"
@@ -4120,6 +4122,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-2"
                         name="root[choices][]"
                         type="checkbox"
+                        value="2"
                       />
                       <svg
                         aria-hidden="true"
@@ -18081,6 +18084,7 @@ exports[`single fields > checkboxes field 1`] = `
                 id="root-0"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <svg
                 aria-hidden="true"
@@ -18113,6 +18117,7 @@ exports[`single fields > checkboxes field 1`] = `
                 id="root-1"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <svg
                 aria-hidden="true"
@@ -18145,6 +18150,7 @@ exports[`single fields > checkboxes field 1`] = `
                 id="root-2"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <svg
                 aria-hidden="true"
@@ -18177,6 +18183,7 @@ exports[`single fields > checkboxes field 1`] = `
                 id="root-3"
                 name="root"
                 type="checkbox"
+                value="3"
               />
               <svg
                 aria-hidden="true"
@@ -18610,6 +18617,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 id="root-0"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <svg
                 aria-hidden="true"
@@ -18642,6 +18650,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 id="root-1"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <svg
                 aria-hidden="true"
@@ -18674,6 +18683,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 id="root-2"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <svg
                 aria-hidden="true"
@@ -19094,6 +19104,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 id="root-0"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <svg
                 aria-hidden="true"
@@ -19126,6 +19137,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 id="root-1"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <svg
                 aria-hidden="true"
@@ -19158,6 +19170,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 id="root-2"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <svg
                 aria-hidden="true"
@@ -39909,6 +39922,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 id="root-0"
                 name="root"
                 type="checkbox"
+                value="0"
               />
               <svg
                 aria-hidden="true"
@@ -39942,6 +39956,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 id="root-1"
                 name="root"
                 type="checkbox"
+                value="1"
               />
               <svg
                 aria-hidden="true"
@@ -39974,6 +39989,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 id="root-2"
                 name="root"
                 type="checkbox"
+                value="2"
               />
               <svg
                 aria-hidden="true"
@@ -40006,6 +40022,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 id="root-3"
                 name="root"
                 type="checkbox"
+                value="3"
               />
               <svg
                 aria-hidden="true"

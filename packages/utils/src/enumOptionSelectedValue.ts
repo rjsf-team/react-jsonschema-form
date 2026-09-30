@@ -39,12 +39,12 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
     // Encoded the same way as the options' values so they match, e.g. `null` is its option's index on both sides
     const encode = (item: any, noMatch: any) => {
       // Only a value encoded as its index needs the scan that searches for one
-      if (!encodesAsIndex(item)) {
-        return enumOptionValueEncoder(item, 0, format);
+      if (!encodesAsIndex<S>(item, enumOptions)) {
+        return enumOptionValueEncoder<S>(item, 0, enumOptions, format);
       }
       const index = enumOptionsIndexForValue<S>(item, enumOptions);
       // A value with no matching option has no index to encode, which would otherwise render as the string `NaN`
-      return index === undefined ? noMatch : enumOptionValueEncoder(item, Number(index), format);
+      return index === undefined ? noMatch : enumOptionValueEncoder<S>(item, Number(index), enumOptions, format);
     };
     if (!multiple) {
       return encode(value, emptyValue);

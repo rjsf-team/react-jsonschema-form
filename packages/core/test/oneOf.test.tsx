@@ -3490,6 +3490,71 @@ describe('oneOf', () => {
       expect(getSelectedOptionValue(select)).toEqual('None');
     });
 
+    describe.each(['select', 'radio'])('consts whose String() is the same (#5315) as a %s', (widget) => {
+      it('should select each of them in the realValue format', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              oneOf: [
+                { const: 1, title: 'Number' },
+                { const: '1', title: 'String' },
+                { const: true, title: 'True' },
+                { const: 'true', title: 'String true' },
+              ],
+            },
+          },
+        };
+        const uiSchema: UiSchema = { p: { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } } };
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: 1 } });
+        const optionValues = [...node.querySelectorAll<HTMLInputElement | HTMLOptionElement>('option, input')]
+          .map((option) => option.value)
+          .filter((value) => value !== '');
+        expect(new Set(optionValues).size).toBe(4);
+
+        const pickAndExpect = async (label: string, value: unknown) => {
+          await (widget === 'select'
+            ? user.selectOptions(node.querySelector('select')!, label)
+            : user.click(screen.getByLabelText(label)));
+          expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: value } }), 'root_p');
+        };
+        await pickAndExpect('String', '1');
+        await pickAndExpect('Number', 1);
+        await pickAndExpect('String true', 'true');
+        await pickAndExpect('True', true);
+      });
+    });
+
+    it('should check each of the consts whose String() is the same in the realValue format (#5315)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'array',
+            uniqueItems: true,
+            items: {
+              anyOf: [
+                { const: 1, title: 'Number' },
+                { const: '1', title: 'String' },
+              ],
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        p: { 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat: 'realValue' } },
+      };
+      const { onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: ['1'] } });
+
+      const numberBox = screen.getByLabelText<HTMLInputElement>('Number');
+      const stringBox = screen.getByLabelText<HTMLInputElement>('String');
+      expect(numberBox.value).not.toBe(stringBox.value);
+      expect(stringBox).toBeChecked();
+      expect(numberBox).not.toBeChecked();
+      await user.click(numberBox);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: [1, '1'] } }), 'root_p');
+    });
+
     it('should render a null const property the same way as an explicit type of null', () => {
       const constSchema: RJSFSchema = { type: 'object', properties: { note: { const: null } } };
       const typeSchema: RJSFSchema = { type: 'object', properties: { note: { type: 'null' } } };

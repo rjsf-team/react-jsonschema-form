@@ -99,7 +99,7 @@ export default function SelectWidget<
     return (
       <MenuItem
         key={option.index}
-        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        value={enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat)}
         disabled={option.disabled}
       >
         {option.label}

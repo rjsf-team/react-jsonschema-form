@@ -75,7 +75,7 @@ export default function CheckboxesWidget<
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
               disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+              value={enumOptionValueEncoder(option.value, i, enumOptions, optionValueFormat)}
             >
               {option.label}
             </Checkbox>

@@ -14,6 +14,7 @@ exports[`CheckboxesWidget > inline 1`] = `
         name="_id"
         required=""
         type="checkbox"
+        value="0"
       />
       <label
         class="form-check-label"
@@ -41,6 +42,7 @@ exports[`CheckboxesWidget > simple 1`] = `
         name="_id"
         required=""
         type="checkbox"
+        value="0"
       />
       <label
         class="form-check-label"

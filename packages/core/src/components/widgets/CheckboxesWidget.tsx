@@ -72,7 +72,7 @@ function CheckboxesWidget<
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}

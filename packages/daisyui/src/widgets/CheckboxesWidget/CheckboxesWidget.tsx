@@ -100,7 +100,7 @@ export default function CheckboxesWidget<
               id={optionId(id, index)}
               className='checkbox'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
               checked={enumOptionsIsSelected<S>(option.value, selected)}
               disabled={disabled || readonly}
               data-index={index}

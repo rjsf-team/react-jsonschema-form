@@ -9,9 +9,8 @@ export interface SchemaExamplesProps<S extends StrictRJSFSchema = RJSFSchema> {
 }
 
 /** Renders a `<datalist>` element containing options from schema examples and default value.
- * Normalizes types to prevent duplicate keys when examples and default have different types.
- * For example, if examples are strings ["5432"] and default is number 5432, the default
- * will not be added as a duplicate option.
+ * A datalist suggests strings, so examples and a default that share a `String()` are one option. For example, if
+ * examples are `["5432", 5432]` and default is `5432`, a single `5432` option is rendered.
  *
  * @param props - The `SchemaExamplesProps` for this component
  */
@@ -21,18 +20,18 @@ export default function SchemaExamples<S extends StrictRJSFSchema = RJSFSchema>(
   if (!Array.isArray(examples)) {
     return null;
   }
+  // `String()` spells `null` as a `'null'` a user could pick, and an object or array as nothing a user could type
+  const suggestions = new Set(
+    (schemaDefault === undefined ? examples : [...examples, schemaDefault])
+      .filter((example) => typeof example !== 'object')
+      .map(String),
+  );
   return (
     <datalist key={`datalist_${id}`} id={examplesId(id)}>
-      {(examples as string[])
-        .concat(
-          schemaDefault !== undefined && !examples.map(String).includes(String(schemaDefault))
-            ? ([schemaDefault] as string[])
-            : [],
-        )
-        .map((example: any) => (
-          // oxlint-disable-next-line jsx-a11y/control-has-associated-label
-          <option key={String(example)} value={example} />
-        ))}
+      {[...suggestions].map((example) => (
+        // oxlint-disable-next-line jsx-a11y/control-has-associated-label
+        <option key={example} value={example} />
+      ))}
     </datalist>
   );
 }

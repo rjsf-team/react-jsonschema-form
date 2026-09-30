@@ -1110,7 +1110,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -1118,7 +1118,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1141,7 +1141,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -1149,7 +1149,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1172,7 +1172,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -1180,7 +1180,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4501,7 +4501,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-0"
               role="checkbox"
               type="button"
-              value="on"
+              value="0"
             />
             <input
               aria-hidden="true"
@@ -4509,7 +4509,7 @@ exports[`single fields > checkboxes field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="0"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4532,7 +4532,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-1"
               role="checkbox"
               type="button"
-              value="on"
+              value="1"
             />
             <input
               aria-hidden="true"
@@ -4540,7 +4540,7 @@ exports[`single fields > checkboxes field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="1"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4563,7 +4563,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-2"
               role="checkbox"
               type="button"
-              value="on"
+              value="2"
             />
             <input
               aria-hidden="true"
@@ -4571,7 +4571,7 @@ exports[`single fields > checkboxes field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="2"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4594,7 +4594,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-3"
               role="checkbox"
               type="button"
-              value="on"
+              value="3"
             />
             <input
               aria-hidden="true"
@@ -4602,7 +4602,7 @@ exports[`single fields > checkboxes field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="3"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4661,7 +4661,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-0"
               role="checkbox"
               type="button"
-              value="on"
+              value="0"
             >
               <span
                 class="flex items-center justify-center text-current transition-none"
@@ -4693,7 +4693,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="0"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4716,7 +4716,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-1"
               role="checkbox"
               type="button"
-              value="on"
+              value="1"
             />
             <input
               aria-hidden="true"
@@ -4724,7 +4724,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="1"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4747,7 +4747,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-2"
               role="checkbox"
               type="button"
-              value="on"
+              value="2"
             />
             <input
               aria-hidden="true"
@@ -4755,7 +4755,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="2"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4832,7 +4832,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-0"
               role="checkbox"
               type="button"
-              value="on"
+              value="0"
             />
             <input
               aria-hidden="true"
@@ -4840,7 +4840,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="0"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4863,7 +4863,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-1"
               role="checkbox"
               type="button"
-              value="on"
+              value="1"
             />
             <input
               aria-hidden="true"
@@ -4871,7 +4871,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="1"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4894,7 +4894,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-2"
               role="checkbox"
               type="button"
-              value="on"
+              value="2"
             />
             <input
               aria-hidden="true"
@@ -4902,7 +4902,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="2"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -11845,7 +11845,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-0"
               role="checkbox"
               type="button"
-              value="on"
+              value="0"
             />
             <input
               aria-hidden="true"
@@ -11853,7 +11853,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="0"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -11878,7 +11878,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-1"
               role="checkbox"
               type="button"
-              value="on"
+              value="1"
             />
             <input
               aria-hidden="true"
@@ -11887,7 +11887,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="1"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -11910,7 +11910,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-2"
               role="checkbox"
               type="button"
-              value="on"
+              value="2"
             />
             <input
               aria-hidden="true"
@@ -11918,7 +11918,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="2"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -11941,7 +11941,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-3"
               role="checkbox"
               type="button"
-              value="on"
+              value="3"
             />
             <input
               aria-hidden="true"
@@ -11949,7 +11949,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
               tabindex="-1"
               type="checkbox"
-              value="on"
+              value="3"
             />
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"

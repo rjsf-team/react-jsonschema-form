@@ -74,7 +74,6 @@ describe('enumOptionValueDecoder', () => {
       const options: EnumOptionsType[] = [
         { value: null, label: 'None' },
         { value: 0, label: 'Zero' },
-        { value: '0', label: 'Zero string' },
       ];
       expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBeNull();
       expect(enumOptionValueDecoder('0', options, 'realValue')).toBe(0);
@@ -96,6 +95,17 @@ describe('enumOptionValueDecoder', () => {
       expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBe(
         `${ENUM_OPTION_INDEX_PREFIX}1`,
       );
+    });
+    it('tells apart options whose String() is the same', () => {
+      const options: EnumOptionsType[] = [
+        { value: 1, label: 'Number' },
+        { value: '1', label: 'String' },
+        { value: 2, label: 'Two' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue', 'empty')).toBe(1);
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, options, 'realValue', 'empty')).toBe('1');
+      expect(enumOptionValueDecoder('1', options, 'realValue', 'empty')).toBe('empty');
+      expect(enumOptionValueDecoder('2', options, 'realValue', 'empty')).toBe(2);
     });
     it('returns emptyValue for empty string when an option is null', () => {
       expect(enumOptionValueDecoder('', nullableOptions, 'realValue', 'empty')).toBe('empty');

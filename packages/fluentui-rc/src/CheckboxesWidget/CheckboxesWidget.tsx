@@ -5,6 +5,7 @@ import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
+  enumOptionValueEncoder,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
@@ -77,6 +78,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 label={option.label}
                 checked={checked}
+                value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange(index)}

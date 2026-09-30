@@ -81,7 +81,7 @@ export default function RadioWidget<
                   // oxlint-disable-next-line react/no-array-index-key
                   key={i}
                   id={optionId(id, i)}
-                  value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                  value={enumOptionValueEncoder(option.value, i, enumOptions, optionValueFormat)}
                   label={option.label}
                   disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
                   autoFocus={i === 0 && autofocus}

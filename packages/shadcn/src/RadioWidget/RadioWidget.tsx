@@ -58,7 +58,7 @@ export default function RadioWidget<
               <div className='flex items-center gap-2' key={optionId(id, index)}>
                 <RadioGroupItem
                   checked={checked}
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                  value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                   id={optionId(id, index)}
                   disabled={itemDisabled}
                 />

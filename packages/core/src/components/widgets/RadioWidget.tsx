@@ -65,7 +65,7 @@ function RadioWidget<
                 checked={checked}
                 name={htmlName || id}
                 required={required}
-                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                value={enumOptionValueEncoder(option.value, i, enumOptions, optionValueFormat)}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && i === 0}
                 onChange={handleChange}

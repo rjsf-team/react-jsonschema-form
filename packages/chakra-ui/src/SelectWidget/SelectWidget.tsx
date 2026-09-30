@@ -63,10 +63,10 @@ export default function SelectWidget<
   const toItem = useCallback(
     (option: IndexedEnumOptionType<S>) => ({
       label: option.label,
-      value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+      value: enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
       disabled: option.disabled,
     }),
-    [optionValueFormat],
+    [enumOptions, optionValueFormat],
   );
 
   const groupedOptions = useMemo(

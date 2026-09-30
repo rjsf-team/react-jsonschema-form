@@ -1504,6 +1504,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-0"
                           name="root_person_race"
                           type="checkbox"
+                          value="0"
                         />
                         <svg
                           aria-hidden="true"
@@ -1536,6 +1537,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-1"
                           name="root_person_race"
                           type="checkbox"
+                          value="1"
                         />
                         <svg
                           aria-hidden="true"
@@ -1568,6 +1570,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-2"
                           name="root_person_race"
                           type="checkbox"
+                          value="2"
                         />
                         <svg
                           aria-hidden="true"
@@ -1600,6 +1603,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-3"
                           name="root_person_race"
                           type="checkbox"
+                          value="3"
                         />
                         <svg
                           aria-hidden="true"
@@ -1632,6 +1636,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-4"
                           name="root_person_race"
                           type="checkbox"
+                          value="4"
                         />
                         <svg
                           aria-hidden="true"
@@ -3932,6 +3937,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-0"
                           name="root_person_race"
                           type="checkbox"
+                          value="0"
                         />
                         <svg
                           aria-hidden="true"
@@ -3964,6 +3970,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-1"
                           name="root_person_race"
                           type="checkbox"
+                          value="1"
                         />
                         <svg
                           aria-hidden="true"
@@ -3996,6 +4003,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-2"
                           name="root_person_race"
                           type="checkbox"
+                          value="2"
                         />
                         <svg
                           aria-hidden="true"
@@ -4028,6 +4036,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-3"
                           name="root_person_race"
                           type="checkbox"
+                          value="3"
                         />
                         <svg
                           aria-hidden="true"
@@ -4060,6 +4069,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-4"
                           name="root_person_race"
                           type="checkbox"
+                          value="4"
                         />
                         <svg
                           aria-hidden="true"
@@ -6564,6 +6574,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           id="root_person_race-0"
                           name="root_person_race"
                           type="checkbox"
+                          value="0"
                         />
                         <svg
                           aria-hidden="true"
@@ -6596,6 +6607,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           id="root_person_race-1"
                           name="root_person_race"
                           type="checkbox"
+                          value="1"
                         />
                         <svg
                           aria-hidden="true"
@@ -6628,6 +6640,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           id="root_person_race-2"
                           name="root_person_race"
                           type="checkbox"
+                          value="2"
                         />
                         <svg
                           aria-hidden="true"
@@ -6660,6 +6673,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           id="root_person_race-3"
                           name="root_person_race"
                           type="checkbox"
+                          value="3"
                         />
                         <svg
                           aria-hidden="true"
@@ -6692,6 +6706,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           id="root_person_race-4"
                           name="root_person_race"
                           type="checkbox"
+                          value="4"
                         />
                         <svg
                           aria-hidden="true"
@@ -8807,6 +8822,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-0"
                           name="root_person_race"
                           type="checkbox"
+                          value="0"
                         />
                         <svg
                           aria-hidden="true"
@@ -8839,6 +8855,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-1"
                           name="root_person_race"
                           type="checkbox"
+                          value="1"
                         />
                         <svg
                           aria-hidden="true"
@@ -8871,6 +8888,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-2"
                           name="root_person_race"
                           type="checkbox"
+                          value="2"
                         />
                         <svg
                           aria-hidden="true"
@@ -8903,6 +8921,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-3"
                           name="root_person_race"
                           type="checkbox"
+                          value="3"
                         />
                         <svg
                           aria-hidden="true"
@@ -8935,6 +8954,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           id="root_person_race-4"
                           name="root_person_race"
                           type="checkbox"
+                          value="4"
                         />
                         <svg
                           aria-hidden="true"
@@ -10984,6 +11004,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-0"
                         name="root_person_race"
                         type="checkbox"
+                        value="0"
                       />
                       <svg
                         aria-hidden="true"
@@ -11016,6 +11037,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-1"
                         name="root_person_race"
                         type="checkbox"
+                        value="1"
                       />
                       <svg
                         aria-hidden="true"
@@ -11048,6 +11070,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-2"
                         name="root_person_race"
                         type="checkbox"
+                        value="2"
                       />
                       <svg
                         aria-hidden="true"
@@ -11080,6 +11103,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-3"
                         name="root_person_race"
                         type="checkbox"
+                        value="3"
                       />
                       <svg
                         aria-hidden="true"
@@ -11112,6 +11136,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-4"
                         name="root_person_race"
                         type="checkbox"
+                        value="4"
                       />
                       <svg
                         aria-hidden="true"
@@ -12642,6 +12667,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-0"
                         name="root_person_race"
                         type="checkbox"
+                        value="0"
                       />
                       <svg
                         aria-hidden="true"
@@ -12674,6 +12700,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-1"
                         name="root_person_race"
                         type="checkbox"
+                        value="1"
                       />
                       <svg
                         aria-hidden="true"
@@ -12706,6 +12733,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-2"
                         name="root_person_race"
                         type="checkbox"
+                        value="2"
                       />
                       <svg
                         aria-hidden="true"
@@ -12738,6 +12766,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-3"
                         name="root_person_race"
                         type="checkbox"
+                        value="3"
                       />
                       <svg
                         aria-hidden="true"
@@ -12770,6 +12799,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                         id="root_person_race-4"
                         name="root_person_race"
                         type="checkbox"
+                        value="4"
                       />
                       <svg
                         aria-hidden="true"

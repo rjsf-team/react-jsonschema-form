@@ -69,7 +69,7 @@ function SelectWidget<
           .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
   const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
   const selectedOptions = selectedOptionsWithIndex.map((option) =>
-    enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+    enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
   );
 
   const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
@@ -84,7 +84,7 @@ function SelectWidget<
     return (
       <Option
         key={option.index}
-        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
+        value={enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat)}
         disabled={option.disabled}
       >
         {option.label}

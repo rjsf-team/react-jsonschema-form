@@ -72,8 +72,8 @@ export type TestIdShape = Record<string, string>;
  *   submission. Object, array and `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
  *   (e.g. `__rjsf_index:2`), which keeps them apart from a string option that happens to look like an index. The empty
  *   string, which a select's empty placeholder carries, and a string option that starts with the prefix are encoded as
- *   their index too. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value, so an enum mixing
- *   them needs the `'indexed'` format.
+ *   their index too, and so are options whose `String()` is the same, such as `1` and `'1'`, so each keeps a DOM value
+ *   of its own.
  */
 export type OptionValueFormat = 'indexed' | 'realValue';
 
@@ -584,7 +584,8 @@ interface GlobalUISchemaOptionsKeys {
    *    `null` values are encoded as their index behind the `ENUM_OPTION_INDEX_PREFIX`
    *    (e.g. `"__rjsf_index:2"`), since `String(obj)` would produce `"[object Object]"`
    *    and `String(null)` would collide with a `"null"` string option. So is the empty
-   *    string, which would collide with the select's empty placeholder.
+   *    string, which would collide with the select's empty placeholder, and so are options
+   *    whose `String()` is the same, such as `1` and `'1'`, which would collide with each other.
    *
    *  The form data passed to `onChange` is always the typed enum value; this option
    *  only affects the DOM-level encoding.

@@ -70,7 +70,7 @@ describe('enumOptionSelectedValue', () => {
     });
     it('encodes null the same way as the option value', () => {
       expect(enumOptionSelectedValue(null, mixedOptions, false, 'realValue', '')).toBe(
-        enumOptionValueEncoder(null, 1, 'realValue'),
+        enumOptionValueEncoder(null, 1, mixedOptions, 'realValue'),
       );
     });
     it('encodes an object value as its option index', () => {
@@ -125,6 +125,20 @@ describe('enumOptionSelectedValue', () => {
       ]);
       expect(enumOptionSelectedValue(null, stringOptions, true, 'realValue', [])).toEqual([]);
       expect(enumOptionSelectedValue('bar', stringOptions, true, 'realValue', [])).toEqual(['bar']);
+    });
+    it('encodes a value whose String() another option shares as its own option does', () => {
+      const options: EnumOptionsType[] = [
+        { label: 'Number', value: 1 },
+        { label: 'String', value: '1' },
+        { label: 'Two', value: 2 },
+      ];
+      expect(enumOptionSelectedValue('1', options, false, 'realValue', '')).toBe(`${ENUM_OPTION_INDEX_PREFIX}1`);
+      expect(enumOptionSelectedValue(1, options, false, 'realValue', '')).toBe(`${ENUM_OPTION_INDEX_PREFIX}0`);
+      expect(enumOptionSelectedValue(['1', 2, 1], options, true, 'realValue', [])).toEqual([
+        `${ENUM_OPTION_INDEX_PREFIX}1`,
+        '2',
+        `${ENUM_OPTION_INDEX_PREFIX}0`,
+      ]);
     });
     it('returns String(value) for a single string value', () => {
       expect(enumOptionSelectedValue('bar', stringOptions, false, 'realValue', '')).toBe('bar');

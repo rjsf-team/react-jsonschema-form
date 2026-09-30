@@ -58,7 +58,7 @@ export default function CheckboxesWidget<
                   key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                  value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={handleBlur}
                   onFocus={handleFocus}

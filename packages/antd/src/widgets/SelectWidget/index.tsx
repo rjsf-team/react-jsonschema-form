@@ -96,7 +96,7 @@ export default function SelectWidget<
       const toOptionType = (option: IndexedEnumOptionType<S>): DefaultOptionType => ({
         disabled: option.disabled,
         key: String(option.index),
-        value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+        value: enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
         label: option.label,
       });
       const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(

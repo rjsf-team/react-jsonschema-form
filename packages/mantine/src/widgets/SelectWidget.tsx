@@ -71,7 +71,7 @@ export default function SelectWidget<
   const selectOptions = useMemo(() => {
     const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({
       key: String(option.index),
-      value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+      value: enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
       label: option.label,
       disabled: option.disabled,
     });

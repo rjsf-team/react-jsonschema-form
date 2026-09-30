@@ -46,7 +46,7 @@ export default function RadioWidget<
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
-              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}

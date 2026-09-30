@@ -89,7 +89,7 @@ export default function RadioWidget<
                   <Radio {...muiSlotProps?.radio} name={htmlName || id} id={optionId(id, index)} color='primary' />
                 }
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}
                 disabled={disabled || itemDisabled || readonly}
