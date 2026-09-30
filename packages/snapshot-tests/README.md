@@ -71,11 +71,13 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-The suites expect `getTestIds` from `@rjsf/utils` to be mocked out, and the mock has to be registered before your `Form` is imported, so add the package's setup file to your vitest config. Vitest leaves packages installed in `node_modules` to Node, which bypasses its mocks, so `@rjsf/core` also has to be inlined for the mock to reach the components that read `getTestIds()`:
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out, and the mock has to be registered before your `Form` is imported, so add the package's setup file to your vitest config. Vitest leaves packages installed in `node_modules` to Node, which bypasses its mocks, so `@rjsf/core` also has to be inlined for the mock to reach the components that read `getTestIds()`. The setup file and the suites call Vitest's `vi`, `describe` and `test` as globals and render into a DOM, so the config needs `globals: true` and `environment: 'jsdom'` too:
 
 ```ts
 export default defineConfig({
   test: {
+    globals: true,
+    environment: 'jsdom',
     setupFiles: ['@rjsf/snapshot-tests/lib/setup.js'],
     server: { deps: { inline: [/@rjsf\//] } },
   },
