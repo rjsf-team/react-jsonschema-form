@@ -6,18 +6,30 @@ exports[`ToggleWidget > renders correctly 1`] = `
     class="form-control"
   >
     <label
-      class="cursor-pointer label my-auto"
+      class="cursor-pointer label my-auto justify-start"
     >
-      <input
-        checked=""
-        class="toggle "
-        id="test-id"
-        required=""
-        type="checkbox"
-      />
+      <span
+        class="mr-2"
+      >
+        <input
+          aria-describedby="test-id__error test-id__description test-id__help"
+          checked=""
+          class="toggle "
+          id="test-id"
+          name="test-id"
+          type="checkbox"
+        />
+      </span>
       <span
         class="label-text"
-      />
+      >
+        Sample Field Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
+      </span>
     </label>
   </div>
 </DocumentFragment>
@@ -29,19 +41,31 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
     class="form-control"
   >
     <label
-      class="cursor-pointer label my-auto"
+      class="cursor-pointer label my-auto justify-start"
     >
-      <input
-        checked=""
-        class="toggle "
-        disabled=""
-        id="test-id"
-        required=""
-        type="checkbox"
-      />
+      <span
+        class="mr-2"
+      >
+        <input
+          aria-describedby="test-id__error test-id__description test-id__help"
+          checked=""
+          class="toggle "
+          disabled=""
+          id="test-id"
+          name="test-id"
+          type="checkbox"
+        />
+      </span>
       <span
         class="label-text"
-      />
+      >
+        Sample Field Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
+      </span>
     </label>
   </div>
 </DocumentFragment>
@@ -53,18 +77,30 @@ exports[`ToggleWidget > renders with custom label 1`] = `
     class="form-control"
   >
     <label
-      class="cursor-pointer label my-auto"
+      class="cursor-pointer label my-auto justify-start"
     >
-      <input
-        checked=""
-        class="toggle "
-        id="test-id"
-        required=""
-        type="checkbox"
-      />
+      <span
+        class="mr-2"
+      >
+        <input
+          aria-describedby="test-id__error test-id__description test-id__help"
+          checked=""
+          class="toggle "
+          id="test-id"
+          name="test-id"
+          type="checkbox"
+        />
+      </span>
       <span
         class="label-text"
-      />
+      >
+        Custom Toggle Label
+        <span
+          class="text-error ml-1"
+        >
+          *
+        </span>
+      </span>
     </label>
   </div>
 </DocumentFragment>

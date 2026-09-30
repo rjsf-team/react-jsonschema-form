@@ -65,14 +65,17 @@ import hasWidget from './hasWidget.ts';
 import {
   ariaDescribedByIds,
   buttonId,
+  dateElementId,
   descriptionId,
   errorId,
   examplesId,
   expandButtonId,
+  fieldLabelId,
   helpId,
   optionalControlsId,
   optionId,
   titleId,
+  triggerValueId,
 } from './idGenerators.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -168,6 +171,7 @@ export {
   createSchemaUtils,
   DateElement,
   dataURItoBlob,
+  dateElementId,
   dateRangeOptions,
   deepEquals,
   descriptionId,
@@ -185,6 +189,7 @@ export {
   examplesId,
   expandButtonId,
   ErrorSchemaBuilder,
+  fieldLabelId,
   findSchemaDefinition,
   flattenGroupedOptions,
   getChangedFields,
@@ -277,6 +282,7 @@ export {
   fieldPathToList,
   fieldPathToName,
   toPath,
+  triggerValueId,
   unsetByPath,
   unwrapErrorHandler,
   useAltDateWidgetProps,

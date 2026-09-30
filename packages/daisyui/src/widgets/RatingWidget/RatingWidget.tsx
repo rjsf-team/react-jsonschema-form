@@ -2,6 +2,8 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
+import { getGroupProps } from '../../utils.ts';
+
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
  * Features:
@@ -24,6 +26,9 @@ export default function RatingWidget<
 >({
   id,
   value,
+  label,
+  name,
+  hideLabel,
   required,
   disabled,
   readonly,
@@ -94,7 +99,10 @@ export default function RatingWidget<
 
   return (
     <div className='form-control w-full'>
-      <div className={`rating gap-1 ${sizeClass}`}>
+      <div
+        className={`rating gap-1 ${sizeClass}`}
+        {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}
+      >
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;
           return (

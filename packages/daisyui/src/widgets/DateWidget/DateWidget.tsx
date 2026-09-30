@@ -1,129 +1,76 @@
-import type { RefObject } from 'react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { format, isSameDay, isToday, isValid } from 'date-fns';
-import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
-import { DayPicker, UI } from 'react-day-picker';
+import { format, startOfDay } from 'date-fns';
 
-import 'react-day-picker/dist/style.css';
+import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
+import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
+import DatePickerTrigger from '../DatePickerTrigger.tsx';
 
-/**
- * Props for the DatePicker popup component
+/** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
+const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
+
+/** A zone offset spelled as hours from UTC, which `Z` is not. It has to follow a time to count, so a bare `YYYY-MM`
+ * is not read as May with a five-hour offset
  */
-interface DatePickerProps {
-  /** Currently selected date */
-  selectedDate?: Date;
-  /** Currently displayed month */
-  month: Date;
-  /** Handler for month changes */
-  onMonthChange: (date: Date) => void;
-  /** Handler for date selection */
-  onSelect: (date: Date | undefined) => void;
+const NUMERIC_OFFSET = /\d{2}:\d{2}(:\d{2})?(\.\d+)?[+-]\d{2}(:?\d{2})?$/;
+
+/** The calendar day a date-time's own text names, read as a day in its own right rather than through the `Date`
+ * constructor, which reads a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
+ *
+ * @param text - A date-time beginning with a `YYYY-MM-DD` day, or nothing where the stored value is not text
+ * @returns - That day at local midnight, or `undefined` if the text does not begin with one
+ */
+function dayNamedBy(text?: string) {
+  return readDateOnly(text?.match(LEADING_DAY)?.[0]);
 }
 
-/**
- * Custom hook to manage the picker's popup state and displayed month
+/** Reads the stored value of a date field as the calendar day it stands for.
  *
- * @param initialDate - Initial date to display, defaults to today
- * @returns State and handlers for the date picker
+ * A value carrying a time is not a `date` at all, and the day it names is the one its own text spells: whatever wrote
+ * `2020-01-03T12:00:00Z` meant the third, and reading the instant where the calendar day differs would show the fourth
+ * to a reader far enough east.
+ *
+ * The exception is the shape this widget stores for a field declaring a date-time: `toISOString()` of the midnight
+ * beginning the day the user picked, in the zone they picked it in, whose text names the day before to everyone ahead
+ * of UTC. It is told apart by its zone — a value stamped with an offset of its own came from somewhere else, and is
+ * read as its text reads however that offset resolves here.
+ *
+ * Exactly twelve hours ahead of UTC the two readings cannot be told apart at all: a day picked there is stored as the
+ * midday UTC instant of the day before, which is the same instant, and all but the milliseconds `toISOString()` always
+ * emits the same text, as a backend's own midday-UTC value for that earlier day. A midday value is read there as the
+ * local day its instant begins, since reading the text first instead would move every day this widget itself stored in
+ * a zone ahead of UTC. Deciding it from the format the field declares rather than from the value's shape is #5395.
+ *
+ * @param raw - The stored value
+ * @returns - The day it names, or `undefined` for a value that names none — an object or a boolean as much as an
+ *          unreadable text
  */
-function useDatePickerState(initialDate?: Date) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState<Date>(initialDate ?? new Date());
-  return { isOpen, setIsOpen, month, setMonth };
+function parseDateValue(raw: unknown) {
+  const text = typeof raw === 'string' ? raw.trim() : undefined;
+  const dateOnly = readDateOnly(text);
+  if (dateOnly) {
+    return dateOnly;
+  }
+  const instant = readInstant(raw);
+  const dayInItsOwnText = dayNamedBy(text);
+  if (!instant) {
+    // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
+    // that day rather than thrown away along with the instant no engine agreed on
+    return dayInItsOwnText;
+  }
+  const writtenByThisWidget =
+    !(text && NUMERIC_OFFSET.test(text)) && instant.getTime() === startOfDay(instant).getTime();
+  if (writtenByThisWidget) {
+    return instant;
+  }
+  if (dayInItsOwnText) {
+    return dayInItsOwnText;
+  }
+  // Left with a value whose text names no day at all — a `YYYY-MM`, or an epoch number that is not text to begin with.
+  // A UTC midnight names the day `Date` resolved it to; anything else names only the day its instant lands on here
+  const iso = instant.toISOString();
+  return (iso.endsWith('T00:00:00.000Z') ? dayNamedBy(iso) : undefined) ?? instant;
 }
-
-/**
- * Custom hook to detect clicks outside an element and run a callback
- *
- * @param ref - React ref to the element to monitor
- * @param callback - Function to call when a click outside is detected
- */
-function useClickOutside(ref: RefObject<HTMLDivElement | null>, callback: () => void) {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ref, callback]);
-}
-
-/**
- * Predefined DayPicker styles using DaisyUI classes
- */
-const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<ModifiersClassNames> } = {
-  classNames: {
-    [UI.Root]: 'relative',
-    [UI.Nav]: 'hidden',
-    [UI.Chevron]: 'hidden',
-    [UI.CaptionLabel]: 'hidden',
-    [UI.Dropdowns]: 'flex justify-between gap-4 px-4 pb-4',
-    [UI.Dropdown]: 'select select-bordered select-sm w-32',
-    [UI.MonthsDropdown]: 'select select-bordered select-sm',
-    [UI.YearsDropdown]: 'select select-bordered select-sm',
-    [UI.Months]: 'flex justify-center',
-    [UI.Month]: 'w-full',
-    [UI.MonthCaption]: 'flex justify-center',
-    [UI.MonthGrid]: 'w-full',
-    [UI.Weekdays]: 'grid grid-cols-7 text-center border-b mb-2 pb-1 text-base-content/60 uppercase',
-    [UI.Weekday]: 'p-1 font-medium text-base-content/60 text-sm',
-    [UI.Week]: 'grid grid-cols-7',
-    [UI.Day]: 'w-10 h-8 p-0 relative rounded-md',
-    [UI.DayButton]:
-      'btn btn-ghost absolute inset-0 flex items-center justify-center w-full h-full cursor-pointer rounded-md hover:btn-primary',
-  },
-  modifiers: {
-    selected: 'btn btn-accent min-h-0 h-full',
-    outside: 'text-base-content/30 hover:btn-ghost',
-    disabled: 'opacity-50 cursor-not-allowed hover:btn-disabled',
-  },
-};
-
-/**
- * Popup component for the calendar
- *
- * Renders a DayPicker calendar for selecting dates
- *
- * @param props - The DatePickerProps for this component
- */
-function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DatePickerProps) {
-  const customDayModifiers = {
-    selected: selectedDate,
-    'custom-today': (date: Date) => isToday(date) && !(selectedDate && isSameDay(date, selectedDate)),
-  };
-
-  const customModifiersClassNames: ModifiersClassNames = {
-    ...dayPickerStyles.modifiers,
-    'custom-today': 'btn btn-outline btn-info min-h-0 h-full',
-  };
-
-  return (
-    <div className='p-3' style={{ minWidth: '320px', minHeight: '350px' }}>
-      <DayPicker
-        mode='single'
-        selected={selectedDate}
-        month={month}
-        onMonthChange={onMonthChange}
-        onSelect={onSelect}
-        captionLayout='dropdown'
-        startMonth={new Date(1900, 0)}
-        endMonth={new Date(new Date().getFullYear() + 10, 11)}
-        showOutsideDays
-        classNames={dayPickerStyles.classNames}
-        modifiers={customDayModifiers}
-        modifiersClassNames={customModifiersClassNames}
-      />
-    </div>
-  );
-}
-
-// Use React.memo to optimize re-renders
-const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
  *
@@ -141,122 +88,56 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, onChange, onFocus, onBlur, schema } = props;
-  // Initialize the local date from the parent's value.
-  const initialDate = useMemo(() => (value ? new Date(value) : undefined), [value]);
-  const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
+  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const initialDate = useMemo(() => parseDateValue(value), [value]);
+  const formatDate = useDateFormatter<S>(schema, 'date');
+  const {
+    isOpen,
+    month,
+    displayedDate,
+    containerRef,
+    triggerRef,
+    chooseDate,
+    handleMonthChange,
+    togglePicker,
+    handleFocus,
+    handleBlur,
+    handleDone,
+  } = useDatePicker({ ...props, initialDate, formatDate, emptyValue: options.emptyValue });
 
-  // When the parent's value changes externally, update local state.
-  useEffect(() => {
-    setLocalDate(initialDate);
-  }, [initialDate]);
-
-  const { isOpen, setIsOpen, month, setMonth } = useDatePickerState(initialDate);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
-
-  // Close the popup when clicking outside and commit changes.
-  useClickOutside(containerRef, () => {
-    if (isOpen) {
-      setIsOpen(false);
-      onChange(localDate ? localDate.toISOString() : '');
-      // Manually invoke the blur handler to ensure blur event is triggered
-      if (onBlur) {
-        onBlur(id, value);
+  // Take the day the user picked, with no time component, since a `date` names none.
+  const handleSelect = useCallback(
+    (date: Date | undefined) => {
+      if (date) {
+        chooseDate(startOfDay(date));
       }
-    }
-  });
-
-  // When the local date changes, update the displayed month.
-  useEffect(() => {
-    if (localDate) {
-      setMonth(localDate);
-    }
-  }, [localDate, setMonth]);
-
-  // Update the month when the user navigates the calendar.
-  const handleMonthChange = useCallback((date: Date) => setMonth(date), [setMonth]);
-
-  // Update local state on day selection (but do not commit immediately).
-  const handleSelect = useCallback((date: Date | undefined) => {
-    if (date) {
-      // Remove any time component by setting hours, minutes, seconds, and milliseconds to zero.
-      date.setHours(0, 0, 0, 0);
-      setLocalDate(date);
-    }
-  }, []);
-
-  // Add a portal container to the document body if it doesn't exist
-  useEffect(() => {
-    // Check if the portal container exists, create it if not
-    let portalContainer = document.getElementById('date-picker-portal');
-    if (!portalContainer) {
-      portalContainer = document.createElement('div');
-      portalContainer.id = 'date-picker-portal';
-      document.body.appendChild(portalContainer);
-    }
-
-    // Clean up on unmount
-    return () => {
-      // Only remove if no other date pickers are using it and if portalContainer exists
-      const container = document.getElementById('date-picker-portal');
-      if (container && document.querySelectorAll('.date-picker-popup').length === 0) {
-        container.remove();
-      }
-    };
-  }, []);
-
-  // Get the document and window objects (will work in iframes too)
-  const getDocumentAndWindow = () => {
-    // Try to get the iframe's document and window if we're in one
-    let doc = document;
-    let win = window;
-
-    try {
-      // If we're in an iframe, try to access the parent
-      if (window.frameElement) {
-        // We're in an iframe
-        const iframe = window.frameElement as HTMLIFrameElement;
-        // Get the iframe's contentDocument and contentWindow
-        if (iframe.contentDocument) {
-          doc = iframe.contentDocument;
-        }
-        if (iframe.contentWindow) {
-          win = iframe.contentWindow as typeof window;
-        }
-      }
-    } catch (e) {
-      // Security error, we're in a cross-origin iframe
-      // oxlint-disable-next-line no-console
-      console.log('Unable to access parent frame:', e);
-    }
-
-    return { doc, win };
-  };
+    },
+    [chooseDate],
+  );
 
   // Render the calendar at a specific position
   const renderCalendar = useCallback(() => {
-    if (!containerRef.current || !inputRef.current) {
+    if (!containerRef.current || !triggerRef.current) {
       return;
     }
 
-    // Get the proper document and window
-    const { win } = getDocumentAndWindow();
+    // The rect below is measured against the viewport of the window the form is in, so that is the width to keep the
+    // popup inside of
+    const win = windowOf(triggerRef.current);
 
-    const inputRect = inputRef.current.getBoundingClientRect();
-    const containerWidth = 320; // Minimum width we've set
+    const inputRect = triggerRef.current.getBoundingClientRect();
 
     // Position the calendar relative to the input but with fixed positioning
     containerRef.current.style.position = 'fixed';
     containerRef.current.style.top = `${inputRect.bottom + 5}px`;
 
     // Prevent it from going off-screen on the right
-    const rightEdge = inputRect.left + containerWidth;
+    const rightEdge = inputRect.left + CALENDAR_MIN_WIDTH;
     const windowWidth = win.innerWidth;
 
     if (rightEdge > windowWidth - 20) {
       // Align to the right edge if it would overflow
-      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - containerWidth)}px`;
+      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - CALENDAR_MIN_WIDTH)}px`;
     } else {
       // Otherwise align to the left edge of the input
       containerRef.current.style.left = `${inputRect.left}px`;
@@ -264,7 +145,7 @@ export default function DateWidget<
 
     // Ensure the calendar is visible
     containerRef.current.style.zIndex = '99999';
-  }, [containerRef, inputRef]);
+  }, [containerRef, triggerRef]);
 
   // Handle window resize to reposition the calendar
   useEffect(() => {
@@ -276,97 +157,37 @@ export default function DateWidget<
     renderCalendar();
 
     // Update position on resize
-    window.addEventListener('resize', renderCalendar);
-    window.addEventListener('scroll', renderCalendar);
+    const win = windowOf(triggerRef.current);
+    win.addEventListener('resize', renderCalendar);
+    win.addEventListener('scroll', renderCalendar);
 
     return () => {
-      window.removeEventListener('resize', renderCalendar);
-      window.removeEventListener('scroll', renderCalendar);
+      win.removeEventListener('resize', renderCalendar);
+      win.removeEventListener('scroll', renderCalendar);
     };
-  }, [isOpen, renderCalendar]);
+  }, [isOpen, renderCalendar, triggerRef]);
 
-  // Toggle popup visibility.
-  const togglePicker = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsOpen((prev) => !prev);
-      if (!isOpen && onFocus) {
-        onFocus(id, value);
-      }
-
-      // Position calculation will happen in the effect hook
-    },
-    [isOpen, id, onFocus, setIsOpen, value],
-  );
-
-  // Handle focus event
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [id, onFocus, value]);
-
-  // Handle blur event
-  const handleBlur = useCallback(() => {
-    if (!isOpen && onBlur) {
-      onBlur(id, value);
-    }
-  }, [id, onBlur, value, isOpen]);
-
-  // Close popup on escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-        if (onBlur) {
-          onBlur(id, value);
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [id, isOpen, setIsOpen, onBlur, value]);
-
-  // Add the handleDoneClick callback near the top of the component, with the other event handlers
-  /** Handle clicking the "Done" button
-   */
-  const handleDoneClick = useCallback(() => {
-    setIsOpen(false);
-    onChange(localDate ? localDate.toISOString() : '');
-    if (onBlur) {
-      onBlur(id, value);
-    }
-    inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value, setIsOpen]);
+  const formattedValue = displayedDate ? format(displayedDate, 'PP') : undefined;
 
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
-        <div
+        <DatePickerTrigger<T, S, F>
           id={id}
-          className={`input input-bordered w-full flex items-center justify-between cursor-pointer ${
-            isOpen ? 'ring-2 ring-primary/50' : ''
-          }`}
+          label={label}
+          name={name}
+          hideLabel={hideLabel}
+          placeholder={placeholder}
+          formattedValue={formattedValue}
+          isOpen={isOpen}
+          disabled={disabled}
+          readonly={readonly}
+          triggerRef={triggerRef}
           onClick={togglePicker}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              togglePicker(e as unknown as React.MouseEvent);
-            }
-          }}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          role='button'
-          aria-haspopup='true'
-          aria-expanded={isOpen}
-          tabIndex={0}
-          ref={inputRef}
-        >
-          <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
-            {localDate && isValid(localDate) ? format(localDate, 'PP') : schema.title}
-          </span>
-          <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
-        </div>
+          registry={registry}
+        />
         {isOpen && (
           <div
             ref={containerRef}
@@ -378,14 +199,16 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <MemoizedDatePickerPopup
-              selectedDate={localDate}
-              month={month}
-              onMonthChange={handleMonthChange}
-              onSelect={handleSelect}
-            />
+            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+              <DatePickerCalendar
+                selectedDate={displayedDate}
+                month={month}
+                onMonthChange={handleMonthChange}
+                onSelect={handleSelect}
+              />
+            </div>
             <div className='p-3 flex justify-end border-t border-base-300'>
-              <button type='button' className='btn btn-sm btn-primary' onClick={handleDoneClick}>
+              <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
                 Done
               </button>
             </div>

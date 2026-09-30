@@ -69,7 +69,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 - value: any - The value currently selected for this element
 - name: string - The name of the field the element belongs to
-- rootId: string - The id of the field, from which the element derives its own id by appending its `type`
+- rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
 - range: DateElementProp['range'] - The inclusive range of values the element offers
@@ -208,6 +208,27 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 #### Returns
 
 - \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
+
+### dateElementId()
+
+Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
+`DateElement` gives its `SelectWidget` this id, so a theme can point a label at the year, month or day control rather than rebuilding the id itself.
+Note that the separator here is always `_`, independent of the form's `idSeparator`.
+
+#### Parameters
+
+- rootId: string - The id of the `AltDateWidget` field the date element belongs to
+- type: string - The type of the date element, as given by its `DateElementProp`
+
+#### Returns
+
+- string: The consistent id for that date element's control
+
+#### Example
+
+```typescript
+dateElementId('root_birthday', 'year'); // 'root_birthday_year'
+```
 
 ### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -478,6 +499,27 @@ Return a consistent `id` for the expand button of a cyclic schema's expand contr
 #### Returns
 
 - string: The consistent id for the expand button from the given `id`
+
+### fieldLabelId()
+
+Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
+A widget that a `label htmlFor` cannot name — a group of controls, since the association reaches a single control rather than the element wrapping them — points `aria-labelledby` at this id, so its accessible name is the text the user actually sees.
+A single control, including a `button` a picker opens from, is named by the label's `htmlFor` alone: an `aria-labelledby` pointing here outranks that association, so under a `FieldTemplate` that renders no label with this id it would leave the control named by its own contents, or by nothing at all.
+Note that this cannot be [titleId()](#titleid), which `TitleFieldTemplate` already claims for the same field.
+
+#### Parameters
+
+- id: string - The id of the field
+
+#### Returns
+
+- string: The consistent id for that field's label element
+
+#### Example
+
+```typescript
+fieldLabelId('root_birthday'); // 'root_birthday__label'
+```
 
 ### fieldPathEndsWithIndex()
 
@@ -1906,6 +1948,25 @@ Only the grammar RJSF itself produces is supported: dots and brackets are always
 toPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
 toPath('a.0.b'); // ['a', '0', 'b']
 getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
+```
+
+### triggerValueId()
+
+Return a consistent `id` for the element inside a picker's trigger that displays the selected value.
+A trigger that is a `button` is named by the label pointing at it, which replaces its own contents, so the value it displays is only announced where something references this id — `aria-describedby`, the way a native control announces its value after its name.
+
+#### Parameters
+
+- id: string - The id of the trigger
+
+#### Returns
+
+- string: The consistent id for the element displaying its value
+
+#### Example
+
+```typescript
+triggerValueId('root_birthday'); // 'root_birthday__value'
 ```
 
 ### unsetByPath()

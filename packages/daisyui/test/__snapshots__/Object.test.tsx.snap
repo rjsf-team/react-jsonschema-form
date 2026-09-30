@@ -57,6 +57,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_name"
+                              id="root_person_name__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -67,17 +68,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <div
                               class="form-control"
                             >
-                              <label
-                                class="label hidden"
-                                for="root_person_name"
-                                style="display: none;"
-                              >
-                                <span
-                                  class="label-text"
-                                >
-                                  name
-                                </span>
-                              </label>
                               <div
                                 style="position: relative;"
                               >
@@ -142,6 +132,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -152,17 +143,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <div
                                         class="form-control"
                                       >
-                                        <label
-                                          class="label hidden"
-                                          for="root_person_address_street"
-                                          style="display: none;"
-                                        >
-                                          <span
-                                            class="label-text"
-                                          >
-                                            street
-                                          </span>
-                                        </label>
                                         <div
                                           style="position: relative;"
                                         >
@@ -199,6 +179,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -209,17 +190,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <div
                                         class="form-control"
                                       >
-                                        <label
-                                          class="label hidden"
-                                          for="root_person_address_city"
-                                          style="display: none;"
-                                        >
-                                          <span
-                                            class="label-text"
-                                          >
-                                            city
-                                          </span>
-                                        </label>
                                         <div
                                           style="position: relative;"
                                         >
@@ -256,6 +226,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_country"
+                                        id="root_person_address_country__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -266,17 +237,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <div
                                         class="form-control"
                                       >
-                                        <label
-                                          class="label hidden"
-                                          for="root_person_address_country"
-                                          style="display: none;"
-                                        >
-                                          <span
-                                            class="label-text"
-                                          >
-                                            country
-                                          </span>
-                                        </label>
                                         <div
                                           style="position: relative;"
                                         >
@@ -377,6 +337,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -387,17 +348,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -456,6 +406,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <label
                       class="label"
                       for="root_customField"
+                      id="root_customField__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -466,17 +417,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_customField"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          customField
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -613,6 +553,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -623,17 +564,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -670,6 +600,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -680,17 +611,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_age"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        age
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -733,17 +653,18 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <div
+                      <span
                         class="mr-2"
                       >
                         <input
+                          aria-describedby="root_active__error root_active__description root_active__help"
                           checked=""
                           class="checkbox"
                           id="root_active"
                           name="root[active]"
                           type="checkbox"
                         />
-                      </div>
+                      </span>
                       <span
                         class="label-text"
                       >
@@ -797,6 +718,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
+                                id="root_tags_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -812,17 +734,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_tags_0"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    tags-1
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -932,6 +843,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
+                                id="root_tags_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -947,17 +859,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_tags_1"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    tags-2
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1153,6 +1054,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1163,17 +1065,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_firstName"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        firstName
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1210,6 +1101,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_lastName"
+                    id="root_lastName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1220,17 +1112,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_lastName"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        lastName
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1267,6 +1148,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1277,17 +1159,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_age"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        age
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1395,6 +1266,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_name"
+                              id="root_person_name__label"
                             >
                               <span
                                 class="label-text font-medium"
@@ -1405,17 +1277,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <div
                               class="form-control"
                             >
-                              <label
-                                class="label hidden"
-                                for="root_person_name"
-                                style="display: none;"
-                              >
-                                <span
-                                  class="label-text"
-                                >
-                                  name
-                                </span>
-                              </label>
                               <div
                                 style="position: relative;"
                               >
@@ -1480,6 +1341,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1490,17 +1352,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <div
                                         class="form-control"
                                       >
-                                        <label
-                                          class="label hidden"
-                                          for="root_person_address_street"
-                                          style="display: none;"
-                                        >
-                                          <span
-                                            class="label-text"
-                                          >
-                                            street
-                                          </span>
-                                        </label>
                                         <div
                                           style="position: relative;"
                                         >
@@ -1537,6 +1388,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
@@ -1547,17 +1399,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <div
                                         class="form-control"
                                       >
-                                        <label
-                                          class="label hidden"
-                                          for="root_person_address_city"
-                                          style="display: none;"
-                                        >
-                                          <span
-                                            class="label-text"
-                                          >
-                                            city
-                                          </span>
-                                        </label>
                                         <div
                                           style="position: relative;"
                                         >
@@ -1658,6 +1499,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1668,17 +1510,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1715,6 +1546,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="label"
                     for="root_count"
+                    id="root_count__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1725,17 +1557,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_count"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        count
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1799,6 +1620,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <label
                                 class="label"
                                 for="root_items_0"
+                                id="root_items_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1814,17 +1636,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_items_0"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    items-1
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1934,6 +1745,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <label
                                 class="label"
                                 for="root_items_1"
+                                id="root_items_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1949,17 +1761,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_items_1"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    items-2
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -2155,6 +1956,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -2165,17 +1967,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_firstName"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        firstName
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -2212,6 +2003,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_lastName"
+                    id="root_lastName__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -2222,17 +2014,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_lastName"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        lastName
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -2269,6 +2050,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="label"
                     for="root_age"
+                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -2279,17 +2061,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_age"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        age
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -2391,6 +2162,7 @@ exports[`object fields > additionalProperties 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -2401,17 +2173,6 @@ exports[`object fields > additionalProperties 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2564,6 +2325,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
+                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
@@ -2571,10 +2333,12 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         >
                           <span
                             class="truncate"
+                            id="root_foo-key__value"
                           >
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼
@@ -2639,6 +2403,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -2649,17 +2414,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2828,6 +2582,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3035,6 +2790,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3045,17 +2801,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3224,6 +2969,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3234,17 +2980,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3403,6 +3138,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3441,6 +3177,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <label
                                 class="label"
                                 for="root_foo_foo"
+                                id="root_foo_foo__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3451,17 +3188,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_foo_foo"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    foo
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3626,6 +3352,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
+                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
@@ -3633,10 +3360,12 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         >
                           <span
                             class="truncate"
+                            id="root_foo-key__value"
                           >
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼
@@ -3701,6 +3430,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3711,17 +3441,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3874,6 +3593,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
+                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
@@ -3881,10 +3601,12 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         >
                           <span
                             class="truncate"
+                            id="root_foo-key__value"
                           >
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼
@@ -3949,6 +3671,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -3959,17 +3682,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4106,6 +3818,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -4116,17 +3829,6 @@ exports[`object fields > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_a"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        A
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -4163,6 +3865,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -4173,17 +3876,6 @@ exports[`object fields > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_b"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        B
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -4285,6 +3977,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4295,17 +3988,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_additionalProperty"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          additionalProperty
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4487,6 +4169,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4497,17 +4180,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4667,6 +4339,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -4677,17 +4350,6 @@ exports[`object fields > with title and description > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_a"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        A
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -4734,6 +4396,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -4744,17 +4407,6 @@ exports[`object fields > with title and description > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_b"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        B
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -4889,6 +4541,7 @@ exports[`object fields > with title and description > show add button and fields
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4899,17 +4552,6 @@ exports[`object fields > with title and description > show add button and fields
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_additionalProperty"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          additionalProperty
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5091,6 +4733,7 @@ exports[`object fields > with title and description from both > additionalProper
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5101,17 +4744,6 @@ exports[`object fields > with title and description from both > additionalProper
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5271,6 +4903,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5281,17 +4914,6 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_a"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        My Item A
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -5338,6 +4960,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5348,17 +4971,6 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_b"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        My Item B
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -5493,6 +5105,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <label
                       class="label"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5503,17 +5116,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5673,6 +5275,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="label"
                     for="root_a"
+                    id="root_a__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5683,17 +5286,6 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_a"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        My Item A
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -5740,6 +5332,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="label"
                     for="root_b"
+                    id="root_b__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -5750,17 +5343,6 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_b"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        My Item B
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -5895,6 +5477,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <label
                       class="label"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5905,17 +5488,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_additionalProperty"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          additionalProperty
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6064,17 +5636,6 @@ exports[`object fields > with title and description with global label off > addi
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_foo"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          foo
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6211,17 +5772,6 @@ exports[`object fields > with title and description with global label off > obje
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_a"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        A
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -6258,17 +5808,6 @@ exports[`object fields > with title and description with global label off > obje
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_b"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        B
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -6360,17 +5899,6 @@ exports[`object fields > with title and description with global label off > show
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_additionalProperty"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          additionalProperty
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >

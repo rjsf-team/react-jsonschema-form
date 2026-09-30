@@ -18,8 +18,11 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  triggerValueId,
   useSelectFocusHandlers,
 } from '@rjsf/utils';
+
+import { getTriggerDescribedBy } from '../../utils.ts';
 
 function getDisplayValue(val: any) {
   if (val === undefined || val === null) {
@@ -55,6 +58,8 @@ export default function SelectWidget<
   id,
   options,
   label,
+  name,
+  hideLabel,
   disabled,
   placeholder,
   readonly,
@@ -135,6 +140,7 @@ export default function SelectWidget<
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
   const selectedIndexes = [enumOptionsIndexForValue<S>(value, optionsList, isMultiple) ?? []].flat();
   const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
+  const hasValue = selectedLabels.length > 0;
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
@@ -186,11 +192,19 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
+          /* The label naming this button replaces its contents as its name, so the option it displays is announced
+             as its description instead — the same split a native control makes between its name and its value, and
+             the same one `DatePickerTrigger` makes, through the predicate both share */
+          aria-describedby={getTriggerDescribedBy({ id, label, name, hideLabel, hasValue })}
         >
-          <span className='truncate'>
-            {selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
+          <span id={triggerValueId(id)} className='truncate'>
+            {hasValue ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
           </span>
-          <span className='ml-2'>▼</span>
+          {/* Decoration, and hidden from the name the button's own contents give it where no label points at one —
+              a root field, a `oneOf` option selector — which would otherwise end in the glyph's own spoken name */}
+          <span aria-hidden className='ml-2'>
+            ▼
+          </span>
         </button>
         <ul
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role

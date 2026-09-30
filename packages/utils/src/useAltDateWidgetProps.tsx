@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
-import { ariaDescribedByIds } from './idGenerators.ts';
+import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
 import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
@@ -64,7 +64,7 @@ export function DateElement<
     onBlur,
     onFocus,
   } = props;
-  const id = `${rootId}_${type}`;
+  const id = dateElementId(rootId, type);
   const { SelectWidget } = registry.widgets;
   const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   return (

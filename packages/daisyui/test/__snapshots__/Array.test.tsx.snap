@@ -111,32 +111,9 @@ exports[`array fields > array icons 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -264,32 +241,9 @@ exports[`array fields > array icons 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -476,14 +430,6 @@ exports[`array fields > checkboxes 1`] = `
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -491,6 +437,7 @@ exports[`array fields > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -498,10 +445,12 @@ exports[`array fields > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -624,6 +573,7 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -634,17 +584,6 @@ exports[`array fields > empty errors array 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -721,32 +660,9 @@ exports[`array fields > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -781,32 +697,9 @@ exports[`array fields > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -899,6 +792,7 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -909,17 +803,6 @@ exports[`array fields > has errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1000,6 +883,7 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1010,17 +894,6 @@ exports[`array fields > no errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1115,6 +988,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1125,17 +999,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1172,6 +1035,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1182,17 +1046,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1331,6 +1184,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1341,17 +1195,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1388,6 +1231,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1398,17 +1242,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1606,32 +1439,9 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1738,32 +1548,9 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1929,14 +1716,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       <div
         class="field-template mb-3 rjsf-field rjsf-field-array"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
@@ -1944,6 +1723,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -1951,10 +1731,12 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -2077,32 +1859,9 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2137,32 +1896,9 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-number"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2204,11 +1940,11 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       class="form-control"
                     >
                       <input
+                        aria-describedby="root_2__error root_2__description root_2__help"
                         checked=""
                         class="checkbox"
                         id="root_2"
                         name="root[2]"
-                        required=""
                         type="checkbox"
                       />
                     </div>
@@ -2293,32 +2029,9 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2425,32 +2138,9 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2693,32 +2383,9 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2825,32 +2492,9 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               <div
                                 class="field-template mb-3 rjsf-field rjsf-field-string"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -3170,6 +2814,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3180,17 +2825,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3227,6 +2861,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3237,17 +2872,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3386,6 +3010,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3396,17 +3021,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3443,6 +3057,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3453,17 +3068,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3661,32 +3265,9 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3793,32 +3374,9 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   <div
                     class="field-template mb-3 rjsf-field rjsf-field-string"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4115,6 +3673,7 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4130,17 +3689,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4281,6 +3829,7 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4296,17 +3845,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4506,6 +4044,7 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -4520,6 +4059,7 @@ exports[`with title and description > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4527,10 +4067,12 @@ exports[`with title and description > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -4680,6 +4222,7 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4695,17 +4238,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4753,6 +4285,7 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4768,17 +4301,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4983,6 +4505,7 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4998,17 +4521,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5149,6 +4661,7 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5164,17 +4677,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5374,6 +4876,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -5388,6 +4891,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -5395,10 +4899,12 @@ exports[`with title and description from both > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -5548,6 +5054,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5563,17 +5070,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5621,6 +5117,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5636,17 +5133,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5851,6 +5337,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5866,17 +5353,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6017,6 +5493,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6032,17 +5509,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6242,6 +5708,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -6256,6 +5723,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -6263,10 +5731,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -6416,6 +5886,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6431,17 +5902,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6489,6 +5949,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6504,17 +5965,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6691,17 +6141,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6832,17 +6271,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7036,6 +6464,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -7043,10 +6472,12 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -7172,17 +6603,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7220,17 +6640,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >

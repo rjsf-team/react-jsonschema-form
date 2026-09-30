@@ -1,14 +1,17 @@
 import {
   ariaDescribedByIds,
   buttonId,
+  dateElementId,
   expandButtonId,
   descriptionId,
   errorId,
   examplesId,
+  fieldLabelId,
   helpId,
   optionalControlsId,
   optionId,
   titleId,
+  triggerValueId,
 } from '../src/index.ts';
 
 const SIMPLE_ID = 'simpleID';
@@ -28,6 +31,15 @@ describe('idGenerators', () => {
   });
   it('title id is generated for simple id', () => {
     expect(titleId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__title`);
+  });
+  it('field label id is generated for simple id', () => {
+    expect(fieldLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__label`);
+  });
+  it('trigger value id is generated for simple id', () => {
+    expect(triggerValueId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__value`);
+  });
+  it('date element id is generated for simple id', () => {
+    expect(dateElementId(SIMPLE_ID, 'year')).toEqual(`${SIMPLE_ID}_year`);
   });
   it('ariaDescribedBy ids are generated for simple id', () => {
     expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);
