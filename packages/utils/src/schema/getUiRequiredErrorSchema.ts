@@ -127,7 +127,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
   // `unknown` because uiSchemas are often untyped JSON, so `ui:required` may not be the boolean it is typed as
   const fieldUiRequired: unknown = getUiOptions<T, S, F>(uiSchema).required;
-  if (path.length > 0 && fieldUiRequired === true && formData === undefined && !(required && parentPresent)) {
+  if (path.length > 0 && Boolean(fieldUiRequired) && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
     // only when AJV will raise this exact message itself: the field is in its parent's schema `required` list AND
@@ -169,6 +169,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
+  // `unknown` for the same untyped-JSON reason as `fieldUiRequired`
   const branchUiRequired: unknown = getUiOptions<T, S, F>(branchUiSchema).required;
   const branchRequired = branchUiRequired !== undefined ? Boolean(branchUiRequired) : effectiveRequired;
   if (

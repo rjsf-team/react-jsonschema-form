@@ -717,6 +717,7 @@ function LayoutGridFieldComponent<
     // computed here.
     let requiredForField = isRequired;
     if (optionsInfo?.hasDiscriminator) {
+      // `unknown` and `Boolean()` because uiSchemas are often untyped JSON, so `ui:required` may not be a boolean
       const uiRequired: unknown = getUiOptions<T, S, F>(fieldUiSchema).required;
       requiredForField = uiRequired !== undefined ? Boolean(uiRequired) : isRequired;
     }

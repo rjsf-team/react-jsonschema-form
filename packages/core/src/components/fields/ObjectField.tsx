@@ -21,6 +21,7 @@ import {
   ANY_OF_KEY,
   getFreePropertyNames,
   getMatchingPatternProperties,
+  getSchemaType,
   getTemplates,
   getPropertySchema,
   getUiOptions,
@@ -57,7 +58,7 @@ function getDefaultValue<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(translateString: Registry<T, S, F>['translateString'], type?: RJSFSchema['type']) {
+>(translateString: Registry<T, S, F>['translateString'], type?: string | string[]) {
   switch (type) {
     case 'array':
       return [];
@@ -382,20 +383,19 @@ export default function ObjectField<
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
-      let type: RJSFSchema['type'] = undefined;
+      let type: ReturnType<typeof getSchemaType> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
       if (isObject(schema.additionalProperties)) {
-        type = schema.additionalProperties.type;
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
         const wasRef = REF_KEY in apSchema;
         if (wasRef) {
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
-          type = apSchema.type;
           constValue = apSchema.const;
         }
+        type = getSchemaType<S>(apSchema as S);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -535,10 +535,12 @@ export default function ObjectField<
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
+  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`, read as `unknown`
+  // like getDisplayLabel() does since uiSchemas are often untyped JSON and `"ui:label": 0` must hide the title too
+  const { label: showLabel = true }: { label?: unknown } = uiOptions;
   const templateProps = {
-    // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
-    title: uiOptions.label === false ? '' : templateTitle,
-    description: uiOptions.label === false ? undefined : description,
+    title: showLabel ? templateTitle : '',
+    description: showLabel ? description : undefined,
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
       const fieldUiSchema = getByPath<UiSchema<T, S, F> | undefined>(

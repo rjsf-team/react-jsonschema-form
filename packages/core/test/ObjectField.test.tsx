@@ -1627,6 +1627,21 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
     });
 
+    it.each<[RJSFSchema['type'], unknown]>([
+      [['integer', 'null'], 0],
+      [['number', 'null'], 0],
+      [['boolean', 'null'], false],
+    ])('should add a typed default for a nullable %j additionalProperties schema', async (type, expected) => {
+      const { node, onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type } },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+    });
+
     it('should add a string item if additionalProperties is true', async () => {
       // Specify that additionalProperties is true
       const customSchema: RJSFSchema = {
