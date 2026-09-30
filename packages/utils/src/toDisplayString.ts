@@ -22,7 +22,8 @@ function stringifyNonJson(_key: string, value: unknown): unknown {
 
 /** Converts `value` to a string the way `String()` does, except that a plain object or an array is spelled out as
  * JSON, since `String()` would turn every plain object into the same `[object Object]`. Values inside it that JSON has
- * no form for are spelled the way `String()` spells them. A plain object or array that still can't be converted, such
+ * no form for are spelled the way `String()` spells them, so they read the same as a string of that text: `{ a: 10n }`
+ * and `{ a: '10' }` both give `{"a":"10"}`. A plain object or array that still can't be converted, such
  * as a circular one or one whose `toJSON()` returns `undefined`, falls back to `String()`.
  *
  * @param value - The value to convert

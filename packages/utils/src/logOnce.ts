@@ -11,9 +11,9 @@ export type LogOnceLevel = 'warn' | 'error';
  * mistake, so an array of a thousand rows whose item schema is misconfigured twice is two thousand distinct messages.
  * What is bounded is the number of remembered messages, at twice this; how much memory they take follows what callers
  * pass, since a remembered message holds the `message` and the string form of the `error`, both of which can carry
- * arbitrary text, and a plain-object or array `error` is held as its whole JSON. Two full generations of the warnings raised inside this library, which run a few hundred bytes each,
- * stay under a megabyte. The cap is a ceiling rather than an allocation, so a form warning about a handful of fields
- * holds a handful of strings.
+ * arbitrary text, and a plain-object or array `error` is held as its whole JSON. Two full generations of the warnings
+ * raised inside this library, which run a few hundred bytes each, stay under a megabyte. The cap is a ceiling rather
+ * than an allocation, so a form warning about a handful of fields holds a handful of strings.
  */
 export const LOG_ONCE_MAX_MESSAGES = 2000;
 
@@ -33,9 +33,10 @@ let previousMessages = new Set<string>();
  * first time that combination of `level`, `message` and `error` is seen, so that a warning raised while rendering isn't
  * repeated on every re-render. The `error` is compared by its `String()` form, or its JSON for a plain object or array,
  * falling back to its type when that can't be converted, so two distinct values with the same form (two `Error`s of
- * the same type and message, say) are treated as one message. A message that has to be told apart from another must say so itself, as the field
- * warnings do by naming the field; one that identifies nothing, or only something as generic as a `dependencies` key,
- * is reported for whichever schema reaches it first and stays silent for the rest until the page is reloaded.
+ * the same type and message, say) are treated as one message. A message that has to be told apart from another must
+ * say so itself, as the field warnings do by naming the field; one that identifies nothing, or only something as
+ * generic as a `dependencies` key, is reported for whichever schema reaches it first and stays silent for the rest
+ * until the page is reloaded.
  *
  * @param message - The message to log
  * @param [level='warn'] - Which console method to log through

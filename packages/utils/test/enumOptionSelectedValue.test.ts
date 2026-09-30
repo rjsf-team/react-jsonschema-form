@@ -158,6 +158,9 @@ describe('enumOptionSelectedValue', () => {
         enumOptionValueEncoder(10n, 1, 'realValue'),
       );
     });
+    it('encodes an undefined entry of multiple values as the empty string, as the encoder does', () => {
+      expect(enumOptionSelectedValue([undefined, 'foo'], stringOptions, true, 'realValue', [])).toEqual(['', 'foo']);
+    });
     it('returns value.map(String) for multiple values', () => {
       expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, 'realValue', [])).toEqual(['foo', 'baz']);
     });

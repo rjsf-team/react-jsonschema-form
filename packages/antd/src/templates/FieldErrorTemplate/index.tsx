@@ -19,7 +19,9 @@ export default function FieldErrorTemplate<
   return (
     <div id={id}>
       {errors.map((error, index) => (
-        <div key={`field-${id}-error-${typeof error === 'string' ? `s-${error}-${index}` : `e-${error.key ?? index}`}`}>
+        <div
+          key={`field-${id}-error-${typeof error === 'string' || error.key === null ? `i-${index}` : `k-${error.key}`}`}
+        >
           {error}
         </div>
       ))}

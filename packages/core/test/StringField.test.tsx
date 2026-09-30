@@ -190,6 +190,16 @@ describe('StringField', () => {
       expect([...options].map((option) => option.value)).toEqual(['a']);
     });
 
+    it('should not offer a null default as a suggestion', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['string', 'null'], default: null, examples: ['a'] },
+      });
+      const values = [...node.querySelectorAll('.rjsf-field datalist > option')].map((option) =>
+        option.getAttribute('value'),
+      );
+      expect(values).toEqual(['a']);
+    });
+
     it('should include default in datalist when types mismatch and values differ', () => {
       const { node } = createFormComponent({
         schema: {
