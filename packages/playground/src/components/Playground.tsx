@@ -85,14 +85,17 @@ type LoadData = Sample & {
   validator?: string;
 };
 
-/** Decodes the setup a shared link carries in the URL hash. It's read once, before the playground first renders */
-function readSharedSetup(): LoadData | undefined {
-  const hash = typeof document === 'undefined' ? '' : document.location.hash.slice(1);
+/** Decodes the setup a shared link carries in the URL `hash`. It's read once, before the playground first renders */
+export function readSharedSetup(hash: string): LoadData | undefined {
   if (!hash) {
     return undefined;
   }
   try {
-    return JSON.parse(base64.decode(hash)) as LoadData;
+    const data: unknown = JSON.parse(base64.decode(hash));
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+      throw new TypeError(`A shared link's setup must be an object: ${hash}`);
+    }
+    return data as LoadData;
   } catch (error) {
     // oxlint-disable-next-line no-alert
     alert('Unable to load form setup data.');
@@ -101,13 +104,13 @@ function readSharedSetup(): LoadData | undefined {
   }
 }
 
-const sharedSetup = readSharedSetup();
+const sharedSetup = readSharedSetup(typeof document === 'undefined' ? '' : document.location.hash.slice(1));
 
 /** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
  * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
  * data doesn't carry them, so the caller keeps its own.
  */
-function loadedState(
+export function loadedState(
   data: LoadData,
   currentTheme: string,
   themes: PlaygroundProps['themes'],
@@ -133,20 +136,19 @@ function loadedState(
   // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
   const namedTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
   // Old shared links still name themes the playground has since dropped, such as `semantic-ui` or `fluent-ui`
-  const theme = namedTheme in themes ? namedTheme : 'default';
+  const theme = Object.hasOwn(themes, namedTheme) ? namedTheme : 'default';
   const uiSchema = typeof loadedUiSchema === 'function' ? loadedUiSchema(currentTheme) : loadedUiSchema;
-  const sampleUiSchema = sampleName && sampleName in samples ? samples[sampleName].uiSchema : undefined;
+  const sampleUiSchema = sampleName && Object.hasOwn(samples, sampleName) ? samples[sampleName].uiSchema : undefined;
   const liveSettings = normalizeLiveSettings(loadedLiveSettings);
+  // A hand-edited link, or one from before a validator was renamed, may name one the playground doesn't have
+  const knownValidator =
+    validator !== undefined && Object.hasOwn(validators, validator) ? validator : DEFAULT_VALIDATOR;
 
   // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
   let formData = loadedFormData;
   try {
     // A sample passes the current validator and a shared link carries its own
-    const schemaUtils = createSchemaUtils(
-      validators[validator ?? DEFAULT_VALIDATOR],
-      schema,
-      liveSettings.defaultFormStateBehavior,
-    );
+    const schemaUtils = createSchemaUtils(validators[knownValidator], schema, liveSettings.defaultFormStateBehavior);
     formData = schemaUtils.getDefaultFormState(schema, loadedFormData, false, false, uiSchema);
   } catch (error) {
     // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given
@@ -164,12 +166,13 @@ function loadedState(
     otherFormProps: { fields, templates, ...rest },
     sampleName,
     uiSchemaGenerator: typeof sampleUiSchema === 'function' ? { generator: sampleUiSchema } : undefined,
-    validator: 'validator' in data ? validator : undefined,
+    validator: validator === undefined ? undefined : knownValidator,
   };
 }
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
-  // `themes` and `validators` never change, so this is computed once, for the page's first render
+  // Only the first render's result is read: every `useState` below keeps its own value from then on, so a recompute
+  // (Fast Refresh recomputes every memo on save) repeats the work and logs a sample's errors again, and changes nothing
   const initial = useMemo(
     () =>
       loadedState(
