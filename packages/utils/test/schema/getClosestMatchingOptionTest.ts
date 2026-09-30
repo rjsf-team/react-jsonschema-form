@@ -115,25 +115,27 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     });
     it('scores a falsy const the way it scores a truthy one', () => {
       const schema: RJSFSchema = { properties: { flag: { type: 'boolean', const: false } } };
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { flag: false })).toEqual(2);
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { flag: true })).toEqual(0);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { flag: false })).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { flag: true })).toEqual(0);
     });
     it('scores a nested oneOf holding a falsy value the way it scores a truthy one', () => {
       const schema: RJSFSchema = { properties: { value: { oneOf: [{ type: 'string' }, { type: 'number' }] } } };
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { value: 0 })).toEqual(1);
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { value: 5 })).toEqual(1);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 0 })).toEqual(1);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(1);
     });
     it('does not score a nested oneOf against a null value', () => {
       const schema: RJSFSchema = {
         properties: { name: { type: 'string' }, extra: { oneOf: [{ type: 'string' }, { type: 'number' }] } },
       };
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { name: 'a', extra: null })).toEqual(1);
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { name: 'a' })).toEqual(1);
+      expect(
+        calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { name: 'a', extra: null }),
+      ).toEqual(1);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { name: 'a' })).toEqual(1);
     });
     it('does not compare a missing value to a const of null', () => {
       const schema: RJSFSchema = { properties: { n: { type: 'null', const: null } } };
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, {})).toEqual(1);
-      expect(calculateIndexScore(testValidator, oneOfSchema, schema, { n: null })).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, {})).toEqual(1);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { n: null })).toEqual(2);
     });
   });
   describe('oneOfMatchingOption', () => {

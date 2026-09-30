@@ -85,6 +85,7 @@ export default class ParserValidator<
   /** Implements the `ValidatorType` `isValid()` method to capture the `schema` in the `schemaMap`. Throws an error when
    * the `rootSchema` is not the same as the root schema provided during construction.
    *
+   * @param _context - The context parameter that is ignored
    * @param schema - The schema to record in the `schemaMap`
    * @param _formData - The formData parameter that is ignored
    * @param rootSchema - The root schema associated with the schema

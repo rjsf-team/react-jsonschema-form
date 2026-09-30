@@ -109,7 +109,9 @@ export function resolveCondition<
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
-  const conditionValue = context.validator.isValid(context, expression as S, formData || {}, rootSchema);
+  // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
+  // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
+  const conditionValue = context.validator.isValid(context, expression as S, formData ?? {}, rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {

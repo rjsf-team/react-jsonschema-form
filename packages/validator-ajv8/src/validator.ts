@@ -235,6 +235,7 @@ export default class AJV8Validator<
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
+   * @param _context - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions

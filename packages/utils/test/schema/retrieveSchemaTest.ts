@@ -1500,7 +1500,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           then: { title: 'matched' },
           else: { title: 'unmatched' },
         };
-        expect(retrieveSchema(testValidator, schema, {}, value)).toEqual({ type, title: 'matched' });
+        expect(retrieveSchema({ validator: testValidator }, schema, {}, value)).toEqual({ type, title: 'matched' });
       });
       it('evaluates an object condition against a null value as against an empty object', () => {
         const schema: RJSFSchema = {
@@ -1511,7 +1511,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         // The real validators ignore this and evaluate the condition, which is what pins the fallback to `{}`
         testValidator.setReturnValues({ isValid: [false] });
-        expect(retrieveSchema(testValidator, schema, {}, null)).toEqual({
+        expect(retrieveSchema({ validator: testValidator }, schema, {}, null)).toEqual({
           type: ['object', 'null'],
           title: 'unmatched',
         });

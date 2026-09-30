@@ -34,13 +34,6 @@ export default class AJV8PrecompiledValidator<
    */
   readonly rootSchema: S;
 
-  /** The `SchemaContext` naming this validator, used when a caller supplies none. Built once because `isValid()` calls
-   * `ensureSameRootSchema()` without one, and that runs for every node of the schema recursion
-   *
-   * @private
-   */
-  private readonly selfContext: Readonly<SchemaContext<S, F>> = Object.freeze({ validator: this });
-
   /** The `ValidatorFunctions` map used to construct this validator
    *
    * @private
@@ -110,10 +103,17 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate if any
    * @param [context] - The `SchemaContext` of the form, so the root schema resolves the way the form resolved it
    */
-  ensureSameRootSchema(schema: S, formData?: unknown, context: Readonly<SchemaContext<S, F>> = this.selfContext) {
+  ensureSameRootSchema(schema: S, formData?: unknown, context?: Readonly<SchemaContext<S, F>>) {
     if (!deepEquals(schema, this.rootSchema)) {
-      // Resolve the root schema with the passed in form data since that may affect the resolution
-      const resolvedRootSchema = retrieveSchema(context, this.rootSchema, this.rootSchema, formData);
+      // Resolve the root schema with the passed in form data since that may affect the resolution, and with this
+      // validator rather than whatever one the context names: only this validator's own precompiled functions can
+      // answer for the `oneOf`/`anyOf` options and conditions of its root schema, which `validateFormData()` also pins
+      const resolvedRootSchema = retrieveSchema(
+        { ...context, validator: this },
+        this.rootSchema,
+        this.rootSchema,
+        formData,
+      );
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
@@ -187,6 +187,7 @@ export default class AJV8PrecompiledValidator<
   /** Validates data against a schema, returning true if the data is valid, or false otherwise. If the schema is
    * invalid, then this function will return false.
    *
+   * @param context - The `SchemaContext` of the form, used to check the `rootSchema` against this validator's own
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
