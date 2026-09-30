@@ -78,6 +78,17 @@ describe('enumOptionValueDecoder', () => {
       expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBeNull();
       expect(enumOptionValueDecoder('0', options, 'realValue')).toBe(0);
     });
+    it('keeps a null option apart from primitive options that share a String() and are spelled as its index', () => {
+      const options: EnumOptionsType[] = [
+        { value: null, label: 'None' },
+        { value: 0, label: 'Zero' },
+        { value: '0', label: 'Zero string' },
+      ];
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}0`, options, 'realValue')).toBeNull();
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}1`, options, 'realValue')).toBe(0);
+      expect(enumOptionValueDecoder(`${ENUM_OPTION_INDEX_PREFIX}2`, options, 'realValue')).toBe('0');
+      expect(enumOptionValueDecoder('0', options, 'realValue', 'empty')).toBe('empty');
+    });
     it('finds an empty string option by its prefixed index, and reads the empty string as no selection', () => {
       const options: EnumOptionsType[] = [
         { value: 'a', label: 'A' },

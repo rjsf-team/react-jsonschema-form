@@ -68,6 +68,13 @@ describe('enumOptionValueEncoder', () => {
           'other',
         ]);
       });
+      it('does not count an undefined option as sharing the String() of an undefined string option', () => {
+        const undefinedOptions: EnumOptionsType[] = [
+          { value: undefined, label: 'None' },
+          { value: 'undefined', label: 'String' },
+        ];
+        expect(enumOptionValueEncoder('undefined', 1, undefinedOptions, 'realValue')).toBe('undefined');
+      });
       it('ignores the options in the indexed format', () => {
         expect(enumOptionValueEncoder('1', 1, options, 'indexed')).toBe('1');
       });

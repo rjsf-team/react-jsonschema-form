@@ -24,7 +24,8 @@ function sharedStrings(enumOptions: readonly { value: unknown }[]): Set<string> 
     const seen = new Set<string>();
     shared = new Set<string>();
     for (const { value } of enumOptions) {
-      if (!alwaysEncodesAsIndex(value)) {
+      // `undefined` is encoded as the empty string, so it shares nothing with a `'undefined'` option
+      if (value !== undefined && !alwaysEncodesAsIndex(value)) {
         const encoded = String(value);
         if (seen.has(encoded)) {
           shared.add(encoded);

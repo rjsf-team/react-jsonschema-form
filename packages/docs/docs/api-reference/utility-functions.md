@@ -1084,7 +1084,7 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (needed by [enumOptionValueEncoder()](#enumoptionvalueencoder) for the `indexed` `optionValueFormat`) and its `disabled` status (from `ui:enumDisabled`).
+Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (needed by [enumOptionValueEncoder()](#enumoptionvalueencoders-extends-strictrjsfschema--rjsfschema) for the `indexed` `optionValueFormat`) and its `disabled` status (from `ui:enumDisabled`).
 Each theme's `SelectWidget` calls it and renders the result with whatever grouping primitive its own UI library provides.
 
 When no `optgroups` is given, the same flat list of options is returned, just tagged, so a widget can use one rendering path whether or not grouping is in effect.
