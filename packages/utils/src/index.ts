@@ -10,13 +10,13 @@ import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
+import enumOptionsDomValues from './enumOptionsDomValues.ts';
 import enumOptionSelectedValue from './enumOptionSelectedValue.ts';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
 import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
 import enumOptionsSelectValue from './enumOptionsSelectValue.ts';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
-import enumOptionValueEncoder from './enumOptionValueEncoder.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
 import {
@@ -179,9 +179,9 @@ export {
   englishStringTranslator,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   enumOptionValueLabel,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,

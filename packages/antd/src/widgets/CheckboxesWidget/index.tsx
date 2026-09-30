@@ -4,7 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -37,6 +37,7 @@ export default function CheckboxesWidget<
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
@@ -75,7 +76,7 @@ export default function CheckboxesWidget<
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
               disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              value={enumOptionValueEncoder(option.value, i, enumOptions, optionValueFormat)}
+              value={domValues[i]}
             >
               {option.label}
             </Checkbox>

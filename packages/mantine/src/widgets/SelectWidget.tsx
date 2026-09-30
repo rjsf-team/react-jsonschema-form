@@ -5,7 +5,7 @@ import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSche
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -52,6 +52,10 @@ export default function SelectWidget<
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = useMemo(
+    () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
+    [enumOptions, optionValueFormat],
+  );
   const themeProps = cleanupOptions(options);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
@@ -71,7 +75,7 @@ export default function SelectWidget<
   const selectOptions = useMemo(() => {
     const toComboboxItem = (option: IndexedEnumOptionType<S>) => ({
       key: String(option.index),
-      value: enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
+      value: domValues[option.index],
       label: option.label,
       disabled: option.disabled,
     });
@@ -80,7 +84,7 @@ export default function SelectWidget<
         ? { group: item.label, items: item.options.map(toComboboxItem) }
         : toComboboxItem(item),
     );
-  }, [enumDisabled, enumOptions, optgroups, optionValueFormat]);
+  }, [enumDisabled, enumOptions, optgroups, domValues]);
 
   const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options);
 

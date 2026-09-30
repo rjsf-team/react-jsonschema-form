@@ -5,7 +5,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
@@ -60,6 +60,7 @@ function SelectWidget<
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const groupedOptions = useMemo(
     () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
@@ -100,11 +101,7 @@ function SelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
-      <option
-        key={option.index}
-        value={enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat)}
-        disabled={option.disabled}
-      >
+      <option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
         {option.label}
       </option>
     );

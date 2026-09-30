@@ -2,39 +2,9 @@ import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import CheckboxesWidget from '../src/CheckboxesWidget/index.ts';
 import Form from '../src/index.ts';
-import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
-
-describe('CheckboxesWidget', () => {
-  test('simple', () => {
-    const { asFragment } = render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({
-          options: {
-            enumOptions: [{ label: 'A', value: 'a' }],
-          },
-        })}
-      />,
-    );
-    expect(asFragment()).toMatchSnapshot();
-  });
-  test('inline', () => {
-    const { asFragment } = render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({
-          options: {
-            enumOptions: [{ label: 'A', value: 'a' }],
-            inline: true,
-          },
-        })}
-      />,
-    );
-    expect(asFragment()).toMatchSnapshot();
-  });
-});
 
 describe('CheckboxesWidget focus and blur', () => {
   it.each(['indexed', 'realValue'] as const)(

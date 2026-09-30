@@ -10,7 +10,7 @@ import type {
 } from './types.ts';
 
 /** Groups `enumOptions` according to `optgroups`, tagging every option along the way with its original array
- * `index` (needed by `enumOptionValueEncoder` for the `'indexed'` `optionValueFormat`) and its `disabled` status
+ * `index` (where a widget reads the option's DOM value in `enumOptionsDomValues()`) and its `disabled` status
  * (from `enumDisabled`).
  *
  * When `optgroups` isn't provided, returns the same flat list of options, just tagged, so callers can use one

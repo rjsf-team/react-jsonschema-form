@@ -5,7 +5,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   hasVisibleErrors,
   labelValue,
@@ -24,6 +24,7 @@ export default function CheckboxesWidget<
     props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
@@ -58,7 +59,7 @@ export default function CheckboxesWidget<
                   key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
-                  value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
+                  value={domValues[index]}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={handleBlur}
                   onFocus={handleFocus}

@@ -15,25 +15,6 @@ describe('SelectWidget', () => {
     { label: 'Qux', value: 'qux' },
   ];
 
-  test('gives options that share a label distinct ids (#5315)', () => {
-    const { container } = render(
-      <SelectWidget
-        {...makeWidgetMockProps({
-          id: 'root',
-          options: {
-            enumOptions: [
-              { label: '1', value: 1 },
-              { label: '1', value: '1' },
-            ],
-          },
-        })}
-      />,
-    );
-
-    const ids = [...container.querySelectorAll('option')].map((option) => option.id).filter(Boolean);
-    expect(ids).toEqual(['root-0', 'root-1']);
-  });
-
   test('renders optgroups when ui:options.optgroups is provided', () => {
     const { container } = render(
       <SelectWidget

@@ -4,14 +4,13 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
   hasVisibleErrors,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
-  optionId,
   SelectedOptionDescription,
 } from '@rjsf/utils';
 import { FormSelect } from 'react-bootstrap';
@@ -44,6 +43,7 @@ export default function SelectWidget<
 
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const groupedOptions = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled);
   const enumIndexByPosition = flattenGroupedOptions<S>(groupedOptions).map((option) => option.index);
@@ -68,12 +68,7 @@ export default function SelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
-      <option
-        key={option.index}
-        id={optionId(id, option.index)}
-        value={enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat)}
-        disabled={option.disabled}
-      >
+      <option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
         {option.label}
       </option>
     );

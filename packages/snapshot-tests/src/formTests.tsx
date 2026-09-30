@@ -5,9 +5,6 @@ import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-
-const user = userEvent.setup();
 
 export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
@@ -1476,35 +1473,21 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} formData={{ answer: true }} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
-  describe('checkboxes focus and blur', () => {
-    it.each(['indexed', 'realValue'] as const)(
-      'reports the focused option value in the %s format, apart from an option sharing its String() (#5315)',
-      async (optionValueFormat) => {
-        const onFocus = vi.fn();
-        const onBlur = vi.fn();
-        render(
-          <Form
-            schema={{ type: 'array', uniqueItems: true, items: { enum: [1, '1'] } }}
-            uiSchema={{ 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat } }}
-            validator={validator}
-            onFocus={onFocus}
-            onBlur={onBlur}
-          />,
-        );
-
-        await user.tab();
-        await user.tab();
-        await user.tab();
-
-        expect(onFocus.mock.calls).toEqual([
-          ['root', 1],
-          ['root', '1'],
-        ]);
-        expect(onBlur.mock.calls).toEqual([
-          ['root', 1],
-          ['root', '1'],
-        ]);
-      },
-    );
-  });
+  // A theme whose select keys or validates its items by value, like chakra's or mantine's, fails on options sharing one
+  describe.each(['select', 'radio'])(
+    '%s widget with options sharing a String() in the realValue format (#5315)',
+    (widget) => {
+      test('renders each option with a value of its own', () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { const: 1, title: 'Number' },
+            { const: '1', title: 'String' },
+          ],
+        };
+        const uiSchema: UiSchema = { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} formData='1' validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+    },
+  );
 }

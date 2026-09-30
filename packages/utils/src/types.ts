@@ -1259,8 +1259,8 @@ export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
  * grouped by `groupEnumOptions()`
  */
 export interface IndexedEnumOptionType<S extends StrictRJSFSchema = RJSFSchema> extends EnumOptionsType<S> {
-  /** This option's position in the original, ungrouped `enumOptions` array. Needed because `enumOptionValueEncoder`
-   * encodes values by their original index when using the `'indexed'` `optionValueFormat`
+  /** This option's position in the original, ungrouped `enumOptions` array, where a widget reads the option's DOM
+   * value in `enumOptionsDomValues()`
    */
   index: number;
   /** Whether this option is disabled, as determined by `ui:enumDisabled` */

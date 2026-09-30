@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
@@ -17,6 +17,7 @@ export default function RadioWidget<
 >({ id, htmlName, options, value, required, disabled, readonly, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
@@ -46,7 +47,7 @@ export default function RadioWidget<
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
-              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
+              value={domValues[index]}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}

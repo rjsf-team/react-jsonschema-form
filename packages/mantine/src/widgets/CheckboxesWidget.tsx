@@ -5,7 +5,7 @@ import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from 
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -26,6 +26,7 @@ export default function CheckboxesWidget<
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
@@ -80,7 +81,7 @@ export default function CheckboxesWidget<
                 key={i}
                 id={optionId(id, i)}
                 name={htmlName || id}
-                value={enumOptionValueEncoder(option.value, i, enumOptions, optionValueFormat)}
+                value={domValues[i]}
                 label={option.label}
                 disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
                 autoFocus={i === 0 && autofocus}

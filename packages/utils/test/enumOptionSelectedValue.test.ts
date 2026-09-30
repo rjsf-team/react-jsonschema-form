@@ -1,4 +1,4 @@
-import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionValueEncoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
@@ -65,12 +65,15 @@ describe('enumOptionSelectedValue', () => {
       { value: null, label: 'None' },
       { value: { id: 1 }, label: 'Object' },
     ];
+    it('encodes a primitive value as its String() without options', () => {
+      expect(enumOptionSelectedValue(1, undefined, false, 'realValue', '')).toBe('1');
+    });
     it('returns emptyValue for null when no option carries it', () => {
       expect(enumOptionSelectedValue(null, stringOptions, false, 'realValue', '')).toBe('');
     });
     it('encodes null the same way as the option value', () => {
       expect(enumOptionSelectedValue(null, mixedOptions, false, 'realValue', '')).toBe(
-        enumOptionValueEncoder(null, 1, mixedOptions, 'realValue'),
+        enumOptionsDomValues(mixedOptions, 'realValue')[1],
       );
     });
     it('encodes an object value as its option index', () => {

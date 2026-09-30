@@ -3,10 +3,10 @@ import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -47,6 +47,7 @@ export default function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const selected = useMemo(() => (Array.isArray(value) ? value : []), [value]);
 
   /** Handles changes to a checkbox's checked state */
@@ -100,7 +101,7 @@ export default function CheckboxesWidget<
               id={optionId(id, index)}
               className='checkbox'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
+              value={domValues[index]}
               checked={enumOptionsIsSelected<S>(option.value, selected)}
               disabled={disabled || readonly}
               data-index={index}

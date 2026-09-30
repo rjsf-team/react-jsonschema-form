@@ -6,7 +6,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
@@ -46,6 +46,10 @@ export default function SelectWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = useMemo(
+    () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
+    [enumOptions, optionValueFormat],
+  );
 
   const handleMultiChange = ({ value: newValue }: SelectValueChangeDetails) =>
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue));
@@ -63,10 +67,10 @@ export default function SelectWidget<
   const toItem = useCallback(
     (option: IndexedEnumOptionType<S>) => ({
       label: option.label,
-      value: enumOptionValueEncoder(option.value, option.index, enumOptions, optionValueFormat),
+      value: domValues[option.index],
       disabled: option.disabled,
     }),
-    [enumOptions, optionValueFormat],
+    [domValues],
   );
 
   const groupedOptions = useMemo(

@@ -3389,6 +3389,142 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="root"
+        />
+        <div
+          class="mb-0"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-orientation="vertical"
+            aria-required="false"
+            class="gap-3 flex flex-wrap flex-col"
+            data-orientation="vertical"
+            data-slot="radio-group"
+            dir="ltr"
+            role="radiogroup"
+            style="outline: none;"
+            tabindex="0"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <button
+                aria-checked="false"
+                class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                data-orientation="vertical"
+                data-radix-collection-item=""
+                data-slot="radio-group-item"
+                data-state="unchecked"
+                id="root-0"
+                role="radio"
+                tabindex="-1"
+                type="button"
+                value="__rjsf_index:0"
+              />
+              <input
+                aria-hidden="true"
+                style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                tabindex="-1"
+                type="radio"
+                value="__rjsf_index:0"
+              />
+              <label
+                class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+                data-slot="label"
+                for="root-0"
+              >
+                Number
+              </label>
+            </div>
+            <div
+              class="flex items-center gap-2"
+            >
+              <button
+                aria-checked="true"
+                class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                data-orientation="vertical"
+                data-radix-collection-item=""
+                data-slot="radio-group-item"
+                data-state="checked"
+                id="root-1"
+                role="radio"
+                tabindex="-1"
+                type="button"
+                value="__rjsf_index:1"
+              >
+                <span
+                  class="relative flex items-center justify-center"
+                  data-slot="radio-group-indicator"
+                  data-state="checked"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-circle fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <input
+                aria-hidden="true"
+                checked=""
+                style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                tabindex="-1"
+                type="radio"
+                value="__rjsf_index:1"
+              />
+              <label
+                class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+                data-slot="label"
+                for="root-1"
+              >
+                String
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from a nested oneOf of constants without a type 1`] = `
 <DocumentFragment>
   <form
@@ -3938,6 +4074,88 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 class="flex-1 line-clamp-1"
               >
                 No
+              </span>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m6 9 6 6 6-6"
+                />
+              </svg>
+            </button>
+            <div
+              class="relative"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          for="root"
+        />
+        <div
+          class="p-0.5"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            aria-disabled="false"
+            class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+            cmdk-root=""
+            data-slot="command"
+            tabindex="-1"
+          >
+            <label
+              cmdk-label=""
+              for="radix-_r_2s_"
+              id="radix-_r_2r_"
+              style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+            />
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id="root"
+              type="button"
+            >
+              <span
+                class="flex-1 line-clamp-1"
+              >
+                String
               </span>
               <svg
                 aria-hidden="true"

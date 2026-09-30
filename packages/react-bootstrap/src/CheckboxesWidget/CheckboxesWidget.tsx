@@ -3,8 +3,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
@@ -31,6 +31,7 @@ export default function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleChange =
@@ -62,7 +63,7 @@ export default function CheckboxesWidget<
               inline={inline}
               required={required}
               checked={checked}
-              value={enumOptionValueEncoder(option.value, index, enumOptions, optionValueFormat)}
+              value={domValues[index]}
               className='bg-transparent border-0'
               type='checkbox'
               id={optionId(id, index)}

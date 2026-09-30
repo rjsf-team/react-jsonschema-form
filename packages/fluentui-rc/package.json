@@ -42,7 +42,8 @@
     "@fluentui/react-migration-v0-v9": "^9.6.29",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
-    "@rjsf/utils": "workspace:^"
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^"
   },
   "directories": {
     "test": "test"

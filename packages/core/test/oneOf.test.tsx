@@ -3512,11 +3512,16 @@ describe('oneOf', () => {
           .filter((value) => value !== '');
         expect(new Set(optionValues).size).toBe(4);
 
+        const select = widget === 'select' ? node.querySelector<HTMLSelectElement>('select#root_p')! : undefined;
         const pickAndExpect = async (label: string, value: unknown) => {
-          await (widget === 'select'
-            ? user.selectOptions(node.querySelector('select')!, label)
-            : user.click(screen.getByLabelText(label)));
+          await (select ? user.selectOptions(select, label) : user.click(screen.getByLabelText(label)));
           expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: value } }), 'root_p');
+          // A select fires its change whatever it showed before, so what it shows now is checked on its own
+          if (select) {
+            expect(getSelectedOptionValue(select)).toEqual(label);
+          } else {
+            expect(screen.getByLabelText(label)).toBeChecked();
+          }
         };
         await pickAndExpect('String', '1');
         await pickAndExpect('Number', 1);
