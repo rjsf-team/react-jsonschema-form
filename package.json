@@ -10,7 +10,7 @@
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
     "lint": "oxlint",
-    "typecheck": "tsc --build tsconfig.typecheck-test.json tsconfig.typecheck-playground.json --builders 3 --checkers 1",
+    "typecheck": "tsc --build tsconfig.typecheck.json tsconfig.typecheck-bundler.json --builders 1 --checkers 2",
     "knip": "knip",
     "cs-check": "oxfmt --check",
     "cs-format": "oxfmt",

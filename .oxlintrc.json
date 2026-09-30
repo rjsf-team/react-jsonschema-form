@@ -770,6 +770,109 @@
       }
     },
     {
+      // The typecheck program gives package sources the tests' Node and Vitest globals, so this keeps published code
+      // off them. snapshot-tests' sources are Vitest suites and the playground isn't published, so they're left out.
+      // An override replaces the rule's options, so the root entries are repeated here
+      "files": [
+        "packages/{antd,chakra-ui,core,daisyui,fluentui-rc,mantine,mui,react-bootstrap,shadcn,utils,validator-ajv8,validator-ata,validator-cfworker}/src/**"
+      ],
+      "rules": {
+        "no-restricted-globals": [
+          "error",
+          { "name": "isFinite", "message": "Use Number.isFinite instead." },
+          { "name": "isNaN", "message": "Use Number.isNaN instead." },
+          { "name": "addEventListener" },
+          { "name": "blur" },
+          { "name": "close" },
+          { "name": "closed" },
+          { "name": "confirm" },
+          { "name": "defaultStatus" },
+          { "name": "defaultstatus" },
+          { "name": "event" },
+          { "name": "external" },
+          { "name": "find" },
+          { "name": "focus" },
+          { "name": "frameElement" },
+          { "name": "frames" },
+          { "name": "history" },
+          { "name": "innerHeight" },
+          { "name": "innerWidth" },
+          { "name": "length" },
+          { "name": "location" },
+          { "name": "locationbar" },
+          { "name": "menubar" },
+          { "name": "moveBy" },
+          { "name": "moveTo" },
+          { "name": "name" },
+          { "name": "onblur" },
+          { "name": "onerror" },
+          { "name": "onfocus" },
+          { "name": "onload" },
+          { "name": "onresize" },
+          { "name": "onunload" },
+          { "name": "open" },
+          { "name": "opener" },
+          { "name": "opera" },
+          { "name": "outerHeight" },
+          { "name": "outerWidth" },
+          { "name": "pageXOffset" },
+          { "name": "pageYOffset" },
+          { "name": "parent" },
+          { "name": "print" },
+          { "name": "removeEventListener" },
+          { "name": "resizeBy" },
+          { "name": "resizeTo" },
+          { "name": "screen" },
+          { "name": "screenLeft" },
+          { "name": "screenTop" },
+          { "name": "screenX" },
+          { "name": "screenY" },
+          { "name": "scroll" },
+          { "name": "scrollbars" },
+          { "name": "scrollBy" },
+          { "name": "scrollTo" },
+          { "name": "scrollX" },
+          { "name": "scrollY" },
+          { "name": "self" },
+          { "name": "status" },
+          { "name": "statusbar" },
+          { "name": "stop" },
+          { "name": "toolbar" },
+          { "name": "top" },
+          { "name": "Buffer", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "process", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "global", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "require", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "module", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          {
+            "name": "__dirname",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "__filename",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          { "name": "describe", "message": "Vitest globals are for tests." },
+          { "name": "it", "message": "Vitest globals are for tests." },
+          { "name": "test", "message": "Vitest globals are for tests." },
+          { "name": "expect", "message": "Vitest globals are for tests." },
+          { "name": "vi", "message": "Vitest globals are for tests." },
+          { "name": "beforeEach", "message": "Vitest globals are for tests." },
+          { "name": "afterEach", "message": "Vitest globals are for tests." },
+          { "name": "beforeAll", "message": "Vitest globals are for tests." },
+          { "name": "afterAll", "message": "Vitest globals are for tests." }
+        ]
+      }
+    },
+    {
       "files": ["packages/core/test/**"],
       "rules": {
         "no-unused-expressions": "off",

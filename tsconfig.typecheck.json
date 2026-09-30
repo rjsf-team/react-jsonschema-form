@@ -1,23 +1,15 @@
 {
-  // Every package's src as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F
-  // type graph once rather than once per package. No `types`, so published code can't rely on Node, Vitest or Vite
-  // globals. It emits declarations, which the other typecheck programs reference so they don't re-check this source.
-  "extends": "./tsconfig.base.json",
+  // The whole repo as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type
+  // graph once rather than once per package. The tests' Node and Vitest globals are visible in `src` too, so the
+  // `no-restricted-globals` lint override for `packages/*/src` is what keeps published code off them
+  "extends": "./tsconfig.test.json",
   "compilerOptions": {
-    "emitDeclarationOnly": true,
-    "declarationMap": false,
-    "rootDir": "packages",
-    "outDir": "node_modules/.cache/typecheck/src",
+    "composite": false,
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typecheck/main.tsbuildinfo",
     "customConditions": ["@rjsf/source"]
   },
-  "include": ["packages/*/src"],
-  // chakra-ui and the playground need "bundler" resolution, and the validators read files with Node's `fs`, so each has
-  // a program of its own; snapshot-tests is test code and is checked with the tests
-  "exclude": [
-    "packages/chakra-ui",
-    "packages/docs",
-    "packages/playground",
-    "packages/snapshot-tests",
-    "packages/validator-*"
-  ]
+  "include": ["packages/*/src", "packages/*/test", "testing"],
+  // chakra-ui and the playground need "bundler" resolution, so they're in tsconfig.typecheck-bundler.json
+  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
 }
