@@ -228,7 +228,6 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    // validator.isValid signature: (schema, formData, rootSchema)
     const isThenBranch = isSchemaObj(condition as S | boolean)
       ? validator.isValid(context, condition as S, source, rootSchema)
       : condition;

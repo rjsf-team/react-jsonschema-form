@@ -2263,7 +2263,7 @@ An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants rende
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options
 
 #### Returns
 

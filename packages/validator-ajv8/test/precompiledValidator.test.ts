@@ -472,6 +472,41 @@ describe('AJV8PrecompiledValidator', () => {
   });
 });
 
+describe('AJV8PrecompiledValidator checking a rootSchema it is handed', () => {
+  // Resolving this root schema means evaluating its `if`, so which validator answers decides which branch it resolves to
+  const conditionalSchema: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string' } },
+    if: { properties: { a: { const: 'yes' } }, required: ['a'] },
+    then: { properties: { b: { type: 'string' } } },
+    else: { properties: { c: { type: 'string' } } },
+  };
+
+  it('resolves it with itself rather than the validator the context names', () => {
+    const validator = new AJV8PrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(conditionalSchema)),
+      conditionalSchema,
+    );
+    const formData = { a: 'yes' };
+    const resolvedRootSchema = retrieveSchema({ validator }, conditionalSchema, conditionalSchema, formData);
+    expect(resolvedRootSchema.properties).toHaveProperty('b');
+
+    // Answering every condition `false` takes the `else` branch instead, so the branch really does decide the result
+    const otherValidator = { isValid: vi.fn(() => false), validateFormData: vi.fn(), rawValidation: vi.fn() };
+    const otherResolved = retrieveSchema({ validator: otherValidator }, conditionalSchema, conditionalSchema, formData);
+    expect(otherResolved.properties).toHaveProperty('c');
+    expect(otherResolved).not.toEqual(resolvedRootSchema);
+    expect(otherValidator.isValid).toHaveBeenCalled();
+    otherValidator.isValid.mockClear();
+
+    // So had the check resolved with the context's validator, it would have rejected a root schema that does match
+    expect(() =>
+      validator.isValid({ validator: otherValidator }, conditionalSchema, formData, resolvedRootSchema),
+    ).not.toThrow();
+    expect(otherValidator.isValid).not.toHaveBeenCalled();
+  });
+});
+
 describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
   const allOfSchema: RJSFSchema = {
     type: 'object',
@@ -503,5 +538,21 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
     expect(validator.isValid(context, allOfSchema, formData, resolvedRootSchema)).toBe(true);
+  });
+
+  it('accepts that root schema through rawValidation(), which takes the context as an optional argument', () => {
+    const validator = new AJV8PrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
+      allOfSchema,
+    );
+    const context = { validator, customMergeAllOf };
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
+    expect(validator.rawValidation(resolvedRootSchema, formData, context).errors).toBeUndefined();
+    // Omitting the context resolves the root schema with the default merge instead, which no longer matches, so the
+    // context argument is what makes the call above succeed
+    expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
+      'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+    );
   });
 });

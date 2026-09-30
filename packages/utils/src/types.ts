@@ -1748,8 +1748,14 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
+   * @param [context] - The optional `SchemaContext` of the form, so a `rootSchema` this resolves is resolved the way
+   *        the form resolved it
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): { errors?: Result[]; validationError?: Error };
+  rawValidation<Result = any>(
+    schema: S,
+    formData?: unknown,
+    context?: Readonly<SchemaContext<S, F>>,
+  ): { errors?: Result[]; validationError?: Error };
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */
