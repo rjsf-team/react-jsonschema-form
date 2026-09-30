@@ -123,6 +123,12 @@ function dayNamedBy(text?: string) {
  * of UTC. It is told apart by its zone — a value stamped with an offset of its own came from somewhere else, and is
  * read as its text reads however that offset resolves here.
  *
+ * Exactly twelve hours ahead of UTC the two readings cannot be told apart at all: a day picked there is stored as the
+ * midday UTC instant of the day before, which is the same instant, and all but the milliseconds `toISOString()` always
+ * emits the same text, as a backend's own midday-UTC value for that earlier day. A midday value is read there as the
+ * local day its instant begins, since reading the text first instead would move every day this widget itself stored in
+ * a zone ahead of UTC. Deciding it from the format the field declares rather than from the value's shape is #5395.
+ *
  * @param raw - The stored value
  * @returns - The day it names, or `undefined` for a value that names none — an object or a boolean as much as an
  *          unreadable text

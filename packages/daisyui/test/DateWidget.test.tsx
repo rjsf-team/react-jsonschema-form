@@ -177,6 +177,33 @@ describe('DateWidget', () => {
       });
     });
 
+    // The one zone where the two rules above cannot both hold, and the reason the reading is decided by shape at all is
+    // the thing to fix rather than the shape rule itself (#5395). A day picked exactly twelve hours ahead of UTC is
+    // stored as the midday UTC instant of the day *before* — the same instant, and the same text but for the
+    // milliseconds `toISOString()` always emits, as a backend's own midday-UTC value for that earlier day. So a midday
+    // value is read here as the local day its instant begins. Reading the text first instead would move every day this
+    // widget itself stored in a zone ahead of UTC, which is by far the more common value
+    describe('in a timezone exactly twelve hours ahead of UTC', () => {
+      pinTimeZone('Pacific/Auckland');
+
+      test('reads a midday UTC value as the local day its instant begins, not the day its text spells', () => {
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T12:00:00Z', schema })} />,
+        );
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 4, 2020');
+      });
+
+      // The reading the case above pays for: this is the same text, to the millisecond
+      test('names the day a value stored from here stands for', () => {
+        const localMidnight = new Date(2020, 4, 3).toISOString();
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: localMidnight, schema })} />);
+
+        expect(localMidnight).toBe('2020-05-02T12:00:00.000Z');
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+      });
+    });
+
     // The `Date` constructor reads a year below 100 as a two-digit one, so building the day from its parts would name
     // 1950 here
     test('names a year below 100 as itself', () => {

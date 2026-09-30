@@ -172,17 +172,20 @@ export default function DateTimeWidget<
   const handleSelect = useCallback(
     (date: Date | undefined) => {
       if (date) {
+        // A copy, since react-day-picker memoizes the `Date` it hands over for as long as the month stays displayed:
+        // setting the time on that instance would leave the day cell carrying the time this field holds
+        const picked = new Date(date);
         if (displayedDate) {
           // Down to the milliseconds, which the time input cannot show: the user picked a day, not a time, and a
           // stored value may carry seconds this widget has no way to put back
-          date.setHours(
+          picked.setHours(
             displayedDate.getHours(),
             displayedDate.getMinutes(),
             displayedDate.getSeconds(),
             displayedDate.getMilliseconds(),
           );
         }
-        chooseDate(date);
+        chooseDate(picked);
       }
     },
     [chooseDate, displayedDate],
