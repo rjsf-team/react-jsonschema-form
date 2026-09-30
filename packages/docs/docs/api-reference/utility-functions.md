@@ -1808,7 +1808,17 @@ Resolution order (later sources override earlier):
 1. `ui:definitions[$ref]` - base definition from registry
 2. `localUiSchema` - local overrides at current path
 
-#### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+#### Parameters
+
+- schema: S - The JSON schema (may contain `$ref` or `RJSF_REF_KEY`)
+- localUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema at the current path (local overrides)
+- registry: Registry&lt;T, S, F> - The registry containing `uiSchemaDefinitions`
+
+#### Returns
+
+- UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
+
+### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. Destructure
 it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, registry.widgets)`.
@@ -1826,16 +1836,6 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
-
-### Parameters
-
-- schema: S - The JSON schema (may contain `$ref` or `RJSF_REF_KEY`)
-- localUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema at the current path (local overrides)
-- registry: Registry&lt;T, S, F> - The registry containing `uiSchemaDefinitions`
-
-#### Returns
-
-- UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
 
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
