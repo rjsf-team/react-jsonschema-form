@@ -25,13 +25,13 @@ const base = new Map(read('base.json').map((c) => [c.name, c]));
 
 // The json comes from the PR's own build, and this text is posted by a
 // write-token workflow: keep names inert and the row count bounded.
-const safe = (name) =>
+const safe = (/** @type {string} */ name) =>
   String(name)
     .replace(/[^\w ()@/+.,:-]/g, '')
     .slice(0, 80);
 // size-limit budgets are decimal via bytes-iec.
-const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
-const formatDelta = (diff) => {
+const fmt = (/** @type {number} */ bytes) => `${(bytes / 1000).toFixed(2)} kB`;
+const formatDelta = (/** @type {number | null} */ diff) => {
   if (diff === null) {
     return 'new';
   }
