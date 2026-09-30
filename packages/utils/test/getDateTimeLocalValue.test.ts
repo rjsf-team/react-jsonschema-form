@@ -1,6 +1,19 @@
 import { getDateTimeLocalValue } from '../src/index.ts';
 
 describe('getDateTimeLocalValue()', () => {
+  // Mirrors packages/daisyui/test/helpers/pinTimeZone.ts: the iso-date-time cases below depend on the local zone
+  const realTZ = process.env.TZ;
+  beforeAll(() => {
+    process.env.TZ = 'America/Los_Angeles';
+  });
+  afterAll(() => {
+    if (realTZ === undefined) {
+      delete process.env.TZ;
+    } else {
+      process.env.TZ = realTZ;
+    }
+  });
+
   it('should report isIsoDateTime as false for format=date-time', () => {
     expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, undefined).isIsoDateTime).toBe(false);
   });
@@ -31,17 +44,17 @@ describe('getDateTimeLocalValue()', () => {
     );
   });
 
-  it('should strip the offset from a converted epoch number for iso-date-time', () => {
+  it('should show a converted epoch number at local wall-clock time for iso-date-time', () => {
     const epoch = Date.UTC(2020, 4, 3, 14, 30);
     expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, epoch).localValue).toEqual(
-      '2020-05-03T14:30:00.000',
+      '2020-05-03T07:30:00.000',
     );
   });
 
-  it('should strip the offset from a converted Date for iso-date-time', () => {
+  it('should show a converted Date at local wall-clock time for iso-date-time', () => {
     const date = new Date(Date.UTC(2020, 4, 3, 14, 30));
     expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, date).localValue).toEqual(
-      '2020-05-03T14:30:00.000',
+      '2020-05-03T07:30:00.000',
     );
   });
 
