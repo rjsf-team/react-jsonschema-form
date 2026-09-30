@@ -407,7 +407,7 @@ function SchemaFieldRender<
   const handleFieldComponentChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
-      return onChange(newFormData, changedFieldPath, newErrorSchema, theId);
+      onChange(newFormData, changedFieldPath, newErrorSchema, theId);
     },
     [fieldId, onChange],
   );

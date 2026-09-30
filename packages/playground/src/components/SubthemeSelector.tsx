@@ -38,7 +38,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
         return;
       }
 
-      return select(formData, subthemes[formData]);
+      select(formData, subthemes[formData]);
     },
     [select, subthemes],
   );
