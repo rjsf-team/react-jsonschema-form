@@ -699,6 +699,7 @@
     },
     {
       "files": ["**/test/**/*.ts", "**/test/**/*.tsx", "**/test/**/*.js"],
+      "plugins": ["vitest"],
       "env": {
         "vitest": true
       },
@@ -719,23 +720,39 @@
         "typescript/prefer-optional-chain": "off",
         "typescript/promise-function-async": "off",
         "typescript/unbound-method": "off",
-        "vitest/expect-expect": "error",
         "vitest/no-commented-out-tests": "error",
-        "vitest/no-conditional-expect": "error",
         "vitest/no-disabled-tests": "off",
         "vitest/no-focused-tests": "error",
-        "vitest/no-identical-title": "error",
         "vitest/no-import-node-test": "error",
+        "vitest/no-importing-vitest-globals": "error",
         "vitest/no-interpolation-in-snapshots": "error",
         "vitest/no-mocks-import": "error",
         "vitest/no-standalone-expect": "error",
         "vitest/no-unneeded-async-expect-function": "error",
         "vitest/prefer-called-exactly-once-with": "error",
         "vitest/require-local-test-context-for-concurrent-snapshots": "error",
-        "vitest/valid-describe-callback": "error",
-        "vitest/valid-expect": "error",
+        // Vitest's `expect(value, message)` takes a second argument that the Jest-derived default of 1 rejects
+        "vitest/valid-expect": ["error", { "maxArgs": 2 }],
         "vitest/valid-expect-in-promise": "error",
-        "vitest/valid-title": "error"
+        // Off only because existing tests violate them; turn each on once its violations are fixed
+        "vitest/expect-expect": "off",
+        "vitest/no-conditional-expect": "off",
+        "vitest/no-identical-title": "off",
+        "vitest/require-mock-type-parameters": "off",
+        "vitest/valid-describe-callback": "off",
+        "vitest/valid-title": "off"
+      }
+    },
+    {
+      // Shared test suites that every theme package runs, living outside a `test/` directory
+      "files": ["packages/snapshot-tests/src/**"],
+      "plugins": ["vitest"],
+      "env": {
+        "vitest": true
+      },
+      "rules": {
+        "vitest/no-importing-vitest-globals": "error",
+        "vitest/valid-expect": ["error", { "maxArgs": 2 }]
       }
     },
     {

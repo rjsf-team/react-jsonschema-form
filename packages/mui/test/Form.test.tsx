@@ -3,7 +3,6 @@ import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-import { expectTypeOf } from 'vitest';
 
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 

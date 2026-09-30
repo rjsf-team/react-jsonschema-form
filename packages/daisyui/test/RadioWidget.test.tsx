@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import RadioWidget from '../src/widgets/RadioWidget/RadioWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';

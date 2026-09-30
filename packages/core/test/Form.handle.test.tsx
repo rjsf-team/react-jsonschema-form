@@ -2,7 +2,6 @@ import type { RJSFSchema, RJSFValidationError, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { expectTypeOf } from 'vitest';
 
 import type { FormHandle } from '../src/index.ts';
 import Form, { withTheme } from '../src/index.ts';

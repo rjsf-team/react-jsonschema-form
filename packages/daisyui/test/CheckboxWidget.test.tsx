@@ -2,7 +2,6 @@ import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import Form from '../src/index.ts';
 import CheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';

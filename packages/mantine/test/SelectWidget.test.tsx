@@ -3,7 +3,6 @@ import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import Templates from '../src/templates/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget.tsx';

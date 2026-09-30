@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { mockResizeObserver } from 'jsdom-testing-mocks';
 
 // Imported by path rather than as `@rjsf/utils`, which isn't resolvable from here; it's the same source file the tests

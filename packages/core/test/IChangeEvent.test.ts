@@ -1,5 +1,3 @@
-import { expectTypeOf } from 'vitest';
-
 import type { EventFormData, FormState, IChangeEvent } from '../src/index.ts';
 
 type EventKey = Exclude<keyof IChangeEvent, 'status'>;
