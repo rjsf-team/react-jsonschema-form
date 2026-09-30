@@ -62,7 +62,9 @@ class SchemaUtils<
     } else {
       this.rootSchema = rootSchema;
     }
-    this.context = context;
+    // Snapshot the context so a caller that mutates the object it passed can neither change how this instance behaves
+    // nor hide that change from `doesSchemaUtilsDiffer()`
+    this.context = { ...context };
   }
 
   /** Returns the `rootSchema` in the `SchemaUtilsType`
