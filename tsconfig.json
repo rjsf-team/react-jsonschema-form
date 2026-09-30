@@ -25,6 +25,7 @@
     { "path": "./packages/mui/test" },
     { "path": "./packages/react-bootstrap/test" },
     { "path": "./packages/shadcn/test" },
+    { "path": "./packages/snapshot-tests/test" },
     { "path": "./packages/utils/test" },
     { "path": "./packages/validator-ajv8/test" },
     { "path": "./packages/validator-ata/test" },
