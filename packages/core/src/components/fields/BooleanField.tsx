@@ -65,8 +65,9 @@ function BooleanField<
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
-  // A checkbox shows no option labels, and a hidden field no options at all, so neither can drop a label or an order
-  const showsOptions = Widget !== widgets.CheckboxWidget && Widget !== widgets.HiddenWidget;
+  // Only a select and radios are known to list the options, so only they can drop a label or an order. A checkbox, a
+  // hidden field or a custom widget such as a toggle may show no option labels, which would make the warnings noise
+  const showsOptions = Widget === widgets.SelectWidget || Widget === widgets.RadioWidget;
   // The label `optionsList()` falls back to for a value nothing else names; any other value is labelled with itself
   const yesNoLabel = (value: unknown) => {
     if (typeof value !== 'boolean') {
@@ -98,10 +99,10 @@ function BooleanField<
     // Without the `enum`, which `optionsList()` would list instead
     enumOptions = optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel);
   } else {
-    let hasUnnamedValue = false;
+    const unnamedValues = new Set<unknown>();
     enumOptions = optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, (value) => {
       // Only a value `ui:enumNames` doesn't name gets here
-      hasUnnamedValue = true;
+      unnamedValues.add(value);
       return yesNoLabel(value);
     });
     if (
@@ -109,7 +110,8 @@ function BooleanField<
       schema.enum &&
       altKey &&
       altSchemas &&
-      hasUnnamedValue &&
+      // Checked on the options left once `ui:enumOrder` has dropped any, since an unnamed value it drops isn't shown
+      enumOptions?.some(({ value }) => unnamedValues.has(value)) &&
       hasOptionLabels<T, S, F>(altSchemas, altKey, uiSchema)
     ) {
       logOnce(
