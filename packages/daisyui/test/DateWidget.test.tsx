@@ -44,6 +44,22 @@ describe('DateWidget', () => {
       expect(onChange).toHaveBeenCalledWith('2020-05-17');
     });
 
+    // A value that arrived from the parent is not one the user was in the middle of choosing
+    test('drops a pick made against a value the parent has since replaced', async () => {
+      const onChange = vi.fn();
+      const { container, rerender } = render(
+        <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />,
+      );
+
+      await openPicker(container);
+      await pickTheSeventeenth();
+      rerender(<DateWidget {...makeWidgetMockProps({ value: '2021-01-10', onChange, schema })} />);
+
+      expect(screen.getByRole('button', { name: /January 10th, 2021, selected/ })).toBeInTheDocument();
+      await user.click(screen.getByText('Done'));
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
     test('commits the empty value, not an empty string, when there is no date', async () => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
