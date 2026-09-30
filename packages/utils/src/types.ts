@@ -1562,9 +1562,11 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
 
 /** @internal The closed vocabulary of a `StrictUiSchema`: `ui:widget`/`ui:field` narrowed to only the names `Checks`
  * declares for the field's type, and the `ui:` namespace closed to just the options it declares plus
- * `CommonUiOptions`: for a known form-data type, every other key, including a typo like `ui:wigdet`, becomes a type error
- * instead of only failing at runtime. An unknown one, such as a `ui:definitions` entry's, leaves the other keys open. `@rjsf/utils` has no built-in vocabulary of its own to always include here - a theme's `Checks` union
- * (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to be unioned in by whoever passes `Checks`.
+ * `CommonUiOptions`: for a known form-data type, every other key, including a typo like `ui:wigdet`, becomes a type
+ * error instead of only failing at runtime. For an unknown one, such as a `ui:definitions` entry's, `ui:options` stays
+ * closed to `Checks` but an undeclared `ui:` key is left open. `@rjsf/utils` has no built-in vocabulary of its own to
+ * always include here - a theme's `Checks` union (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to be unioned
+ * in by whoever passes `Checks`.
  */
 type StrictUiVocabulary<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = MakeUIType<
   CommonUiOptions<T, S, F>
@@ -1638,7 +1640,7 @@ interface UiSchemaSharedKeys {
 
 /** @internal The keys through which a uiSchema holds further uiSchemas, shared by `UiSchema` and `StrictUiSchema`.
  * `Node`, `ItemNode` and `AdditionalNode` are the uiSchema types for the same data, for one array element, and for one
- * `additionalProperties` value; `Definition` is the uiSchema type of a `$ref` definition.
+ * `additionalProperties` value; `Definitions` is the `$ref`-keyed record of uiSchemas that `ui:definitions` holds.
  */
 interface UiSchemaNestingKeys<Node, ItemNode, AdditionalNode, Definitions, ItemData, F extends FormContextType> {
   /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of

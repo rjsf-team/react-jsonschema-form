@@ -1,4 +1,4 @@
-import type { StrictUiSchema, UiOptionsCheck, UiSchema } from '../src/index.ts';
+import type { StrictUiSchema, UiOptionsCheck, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -216,7 +216,7 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect([badWidget, badRawOption]).toHaveLength(2);
   });
 
-  it("types a `ui:definitions` entry by the referenced field's data, not the root form's", () => {
+  it("types a `ui:definitions` entry by unknown data, not the root form's", () => {
     const ui = {
       'ui:definitions': {
         '#/$defs/str': { 'ui:widget': 'ExampleTextWidget' },
@@ -230,6 +230,13 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
 
     expect(ui['ui:definitions']['#/$defs/str']['ui:widget']).toBe('ExampleTextWidget');
     expect(badWidget).toBeDefined();
+  });
+
+  it('accepts a `ui:definitions` entry for a field the root form data does not have', () => {
+    const open: UiSchema<ReferencesFormData> = { 'ui:definitions': { '#/$defs/addr': { city: {} } } };
+    const definitions: UiSchemaDefinitions = { '#/$defs/addr': { city: {} } };
+
+    expect(open['ui:definitions']?.['#/$defs/addr']).toEqual(definitions['#/$defs/addr']);
   });
 
   it('passes an object literal checked with `satisfies` on to the open UiSchema that Form takes', () => {
