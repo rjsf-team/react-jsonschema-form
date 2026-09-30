@@ -14,6 +14,9 @@ const user = userEvent.setup();
 const CustomWidget = () => <div id='custom' />;
 
 describe('BooleanField', () => {
+  const texts = (node: Element, selector = 'select#root') =>
+    [...node.querySelector<HTMLSelectElement>(selector)!.options].map((option) => option.text);
+
   it('should pass ui:placeholder to a select widget', () => {
     const CustomSelect = ({ placeholder }: WidgetProps) => <div id='boolean-placeholder'>{placeholder}</div>;
 
@@ -574,11 +577,6 @@ describe('BooleanField', () => {
     it.each<[string, RJSFSchema, UiSchema?]>([
       ['untitled options', { type: 'boolean', anyOf: [{ const: true }, { const: false }] }],
       ['a single titled option', { type: 'boolean', oneOf: [{ const: true, title: 'I agree' }] }],
-      [
-        'untitled options with ui:enumNames, which names only enum values',
-        { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
-        { 'ui:enumNames': ['Accept', 'Decline'] },
-      ],
     ])('should keep the checkbox for %s', (_, schema, uiSchema) => {
       const { node } = createFormComponent({ schema, uiSchema });
 
@@ -597,22 +595,84 @@ describe('BooleanField', () => {
     expect([...select!.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
   });
 
-  it.each<[string, UiSchema['ui:enumNames']]>([
-    ['array', ['Affirmative', 'Negative']],
-    ['record', { true: 'Affirmative', false: 'Negative' }],
-  ])('should not label constant options with the %s spelling of ui:enumNames', (_, enumNames) => {
-    // `ui:enumNames` names only `enum` values, as it does in `optionsList()`
-    const uiSchema = { 'ui:widget': 'select', 'ui:enumNames': enumNames };
-    const constants = createFormComponent({
-      schema: { type: 'boolean', anyOf: [{ const: true }, { const: false }] },
-      uiSchema,
-    });
-    const enumSpelling = createFormComponent({ schema: { type: 'boolean', enum: [true, false] }, uiSchema });
-    const texts = (node: Element) =>
-      [...node.querySelector<HTMLSelectElement>('select#root')!.options].map((option) => option.text);
+  describe('ui:enumNames and ui:enumOrder beside constant options', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    const ignoredWarning = expect.stringContaining('sets ui:enumNames or ui:enumOrder');
 
-    expect(texts(constants.node)).toEqual(['', 'Yes', 'No']);
-    expect(texts(enumSpelling.node)).toEqual(['', 'Affirmative', 'Negative']);
+    it.each<[string, UiSchema['ui:enumNames']]>([
+      ['array', ['Affirmative', 'Negative']],
+      ['record', { true: 'Affirmative', false: 'Negative' }],
+    ])('should not label constant options with the %s spelling of ui:enumNames', (_, enumNames) => {
+      // `ui:enumNames` names only `enum` values, as it does in `optionsList()`
+      const uiSchema = { 'ui:widget': 'select', 'ui:enumNames': enumNames };
+      const constants = createFormComponent({
+        schema: { type: 'boolean', anyOf: [{ const: true }, { const: false }] },
+        uiSchema,
+      });
+      const enumSpelling = createFormComponent({ schema: { type: 'boolean', enum: [true, false] }, uiSchema });
+
+      expect(texts(constants.node)).toEqual(['', 'Yes', 'No']);
+      expect(texts(enumSpelling.node)).toEqual(['', 'Affirmative', 'Negative']);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining('"root" sets ui:enumNames or ui:enumOrder, which apply only to `enum` values'),
+      );
+    });
+
+    it('should read the constant options before an enum that ui:enumNames labels, and warn', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', enum: [true, false], oneOf: [{ const: true }, { const: false }] },
+        uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] },
+      });
+
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(ignoredWarning);
+    });
+
+    it('should keep the order of the constant options over ui:enumOrder, and warn', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'boolean',
+          oneOf: [
+            { const: true, title: 'Y' },
+            { const: false, title: 'N' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': [false, true] },
+      });
+
+      expect(texts(node)).toEqual(['', 'Y', 'N']);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(ignoredWarning);
+    });
+
+    it('should keep the checkbox for untitled options that only ui:enumNames names, and warn', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+        uiSchema: { 'ui:enumNames': ['Accept', 'Decline'] },
+      });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
+      expect(node.querySelector('select')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(ignoredWarning);
+    });
+
+    it('should not warn for a single option, whose checkbox no label could turn into a select', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', oneOf: [{ const: true }] },
+        uiSchema: { 'ui:enumNames': ['I agree'] },
+      });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);
+    });
+
+    it.each(['checkbox', 'CheckboxWidget', 'hidden'])('should not warn when rendered through %s', (widget) => {
+      createFormComponent({
+        schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+        uiSchema: { 'ui:widget': widget, 'ui:enumNames': ['Accept', 'Decline'], 'ui:enumOrder': [false, true] },
+      });
+
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);
+    });
   });
 
   it('should fall back to the oneOf when the anyOf is empty', () => {
@@ -641,7 +701,7 @@ describe('BooleanField', () => {
       const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'select' } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root')!;
-      expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
       await user.selectOptions(select, 'No');
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
     });
@@ -664,8 +724,7 @@ describe('BooleanField', () => {
         uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('select#root')!;
-      expect([...select.options].map((option) => option.text)).toEqual(['', 'Accept', 'Decline']);
+      expect(texts(node)).toEqual(['', 'Accept', 'Decline']);
     });
 
     it('should read the anyOf before a constant oneOf, as SchemaField does', () => {
@@ -682,8 +741,7 @@ describe('BooleanField', () => {
         uiSchema: { 'ui:widget': 'select' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('select#root')!;
-      expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
     });
 
     it('should read the enum when the oneOf mixes constants with a boolean schema', () => {
@@ -696,8 +754,7 @@ describe('BooleanField', () => {
         uiSchema: { 'ui:widget': 'select' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('select#root')!;
-      expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
     });
 
     it('should apply ui:enumOrder', () => {
@@ -706,34 +763,60 @@ describe('BooleanField', () => {
         uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': [false, true] },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('select#root')!;
-      expect([...select.options].map((option) => option.text)).toEqual(['', 'No', 'Yes']);
+      expect(texts(node)).toEqual(['', 'No', 'Yes']);
     });
 
-    it('should warn that the oneOf titles are not shown', () => {
-      createFormComponent({
-        schema: { type: 'object', properties: { answer: schema } },
-        uiSchema: { answer: { 'ui:widget': 'select' } },
-      });
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['oneOf', schema, { 'ui:widget': 'select' }],
+      [
+        'anyOf',
+        { type: 'boolean', enum: [true, false], anyOf: [{ title: 'A' }, { title: 'B' }] },
+        { 'ui:widget': 'select' },
+      ],
+      ['oneOf, which an empty ui:enumNames leaves unlabelled,', schema, { 'ui:widget': 'select', 'ui:enumNames': [] }],
+      [
+        'oneOf, which ui:enumNames names only in part,',
+        schema,
+        { 'ui:widget': 'select', 'ui:enumNames': { true: 'Accept' } },
+      ],
+      [
+        'oneOf, titled through uiSchema.oneOf,',
+        { type: 'boolean', enum: [true, false], oneOf: [{ description: 'y' }, { description: 'n' }] },
+        { 'ui:widget': 'radio', oneOf: [{ 'ui:title': 'Y' }, {}] },
+      ],
+    ])('should warn that the %s titles are not shown', (_, warnedSchema, uiSchema) => {
+      createFormComponent({ schema: warnedSchema, uiSchema });
 
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('"root_answer" (answer) has an enum beside a oneOf'),
+      const keyword = warnedSchema.anyOf ? 'anyOf' : 'oneOf';
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining(`"root" has an \`enum\` beside \`${keyword}\` options`),
       );
     });
 
-    it.each<[string, UiSchema]>([
-      ['labelled by ui:enumNames', { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] }],
-      ['rendered as a checkbox', { 'ui:widget': 'checkbox' }],
-    ])('should not warn when the enum is %s', (_, uiSchema) => {
-      // A field name no other test uses, since `logOnce()` would otherwise stay silent for a message already logged
-      const fieldName = `unwarned${uiSchema['ui:widget']}${uiSchema['ui:enumNames'] ? 'Named' : ''}`;
-      createFormComponent({
-        schema: { type: 'object', properties: { [fieldName]: schema } },
-        uiSchema: { [fieldName]: uiSchema },
-      });
+    it.each<[string, RJSFSchema, UiSchema]>([
+      [
+        'the enum is labelled by ui:enumNames',
+        schema,
+        { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] },
+      ],
+      [
+        'ui:enumNames names the enum values as they are spelled',
+        schema,
+        { 'ui:widget': 'select', 'ui:enumNames': ['true', 'false'] },
+      ],
+      ['it renders as a checkbox', schema, { 'ui:widget': 'checkbox' }],
+      ['it renders as a CheckboxWidget', schema, { 'ui:widget': 'CheckboxWidget' }],
+      ['it is hidden', schema, { 'ui:widget': 'hidden' }],
+      [
+        'the oneOf has no titles to hide',
+        { type: 'boolean', enum: [true, false], oneOf: [{ description: 'x' }, { not: { const: true } }] },
+        { 'ui:widget': 'radio' },
+      ],
+    ])('should not warn when %s', (_, unwarnedSchema, uiSchema) => {
+      createFormComponent({ schema: unwarnedSchema, uiSchema });
 
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(
-        expect.stringContaining(`(${fieldName}) has an enum beside a oneOf`),
+        expect.stringContaining('has an `enum` beside'),
       );
     });
   });
@@ -744,18 +827,89 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'select' },
     });
 
-    const select = node.querySelector<HTMLSelectElement>('select#root')!;
-    expect([...select.options].map((option) => option.text)).toEqual(['', '', 'No']);
+    expect(texts(node)).toEqual(['', '', 'No']);
   });
 
-  it('should offer only the constant options the enum allows', () => {
-    const { node } = createFormComponent({
-      schema: { type: 'boolean', enum: [true], oneOf: [{ const: true }, { const: false }] },
+  it('should select the constant, not a discriminator property, when the schema carries a discriminator', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'boolean',
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { const: true, title: 'A' },
+          { const: false, title: 'B' },
+        ],
+      },
       uiSchema: { 'ui:widget': 'select' },
     });
 
-    const select = node.querySelector<HTMLSelectElement>('select#root')!;
-    expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes']);
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('select#root')!, 'B');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+  });
+
+  describe('an enum beside constant options', () => {
+    it('should offer every constant option, leaving one the enum excludes to validation', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', enum: [true], oneOf: [{ const: true }, { const: false }] },
+        uiSchema: { 'ui:widget': 'select' },
+      });
+
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
+    });
+
+    it('should show the default the constant options give as selected', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['a'],
+          properties: {
+            a: {
+              type: 'boolean',
+              enum: [true],
+              oneOf: [
+                { const: false, title: 'No way' },
+                { const: true, title: 'Sure' },
+              ],
+            },
+          },
+        },
+        uiSchema: { a: { 'ui:widget': 'select' } },
+      });
+
+      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_a')!)).toBe('No way');
+    });
+
+    it('should offer the constant options that an empty enum allows none of', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'boolean',
+          enum: [],
+          oneOf: [
+            { const: true, title: 'A' },
+            { const: false, title: 'B' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'radio' },
+      });
+
+      const radios = [...node.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+      expect(radios.map((radio) => radio.closest('label')?.textContent)).toEqual(['A', 'B']);
+    });
+
+    it('should default to a select that lists as many options as SchemaField counted', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'boolean',
+          enum: [true],
+          oneOf: [
+            { const: true, title: 'I agree' },
+            { const: false, title: 'I disagree' },
+          ],
+        },
+      });
+
+      expect(texts(node)).toEqual(['', 'I agree', 'I disagree']);
+    });
   });
 
   it('should label boolean enum values Yes/No, as it does boolean constants', () => {
@@ -764,8 +918,24 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'select' },
     });
 
-    const select = node.querySelector<HTMLSelectElement>('select#root')!;
-    expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No', 'null']);
+    expect(texts(node)).toEqual(['', 'Yes', 'No', 'null']);
+  });
+
+  it.each<[string, UiSchema, string[]]>([
+    [
+      'keep a ui:enumNames label spelled like its value rather than relabel it Yes/No',
+      { 'ui:widget': 'select', 'ui:enumNames': ['true', 'false'] },
+      ['', 'true', 'false'],
+    ],
+    [
+      'label an enum Yes/No when only ui:globalOptions sets ui:enumNames, which optionsList() ignores',
+      { 'ui:widget': 'select', 'ui:globalOptions': { enumNames: ['GA', 'GB'] } },
+      ['', 'Yes', 'No'],
+    ],
+  ])('should %s', (_, uiSchema, expected) => {
+    const { node } = createFormComponent({ schema: { type: 'boolean', enum: [true, false] }, uiSchema });
+
+    expect(texts(node)).toEqual(expected);
   });
 
   it('should label a null const with its value rather than sharing the false label', () => {

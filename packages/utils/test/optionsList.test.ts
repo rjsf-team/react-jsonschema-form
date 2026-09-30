@@ -782,5 +782,46 @@ describe('optionsList()', () => {
       const schema: RJSFSchema = { oneOf: [{ const: 'a' }, true] };
       expect(optionsList(schema)).toBeUndefined();
     });
+    it('should read constant options by their constants under a discriminator', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['a', 'b']);
+    });
+    it('should read constant options by their constants under ui:optionsSchemaSelector', () => {
+      const schema: RJSFSchema = { anyOf: [{ const: true }, { const: false }] };
+      const uiSchema: UiSchema = { 'ui:options': { optionsSchemaSelector: 'kind' } };
+      expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([true, false]);
+    });
+  });
+  describe('fallbackLabel', () => {
+    const fallbackLabel = (value: unknown) => (value === true ? 'Yes' : undefined);
+
+    it('should label an enum value ui:enumNames does not name, by the value itself when it returns undefined', () => {
+      const uiSchema: UiSchema = { 'ui:enumNames': { false: 'false' } };
+      expect(optionsList({ enum: [true, false, null] }, uiSchema, fallbackLabel)).toEqual([
+        { label: 'Yes', value: true },
+        { label: 'false', value: false },
+        { label: 'null', value: null },
+      ]);
+    });
+
+    it('should label a constant option with no title or ui:title', () => {
+      const schema: RJSFSchema = { anyOf: [{ const: true }, { const: true, title: '' }, { const: true }] };
+      const uiSchema: UiSchema = { anyOf: [{}, {}, { 'ui:title': 'Sure' }] };
+      expect(optionsList(schema, uiSchema, fallbackLabel)?.map(({ label }) => label)).toEqual(['Yes', '', 'Sure']);
+    });
+
+    it('should label a discriminated option with no title', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'flag' },
+        oneOf: [
+          { type: 'object', properties: { flag: { const: true } } },
+          { type: 'object', properties: { flag: { const: false } } },
+        ],
+      };
+      expect(optionsList(schema, undefined, fallbackLabel)?.map(({ label }) => label)).toEqual(['Yes', 'false']);
+    });
   });
 });

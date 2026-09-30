@@ -1586,8 +1586,8 @@ The labels for the options will be extracted from `ui:enumNames` in the `uiSchem
 
 If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is the list of either:
 
-- The `const` values from the schema if present, labelled with the option's `title`, or its value (as JSON for an object or array) when it has none. When the options aren't all constants, there is no list and `undefined` is returned
-- If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
+- The `const` values from the schema if present, labelled with the option's `title`, or its value (as JSON for an object or array) when it has none. When the options aren't all constants and there is no selector, there is no list and `undefined` is returned
+- If the options aren't all constants and the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, and the label using either the `schema.title` or the value. If a `uiSchema` is
   provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
   objects containing `ui:title` then the UI schema values will replace the values from the schema.
 
@@ -1595,6 +1595,7 @@ If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it doe
 
 - schema: S - The schema from which to extract the options list
 - [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema from which to get alternate labels for the options
+- [fallbackLabel]: (value: unknown) => string | undefined - Labels an option that nothing else names: no non-empty `ui:enumNames` entry, and no `ui:title` or `title`. An option it returns `undefined` for is labelled with its value
 
 #### Returns
 

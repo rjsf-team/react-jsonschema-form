@@ -46,6 +46,7 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import hasOptionLabels from '../../hasOptionLabels.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** The map of component type to FieldName */
@@ -70,28 +71,6 @@ const COMPONENT_TYPES: Record<string, string> = {
 function selectTypeForConstants(types: string[]): string {
   const nonNullTypes = types.filter((type) => type !== 'null');
   return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
-}
-
-/** Whether any of a constant option list's labels comes from somewhere other than its values: an option's own
- * `title` or its `ui:title` in the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry. `ui:enumNames` names only `enum`
- * values, so it doesn't label these options
- *
- * @param options - The constant options of the keyword being rendered
- * @param keyword - The keyword the `options` came from
- * @param uiSchema - The resolved `uiSchema` for the field
- * @returns - True when at least one option is labelled
- */
-function hasOptionLabels<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(options: S[], keyword: typeof ANY_OF_KEY | typeof ONE_OF_KEY, uiSchema: UiSchema<T, S, F>): boolean {
-  const optionUiSchemas = uiSchema[keyword];
-  return options.some(
-    (option, index) =>
-      Boolean(option.title) ||
-      (Array.isArray(optionUiSchemas) && Boolean(getUiOptions<T, S, F>(optionUiSchemas[index]).title)),
-  );
 }
 
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
