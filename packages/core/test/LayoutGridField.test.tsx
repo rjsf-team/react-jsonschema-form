@@ -1568,6 +1568,24 @@ describe('LayoutGridField', () => {
       stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
     );
   });
+  test.each([0, null])(
+    'renderField passes a ui:required of %s to a required discriminated field as required: false',
+    (uiRequired) => {
+      const fieldName = 'employment';
+      const props = getProps({
+        schema: { ...GRID_FORM_SCHEMA, required: [fieldName] },
+        uiSchema: { ...gridFormUISchema, [fieldName]: JSON.parse(JSON.stringify({ 'ui:required': uiRequired })) },
+        formData: {},
+        fieldPath: ROOT_FIELD_PATH,
+        id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
+        layoutGridSchema: { name: fieldName },
+        registry: gridFormSchemaRegistry,
+      });
+      render(<LayoutGridField {...props} />);
+      const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+      expect(field).toHaveTextContent('"required":false');
+    },
+  );
   test('renderField via object explicit readonlySchema, and uiSchema readonly override', () => {
     const fieldName = 'string';
     const props = getProps({

@@ -778,6 +778,27 @@ describe('SchemaField', () => {
         expect(matches).toHaveLength(1);
         expect(matches[0]).toHaveTextContent('test');
       });
+
+      it('reads a child ui:hideError of null as false rather than inheriting the parent flag', async () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            ...hideUiSchema,
+            'ui:field': (props: FieldProps) => {
+              const { uiSchema, ...fieldProps } = props;
+              const uiSchemaFromJson: UiSchema = JSON.parse('{ "ui:hideError": null }');
+              return <SchemaField {...fieldProps} uiSchema={uiSchemaFromJson} />;
+            },
+          },
+          customValidate,
+        });
+
+        await submitForm(node, user);
+
+        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+        expect(matches).toHaveLength(1);
+        expect(matches[0]).toHaveTextContent('test');
+      });
     });
   });
   describe('help', () => {

@@ -2872,6 +2872,19 @@ describe('uiSchema', () => {
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
     });
 
+    it('reads a ui:required of null as false on a schema-required field, not as unset', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: UiSchema = JSON.parse('{ "foo": { "ui:required": null } }');
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+    });
+
     it('blocks submission when ui:required is true and the field is empty', async () => {
       const schema: RJSFSchema = {
         type: 'object',

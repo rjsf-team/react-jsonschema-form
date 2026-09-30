@@ -622,6 +622,24 @@ describe('LayoutMultiSchemaField', () => {
     // OnChange was called with the correct event
     expect(props.onChange).toHaveBeenCalledWith(undefined, props.fieldPath, undefined, DEFAULT_ID);
   });
+  test('ui:hideError null reads as false, showing errors despite props.hideError true', () => {
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: oneOfSchema as RJSFSchema,
+      formData: oneOfData,
+      errorSchema: NESTED_ERROR_SCHEMA,
+      uiSchema: {
+        [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'name' },
+        ...JSON.parse('{ "ui:hideError": null }'),
+      },
+      hideError: true,
+    });
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const fakeFieldErrorTemplate = screen.queryByTestId(FIELD_ERROR_TEST_ID);
+    expect(fakeFieldErrorTemplate).toBeInTheDocument();
+    expect(fakeFieldErrorTemplate).toHaveTextContent(getByPath<string[]>(props.errorSchema, [ERRORS_KEY]).join(''));
+  });
   test("replaces the old option's defaults when switching options", async () => {
     // This field picks `oldOption` out of `formData` by its selector value rather than from a selected index, and
     // writes the selector back after the defaults are filled in, so it exercises the switch differently than
