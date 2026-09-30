@@ -238,15 +238,15 @@ function maybeAddDefaultToObject<T = unknown>(
   }
 }
 
+// The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so an option added to
+// the public shape cannot be silently dropped on the way into the recursion. `schema` and `formData` are omitted because
+// the recursion takes them as its own positional `rawSchema` and `rawFormData`, and `uiSchemaDefinitions` is inherited
+// but redeclared below, since only its documentation differs here
 interface ComputeDefaultsProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->
-  // The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so an option added
-  // to the public shape cannot be silently dropped on the way into the recursion. `schema` and `formData` are omitted
-  // because the recursion takes them as its own positional `rawSchema` and `rawFormData`
-  extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
+> extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
   /** Optional `ui:definitions`, applied at every `$ref`-resolved node the same way `SchemaField` applies them. Unlike
    * `getDefaultFormState()`, the recursion does not fall back to `uiSchema['ui:definitions']`: it is passed the root's
    * definitions once and forwards that same value down, so a caller reaching this function directly has to supply them

@@ -173,9 +173,10 @@ export default class CFWorkerValidator<
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
+    const validationContext = { ...context, validator: this };
+    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData, validationContext);
     return processRawValidationErrors(
-      { ...context, validator: this },
+      validationContext,
       rawErrors,
       formData,
       schema,

@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, isValueEmpty, omitExtraData } from '../../src/index.ts';
+import { createSchemaUtils, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
@@ -925,7 +925,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
 
       it('drops the allOf and warns when customMergeAllOf throws, rather than propagating out of Form', () => {
-        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
         const schema: RJSFSchema = {
           type: 'object',
           properties: { foo: { type: 'string' } },
@@ -935,8 +935,6 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           throw new Error('omission merge failed');
         });
         const formData = { foo: 'hi', extra: 'drop' };
-        // `retrieveSchema()` warns and carries on without the `allOf` for the same failure, so omission has to agree
-        // with the schema the form rendered instead of throwing from `Form`'s change and submit handlers
         const result = omitExtraData(
           { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
           schema,

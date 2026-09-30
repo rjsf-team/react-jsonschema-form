@@ -1717,7 +1717,10 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * transform them in what ever way it chooses. The form data type `T` is a parameter of the call rather than of the
    * validator, since a validator checks data of any shape against a schema and one instance serves every `Form`.
    *
-   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
+   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`. An
+   *        implementation computes those defaults with itself, whatever validator the context names, since it is the one
+   *        being asked to validate; a validator that delegates to another therefore replaces `context.validator` with
+   *        itself rather than passing the context through unchanged
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation

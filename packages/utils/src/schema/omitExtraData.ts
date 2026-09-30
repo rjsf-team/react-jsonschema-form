@@ -361,9 +361,8 @@ export default function omitExtraData<
       try {
         localSchema = mergeAllOf<S, F>(context, localSchema);
       } catch (e) {
-        // A `customMergeAllOf` may throw on subschemas it considers irreconcilable. `retrieveSchemaInternal()` drops
-        // the `allOf` and carries on for the same failure, so omission has to agree with the schema the form rendered
-        // rather than propagate out of `Form`'s change and submit handlers
+        // A `customMergeAllOf` may throw on subschemas it considers irreconcilable, and omission has to agree with the
+        // schema the form rendered rather than propagate out of `Form`'s change and submit handlers
         logOnce('could not merge subschemas in allOf:\n', 'warn', e);
         const { allOf: unmergedAllOf, ...schemaWithoutAllOf } = localSchema;
         localSchema = schemaWithoutAllOf as S;
