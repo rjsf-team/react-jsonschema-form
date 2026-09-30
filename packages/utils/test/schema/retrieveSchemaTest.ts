@@ -1486,6 +1486,20 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         expect(retrieveSchema(testValidator, schema, {}, value)).toEqual({ type, title: 'matched' });
       });
+      it('evaluates an object condition against a null value as against an empty object', () => {
+        const schema: RJSFSchema = {
+          type: ['object', 'null'],
+          if: { required: ['a'] },
+          then: { title: 'matched' },
+          else: { title: 'unmatched' },
+        };
+        // The real validators ignore this and evaluate the condition, which is what pins the fallback to `{}`
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(retrieveSchema(testValidator, schema, {}, null)).toEqual({
+          type: ['object', 'null'],
+          title: 'unmatched',
+        });
+      });
       it('overrides the base schema with a conditional branch when merged', () => {
         const schema: RJSFSchema = {
           type: 'object',

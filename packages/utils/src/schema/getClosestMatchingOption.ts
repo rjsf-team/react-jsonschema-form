@@ -107,9 +107,9 @@ export function calculateIndexScore<
           // If the types match, then we bump the score by one
           let newScore = score + 1;
           if (value.default) {
-            // If the schema contains a readonly default value score the value that matches the default higher and
-            // any non-matching value lower. A falsy default is skipped on purpose: this check does not require
-            // `readOnly`, so a `default: false` would penalize a user who ticked the checkbox and switch the `oneOf`
+            // Score a value that matches the default higher and any other value lower. Only a truthy default is
+            // scored, as before: the check doesn't require `readOnly`, so scoring `default: false` would penalize a
+            // user who ticks the box, the same way a truthy default already penalizes one who clears it
             newScore += formValue === value.default ? 1 : -1;
           } else if (value.const !== undefined && formValue !== undefined) {
             // If the schema contains a const value score the value that matches the const higher and any non-matching
