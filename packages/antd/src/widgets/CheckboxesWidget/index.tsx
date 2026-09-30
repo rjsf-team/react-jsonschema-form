@@ -67,7 +67,9 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+              disabled={
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
+              }
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}

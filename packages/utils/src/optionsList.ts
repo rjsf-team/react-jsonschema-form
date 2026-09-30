@@ -96,7 +96,7 @@ export default function optionsList<
       enumNames = uiEnumNames;
       enumOrder = uiEnumOrder;
     }
-    let options = schema.enum.map((value, i) => {
+    let options: EnumOptionsType<S>[] = schema.enum.map((value, i) => {
       // A map is keyed by strings, which can't name an object or array value
       const name = Array.isArray(enumNames) ? enumNames[i] : !isContainerValue(value) && enumNames?.[String(value)];
       return { label: name || unnamedLabel(value), value };

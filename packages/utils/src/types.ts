@@ -1290,7 +1290,7 @@ export type EnumValue = string | number | boolean;
 /** This type represents an element used to render an enum option */
 export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
   /** The value for the enum option */
-  value: any;
+  value: unknown;
   /** The label for the enum options */
   label: string;
   /** The schema associated with the enum option when the option represents a `oneOf` or `anyOf` choice */

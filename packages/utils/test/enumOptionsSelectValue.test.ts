@@ -22,7 +22,7 @@ describe('enumOptionsSelectValue()', () => {
     expect(selected).toEqual(expected);
   });
   it('adds the last value to an existing list in the correct position', () => {
-    const expected = ALL_OPTIONS.map(({ value }): unknown => value);
+    const expected = ALL_OPTIONS.map(({ value }) => value);
     expect(enumOptionsSelectValue(1, selected, ALL_OPTIONS)).toEqual(expected);
   });
   it('returns the selected array unchanged when index is -1', () => {

@@ -19,7 +19,7 @@ export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJ
   if (Array.isArray(valueIndex)) {
     return (
       valueIndex
-        .map((index): unknown => enumOptionsValueForIndex(index, allEnumOptions))
+        .map((index) => enumOptionsValueForIndex(index, allEnumOptions))
         // The recursive call returns undefined for a bad option, filter those out
         .filter((val) => val !== undefined)
     );

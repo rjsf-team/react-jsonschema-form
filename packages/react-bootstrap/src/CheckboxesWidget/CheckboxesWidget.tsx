@@ -51,7 +51,8 @@ export default function CheckboxesWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const itemDisabled =
+            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
 
           return (
             <Form.Check

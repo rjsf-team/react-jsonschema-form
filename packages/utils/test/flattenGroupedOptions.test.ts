@@ -16,7 +16,7 @@ describe('flattenGroupedOptions', () => {
 
   it('flattens groups back into a list, in grouped-then-ungrouped order', () => {
     const grouped = groupEnumOptions(options, { 'Group A': ['foo', 'bar'] });
-    expect(flattenGroupedOptions(grouped).map((o): unknown => o.value)).toEqual(['foo', 'bar', 'baz', 'qux']);
+    expect(flattenGroupedOptions(grouped).map((o) => o.value)).toEqual(['foo', 'bar', 'baz', 'qux']);
   });
 
   it('returns an empty array for an empty input', () => {

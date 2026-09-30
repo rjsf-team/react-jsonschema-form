@@ -36,9 +36,7 @@ describe('groupEnumOptions', () => {
       ];
       const result = groupEnumOptions(mixedOptions, { Numbers: [1] }, [1]);
       const [group, ungrouped] = result;
-      expect(isEnumOptionsGroup(group) && group.options.map((o): unknown[] => [o.value, o.disabled])).toEqual([
-        [1, true],
-      ]);
+      expect(isEnumOptionsGroup(group) && group.options.map((o) => [o.value, o.disabled])).toEqual([[1, true]]);
       expect(!isEnumOptionsGroup(ungrouped) && [ungrouped.value, ungrouped.disabled]).toEqual(['1', false]);
     });
     it('matches object enumDisabled values only by reference', () => {
@@ -60,9 +58,9 @@ describe('groupEnumOptions', () => {
       expect(isEnumOptionsGroup(result[1])).toBe(true);
       if (isEnumOptionsGroup(result[0]) && isEnumOptionsGroup(result[1])) {
         expect(result[0].label).toBe('Group A');
-        expect(result[0].options.map((o): unknown => o.value)).toEqual(['foo', 'bar']);
+        expect(result[0].options.map((o) => o.value)).toEqual(['foo', 'bar']);
         expect(result[1].label).toBe('Group B');
-        expect(result[1].options.map((o): unknown => o.value)).toEqual(['baz']);
+        expect(result[1].options.map((o) => o.value)).toEqual(['baz']);
       }
     });
     it('orders integer-like group labels ahead of other labels, following JavaScript property order', () => {
@@ -79,7 +77,7 @@ describe('groupEnumOptions', () => {
       expect(isEnumOptionsGroup(result[0])).toBe(true);
       const ungrouped = result.slice(1);
       expect(ungrouped.every((o) => !isEnumOptionsGroup(o))).toBe(true);
-      expect(ungrouped.map((o): unknown => !isEnumOptionsGroup(o) && o.value)).toEqual(['foo', 'bar', 'qux']);
+      expect(ungrouped.map((o) => !isEnumOptionsGroup(o) && o.value)).toEqual(['foo', 'bar', 'qux']);
     });
     it('preserves each grouped option’s original index and disabled status', () => {
       const result = groupEnumOptions(options, { 'Group A': ['qux', 'foo'] }, ['qux']);
@@ -97,7 +95,7 @@ describe('groupEnumOptions', () => {
       const result = groupEnumOptions(options, { 'Group A': ['foo', 'does-not-exist'] });
       const group = result[0];
       if (isEnumOptionsGroup(group)) {
-        expect(group.options.map((o): unknown => o.value)).toEqual(['foo']);
+        expect(group.options.map((o) => o.value)).toEqual(['foo']);
       } else {
         throw new Error('expected a group');
       }
@@ -160,7 +158,7 @@ describe('groupEnumOptions', () => {
       expect(result).toHaveLength(2);
       const group = result[0];
       if (isEnumOptionsGroup(group)) {
-        expect(group.options.map((o): unknown => o.value)).toEqual([1, 2]);
+        expect(group.options.map((o) => o.value)).toEqual([1, 2]);
       } else {
         throw new Error('expected a group');
       }

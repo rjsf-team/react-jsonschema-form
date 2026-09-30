@@ -16,7 +16,7 @@ export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSF
   valueIndex: string | number,
   selected: EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = [],
-): unknown[] {
+) {
   // `undefined` marks an index with no option, since a JSON value (including `null`) is never `undefined`
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (value === undefined || selected.some((val) => deepEquals(val, value))) {

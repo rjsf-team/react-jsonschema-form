@@ -32,7 +32,8 @@ export default function RadioWidget<
     <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const itemDisabled =
+            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
 
           const radio = (
