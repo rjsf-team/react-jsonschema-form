@@ -823,5 +823,19 @@ describe('optionsList()', () => {
       };
       expect(optionsList(schema, undefined, fallbackLabel)?.map(({ label }) => label)).toEqual(['Yes', 'false']);
     });
+
+    it('should be called once for each enum value without a name, including one ui:enumOrder drops', () => {
+      const spy = vi.fn(fallbackLabel);
+      const uiSchema: UiSchema = { 'ui:enumNames': { a: 'A', b: '' }, 'ui:enumOrder': ['a', 'b'] };
+      optionsList({ enum: ['a', 'b', 'c'] }, uiSchema, spy);
+      expect(spy.mock.calls).toEqual([['b'], ['c']]);
+    });
+
+    it('should be called once for each constant option without a name', () => {
+      const spy = vi.fn(fallbackLabel);
+      const schema: RJSFSchema = { anyOf: [{ const: 'a', title: 'A' }, { const: 'b' }, { const: 'c' }] };
+      optionsList(schema, { anyOf: [{}, {}, { 'ui:title': 'C' }] }, spy);
+      expect(spy.mock.calls).toEqual([['b']]);
+    });
   });
 });

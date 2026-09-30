@@ -55,22 +55,26 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   });
 }
 
-/** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned. The
- * label will be the same as the `value`.
+/** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned,
+ * reordered by the `ui:enumOrder` of the `uiSchema` when it has one.
  *
  * If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is
  * the list of either:
  * - The `const` values from the schema if present
  * - If the options aren't all constants and the schema has a discriminator (or the uiSchema a
- * `ui:optionsSchemaSelector`), the value of that property, and the label using either the `schema.title` or the value.
- * If a `uiSchema` is provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or
- * `anyOf` with a list of objects containing `ui:title` then the UI schema values will replace the values from the
- * schema.
+ * `ui:optionsSchemaSelector`), the value of that property
+ *
+ * An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value
+ * (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
+ * - An `enum` value's name is its non-empty `ui:enumNames` entry in the `uiSchema`
+ * - A `oneOf`/`anyOf` option's name is the `ui:title` of its entry in `uiSchema.anyOf`/`uiSchema.oneOf`, then the
+ * `title` of its selector property when there is one, then its own `title`. An empty title is kept as the label
  *
  * @param schema - The schema from which to extract the options list
  * @param [uiSchema] - The optional uiSchema from which to get alternate labels for the options
- * @param [fallbackLabel] - Labels an option that nothing else names: no non-empty `ui:enumNames` entry, and no
- *        `ui:title` or `title`. An option it returns `undefined` for is labelled with its value
+ * @param [fallbackLabel] - Labels an option that has no name. It is called once for each such option, before
+ *        `ui:enumOrder` drops any, and for no other option. An option it returns `undefined` for is labelled with its
+ *        value
  * @returns - The list of options from the schema, or `undefined` when it has none, including when its `anyOf`/`oneOf`
  *        options are not all constants and no selector field names where their values are
  */
@@ -83,9 +87,7 @@ export default function optionsList<
   uiSchema?: UiSchema<T, S, F>,
   fallbackLabel?: (value: unknown) => string | undefined,
 ): EnumOptionsType<S>[] | undefined {
-  const unnamedLabel = fallbackLabel
-    ? (value: unknown) => fallbackLabel(value) ?? enumOptionValueLabel(value)
-    : enumOptionValueLabel;
+  const unnamedLabel = (value: unknown) => fallbackLabel?.(value) ?? enumOptionValueLabel(value);
   if (schema.enum) {
     let enumNames: string[] | Record<string | number, string> | undefined;
     let enumOrder: EnumValue[] | undefined;

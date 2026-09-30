@@ -87,12 +87,22 @@ function BooleanField<
     if (showsOptions || (!widget && altSchemas.length > 1)) {
       // Read without `globalUiOptions`, as `optionsList()` reads them
       const { enumNames, enumOrder } = getUiOptions<T, S, F>(uiSchema);
-      if (Object.keys(enumNames ?? {}).length > 0 || enumOrder?.length) {
+      // No order shows on a checkbox, and a lone `'*'` keeps the order the options already have
+      const orderIgnored = showsOptions && Boolean(enumOrder?.some((entry) => entry !== '*'));
+      if (Object.keys(enumNames ?? {}).length > 0 || orderIgnored) {
+        // A checkbox shows neither list, and dropping the `anyOf`/`oneOf` wouldn't turn it into a widget that shows the
+        // `enum`, so only a widget that lists the options is pointed at the `enum`, and only at one with values to show
+        const [source, alternative] =
+          showsOptions && Boolean(schema.enum?.length)
+            ? [
+                `it shows its constant \`${altKey}\` options rather than its \`enum\``,
+                `, or drop the \`${altKey}\` to show the \`enum\``,
+              ]
+            : [`its options come from its constant \`${altKey}\``, ''];
         logOnce(
           `${fieldLabelForLog(fieldId, fieldPath)} sets ui:enumNames or ui:enumOrder, which apply only to \`enum\` ` +
-            `values, but its options come from its constant \`${altKey}\`, so they are ignored. Label those ` +
-            `options with a \`title\` or a \`ui:title\` in \`uiSchema.${altKey}\`, and list them in the order to ` +
-            `show them.`,
+            `values, but ${source}, so they are ignored. Label those options with a \`title\` or a \`ui:title\` in ` +
+            `\`uiSchema.${altKey}\`, and list them in the order to show them${alternative}.`,
         );
       }
     }
@@ -101,7 +111,7 @@ function BooleanField<
   } else {
     const unnamedValues = new Set<unknown>();
     enumOptions = optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, (value) => {
-      // Only a value `ui:enumNames` doesn't name gets here
+      // `optionsList()` calls the fallback for each value `ui:enumNames` doesn't name, and for no other
       unnamedValues.add(value);
       return yesNoLabel(value);
     });
