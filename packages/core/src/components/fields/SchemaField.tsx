@@ -264,7 +264,7 @@ function getFieldComponent<
     !isSelectSchema &&
     !schema.enum &&
     !isConstant<S>(schema) &&
-    Boolean(getUnionTypes<S>(schema) ?? hasGuessedType);
+    (getUnionTypes<S>(schema) !== undefined || hasGuessedType);
   if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }
