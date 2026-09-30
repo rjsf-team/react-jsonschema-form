@@ -28,13 +28,14 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
  *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
  *   the total, as long as the formValue has data to score; a `$ref` with no form data left is not followed.
- * - If the `value` contains a `oneOf` or `anyOf` and the formValue is neither `undefined` nor `null`, then score based
- *   on the index returned from calling `getClosestMatchingOption()` of that oneOf.
+ * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, then score based
+ *   on the index returned from calling `getClosestMatchingOption()` of that `anyOf`/`oneOf`.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
  *   `value` itself as the sub-schema, and the score is added to the total.
  * - If the type of the `value` matches the guessed-type of the `formValue`, the score is incremented by 1, UNLESS the
- *   value has a `default` or `const`. In those case, if the `default` or `const` and the `formValue` match, the score
- *   is incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a `const`.
+ *   value has a truthy `default` or a `const`. In those case, if the `default` or `const` and the `formValue` match,
+ *   the score is incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a
+ *   `const`.
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
  * @param rootSchema - The root JSON schema of the entire form
@@ -107,7 +108,8 @@ export function calculateIndexScore<
           let newScore = score + 1;
           if (value.default) {
             // If the schema contains a readonly default value score the value that matches the default higher and
-            // any non-matching value lower
+            // any non-matching value lower. A falsy default is skipped on purpose: this check does not require
+            // `readOnly`, so a `default: false` would penalize a user who ticked the checkbox and switch the `oneOf`
             newScore += formValue === value.default ? 1 : -1;
           } else if (value.const !== undefined && formValue !== undefined) {
             // If the schema contains a const value score the value that matches the const higher and any non-matching
