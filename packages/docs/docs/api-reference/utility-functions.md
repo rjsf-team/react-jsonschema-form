@@ -786,6 +786,21 @@ A `pattern` that the value fails is reported by the browser as a bare "Please ma
 
 - string | undefined: The `title` string, or undefined when the input has no `pattern` to explain
 
+### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema has no `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), read from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides, and `undefined` when no option names a type; otherwise it is the schema's own type. An empty `anyOf: []`/`oneOf: []` counts as no option list, so such a schema returns its own type.
+`shouldRenderOptionalField()` decides whether to render the controls from this type, and `OptionalDataControlsField` uses it to pick the empty value it adds, so the two always agree.
+
+The type of an `anyOf`/`oneOf` schema whose options name no type of their own is provisional: it may come to take the parent's `type` into account ([#5360](https://github.com/rjsf-team/react-jsonschema-form/issues/5360)).
+
+#### Parameters
+
+- schema: S - The schema for the field
+
+#### Returns
+
+- string | string[] | undefined: The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither names one
+
 ### getOptionMatchingSimpleDiscriminator()
 
 Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`. Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.

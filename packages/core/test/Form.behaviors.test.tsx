@@ -2922,6 +2922,80 @@ describe('optionalDataControls', () => {
     expect(ids).toContain(objectControlAddId);
     expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
   });
+  it('renders the controls for an object and an array with an empty option list, and adds and removes the value', async () => {
+    const emptyOptionsSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: { ...(schema.properties!.nestedObjectOptional as RJSFSchema), oneOf: [] },
+        nestedArrayOptional: { ...(schema.properties!.nestedArrayOptional as RJSFSchema), anyOf: [] },
+      },
+    };
+    const { node, onChange } = createFormComponent({ schema: emptyOptionsSchema, uiSchema: bothOnUiSchema });
+
+    expect(node.querySelector(`#${objectId}_test`)).toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).toEqual(null);
+
+    await user.click(node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`)!);
+    await user.click(node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`)!);
+
+    expectToHaveBeenCalledWithFormData(onChange, { nestedObjectOptional: {}, nestedArrayOptional: [] }, arrayId);
+    expect(node.querySelector(`#${objectControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${objectId}_test`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).not.toEqual(null);
+
+    await user.click(node.querySelector<HTMLButtonElement>(`#${objectControlRemoveId}`)!);
+    await user.click(node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`)!);
+
+    expectToHaveBeenCalledWithFormData(
+      onChange,
+      { nestedObjectOptional: undefined, nestedArrayOptional: undefined },
+      arrayId,
+    );
+    expect(node.querySelector(`#${objectControlAddId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${objectId}_test`)).toEqual(null);
+    expect(node.querySelector(`#${arrayControlAddId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).toEqual(null);
+  });
+  it('submits past a ui:required field of an anyOf object option that is hidden behind its Add button', async () => {
+    const thingSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { allOf: [{ anyOf: [{ type: 'object', properties: { a: { type: 'string' } } }] }] },
+      },
+    };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: thingSchema,
+      uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
+      formData: { thing: {} },
+    });
+
+    expect(node.querySelector('#root_thing_a')).toEqual(null);
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+  it('blocks submit on a ui:required property an object renders beside anyOf options that name no type', async () => {
+    const thingSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', properties: { a: { type: 'string' } }, anyOf: [{ minProperties: 0 }] },
+      },
+    };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: thingSchema,
+      uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
+      formData: { thing: {} },
+      noHtml5Validate: true,
+    });
+
+    expect(node.querySelector('#root_thing_a')).not.toEqual(null);
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
+  });
 });
 
 describe('nameGenerator', () => {

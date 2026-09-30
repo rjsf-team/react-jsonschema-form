@@ -114,7 +114,7 @@ import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
-import shouldRenderOptionalField from './shouldRenderOptionalField.ts';
+import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
@@ -196,6 +196,7 @@ export {
   getInputProps,
   getItemUiSchemaForItem,
   getNumericInputTitle,
+  getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,
   getOptionUiSchema,
   getPropertySchema,

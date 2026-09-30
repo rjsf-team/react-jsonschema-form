@@ -4,7 +4,6 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
-  ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
@@ -22,7 +21,7 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
-import getXxxOfKey from '../getXxxOfKey.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isFixedItems from '../isFixedItems.ts';
@@ -326,7 +325,7 @@ export function computeDefaults<
   let branchUiSchema = uiSchema;
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
-  const xxxOfKey = getXxxOfKey<S>(schema);
+  const xxxOf = getXxxOfOptions<S>(schema);
   if (
     schema[CONST_KEY] !== undefined &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -336,8 +335,7 @@ export function computeDefaults<
   } else if (
     isObject(defaults) &&
     isObject(schema.default) &&
-    !schema[ANY_OF_KEY] &&
-    !schema[ONE_OF_KEY] &&
+    !xxxOf &&
     !schema[REF_KEY] &&
     !isWholeValueSelect<S>(schema)
   ) {
@@ -351,13 +349,7 @@ export function computeDefaults<
       // Only override parent defaults that are defined in schema.default.
       defaults = mergeObjects(defaults, schema.default) as T;
     }
-  } else if (
-    DEFAULT_KEY in schema &&
-    !preferParentDefaults &&
-    !schema[ANY_OF_KEY] &&
-    !schema[ONE_OF_KEY] &&
-    !schema[REF_KEY]
-  ) {
+  } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf && !schema[REF_KEY]) {
     // If the schema has a default value and parentDefaults does not have precedence
     // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
     // Then we should use it as the default.
@@ -419,11 +411,9 @@ export function computeDefaults<
         uiSchemaDefinitions,
       }),
     ) as T[];
-  } else if (xxxOfKey) {
-    const { [xxxOfKey]: options, ...remaining } = schema;
-    if (options!.length === 0) {
-      return undefined;
-    }
+  } else if (xxxOf) {
+    const { key, options } = xxxOf;
+    const { [key]: _options, ...remaining } = schema;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const { type = 'null' } = remaining;
     // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
@@ -431,9 +421,10 @@ export function computeDefaults<
     // taken whole
     isWholeValue = isWholeValueSelect<S>(schema);
     const picksWholeOption = isWholeValue && isConstantOptionList<S>(options, true);
-    // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips
+    // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
+    // unless it is empty, which counts as no option list here as it does for the keyword read
     if (
-      ONE_OF_KEY in schema &&
+      !!schema[ONE_OF_KEY]?.length &&
       !Array.isArray(type) &&
       (PRIMITIVE_TYPES.includes(type) || picksWholeOption) &&
       dfsb_to_compute?.constAsDefaults === 'skipOneOf'
@@ -459,7 +450,7 @@ export function computeDefaults<
             validator,
             rootSchema,
             valueToMatch,
-            options as S[],
+            options,
             0,
             discriminator,
             customMergeAllOf,
@@ -474,8 +465,8 @@ export function computeDefaults<
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {
-      schemaToCompute = mergeSchemas(remaining, options![optionIndex] as S) as S;
-      branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, optionIndex);
+      schemaToCompute = mergeSchemas(remaining, options[optionIndex]) as S;
+      branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
@@ -587,8 +578,10 @@ export function ensureFormDataMatchingSchema<
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(schemaToMatch);
-    const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));
-    validFormData = isValid ? formData : undefined;
+    // An empty option list has no value to check the data against, so the data is kept, as it is without the list
+    if (getOptionsList?.length !== 0) {
+      validFormData = getOptionsList?.some((option) => deepEquals(option.value, formData)) ? formData : undefined;
+    }
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
