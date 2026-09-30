@@ -1473,6 +1473,33 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           required: ['country', 'state'],
         });
       });
+      it.each([
+        { type: 'integer', value: 0 },
+        { type: 'boolean', value: false },
+        { type: 'string', value: '' },
+      ] as const)('evaluates the condition against a falsy $type value', ({ type, value }) => {
+        const schema: RJSFSchema = {
+          type,
+          if: { const: value },
+          then: { title: 'matched' },
+          else: { title: 'unmatched' },
+        };
+        expect(retrieveSchema(testValidator, schema, {}, value)).toEqual({ type, title: 'matched' });
+      });
+      it('evaluates an object condition against a null value as against an empty object', () => {
+        const schema: RJSFSchema = {
+          type: ['object', 'null'],
+          if: { required: ['a'] },
+          then: { title: 'matched' },
+          else: { title: 'unmatched' },
+        };
+        // The real validators ignore this and evaluate the condition, which is what pins the fallback to `{}`
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(retrieveSchema(testValidator, schema, {}, null)).toEqual({
+          type: ['object', 'null'],
+          title: 'unmatched',
+        });
+      });
       it('overrides the base schema with a conditional branch when merged', () => {
         const schema: RJSFSchema = {
           type: 'object',
