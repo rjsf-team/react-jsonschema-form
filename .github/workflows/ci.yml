@@ -44,7 +44,9 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - run: pnpm run typecheck
+      # tsc runs 4 checkers per program whatever the core count, 8 across both programs. On the runner's 4 vCPUs
+      # 2 per program is faster and peaks about 3 GB lower (~7 GB of 16 GB instead of ~10 GB)
+      - run: pnpm run typecheck --checkers 2
 
       - if: matrix.node-version == '24.x'
         uses: actions/upload-artifact@v7
