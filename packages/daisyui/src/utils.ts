@@ -60,6 +60,12 @@ interface GetGroupProps {
  * selector is handed the field's title while the label that title renders names the field's own control rather than
  * the selector, so the value it displays is described as well as shown.
  *
+ * That selector is also the one place a reference from `getGroupProps()` reaches nothing: `MultiSchemaField` gives it
+ * an id of its own (`__anyof_select`/`__oneof_select`), so a group widget rendering it — `ui:widget: 'radio'` on a
+ * non-constant `anyOf`/`oneOf` — points at a label id no `FieldTemplate` renders, and the group is left unnamed
+ * rather than misnamed. Naming it would mean rebuilding that suffix here, which is the theme guessing at an id
+ * `@rjsf/core` owns.
+ *
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
