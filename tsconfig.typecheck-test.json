@@ -8,5 +8,6 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"]
   },
   "include": ["packages/*/test", "packages/snapshot-tests/src", "testing"],
-  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
+  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"],
+  "references": [{ "path": "./tsconfig.typecheck.json" }, { "path": "./tsconfig.typecheck-node.json" }]
 }

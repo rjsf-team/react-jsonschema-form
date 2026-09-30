@@ -1,12 +1,13 @@
 {
   // Every package's src as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F
   // type graph once rather than once per package. No `types`, so published code can't rely on Node, Vitest or Vite
-  // globals.
+  // globals. It emits declarations, which the other typecheck programs reference so they don't re-check this source.
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": false,
-    "incremental": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "rootDir": "packages",
+    "outDir": "node_modules/.cache/typecheck/src",
     "resolveJsonModule": true,
     "customConditions": ["@rjsf/source"],
     "lib": ["DOM", "DOM.Iterable", "ESNext"]

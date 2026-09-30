@@ -12,5 +12,10 @@
     "packages/playground/test",
     "packages/playground/*.ts"
   ],
-  "exclude": []
+  "exclude": [],
+  "references": [
+    { "path": "./tsconfig.typecheck.json" },
+    { "path": "./tsconfig.typecheck-node.json" },
+    { "path": "./tsconfig.typecheck-bundler.json" }
+  ]
 }

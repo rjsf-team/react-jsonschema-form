@@ -2,8 +2,10 @@
   // The validators run under Node as well as in a browser, and their precompiling entry reads files with `fs`
   "extends": "./tsconfig.typecheck.json",
   "compilerOptions": {
+    "outDir": "node_modules/.cache/typecheck/node",
     "types": ["node"]
   },
   "include": ["packages/validator-*/src"],
-  "exclude": []
+  "exclude": [],
+  "references": [{ "path": "./tsconfig.typecheck.json" }]
 }

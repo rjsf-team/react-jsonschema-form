@@ -2,9 +2,11 @@
   // @chakra-ui/react's declarations do not resolve under "nodenext" (see packages/chakra-ui/tsconfig.json)
   "extends": "./tsconfig.typecheck.json",
   "compilerOptions": {
+    "outDir": "node_modules/.cache/typecheck/bundler",
     "module": "esnext",
     "moduleResolution": "bundler"
   },
   "include": ["packages/chakra-ui/src"],
-  "exclude": []
+  "exclude": [],
+  "references": [{ "path": "./tsconfig.typecheck.json" }, { "path": "./tsconfig.typecheck-node.json" }]
 }
