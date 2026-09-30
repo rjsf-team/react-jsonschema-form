@@ -48,7 +48,7 @@ export default function CheckboxesWidget<
   // spread on via `extraProps` to avoid a typescript error
   const extraProps = { id };
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []) as string[];
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group

@@ -50,7 +50,7 @@ function AltDatePart({
   // The widget's state holds -1 for an unset part, and a string once one is picked
   const partValue = part.value === undefined || Number(part.value) < 0 ? undefined : Number(part.value);
   const [start, end] = part.range;
-  const data = useMemo(() => dateRangeOptions(start, end).map((item) => String(item.value)), [start, end]);
+  const data = useMemo(() => dateRangeOptions(start, end).map((item) => item.value.toString()), [start, end]);
   const handleChange = useCallback(
     (value: string | null) => onChange(part.type as keyof DateObject, value || undefined),
     [onChange, part.type],

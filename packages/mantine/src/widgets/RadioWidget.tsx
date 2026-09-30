@@ -57,7 +57,7 @@ export default function RadioWidget<
   );
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
-  const selected: string | undefined = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat);
+  const selected: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
 
   const { groupProps, optionProps } = useGroupAriaProps('RadioGroup', props);
 

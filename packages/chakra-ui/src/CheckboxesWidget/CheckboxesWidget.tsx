@@ -29,7 +29,7 @@ export default function CheckboxesWidget<
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []) as string[];
 
   const chakraProps = getChakra({ uiSchema });
   const hasError = hasVisibleErrors(props);

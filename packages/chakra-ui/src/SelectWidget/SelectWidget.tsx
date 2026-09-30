@@ -82,9 +82,7 @@ export default function SelectWidget<
 
   // Chakra's SelectRoot always expects a string array, so flatten the helper's
   // single/multiple return shape and strip the empty-single case.
-  const formValue = [
-    enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : ''),
-  ]
+  const formValue = [enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : '')]
     .flat()
     .filter((v) => v !== '') as string[];
 

@@ -115,13 +115,10 @@ export default function SelectWidget<
       {multiple ? (
         <MultiSelect
           {...sharedProps}
-          value={enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[]}
+          value={enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, [])}
         />
       ) : (
-        <Select
-          {...sharedProps}
-          value={enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null) as string | null}
-        />
+        <Select {...sharedProps} value={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null)} />
       )}
     </>
   );

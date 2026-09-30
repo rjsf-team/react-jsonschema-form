@@ -95,7 +95,7 @@ function SelectWidget<
     [onChange, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 

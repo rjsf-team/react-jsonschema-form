@@ -56,7 +56,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '');
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
 

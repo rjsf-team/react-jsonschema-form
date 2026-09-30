@@ -47,7 +47,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
-  const selectedValue: string | undefined = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat);
+  const selectedValue: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
 
   return (
     <>

@@ -46,7 +46,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra({ uiSchema });
 

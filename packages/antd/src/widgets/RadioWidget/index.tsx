@@ -49,7 +49,7 @@ export default function RadioWidget<
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
 
   return (
     <Radio.Group
