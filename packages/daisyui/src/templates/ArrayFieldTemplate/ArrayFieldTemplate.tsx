@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -37,16 +37,7 @@ export default function ArrayFieldTemplate<
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

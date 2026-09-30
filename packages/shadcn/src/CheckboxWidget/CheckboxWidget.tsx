@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Label } from '../components/ui/label.tsx';
@@ -37,11 +37,7 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   const handleChange = (checked: boolean) => onChange(checked);
   const handleBlur = () => onBlur(id, value);

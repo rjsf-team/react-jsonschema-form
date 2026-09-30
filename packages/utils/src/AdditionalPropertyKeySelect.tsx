@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 
-import getWidget from './getWidget.tsx';
+import { resolveWidget } from './getWidget.tsx';
 import noop from './noop.ts';
 import optionsList from './optionsList.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
@@ -73,7 +73,7 @@ export default function AdditionalPropertyKeySelect<
     },
     [disabled, onKeyRename, propertyNamesEnum, readonly],
   );
-  const SelectWidget = getWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
+  const { Widget: SelectWidget } = resolveWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
 
   return (
     <SelectWidget

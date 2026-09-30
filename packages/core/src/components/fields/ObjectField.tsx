@@ -21,7 +21,7 @@ import {
   ANY_OF_KEY,
   getFreePropertyNames,
   getMatchingPatternProperties,
-  getTemplate,
+  getTemplates,
   getPropertySchema,
   getUiOptions,
   isFormDataAvailable,
@@ -528,7 +528,7 @@ export default function ObjectField<
     }
   }
 
-  const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
+  const { ObjectFieldTemplate: Template } = getTemplates<T, S, F>(registry, uiOptions);
   const optionalDataControl = renderOptionalField ? (
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;

@@ -3,7 +3,7 @@ import Checkbox from '@mui/material/Checkbox';
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -46,11 +46,7 @@ export default function CheckboxWidget<
     uiSchema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

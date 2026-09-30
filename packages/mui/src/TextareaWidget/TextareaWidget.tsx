@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplate } from '@rjsf/utils';
+import { getTemplates } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -11,7 +11,7 @@ export default function TextareaWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
 
   let rows: string | number = 5;
   if (typeof options.rows === 'string' || typeof options.rows === 'number') {

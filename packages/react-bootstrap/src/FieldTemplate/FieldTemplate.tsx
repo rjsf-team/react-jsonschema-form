@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
@@ -34,11 +34,7 @@ export default function FieldTemplate<
 }: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
   const hasError = hasVisibleErrors({ rawErrors, hideError });
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }

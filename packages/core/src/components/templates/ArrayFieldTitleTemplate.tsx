@@ -1,5 +1,5 @@
-import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
  * the `id`.
@@ -17,11 +17,7 @@ export default function ArrayFieldTitleTemplate<
   if (!title || !displayLabel) {
     return null;
   }
-  const TitleFieldTemplate: TemplatesType<T, S, F>['TitleFieldTemplate'] = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
-    registry,
-    options,
-  );
+  const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <TitleFieldTemplate
       id={titleId(id)}

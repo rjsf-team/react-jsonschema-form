@@ -5,7 +5,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -35,12 +35,7 @@ export default function ObjectFieldTemplate<
     uiSchema,
   } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   // For "pure union" schemas (oneOf/anyOf without properties), skip rendering the empty fieldset wrapper.
   // The AnyOfField/OneOfField will handle rendering the union selector and selected variant's content directly.

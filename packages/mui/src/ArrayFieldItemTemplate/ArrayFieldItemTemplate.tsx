@@ -12,7 +12,7 @@ import type {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getUiOptions, getTemplate } from '@rjsf/utils';
+import { getUiOptions, getTemplates } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -46,11 +46,7 @@ export default function ArrayFieldItemTemplate<
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
-    'ArrayFieldItemButtonsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,

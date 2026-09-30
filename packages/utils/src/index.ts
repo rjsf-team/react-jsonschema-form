@@ -53,13 +53,14 @@ import getSchemaType from './getSchemaType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
+import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget from './getWidget.tsx';
+import getWidget, { resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
@@ -224,6 +225,7 @@ export {
   getStaticItemsUiSchema,
   getSubmitButtonOptions,
   getTemplate,
+  getTemplates,
   getTestIds,
   getUiOptions,
   getUnionTypes,
@@ -274,6 +276,7 @@ export {
   replaceStringParameters,
   resetLogOnce,
   resolveDefaultWidget,
+  resolveWidget,
   resolveUiSchema,
   schemaHasNestedConditional,
   schemaRequiresTrueValue,

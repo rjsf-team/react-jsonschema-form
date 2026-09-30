@@ -9,7 +9,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
+import { getTemplate, getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
 
 import RichDescription from '../RichDescription.tsx';
 
@@ -97,7 +97,7 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 ) {
   const { disabled, readonly, required, multiple, onChange, value, options, registry, uiSchema } = props;
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
 
   const handleOnChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
     // Some pickers re-fire `change` with an empty FileList on cancel; an empty list would clear the value

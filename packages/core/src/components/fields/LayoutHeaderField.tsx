@@ -1,5 +1,5 @@
-import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `LayoutHeaderField` component renders a `TitleFieldTemplate` with an `id` derived from the field `id`
  * and whether it is `required` from the props. The `title` is derived from the props as follows:
@@ -23,11 +23,7 @@ export default function LayoutHeaderField<
   if (!fieldTitle) {
     return null;
   }
-  const TitleFieldTemplate: TemplatesType<T, S, F>['TitleFieldTemplate'] = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
-    registry,
-    options,
-  );
+  const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <TitleFieldTemplate
       id={titleId(id)}

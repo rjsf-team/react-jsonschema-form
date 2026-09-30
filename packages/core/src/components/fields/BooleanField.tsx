@@ -13,12 +13,12 @@ import {
   deepEquals,
   fieldPathToName,
   getUiOptions,
-  getWidget,
   getXxxOfKey,
   isConstantOptionList,
   logOnce,
   ONE_OF_KEY,
   optionsList,
+  resolveWidget,
   toConstant,
   TranslatableString,
 } from '@rjsf/utils';
@@ -83,7 +83,7 @@ function BooleanField<
     placeholder,
     ...options
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget(schema, widget ?? 'checkbox', widgets);
+  const { Widget } = resolveWidget<T, S, F>(schema, widget ?? 'checkbox', widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;

@@ -6,7 +6,7 @@ import type {
   RegistryWidgetsType,
   Widget,
 } from '@rjsf/utils';
-import { fieldLabelId, getSchemaType, getTemplate, getUiOptions, getWidget } from '@rjsf/utils';
+import { fieldLabelId, getSchemaType, getTemplates, getUiOptions, getWidget } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -108,11 +108,7 @@ export default function FieldTemplate<
   // spelled, since an alias, a registry key and the component itself all have to reach the same answer
   const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
     <WrapIfAdditionalTemplate

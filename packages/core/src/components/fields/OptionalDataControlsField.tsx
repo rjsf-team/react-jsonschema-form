@@ -7,7 +7,7 @@ import type {
 } from '@rjsf/utils';
 import {
   getOptionalDataControlsType,
-  getTemplate,
+  getTemplates,
   getUiOptions,
   isFormDataAvailable,
   optionalControlsId,
@@ -39,11 +39,7 @@ export default function OptionalDataControlsField<
 
   const { globalUiOptions = {}, schemaUtils, translateString, uiSchemaDefinitions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const OptionalDataControlsTemplate = getTemplate<'OptionalDataControlsTemplate', T, S, F>(
-    'OptionalDataControlsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { OptionalDataControlsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const hasFormData = isFormDataAvailable<T>(formData);
   let id: string;
   let label: string | undefined;

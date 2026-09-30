@@ -5,7 +5,7 @@ import {
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
-  getTemplate,
+  getTemplates,
   getUiOptions,
   getXxxOfKey,
   getWidget,
@@ -201,11 +201,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
-    'MultiSchemaFieldTemplate',
-    registry,
-    globalUiOptions,
-  );
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
 

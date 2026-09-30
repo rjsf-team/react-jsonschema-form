@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, hasVisibleErrors, isWholeValueSelect } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors, isWholeValueSelect } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -45,11 +45,7 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const hasError = hasVisibleErrors({ rawErrors, hideError });
 
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div className='rjsf-field-hidden'>{children}</div>;

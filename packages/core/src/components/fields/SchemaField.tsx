@@ -23,7 +23,7 @@ import {
   getFieldClassNames,
   getSchemaOwnTypes,
   getSchemaType,
-  getTemplate,
+  getTemplates,
   getUiOptions,
   getUnionTypes,
   getXxxOfKey,
@@ -176,6 +176,8 @@ function getUiFieldComponent<
   }
   return typeof field === 'string' && Object.hasOwn(fields, field) ? fields[field] : undefined;
 }
+
+const RenderNothing = () => null;
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
  * `schema`. The `uiOptions` are used to alter what potential `Field` implementation is actually returned. If no
@@ -341,7 +343,7 @@ function getFieldComponent<
   const optionsReplaceNamedField = yieldsToOptions && namedField === fields.FallbackField;
 
   return {
-    FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? () => null : FieldComponent,
+    FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? RenderNothing : FieldComponent,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
@@ -466,14 +468,10 @@ function SchemaFieldRender<
   }
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
+  const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
-  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
 
   const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
     T,

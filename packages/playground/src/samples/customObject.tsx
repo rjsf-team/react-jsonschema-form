@@ -5,7 +5,7 @@ import type {
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -16,7 +16,7 @@ function ObjectFieldTemplate<
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const { registry, properties, title, description, uiSchema, required, schema, id } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
+  const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <div>
       {title && (

@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 
 import Label from './Label.tsx';
 
@@ -15,11 +15,7 @@ export default function FieldTemplate<
 >(props: FieldTemplateProps<T, S, F>) {
   const { id, label, children, errors, help, description, hidden, required, displayLabel, registry, uiSchema } = props;
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }

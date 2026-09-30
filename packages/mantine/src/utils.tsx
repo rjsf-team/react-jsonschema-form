@@ -23,7 +23,7 @@ import {
   ariaDescribedByIds,
   descriptionId,
   errorId,
-  getTemplate,
+  getTemplates,
   getVisibleErrors,
   isObject,
   labelValue,
@@ -168,11 +168,7 @@ export function getDescriptionProps<
 >(widgetProps: WidgetProps<T, S, F>) {
   const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
   const description = options.description || schema.description;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   return {
     description:

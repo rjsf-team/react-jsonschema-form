@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getSchemaType, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getSchemaType, getTemplates, schemaRequiresTrueValue } from '@rjsf/utils';
 
 interface BooleanInputProps<
   T = unknown,
@@ -46,11 +46,7 @@ export default function BooleanInput<
   inputClassName,
   labelClassName,
 }: BooleanInputProps<T, S, F>) {
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const description = options.description || schema.description;
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more

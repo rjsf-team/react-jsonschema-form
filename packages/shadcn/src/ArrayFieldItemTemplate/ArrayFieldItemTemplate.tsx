@@ -1,5 +1,5 @@
 import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -12,11 +12,7 @@ export default function ArrayFieldItemTemplate<
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
-    'ArrayFieldItemButtonsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const margin = hasDescription ? -6 : 22;
   return (
     <div>

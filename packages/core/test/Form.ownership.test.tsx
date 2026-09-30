@@ -1,6 +1,6 @@
 import { createRef, StrictMode, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { createSchemaUtils, getTemplate, getUiOptions, noop } from '@rjsf/utils';
+import { createSchemaUtils, getTemplates, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, fireEvent, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -95,7 +95,7 @@ describe('form data ownership', () => {
      */
     function recordingWidget(seen: unknown[]) {
       return function Recording(props: WidgetProps) {
-        const BaseInputTemplate = getTemplate('BaseInputTemplate', props.registry, getUiOptions(props.uiSchema));
+        const { BaseInputTemplate } = getTemplates(props.registry, getUiOptions(props.uiSchema));
         useLayoutEffect(() => {
           seen.push(props.value);
         });

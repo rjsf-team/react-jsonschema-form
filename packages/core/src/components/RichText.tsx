@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 
 export interface RichTextProps<
   T = unknown,
@@ -34,7 +34,7 @@ export default function RichText<
   if (!uiOptions[enabledBy]) {
     return text;
   }
-  const MarkdownTemplate = getTemplate<'MarkdownTemplate', T, S, F>('MarkdownTemplate', registry, uiOptions);
+  const { MarkdownTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   return (
     <MarkdownTemplate registry={registry} uiSchema={uiSchema}>
       {text}

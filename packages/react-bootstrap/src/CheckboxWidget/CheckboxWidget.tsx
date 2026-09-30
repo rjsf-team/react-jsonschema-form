@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplates, schemaRequiresTrueValue } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxWidget<
@@ -30,11 +30,7 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   const handleChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);

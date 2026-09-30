@@ -1,7 +1,7 @@
 import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayFieldItem: {
@@ -23,11 +23,7 @@ export default function ArrayFieldItemTemplate<
   const classes = useStyles();
   const { children, buttonsProps, displayLabel, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
-    'ArrayFieldItemButtonsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
     <Flex vAlign='start'>

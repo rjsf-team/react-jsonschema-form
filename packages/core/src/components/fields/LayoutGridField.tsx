@@ -15,7 +15,7 @@ import {
   toPath,
   deepEquals,
   getDiscriminatorFieldFromSchema,
-  getTemplate,
+  getTemplates,
   getTestIds,
   getPropertySchema,
   getUiOptions,
@@ -562,7 +562,7 @@ function LayoutGridCol<
   const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
     <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
@@ -587,7 +587,7 @@ function LayoutGridColumns<
   const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return children.map((child) => (
     <GridTemplate
@@ -617,7 +617,7 @@ function LayoutGridRow<
   const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+  const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
     <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>

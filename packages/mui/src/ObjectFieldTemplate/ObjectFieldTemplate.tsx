@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -53,12 +53,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

@@ -24,7 +24,7 @@ import {
   PROPERTIES_KEY,
   descriptionId,
   getDeprecatedHandling,
-  getTemplate,
+  getTemplates,
   getFieldClassNames,
   getPropertySchema,
   getUiOptions,
@@ -189,14 +189,10 @@ export default function LayoutMultiSchemaField<
       : widgetLabel;
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
+  const { DescriptionFieldTemplate, FieldErrorTemplate, FieldHelpTemplate, FieldTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }

@@ -4,7 +4,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   descriptionId,
-  getTemplate,
+  getTemplates,
   labelValue,
   schemaRequiresTrueValue,
   getUiOptions,
@@ -37,11 +37,7 @@ function CheckboxWidget<
   htmlName,
   required,
 }: WidgetProps<T, S, F>) {
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
