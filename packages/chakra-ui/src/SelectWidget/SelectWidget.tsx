@@ -52,7 +52,7 @@ export default function SelectWidget<
 
   const handleSingleChange = ({ value: newValue }: SelectValueChangeDetails) => {
     const selected = enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, emptyValue);
-    return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
+    onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
   // The focused element is the trigger button, which carries no option value

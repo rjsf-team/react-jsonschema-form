@@ -73,7 +73,7 @@ function SelectWidget<
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple, enumIndexByPosition);
-      return onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
     [onFocus, id, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
@@ -81,7 +81,7 @@ function SelectWidget<
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple, enumIndexByPosition);
-      return onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
     [onBlur, id, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
@@ -89,7 +89,7 @@ function SelectWidget<
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       const newValue = getValue(event, multiple, enumIndexByPosition);
-      return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
     [onChange, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );

@@ -40,16 +40,10 @@ export default function findSelectedOptionInXxxOf<
     );
     const data = getByPath(formData, selectorField);
     if (data !== undefined) {
-      return xxxOfs.find((xxxOfOption) =>
-        deepEquals(
-          getByPath(
-            xxxOfOption,
-            [PROPERTIES_KEY, selectorField, DEFAULT_KEY],
-            getByPath(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]),
-          ),
-          data,
-        ),
-      );
+      return xxxOfs.find((xxxOfOption) => {
+        const constValue = getByPath(xxxOfOption, [PROPERTIES_KEY, selectorField, CONST_KEY]);
+        return deepEquals(getByPath(xxxOfOption, [PROPERTIES_KEY, selectorField, DEFAULT_KEY], constValue), data);
+      });
     }
   }
   return undefined;
