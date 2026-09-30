@@ -77,4 +77,10 @@ describe('computeSxProps', () => {
     const sx = (theme: Theme) => ({ color: theme.palette.primary.main });
     expect(computeSxProps({ mt: 1 }, { sx })).toEqual([{ mt: 1 }, sx]);
   });
+
+  it('composes a theme callback or array default sx with the mui sx', () => {
+    const defaults = (theme: Theme) => ({ color: theme.palette.primary.main });
+    expect(computeSxProps(defaults, { sx: { mt: 2 } })).toEqual([defaults, { mt: 2 }]);
+    expect(computeSxProps([{ mt: 1 }, defaults], { sx: [{ mb: 2 }] })).toEqual([{ mt: 1 }, defaults, { mb: 2 }]);
+  });
 });

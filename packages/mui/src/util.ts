@@ -9,10 +9,14 @@ import type {
 } from '@mui/material';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
 
-type SystemStyleObject = Exclude<SxProps<Theme>, readonly unknown[] | ((...args: never[]) => unknown)>;
+type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 
-function isSxArray(sx: SxProps<Theme>): sx is Extract<SxProps<Theme>, readonly unknown[]> {
+function isSxArray(sx: SxProps<Theme>): sx is SxArray {
   return Array.isArray(sx);
+}
+
+function toSxArray(sx: SxProps<Theme>): SxArray {
+  return isSxArray(sx) ? sx : [sx];
 }
 
 /**
@@ -48,8 +52,8 @@ export function getMuiProps<
  * Merges default `sx` props with any `sx` provided on a MUI component's props, returning a value
  * suitable for passing directly to the MUI `sx` prop.
  *
- * When `muiProps.sx` is an array or a theme callback, the default sx object is prepended to produce
- * an `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
+ * When either `sx` is an array or a theme callback, the two are concatenated, defaults first, into
+ * one `sx` array, preserving MUI's array-merge semantics. Otherwise the two objects are
  * shallow-merged, with `muiProps.sx` taking precedence over the `sxProps`.
  *
  * If `muiProps` or its `sx` is omitted the `sxProps` are returned as-is.
@@ -59,25 +63,22 @@ export function getMuiProps<
  * @returns - The merged sx value
  */
 export function computeSxProps<MuiProps extends GridProps>(
-  sxProps: SystemStyleObject,
+  sxProps: SxProps<Theme>,
   muiProps: MuiProps & { sx: any[] },
 ): MuiProps['sx'] | MuiProps['sx'][];
 export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
-  sxProps: SystemStyleObject,
+  sxProps: SxProps<Theme>,
   muiProps?: MuiProps,
 ): MuiProps['sx'];
 export function computeSxProps<
   MuiProps extends BoxProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
->(sxProps: SystemStyleObject, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
+>(sxProps: SxProps<Theme>, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
   const sx: SxProps<Theme> | undefined = muiProps?.sx;
   if (sx === undefined) {
     return sxProps;
   }
-  if (isSxArray(sx)) {
-    return [sxProps, ...sx];
-  }
-  if (typeof sx === 'function') {
-    return [sxProps, sx];
+  if (isSxArray(sxProps) || isSxArray(sx) || typeof sxProps === 'function' || typeof sx === 'function') {
+    return [...toSxArray(sxProps), ...toSxArray(sx)];
   }
   return { ...sxProps, ...sx };
 }
