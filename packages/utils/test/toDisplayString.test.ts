@@ -1,4 +1,4 @@
-import { toDisplayString } from '../src/index.ts';
+import toDisplayString from '../src/toDisplayString.ts';
 
 describe('toDisplayString()', () => {
   it('converts primitives the way String() does', () => {
@@ -32,10 +32,23 @@ describe('toDisplayString()', () => {
     expect(toDisplayString(nullPrototype)).toBe('{"a":1}');
     expect(toDisplayString([1, 'b'])).toBe('[1,"b"]');
   });
-  it('throws for a plain object or array JSON.stringify() cannot convert', () => {
+  it('spells nested values JSON has no form for the way String() does', () => {
+    expect(toDisplayString({ cause: new Error('a') })).toBe('{"cause":"Error: a"}');
+    expect(toDisplayString([/x/, 10n])).toBe('["/x/","10"]');
+    expect(toDisplayString([new Date(0)])).toBe(JSON.stringify([new Date(0)]));
+  });
+  it('falls back to String() for a plain object or array JSON.stringify() cannot convert', () => {
     const circular: Record<string, unknown> = {};
     circular.self = circular;
+    const circularArray: unknown[] = [1];
+    circularArray.push(circularArray);
+    expect(toDisplayString(circular)).toBe('[object Object]');
+    expect(toDisplayString(circularArray)).toBe('1,');
+    expect(toDisplayString({ toJSON: () => undefined })).toBe('[object Object]');
+  });
+  it('throws where String() does, for a circular object with no prototype', () => {
+    const circular = Object.create(null) as Record<string, unknown>;
+    circular.self = circular;
     expect(() => toDisplayString(circular)).toThrow(TypeError);
-    expect(() => toDisplayString([1n])).toThrow(TypeError);
   });
 });

@@ -52,10 +52,13 @@ describe('logOnce()', () => {
     logOnce('a message:', 'warn', { a: 2 });
     logOnce('a message:', 'warn', /first/);
     logOnce('a message:', 'warn', /second/);
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(4);
+    logOnce('a message:', 'warn', { cause: new Error('first') });
+    logOnce('a message:', 'warn', { cause: new Error('second') });
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(6);
   });
   it('remembers a message, without throwing, when the error cannot be converted for comparison', () => {
-    const nullPrototype = Object.assign(Object.create(null), { a: 1n });
+    const nullPrototype = Object.create(null) as Record<string, unknown>;
+    nullPrototype.self = nullPrototype;
     const unprintableError = new Error('boom');
     unprintableError.toString = () => {
       throw new Error('no string for you');

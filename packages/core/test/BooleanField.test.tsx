@@ -771,6 +771,17 @@ describe('BooleanField', () => {
     });
   });
 
+  it('should not look an object constant up in the record spelling of ui:enumNames, like the enum path', () => {
+    // Every object would be looked up under the same `[object Object]` key
+    const { node } = createFormComponent({
+      schema: { type: 'boolean', oneOf: [{ const: true }, { const: { a: 1 } }] },
+      uiSchema: { 'ui:widget': 'select', 'ui:enumNames': { true: 'Yep', '[object Object]': 'Shared' } },
+    });
+
+    const select = node.querySelector<HTMLSelectElement>('select#root');
+    expect([...select!.options].map((option) => option.text)).toEqual(['', 'Yep', '{"a":1}']);
+  });
+
   it('should fall back to the oneOf when the anyOf is empty', () => {
     // Every option of an empty list is vacuously a constant, so the emptiness has to be checked on its own
     const { node } = createFormComponent({

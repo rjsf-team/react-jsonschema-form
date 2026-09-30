@@ -355,8 +355,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               validator={validators[validator]}
               onChange={onFormDataChange}
               onSubmit={onFormDataSubmit}
-              onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value ${String(value)}`)}
-              onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value ${String(value)}`)}
+              onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value`, value)}
+              onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value`, value)}
               onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
               ref={playGroundFormRef}
             />
