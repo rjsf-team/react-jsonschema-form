@@ -604,7 +604,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -1541,7 +1543,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -2510,7 +2514,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -3313,7 +3319,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >

@@ -24,6 +24,7 @@ import {
   PROPERTIES_KEY,
   getTemplate,
   getPropertySchema,
+  getSchemaType,
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
@@ -152,6 +153,10 @@ export default function LayoutMultiSchemaField<
     placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
     hideError: uiSchemaHideError,
+    // See #439: the class names and style this field's `FieldTemplate` consumes are kept out of the options handed
+    // to the widget below, so a widget reading them off its own `options` cannot apply them a second time
+    classNames: uiClassNames,
+    style,
     ...uiOptions
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
@@ -215,10 +220,17 @@ export default function LayoutMultiSchemaField<
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
   const visibleErrors = getVisibleErrors({ rawErrors, hideError: hideFieldError });
-  const errors =
-    visibleErrors.length > 0 ? (
-      <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
-    ) : undefined;
+  const hasErrors = visibleErrors.length > 0;
+  const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
+  if (hasErrors) {
+    classNames.push('rjsf-field-error');
+  }
+  if (uiClassNames) {
+    classNames.push(uiClassNames);
+  }
+  const errors = hasErrors ? (
+    <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
+  ) : undefined;
   const { help } = uiOptions;
   const helpComponent = (
     <FieldHelpTemplate
@@ -226,7 +238,7 @@ export default function LayoutMultiSchemaField<
       id={id}
       schema={schema}
       uiSchema={uiSchema}
-      hasErrors={visibleErrors.length > 0}
+      hasErrors={hasErrors}
       registry={registry}
     />
   );
@@ -244,6 +256,8 @@ export default function LayoutMultiSchemaField<
       readonly={!!readonly}
       registry={registry}
       displayLabel={displayLabel}
+      classNames={classNames.join(' ').trim()}
+      style={style}
       errors={errors}
       help={helpComponent}
       rawHelp={help}

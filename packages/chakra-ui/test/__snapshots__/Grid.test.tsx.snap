@@ -3823,7 +3823,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="emotion-277"
                     style="margin: 0px 0px 16px;"
                   >
-                    <div>
+                    <div
+                      class="rjsf-field rjsf-field-undefined"
+                    >
                       <fieldset
                         aria-labelledby="fieldset::_r_3q_::legend"
                         class="fieldset__root emotion-0"
@@ -10124,7 +10126,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="emotion-277"
                     style="margin: 0px 0px 16px;"
                   >
-                    <div>
+                    <div
+                      class="rjsf-field rjsf-field-undefined"
+                    >
                       <fieldset
                         aria-labelledby="fieldset::_r_53_::legend"
                         class="fieldset__root emotion-0"
@@ -16517,7 +16521,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="emotion-277"
                     style="margin: 0px 0px 16px;"
                   >
-                    <div>
+                    <div
+                      class="rjsf-field rjsf-field-undefined"
+                    >
                       <fieldset
                         aria-labelledby="fieldset::_r_6e_::legend"
                         class="fieldset__root emotion-0"
@@ -20606,7 +20612,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="emotion-277"
                     style="margin: 0px 0px 16px;"
                   >
-                    <div>
+                    <div
+                      class="rjsf-field rjsf-field-undefined"
+                    >
                       <fieldset
                         aria-labelledby="fieldset::_r_2h_::legend"
                         class="fieldset__root emotion-0"

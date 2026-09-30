@@ -746,6 +746,76 @@ describe('LayoutMultiSchemaField', () => {
     // The hidden errors remain reachable, so a template rendering them itself is not cut off by the directive
     expect(templateProps?.errorSchema).toEqual(NESTED_ERROR_SCHEMA);
   });
+  // This field renders its own `FieldTemplate` in place of `SchemaField`'s, so it has to compute the same class list;
+  // otherwise a discriminated oneOf/anyOf in a layout grid is the one field a `rjsf-field*` CSS rule never reaches
+  describe('classNames and style', () => {
+    function renderRecording(overrideProps: Partial<FieldProps> = {}) {
+      let templateProps: FieldTemplateProps | undefined;
+      let widgetProps: WidgetProps | undefined;
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        templateProps = props;
+        return <FakeFieldTemplate {...props} />;
+      }
+      function RecordingRadioWidget(props: WidgetProps) {
+        widgetProps = props;
+        return <WrappedRadioWidget {...props} />;
+      }
+      const props = getProps(overrideProps);
+
+      render(
+        <LayoutMultiSchemaField
+          {...props}
+          registry={getTestRegistry(
+            props.schema,
+            {},
+            { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+            { SelectWidget: WrappedSelectWidget, RadioWidget: RecordingRadioWidget },
+          )}
+        />,
+      );
+
+      return { templateProps, widgetProps };
+    }
+    test('hands its FieldTemplate the schema-derived classes', () => {
+      const { templateProps } = renderRecording();
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-object');
+      expect(templateProps?.style).toBeUndefined();
+    });
+    // `SchemaField` spells the same class `rjsf-field-undefined` for a schema `getSchemaType()` cannot type, which a
+    // discriminated oneOf/anyOf of `$ref`s usually is, so the two agree on what a CSS rule has to match
+    test('spells the type class the way SchemaField does for a schema with no derivable type', () => {
+      const { templateProps } = renderRecording({
+        schema: anyOfSchema,
+        options: anyOfSchema[ANY_OF_KEY] as RJSFSchema[],
+      });
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-undefined');
+    });
+    test('adds rjsf-field-error when it has errors to show', () => {
+      const { templateProps } = renderRecording({ errorSchema: NESTED_ERROR_SCHEMA });
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-object rjsf-field-error');
+    });
+    test('omits rjsf-field-error while the errors are hidden', () => {
+      const { templateProps } = renderRecording({ errorSchema: NESTED_ERROR_SCHEMA, hideError: true });
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-object');
+    });
+    test('appends ui:classNames and passes ui:style, without leaking either to the widget', () => {
+      const style = { color: 'red' };
+      const { templateProps, widgetProps } = renderRecording({
+        errorSchema: NESTED_ERROR_SCHEMA,
+        uiSchema: { 'ui:classNames': 'custom-class', 'ui:style': style },
+      });
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-object rjsf-field-error custom-class');
+      expect(templateProps?.style).toBe(style);
+      // See #439: the template consumed them, so they are kept out of the widget's own options
+      expect(widgetProps?.options).not.toHaveProperty('classNames');
+      expect(widgetProps?.options).not.toHaveProperty('style');
+    });
+  });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
     const overrideTemplateTestId = 'override-field-template';
     const overrideErrorTestId = 'override-field-error-template';

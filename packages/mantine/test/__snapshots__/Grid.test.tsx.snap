@@ -1742,7 +1742,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <div
                             class="m_96bdd299 mantine-Grid-col __m__-_r_143_"
                           >
-                            <div>
+                            <div
+                              class="rjsf-field rjsf-field-undefined"
+                            >
                               <div
                                 class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
                                 id="root_employment"
@@ -4644,7 +4646,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <div
                             class="m_96bdd299 mantine-Grid-col __m__-_r_1ho_"
                           >
-                            <div>
+                            <div
+                              class="rjsf-field rjsf-field-undefined"
+                            >
                               <div
                                 class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
                                 id="root_employment"
@@ -7590,7 +7594,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <div
                             class="m_96bdd299 mantine-Grid-col __m__-_r_1vk_"
                           >
-                            <div>
+                            <div
+                              class="rjsf-field rjsf-field-undefined"
+                            >
                               <div
                                 class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
                                 id="root_employment"
@@ -9584,7 +9590,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <div
                             class="m_96bdd299 mantine-Grid-col __m__-_r_me_"
                           >
-                            <div>
+                            <div
+                              class="rjsf-field rjsf-field-undefined"
+                            >
                               <div
                                 class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
                                 id="root_employment"

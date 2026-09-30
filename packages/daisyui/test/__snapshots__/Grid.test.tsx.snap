@@ -1589,10 +1589,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
               xs="12"
             >
               <div
-                class="flex-grow undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3"
+                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="form-control"
@@ -3271,10 +3271,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
               xs="12"
             >
               <div
-                class="flex-grow undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3"
+                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="form-control"
@@ -4953,10 +4953,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
               xs="12"
             >
               <div
-                class="flex-grow undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3"
+                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="form-control"
@@ -6635,10 +6635,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
               xs="12"
             >
               <div
-                class="flex-grow undefined"
+                class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3"
+                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
                 >
                   <div
                     class="form-control"
