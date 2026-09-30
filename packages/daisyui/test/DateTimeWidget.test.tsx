@@ -204,6 +204,24 @@ describe('DateTimeWidget', () => {
     });
   });
 
+  // Both pickers can be pointed at any `string` field through `ui:widget`, and a consumer's form data can hold whatever
+  // it holds: a value one picker displays and the other leaves blank is the same value either way, and the blank one
+  // then writes its own day over it at the first pick
+  describe('a stored value that is not text', () => {
+    pinTimeZone('UTC');
+
+    test.each([
+      ['an epoch number', Date.UTC(2020, 4, 3, 14, 30)],
+      ['a Date', new Date(Date.UTC(2020, 4, 3, 14, 30))],
+    ])('displays the instant %s names', (_, value) => {
+      const { container } = render(
+        <DateTimeWidget {...makeWidgetMockProps({ value, schema: { type: 'string', format: 'date-time' } })} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 2:30 PM');
+    });
+  });
+
   // A field with no title leaves `FieldTemplate` no label to render, so the trigger has neither a name from outside nor
   // contents of its own to be named by
   test('names an untitled field with no value by the translated prompt', () => {

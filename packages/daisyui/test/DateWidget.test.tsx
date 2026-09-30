@@ -265,6 +265,59 @@ describe('DateWidget', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  // Escape unmounts the popup from under whatever inside it holds focus, which would fall to the document body and
+  // lose a keyboard user their place in the form
+  test('returns focus to the trigger when Escape closes the picker from inside it', async () => {
+    const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema })} />);
+    const trigger = container.querySelector('button[aria-haspopup]')!;
+
+    await openPicker(container);
+    await pickTheSeventeenth();
+    await user.keyboard('{Escape}');
+
+    expect(trigger).toHaveFocus();
+  });
+
+  // A form that does not take what the picker committed — one rendering `formData` it holds itself, or normalizing the
+  // value back to the one it already had — leaves the widget's props unchanged, and nothing else would bring the
+  // trigger back to the day the form actually holds
+  test('goes back to the stored day where the form does not take the day it committed', async () => {
+    const onChange = vi.fn();
+    const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />);
+
+    await openPicker(container);
+    await pickTheSeventeenth();
+    await user.click(screen.getByText('Done'));
+
+    expect(onChange).toHaveBeenCalledWith('2020-05-17');
+    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+
+    // Reopening on the discarded day would offer to commit it again, from a calendar the form never agreed to
+    await openPicker(container);
+
+    expect(screen.getByRole('button', { name: /May 3rd, 2020, selected/ })).toBeInTheDocument();
+  });
+
+  // The playground renders the form into an iframe, which is a document away from the one this module runs in: a press
+  // or a key inside it never reaches listeners bound to ours, leaving Done and the trigger the only ways out
+  test('closes on Escape raised in the document it was rendered into', async () => {
+    const frame = document.body.appendChild(document.createElement('iframe'));
+    const frameDocument = frame.contentDocument!;
+    const frameUser = userEvent.setup({ document: frameDocument });
+    const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema })} />, {
+      container: frameDocument.body.appendChild(frameDocument.createElement('div')),
+      baseElement: frameDocument.body,
+    });
+
+    await frameUser.click(container.querySelector('button[aria-haspopup]')!);
+    expect(frameDocument.querySelector('.date-picker-popup')).not.toBeNull();
+
+    await frameUser.keyboard('{Escape}');
+    expect(frameDocument.querySelector('.date-picker-popup')).toBeNull();
+
+    frame.remove();
+  });
+
   // Reopening on the month the user just left would show them the calendar they discarded rather than the one the
   // stored value names — and for an empty field the month is never reset by the stored day, since there is none
   test('reopens on the current month after Escape discards a month the user navigated to', async () => {

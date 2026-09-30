@@ -2338,6 +2338,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼
@@ -3364,6 +3365,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼
@@ -3604,6 +3606,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             foo
                           </span>
                           <span
+                            aria-hidden="true"
                             class="ml-2"
                           >
                             ▼

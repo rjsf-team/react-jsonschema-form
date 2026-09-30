@@ -6,7 +6,7 @@ import { format, isSameDay, isToday, isValid } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { readDateOnly, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
 import 'react-day-picker/dist/style.css';
 
@@ -146,17 +146,18 @@ export default function DateTimeWidget<
   // change) normalizes to `undefined` here, rather than becoming an `Invalid Date` that every downstream
   // consumer (the calendar's month caption, the time input, the commit) would otherwise have to guard
   // against individually.
+  //
+  // A value that is not text has no offset for `getDateTimeLocalValue()` to strip and nothing for it to return, so it
+  // reaches the readers as it was stored: an epoch number or a `Date` a consumer left in the form data is a value the
+  // date picker displays, and not one this picker should leave blank.
   const initialDate = useMemo(() => {
-    if (!localValue) {
-      return undefined;
-    }
-    const date = readDateOnly(localValue) ?? new Date(localValue);
-    return isValid(date) ? date : undefined;
-  }, [localValue]);
+    const stored = localValue ?? value;
+    return readDateOnly(stored) ?? readInstant(stored);
+  }, [localValue, value]);
   const {
     isOpen,
     month,
-    localDate,
+    displayedDate,
     containerRef,
     triggerRef,
     chooseDate,
@@ -171,28 +172,28 @@ export default function DateTimeWidget<
   const handleSelect = useCallback(
     (date: Date | undefined) => {
       if (date) {
-        if (localDate) {
+        if (displayedDate) {
           // Down to the milliseconds, which the time input cannot show: the user picked a day, not a time, and a
           // stored value may carry seconds this widget has no way to put back
           date.setHours(
-            localDate.getHours(),
-            localDate.getMinutes(),
-            localDate.getSeconds(),
-            localDate.getMilliseconds(),
+            displayedDate.getHours(),
+            displayedDate.getMinutes(),
+            displayedDate.getSeconds(),
+            displayedDate.getMilliseconds(),
           );
         }
         chooseDate(date);
       }
     },
-    [chooseDate, localDate],
+    [chooseDate, displayedDate],
   );
 
   // Take the time the user typed, on the day the popup already holds.
   const handleTimeChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      if (localDate) {
+      if (displayedDate) {
         const [hours, minutes] = e.target.value.split(':');
-        const newDate = new Date(localDate);
+        const newDate = new Date(displayedDate);
         newDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
         // An emptied or half-typed time parses as `NaN`, which invalidates the whole date. The last valid one is kept
         // instead, so the input re-renders the time it still holds and the user can carry on editing it; an
@@ -202,7 +203,7 @@ export default function DateTimeWidget<
         }
       }
     },
-    [chooseDate, localDate],
+    [chooseDate, displayedDate],
   );
 
   // Prevent event propagation for popup container
@@ -210,7 +211,7 @@ export default function DateTimeWidget<
     e.stopPropagation();
   }, []);
 
-  const formattedValue = localDate ? format(localDate, 'PP p') : undefined;
+  const formattedValue = displayedDate ? format(displayedDate, 'PP p') : undefined;
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -240,7 +241,7 @@ export default function DateTimeWidget<
           >
             <MemoizedDateTimePickerPopup
               id={`${id}-picker`}
-              selectedDate={localDate}
+              selectedDate={displayedDate}
               month={month}
               onMonthChange={handleMonthChange}
               onSelect={handleSelect}

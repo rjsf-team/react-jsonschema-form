@@ -52,6 +52,14 @@ interface GetGroupProps {
  * computes it with `||`, so a field whose `title` is explicitly `''` still gets a label there, while the `label` a
  * widget is handed keeps the `''` it was given.
  *
+ * It answers from what the widget was handed, which is as close as a widget can get: it cannot see the label the
+ * template computed, and the two disagree in one case either way. Under `deprecatedHandling: 'label'` a field with
+ * neither a title nor a property name — a root field, an array item — is given a template label that is nothing but
+ * the deprecation decoration, so one is rendered where this says none is; pointing a group at it would name the group
+ * `(deprecated)`, which is why the widget is left to its own name instead. In the other direction, a `oneOf` option
+ * selector is handed the field's title while the label that title renders names the field's own control rather than
+ * the selector, so the value it displays is described as well as shown.
+ *
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
@@ -96,20 +104,26 @@ interface GetTriggerDescribedBy {
   hasValue: boolean;
 }
 
-/** Builds the `aria-describedby` for a picker's trigger, which is how the value it displays is announced. The label
- * `FieldTemplate` renders names the trigger through its own `htmlFor`, and a name from outside an element replaces its
+/** Builds the `aria-describedby` for a button that displays the field's value and opens a popup to change it — a
+ * picker's trigger, and the select's dropdown — which is how the value it displays is announced. The label
+ * `FieldTemplate` renders names the button through its own `htmlFor`, and a name from outside an element replaces its
  * contents, so the value would otherwise be dropped from everything a screen reader says about the control — the same
  * split a native control makes between its name and its value.
  *
- * Where there is no label to name the trigger, its contents *are* its name, and referencing them as well would have
- * the value announced twice.
+ * Where the predicate below reports no label to name the button, its contents *are* its name, and referencing them as
+ * well would have the value announced twice.
  *
- * @param id - The trigger's `id`, which `triggerValueId()` and `ariaDescribedByIds()` derive their ids from
+ * A single control is named by that `htmlFor` alone, so this describes the value rather than pointing
+ * `aria-labelledby` at the label and the value together: a reference would outrank the association, and under a
+ * `FieldTemplate` that renders no label carrying `fieldLabelId()` it would leave the button named by its own value
+ * with the field's label dropped.
+ *
+ * @param id - The button's `id`, which `triggerValueId()` and `ariaDescribedByIds()` derive their ids from
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
- * @param hasValue - Whether the trigger is displaying a value rather than falling back to the label
- * @returns - The trigger's `aria-describedby`, naming the value element only where the label names the trigger
+ * @param hasValue - Whether the button is displaying a value rather than falling back to the label
+ * @returns - The button's `aria-describedby`, naming the value element only where the label names the button
  */
 export function getTriggerDescribedBy({ id, label, name, hideLabel, hasValue }: GetTriggerDescribedBy) {
   if (!hasValue || !hasLabelToReference({ label, name, hideLabel })) {

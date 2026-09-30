@@ -1597,6 +1597,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           color
                         </span>
                         <span
+                          aria-hidden="true"
                           class="ml-2"
                         >
                           ▼
@@ -3187,6 +3188,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           color
                         </span>
                         <span
+                          aria-hidden="true"
                           class="ml-2"
                         >
                           ▼
@@ -3507,8 +3509,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
-                            aria-labelledby="root_region__oneof_select__label root_region__oneof_select__value"
+                            aria-describedby="root_region__oneof_select__value root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_region__oneof_select"
                             tabindex="0"
@@ -3521,6 +3522,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               Europe
                             </span>
                             <span
+                              aria-hidden="true"
                               class="ml-2"
                             >
                               ▼
@@ -3588,8 +3590,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="dropdown w-full"
                           >
                             <button
-                              aria-describedby="root_region__error root_region__description root_region__help"
-                              aria-labelledby="root_region__label root_region__value"
+                              aria-describedby="root_region__value root_region__error root_region__description root_region__help"
                               class="btn btn-outline w-full text-left flex justify-between items-center "
                               id="root_region"
                               tabindex="0"
@@ -3602,6 +3603,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 Germany
                               </span>
                               <span
+                                aria-hidden="true"
                                 class="ml-2"
                               >
                                 ▼
@@ -3699,7 +3701,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -3712,6 +3713,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 Subscribed
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -3779,7 +3781,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -3792,6 +3793,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 Once
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -3889,7 +3891,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -3902,6 +3903,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 Unknown
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -3999,7 +4001,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4012,6 +4013,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 Bar
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -4094,7 +4096,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4107,6 +4108,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 No
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -6681,8 +6683,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                            aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -6695,6 +6696,7 @@ exports[`single fields > optional data controls > does not show optional control
                               Option 1
                             </span>
                             <span
+                              aria-hidden="true"
                               class="ml-2"
                             >
                               ▼
@@ -6874,8 +6876,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
-                            aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -6888,6 +6889,7 @@ exports[`single fields > optional data controls > does not show optional control
                               Option 1
                             </span>
                             <span
+                              aria-hidden="true"
                               class="ml-2"
                             >
                               ▼
@@ -7839,8 +7841,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                            aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -7853,6 +7854,7 @@ exports[`single fields > optional data controls > does not show optional control
                               Option 1
                             </span>
                             <span
+                              aria-hidden="true"
                               class="ml-2"
                             >
                               ▼
@@ -8032,8 +8034,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
-                            aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -8046,6 +8047,7 @@ exports[`single fields > optional data controls > does not show optional control
                               Option 1
                             </span>
                             <span
+                              aria-hidden="true"
                               class="ml-2"
                             >
                               ▼
@@ -11659,6 +11661,7 @@ exports[`single fields > select field 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -11753,6 +11756,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -11897,6 +11901,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12140,7 +12145,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12153,6 +12157,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 foo, bar
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12299,6 +12304,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12423,6 +12429,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12662,7 +12669,6 @@ exports[`single fields > select field single choice formData 1`] = `
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12675,6 +12681,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 bar
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12769,6 +12776,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -12923,6 +12931,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -13168,6 +13177,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 test
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -13260,7 +13270,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
           >
             <button
               aria-describedby="root__error root__description root__help"
-              aria-labelledby="root__label root__value"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13273,6 +13282,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 Foo
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -13377,6 +13387,7 @@ exports[`single fields > select widget with selected oneOf option description an
                 Foo
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -14577,8 +14588,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="dropdown w-full"
                     >
                       <button
-                        aria-describedby="root_answer__error root_answer__description root_answer__help"
-                        aria-labelledby="root_answer__label root_answer__value"
+                        aria-describedby="root_answer__value root_answer__error root_answer__description root_answer__help"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_answer"
                         tabindex="0"
@@ -14591,6 +14601,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           Yes
                         </span>
                         <span
+                          aria-hidden="true"
                           class="ml-2"
                         >
                           ▼

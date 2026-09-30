@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, fieldLabelId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -43,18 +43,17 @@ export default function AltDateWidget<
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
-            {/* The id the select looks for when it names itself, so the value it displays is announced after this
-                label rather than replaced by it */}
-            <label
-              id={fieldLabelId(dateElementId(id, elemProps.type))}
-              htmlFor={dateElementId(id, elemProps.type)}
-              className='label'
-            >
+            {/* Naming each select, which is otherwise left to whatever it happens to be displaying. A single control is
+                named by this association alone, and announces the value it displays after it */}
+            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>
             </label>
             <DateElement
               rootId={id}
-              name={name}
+              // The part's own id, as `@rjsf/mantine` and `@rjsf/chakra-ui` name theirs: each select is a control in
+              // its own right, and a field with no property name of its own — a root field, an array item — would
+              // otherwise leave the label above replacing the value its select displays rather than preceding it
+              name={dateElementId(id, elemProps.type)}
               className='select select-bordered select-sm'
               select={handleChange}
               type={elemProps.type}

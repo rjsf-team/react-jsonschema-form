@@ -1,7 +1,28 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { format, isValid, parseISO } from 'date-fns';
+import { format, isSameMonth, isValid, parseISO } from 'date-fns';
+
+/** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
+ * an iframe — as the playground's frame renders it. A press, a key and a viewport width all belong to that document
+ * rather than to ours, and reading it off an element the form rendered needs no setup from the consumer, where a
+ * provider would.
+ *
+ * @param element - An element of the form, whose document answers for the whole of it
+ * @returns - That element's document, falling back to this one for an element that is in no document yet
+ */
+function documentOf(element: Element | null) {
+  return element?.ownerDocument ?? document;
+}
+
+/** The window of the document above, which is the only way to a viewport and to the events that belong to one.
+ *
+ * @param element - An element of the form
+ * @returns - That element's window, falling back to this one for a document with no browsing context of its own
+ */
+export function windowOf(element: Element | null) {
+  return documentOf(element).defaultView ?? window;
+}
 
 /** A `date` proper: a calendar day with no time and no zone */
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
@@ -15,15 +36,34 @@ const KNOWN_FORMATS = ['date', 'date-time', 'iso-date-time'];
  * a day with no zone as UTC midnight, which names the day before to every reader behind UTC once date-fns formats it
  * in their own zone.
  *
- * @param text - The stored value's text
- * @returns - That day at local midnight, or `undefined` where the text is not a day on its own
+ * @param value - The stored value
+ * @returns - That day at local midnight, or `undefined` where the value is not a day on its own
  */
-export function readDateOnly(text: string) {
-  if (!DATE_ONLY.test(text)) {
+export function readDateOnly(value: unknown) {
+  if (typeof value !== 'string' || !DATE_ONLY.test(value)) {
     return undefined;
   }
-  const day = parseISO(text);
+  const day = parseISO(value);
   return isValid(day) ? day : undefined;
+}
+
+/** Reads a stored value as the instant it names, for every shape a `Date` can be built from: the text either picker
+ * writes, the epoch number or `Date` a consumer can leave in the form data, and the dialects an engine accepts beyond
+ * ISO 8601 — a lowercase `t`/`z`, or the space separator RFC 3339 also allows — every one of which `parseISO` rejects.
+ * Shared so the two pickers agree on which stored values they can read at all, since a value one of them shows and the
+ * other leaves blank is the same value either way.
+ *
+ * @param value - The stored value
+ * @returns - The instant it names, or `undefined` for a value no `Date` can be built from, which would otherwise
+ *          become an `Invalid Date` that the calendar, its month caption and the trigger would each have to guard
+ *          against
+ */
+export function readInstant(value: unknown) {
+  if (typeof value !== 'string' && typeof value !== 'number' && !(value instanceof Date)) {
+    return undefined;
+  }
+  const instant = new Date(value);
+  return isValid(instant) ? instant : undefined;
 }
 
 /** Builds the formatter that turns the date a picker is holding into the text the field stores. Either picker can be
@@ -132,7 +172,7 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState<Date>(initialDate ?? new Date());
+  const [month, setMonth] = useState<Date>(() => initialDate ?? new Date());
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
   const pickedADate = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -145,12 +185,36 @@ export function useDatePicker<V>({
     pickedADate.current = false;
   }, [initialDate]);
 
-  // When the local date changes, update the displayed month.
+  // When the local date changes, update the displayed month — keeping the month already displayed where the new date
+  // is in it, which every pick within the visible calendar and every keystroke in a time input is. Handing the state a
+  // fresh `Date` naming the same month would rebuild the whole calendar, its day grid and its year dropdown, for a
+  // caption that does not change
   useEffect(() => {
     if (localDate) {
-      setMonth(localDate);
+      setMonth((current) => (isSameMonth(current, localDate) ? current : localDate));
     }
   }, [localDate]);
+
+  /** Take the value the form holds, discarding anything the popup was holding before: the date, the month displaying
+   * it, and the fact that the user chose a date at all. Done on the way in rather than on each way out, so a way out
+   * added later cannot forget it and leave the popup reopening on a date the form never took
+   */
+  const resetToStoredValue = useCallback(() => {
+    setLocalDate(initialDate);
+    setMonth(initialDate ?? new Date());
+    pickedADate.current = false;
+  }, [initialDate]);
+
+  /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
+   * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
+   * A press outside moved focus itself, so that one is left where the user put it
+   */
+  const returnFocusFromPopup = useCallback(() => {
+    const popup = containerRef.current;
+    if (popup?.contains(documentOf(popup).activeElement)) {
+      triggerRef.current?.focus();
+    }
+  }, []);
 
   /** Store what the popup is holding, which closing it does whenever the user chose a date. A field holding a `''`
    * left over from a cleared one commits its empty value instead, since `''` is no more a date than it is a date-time
@@ -171,7 +235,6 @@ export function useDatePicker<V>({
   const closePicker = useCallback(() => {
     setIsOpen(false);
     commitDate();
-    pickedADate.current = false;
     // Manually invoke the blur handler to ensure blur event is triggered
     if (onBlur) {
       onBlur(id, value);
@@ -179,19 +242,15 @@ export function useDatePicker<V>({
   }, [commitDate, id, onBlur, value]);
 
   /** Close the popup without storing anything, which Escape does: a date the user was trying out in the calendar is
-   * not one they asked to store. The popup goes back to the stored value entirely — the date it holds and the month it
-   * displays — so the trigger stops showing a day the form does not hold and reopening does not land on the month the
-   * user just discarded
+   * not one they asked to store
    */
   const cancelPicker = useCallback(() => {
-    setLocalDate(initialDate);
-    setMonth(initialDate ?? new Date());
-    pickedADate.current = false;
+    returnFocusFromPopup();
     setIsOpen(false);
     if (onBlur) {
       onBlur(id, value);
     }
-  }, [id, initialDate, onBlur, value]);
+  }, [id, onBlur, returnFocusFromPopup, value]);
 
   const latestCancel = useLatest(cancelPicker);
   const latestClose = useLatest(closePicker);
@@ -213,11 +272,14 @@ export function useDatePicker<V>({
       }
       latestClose.current();
     };
-    document.addEventListener('keydown', handleEscape);
-    document.addEventListener('mousedown', handlePressOutside);
+    // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
+    // ours, which would leave Done and the trigger as the only ways out of the popup
+    const doc = documentOf(triggerRef.current);
+    doc.addEventListener('keydown', handleEscape);
+    doc.addEventListener('mousedown', handlePressOutside);
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.removeEventListener('mousedown', handlePressOutside);
+      doc.removeEventListener('keydown', handleEscape);
+      doc.removeEventListener('mousedown', handlePressOutside);
     };
   }, [isOpen, latestCancel, latestClose]);
 
@@ -249,12 +311,13 @@ export function useDatePicker<V>({
         closePicker();
         return;
       }
+      resetToStoredValue();
       setIsOpen(true);
       if (onFocus) {
         onFocus(id, value);
       }
     },
-    [closePicker, id, isOpen, onFocus, value],
+    [closePicker, id, isOpen, onFocus, resetToStoredValue, value],
   );
 
   /** Report focus on the trigger
@@ -273,17 +336,23 @@ export function useDatePicker<V>({
     }
   }, [id, isOpen, onBlur, value]);
 
-  /** Close the popup from its Done button, returning focus to the trigger it was opened from
+  /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
+   * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,
+   * leaves this press with no focus inside the popup to return from
    */
   const handleDone = useCallback(() => {
     closePicker();
     triggerRef.current?.focus();
   }, [closePicker]);
 
+  // What the trigger displays and the calendar selects: the date the user is choosing while the popup is open, and
+  // otherwise the one the form holds, so nothing the form did not take is left on screen once the popup is closed
+  const displayedDate = isOpen ? localDate : initialDate;
+
   return {
     isOpen,
     month,
-    localDate,
+    displayedDate,
     containerRef,
     triggerRef,
     chooseDate,

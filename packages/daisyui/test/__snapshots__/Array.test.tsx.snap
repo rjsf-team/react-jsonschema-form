@@ -450,6 +450,7 @@ exports[`array fields > checkboxes 1`] = `
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -1735,6 +1736,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -4070,6 +4072,7 @@ exports[`with title and description > checkboxes 1`] = `
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -4901,6 +4904,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -5732,6 +5736,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
@@ -6472,6 +6477,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼

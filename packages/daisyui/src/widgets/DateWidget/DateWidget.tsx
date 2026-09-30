@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { format, isSameDay, isToday, isValid, startOfDay } from 'date-fns';
+import { format, isSameDay, isToday, startOfDay } from 'date-fns';
 import type { ClassNames, ModifiersClassNames } from 'react-day-picker';
 import { DayPicker, UI } from 'react-day-picker';
 
-import { readDateOnly, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
 import 'react-day-picker/dist/style.css';
 
@@ -105,12 +105,11 @@ const NUMERIC_OFFSET = /\d{2}:\d{2}(:\d{2})?(\.\d+)?[+-]\d{2}(:?\d{2})?$/;
 /** The calendar day a date-time's own text names, read as a day in its own right rather than through the `Date`
  * constructor, which reads a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
  *
- * @param text - A date-time beginning with a `YYYY-MM-DD` day
+ * @param text - A date-time beginning with a `YYYY-MM-DD` day, or nothing where the stored value is not text
  * @returns - That day at local midnight, or `undefined` if the text does not begin with one
  */
-function dayNamedBy(text: string) {
-  const [day] = LEADING_DAY.exec(text) ?? [];
-  return day ? readDateOnly(day) : undefined;
+function dayNamedBy(text?: string) {
+  return readDateOnly(text?.match(LEADING_DAY)?.[0]);
 }
 
 /** Reads the stored value of a date field as the calendar day it stands for.
@@ -125,22 +124,20 @@ function dayNamedBy(text: string) {
  * read as its text reads however that offset resolves here.
  *
  * @param raw - The stored value
- * @returns - The day it names, or `undefined` for a value that cannot be parsed, which would otherwise become an
- *          `Invalid Date` that the calendar, its month caption and the trigger would each have to guard against
+ * @returns - The day it names, or `undefined` for a value that names none — an object or a boolean as much as an
+ *          unreadable text
  */
-function parseDateValue(raw: string | number | Date) {
+function parseDateValue(raw: unknown) {
   const text = typeof raw === 'string' ? raw.trim() : undefined;
-  const dateOnly = text ? readDateOnly(text) : undefined;
+  const dateOnly = readDateOnly(text);
   if (dateOnly) {
     return dateOnly;
   }
-  // `Date` rather than `parseISO`, which rejects the lowercase separator and zone and the space separator RFC 3339 also
-  // allows, as well as the epoch number that is not ISO text at all
-  const instant = new Date(raw);
-  const dayInItsOwnText = text ? dayNamedBy(text) : undefined;
-  if (!isValid(instant)) {
-    // Every one of those shapes is optional for an engine to accept, so a text naming a day outright is read as that
-    // day rather than thrown away along with the instant no engine agreed on
+  const instant = readInstant(raw);
+  const dayInItsOwnText = dayNamedBy(text);
+  if (!instant) {
+    // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
+    // that day rather than thrown away along with the instant no engine agreed on
     return dayInItsOwnText;
   }
   const writtenByThisWidget =
@@ -174,18 +171,12 @@ export default function DateWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
-  const initialDate = useMemo(() => {
-    // Anything else — an object, a boolean — names no day, and `Date` would read it as `Invalid Date`
-    if (typeof value === 'string' || typeof value === 'number' || value instanceof Date) {
-      return parseDateValue(value);
-    }
-    return undefined;
-  }, [value]);
+  const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
     isOpen,
     month,
-    localDate,
+    displayedDate,
     containerRef,
     triggerRef,
     chooseDate,
@@ -206,62 +197,15 @@ export default function DateWidget<
     [chooseDate],
   );
 
-  // Add a portal container to the document body if it doesn't exist
-  useEffect(() => {
-    // Check if the portal container exists, create it if not
-    let portalContainer = document.getElementById('date-picker-portal');
-    if (!portalContainer) {
-      portalContainer = document.createElement('div');
-      portalContainer.id = 'date-picker-portal';
-      document.body.appendChild(portalContainer);
-    }
-
-    // Clean up on unmount
-    return () => {
-      // Only remove if no other date pickers are using it and if portalContainer exists
-      const container = document.getElementById('date-picker-portal');
-      if (container && document.querySelectorAll('.date-picker-popup').length === 0) {
-        container.remove();
-      }
-    };
-  }, []);
-
-  // Get the document and window objects (will work in iframes too)
-  const getDocumentAndWindow = () => {
-    // Try to get the iframe's document and window if we're in one
-    let doc = document;
-    let win = window;
-
-    try {
-      // If we're in an iframe, try to access the parent
-      if (window.frameElement) {
-        // We're in an iframe
-        const iframe = window.frameElement as HTMLIFrameElement;
-        // Get the iframe's contentDocument and contentWindow
-        if (iframe.contentDocument) {
-          doc = iframe.contentDocument;
-        }
-        if (iframe.contentWindow) {
-          win = iframe.contentWindow as typeof window;
-        }
-      }
-    } catch (e) {
-      // Security error, we're in a cross-origin iframe
-      // oxlint-disable-next-line no-console
-      console.log('Unable to access parent frame:', e);
-    }
-
-    return { doc, win };
-  };
-
   // Render the calendar at a specific position
   const renderCalendar = useCallback(() => {
     if (!containerRef.current || !triggerRef.current) {
       return;
     }
 
-    // Get the proper document and window
-    const { win } = getDocumentAndWindow();
+    // The rect below is measured against the viewport of the window the form is in, so that is the width to keep the
+    // popup inside of
+    const win = windowOf(triggerRef.current);
 
     const inputRect = triggerRef.current.getBoundingClientRect();
     const containerWidth = 320; // Minimum width we've set
@@ -296,16 +240,17 @@ export default function DateWidget<
     renderCalendar();
 
     // Update position on resize
-    window.addEventListener('resize', renderCalendar);
-    window.addEventListener('scroll', renderCalendar);
+    const win = windowOf(triggerRef.current);
+    win.addEventListener('resize', renderCalendar);
+    win.addEventListener('scroll', renderCalendar);
 
     return () => {
-      window.removeEventListener('resize', renderCalendar);
-      window.removeEventListener('scroll', renderCalendar);
+      win.removeEventListener('resize', renderCalendar);
+      win.removeEventListener('scroll', renderCalendar);
     };
-  }, [isOpen, renderCalendar]);
+  }, [isOpen, renderCalendar, triggerRef]);
 
-  const formattedValue = localDate ? format(localDate, 'PP') : undefined;
+  const formattedValue = displayedDate ? format(displayedDate, 'PP') : undefined;
 
   return (
     <div className='form-control my-4 w-full relative'>
@@ -338,7 +283,7 @@ export default function DateWidget<
             onClick={(e) => e.stopPropagation()}
           >
             <MemoizedDatePickerPopup
-              selectedDate={localDate}
+              selectedDate={displayedDate}
               month={month}
               onMonthChange={handleMonthChange}
               onSelect={handleSelect}

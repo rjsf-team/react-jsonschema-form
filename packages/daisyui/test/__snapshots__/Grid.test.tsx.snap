@@ -650,6 +650,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     State
                                   </span>
                                   <span
+                                    aria-hidden="true"
                                     class="ml-2"
                                   >
                                     ▼
@@ -2331,6 +2332,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     State
                                   </span>
                                   <span
+                                    aria-hidden="true"
                                     class="ml-2"
                                   >
                                     ▼
@@ -4012,6 +4014,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     State
                                   </span>
                                   <span
+                                    aria-hidden="true"
                                     class="ml-2"
                                   >
                                     ▼
@@ -5693,6 +5696,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     State
                                   </span>
                                   <span
+                                    aria-hidden="true"
                                     class="ml-2"
                                   >
                                     ▼
@@ -7343,6 +7347,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         State
                       </span>
                       <span
+                        aria-hidden="true"
                         class="ml-2"
                       >
                         ▼
@@ -8850,6 +8855,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         State
                       </span>
                       <span
+                        aria-hidden="true"
                         class="ml-2"
                       >
                         ▼
