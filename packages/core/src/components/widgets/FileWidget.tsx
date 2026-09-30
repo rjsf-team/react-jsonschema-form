@@ -5,7 +5,6 @@ import type {
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
-  UIOptionsType,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
@@ -49,14 +48,12 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   registry,
   preview,
   onRemove,
-  options,
   uiSchema,
 }: {
   filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
   preview?: boolean;
   onRemove: (index: number) => void;
-  options: UIOptionsType<T, S, F>;
   uiSchema?: UiSchema<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
@@ -64,9 +61,7 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   }
   const { translateString } = registry;
 
-  const {
-    ButtonTemplates: { RemoveButton },
-  } = getTemplates<T, S, F>(registry, options);
+  const { RemoveButton } = registry.templates.ButtonTemplates;
 
   return (
     <ul className='file-info'>
@@ -126,7 +121,6 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         onRemove={handleRemove}
         registry={registry}
         preview={options.filePreview}
-        options={options}
         uiSchema={uiSchema}
       />
     </div>

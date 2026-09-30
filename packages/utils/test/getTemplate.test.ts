@@ -141,4 +141,8 @@ describe('getTemplates', () => {
     expect(templates.ButtonTemplates).toBe(registry.templates.ButtonTemplates);
     expect(templates).not.toHaveProperty('label');
   });
+  it('leaves out an override for a template the registry lacks, unlike getTemplate', () => {
+    expect(getTemplates(registry, { CustomTemplate })).toBe(registry.templates);
+    expect(getTemplate('CustomTemplate', registry, { CustomTemplate })).toBe(CustomTemplate);
+  });
 });

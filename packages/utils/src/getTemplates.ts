@@ -17,15 +17,14 @@ export default function getTemplates<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(registry: Registry<T, S, F>, uiOptions: UIOptionsType<T, S, F> = {}): TemplatesType<T, S, F> {
-  const overridden = Object.keys(uiOptions).filter((name) => Object.hasOwn(registry.templates, name));
-  // Every field and widget calls this on each render, so the registry's own map is returned as-is unless an override
-  // actually applies
-  if (overridden.length === 0) {
-    return registry.templates;
+  // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
+  // unless an override actually applies
+  let templates: TemplatesType<T, S, F> | undefined;
+  for (const name in uiOptions) {
+    if (Object.hasOwn(uiOptions, name) && Object.hasOwn(registry.templates, name)) {
+      templates ??= { ...registry.templates };
+      templates[name] = getTemplate(name, registry, uiOptions);
+    }
   }
-  const templates = { ...registry.templates };
-  for (const name of overridden) {
-    templates[name] = getTemplate(name, registry, uiOptions);
-  }
-  return templates;
+  return templates ?? registry.templates;
 }
