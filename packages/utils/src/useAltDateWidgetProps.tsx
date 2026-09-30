@@ -115,10 +115,11 @@ export default function useAltDateWidgetProps<
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
   const parsed = useMemo(() => parseDateString(value, time), [value, time]);
-  // A selection that isn't complete yet, kept only for the `value` and `time` it was made against, so a new value from
-  // the parent replaces it instead of having to be copied into state
-  const [draft, setDraft] = useState<{ value: typeof value; time: boolean; state: DateObject }>();
-  const state = draft && draft.value === value && draft.time === time ? draft.state : parsed;
+  // A selection that isn't complete yet, kept only for the parse it was made against, so a new value from the parent
+  // replaces it instead of having to be copied into state. Tagged with that parse rather than with `value`, since the
+  // memo builds a new one on every change: a value the parent replaces and then restores must not revive the draft
+  const [draft, setDraft] = useState<{ basis: DateObject; state: DateObject }>();
+  const state = draft?.basis === parsed ? draft.state : parsed;
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: string) => {
@@ -131,10 +132,10 @@ export default function useAltDateWidgetProps<
         setDraft(undefined);
         onChange(toDateString(nextState, time));
       } else {
-        setDraft({ value, time, state: nextState });
+        setDraft({ basis: parsed, state: nextState });
       }
     },
-    [state, onChange, time, value],
+    [state, onChange, time, parsed],
   );
 
   const handleClear = useCallback(

@@ -60,6 +60,20 @@ describe('DateWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    test('drops a pick when the parent replaces the value and then restores it', async () => {
+      const onChange = vi.fn();
+      const { container, rerender } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
+
+      await openPicker(container);
+      await pickTheSeventeenth(new Date().getFullYear());
+      rerender(<DateWidget {...makeWidgetMockProps({ value: '2021-01-10', onChange, schema })} />);
+      rerender(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
+
+      await user.click(screen.getByText('Done'));
+      // A `''` is the one value Done rewrites without a pick, and it rewrites it to the empty value
+      expect(onChange.mock.calls).toEqual([[undefined]]);
+    });
+
     test('commits the empty value, not an empty string, when there is no date', async () => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);

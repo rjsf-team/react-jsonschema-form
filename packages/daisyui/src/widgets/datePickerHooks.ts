@@ -130,9 +130,9 @@ function useLatest<A extends unknown[]>(callback: (...args: A) => void) {
   return ref;
 }
 
-/** What the popup holds while it is open, tagged with the parsed value it was seeded from */
+/** What the popup holds while it is open, tagged with the stored value it was seeded from */
 interface PickerDraft {
-  basis: Date | undefined;
+  basis: { date: Date | undefined };
   date: Date | undefined;
   month: Date;
   /** Whether the user chose `date`, which is what makes closing the popup store it */
@@ -181,8 +181,11 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
+  // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
+  // replaces and then restores must not revive a draft made against it
+  const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
   const [savedDraft, setSavedDraft] = useState<PickerDraft>(() => ({
-    basis: initialDate,
+    basis,
     date: initialDate,
     month: initialDate ?? new Date(),
     picked: false,
@@ -194,10 +197,10 @@ export function useDatePicker<V>({
   // is not one the user was in the middle of choosing. Derived during render, so a new value costs no second render
   const draft = useMemo<PickerDraft>(
     () =>
-      savedDraft.basis === initialDate
+      savedDraft.basis === basis
         ? savedDraft
-        : { basis: initialDate, date: initialDate, month: initialDate ?? savedDraft.month, picked: false },
-    [initialDate, savedDraft],
+        : { basis, date: basis.date, month: basis.date ?? savedDraft.month, picked: false },
+    [basis, savedDraft],
   );
   const localDate = draft.date;
 
@@ -206,8 +209,8 @@ export function useDatePicker<V>({
    * added later cannot forget it and leave the popup reopening on a date the form never took
    */
   const resetToStoredValue = useCallback(() => {
-    setSavedDraft({ basis: initialDate, date: initialDate, month: initialDate ?? new Date(), picked: false });
-  }, [initialDate]);
+    setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
+  }, [basis]);
 
   /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
    * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
@@ -297,9 +300,9 @@ export function useDatePicker<V>({
       // and every keystroke in a time input is: a fresh `Date` naming the same month would rebuild the whole calendar,
       // its day grid and its year dropdown, for a caption that does not change
       const month = isSameMonth(draft.month, date) ? draft.month : date;
-      setSavedDraft({ basis: initialDate, date, month, picked: true });
+      setSavedDraft({ basis, date, month, picked: true });
     },
-    [draft.month, initialDate],
+    [basis, draft.month],
   );
 
   /** Move the calendar to another month without choosing a date in it

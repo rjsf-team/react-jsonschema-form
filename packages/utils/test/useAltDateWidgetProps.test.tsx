@@ -162,6 +162,15 @@ describe('useAltDateWidgetProps()', () => {
       getDateElementProps(parseDateString(DATE_STR, true), true, PROPS.options.yearsRange),
     );
   });
+  test('discards a partial selection when the value changes and then changes back', () => {
+    const { result, rerender } = renderHook((props: WidgetProps) => useAltDateWidgetProps(props), {
+      initialProps: PROPS,
+    });
+    act(() => result.current.handleChange('year', '2020'));
+    rerender({ ...PROPS, value: DATE_STR });
+    rerender(PROPS);
+    expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
+  });
   describe('with a parent that stores what it is sent', () => {
     const CLEAR_EVENT = { preventDefault: vi.fn() } as unknown as MouseEvent;
     const BLANK = getDateElementProps(parseDateString(), false, PROPS.options.yearsRange);
