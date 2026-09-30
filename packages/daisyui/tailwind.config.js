@@ -1,6 +1,6 @@
-const config = require('./tailwind.config.json');
+import daisyui from 'daisyui';
+
+import config from './tailwind.config.json' with { type: 'json' };
 
 // Add plugins that require JavaScript functions
-config.plugins = [require('daisyui')];
-
-module.exports = config;
+export default { ...config, plugins: [daisyui] };

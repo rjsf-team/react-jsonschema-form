@@ -8,6 +8,14 @@ const ROOT = join(__dirname, '..', '..');
 // Canaries are single-export imports that fail if tree-shaking regresses.
 // Every export subpath is measured as its own entry, except those listed in a package's `nodeOnly`, which import
 // Node built-ins such as `fs` and cannot be bundled for a browser.
+/**
+ * @typedef {{ label: string, import: string, limit: string }} Canary
+ * @typedef {{ installed?: string, own?: string, canaries?: Canary[], nodeOnly?: string[] }} Budget
+ * @typedef {string | { default?: string }} ExportTarget
+ * @typedef {Record<string, string>} DependencyMap
+ * @typedef {{ name: string, private?: boolean, dependencies?: DependencyMap, peerDependencies?: DependencyMap, peerDependenciesMeta?: Record<string, unknown>, exports?: Record<string, ExportTarget> }} PackageJson
+ * @type {Record<string, Budget>}
+ */
 const PACKAGES = {
   '@rjsf/core': {
     installed: '27 kB',
@@ -23,6 +31,12 @@ const PACKAGES = {
 };
 
 // The `default` condition is what a consumer's bundler resolves; a subpath without one has no browser entry to measure
+/**
+ * @param {PackageJson} pkg
+ * @param {string} key
+ * @param {ExportTarget} target
+ * @returns {string}
+ */
 function subpathEntry(pkg, key, target) {
   const entry = typeof target === 'string' ? target : target.default;
   if (!entry) {
@@ -33,7 +47,10 @@ function subpathEntry(pkg, key, target) {
 
 const released = readdirSync(join(ROOT, 'packages'))
   .filter((dir) => existsSync(join(ROOT, 'packages', dir, 'package.json')))
-  .map((dir) => ({ dir, pkg: JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8')) }))
+  .map((dir) => ({
+    dir,
+    pkg: /** @type {PackageJson} */ (JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8'))),
+  }))
   // @rjsf/snapshot-tests is a test harness for the themes, not a bundle a
   // consumer installs.
   .filter(({ pkg }) => !pkg.private && pkg.name !== '@rjsf/snapshot-tests')

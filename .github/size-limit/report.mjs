@@ -7,10 +7,15 @@ const dir = process.argv[2];
 const headSha = process.argv[3];
 // size-limit prints `{"error": "..."}` when it fails internally, and a crashed
 // run leaves an empty file; treat both as "no data".
+/** @typedef {{ name: string, size: number, passed?: boolean }} SizeCheck */
+/**
+ * @param {string} f
+ * @returns {SizeCheck[]}
+ */
 const read = (f) => {
   try {
     const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-    return Array.isArray(data) ? data : [];
+    return Array.isArray(data) ? /** @type {SizeCheck[]} */ (data) : [];
   } catch {
     return [];
   }

@@ -1184,14 +1184,11 @@
       }
     },
     {
-      // Node tooling scripts: module-scope functions are correct there, and printing is their output. They're untyped
-      // JavaScript, so the type-aware `no-unsafe-*` rules only see `any` there
+      // Node tooling scripts: module-scope functions are correct there, and printing is their output
       "files": [".github/**", "scripts/**", "**/tailwind.config.js"],
       "rules": {
         "no-console": "off",
-        "no-implicit-globals": "off",
-        "typescript/no-unsafe-call": "off",
-        "typescript/no-unsafe-return": "off"
+        "no-implicit-globals": "off"
       }
     },
     {
