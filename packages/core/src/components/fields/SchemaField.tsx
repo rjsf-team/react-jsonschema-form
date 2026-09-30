@@ -363,15 +363,15 @@ function SchemaFieldRender<
   // unchanged. `ui:widget` is the key that carries it because that is where the inferred default has to land, and
   // spreading leaves an existing key where the caller put it, so the order `getUiOptions()` reduces in — and with it
   // `ui:widget` against `ui:options.widget` — is untouched either way.
-  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes. The
-  // widget is only ever inferred for a boolean, whose BooleanField reads it, so a different field the `ui:field` key
-  // names is handed the caller's `uiSchema` without a widget it never chose, which a field following BooleanField's
-  // lead would otherwise render in place of its own default
+  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
   const uiSchema = useMemo(() => {
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
     const uiFieldComponent = getUiFieldComponent<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
+    // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
+    // following `BooleanField`'s lead would otherwise render in place of its own default
     if (uiFieldComponent && uiFieldComponent !== fields.BooleanField) {
       return resolvedUiSchema;
     }

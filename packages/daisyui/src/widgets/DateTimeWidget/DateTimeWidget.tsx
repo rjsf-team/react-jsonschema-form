@@ -5,23 +5,15 @@ import { getDateTimeLocalValue } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
+import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
 
-/**
- * Props for the DateTimePicker popup component
+/** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
  */
-interface DateTimePickerProps {
-  /** DayTimePicker id */
+interface DateTimePickerProps extends DatePickerCalendarProps {
+  /** The id of the time input, which its own label names */
   id: string;
-  /** Currently selected date */
-  selectedDate?: Date;
-  /** Currently displayed month */
-  month: Date;
-  /** Handler for month changes */
-  onMonthChange: (date: Date) => void;
-  /** Handler for date selection */
-  onSelect: (date: Date | undefined) => void;
   /** Handler for time input changes */
   onTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -34,11 +26,6 @@ interface DateTimePickerProps {
  * @param props - The DateTimePickerProps for this component
  */
 function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect, onTimeChange }: DateTimePickerProps) {
-  // Memoize click handler to stop event propagation
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-  }, []);
-
   return (
     <div className='p-3'>
       <DatePickerCalendar selectedDate={selectedDate} month={month} onMonthChange={onMonthChange} onSelect={onSelect} />
@@ -54,7 +41,6 @@ function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect,
             className='input input-bordered w-full'
             value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
             onChange={onTimeChange}
-            onClick={handleClick}
           />
         </div>
       </div>

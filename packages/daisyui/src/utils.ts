@@ -62,9 +62,9 @@ interface GetGroupProps {
  *
  * That selector is also the one place a reference from `getGroupProps()` reaches nothing: `MultiSchemaField` gives it
  * an id of its own (`__anyof_select`/`__oneof_select`), so a group widget rendering it — `ui:widget: 'radio'` on a
- * non-constant `anyOf`/`oneOf` — points at a label id no `FieldTemplate` renders, and the group is left unnamed
- * rather than misnamed. Naming it would mean rebuilding that suffix here, which is the theme guessing at an id
- * `@rjsf/core` owns.
+ * non-constant `anyOf`/`oneOf` of primitives, the only shape that keeps its label — points at a label id no
+ * `FieldTemplate` renders, and the group is left unnamed rather than misnamed. Naming it would mean rebuilding that
+ * suffix here, which is the theme guessing at an id `@rjsf/core` owns.
  *
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
@@ -123,6 +123,10 @@ interface GetTriggerDescribedBy {
  * `aria-labelledby` at the label and the value together: a reference would outrank the association, and under a
  * `FieldTemplate` that renders no label carrying `fieldLabelId()` it would leave the button named by its own value
  * with the field's label dropped.
+ *
+ * Exported, since a consumer's own trigger cannot rebuild this: it encodes the fallback the template's label uses and
+ * the split between a name and a value. The `label`, `name` and `hideLabel` trio stands in for a fact `@rjsf/core`
+ * does not report — whether the template rendered a label for this id — which is #5394.
  *
  * @param id - The button's `id`, which `triggerValueId()` and `ariaDescribedByIds()` derive their ids from
  * @param label - The field's label, empty when it has no title

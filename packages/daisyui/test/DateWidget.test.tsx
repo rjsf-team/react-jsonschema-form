@@ -177,12 +177,9 @@ describe('DateWidget', () => {
       });
     });
 
-    // The one zone where the two rules above cannot both hold, and the reason the reading is decided by shape at all is
-    // the thing to fix rather than the shape rule itself (#5395). A day picked exactly twelve hours ahead of UTC is
-    // stored as the midday UTC instant of the day *before* — the same instant, and the same text but for the
-    // milliseconds `toISOString()` always emits, as a backend's own midday-UTC value for that earlier day. So a midday
-    // value is read here as the local day its instant begins. Reading the text first instead would move every day this
-    // widget itself stored in a zone ahead of UTC, which is by far the more common value
+    // The one zone where the two rules above cannot both hold — `parseDateValue()`'s own doc has the argument, and
+    // #5395 is the fix. These two tests are what keeps the reading it settles on from being changed by accident: the
+    // second value is the first's text to the millisecond, so whichever way the rule reads one, it reads the other
     describe('in a timezone exactly twelve hours ahead of UTC', () => {
       pinTimeZone('Pacific/Auckland');
 

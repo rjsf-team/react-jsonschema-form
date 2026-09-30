@@ -1,42 +1,10 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
-import DatePickerCalendar from '../DatePickerCalendar.tsx';
+import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
 import DatePickerTrigger from '../DatePickerTrigger.tsx';
-
-/**
- * Props for the DatePicker popup component
- */
-interface DatePickerProps {
-  /** Currently selected date */
-  selectedDate?: Date;
-  /** Currently displayed month */
-  month: Date;
-  /** Handler for month changes */
-  onMonthChange: (date: Date) => void;
-  /** Handler for date selection */
-  onSelect: (date: Date | undefined) => void;
-}
-
-/**
- * Popup component for the calendar
- *
- * Renders a DayPicker calendar for selecting dates
- *
- * @param props - The DatePickerProps for this component
- */
-function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DatePickerProps) {
-  return (
-    <div className='p-3' style={{ minWidth: '320px', minHeight: '350px' }}>
-      <DatePickerCalendar selectedDate={selectedDate} month={month} onMonthChange={onMonthChange} onSelect={onSelect} />
-    </div>
-  );
-}
-
-// Use React.memo to optimize re-renders
-const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
@@ -158,19 +126,18 @@ export default function DateWidget<
     const win = windowOf(triggerRef.current);
 
     const inputRect = triggerRef.current.getBoundingClientRect();
-    const containerWidth = 320; // Minimum width we've set
 
     // Position the calendar relative to the input but with fixed positioning
     containerRef.current.style.position = 'fixed';
     containerRef.current.style.top = `${inputRect.bottom + 5}px`;
 
     // Prevent it from going off-screen on the right
-    const rightEdge = inputRect.left + containerWidth;
+    const rightEdge = inputRect.left + CALENDAR_MIN_WIDTH;
     const windowWidth = win.innerWidth;
 
     if (rightEdge > windowWidth - 20) {
       // Align to the right edge if it would overflow
-      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - containerWidth)}px`;
+      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - CALENDAR_MIN_WIDTH)}px`;
     } else {
       // Otherwise align to the left edge of the input
       containerRef.current.style.left = `${inputRect.left}px`;
@@ -232,12 +199,14 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <MemoizedDatePickerPopup
-              selectedDate={displayedDate}
-              month={month}
-              onMonthChange={handleMonthChange}
-              onSelect={handleSelect}
-            />
+            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+              <DatePickerCalendar
+                selectedDate={displayedDate}
+                month={month}
+                onMonthChange={handleMonthChange}
+                onSelect={handleSelect}
+              />
+            </div>
             <div className='p-3 flex justify-end border-t border-base-300'>
               <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
                 Done
