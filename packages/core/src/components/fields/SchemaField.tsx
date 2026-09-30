@@ -249,7 +249,9 @@ function getFieldComponent<
 
   const schemaId = schema.$id;
 
-  let componentName = COMPONENT_TYPES[type];
+  // Looked up as an own property, for the reason `getUiFieldComponent()` looks the `ui:field` up that way: a `type` such
+  // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
+  let componentName = Object.hasOwn(COMPONENT_TYPES, type) ? COMPONENT_TYPES[type] : '';
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
   // array constants, spelled as an `enum` or a `oneOf`/`anyOf`, is rendered by the field that renders every other
   // select, while `schema.type` stays as declared. An empty list offers nothing to choose, so the object or array is
@@ -317,18 +319,26 @@ function getFieldComponent<
    * than by an option selector
    */
   const rendersOptionSelector = xxxOfKey !== undefined && !isSelectSchema && !optionsGiveWayToField;
+  /** The types the schema says its value has, read only where the answer can matter — the two flags are what the one
+   * reader below already requires, so they keep `getSchemaOwnTypes()` off the path of every ordinary union in every
+   * form without the opt-in
+   */
+  const ownTypes = rendersFallbackUi && rendersOptionSelector ? getSchemaOwnTypes<S>(schema) : undefined;
   /** Whether the option selector is the only choice of type there is, because the schema names no type of its own for a
    * type selector to offer one of. An option naming its own type overrides whatever a type selector pinned, so such a
    * selector would leave the screen as it was while `castToNewType()` rewrote the value on every switch. What the
    * schema names is read from the schema rather than from how the fallback UI was reached, so that a `ui:field` or a
-   * `$id` naming it gets the same answer as the schema's own type having no field of its own. The two flags ahead of
-   * that read are what the one reader below already requires, so they only keep `getSchemaOwnTypes()` off the path of
-   * every ordinary union in every form without the opt-in
+   * `$id` naming it gets the same answer as the schema's own type having no field of its own
    */
-  const optionsSupplyTheTypes =
-    rendersFallbackUi && rendersOptionSelector && getSchemaOwnTypes<S>(schema) === undefined;
+  const optionsSupplyTheTypes = rendersFallbackUi && rendersOptionSelector && ownTypes === undefined;
+  /** Whether the value field the fallback UI would render the options within holds nothing for them to describe. A
+   * `null` is the whole of the value it describes, so `getValueSchema()` drops the options once that is the type in
+   * effect; with `null` the only type the schema allows there is no selector to choose another, so the options are
+   * dropped for good and the field that was to render them renders nothing at all
+   */
+  const optionsHaveNoValueToRenderWithin = ownTypes?.length === 1 && ownTypes[0] === 'null';
   /** Whether the fallback UI renders this schema's options itself, within the value field for the type it has pinned */
-  const rendersOptionsItself = rendersFallbackUi && !optionsSupplyTheTypes;
+  const rendersOptionsItself = rendersFallbackUi && !optionsSupplyTheTypes && !optionsHaveNoValueToRenderWithin;
 
   // If the schema uses 'anyOf' or 'oneOf' and is not a pure select (all-constant options),
   // let the MultiSchemaField component handle the form display entirely.

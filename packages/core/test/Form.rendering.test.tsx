@@ -1847,6 +1847,25 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
+    it('keeps the options of a schema whose only type is null', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: 'null', anyOf: [{ title: 'A' }, { title: 'B' }] } },
+        },
+        // Named rather than reached through a `['foo', 'null']` type, which allows `null` alone the same way: such a
+        // schema does not compile under AJV, and the shared validator carries that failure into every later test
+        uiSchema: { val: { 'ui:field': 'FallbackField' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // `getValueSchema()` drops the options once `null` is the type in effect, since a `null` is the whole of the
+      // value and no option can describe it. With `null` the only type the schema allows there is no selector to
+      // choose another, so the fallback UI cannot be the one that renders them and does not claim to be
+      expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+      expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+    });
+
     it('renders a single-type value field without the selector template around it', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: 'string' } } },
