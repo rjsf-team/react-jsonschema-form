@@ -1,7 +1,7 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { theme } from 'antd';
 
@@ -244,13 +244,13 @@ describe('antd specific tests', () => {
     );
 
     expect(container.querySelector('#root_hour')).toBeInTheDocument();
-    await user.click(container.querySelector('.btn-now')!);
+    await user.click(screen.getByRole('button', { name: 'Now' }));
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
 
   test('a readonly alt-date ignores its Now button', async () => {
     const onChange = vi.fn();
-    const { container } = render(
+    render(
       <Form
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
@@ -259,7 +259,7 @@ describe('antd specific tests', () => {
       />,
     );
 
-    await user.click(container.querySelector('.btn-now')!);
+    await user.click(screen.getByRole('button', { name: 'Now' }));
     expect(onChange).not.toHaveBeenCalled();
   });
 });

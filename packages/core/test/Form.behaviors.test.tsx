@@ -549,7 +549,7 @@ describe('Error state consistency when deriving from new props', () => {
     const { container } = render(<RestylingParent extraErrors={otherServerErrors} onChange={onChange} />);
 
     await submitForm(container.querySelector('form')!, user);
-    const { name } = rootField().errorSchema as ErrorSchema<{ name: string }>;
+    const name: ErrorSchema<string> | undefined = rootField().errorSchema?.name;
     act(() => rootField().onChange('short', nameStreetPath, name));
 
     const [{ errors }] = onChange.mock.calls.at(-1)!;
@@ -815,8 +815,8 @@ describe('Error state consistency when deriving from new props', () => {
     act(() => rootField().onChange('a', streetPath, { __errors: [minLengthError] }));
     await submitForm(container.querySelector('form')!, user);
     act(() => {
-      const { addr } = rootField().errorSchema as ErrorSchema<{ addr: { street: string } }>;
-      rootField().onChange('a', streetPath, addr!.street);
+      const street: ErrorSchema<string> | undefined = rootField().errorSchema?.addr?.street;
+      rootField().onChange('a', streetPath, street);
     });
 
     // Not a phantom `{ addr: { street: {} } }`, which the next raise on `addr` would read as a validator error
