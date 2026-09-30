@@ -37,9 +37,10 @@ interface EditorProps {
   title: string;
   code: string;
   onChange: (data: any) => void;
+  dark: boolean;
 }
 
-function Editor({ title, code, onChange }: EditorProps) {
+function Editor({ title, code, onChange, dark }: EditorProps) {
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
@@ -72,7 +73,7 @@ function Editor({ title, code, onChange }: EditorProps) {
         <MonacoEditor
           language='json'
           value={code}
-          theme='vs-light'
+          theme={dark ? 'vs-dark' : 'vs-light'}
           onChange={onCodeChange}
           height={400}
           options={monacoEditorOptions}
@@ -85,6 +86,7 @@ function Editor({ title, code, onChange }: EditorProps) {
 const toJson = (val: unknown) => JSON.stringify(val, null, 2);
 
 interface EditorsProps {
+  dark: boolean;
   schema: RJSFSchema;
   setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
   uiSchema: UiSchema;
@@ -104,6 +106,7 @@ interface EditorsProps {
 }
 
 export default function Editors({
+  dark,
   extraErrors,
   formData,
   schema,
@@ -188,21 +191,21 @@ export default function Editors({
       <AccordionDetails sx={{ p: 0 }}>
         <Group orientation='horizontal'>
           <Panel defaultSize={extraErrors ? '34%' : '25%'} minSize='10%'>
-            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} dark={dark} />
           </Panel>
           <Separator style={{ width: '4px', cursor: 'col-resize' }} />
           <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} dark={dark} />
           </Panel>
           <Separator style={{ width: '4px', cursor: 'col-resize' }} />
           <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} dark={dark} />
           </Panel>
           {extraErrors && (
             <>
               <Separator style={{ width: '4px', cursor: 'col-resize' }} />
               <Panel defaultSize='25%' minSize='10%'>
-                <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} />
+                <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} dark={dark} />
               </Panel>
             </>
           )}

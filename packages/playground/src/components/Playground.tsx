@@ -3,6 +3,7 @@ import type { SubmitEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
@@ -180,6 +181,7 @@ export function loadedState(
 }
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
+  const dark = useTheme().palette.mode === 'dark';
   // Only the first render's result is read: every `useState` below keeps its own value from then on, so a recompute
   // (Fast Refresh does one when this file is edited) repeats the work and logs a sample's errors again, and changes
   // nothing
@@ -307,6 +309,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
         <Editors
+          dark={dark}
           themes={themes}
           theme={theme}
           subtheme={subtheme}
@@ -327,7 +330,10 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
           <DemoFrame
-            head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+            head={<>
+<style>{'html { background-color: var(--surface-ground, #fff); } .daisy-ui-theme { min-height: 100vh; }'}</style>
+<link rel='stylesheet' id='theme' href={stylesheet || ''} />
+</>}
             style={{
               width: '100%',
               height: 1000,
