@@ -2815,6 +2815,14 @@ describe('uiSchema', () => {
 
       expect(container.querySelector('input')).not.toBeNull();
     });
+
+    it.each(['ui:label', 'ui:required'])('reads a %s of 0 as false, rendering no stray 0', (key) => {
+      const uiSchema: GenericObjectType = { foo: { [key]: 0 } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('.rjsf-field-string')?.textContent).not.toContain('0');
+    });
   });
 
   describe('ui:required', () => {

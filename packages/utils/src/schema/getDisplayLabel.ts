@@ -38,8 +38,10 @@ export default function getDisplayLabel<
   globalOptions?: GlobalUISchemaOptions,
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
-  const { label = true } = uiOptions;
-  let displayLabel = label;
+  // Typed `boolean`, but uiSchemas are often untyped JSON, and a template rendering `displayLabel && <Label />` would
+  // print a stray `0` for `"ui:label": 0`
+  const { label = true }: { label?: unknown } = uiOptions;
+  let displayLabel = Boolean(label);
   if (displayLabel) {
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);

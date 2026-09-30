@@ -491,7 +491,9 @@ function SchemaFieldRender<
     initialValue: fieldInitialValue,
     emptyValue: fieldEmptyValue,
   } = getUiOptions<T, S, F>(uiSchema);
-  const effectiveRequired = fieldUiRequired ?? required;
+  // `Boolean()` because uiSchemas are often untyped JSON, where a `"ui:required": 0` would reach the template as is
+  const uiRequired: unknown = fieldUiRequired;
+  const effectiveRequired = uiRequired !== undefined ? Boolean(uiRequired) : required;
   if (
     fieldUiRequired === false &&
     required &&
@@ -510,9 +512,9 @@ function SchemaFieldRender<
         'will still fail if it is left empty.',
     );
   }
-  const uiSchemaHideError = uiOptions.hideError;
+  const uiSchemaHideError: unknown = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiSchemaHideError ?? props.hideError;
+  const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;

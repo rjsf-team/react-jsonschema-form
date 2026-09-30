@@ -22,6 +22,12 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     it('with local uiSchema "label" set to false', () => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'string' }, { 'ui:label': false })).toEqual(false);
     });
+    it('coerces a non-boolean "ui:label" from untyped JSON to a boolean', () => {
+      const uiSchemaFromJson = (label: unknown) => JSON.parse(JSON.stringify({ 'ui:label': label }));
+      expect(getDisplayLabel(testValidator, { type: 'string' }, uiSchemaFromJson(0))).toBe(false);
+      expect(getDisplayLabel(testValidator, { type: 'string' }, uiSchemaFromJson(null))).toBe(false);
+      expect(getDisplayLabel(testValidator, { type: 'string' }, uiSchemaFromJson('yes'))).toBe(true);
+    });
     it('object type', () => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'object' })).toEqual(false);
     });
