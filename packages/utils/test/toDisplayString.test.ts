@@ -10,13 +10,32 @@ describe('toDisplayString()', () => {
     expect(toDisplayString(undefined)).toBe('undefined');
     expect(toDisplayString(null)).toBe('null');
   });
-  it('converts errors and functions with their own toString()', () => {
-    expect(toDisplayString(new TypeError('boom'))).toBe('TypeError: boom');
+  it('converts values other than plain objects and arrays the way String() does', () => {
+    class Money {
+      amount = 5;
+      toString() {
+        return `USD ${this.amount}`;
+      }
+    }
     const fn = () => 1;
-    expect(toDisplayString(fn)).toBe(fn.toString());
+    const date = new Date(0);
+    expect(toDisplayString(new TypeError('boom'))).toBe('TypeError: boom');
+    expect(toDisplayString(fn)).toBe(String(fn));
+    expect(toDisplayString(/ab+c/)).toBe('/ab+c/');
+    expect(toDisplayString(date)).toBe(String(date));
+    expect(toDisplayString(new Map([[1, 2]]))).toBe('[object Map]');
+    expect(toDisplayString(new Money())).toBe('USD 5');
   });
-  it('spells objects and arrays out as JSON', () => {
+  it('spells plain objects and arrays out as JSON', () => {
+    const nullPrototype = Object.assign(Object.create(null) as object, { a: 1 });
     expect(toDisplayString({ a: 1 })).toBe('{"a":1}');
+    expect(toDisplayString(nullPrototype)).toBe('{"a":1}');
     expect(toDisplayString([1, 'b'])).toBe('[1,"b"]');
+  });
+  it('throws for a plain object or array JSON.stringify() cannot convert', () => {
+    const circular: Record<string, unknown> = {};
+    circular.self = circular;
+    expect(() => toDisplayString(circular)).toThrow(TypeError);
+    expect(() => toDisplayString([1n])).toThrow(TypeError);
   });
 });

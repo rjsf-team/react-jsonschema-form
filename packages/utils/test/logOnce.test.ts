@@ -46,6 +46,14 @@ describe('logOnce()', () => {
     logOnce('a message:', 'warn', new Error('second'));
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
+  it('logs the same message separately for distinct plain-object and non-Error payloads', () => {
+    logOnce('a message:', 'warn', { a: 1 });
+    logOnce('a message:', 'warn', { a: 2 });
+    logOnce('a message:', 'warn', { a: 2 });
+    logOnce('a message:', 'warn', /first/);
+    logOnce('a message:', 'warn', /second/);
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(4);
+  });
   it('remembers a message, without throwing, when the error cannot be converted for comparison', () => {
     const nullPrototype = Object.assign(Object.create(null), { a: 1n });
     const unprintableError = new Error('boom');

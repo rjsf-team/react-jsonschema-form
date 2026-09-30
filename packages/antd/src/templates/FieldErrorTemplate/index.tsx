@@ -19,8 +19,7 @@ export default function FieldErrorTemplate<
   return (
     <div id={id}>
       {errors.map((error, index) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <div key={index}>{error}</div>
+        <div key={`field-${id}-error-${typeof error === 'string' ? error : (error.key ?? index)}`}>{error}</div>
       ))}
     </div>
   );
