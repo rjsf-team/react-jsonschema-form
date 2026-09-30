@@ -115,7 +115,7 @@ export default function SelectWidget<
           id={id}
           items={items}
           sections={sections}
-          selected={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '') as string}
+          selected={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '')}
           onValueChange={(selectedValue) => {
             onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
           }}

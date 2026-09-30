@@ -360,7 +360,7 @@ Returns `emptyValue` when the current value is empty.
 
 #### Returns
 
-- string | string[] | E | undefined: The value to use for the select element's `value` attribute, a `string[]` when `multiple` and a `string` otherwise
+- string | string[] | E: The value to use for the select element's `value` attribute, a `string[]` when `multiple` and a `string` otherwise, or `emptyValue` (`undefined` when it is omitted)
 
 ### enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

@@ -1383,7 +1383,7 @@ type UIOptionsBaseType<
     /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
-    emptyValue?: any;
+    emptyValue?: unknown;
     /** Pre-fills the field on initial render and after a form reset. Takes priority over `schema.default`, but never
      * overrides form data the user (or caller) has already provided.
      */
@@ -1440,7 +1440,7 @@ export type UIOptionsType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = UIOptionsBaseType<T, S, F> & Record<string, boolean | number | string | object | any[] | null | undefined>;
+> = UIOptionsBaseType<T, S, F> & Record<string, unknown>;
 
 /**
  * A utility type that extracts the element type from an array type.

@@ -1,3 +1,5 @@
+import { expectTypeOf } from 'vitest';
+
 import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
@@ -160,6 +162,26 @@ describe('enumOptionSelectedValue', () => {
     });
     it('returns emptyValue when value equals emptyValue (single)', () => {
       expect(enumOptionSelectedValue('', stringOptions, false, 'realValue', '')).toBe('');
+    });
+  });
+  describe('return type', () => {
+    it('is the selection or the emptyValue given, never any', () => {
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, true, 'indexed', [])).toEqualTypeOf<
+        string[] | never[]
+      >();
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, false, 'indexed', '')).toEqualTypeOf<string>();
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, false, 'indexed', null)).toEqualTypeOf<
+        string | null
+      >();
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, false)).toEqualTypeOf<string | undefined>();
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, true)).toEqualTypeOf<string[] | undefined>();
+      expectTypeOf(enumOptionSelectedValue('foo', stringOptions, Math.random() > 0.5, 'indexed', '')).toEqualTypeOf<
+        string | string[]
+      >();
+      const emptyValue: unknown = undefined;
+      expectTypeOf(
+        enumOptionSelectedValue('foo', stringOptions, false, 'indexed', emptyValue),
+      ).toEqualTypeOf<unknown>();
     });
   });
 });

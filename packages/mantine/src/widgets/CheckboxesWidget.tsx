@@ -41,7 +41,7 @@ export default function CheckboxesWidget<
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
-  const selectedValues: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat) ?? [];
+  const selectedValues: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
 

@@ -23,21 +23,21 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   multiple: true,
   format?: OptionValueFormat,
   emptyValue?: E,
-): string[] | E | undefined;
+): string[] | E;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: false,
   format?: OptionValueFormat,
   emptyValue?: E,
-): string | E | undefined;
+): string | E;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: boolean,
   format?: OptionValueFormat,
   emptyValue?: E,
-): string | string[] | E | undefined;
+): string | string[] | E;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,

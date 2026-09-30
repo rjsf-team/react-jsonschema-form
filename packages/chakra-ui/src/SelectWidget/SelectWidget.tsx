@@ -84,7 +84,7 @@ export default function SelectWidget<
   // single/multiple return shape and strip the empty-single case.
   const formValue = [enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, isMultiple ? [] : '')]
     .flat()
-    .filter((v) => v !== '') as string[];
+    .filter((v) => v !== '');
 
   const selectOptions = useMemo(
     () => createListCollection({ items: flattenGroupedOptions<S>(groupedOptions).map(toItem) }),
