@@ -3,6 +3,7 @@ import type { ComponentType, FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
@@ -26,6 +27,7 @@ export interface PlaygroundProps {
 }
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
+  const dark = useTheme().palette.mode === 'dark';
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
   const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
@@ -206,6 +208,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
         <Editors
+          dark={dark}
           themes={themes}
           theme={theme}
           subtheme={subtheme}
@@ -227,7 +230,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <ErrorBoundary>
           {showForm && (
             <DemoFrame
-              head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+              head={
+                <>
+                  <style>
+                    {'html { background-color: var(--surface-ground, #fff); } .daisy-ui-theme { min-height: 100vh; }'}
+                  </style>
+                  <link rel='stylesheet' id='theme' href={stylesheet || ''} />
+                </>
+              }
               style={{
                 width: '100%',
                 height: 1000,
