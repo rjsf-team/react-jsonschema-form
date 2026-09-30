@@ -103,7 +103,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('offers the select and radio widgets for an object field, which an enum or oneOf/anyOf of constants renders', () => {
-    type Checked = UiSchema<{ plan: { tier: number }; backup: { tier: number } }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { plan: { tier: number }; backup: { tier: number } }, any, any>;
 
     const ui: Checked = { plan: { 'ui:widget': 'radio' }, backup: { 'ui:widget': 'SelectWidget' } };
     const badWidget: Checked = {
@@ -117,7 +117,7 @@ describe('CoreUiOptionsChecks', () => {
   });
 
   it('offers the radio alias for an array field, which an enum or oneOf/anyOf of array constants renders', () => {
-    type Checked = UiSchema<{ size: number[]; fallback: number[] }, any, any, CoreUiOptionsChecks>;
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { size: number[]; fallback: number[] }, any, any>;
 
     const ui: Checked = { size: { 'ui:widget': 'radio' } };
     const badWidget: Checked = {
