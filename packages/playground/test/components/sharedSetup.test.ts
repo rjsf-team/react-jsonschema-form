@@ -17,32 +17,24 @@ function load(data: Record<string, unknown>) {
 }
 
 describe('readSharedSetup', () => {
-  beforeEach(() => {
-    vi.spyOn(window, 'alert').mockImplementation(() => undefined);
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it('returns undefined without alerting for an empty hash', () => {
-    expect(readSharedSetup('')).toBeUndefined();
-    expect(window.alert).not.toHaveBeenCalled();
+  it('returns nothing for an empty hash', () => {
+    expect(readSharedSetup('')).toEqual({});
   });
 
   it('decodes an object', () => {
-    expect(readSharedSetup(base64.encode(JSON.stringify({ theme: 'mui' })))).toEqual({ theme: 'mui' });
+    expect(readSharedSetup(base64.encode(JSON.stringify({ theme: 'mui' })))).toEqual({ setup: { theme: 'mui' } });
   });
 
-  it.each([['"x"'], ['1'], ['null'], ['[]']])('rejects a hash decoding to %s', (json) => {
-    expect(readSharedSetup(base64.encode(json))).toBeUndefined();
-    expect(window.alert).toHaveBeenCalledWith('Unable to load form setup data.');
+  it.each([['"x"'], ['1'], ['null'], ['[]']])('returns an error naming the decoded %s', (json) => {
+    expect(readSharedSetup(base64.encode(json))).toEqual({
+      error: `A shared link's setup must be an object: ${json}`,
+    });
   });
 
-  it('rejects a hash that is not JSON', () => {
-    expect(readSharedSetup(base64.encode('{'))).toBeUndefined();
-    expect(window.alert).toHaveBeenCalledWith('Unable to load form setup data.');
+  it('returns the parse error for a hash that is not JSON', () => {
+    const { setup, error } = readSharedSetup(base64.encode('{'));
+    expect(setup).toBeUndefined();
+    expect(error).toBeInstanceOf(SyntaxError);
   });
 });
 
@@ -72,8 +64,11 @@ describe('loadedState', () => {
     },
   );
 
-  it.each([['Removed sample'], ['constructor']])('ignores a sample named %s', (sampleName) => {
-    expect(load({ sampleName })).toMatchObject({ sampleName, uiSchemaGenerator: undefined });
+  it('falls back to the Simple sample for a removed one', () => {
+    expect(load({ sampleName: 'Removed sample' })).toMatchObject({
+      sampleName: 'Simple',
+      uiSchemaGenerator: undefined,
+    });
   });
 
   it('falls back to the default validator for one the playground lacks, and still seeds defaults', () => {

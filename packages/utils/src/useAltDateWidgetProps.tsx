@@ -116,9 +116,9 @@ export default function useAltDateWidgetProps<
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
   const parsed = useMemo(() => parseDateString(value, time), [value, time]);
   // A selection that isn't complete yet, kept only for the parse it was made against, so a new value from the parent
-  // replaces it instead of having to be copied into state. Tagged with that parse rather than with `value`, since the
-  // memo builds a new one on every change: a value the parent replaces and then restores must not revive the draft
-  // Dropped whenever a value is sent, so a parent that rejects it or stores it later shows the value it holds
+  // replaces it. Tagged with that parse rather than with `value`, since the memo builds a new one on every change: a
+  // value the parent replaces and then restores must not revive the draft. Dropped whenever a value is sent, so a
+  // parent that rejects it or stores it later shows the value it holds
   const [draft, setDraft] = useState<{ basis: DateObject; state: DateObject }>();
   const state = draft?.basis === parsed ? draft.state : parsed;
 

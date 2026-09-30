@@ -1,6 +1,6 @@
 // oxlint-disable no-console
 import type { SubmitEvent } from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
@@ -85,26 +85,28 @@ type LoadData = Sample & {
   validator?: string;
 };
 
-/** Decodes the setup a shared link carries in the URL `hash`. It's read once, before the playground first renders */
-export function readSharedSetup(hash: string): LoadData | undefined {
+/** Decodes the setup a shared link carries in the URL `hash`. It's read once, before the playground first renders,
+ * and a malformed link's `error` is reported after the first paint
+ */
+export function readSharedSetup(hash: string): { setup?: LoadData; error?: unknown } {
   if (!hash) {
-    return undefined;
+    return {};
   }
+  let data: unknown;
   try {
-    const data: unknown = JSON.parse(base64.decode(hash));
-    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-      throw new TypeError(`A shared link's setup must be an object: ${hash}`);
-    }
-    return data as LoadData;
+    data = JSON.parse(base64.decode(hash));
   } catch (error) {
-    // oxlint-disable-next-line no-alert
-    alert('Unable to load form setup data.');
-    console.error(error);
-    return undefined;
+    return { error };
   }
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+    return { error: `A shared link's setup must be an object: ${JSON.stringify(data)}` };
+  }
+  return { setup: data as LoadData };
 }
 
-const sharedSetup = readSharedSetup(typeof document === 'undefined' ? '' : document.location.hash.slice(1));
+const { setup: sharedSetup, error: sharedSetupError } = readSharedSetup(
+  typeof document === 'undefined' ? '' : document.location.hash.slice(1),
+);
 
 /** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
  * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
@@ -138,7 +140,8 @@ export function loadedState(
   // Old shared links still name themes the playground has since dropped, such as `semantic-ui` or `fluent-ui`
   const theme = Object.hasOwn(themes, namedTheme) ? namedTheme : 'default';
   const uiSchema = typeof loadedUiSchema === 'function' ? loadedUiSchema(currentTheme) : loadedUiSchema;
-  const sampleUiSchema = sampleName && Object.hasOwn(samples, sampleName) ? samples[sampleName].uiSchema : undefined;
+  const knownSampleName = sampleName !== undefined && !Object.hasOwn(samples, sampleName) ? 'Simple' : sampleName;
+  const sampleUiSchema = knownSampleName ? samples[knownSampleName].uiSchema : undefined;
   const liveSettings = normalizeLiveSettings(loadedLiveSettings);
   // A hand-edited link, or one from before a validator was renamed, may name one the playground doesn't have
   const knownValidator =
@@ -164,7 +167,7 @@ export function loadedState(
     extraErrors,
     liveSettings,
     otherFormProps: { fields, templates, ...rest },
-    sampleName,
+    sampleName: knownSampleName,
     uiSchemaGenerator: typeof sampleUiSchema === 'function' ? { generator: sampleUiSchema } : undefined,
     validator: validator === undefined ? undefined : knownValidator,
   };
@@ -172,7 +175,8 @@ export function loadedState(
 
 export default function Playground({ themes, validators }: PlaygroundProps) {
   // Only the first render's result is read: every `useState` below keeps its own value from then on, so a recompute
-  // (Fast Refresh recomputes every memo on save) repeats the work and logs a sample's errors again, and changes nothing
+  // (Fast Refresh does one when this file is edited) repeats the work and logs a sample's errors again, and changes
+  // nothing
   const initial = useMemo(
     () =>
       loadedState(
@@ -207,6 +211,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
   const playGroundFormRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (sharedSetupError !== undefined) {
+      // oxlint-disable-next-line no-alert
+      alert('Unable to load form setup data.');
+      console.error(sharedSetupError);
+    }
+  }, []);
 
   const FormComponent = useMemo(() => withTheme(themes[theme].theme), [themes, theme]);
 
