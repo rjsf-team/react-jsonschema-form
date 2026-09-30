@@ -6,7 +6,7 @@ import { ariaDescribedByIds, descriptionId, getTemplates, getUiOptions, schemaRe
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Field } from '../components/ui/field.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, isInputElement } from '../utils.ts';
 
 export default function CheckboxWidget<
   T = unknown,
@@ -37,11 +37,10 @@ export default function CheckboxWidget<
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
-  // Duck-typed rather than `instanceof HTMLInputElement`, which is false for inputs rendered inside an iframe.
   const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
-    onBlur(id, 'checked' in target ? target.checked : undefined);
+    onBlur(id, isInputElement(target) ? target.checked : undefined);
   const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
-    onFocus(id, 'checked' in target ? target.checked : undefined);
+    onFocus(id, isInputElement(target) ? target.checked : undefined);
 
   const chakraProps = getChakra({ uiSchema });
 

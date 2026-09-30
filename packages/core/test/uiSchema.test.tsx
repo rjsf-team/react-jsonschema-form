@@ -2987,7 +2987,7 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field "root_foo"'),
+        expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
       );
     });
 
@@ -3004,7 +3004,7 @@ describe('uiSchema', () => {
         const uiSchema: GenericObjectType = { foo: { 'ui:required': value } };
         createFormComponent({ schema, uiSchema });
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('ui:required is false for schema-required field "root_foo"'),
+          expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
         );
       },
     );
@@ -3256,7 +3256,7 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field'),
+        expect.stringContaining('ui:required turns off required for schema-required field'),
       );
     });
 

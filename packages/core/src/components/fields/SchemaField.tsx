@@ -509,7 +509,7 @@ function SchemaFieldRender<
     schema.default === undefined
   ) {
     logOnce(
-      `ui:required is false for schema-required field ${fieldLabelForLog(fieldId, fieldPath)} but neither ` +
+      `ui:required turns off required for schema-required field ${fieldLabelForLog(fieldId, fieldPath)} but neither ` +
         'ui:initialValue nor ui:emptyValue is set. The UI will show this field as optional, but schema validation ' +
         'will still fail if it is left empty.',
     );
