@@ -23,6 +23,15 @@ const TWO_BUTTONS = (
 const user = userEvent.setup();
 setupConsoleErrorSuppression();
 
+/** The ways something other than the schema's own type names the fallback field for it, as `[label, uiSchema, schema]`
+ * for a schema at `properties.val`. Shared so a route added here is covered by every test that walks them
+ */
+const FALLBACK_FIELD_ROUTES: [string, UiSchema, RJSFSchema][] = [
+  ['a $id', {}, { $id: 'FallbackField' }],
+  ['a ui:field', { val: { 'ui:field': 'FallbackField' } }, {}],
+  ['a ui:globalOptions field', { 'ui:globalOptions': { field: 'FallbackField' } }, {}],
+];
+
 describeRepeated('Form common: rendering', (createFormComponent) => {
   describe('Empty schema', () => {
     it('Should throw error when Form is missing validator', () => {
@@ -1684,10 +1693,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
-    it.each([
-      ['a $id', {}, { $id: 'FallbackField' }],
-      ['a ui:field', { val: { 'ui:field': 'FallbackField' } }, {}],
-    ] as [string, UiSchema, RJSFSchema][])(
+    it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
       'leaves the types to the options of a schema naming none, reached through %s',
       (_, uiSchema, schemaKeys) => {
         const { node } = createFormComponent({
@@ -1709,11 +1715,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
-    it.each([
-      ['a $id', {}, { $id: 'FallbackField' }],
-      ['a ui:field', { val: { 'ui:field': 'FallbackField' } }, {}],
-      ['a ui:globalOptions field', { 'ui:globalOptions': { field: 'FallbackField' } }, {}],
-    ] as [string, UiSchema, RJSFSchema][])(
+    it.each(FALLBACK_FIELD_ROUTES)(
       'renders one option selector for a schema whose type is read out of its properties, reached through %s',
       (_, uiSchema, schemaKeys) => {
         const { node } = createFormComponent({
@@ -1754,6 +1756,109 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // shadowed rather than the ones found to misbehave one at a time
       expect(node.querySelector('label[for="root_val___internal_type_selector"]')).toHaveTextContent('Type');
       expect(node.querySelector('label[for="root_val"]')).toHaveTextContent('GLOBAL');
+    });
+
+    // A schema that only implies its type is rendered by the field for the implied one everywhere else, so the fallback
+    // UI says the same about it however it was reached
+    it.each(FALLBACK_FIELD_ROUTES)(
+      'renders the properties of a schema whose object type is implied, reached through %s',
+      (_, uiSchema, schemaOverride) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              val: {
+                ...schemaOverride,
+                properties: { own: { type: 'string' } },
+                anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }],
+              },
+            },
+          },
+          uiSchema,
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        // `properties` implies `object`, which is the one type the schema allows, so there is no type to choose and the
+        // options supply no other. The schema's own property renders beside them, as it does with nothing naming a field
+        expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+        expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+        expect(node.querySelector('#root_val_own')).toBeInTheDocument();
+        // The option's own property renders too: a `ui:field` the options are rendered in place of does not reach them,
+        // so no option renders another fallback field over its fields
+        expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+      },
+    );
+
+    it('renders the properties of a schema whose object type is implied with no options to supply one', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { $id: 'FallbackField', properties: { own: { type: 'string' } } } },
+        },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+      expect(node.querySelector('#root_val_own')).toBeInTheDocument();
+    });
+
+    it('lays the type selector out with a ui:globalOptions template', () => {
+      const ids: string[] = [];
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        ids.push(props.id);
+        return <div>{props.children}</div>;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
+        uiSchema: { 'ui:globalOptions': { FieldTemplate: RecordingFieldTemplate } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // A template says how any field renders rather than what one holds, so it reaches the selector as it reaches
+      // every other field, unlike the entries that describe the caller's own field
+      expect(ids).toContain('root_val___internal_type_selector');
+    });
+
+    it.each<[string, UiSchema, RJSFSchema]>([
+      ['ui:field', { val: { 'ui:field': 'FallbackField', 'ui:fieldReplacesAnyOrOneOf': true } }, {}],
+      ['$id', { val: { 'ui:fieldReplacesAnyOrOneOf': true } }, { $id: 'FallbackField' }],
+    ])(
+      'keeps the options of a schema naming the fallback field through %s without the opt-in',
+      (_, uiSchema, schemaOverride) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              val: {
+                ...schemaOverride,
+                type: 'object',
+                anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }],
+              },
+            },
+          },
+          uiSchema,
+        });
+
+        // Without the opt-in the field renders the unsupported-field template, which renders nothing of the options, so
+        // it is not a field they can give way to whichever way it was named
+        expect(node.querySelector('.unsupported-field')).toBeNull();
+        expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
+        expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+      },
+    );
+
+    it('renders a single-type value field without the selector template around it', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: 'string' } } },
+        uiSchema: { val: { 'ui:field': 'FallbackField' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // With no selector to lay out, the template contributes only its wrapper, which every theme gives padding or a
+      // card of its own, and the empty row the selector would have filled
+      expect(node.querySelector('#root_val')).toBeInTheDocument();
+      expect(node.querySelector('.panel')).toBeNull();
+      expect([...node.querySelectorAll('.form-group')].filter((group) => group.children.length === 0)).toHaveLength(0);
     });
   });
 

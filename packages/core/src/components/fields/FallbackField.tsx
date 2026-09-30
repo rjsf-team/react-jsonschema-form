@@ -13,13 +13,12 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
-  getKnownTypes,
+  getSchemaOwnTypes,
   getTemplate,
   getUiOptions,
   GUESSED_TYPE_FLAG,
   guessType,
   hasWidget,
-  isConstant,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -27,57 +26,12 @@ import {
   RJSF_REF_KEY,
   toFieldPath,
   fieldPathToId,
-  toConstant,
   TranslatableString,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
-
-/**
- * Get the types a schema allows, or `undefined` for one that names none. A schema listing its types allows exactly the
- * ones it lists that are JSON Schema types, even when only one of them is, since the unrecognized names alongside it
- * are what sent the schema here — a `['foo', 'null']` allows the `null` it names and nothing else, the way a plain
- * `['null']` renders as the `null` it is. A schema naming one type allows that one, which only arises when something
- * other than the type sent the schema here — a `ui:field` or a `$id` naming this field — since the type a schema names
- * is otherwise rendered by the field for it: offering the other six would be offering types the schema rejects, and
- * choosing one of them would cast the value to something the validator then refuses. A schema naming no type but
- * pinning its value with an `enum` or a `const` allows the types those values have, for the same reason: the value is
- * one of them whichever type is chosen. The `enum` values are read here rather than through `getSchemaType()`, which
- * answers `string` for any typeless `enum` and so would allow `string` alone for an `enum` holding a number.
- *
- * A schema with no usable type at all — an unrecognized type on its own, or an `additionalProperties` entry the schema
- * puts no constraint on, whose type is guessed from the data rather than named — names none of its own. It is free to
- * hold anything, which is why the type selection offers every JSON Schema type for it, and it is also the schema
- * `getFieldComponent()` leaves to its `anyOf`/`oneOf` options: they are the only thing that can say what types it
- * holds, whichever way the fallback UI was reached for it.
- * @param schema - The schema being rendered by the fallback UI.
- */
-export function getSchemaOwnTypes<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-): JSONSchema7TypeName[] | undefined {
-  const listedTypes = getKnownTypes<S>(schema);
-  if (listedTypes.length > 0) {
-    return listedTypes;
-  }
-  if (GUESSED_TYPE_FLAG in schema) {
-    return undefined;
-  }
-  const { type, enum: enumValues } = schema;
-  if (typeof type === 'string' && JSON_SCHEMA_TYPES.includes(type)) {
-    return [type];
-  }
-  if (Array.isArray(enumValues) && enumValues.length > 0) {
-    return [...new Set(enumValues.map((value) => guessType(value)))];
-  }
-  // `undefined` is a legal `const`, so what says the value is pinned is the key being there, which is what
-  // `isConstant()` reads and `toConstant()` then answers with
-  if (isConstant<S>(schema)) {
-    return [guessType(toConstant<S>(schema))];
-  }
-  return undefined;
-}
 
 /**
  * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
@@ -371,7 +325,7 @@ function FallbackUiField<
     errorSchema,
     rawErrors,
   } = props;
-  const { translateString, fields, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
+  const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() => getInitialType(formData, types));
@@ -408,28 +362,31 @@ function FallbackUiField<
     setSelectedType(type);
   }
 
-  const typeSelectorFieldPath = toFieldPath('__internal_type_selector', fieldPath);
-
-  const schemaTitle = translateString(TranslatableString.Type);
-  const typesOptionSchema = useMemo(() => getFallbackTypeSelectionSchema(types, schemaTitle), [types, schemaTitle]);
+  const typesOptionSchema = useMemo(
+    () => getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type)),
+    [types, translateString],
+  );
   // The selector is a control of its own within the field, so the `ui:options.label` that turns the field's own label
-  // off turns the selector's off with it. Nothing else describes the selector — the rest of the caller's `uiSchema`
-  // describes the value — so that one option is all it is given, and every `ui:globalOptions` entry is shadowed to
-  // keep it that way. The selector is a `SchemaField` like any other, so `getUiOptions()` layers the globals under the
-  // options given here: a `field` naming this field would have each selector render another, a `help` would render the
-  // field's help text a second time under the DOM id the first copy's `aria-describedby` names, and a `title` or a
-  // `widget` would rename or replace a control the caller never wrote. Shadowing them by name rather than one at a
-  // time as each is found to misbehave is what keeps that true of an entry added later
+  // off turns the selector's off with it. Nothing else in the caller's `uiSchema` describes the selector — the rest of
+  // it describes the value — so that one option is all it is given. A `ui:globalOptions` entry does reach every field,
+  // and the selector is a `SchemaField` like any other, so `getUiOptions()` layers the globals under the options given
+  // here: a `field` naming this field would have each selector render another, a `help` would render the field's help
+  // text a second time under the DOM id the first copy's `aria-describedby` names, and a `title` or a `widget` would
+  // rename or replace a control the caller never wrote. Each such entry is shadowed, whatever it is named, except for
+  // one naming a template: a template says how any field renders rather than what this one holds, so a form-wide
+  // `FieldTemplate` lays the selector out as it lays out every other field
   const typeSelectorUiSchema = useMemo(() => {
     const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const options = Object.fromEntries(
-      Object.keys(globalUiOptions ?? {}).map((key) => [key, undefined]),
+      Object.keys(globalUiOptions ?? {})
+        .filter((key) => !Object.hasOwn(templates, key))
+        .map((key) => [key, undefined]),
     ) as UIOptionsType<T, S, F>;
     if (label === false) {
       options.label = label;
     }
     return { [UI_OPTIONS_KEY]: options };
-  }, [uiSchema, globalUiOptions]);
+  }, [uiSchema, globalUiOptions, templates]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so
   // that exactly one of the two fields renders them: the outer one when it labels the value, the value field otherwise
@@ -446,6 +403,19 @@ function FallbackUiField<
     [uiSchema, valueSchema, widgets, isLabelled],
   );
 
+  const { SchemaField } = fields;
+  const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
+
+  // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
+  // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's
+  // card or panel chrome and the gap meant for the control around an ordinary field. This arises whenever something
+  // other than the type sent the schema here — a `ui:field`, a `$id` or a `ui:globalOptions.field` naming this field —
+  // since a schema naming one type is otherwise rendered by the field for it
+  if (types.length === 1) {
+    return valueField;
+  }
+
+  const typeSelectorFieldPath = toFieldPath('__internal_type_selector', fieldPath);
   // The errors raised against the old value describe a type it no longer has, so an empty error schema replaces them:
   // passing them on would re-assert them against the cast value, and passing none would leave them standing. With
   // nothing to clear it stays `undefined`, since `Form` keeps an empty-but-truthy error schema as a custom error of
@@ -470,36 +440,27 @@ function FallbackUiField<
     uiOptions,
   );
 
-  const { SchemaField } = fields;
-
   return (
     <FallbackFieldTemplate
       schema={schema}
       registry={registry}
       typeSelector={
-        // One type is not a choice to be made, so the value field renders without a control that can only be left as
-        // it is. Which arises whenever something other than the type sent the schema here — a `ui:field`, a `$id` or a
-        // `ui:globalOptions.field` naming this field — since a schema naming one type is otherwise rendered by the
-        // field for it. `MultiSchemaFieldTemplate` takes a selector of `null` the way it does for an optional data
-        // control with nothing in it yet
-        types.length > 1 ? (
-          <SchemaField
-            fieldPath={typeSelectorFieldPath}
-            id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
-            name={`${name}__fallback_type`}
-            schema={typesOptionSchema as S}
-            uiSchema={typeSelectorUiSchema}
-            formData={type as T}
-            onChange={onTypeChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-          />
-        ) : null
+        <SchemaField
+          fieldPath={typeSelectorFieldPath}
+          id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
+          name={`${name}__fallback_type`}
+          schema={typesOptionSchema as S}
+          uiSchema={typeSelectorUiSchema}
+          formData={type as T}
+          onChange={onTypeChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          registry={registry}
+          disabled={disabled}
+          readonly={readonly}
+        />
       }
-      schemaField={<SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />}
+      schemaField={valueField}
     />
   );
 }

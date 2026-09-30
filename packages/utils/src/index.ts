@@ -45,6 +45,7 @@ import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscr
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
+import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
@@ -206,6 +207,7 @@ export {
   getOptionUiSchema,
   getPropertySchema,
   getOptionValueFormat,
+  getSchemaOwnTypes,
   getSchemaType,
   getByPath,
   getKnownTypes,

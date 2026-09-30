@@ -903,6 +903,24 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 - S: The sub-schema for `property`, or an empty schema when it is not declared
 
+### getSchemaOwnTypes()
+
+Gets the JSON Schema types a `schema` says its value has, or `undefined` for one that says nothing about it.
+The types come from whichever of these the schema provides, in order: the recognized names of a `type` list, as [getKnownTypes()](#getknowntypes) returns them; the values of a typeless `enum` or `const`, whose types the value has whichever one is chosen; and otherwise the type [getSchemaType()](#getschematype) resolves, so a schema that only implies its type — `properties` implying `object` — says what every other reader of it already renders it as.
+The `enum` and `const` values are read directly rather than through `getSchemaType()`, which answers `string` for any typeless `enum` and so would leave out the `number` in an `enum` of numbers.
+
+A schema says nothing about its value's type when its only `type` is a name JSON Schema does not define, or when the type was guessed from the form data rather than named — an `additionalProperties` entry the schema puts no constraint on, which `retrieveSchema()` marks with `GUESSED_TYPE_FLAG`.
+Such a value is free to become anything, so `FallbackField` offers every type for it, and `SchemaField` lets a non-select `anyOf`/`oneOf` supply the types instead of rendering a selector over it.
+`FallbackField` reads this both for the types its selector offers and for whether to offer one at all: a schema saying a single type has nothing to choose between, so the field for that type renders alone.
+
+#### Parameters
+
+- schema: S - The schema for which to get the types it says its value has
+
+#### Returns
+
+- JSONSchema7TypeName[] | undefined: The types the `schema` says its value has, or `undefined` when it says nothing about it
+
 ### getSchemaType()
 
 Gets the type of a given `schema`.
