@@ -4460,6 +4460,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
         expect(getDefaultFormState(testValidator, schema, 'zz')).toEqual({ a: 1 });
       });
+      it('should keep array form data on a root array schema with an object default', () => {
+        const schema: RJSFSchema = { type: 'array', default: {}, items: { type: 'string' } };
+        expect(getDefaultFormState(testValidator, schema, ['q'])).toEqual(['q']);
+      });
       it('should prefer an array const over an object default', () => {
         expect(getDefaultFormState(testValidator, { const: [1, 2], default: { a: 1 } })).toEqual([1, 2]);
       });
