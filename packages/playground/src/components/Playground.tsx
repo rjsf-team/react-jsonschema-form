@@ -131,9 +131,11 @@ function loadedState(
   } = data;
 
   // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
-  const theme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+  const namedTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+  // Old shared links still name themes the playground has since dropped, such as `semantic-ui` or `fluent-ui`
+  const theme = namedTheme in themes ? namedTheme : 'default';
   const uiSchema = typeof loadedUiSchema === 'function' ? loadedUiSchema(currentTheme) : loadedUiSchema;
-  const sampleUiSchema = sampleName ? samples[sampleName].uiSchema : undefined;
+  const sampleUiSchema = sampleName && sampleName in samples ? samples[sampleName].uiSchema : undefined;
   const liveSettings = normalizeLiveSettings(loadedLiveSettings);
 
   // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
