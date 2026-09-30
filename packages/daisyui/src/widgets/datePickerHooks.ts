@@ -139,6 +139,23 @@ interface PickerDraft {
   picked: boolean;
 }
 
+/** The month to display for `date`, keeping `current` where `date` is in it or names no day: handing the calendar a
+ * fresh `Date` naming the same month would rebuild the whole calendar, its day grid and its year dropdown, for a
+ * caption that does not change
+ */
+function monthFor(current: Date, date: Date | undefined) {
+  return date && !isSameMonth(current, date) ? date : current;
+}
+
+/** `saved`, where it was made against `basis`. A draft made against a value the parent has since replaced is discarded
+ * with it: a value that arrived from outside is not one the user was in the middle of choosing
+ */
+function draftFor(saved: PickerDraft, basis: PickerDraft['basis']): PickerDraft {
+  return saved.basis === basis
+    ? saved
+    : { basis, date: basis.date, month: monthFor(saved.month, basis.date), picked: false };
+}
+
 interface UseDatePickerProps<V> {
   /** The field's `id`, which is also the trigger's */
   id: string;
@@ -193,15 +210,8 @@ export function useDatePicker<V>({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // A draft made against a value the parent has since replaced is discarded with it: a value that arrived from outside
-  // is not one the user was in the middle of choosing. Derived during render, so a new value costs no second render
-  const draft = useMemo<PickerDraft>(
-    () =>
-      savedDraft.basis === basis
-        ? savedDraft
-        : { basis, date: basis.date, month: basis.date ?? savedDraft.month, picked: false },
-    [basis, savedDraft],
-  );
+  // Derived during render, so a new value costs no second render
+  const draft = useMemo(() => draftFor(savedDraft, basis), [basis, savedDraft]);
   const localDate = draft.date;
 
   /** Take the value the form holds, discarding anything the popup was holding before: the date, the month displaying
@@ -295,21 +305,22 @@ export function useDatePicker<V>({
    * @param date - The date they chose
    */
   const chooseDate = useCallback(
-    (date: Date) => {
-      // Keeping the month already displayed where the new date is in it, which every pick within the visible calendar
-      // and every keystroke in a time input is: a fresh `Date` naming the same month would rebuild the whole calendar,
-      // its day grid and its year dropdown, for a caption that does not change
-      const month = isSameMonth(draft.month, date) ? draft.month : date;
-      setSavedDraft({ basis, date, month, picked: true });
-    },
-    [basis, draft.month],
+    (date: Date) =>
+      setSavedDraft((saved) => {
+        const current = draftFor(saved, basis);
+        return { basis, date, month: monthFor(current.month, date), picked: true };
+      }),
+    [basis],
   );
 
   /** Move the calendar to another month without choosing a date in it
    *
    * @param date - A date in the month to display
    */
-  const handleMonthChange = useCallback((date: Date) => setSavedDraft({ ...draft, month: date }), [draft]);
+  const handleMonthChange = useCallback(
+    (date: Date) => setSavedDraft((saved) => ({ ...draftFor(saved, basis), month: date })),
+    [basis],
+  );
 
   /** Open the popup, or close it where a press on the trigger is the way out
    *
