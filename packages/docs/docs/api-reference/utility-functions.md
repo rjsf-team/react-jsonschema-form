@@ -710,6 +710,22 @@ const separator = getDecimalSeparator('fr');
 console.log(separator); // Output: ','
 ```
 
+### getDeprecatedHandling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
+Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
+Only the label handed to the `FieldTemplate` is decorated under `label`; the one handed to the widget below it names the widget's own control and is left alone.
+`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
+
+#### Parameters
+
+- schema: S - The schema of the field, whose `deprecated` keyword gates the whole resolution
+- uiOptions: UIOptionsType&lt;T, S, F> - The resolved UI options of the field, read for a `deprecatedHandling` override
+
+#### Returns
+
+- 'hide' | 'disable' | 'label' | undefined: The handling to apply, or `undefined` when the schema is not deprecated
+
 ### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.
@@ -769,7 +785,8 @@ A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `a
 ### getFieldClassNames&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Builds the `classNames` string a `FieldTemplate` receives for a field: the `rjsf-field` marker every field carries, the `rjsf-field-<type>` class naming what the schema holds, `rjsf-field-error` while the field has errors to show, and finally whatever `ui:classNames` the field declares, appended last so it can override the rest.
-The type class comes from [`getSchemaType()`](#getschematype), so a schema with no derivable type — a discriminated `oneOf`/`anyOf` of `$ref`s, say — is spelled `rjsf-field-undefined` rather than left without a type class.
+The type class comes from [`getSchemaType()`](#getschematype), so a schema with no derivable type — a discriminated `oneOf`/`anyOf` of `$ref`s, say — is spelled `rjsf-field-undefined` rather than left without a type class, as it has been since 6.x.
+That spelling is this function's to change, in one place for every field that calls it, so it is not one to key a CSS rule off; key off `rjsf-field`, which every field carries whatever its schema says.
 `SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
 
 #### Parameters

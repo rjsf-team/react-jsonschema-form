@@ -23,6 +23,7 @@ import {
   optionsList,
   PROPERTIES_KEY,
   descriptionId,
+  getDeprecatedHandling,
   getTemplate,
   getFieldClassNames,
   getPropertySchema,
@@ -32,6 +33,7 @@ import {
   getWidget,
   noop,
   omitConsumedStyling,
+  TranslatableString,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -143,9 +145,9 @@ export default function LayoutMultiSchemaField<
   const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
   const formDataHash = formData ? hashObject(formData) : '';
 
-  // Derived rather than held in state: `computeEnumOptions()` retrieves every option's schema, which a `useState`
-  // initializer re-runs and throws away on every render, and the effect that re-synced the state rendered the stale
-  // options once before replacing them
+  // Derived rather than held in state: `computeEnumOptions()` retrieves every option's schema, so recomputing it is
+  // only worth doing when one of the hashes below moves, and holding it in state would render the previous options
+  // for a pass before an effect could re-sync them
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, options, schemaUtils, uiSchema, formData),
     // We are using hashes in place of the dependencies
@@ -167,6 +169,24 @@ export default function LayoutMultiSchemaField<
   // Memoized so a selector widget deriving anything from its `uiSchema` isn't invalidated by a new object each render.
   // A `memo` boundary around it is not what this buys: `widgetOptions` below is rebuilt on every render regardless
   const widgetUiSchema = useMemo(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
+  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
+  // `ui:disabled` and the deprecation modes are resolved from the UI options the way `SchemaField` resolves them, so
+  // a discriminated cell behaves like the same schema rendered outside a layout grid. A selector with nothing to
+  // select from is this field's own reason to be disabled, which no other field has
+  const isDisabled =
+    Boolean(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
+  const widgetLabel = (title || schema.title) ?? '';
+  // Only the template's label carries the deprecation marker, as in `SchemaField`: the widget's own label names its
+  // control, and decorating it would make a group pointing at it announce the decoration twice.
+  //
+  // A label that is empty is left empty, which is the one place this deliberately parts from `SchemaField`: that
+  // falls back to the property name, so it reaches a marker-only `' (deprecated)'` for a root field alone, while a
+  // discriminated cell has no such fallback and a typeless one -- the usual shape, and one `getDisplayLabel()` does
+  // not suppress -- is commonly titleless, so decorating it would render a `<label>` naming nothing as the norm
+  const label =
+    deprecatedHandling === 'label' && widgetLabel
+      ? registry.translateString(TranslatableString.DeprecatedLabel, [widgetLabel])
+      : widgetLabel;
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
@@ -203,7 +223,9 @@ export default function LayoutMultiSchemaField<
    *      will use it as the index of the new option to select
    */
   const onOptionChange = (opt?: unknown) => {
-    if (disabled || readonly) {
+    // `isDisabled`, not the `disabled` prop: a `ui:disabled` of `false` re-enables the selector inside a disabled
+    // form, and the prop alone would render a clickable control whose every selection is dropped here
+    if (isDisabled || readonly) {
       return;
     }
     const newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
@@ -264,9 +286,9 @@ export default function LayoutMultiSchemaField<
       fieldPath={fieldPath}
       id={id}
       schema={schema}
-      label={(title || schema.title) ?? ''}
+      label={label}
       keyName={name}
-      disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
+      disabled={isDisabled}
       uiSchema={uiSchema}
       required={required}
       readonly={!!readonly}
@@ -275,7 +297,7 @@ export default function LayoutMultiSchemaField<
       classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}
       // `widget` carries the resolved value, so a `ui:widget` of `hidden` is what this matches, not its default
-      hidden={widget === 'hidden'}
+      hidden={widget === 'hidden' || deprecatedHandling === 'hide'}
       formData={formData}
       description={descriptionComponent}
       rawDescription={description}
@@ -294,8 +316,8 @@ export default function LayoutMultiSchemaField<
         id={id}
         name={name}
         schema={schema}
-        label={(title || schema.title) ?? ''}
-        disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
+        label={widgetLabel}
+        disabled={isDisabled}
         uiSchema={widgetUiSchema}
         autofocus={autofocus}
         readonly={readonly}

@@ -83,9 +83,10 @@ export default function WrapIfAdditionalTemplate<
   if (!additional) {
     const { type } = schema;
     // Flex grow only non container classes
-    const className = containerTypes.includes(type as string)
-      ? classNames
-      : `${classes.grow} ${classNames ?? ''}`.trim();
+    const className =
+      typeof type === 'string' && containerTypes.includes(type)
+        ? classNames
+        : `${classes.grow} ${classNames ?? ''}`.trim();
     return (
       <div className={className} style={style}>
         {children}

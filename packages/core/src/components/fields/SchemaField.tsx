@@ -19,6 +19,7 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  getDeprecatedHandling,
   getFieldClassNames,
   getSchemaOwnTypes,
   getSchemaType,
@@ -480,8 +481,7 @@ function SchemaFieldRender<
     F
   >(schema, uiOptions, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
-  const isDeprecated = Boolean(schema.deprecated);
-  const deprecatedHandling = isDeprecated ? (uiOptions.deprecatedHandling ?? 'label') : undefined;
+  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));

@@ -11,6 +11,7 @@ import {
   ANY_OF_KEY,
   DEFAULT_KEY,
   DEFINITIONS_KEY,
+  descriptionId,
   ERRORS_KEY,
   getByPath,
   ErrorSchemaBuilder,
@@ -33,7 +34,7 @@ import LayoutMultiSchemaField, {
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import { getTestRegistry } from '../src/testing.ts';
-import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
+import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS, SIMPLE_ONEOF_SCHEMAS } from './testData/layoutData.ts';
 import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
@@ -128,11 +129,11 @@ const oneOfData = {
   flag: true,
 };
 
-const anyOfSchema = {
+const anyOfSchema: RJSFSchema = {
   discriminator: {
     propertyName: 'answer',
   },
-  [ANY_OF_KEY]: SIMPLE_ONEOF[ONE_OF_KEY],
+  [ANY_OF_KEY]: SIMPLE_ONEOF_SCHEMAS,
 };
 
 const DEFAULT_ID = 'test-id';
@@ -155,9 +156,10 @@ function FakeFieldErrorTemplate(props: FieldErrorProps) {
 }
 
 function FakeFieldTemplate(props: FieldTemplateProps) {
-  const { children, errors, help, rawHelp } = props;
+  const { children, description, errors, help, rawHelp } = props;
   return (
     <div data-testid={FIELD_TEMPLATE_TEST_ID}>
+      {description}
       {children}
       {errors}
       {help}
@@ -231,6 +233,36 @@ describe('LayoutMultiSchemaField', () => {
       onChange: vi.fn(),
       onFocus: vi.fn(),
     };
+  }
+  /** Renders the field with a `FieldTemplate` and a selector widget that record the props they were handed, which is
+   * how the props this field builds for itself -- rather than receiving through `SchemaField` -- are asserted on
+   */
+  function renderRecording(overrideProps: Partial<FieldProps> = {}) {
+    let templateProps: FieldTemplateProps | undefined;
+    let widgetProps: WidgetProps | undefined;
+    function RecordingFieldTemplate(props: FieldTemplateProps) {
+      templateProps = props;
+      return <FakeFieldTemplate {...props} />;
+    }
+    function RecordingRadioWidget(props: WidgetProps) {
+      widgetProps = props;
+      return <WrappedRadioWidget {...props} />;
+    }
+    const props = getProps(overrideProps);
+
+    render(
+      <LayoutMultiSchemaField
+        {...props}
+        registry={getTestRegistry(
+          props.schema,
+          {},
+          { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+          { SelectWidget: WrappedSelectWidget, RadioWidget: RecordingRadioWidget },
+        )}
+      />,
+    );
+
+    return { templateProps, widgetProps };
   }
   setupConsoleErrorSuppression();
   test('throws when no selectorField is provided', () => {
@@ -727,18 +759,7 @@ describe('LayoutMultiSchemaField', () => {
     ['hands its FieldTemplate the errors it is showing', false, ['first error', 'second error']],
     ['withholds the errors from its FieldTemplate while they are hidden', true, []],
   ] satisfies [string, boolean, string[]][])('%s', (_, hidden, expectedVisibleErrors) => {
-    let templateProps: FieldTemplateProps | undefined;
-    function RecordingFieldTemplate(props: FieldTemplateProps) {
-      templateProps = props;
-      return <FakeFieldTemplate {...props} />;
-    }
-    const props = getProps({
-      errorSchema: NESTED_ERROR_SCHEMA,
-      hideError: hidden,
-      uiSchema: { 'ui:FieldTemplate': RecordingFieldTemplate },
-    });
-
-    render(<LayoutMultiSchemaField {...props} />);
+    const { templateProps } = renderRecording({ errorSchema: NESTED_ERROR_SCHEMA, hideError: hidden });
 
     expect(templateProps?.rawErrors).toEqual(hidden ? undefined : ['first error', 'second error']);
     expect(templateProps?.hideError).toBe(hidden);
@@ -749,33 +770,6 @@ describe('LayoutMultiSchemaField', () => {
   // This field renders its own `FieldTemplate` in place of `SchemaField`'s, so it has to compute the same class list;
   // otherwise a discriminated oneOf/anyOf in a layout grid is the one field a `rjsf-field*` CSS rule never reaches
   describe('classNames and style', () => {
-    function renderRecording(overrideProps: Partial<FieldProps> = {}) {
-      let templateProps: FieldTemplateProps | undefined;
-      let widgetProps: WidgetProps | undefined;
-      function RecordingFieldTemplate(props: FieldTemplateProps) {
-        templateProps = props;
-        return <FakeFieldTemplate {...props} />;
-      }
-      function RecordingRadioWidget(props: WidgetProps) {
-        widgetProps = props;
-        return <WrappedRadioWidget {...props} />;
-      }
-      const props = getProps(overrideProps);
-
-      render(
-        <LayoutMultiSchemaField
-          {...props}
-          registry={getTestRegistry(
-            props.schema,
-            {},
-            { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
-            { SelectWidget: WrappedSelectWidget, RadioWidget: RecordingRadioWidget },
-          )}
-        />,
-      );
-
-      return { templateProps, widgetProps };
-    }
     test('hands its FieldTemplate the schema-derived classes', () => {
       const { templateProps } = renderRecording();
 
@@ -787,7 +781,7 @@ describe('LayoutMultiSchemaField', () => {
     test('spells the type class the way SchemaField does for a schema with no derivable type', () => {
       const { templateProps } = renderRecording({
         schema: anyOfSchema,
-        options: anyOfSchema[ANY_OF_KEY] as RJSFSchema[],
+        options: SIMPLE_ONEOF_SCHEMAS,
       });
 
       expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-undefined');
@@ -850,45 +844,120 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
-  // `SchemaField` sets all of these, and this field renders the same `FieldTemplate`: an unset `hidden` rendered a
-  // `ui:widget: 'hidden'` cell inside the full wrapper, and an unset `description` rendered none at all
+  // `SchemaField` sets all of these, and this field renders the same `FieldTemplate`, which has no other source for
+  // them: whatever it leaves unset is a prop a template is told nothing about for this one field
   describe('the remaining FieldTemplate props', () => {
-    function renderRecordingTemplate(overrideProps: Partial<FieldProps> = {}) {
-      let templateProps: FieldTemplateProps | undefined;
-      function RecordingFieldTemplate(props: FieldTemplateProps) {
-        templateProps = props;
-        return <FakeFieldTemplate {...props} />;
-      }
-      const props = getProps(overrideProps);
+    test('hands its FieldTemplate the formData it was given', () => {
+      const { templateProps } = renderRecording({ formData: oneOfData });
 
-      render(
-        <LayoutMultiSchemaField
-          {...props}
-          uiSchema={{ ...props.uiSchema, 'ui:FieldTemplate': RecordingFieldTemplate }}
-        />,
-      );
+      expect(templateProps?.formData).toEqual(oneOfData);
+    });
+    test('renders no description, and reports none, for a schema that declares none', () => {
+      const { templateProps } = renderRecording();
 
-      return templateProps;
-    }
-    test('hands its FieldTemplate the formData and the schema description', () => {
-      const templateProps = renderRecordingTemplate();
-
-      expect(templateProps?.formData).toEqual(getProps().formData);
       expect(templateProps?.rawDescription).toBe('');
       expect(templateProps?.hidden).toBe(false);
+      // `DescriptionField` renders nothing for an empty description, which is what keeps every theme's snapshot of an
+      // undescribed cell unchanged by this field passing the prop at all
+      expect(document.getElementById(descriptionId(DEFAULT_ID))).toBeNull();
     });
-    test('prefers a ui:description over the schema one', () => {
-      const templateProps = renderRecordingTemplate({
+    test('falls back to the schema description, and renders it', () => {
+      const { templateProps } = renderRecording({ schema: { ...SIMPLE_ONEOF, description: 'from the schema' } });
+
+      expect(templateProps?.rawDescription).toBe('from the schema');
+      expect(screen.getByText('from the schema')).toBeInTheDocument();
+    });
+    test('prefers a ui:description over the schema one, and renders that', () => {
+      const { templateProps } = renderRecording({
         schema: { ...SIMPLE_ONEOF, description: 'from the schema' },
         uiSchema: { 'ui:description': 'from the uiSchema' },
       });
 
       expect(templateProps?.rawDescription).toBe('from the uiSchema');
+      expect(screen.getByText('from the uiSchema')).toBeInTheDocument();
+      expect(screen.queryByText('from the schema')).not.toBeInTheDocument();
     });
     test('tells its FieldTemplate the field is hidden for a ui:widget of hidden', () => {
-      const templateProps = renderRecordingTemplate({ uiSchema: { [UI_WIDGET_KEY]: 'hidden' } });
+      const { templateProps } = renderRecording({ uiSchema: { [UI_WIDGET_KEY]: 'hidden' } });
 
       expect(templateProps?.hidden).toBe(true);
+    });
+  });
+  // A deprecated schema and `ui:disabled` are resolved by `SchemaField` for every other field, so this one has to
+  // resolve them itself to render the same way inside a layout grid as the same schema does outside one
+  describe('a deprecated schema and ui:disabled', () => {
+    const deprecatedSchema: RJSFSchema = { ...SIMPLE_ONEOF, deprecated: true };
+
+    test('appends the deprecation marker to its FieldTemplate label by default', () => {
+      const { templateProps, widgetProps } = renderRecording({ schema: deprecatedSchema });
+
+      expect(templateProps?.label).toBe('Simple (deprecated)');
+      expect(templateProps?.hidden).toBe(false);
+      expect(templateProps?.disabled).toBe(false);
+      // Only the template's label is decorated, as in `SchemaField`: the widget's label names its own control
+      expect(widgetProps?.label).toBe('Simple');
+    });
+    // There is no label for the marker to decorate, and a template rendering the decorated one would show a label
+    // reading only "(deprecated)" naming nothing
+    test('leaves the label empty for a deprecated schema with no title', () => {
+      const { templateProps } = renderRecording({ schema: { ...deprecatedSchema, title: undefined } });
+
+      expect(templateProps?.label).toBe('');
+    });
+    test('hides the field for a deprecatedHandling of hide', () => {
+      const { templateProps } = renderRecording({
+        schema: deprecatedSchema,
+        uiSchema: { [UI_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+      });
+
+      expect(templateProps?.hidden).toBe(true);
+      expect(templateProps?.label).toBe('Simple');
+    });
+    test('disables the field and its widget for a deprecatedHandling of disable', () => {
+      const { templateProps, widgetProps } = renderRecording({
+        schema: deprecatedSchema,
+        uiSchema: { [UI_OPTIONS_KEY]: { deprecatedHandling: 'disable' } },
+      });
+
+      expect(templateProps?.disabled).toBe(true);
+      expect(widgetProps?.disabled).toBe(true);
+      expect(templateProps?.label).toBe('Simple');
+    });
+    test('leaves a schema that is not deprecated undecorated, whatever deprecatedHandling says', () => {
+      const { templateProps } = renderRecording({
+        uiSchema: { [UI_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+      });
+
+      expect(templateProps?.hidden).toBe(false);
+      expect(templateProps?.label).toBe('Simple');
+    });
+    test('disables the field and its widget for a ui:disabled', () => {
+      const { templateProps, widgetProps } = renderRecording({ uiSchema: { 'ui:disabled': true } });
+
+      expect(templateProps?.disabled).toBe(true);
+      expect(widgetProps?.disabled).toBe(true);
+    });
+    // `ui:disabled` overrides in both directions, the way `SchemaField` resolves it with `??`
+    test('re-enables a disabled field for a ui:disabled of false', () => {
+      const { templateProps, widgetProps } = renderRecording({
+        disabled: true,
+        uiSchema: { 'ui:disabled': false },
+      });
+
+      expect(templateProps?.disabled).toBe(false);
+      expect(widgetProps?.disabled).toBe(false);
+    });
+    // The change handler has to read the same resolution the widget's `disabled` does, or a re-enabled selector is
+    // clickable and every selection made on it is dropped
+    test('reports a selection made on a selector a ui:disabled of false re-enabled', async () => {
+      const selectorField = getDiscriminatorFieldFromSchema(SIMPLE_ONEOF)!;
+      const props = getProps({ disabled: true, uiSchema: { 'ui:disabled': false } });
+
+      render(<LayoutMultiSchemaField {...props} />);
+
+      await user.click(screen.getAllByRole('radio')[1]);
+
+      expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, props.fieldPath, undefined, DEFAULT_ID);
     });
   });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
@@ -978,8 +1047,8 @@ describe('LayoutMultiSchemaField', () => {
       ]);
     });
     test('Reads anyOf', () => {
-      const schema = anyOfSchema as RJSFSchema;
-      const options = anyOfSchema[ANY_OF_KEY] as RJSFSchema[];
+      const schema = anyOfSchema;
+      const options = SIMPLE_ONEOF_SCHEMAS;
       const { schemaUtils } = getTestRegistry(schema);
       const enumOptions = computeEnumOptions(schema, options, schemaUtils);
       expect(enumOptions).toEqual([

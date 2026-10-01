@@ -486,7 +486,7 @@ describe('FieldTemplate', () => {
   });
 
   // `ui:classNames` and `ui:style` are applied once, to the same element, the way `@rjsf/core` applies them: this
-  // template used to repeat the classes on its inner div, drawing a border or padding twice, nested
+  // template delegates both to its wrapper, so a border or padding declared in them is drawn once
   describe('ui:classNames and ui:style', () => {
     // The root object is itself a field, so its own wrapper and `.field-template` are in the container too: the
     // field under test is reached through the `ui:classNames` only it carries
@@ -505,7 +505,7 @@ describe('FieldTemplate', () => {
       // inner div reports the wrapper's red whichever element actually declares it
       expect(wrapper?.getAttribute('style')).toBe('color: red;');
       expect(innerDiv).not.toHaveAttribute('style');
-      // Applied once: the class used to be on the wrapper and on the inner div both
+      // On the wrapper and nowhere else, so a class declaring a box does not nest one inside another
       expect(container.querySelectorAll('.custom-class')).toHaveLength(1);
     });
 

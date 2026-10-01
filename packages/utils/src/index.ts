@@ -36,6 +36,7 @@ import getDateElementProps from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
+import getDeprecatedHandling from './getDeprecatedHandling.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
@@ -203,6 +204,7 @@ export {
   getDateElementProps,
   getDateTimeLocalValue,
   getDecimalSeparator,
+  getDeprecatedHandling,
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
