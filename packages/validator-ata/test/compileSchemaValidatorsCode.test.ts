@@ -2,7 +2,9 @@ import type { CustomValidator, RJSFSchema } from '@rjsf/utils';
 import { getDefaultFormState, retrieveSchema } from '@rjsf/utils';
 
 import {
+  MERGED_PATTERN_KEY_FORM_DATA,
   MERGED_PATTERN_PROPERTY_FORM_DATA,
+  SCHEMA_MERGED_FOR_PATTERN_KEY,
   SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
   titleChoiceMergeAllOf as customMergeAllOf,
 } from '../../utils/test/testUtils/customMergeAllOfData.ts';
@@ -131,19 +133,36 @@ describe('compileSchemaValidatorsCode', () => {
     });
     test('covers the custom-merged sub-schemas when compiled with it', () => {
       const validator = createPrecompiledValidator(
-        loadModule(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+        loadModule(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
         rootSchema,
       );
       expect(
         getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
       ).toEqual(formData);
     });
+    describe('for a key only patternProperties match', () => {
+      const patternKeySchema = SCHEMA_MERGED_FOR_PATTERN_KEY;
+      const patternKeyFormData = MERGED_PATTERN_KEY_FORM_DATA;
+
+      test('covers the sub-schemas of the merge the form makes for that key', () => {
+        const validator = createPrecompiledValidator(
+          loadModule(compileSchemaValidatorsCode(patternKeySchema, { customMergeAllOf })),
+          patternKeySchema,
+        );
+        expect(
+          getDefaultFormState(
+            { validator, customMergeAllOf },
+            { schema: patternKeySchema, rootSchema: patternKeySchema, formData: patternKeyFormData },
+          ),
+        ).toEqual(patternKeyFormData);
+      });
+    });
     test.each([
       ['on submit, against the root schema', false],
       ['under live validation, against the root schema the form resolved', true],
     ])('validates %s with a customValidate when compiled with it', (_when, resolveRoot) => {
       const validator = createPrecompiledValidator(
-        loadModule(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+        loadModule(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
         rootSchema,
         { customMergeAllOf },
       );

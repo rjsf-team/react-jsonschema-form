@@ -87,17 +87,6 @@ describe('ParserValidator', () => {
       ),
     );
   });
-  it('calling isValid() with a differing schema that has a matching $id keeps the first one', () => {
-    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-    const first: RJSFSchema = { [ID_KEY]: 'shared', const: 'a' };
-    const second: RJSFSchema = { [ID_KEY]: 'shared', const: 'a', title: 'Option a' };
-    const idValidator = new ParserValidator(RECURSIVE_REF);
-    expect(idValidator.isValid(first, undefined, RECURSIVE_REF)).toBe(false);
-    expect(idValidator.isValid(second, undefined, RECURSIVE_REF)).toBe(false);
-    expect(idValidator.getSchemaMap().shared).toEqual(first);
-    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringMatching(/the \$id "shared" was parsed more than once/));
-    consoleWarnSpy.mockRestore();
-  });
   it('when exception is thrown, console.error is called twice', () => {
     expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
   });
@@ -114,5 +103,14 @@ describe('ParserValidator', () => {
   it('reset clears the map', () => {
     validator.reset();
     expect(validator.schemaMap).toEqual({});
+  });
+  it('calling isValid() with an empty $id maps the schema under its hash, as a validator looks it up', () => {
+    const emptyIdSchema: RJSFSchema = { [ID_KEY]: '', type: 'boolean' };
+    const emptyIdValidator = new ParserValidator(RECURSIVE_REF);
+    expect(emptyIdValidator.isValid(emptyIdSchema, undefined, RECURSIVE_REF)).toBe(false);
+    expect(emptyIdValidator.getSchemaMap()).toEqual({
+      [RECURSIVE_HASH]: { ...RECURSIVE_REF, [ID_KEY]: RECURSIVE_HASH },
+      [hashForSchema(emptyIdSchema)]: { ...emptyIdSchema, [ID_KEY]: hashForSchema(emptyIdSchema) },
+    });
   });
 });

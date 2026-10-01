@@ -1,4 +1,4 @@
-import { PROPERTIES_KEY } from '../constants.ts';
+import { ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
@@ -89,6 +89,14 @@ export default function getFirstMatchingOption<
       // Remove the "required" field as it's likely that not all fields have
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
+
+      // The augmentation makes a schema that the option's `$id` does not name, and a validator caches the function it
+      // compiles under that `$id`, so keeping it would validate this schema against the option's own function. Dropping
+      // it keys this schema by its content instead. The junk option is the exception: the precompiled validators
+      // recognise it by its `$id` and answer it without a compiled function at all
+      if (augmentedSchema[ID_KEY] !== JUNK_OPTION_ID) {
+        delete augmentedSchema[ID_KEY];
+      }
 
       if (context.validator.isValid(augmentedSchema, formData, rootSchema)) {
         return i;

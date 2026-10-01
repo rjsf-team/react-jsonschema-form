@@ -1,21 +1,47 @@
 import { ADDITIONAL_PROPERTIES_KEY, ITEMS_KEY, PATTERN_PROPERTIES_KEY, PROPERTIES_KEY } from '../constants.ts';
-import deepEquals from '../deepEquals.ts';
+import { sortedJSONStringify } from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
 
-/** The state that one `schemaParser()` call shares across its recursive `parseSchema()` calls
+/** The state that one `schemaParser()` call shares across its recursive `parseSchema()` calls. Both sets hold the
+ * `sortedJSONStringify()` of a schema, the string `hashForSchema()` hashes: it compares as `deepEquals()` does, in
+ * constant time rather than by scanning a list, and unlike the hash it cannot collide two schemas into one, which would
+ * silently leave a sub-schema out of the compiled map
  */
-interface ParseState<S extends StrictRJSFSchema = RJSFSchema> {
-  /** The schemas returned from the `retrieveSchemaInternal()` so far, preventing infinite recursion */
-  readonly recurseList: S[];
-  /** The schema objects already parsed, held by identity. A schema resolves to the same thing however it was reached,
-   * and an option merged into its parent carries the parent's own property objects, so the same object arrives here once
-   * per option; skipping it saves resolving and merging it again for a result the `recurseList` would discard
+interface ParseState {
+  /** The schemas already passed to `parseSchema()`. A schema resolves to the same thing however it was reached, and an
+   * option merged into its parent carries the parent's own sub-schemas, so the same one arrives once per option
    */
-  readonly parsed: Set<S>;
+  readonly parsed: Set<string>;
+  /** The schemas `retrieveSchemaInternal()` has already returned, preventing infinite recursion */
+  readonly resolved: Set<string>;
+}
+
+/** Narrows a value read out of a schema -- which the JSON Schema types also allow to be a boolean, and which can be
+ * absent -- to the schema `parseSchema()` walks. A boolean or missing sub-schema describes no value of its own.
+ *
+ * @param valueSchema - The value read out of a schema keyword
+ * @returns - True when the value is a schema with content to parse
+ */
+function isSchemaObject<S extends StrictRJSFSchema = RJSFSchema>(valueSchema: unknown): valueSchema is S {
+  return isObject(valueSchema);
+}
+
+/** Returns every non-empty combination of the given `values`, each keeping the order they were given in. There are
+ * `2^n - 1` of them: a form reads only the combination of `patternProperties` that a form data key actually matches,
+ * which a parse that has no form data cannot know, so every one of them has to be covered.
+ *
+ * @param values - The values to combine
+ * @returns - The list of every non-empty combination of the `values`
+ */
+function combinationsOf<V>(values: V[]): V[][] {
+  return values.reduce<V[][]>(
+    (combinations, value) => [...combinations, [value], ...combinations.map((combination) => [...combination, value])],
+    [],
+  );
 }
 
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
@@ -30,19 +56,20 @@ interface ParseState<S extends StrictRJSFSchema = RJSFSchema> {
  */
 function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
-  state: ParseState<S>,
+  state: ParseState,
   rootSchema: S,
   schema: S,
 ) {
-  if (state.parsed.has(schema)) {
+  const parsedKey = sortedJSONStringify(schema);
+  if (state.parsed.has(parsedKey)) {
     return;
   }
-  state.parsed.add(schema);
+  state.parsed.add(parsedKey);
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
   schemas.forEach((localSchema) => {
-    const sameSchemaIndex = state.recurseList.findIndex((item) => deepEquals(item, localSchema));
-    if (sameSchemaIndex === -1) {
-      state.recurseList.push(localSchema);
+    const resolvedKey = sortedJSONStringify(localSchema);
+    if (!state.resolved.has(resolvedKey)) {
+      state.resolved.add(resolvedKey);
       parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema);
       // An option can hold an `allOf`, conditions or dependencies of its own, which only parsing the option resolves.
       // The schema is parsed alongside its options rather than being taken as covered by them, since merging an option
@@ -69,11 +96,17 @@ function parseValueSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, state: ParseState<S>, rootSchema: S, schema: S) {
+>(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S) {
   const valueSchemas: unknown[] = Object.values(schema[PROPERTIES_KEY] ?? {});
-  // An additional property is only stubbed into `properties` once the form data has a key for it, which the parse has
-  // none of, so the schema a form renders those keys with is reached here instead
-  valueSchemas.push(...Object.values(schema[PATTERN_PROPERTIES_KEY] ?? {}), schema[ADDITIONAL_PROPERTIES_KEY]);
+  // An additional key is only stubbed into `properties` once the form data has one, which a parse does not, so the
+  // schema a form renders such a key with is reached here instead
+  valueSchemas.push(schema[ADDITIONAL_PROPERTIES_KEY]);
+  // A form renders a key its `patternProperties` match with the merge of every pattern matching it, down to the one
+  // pattern a lone match makes, so each combination is parsed as the `allOf` that `stubExistingAdditionalProperties()`
+  // hands to `retrieveSchema()` rather than as the patterns themselves, which a form resolves nothing from
+  for (const patterns of combinationsOf(Object.values(schema[PATTERN_PROPERTIES_KEY] ?? {}))) {
+    valueSchemas.push({ allOf: patterns });
+  }
   if (Array.isArray(schema.items)) {
     // `additionalItems` only describes the rows a tuple `items` doesn't, and a form renders nothing from it otherwise
     valueSchemas.push(...schema.items, schema.additionalItems);
@@ -81,9 +114,8 @@ function parseValueSchemas<
     valueSchemas.push(schema.items);
   }
   for (const valueSchema of valueSchemas) {
-    // A boolean or missing sub-schema describes no value of its own, so there is nothing in it to parse
-    if (isObject(valueSchema)) {
-      parseSchema<T, S, F>(context, state, rootSchema, valueSchema as S);
+    if (isSchemaObject<S>(valueSchema)) {
+      parseSchema<T, S, F>(context, state, rootSchema, valueSchema);
     }
   }
 }
@@ -102,7 +134,7 @@ export default function schemaParser<
 >(rootSchema: S, options: SchemaParserOptions<S> = {}): SchemaMap<S> {
   const validator = new ParserValidator<S, F>(rootSchema);
 
-  parseSchema({ ...options, validator }, { recurseList: [], parsed: new Set() }, rootSchema, rootSchema);
+  parseSchema({ ...options, validator }, { parsed: new Set(), resolved: new Set() }, rootSchema, rootSchema);
 
   return validator.getSchemaMap();
 }

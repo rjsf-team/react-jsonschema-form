@@ -1,7 +1,8 @@
-import type { RJSFSchema } from '../../src/index.ts';
-import { mergeSchemas, schemaParser } from '../../src/index.ts';
+import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
+import { isObject, mergeSchemas, schemaParser } from '../../src/index.ts';
 import {
   CHOICE as choice,
+  SCHEMA_MERGED_FOR_PATTERN_KEY,
   SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
   TITLED_CHOICE_OPTION,
   titleChoiceMergeAllOf as customMergeAllOf,
@@ -245,6 +246,84 @@ describe('schemaParser()', () => {
     };
     expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(expect.objectContaining({ const: 'never' }));
   });
+  it('parses each variant of an option that has an $id under a key of its own', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        identified: {
+          $id: 'identified',
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          additionalProperties: false,
+        },
+      },
+      properties: {
+        pick: {
+          oneOf: [{ $ref: '#/definitions/identified' }, { type: 'object', properties: { other: { type: 'string' } } }],
+        },
+      },
+    };
+    const schemaMap = schemaParser(rootSchema);
+    // An option is validated both as `getFirstMatchingOption()` augments it and with its `additionalProperties`
+    // relaxed for scoring. Neither is the schema the `$id` names, so each is keyed by its own content: holding the
+    // `$id` would compile only the first and answer the rest with its function
+    expect(schemaMap.identified).toBeUndefined();
+    expect(Object.values(schemaMap).filter((schema) => schema.properties?.name)).toEqual([
+      expect.objectContaining({ additionalProperties: false }),
+      expect.objectContaining({ additionalProperties: true }),
+    ]);
+  });
+  it('parses the relaxed variant of an $id option that has no properties under a key of its own', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      definitions: { bare: { $id: 'bare', type: 'object', additionalProperties: false } },
+      properties: { pick: { oneOf: [{ $ref: '#/definitions/bare' }, { type: 'string' }] } },
+    };
+    const schemaMap = schemaParser(rootSchema);
+    // With no `properties` to augment, the option is validated as it stands, so its own `$id` does name it; the variant
+    // scored with `additionalProperties` relaxed is a schema of its own and is keyed by its content
+    expect(schemaMap.bare).toEqual(expect.objectContaining({ additionalProperties: false }));
+    const relaxed = Object.entries(schemaMap).filter(([, schema]) => schema.additionalProperties === true);
+    expect(relaxed).toEqual([[expect.not.stringContaining('bare'), expect.objectContaining({ type: 'object' })]]);
+  });
+  it('parses each combination of patternProperties a key can match, as the form merges every one it matches', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      patternProperties: {
+        '^x': { properties: { first: { type: 'string' } } },
+        x$: { properties: { second: { type: 'string' } } },
+      },
+    };
+    const mergedLists: string[][] = [];
+    const customMergeAllOf = (schema: RJSFSchema) => {
+      const { allOf = [], ...rest } = schema;
+      mergedLists.push(allOf.filter(isObject).flatMap((subSchema) => Object.keys(subSchema.properties ?? {})));
+      return allOf.reduce<GenericObjectType>(
+        (acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc),
+        rest,
+      );
+    };
+    schemaParser(rootSchema, { customMergeAllOf });
+    // A key of `xy` matches only the first pattern, `yx` only the second and `x` both, so a form can merge any of the
+    // three and the sub-schemas of all three have to be parsed
+    expect(mergedLists).toEqual([['first'], ['second'], ['first', 'second']]);
+  });
+  it('parses the conditional branches of a property its patternProperties also match', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          properties: { t: { type: 'string' } },
+          if: { properties: { t: { const: 'yes' } } },
+          then: { properties: { c: { oneOf: [{ const: 'then1' }, { const: 'then2' }] } } },
+        },
+      },
+      patternProperties: { '^p$': { properties: { extra: { type: 'string' } } } },
+    };
+    // Merging `p` with the pattern that matches it resolves it too, so that resolution expands its branches as well
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 'then1' }));
+  });
   it('parses a schema whose allOf nests without multiplying the merges it makes', () => {
     const nested = (n: number): RJSFSchema => ({
       allOf: [{ properties: { [`a${n}`]: { type: 'string' } } }, { properties: { [`b${n}`]: { type: 'string' } } }],
@@ -253,8 +332,8 @@ describe('schemaParser()', () => {
     let merges = 0;
     const customMergeAllOf = (schema: RJSFSchema) => {
       merges += 1;
-      const { allOf, ...rest } = schema;
-      return (allOf as RJSFSchema[]).reduce((acc, s) => mergeSchemas(acc, s) as RJSFSchema, rest);
+      const { allOf = [], ...rest } = schema;
+      return allOf.reduce<GenericObjectType>((acc, s) => (isObject(s) ? mergeSchemas(acc, s) : acc), rest);
     };
     schemaParser(rootSchema, { customMergeAllOf });
     // One merge per `allOf`, rather than one per combination of the branches of the nested ones
@@ -273,6 +352,11 @@ describe('schemaParser()', () => {
     });
     it('parses the allOf merged for a pattern-matching property with it', () => {
       const rootSchema = SCHEMA_MERGED_FOR_PATTERN_PROPERTY;
+      expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
+      expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
+    });
+    it('parses the allOf merged for a key its patternProperties match with it', () => {
+      const rootSchema = SCHEMA_MERGED_FOR_PATTERN_KEY;
       expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
       expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
     });

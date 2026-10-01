@@ -48,7 +48,7 @@ describe('compileSchemaValidators()', () => {
       expect(consoleLogSpy).toHaveBeenNthCalledWith(2, `writing ${OUTPUT_FILE}`);
     });
     it('compileSchemaValidatorsCode was called with the expected options', () => {
-      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, {}, {});
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, {});
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);
@@ -81,7 +81,7 @@ describe('compileSchemaValidators()', () => {
       expect(consoleLogSpy).toHaveBeenNthCalledWith(2, `writing ${OUTPUT_FILE}`);
     });
     it('compileSchemaValidatorsCode was called with the expected options', () => {
-      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, customOptions, {});
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, customOptions);
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);
@@ -92,15 +92,15 @@ describe('compileSchemaValidators()', () => {
     beforeAll(() => {
       expectedCode = 'expected code 3';
       vi.mocked(compileSchemaValidatorsCode).mockImplementation(() => expectedCode);
-      compileSchemaValidators(testSchema, OUTPUT_FILE, {}, { customMergeAllOf });
+      compileSchemaValidators(testSchema, OUTPUT_FILE, { customMergeAllOf });
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
       vi.mocked(compileSchemaValidatorsCode).mockClear();
       vi.mocked(writeFileSync).mockClear();
     });
-    it('compileSchemaValidatorsCode was called with the parser options', () => {
-      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, {}, { customMergeAllOf });
+    it('compileSchemaValidatorsCode was called with the customMergeAllOf in its options', () => {
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, { customMergeAllOf });
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);

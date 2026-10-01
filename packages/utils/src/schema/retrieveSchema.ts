@@ -904,38 +904,44 @@ export function retrieveSchemaInternal<
         (resolvedSchema as any)[sym] = allOfSymbols[sym];
       }
     }
+    let withMergedProperties = [resolvedSchema];
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
-      resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
-        (acc, key) => {
-          const matchingProperties = getMatchingPatternProperties(acc, key);
-          if (Object.keys(matchingProperties).length > 0) {
-            [acc.properties[key]] = retrieveSchemaInternal<T, S, F>(
+      withMergedProperties = Object.keys(resolvedSchema.properties!).reduce(
+        (schemas: S[], key) =>
+          schemas.flatMap((schemaSoFar) => {
+            const matchingProperties = getMatchingPatternProperties(schemaSoFar, key);
+            if (Object.keys(matchingProperties).length === 0) {
+              return schemaSoFar;
+            }
+            // Each branch of the merged property is one a form can render it with, so `expandAllBranches` is passed on
+            // rather than keeping only the branch this call's form data picks
+            return retrieveSchemaInternal<T, S, F>(
               context,
-              { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
+              { allOf: [schemaSoFar.properties![key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               getByPath<T>(rawFormData, key),
-              undefined,
+              expandAllBranches,
               undefined,
               undefined,
               preserveDependencies,
-            );
-          }
-          return acc;
-        },
-        {
-          ...resolvedSchema,
-          properties: { ...resolvedSchema.properties },
-        },
+            ).map((mergedProperty) => ({
+              ...schemaSoFar,
+              properties: { ...schemaSoFar.properties, [key]: mergedProperty },
+            }));
+          }),
+        [{ ...resolvedSchema, properties: { ...resolvedSchema.properties } } as S],
       );
     }
-    const hasAdditionalProperties =
-      PATTERN_PROPERTIES_KEY in resolvedSchema ||
-      (ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false);
-    if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(context, resolvedSchema, rootSchema, rawFormData);
-    }
+    return withMergedProperties.flatMap((schemaWithProperties) => {
+      const hasAdditionalProperties =
+        PATTERN_PROPERTIES_KEY in schemaWithProperties ||
+        (ADDITIONAL_PROPERTIES_KEY in schemaWithProperties && schemaWithProperties.additionalProperties !== false);
+      if (hasAdditionalProperties) {
+        return stubExistingAdditionalProperties<T, S, F>(context, schemaWithProperties, rootSchema, rawFormData);
+      }
 
-    return resolvedSchema;
+      return schemaWithProperties;
+    });
   });
 }
 
@@ -1016,7 +1022,13 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
       return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
-    return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
+    if (schema.additionalProperties !== false) {
+      return schema;
+    }
+    // Relaxing makes a schema that the option's `$id` does not name, so it is dropped for the same reason
+    // `getFirstMatchingOption()` drops it from the schema it augments
+    const { [ID_KEY]: _id, ...relaxed } = schema;
+    return { ...relaxed, additionalProperties: true } as S;
   });
 }
 

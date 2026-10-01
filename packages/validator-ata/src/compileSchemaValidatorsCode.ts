@@ -1,9 +1,9 @@
-import type { RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
-import type { CustomValidatorOptionsType } from './types.ts';
+import type { CompileValidatorOptionsType } from './types.ts';
 
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
@@ -13,20 +13,18 @@ import type { CustomValidatorOptionsType } from './types.ts';
  * the schemas so the precompiled validator can look each one up.
  *
  * @param schema - The schema to compile
- * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
- * @param [parserOptions={}] - The `SchemaParserOptions` the schema is parsed with. Its `customMergeAllOf` must merge the
- *        same way as the one passed to the form, or the form can validate against sub-schemas that were not compiled
+ * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options used to build the validator, plus
+ *        the form's `customMergeAllOf`, which must merge the same way as the one passed to the form or the form can
+ *        validate against sub-schemas that were not compiled
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CustomValidatorOptionsType = {},
-  parserOptions: SchemaParserOptions<S> = {},
+  options: CompileValidatorOptionsType<S> = {},
 ) {
-  const schemaMaps = schemaParser(schema, parserOptions);
+  const { customFormats, ataOptionsOverrides = {}, customMergeAllOf } = options;
+  const schemaMaps = schemaParser(schema, { customMergeAllOf });
   const keys = Object.keys(schemaMaps);
   const schemas = Object.values(schemaMaps);
-
-  const { customFormats, ataOptionsOverrides = {} } = options;
 
   // Format checkers are serialized into the standalone module via Function#toString,
   // so they must carry no closure references or build-time instrumentation (a plain

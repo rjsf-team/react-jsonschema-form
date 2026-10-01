@@ -1861,13 +1861,16 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 
 ### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the hash of the schema.
-It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through `properties` and `items`, stopping at a schema it has already collected so that a recursive `$ref` cannot loop.
-This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the hash it keys them by is the one the validator looks them up under at runtime; see [validator-ajv8](./validator-ajv8.md).
+Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the `$id` of the schema, or by its hash when it has none.
+It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through the sub-schemas a form renders a value with: `properties`, the `patternProperties` and `additionalProperties` a form renders the keys they describe with, and `items`, including every position of a tuple `items` and the `additionalItems` beyond it.
+It stops at a schema it has already collected, so that a recursive `$ref` cannot loop.
+A key a form's data brings is rendered with the merge of every `patternProperties` entry matching it, so each combination of them is parsed as the `allOf` that merge is made from, which a `customMergeAllOf` sees exactly as the form's does.
+This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the key it maps them under is the one the validator looks them up by at runtime; see [validator-ajv8](./validator-ajv8.md).
 
 #### Parameters
 
 - rootSchema: S - The root schema to parse for the sub-schemas that `isValid()` is called with
+- [options={}]: SchemaParserOptions&lt;S> - The options to parse with, holding the `customMergeAllOf` the form uses. Without it the parse merges every `allOf` the default way, and a form whose merge produces different sub-schemas validates against ones that were never collected
 
 #### Returns
 
