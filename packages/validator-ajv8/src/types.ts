@@ -56,7 +56,7 @@ export interface CompiledValidateFunction {
   /** This is simplified version of a `ValidateFunction` type definition which describes the interface that our
    * precompiled validator will call.
    */
-  (data: any): boolean;
+  (data: unknown): boolean;
 }
 
 /** The definition of precompiled validator functions
