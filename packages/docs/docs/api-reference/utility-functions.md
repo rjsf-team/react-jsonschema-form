@@ -766,6 +766,22 @@ A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `a
 
 - string[]: The distinct suggestions, in the order of `examples` followed by the `default`
 
+### getFieldClassNames&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Builds the `classNames` string a `FieldTemplate` receives for a field: the `rjsf-field` marker every field carries, the `rjsf-field-<type>` class naming what the schema holds, `rjsf-field-error` while the field has errors to show, and finally whatever `ui:classNames` the field declares, appended last so it can override the rest.
+The type class comes from [`getSchemaType()`](#getschematype), so a schema with no derivable type — a discriminated `oneOf`/`anyOf` of `$ref`s, say — is spelled `rjsf-field-undefined` rather than left without a type class.
+`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
+
+#### Parameters
+
+- schema: S - The schema of the field, from which the type class is derived
+- hasErrors: boolean - Whether the field has errors it is displaying, which adds the `rjsf-field-error` class
+- [uiClassNames]: string | undefined - The optional `ui:classNames` the field declares, appended last
+
+#### Returns
+
+- string: The space-separated class list for the field
+
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
@@ -1580,6 +1596,21 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 #### Returns
 
 - string: The `time` string with any trailing offset removed
+
+### omitConsumedStyling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the `uiSchema` to hand a field's children with the class names and style the field's own `FieldTemplate` has already consumed removed from it, in all four spellings: `ui:classNames`, a bare `classNames`, `ui:style` and the `ui:options.classNames`/`ui:options.style` equivalents.
+A child reading these off the `uiSchema` it receives would apply the same classes and style a second time, inside the wrapper already carrying them ([#439](https://github.com/rjsf-team/react-jsonschema-form/issues/439)).
+The original object is returned whenever there is nothing to strip, so a field memoizing the result keeps the identity it had for the forms — the overwhelming majority — that declare no styling on the field at all.
+`SchemaField` and `LayoutMultiSchemaField` both call this for the `uiSchema` they pass down; a custom field that renders its own `FieldTemplate` and reads `ui:classNames`/`ui:style` off its `uiSchema` should do the same.
+
+#### Parameters
+
+- [uiSchema]: UiSchema&lt;T, S, F> | undefined - The uiSchema of the field whose `FieldTemplate` consumed the styling
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: The uiSchema for the field's children, stripped of the consumed styling
 
 ### optionsList&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

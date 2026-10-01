@@ -485,6 +485,42 @@ describe('FieldTemplate', () => {
     });
   });
 
+  // `ui:classNames` and `ui:style` are applied once, to the same element, the way `@rjsf/core` applies them: this
+  // template used to repeat the classes on its inner div, drawing a border or padding twice, nested
+  describe('ui:classNames and ui:style', () => {
+    // The root object is itself a field, so its own wrapper and `.field-template` are in the container too: the
+    // field under test is reached through the `ui:classNames` only it carries
+    function agreeElements(container: HTMLElement) {
+      const wrapper = container.querySelector('.custom-class');
+      return { wrapper, innerDiv: wrapper?.querySelector('.field-template') };
+    }
+
+    test('applies both to the wrapper, and neither to the inner field div', () => {
+      const { container } = renderForm({
+        agree: { 'ui:classNames': 'custom-class', 'ui:style': { color: 'red' } },
+      });
+
+      const { wrapper, innerDiv } = agreeElements(container);
+      // The inline attribute rather than `toHaveStyle`, which reads the computed style: `color` is inherited, so the
+      // inner div reports the wrapper's red whichever element actually declares it
+      expect(wrapper?.getAttribute('style')).toBe('color: red;');
+      expect(innerDiv).not.toHaveAttribute('style');
+      // Applied once: the class used to be on the wrapper and on the inner div both
+      expect(container.querySelectorAll('.custom-class')).toHaveLength(1);
+    });
+
+    // `ui:options.daisy` is this theme's own per-field theming of the inner div, a separate thing from `ui:style`
+    test('leaves the ui:options.daisy styling on the inner field div', () => {
+      const { container } = renderForm({
+        agree: { 'ui:classNames': 'custom-class', 'ui:options': { daisy: { style: { color: 'blue' } } } },
+      });
+
+      const { wrapper, innerDiv } = agreeElements(container);
+      expect(innerDiv?.getAttribute('style')).toBe('color: blue;');
+      expect(wrapper).not.toHaveAttribute('style');
+    });
+  });
+
   test('renders only the children for a hidden field', () => {
     const { container } = render(
       <Form

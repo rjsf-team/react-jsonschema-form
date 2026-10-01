@@ -814,6 +814,81 @@ describe('LayoutMultiSchemaField', () => {
       // See #439: the template consumed them, so they are kept out of the widget's own options
       expect(widgetProps?.options).not.toHaveProperty('classNames');
       expect(widgetProps?.options).not.toHaveProperty('style');
+      // ...nor is the widget's own `uiSchema` left carrying them, which `getUiOptions()` would read them back off
+      expect(widgetProps?.uiSchema).not.toHaveProperty('ui:classNames');
+      expect(widgetProps?.uiSchema).not.toHaveProperty('ui:style');
+    });
+    // `ui:classNames` and `ui:style` can also be written under `ui:options`, where a widget reading its own options
+    // would find them if they were not stripped from both spellings
+    test('reads and strips the ui:options spelling of classNames and style', () => {
+      const style = { color: 'red' };
+      const { templateProps, widgetProps } = renderRecording({
+        uiSchema: { [UI_OPTIONS_KEY]: { classNames: 'custom-class', style } },
+      });
+
+      expect(templateProps?.classNames).toBe('rjsf-field rjsf-field-object custom-class');
+      expect(templateProps?.style).toBe(style);
+      expect(widgetProps?.options).not.toHaveProperty('classNames');
+      expect(widgetProps?.options).not.toHaveProperty('style');
+      expect(widgetProps?.uiSchema?.[UI_OPTIONS_KEY]).not.toHaveProperty('classNames');
+      expect(widgetProps?.uiSchema?.[UI_OPTIONS_KEY]).not.toHaveProperty('style');
+    });
+    // The error class has to follow the same `hideError` resolution the errors themselves do: `ui:hideError` decides
+    // it when it is set, in either direction, and only an unset one falls back to the prop
+    test.each([
+      ['omits rjsf-field-error for ui:hideError', false, true, false],
+      ['adds rjsf-field-error when ui:hideError overrides a hiding prop', true, false, true],
+    ] satisfies [string, boolean, boolean, boolean][])('%s', (_, hideError, uiHideError, expectsErrorClass) => {
+      const { templateProps } = renderRecording({
+        errorSchema: NESTED_ERROR_SCHEMA,
+        hideError,
+        uiSchema: { 'ui:hideError': uiHideError },
+      });
+
+      expect(templateProps?.classNames).toBe(
+        expectsErrorClass ? 'rjsf-field rjsf-field-object rjsf-field-error' : 'rjsf-field rjsf-field-object',
+      );
+    });
+  });
+  // `SchemaField` sets all of these, and this field renders the same `FieldTemplate`: an unset `hidden` rendered a
+  // `ui:widget: 'hidden'` cell inside the full wrapper, and an unset `description` rendered none at all
+  describe('the remaining FieldTemplate props', () => {
+    function renderRecordingTemplate(overrideProps: Partial<FieldProps> = {}) {
+      let templateProps: FieldTemplateProps | undefined;
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        templateProps = props;
+        return <FakeFieldTemplate {...props} />;
+      }
+      const props = getProps(overrideProps);
+
+      render(
+        <LayoutMultiSchemaField
+          {...props}
+          uiSchema={{ ...props.uiSchema, 'ui:FieldTemplate': RecordingFieldTemplate }}
+        />,
+      );
+
+      return templateProps;
+    }
+    test('hands its FieldTemplate the formData and the schema description', () => {
+      const templateProps = renderRecordingTemplate();
+
+      expect(templateProps?.formData).toEqual(getProps().formData);
+      expect(templateProps?.rawDescription).toBe('');
+      expect(templateProps?.hidden).toBe(false);
+    });
+    test('prefers a ui:description over the schema one', () => {
+      const templateProps = renderRecordingTemplate({
+        schema: { ...SIMPLE_ONEOF, description: 'from the schema' },
+        uiSchema: { 'ui:description': 'from the uiSchema' },
+      });
+
+      expect(templateProps?.rawDescription).toBe('from the uiSchema');
+    });
+    test('tells its FieldTemplate the field is hidden for a ui:widget of hidden', () => {
+      const templateProps = renderRecordingTemplate({ uiSchema: { [UI_WIDGET_KEY]: 'hidden' } });
+
+      expect(templateProps?.hidden).toBe(true);
     });
   });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {

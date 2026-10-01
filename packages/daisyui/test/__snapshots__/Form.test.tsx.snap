@@ -9,7 +9,7 @@ exports[`format iso-date-time 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control my-4 w-full relative"
@@ -77,7 +77,7 @@ exports[`format iso-time 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -119,7 +119,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -134,7 +134,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -158,7 +158,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3"
                             >
                               <div
                                 class="form-control "
@@ -186,7 +186,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3"
                                       >
                                         <label
                                           class="label"
@@ -233,7 +233,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3"
                                       >
                                         <div
                                           class="form-control"
@@ -360,7 +360,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3"
                             >
                               <div
                                 class="form-control "
@@ -388,7 +388,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3"
                                       >
                                         <label
                                           class="label"
@@ -435,7 +435,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3"
                                       >
                                         <div
                                           class="form-control"
@@ -634,7 +634,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -649,7 +649,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -673,7 +673,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -798,7 +798,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -994,7 +994,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1009,7 +1009,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1126,7 +1126,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1141,7 +1141,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -1169,7 +1169,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -1216,7 +1216,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -1263,7 +1263,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -1291,7 +1291,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -1338,7 +1338,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -1434,7 +1434,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1449,7 +1449,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1549,7 +1549,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1564,7 +1564,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1697,7 +1697,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1712,7 +1712,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1759,7 +1759,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1809,7 +1809,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -1877,7 +1877,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1892,7 +1892,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1957,7 +1957,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1972,7 +1972,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -1996,7 +1996,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3"
                             >
                               <div
                                 class="form-control "
@@ -2024,7 +2024,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3"
                                       >
                                         <label
                                           class="label"
@@ -2071,7 +2071,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3"
                                       >
                                         <div
                                           class="form-control"
@@ -2198,7 +2198,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-object"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-object"
+                              class="field-template mb-3"
                             >
                               <div
                                 class="form-control "
@@ -2226,7 +2226,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-string"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                                        class="field-template mb-3"
                                       >
                                         <label
                                           class="label"
@@ -2273,7 +2273,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="flex-grow rjsf-field rjsf-field-boolean"
                                     >
                                       <div
-                                        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                                        class="field-template mb-3"
                                       >
                                         <div
                                           class="form-control"
@@ -2472,7 +2472,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2487,7 +2487,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2511,7 +2511,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -2636,7 +2636,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -2832,7 +2832,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2847,7 +2847,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -2875,7 +2875,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -2922,7 +2922,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -2969,7 +2969,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -2997,7 +2997,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -3044,7 +3044,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -3140,7 +3140,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3155,7 +3155,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3288,7 +3288,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3303,7 +3303,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3350,7 +3350,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3400,7 +3400,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -3468,7 +3468,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -3545,7 +3545,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3560,7 +3560,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3647,7 +3647,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       class="flex-grow rjsf-field rjsf-field-string"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-string"
+                        class="field-template mb-3"
                       >
                         <label
                           class="label"
@@ -3768,7 +3768,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -3848,7 +3848,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -3958,7 +3958,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -4068,7 +4068,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -4163,7 +4163,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -4258,7 +4258,7 @@ exports[`select widget with options sharing a String() in the realValue format (
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -4353,7 +4353,7 @@ exports[`single fields > Cyclic schema 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4391,7 +4391,7 @@ exports[`single fields > Cyclic schema 1`] = `
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -4488,7 +4488,7 @@ exports[`single fields > checkbox field 1`] = `
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -4531,7 +4531,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -4597,7 +4597,7 @@ exports[`single fields > checkbox field with label 1`] = `
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -4653,7 +4653,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -4719,7 +4719,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -4793,7 +4793,7 @@ exports[`single fields > checkboxes field 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -4915,7 +4915,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -5037,7 +5037,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -5152,7 +5152,7 @@ exports[`single fields > field with description 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5167,7 +5167,7 @@ exports[`single fields > field with description 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5249,7 +5249,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5264,7 +5264,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5346,7 +5346,7 @@ exports[`single fields > field with markdown description 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5361,7 +5361,7 @@ exports[`single fields > field with markdown description 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5449,7 +5449,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5464,7 +5464,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5546,7 +5546,7 @@ exports[`single fields > format color 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -5595,7 +5595,7 @@ exports[`single fields > format date 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control my-4 w-full relative"
@@ -5663,7 +5663,7 @@ exports[`single fields > format datetime 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control my-4 w-full relative"
@@ -5731,7 +5731,7 @@ exports[`single fields > format time 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -5784,7 +5784,7 @@ exports[`single fields > help and error display 1`] = `
       class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -5843,7 +5843,7 @@ exports[`single fields > hidden field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5893,7 +5893,7 @@ exports[`single fields > hidden label 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -5942,7 +5942,7 @@ exports[`single fields > null field 1`] = `
       class="flex-grow rjsf-field rjsf-field-null"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-null"
+        class="field-template mb-3"
       >
         <div
           class="rjsf-field-error-template text-red-600"
@@ -5974,7 +5974,7 @@ exports[`single fields > number field 0 1`] = `
       class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -6026,7 +6026,7 @@ exports[`single fields > number field 1`] = `
       class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -6078,7 +6078,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -6106,7 +6106,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -6134,7 +6134,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -6181,7 +6181,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -6209,7 +6209,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -6268,7 +6268,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -6296,7 +6296,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -6355,7 +6355,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6430,7 +6430,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6505,7 +6505,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6592,7 +6592,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6667,7 +6667,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -6695,7 +6695,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -6754,7 +6754,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6829,7 +6829,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -6931,7 +6931,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                       >
                         <div
                           class="form-control "
@@ -6959,7 +6959,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 class="flex-grow rjsf-field rjsf-field-string"
                               >
                                 <div
-                                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                                  class="field-template mb-3"
                                 >
                                   <label
                                     class="label"
@@ -7022,7 +7022,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -7124,7 +7124,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7227,7 +7227,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -7255,7 +7255,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -7283,7 +7283,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -7331,7 +7331,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -7359,7 +7359,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -7419,7 +7419,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -7447,7 +7447,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -7507,7 +7507,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7583,7 +7583,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7659,7 +7659,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7747,7 +7747,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7823,7 +7823,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -7851,7 +7851,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -7911,7 +7911,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -7987,7 +7987,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -8089,7 +8089,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                       >
                         <div
                           class="form-control "
@@ -8117,7 +8117,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 class="flex-grow rjsf-field rjsf-field-string"
                               >
                                 <div
-                                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                                  class="field-template mb-3"
                                 >
                                   <label
                                     class="label"
@@ -8180,7 +8180,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -8282,7 +8282,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8386,7 +8386,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -8414,7 +8414,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -8475,7 +8475,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -8522,7 +8522,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -8594,7 +8594,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -8622,7 +8622,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -8681,7 +8681,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8756,7 +8756,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -8821,7 +8821,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -8908,7 +8908,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -8961,7 +8961,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -9085,7 +9085,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -9113,7 +9113,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -9172,7 +9172,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9247,7 +9247,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -9259,7 +9259,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                       >
                         <div
                           class="form-control "
@@ -9334,7 +9334,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -9346,7 +9346,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9439,7 +9439,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -9467,7 +9467,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -9495,7 +9495,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -9543,7 +9543,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -9588,7 +9588,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -9616,7 +9616,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -9676,7 +9676,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9752,7 +9752,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9793,7 +9793,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-array"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-array"
+                            class="field-template mb-3"
                           >
                             <div
                               class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -9881,7 +9881,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -9905,7 +9905,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -10032,7 +10032,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -10060,7 +10060,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -10120,7 +10120,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -10196,7 +10196,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -10208,7 +10208,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                       >
                         <div
                           class="form-control "
@@ -10256,7 +10256,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -10268,7 +10268,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -10337,7 +10337,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -10365,7 +10365,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -10437,7 +10437,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -10502,7 +10502,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -10530,7 +10530,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -10589,7 +10589,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -10664,7 +10664,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -10676,7 +10676,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                       >
                         <div
                           class="form-control "
@@ -10751,7 +10751,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                 >
                   <div
                     class="p-4 border rounded-sm shadow-sm"
@@ -10763,7 +10763,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                       >
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
@@ -10856,7 +10856,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
         disabled=""
       >
         <div
@@ -10885,7 +10885,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -10931,7 +10931,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -10973,7 +10973,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -11002,7 +11002,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                             disabled=""
                           >
                             <label
@@ -11063,7 +11063,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -11140,7 +11140,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -11153,7 +11153,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-object"
+                        class="field-template mb-3"
                         disabled=""
                       >
                         <div
@@ -11202,7 +11202,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="flex-grow rjsf-field rjsf-field-undefined"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-undefined"
+                  class="field-template mb-3"
                   disabled=""
                 >
                   <div
@@ -11215,7 +11215,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
                       <div
-                        class="field-template mb-3 rjsf-field rjsf-field-array"
+                        class="field-template mb-3"
                         disabled=""
                       >
                         <div
@@ -11286,7 +11286,7 @@ exports[`single fields > password field 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -11335,7 +11335,7 @@ exports[`single fields > radio field 1`] = `
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -11411,7 +11411,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -11509,7 +11509,7 @@ exports[`single fields > required checkbox field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -11524,7 +11524,7 @@ exports[`single fields > required checkbox field 1`] = `
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -11592,7 +11592,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -11607,7 +11607,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -11676,7 +11676,7 @@ exports[`single fields > schema examples 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -11745,7 +11745,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
       class="flex-grow rjsf-field rjsf-field-integer"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-integer"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -11811,7 +11811,7 @@ exports[`single fields > select field 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -11906,7 +11906,7 @@ exports[`single fields > select field multiple choice 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12051,7 +12051,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12197,7 +12197,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -12307,7 +12307,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12454,7 +12454,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12579,7 +12579,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12675,7 +12675,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -12751,7 +12751,7 @@ exports[`single fields > select field single choice form disabled using radio wi
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
         disabled=""
       >
         <div
@@ -12831,7 +12831,7 @@ exports[`single fields > select field single choice formData 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -12926,7 +12926,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -13081,7 +13081,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -13237,7 +13237,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
         disabled=""
       >
         <div
@@ -13316,7 +13316,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
       class="flex-grow rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-boolean"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -13432,7 +13432,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -13537,7 +13537,7 @@ exports[`single fields > select widget with selected oneOf option description an
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -13632,7 +13632,7 @@ exports[`single fields > slider field 1`] = `
       class="flex-grow rjsf-field rjsf-field-integer"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-integer"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -13686,7 +13686,7 @@ exports[`single fields > string field > field with markdown help and description
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -13782,7 +13782,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -13869,7 +13869,7 @@ exports[`single fields > string field > field with markdown help text without a 
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -13945,7 +13945,7 @@ exports[`single fields > string field > format data-url 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div>
           <div
@@ -13996,7 +13996,7 @@ exports[`single fields > string field > format email 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14045,7 +14045,7 @@ exports[`single fields > string field > format uri 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14094,7 +14094,7 @@ exports[`single fields > string field > regular 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14143,7 +14143,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -14225,7 +14225,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14275,7 +14275,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14343,7 +14343,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14392,7 +14392,7 @@ exports[`single fields > textarea field 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14434,7 +14434,7 @@ exports[`single fields > title field 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -14462,7 +14462,7 @@ exports[`single fields > title field 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -14534,7 +14534,7 @@ exports[`single fields > unsupported field 1`] = `
       class="flex-grow rjsf-field rjsf-field-undefined"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-undefined"
+        class="field-template mb-3"
       >
         <div
           class="unsupported-field"
@@ -14576,7 +14576,7 @@ exports[`single fields > up/down field 1`] = `
       class="flex-grow rjsf-field rjsf-field-number"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-number"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14626,7 +14626,7 @@ exports[`single fields > using custom tagName 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14675,7 +14675,7 @@ exports[`string field with autocapitalize 1`] = `
       class="flex-grow rjsf-field rjsf-field-string"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-string"
+        class="field-template mb-3"
       >
         <div
           class="form-control"
@@ -14725,7 +14725,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -14740,7 +14740,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"

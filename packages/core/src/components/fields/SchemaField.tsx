@@ -19,6 +19,7 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  getFieldClassNames,
   getSchemaOwnTypes,
   getSchemaType,
   getTemplate,
@@ -33,6 +34,7 @@ import {
   isConstantSelect,
   isFormDataAvailable,
   logOnce,
+  omitConsumedStyling,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
@@ -426,28 +428,8 @@ function SchemaFieldRender<
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
     return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
   }, [inferredWidget, resolvedUiSchema, fields]);
-  // See #439: consumed class names and style must not reach child components. Copied only when there is something
-  // to strip. `resolveUiSchema()` guarantees `uiSchema` and its `ui:options` are objects, so `in` is safe on both
-  const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => {
-    const consumedUiOptions = uiSchema[UI_OPTIONS_KEY];
-    const consumesStyling =
-      'ui:classNames' in uiSchema ||
-      'classNames' in uiSchema ||
-      'ui:style' in uiSchema ||
-      (consumedUiOptions !== undefined && ('classNames' in consumedUiOptions || 'style' in consumedUiOptions));
-    if (!consumesStyling) {
-      return uiSchema;
-    }
-    const strippedUiSchema: UiSchema<T, S, F> = { ...uiSchema };
-    delete strippedUiSchema['ui:classNames'];
-    delete strippedUiSchema.classNames;
-    delete strippedUiSchema['ui:style'];
-    if (consumedUiOptions) {
-      const { classNames: consumedOptionClassNames, style: consumedOptionStyle, ...fieldUiOptions } = consumedUiOptions;
-      strippedUiSchema[UI_OPTIONS_KEY] = fieldUiOptions;
-    }
-    return strippedUiSchema;
-  }, [uiSchema]);
+  // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
+  const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   // The `uiSchema` the `anyOf`/`oneOf` options are rendered against when they are rendered in place of the field a
   // `ui:field` named, see `optionsReplaceNamedField`. Memoized alongside the `uiSchema` it shadows the `field` of, since
   // `MultiSchemaField` derives its per-option `uiSchema` array from this one and hands that array to a `useCallback`:
@@ -618,13 +600,6 @@ function SchemaFieldRender<
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
-  const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
-  if (hasErrors) {
-    classNames.push('rjsf-field-error');
-  }
-  if (uiOptions.classNames) {
-    classNames.push(uiOptions.classNames);
-  }
 
   const helpComponent = (
     <FieldHelpTemplate
@@ -680,7 +655,7 @@ function SchemaFieldRender<
     readonly,
     hideError,
     displayLabel,
-    classNames: classNames.join(' ').trim(),
+    classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,
     formData,
     schema,

@@ -117,6 +117,7 @@ export default function FieldTemplate<
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
+      style={style}
       disabled={divProps.disabled}
       id={id}
       label={label}
@@ -133,10 +134,13 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div
-        className={`field-template mb-3 ${classNames || ''} ${daisy.className || ''}`.trim()}
+        // `ui:classNames` and `ui:style` belong to the `WrapIfAdditionalTemplate` wrapper above, as they do in
+        // `@rjsf/core`: repeating them here drew a border or padding twice, once nested inside the other, and split
+        // the two across elements. Only the per-field `ui:options.daisy` theming, which is this div's own, stays
+        className={`field-template mb-3 ${daisy.className || ''}`.trim()}
         data-theme={daisy.theme}
         {...divProps}
-        style={{ ...style, ...daisy.style }}
+        style={daisy.style}
       >
         {displayLabel && !widgetRendersLabel && !!label && (
           <label id={fieldLabelId(id)} htmlFor={id} className='label'>

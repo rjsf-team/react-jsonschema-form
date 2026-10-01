@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -22,14 +22,16 @@ import {
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
+  descriptionId,
   getTemplate,
+  getFieldClassNames,
   getPropertySchema,
-  getSchemaType,
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
   getWidget,
   noop,
+  omitConsumedStyling,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -135,32 +137,43 @@ export default function LayoutMultiSchemaField<
     hideError = false,
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
-  const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const schemaHash = hashObject(schema);
   const optionsHash = hashObject(options);
   const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
   const formDataHash = formData ? hashObject(formData) : '';
 
-  useEffect(() => {
-    setEnumOptions(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
+  // Derived rather than held in state: `computeEnumOptions()` retrieves every option's schema, which a `useState`
+  // initializer re-runs and throws away on every render, and the effect that re-synced the state rendered the stale
+  // options once before replacing them
+  const enumOptions = useMemo(
+    () => computeEnumOptions(schema, options, schemaUtils, uiSchema, formData),
     // We are using hashes in place of the dependencies
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash]);
+    [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash],
+  );
   const {
     widget = discriminator ? 'radio' : 'select',
     title = '',
     placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
     hideError: uiSchemaHideError,
-    // See #439: the class names and style this field's `FieldTemplate` consumes are kept out of the options handed
-    // to the widget below, so a widget reading them off its own `options` cannot apply them a second time
+    // See #439: the class names and style this field's `FieldTemplate` consumes must not reach the widget below, so
+    // they are destructured out of the options it is handed and stripped from the `uiSchema` it is handed as well
     classNames: uiClassNames,
     style,
     ...uiOptions
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  // Memoized so a selector widget deriving anything from its `uiSchema` isn't invalidated by a new object each render.
+  // A `memo` boundary around it is not what this buys: `widgetOptions` below is rebuilt on every render regardless
+  const widgetUiSchema = useMemo(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
@@ -221,17 +234,20 @@ export default function LayoutMultiSchemaField<
   const widgetOptions = { enumOptions, ...uiOptions };
   const visibleErrors = getVisibleErrors({ rawErrors, hideError: hideFieldError });
   const hasErrors = visibleErrors.length > 0;
-  const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
-  if (hasErrors) {
-    classNames.push('rjsf-field-error');
-  }
-  if (uiClassNames) {
-    classNames.push(uiClassNames);
-  }
   const errors = hasErrors ? (
     <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
   ) : undefined;
-  const { help } = uiOptions;
+  const { help, description: uiDescription } = uiOptions;
+  const description = uiDescription || schema.description || '';
+  const descriptionComponent = (
+    <DescriptionFieldTemplate
+      id={descriptionId(id)}
+      description={description}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
   const helpComponent = (
     <FieldHelpTemplate
       help={help}
@@ -256,8 +272,13 @@ export default function LayoutMultiSchemaField<
       readonly={!!readonly}
       registry={registry}
       displayLabel={displayLabel}
-      classNames={classNames.join(' ').trim()}
+      classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}
+      // `widget` carries the resolved value, so a `ui:widget` of `hidden` is what this matches, not its default
+      hidden={widget === 'hidden'}
+      formData={formData}
+      description={descriptionComponent}
+      rawDescription={description}
       errors={errors}
       help={helpComponent}
       rawHelp={help}
@@ -275,7 +296,7 @@ export default function LayoutMultiSchemaField<
         schema={schema}
         label={(title || schema.title) ?? ''}
         disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
-        uiSchema={uiSchema}
+        uiSchema={widgetUiSchema}
         autofocus={autofocus}
         readonly={readonly}
         required={required}
