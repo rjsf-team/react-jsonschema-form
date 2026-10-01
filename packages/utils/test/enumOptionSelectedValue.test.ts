@@ -1,7 +1,7 @@
 import { expectTypeOf } from 'vitest';
 
 import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
-import type { EnumOptionsType } from '../src/index.ts';
+import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [
   { value: 'foo', label: 'Foo' },
@@ -182,6 +182,15 @@ describe('enumOptionSelectedValue', () => {
       expectTypeOf(
         enumOptionSelectedValue('foo', stringOptions, false, 'indexed', emptyValue),
       ).toEqualTypeOf<unknown>();
+    });
+    it('requires the emptyValue when its type is named', () => {
+      expectTypeOf(
+        enumOptionSelectedValue<RJSFSchema, string>('foo', stringOptions, false, 'indexed', ''),
+      ).toEqualTypeOf<string>();
+      // @ts-expect-error naming the emptyValue's type requires passing the emptyValue
+      enumOptionSelectedValue<RJSFSchema, string>('foo', stringOptions, false);
+      // @ts-expect-error naming the emptyValue's type requires passing the emptyValue
+      enumOptionSelectedValue<RJSFSchema, string[]>('foo', stringOptions, true);
     });
   });
 });

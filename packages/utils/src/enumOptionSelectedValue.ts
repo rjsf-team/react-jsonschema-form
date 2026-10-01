@@ -17,26 +17,44 @@ const NO_MATCH = Symbol('no match');
  * @param emptyValue - The value to return when the selection is empty
  * @returns The value to use for the select element's `value` attribute
  */
-export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: true,
   format?: OptionValueFormat,
-  emptyValue?: E,
-): string[] | E;
+): string[] | undefined;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: true,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
+): string[] | E;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: false,
   format?: OptionValueFormat,
-  emptyValue?: E,
-): string | E;
+): string | undefined;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: false,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
+): string | E;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: boolean,
   format?: OptionValueFormat,
-  emptyValue?: E,
+): string | string[] | undefined;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: boolean,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
 ): string | string[] | E;
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
   value: unknown,
