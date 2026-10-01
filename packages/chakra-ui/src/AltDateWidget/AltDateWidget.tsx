@@ -8,16 +8,10 @@ function AltDateWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ autofocus = false, disabled = false, readonly = false, time = false, options, ...props }: WidgetProps<T, S, F>) {
-  const { id, onBlur, onFocus, registry } = props;
+>(props: WidgetProps<T, S, F>) {
+  const { autofocus = false, disabled = false, id, onBlur, onFocus, options, readonly = false, registry } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
-    ...props,
-    disabled,
-    options,
-    readonly,
-    time,
-  });
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 

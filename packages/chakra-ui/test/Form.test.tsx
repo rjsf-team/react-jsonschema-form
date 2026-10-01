@@ -28,18 +28,20 @@ describe('chakra-ui AltDateWidget', () => {
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
 
-  test('a readonly alt-date ignores its Now button', async () => {
+  // A disabled field renders inside a disabled `<fieldset>`, which already blocks the click before it reaches the hook
+  test.each(['Now', 'Clear'])('a readonly alt-date ignores its %s button', async (button) => {
     const onChange = vi.fn();
     render(
       <WrappedForm
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
+        formData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Now' }));
+    await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
 });

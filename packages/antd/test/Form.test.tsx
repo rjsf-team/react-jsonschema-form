@@ -248,18 +248,24 @@ describe('antd specific tests', () => {
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
 
-  test('a readonly alt-date ignores its Now button', async () => {
+  test.each([
+    ['ui:readonly', 'Now'],
+    ['ui:readonly', 'Clear'],
+    ['ui:disabled', 'Now'],
+    ['ui:disabled', 'Clear'],
+  ])('a %s alt-date ignores its %s button', async (flag, button) => {
     const onChange = vi.fn();
     render(
       <Form
         schema={{ type: 'string', format: 'date' }}
-        uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
+        uiSchema={{ 'ui:widget': 'alt-date', [flag]: true }}
+        formData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Now' }));
+    await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
 });
