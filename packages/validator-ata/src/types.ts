@@ -1,3 +1,4 @@
+import type { CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
@@ -54,6 +55,19 @@ export interface CustomValidatorOptionsType {
    * `processRawValidationErrors#filterDuplicateErrors`.
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+}
+
+/** The options a precompiled validator is constructed with, all optional */
+export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** If provided, is used to localize a list of ata validation errors */
+  localizer?: Localizer;
+  /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors` */
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The form's `customMergeAllOf`, used when resolving this validator's own root schema to check the schema it is
+   * handed against it. Without it that resolution uses the default `allOf` merge, so a form with a `customMergeAllOf`
+   * and an `allOf` in its root schema is rejected with "the schema ... differs from the rootSchema"
+   */
+  customMergeAllOf?: CustomMergeAllOf<S>;
 }
 
 /** The simplified `ValidateFunction` shape produced by ata's compiled

@@ -34,11 +34,11 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           },
         },
       ];
-      expect(getFirstMatchingOption(testValidator, undefined, options, rootSchema)).toEqual(0);
+      expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema)).toEqual(0);
     });
     it('should handle undefined formData when a discriminator field is present in an option', () => {
       const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];
-      expect(getFirstMatchingOption(testValidator, undefined, options, rootSchema, 'id')).toEqual(0);
+      expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema, 'id')).toEqual(0);
     });
     it('should infer correct anyOf schema with properties also having anyOf/allOf', () => {
       // Mock isValid to iterate through both options by failing the first
@@ -59,19 +59,19 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           allOf: [{ type: 'string' }],
         },
       ];
-      expect(getFirstMatchingOption(testValidator, null, options, rootSchema)).toEqual(0);
+      expect(getFirstMatchingOption({ validator: testValidator }, null, options, rootSchema)).toEqual(0);
     });
     it('returns 0 if no options match', () => {
       // Mock isValid fail all the tests to trigger the fall-through
       testValidator.setReturnValues({ isValid: [false, false, false] });
       const options: RJSFSchema[] = [{ type: 'string' }, { type: 'string' }, { type: 'null' }];
-      expect(getFirstMatchingOption(testValidator, undefined, options, rootSchema)).toEqual(0);
+      expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema)).toEqual(0);
     });
     it('should infer correct anyOf schema based on data if passing null and option 2 is {type: null}', () => {
       // Mock isValid fail the first two, non-null values
       testValidator.setReturnValues({ isValid: [false, false, true] });
       const options: RJSFSchema[] = [{ type: 'string' }, { type: 'string' }, { type: 'null' }];
-      expect(getFirstMatchingOption(testValidator, null, options, rootSchema)).toEqual(2);
+      expect(getFirstMatchingOption({ validator: testValidator }, null, options, rootSchema)).toEqual(2);
     });
     it('should infer correct anyOf schema based on data', () => {
       // Mock isValid to fail the first non-nested value
@@ -95,7 +95,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           },
         },
       };
-      const schemaUtils = createSchemaUtils(testValidator, rootSchema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
       expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
       // Mock again isValid fail the first non-nested value
       testValidator.setReturnValues({ isValid: [false, true] });
@@ -129,7 +129,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         required: ['code'],
       };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
-      expect(getFirstMatchingOption(testValidator, null, options, schema, 'code')).toEqual(0);
+      expect(getFirstMatchingOption({ validator: testValidator }, null, options, schema, 'code')).toEqual(0);
     });
 
     // simple in the sense of getOptionMatchingSimpleDiscriminator
@@ -163,7 +163,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       const formData = { code: 'bar_coding' };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       // Use the schemaUtils to verify the discriminator prop gets passed
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       expect(schemaUtils.getFirstMatchingOption(formData, options, 'code')).toEqual(1);
     });
 
@@ -199,7 +199,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       const formData = { code: ['bar_coding'] };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
       // Use the schemaUtils to verify the discriminator prop gets passed
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       const result = schemaUtils.getFirstMatchingOption(formData, options, 'code');
       const wasWarned = consoleWarnSpy.mock.calls.length > 0;
       if (wasWarned) {

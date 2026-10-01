@@ -90,8 +90,8 @@ export default class AJV8Validator<
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
    */
   rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
@@ -183,6 +183,8 @@ export default class AJV8Validator<
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
@@ -190,10 +192,11 @@ export default class AJV8Validator<
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -201,6 +204,7 @@ export default class AJV8Validator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 

@@ -6,14 +6,14 @@ export default function isSelectTest(testValidator: TestValidatorType) {
   describe('isSelect()', () => {
     it('should be false if items is undefined', () => {
       const schema: RJSFSchema = {};
-      expect(isSelect(testValidator, schema)).toBe(false);
+      expect(isSelect({ validator: testValidator }, schema)).toBe(false);
     });
     describe('schema items enum is not an array', () => {
       it('should be false if oneOf/anyOf schemas are not all constants', () => {
         const schema: RJSFSchema = {
           anyOf: [{ type: 'string', enum: ['Foo'] }, { type: 'string' }],
         };
-        expect(isSelect(testValidator, schema)).toBe(false);
+        expect(isSelect({ validator: testValidator }, schema)).toBe(false);
       });
       it('should be true if oneOf/anyOf schemas are all constants', () => {
         const schema: RJSFSchema = {
@@ -22,7 +22,7 @@ export default function isSelectTest(testValidator: TestValidatorType) {
             { type: 'string', enum: ['Foo'] },
           ],
         };
-        expect(isSelect(testValidator, schema)).toBe(true);
+        expect(isSelect({ validator: testValidator }, schema)).toBe(true);
       });
     });
     describe('schema has both anyOf and oneOf', () => {
@@ -32,7 +32,7 @@ export default function isSelectTest(testValidator: TestValidatorType) {
           anyOf: [{ minLength: 1 }],
           oneOf: [{ const: 'a' }, { const: 'b' }],
         };
-        expect(isSelect(testValidator, schema)).toBe(false);
+        expect(isSelect({ validator: testValidator }, schema)).toBe(false);
       });
       it('should be true when only the anyOf options are all constants', () => {
         const schema: RJSFSchema = {
@@ -40,7 +40,7 @@ export default function isSelectTest(testValidator: TestValidatorType) {
           anyOf: [{ const: 'a' }, { const: 'b' }],
           oneOf: [{ minLength: 1 }],
         };
-        expect(isSelect(testValidator, schema)).toBe(true);
+        expect(isSelect({ validator: testValidator }, schema)).toBe(true);
       });
     });
     it('should retrieve reference schema definitions', () => {
@@ -50,7 +50,7 @@ export default function isSelectTest(testValidator: TestValidatorType) {
         },
         $ref: '#/definitions/FooItem',
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       expect(schemaUtils.isSelect(schema)).toBe(true);
     });
   });

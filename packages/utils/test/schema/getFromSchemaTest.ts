@@ -60,7 +60,7 @@ const SCHEMA_DEFINITIONS = rawSchema[DEFINITIONS_KEY];
 const PATIENT_SCHEMA = SCHEMA_DEFINITIONS.Patient as RJSFSchema;
 
 export default function getFromSchemaTest(testValidator: TestValidatorType) {
-  const schemaUtils = createSchemaUtils(testValidator, testSchema);
+  const schemaUtils = createSchemaUtils({ validator: testValidator }, testSchema);
   describe('getFromSchema', () => {
     it('performs a simple `get` for a path without $ref values', () => {
       const fieldPath = [PROPERTIES_KEY, 'birth_date'];

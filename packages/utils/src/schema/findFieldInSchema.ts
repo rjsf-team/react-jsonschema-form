@@ -2,13 +2,12 @@ import { PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
-  CustomMergeAllOf,
   FormContextType,
   FoundFieldType,
   RJSFSchema,
+  SchemaContext,
   SchemaFieldPath,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getFromSchema from './getFromSchema.ts';
@@ -20,12 +19,11 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
  * field is in the `required` list for its parent and if so, it is marked as required on return.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param schema - The node within the JSON schema in which to search
  * @param path - The keys in the path to the desired field
  * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
- * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An object that contains the field and its required state. If no field can be found then
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
@@ -34,12 +32,11 @@ export default function findFieldInSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
   formData: T = {} as T,
-  customMergeAllOf?: CustomMergeAllOf<S>,
 ): FoundFieldType<S> {
   const pathList = Array.isArray(path) ? [...path] : path.split('.');
   let parentField = schema;
@@ -51,25 +48,17 @@ export default function findFieldInSchema<
   if (pathList.length) {
     // drilling into the schema for each sub-path and taking into account of the any/oneOfs
     pathList.forEach((subPath) => {
-      parentField = getFromSchema<T, S, F>(
-        validator,
-        rootSchema,
-        parentField,
-        [PROPERTIES_KEY, subPath],
-        {} as S,
-        customMergeAllOf,
-      );
+      parentField = getFromSchema<T, S, F>(context, rootSchema, parentField, [PROPERTIES_KEY, subPath], {} as S);
       // if this sub-path has an `anyOf` or `oneOf` then use the formData to drill into the schema with the selected option
       const xxxOfKey = parentField && getXxxOfKey<S>(parentField);
       if (xxxOfKey) {
         parentField = findSelectedOptionInXxxOf(
-          validator,
+          context,
           rootSchema,
           parentField,
           fieldNameKey,
           xxxOfKey,
           getByPath<T>(formData, subPath),
-          customMergeAllOf,
         )!;
       }
     });
@@ -78,38 +67,22 @@ export default function findFieldInSchema<
   // When the root schema has an `anyOf` or `oneOf`, use the formData to drill into the schema with the selected option
   const xxxOfKey = parentField && getXxxOfKey<S>(parentField);
   if (xxxOfKey) {
-    parentField = findSelectedOptionInXxxOf(
-      validator,
-      rootSchema,
-      parentField,
-      fieldNameKey,
-      xxxOfKey,
-      formData,
-      customMergeAllOf,
-    )!;
+    parentField = findSelectedOptionInXxxOf(context, rootSchema, parentField, fieldNameKey, xxxOfKey, formData)!;
   }
 
   // taking the most updated `parentField`, get our desired field
   let field: S | undefined = getFromSchema<T, S, F>(
-    validator,
+    context,
     rootSchema,
     parentField,
     [PROPERTIES_KEY, fieldName],
     NOT_FOUND_SCHEMA as S,
-    customMergeAllOf,
   );
   if (field === NOT_FOUND_SCHEMA) {
     field = undefined;
   }
   // check to see if our desired field is in the `required` list for its parent
-  const requiredArray = getFromSchema<T, S, F>(
-    validator,
-    rootSchema,
-    parentField,
-    REQUIRED_KEY,
-    [] as T,
-    customMergeAllOf,
-  );
+  const requiredArray = getFromSchema<T, S, F>(context, rootSchema, parentField, REQUIRED_KEY, [] as T);
   let isRequired: boolean | undefined;
   if (field && Array.isArray(requiredArray)) {
     isRequired = requiredArray.includes(fieldNameKey);

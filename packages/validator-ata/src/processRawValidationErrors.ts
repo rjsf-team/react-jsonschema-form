@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -187,7 +187,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   rawErrors: RawValidationErrorsType<ValidationError>,
   formData: T | undefined,
   schema: S,
@@ -195,6 +195,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -223,17 +224,16 @@ export default function processRawValidationErrors<
 
   // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
   // and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(
-    validator,
-    schema,
-    formData,
-    schema,
-    true,
-    undefined,
-    undefined,
-    undefined,
-    uiSchema,
-  ) as T;
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

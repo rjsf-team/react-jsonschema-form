@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, isValueEmpty, omitExtraData } from '../../src/index.ts';
+import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
@@ -54,7 +55,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         foo: 'bar',
         extraField: 'should be omitted',
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual({ foo: 'bar' });
     });
@@ -77,7 +78,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           extraField: 'should be omitted',
         },
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual({ nested: { foo: 'bar' } });
     });
@@ -100,7 +101,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       const formData = {
         list: [{ foo: 'bar', extraField: 'should be omitted' }, { foo: 'baz' }],
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual({
         list: [{ foo: 'bar' }, { foo: 'baz' }],
@@ -132,7 +133,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         },
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
@@ -148,7 +149,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         key1: 'val1',
         key2: 'val2',
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
@@ -168,7 +169,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         key1: 'val1',
         key2: 'val2',
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
@@ -198,7 +199,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         config: { name: 'test' },
         dynamicKey: 'should be kept',
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(expectedFormData);
     });
@@ -222,7 +223,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         ],
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       const keptData = { discriminator: 'foo', extra: 'should be kept' };
       expect(schemaUtils.omitExtraData(schema, keptData)).toEqual(keptData);
@@ -242,7 +243,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         ],
       };
       const formData = { config: { name: 'test', extraField: 'should be stripped' } };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual({ config: { name: 'test' } });
     });
@@ -257,7 +258,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         ],
       };
       const formData = { config: { name: 'test', extraField: 'kept' } };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(formData);
     });
@@ -275,7 +276,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       ],
     ])('should keep the whole value picked by a typed %s select', (_, choice, value) => {
       const schema: RJSFSchema = { type: 'object', properties: { choice } };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, { choice: value })).toEqual({ choice: value });
     });
@@ -284,7 +285,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         type: 'object',
         properties: { choice: { type: 'object', properties: { a: { type: 'number' } }, oneOf: [] } },
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, { choice: { a: 1, b: 2 } })).toEqual({ choice: { a: 1 } });
     });
@@ -302,7 +303,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         additionalProperties: { type: 'string' },
       };
       const formData = { kind: 'a', bar: 'hello', extra: 'keep me' };
-      expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+      expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
     });
 
     it('should strip extras from within additional property values with strict schemas', () => {
@@ -328,7 +329,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         server1: { name: 'prod' },
         server2: { name: 'staging' },
       };
-      const schemaUtils = createSchemaUtils(testValidator, schema);
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
 
       expect(schemaUtils.omitExtraData(schema, formData)).toEqual(expectedFormData);
     });
@@ -341,7 +342,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         },
       };
 
-      expect(omitExtraData(testValidator, schema)).toBeUndefined();
+      expect(omitExtraData({ validator: testValidator }, schema)).toBeUndefined();
     });
 
     // ---------------------------------------------------------------------------
@@ -361,21 +362,23 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
     describe('basic behavior (removeOptionalEmptyObjects scenarios)', () => {
       it('should return undefined when formData is undefined', () => {
         const schema: RJSFSchema = { type: 'object', properties: {} };
-        expect(omitExtraData(testValidator, schema, schema, undefined)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema)).toBeUndefined();
       });
 
       it('should return non-object formData as-is', () => {
         const schema: RJSFSchema = { type: 'string' };
         // String type falls through without object/array branching, source is returned.
-        expect(omitExtraData(testValidator, schema, schema, 'hello' as any)).toEqual('hello');
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'hello' as any)).toEqual('hello');
       });
 
       it('should return formData as-is when schema is null or undefined', () => {
         const formData = { foo: 'bar' };
         // isEmpty(null) and isEmpty(undefined) are both true, so the schema is treated
         // as a pass-through and source is returned unchanged.
-        expect(omitExtraData(testValidator, null as any, undefined, formData)).toEqual({ foo: 'bar' });
-        expect(omitExtraData(testValidator, undefined as any, undefined, formData)).toEqual({ foo: 'bar' });
+        expect(omitExtraData({ validator: testValidator }, null as any, undefined, formData)).toEqual({ foo: 'bar' });
+        expect(omitExtraData({ validator: testValidator }, undefined as any, undefined, formData)).toEqual({
+          foo: 'bar',
+        });
       });
 
       it('should return formData as-is when schema type is non-object but formData is an object', () => {
@@ -383,7 +386,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // where source is returned unchanged — same as removeOptionalEmptyObjects.
         const schema: RJSFSchema = { type: 'string' };
         const formData = { foo: 'bar' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ foo: 'bar' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ foo: 'bar' });
       });
 
       it('strips all formData keys when schema type is object but defines no properties', () => {
@@ -392,7 +395,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // omitExtraData returns {} because there are no schema-defined properties to copy.
         const schema: RJSFSchema = { type: 'object' };
         const formData = { foo: 'bar' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
       });
 
       it('should return formData unchanged when there are no empty optional objects', () => {
@@ -412,7 +415,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           name: 'John',
           address: { street: '123 Main St' },
         };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
     });
 
@@ -435,19 +438,21 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // field1 and field2 are required, so they are preserved by setProperty even though empty.
         // The parent object is not dropped because it still has keys after depth-first filtering.
         const formData = { test: { field1: '', field2: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ test: { field1: '', field2: '' } });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          test: { field1: '', field2: '' },
+        });
       });
 
       it('should keep the optional object when at least one field has a value', () => {
         const formData = { test: { field1: 'hello', field2: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           test: { field1: 'hello', field2: '' },
         });
       });
 
       it('should keep the optional object when both fields have values', () => {
         const formData = { test: { field1: 'hello', field2: 'world' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
     });
 
@@ -467,7 +472,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { test: { field1: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ test: { field1: '' } });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ test: { field1: '' } });
       });
     });
 
@@ -492,12 +497,12 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       it('prunes all optional objects when every nested value is empty', () => {
         // Every value is empty so each optional object is pruned bottom-up, leaving {}.
         const formData = { outer: { inner: { field1: '' } } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
       });
 
       it('should keep outer object if inner object has data', () => {
         const formData = { outer: { inner: { field1: 'hello' } } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
     });
 
@@ -522,7 +527,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // name is required so it is kept as '' even though empty; age is undefined so it is absent.
         // optional_object still has the 'name' key after depth-first filtering, so it is not pruned.
         const formData = { required_field: 'hello', optional_object: { name: '', age: undefined } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           required_field: 'hello',
           optional_object: { name: '' },
         });
@@ -530,7 +535,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       it('should keep everything when optional object has data', () => {
         const formData = { required_field: 'hello', optional_object: { name: 'John', age: 30 } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
     });
 
@@ -551,7 +556,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           obj2: { field: '' },
           obj3: { field: 'also has data' },
         };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           obj1: { field: 'has data' },
           obj3: { field: 'also has data' },
         });
@@ -575,7 +580,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: 'Test', count: 42, optional_obj: { value: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           name: 'Test',
           count: 42,
         });
@@ -599,7 +604,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { typed: null, untyped: null, multiType: null, items: [null, null], extra: null };
 
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
       it('drops a null held by a key the schema does not describe', () => {
         const schema: RJSFSchema = {
@@ -608,7 +613,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           additionalProperties: false,
         };
 
-        expect(omitExtraData(testValidator, schema, schema, { described: null, extra: null })).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { described: null, extra: null })).toEqual({
           described: null,
         });
       });
@@ -629,7 +634,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { obj: { items: [] } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
       });
 
       it('should keep optional objects with non-empty arrays', () => {
@@ -645,7 +650,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { obj: { items: ['a', 'b'] } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(formData);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
 
       it('strips extra keys and prunes optional objects with all-empty values inside array items', () => {
@@ -675,7 +680,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
             { id: '2', optionalObj: { name: 'Test' } },
           ],
         };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           list: [{ id: '1' }, { id: '2', optionalObj: { name: 'Test' } }],
         });
       });
@@ -695,7 +700,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = [{ optionalObj: { name: '' } }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{}]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([{}]);
       });
 
       it('filters tuple items by their per-index schema; additionalItems schema filters extra elements', () => {
@@ -710,7 +715,11 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           additionalItems: { type: 'object', properties: { extra: { type: 'string' } } },
         };
         const formData = [{ val: '' }, { extra: '' }, { unknown: '' }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{ val: '' }, { extra: '' }, {}]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([
+          { val: '' },
+          { extra: '' },
+          {},
+        ]);
       });
 
       it('drops tuple elements beyond the items array when additionalItems is absent', () => {
@@ -722,13 +731,13 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           items: [{ type: 'object', properties: { val: { type: 'string' } } }],
         };
         const formData = [{ val: '' }, { unknown: '' }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{ val: '' }]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([{ val: '' }]);
       });
 
       it('should return array as-is if no changes are made', () => {
         const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
         const formData = ['a', 'b'];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual(['a', 'b']);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(['a', 'b']);
       });
 
       it('keeps schema-defined content of a required object property', () => {
@@ -746,14 +755,14 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           required: ['reqObj'],
         };
         const formData = { reqObj: { foo: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ reqObj: { foo: '' } });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ reqObj: { foo: '' } });
       });
 
       it('returns source unchanged when the array schema has no items definition', () => {
         // No items schema means there is no filtering rule — preserve the source as-is.
         const schema: RJSFSchema = { type: 'array' };
         const formData = [{ foo: 'bar' }];
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual([{ foo: 'bar' }]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual([{ foo: 'bar' }]);
       });
     });
 
@@ -770,7 +779,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { requiredField: 'hello', optionalField: '' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           requiredField: 'hello',
           optionalField: '',
         });
@@ -788,7 +797,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: 'Test', extra: 'data', extraEmptyObj: {} };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ name: 'Test' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ name: 'Test' });
       });
 
       it('prunes optional objects whose schema-filtered content is all empty', () => {
@@ -805,7 +814,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { obj: { field: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
       });
 
       it('keeps empty scalar properties but prunes optional objects with all-empty values', () => {
@@ -823,17 +832,17 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: '', obj: { value: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ name: '' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ name: '' });
       });
 
       it('returns undefined when schema type is object but source is a non-object scalar', () => {
         const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
-        expect(omitExtraData(testValidator, schema, schema, 'not-an-object' as any)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-object' as any)).toBeUndefined();
       });
 
       it('returns undefined when schema type is array but source is a non-array value', () => {
         const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
-        expect(omitExtraData(testValidator, schema, schema, 'not-an-array' as any)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-array' as any)).toBeUndefined();
       });
     });
 
@@ -844,7 +853,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           $ref: '#/definitions/Foo',
         };
         const formData = { bar: 'hello', extra: 'drop' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ bar: 'hello' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ bar: 'hello' });
       });
 
       it('merges allOf schemas and applies the result', () => {
@@ -855,7 +864,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           ],
         };
         const formData = { foo: 'hello', bar: 42, extra: 'drop' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ foo: 'hello', bar: 42 });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          foo: 'hello',
+          bar: 42,
+        });
       });
 
       it('treats every key as optional when a property schema is boolean true (no required list)', () => {
@@ -866,9 +878,9 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           properties: { flexible: true },
         };
         // All values in flexible are optional-and-empty → flexible is pruned.
-        expect(omitExtraData(testValidator, schema, schema, { flexible: { nested: '' } })).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { flexible: { nested: '' } })).toEqual({});
         // A non-empty value keeps flexible.
-        expect(omitExtraData(testValidator, schema, schema, { flexible: { nested: 'hi' } })).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { flexible: { nested: 'hi' } })).toEqual({
           flexible: { nested: 'hi' },
         });
       });
@@ -890,7 +902,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { inner: { name: '' } };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ inner: { name: '' } });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
       it('uses customMergeAllOf when provided', () => {
@@ -903,9 +915,127 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const merged: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'number' } } };
         const customMerge = vi.fn().mockReturnValue(merged);
         const formData = { foo: 'hi', bar: 1, extra: 'drop' };
-        const result = omitExtraData(testValidator, schema, schema, formData, customMerge as any);
+        const result = omitExtraData(
+          { validator: testValidator, customMergeAllOf: customMerge as any },
+          schema,
+          schema,
+          formData,
+        );
         expect(customMerge).toHaveBeenCalled();
         expect(result).toEqual({ foo: 'hi', bar: 1 });
+      });
+
+      it('keeps the properties of an allOf entry that is a $ref, which the form renders', () => {
+        // `shallowAllOfMerge()` hoists an entry's `$ref` onto the merged schema instead of following it, so without
+        // resolving the entries first the referenced schema's properties are taken for extra data and deleted
+        const schema: RJSFSchema = {
+          definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },
+          allOf: [{ $ref: '#/definitions/a' }, { type: 'object', properties: { y: { type: 'string' } } }],
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { x: 'X', y: 'Y', z: 'Z' })).toEqual({
+          x: 'X',
+          y: 'Y',
+        });
+      });
+
+      it('merges each allOf schema once per call, however many array rows reach it', () => {
+        // `omit()` recurses per data node while the `allOf` belongs to the schema, so every row of an array would
+        // otherwise repeat a merge that can only reach the same answer. The merge is the observable part: one call
+        // for the rows together, rather than one a row
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: { audit: { type: 'object', properties: { at: { type: 'string' } } } },
+          properties: {
+            rows: {
+              type: 'array',
+              items: { allOf: [{ $ref: '#/definitions/audit' }, { properties: { n: { type: 'number' } } }] },
+            },
+          },
+        };
+        const data = {
+          rows: [
+            { at: 'a', n: 1, drop: 'x' },
+            { at: 'b', n: 2, drop: 'y' },
+          ],
+        };
+        const customMergeAllOf = vi.fn((aSchema: RJSFSchema) => shallowAllOfMerge(aSchema) as RJSFSchema);
+        expect(omitExtraData({ validator: testValidator, customMergeAllOf }, schema, schema, data)).toEqual({
+          rows: [
+            { at: 'a', n: 1 },
+            { at: 'b', n: 2 },
+          ],
+        });
+        // Both rows share the one merge, whose entries were resolved for it
+        expect(customMergeAllOf).toHaveBeenCalledTimes(1);
+        const [{ allOf: mergedEntries }] = customMergeAllOf.mock.calls[0];
+        const [refEntry, inlineEntry] = (mergedEntries ?? []) as RJSFSchema[];
+        // Resolved rather than hoisted, so the merge sees the referenced properties
+        expect(refEntry).not.toHaveProperty('$ref');
+        expect(refEntry.properties).toEqual({ at: { type: 'string' } });
+        expect(inlineEntry).toEqual({ properties: { n: { type: 'number' } } });
+      });
+
+      it('leaves a boolean allOf entry alone, since only a subschema object can carry references', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'string' } },
+          allOf: [true, { properties: { y: { type: 'string' } } }],
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { x: 'X', y: 'Y', z: 'Z' })).toEqual({
+          x: 'X',
+          y: 'Y',
+        });
+      });
+
+      it('hands customMergeAllOf the same resolved entries the form resolved with, so it agrees with what rendered', () => {
+        // `resolveSchema()` runs each `allOf` entry through `retrieveSchemaInternal()` before the parent is merged, so
+        // a merger that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input,
+        // or it takes the merge-failure fallback and deletes data the user can see and edit
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },
+          properties: { top: { type: 'string' } },
+          allOf: [{ $ref: '#/definitions/a' }, { type: 'object', properties: { y: { type: 'string' } } }],
+        };
+        const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) => {
+          const entries = (allOf ?? []) as RJSFSchema[];
+          if (entries.some((entry) => isObject(entry) && '$ref' in entry)) {
+            throw new Error('cannot merge an unresolved $ref');
+          }
+          const merged: RJSFSchema = { ...rest, properties: { ...(rest.properties ?? {}) } };
+          entries.forEach((entry) => Object.assign(merged.properties!, entry.properties ?? {}));
+          return merged;
+        };
+        const data = { top: 'T', x: 'X', y: 'Y', z: 'Z' };
+        const utils = createSchemaUtils(
+          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
+          schema,
+        );
+        expect(Object.keys(utils.retrieveSchema(schema, data).properties ?? {})).toEqual(['top', 'x', 'y']);
+        expect(utils.omitExtraData(schema, data)).toEqual({ top: 'T', x: 'X', y: 'Y' });
+      });
+
+      it('drops the allOf and warns when customMergeAllOf throws, rather than propagating out of Form', () => {
+        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' } },
+          allOf: [{ properties: { bar: { type: 'number' } } }],
+        };
+        const customMergeAllOf = vi.fn().mockImplementation(() => {
+          throw new Error('omission merge failed');
+        });
+        const formData = { foo: 'hi', extra: 'drop' };
+        const result = omitExtraData(
+          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
+          schema,
+          schema,
+          formData,
+        );
+        expect(customMergeAllOf).toHaveBeenCalled();
+        expect(result).toEqual({ foo: 'hi' });
+        expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
+        consoleWarnSpy.mockRestore();
       });
 
       // Regression test for https://github.com/rjsf-team/react-jsonschema-form/issues/5142
@@ -950,7 +1080,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // isValid calls: (1) second allOf item's if-condition → true (prop1 matches "with required"),
         //                (2) hoisted top-level if-condition → false (prop1 does not match "without required")
         testValidator.setReturnValues({ isValid: [true, false] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ prop1: 'with required', prop2: { subprop1: '123', subprop2: '456' } });
       });
 
@@ -1003,7 +1133,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         //   (2) allOf[2] if-condition (list contains 3) → false
         //   (3) hoisted top-level if-condition (list contains 1) → true
         testValidator.setReturnValues({ isValid: [true, false, true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({
           list: [1, 2],
           '1': { promotionPeriod: 5, threshold: 0.8 },
@@ -1025,7 +1155,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         ];
         // isValid called once to pick the winning oneOf branch (index 0)
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         // extra keys are dropped; array is preserved, not collapsed to []
         expect(result).toEqual([{ a: 'hello' }, { a: 'world' }]);
       });
@@ -1043,7 +1173,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           { x: 2, extra: false },
         ];
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual([{ x: 1 }, { x: 2 }]);
       });
     });
@@ -1055,7 +1185,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           patternProperties: { '^str_': { type: 'string' } },
         };
         const formData = { str_a: 'hello', str_b: 'world', num_c: 42 };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ str_a: 'hello', str_b: 'world' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          str_a: 'hello',
+          str_b: 'world',
+        });
       });
 
       it('delegates rest keys (not matched by pattern) to additionalProperties', () => {
@@ -1065,7 +1198,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           additionalProperties: { type: 'number' },
         };
         const formData = { str_a: 'hello', num_b: 99, num_c: 0 };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
           str_a: 'hello',
           num_b: 99,
           num_c: 0,
@@ -1079,7 +1212,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           patternProperties: { '^name': { type: 'string' } },
         };
         const formData = { name: 'Alice', nameExtra: 'Bob' };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({ name: 'Alice', nameExtra: 'Bob' });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          name: 'Alice',
+          nameExtra: 'Bob',
+        });
       });
     });
 
@@ -1092,7 +1228,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           propertyNames: { pattern: '^[a-z]+$' },
         };
         const formData = { foo: 'bar', baz: 42 };
-        expect(omitExtraData(testValidator, schema, schema, formData)).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
       });
     });
 
@@ -1108,7 +1244,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { type: 'A', aField: 'hello', bField: 'drop', extra: 'drop' };
         // isValid returns true → condition is met → then branch
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toMatchObject({ type: 'A', aField: 'hello' });
         expect(result).not.toHaveProperty('bField');
         expect(result).not.toHaveProperty('extra');
@@ -1125,7 +1261,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { type: 'B', aField: 'drop', bField: 'world', extra: 'drop' };
         // isValid returns false → condition not met → else branch
         testValidator.setReturnValues({ isValid: [false] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toMatchObject({ type: 'B', bField: 'world' });
         expect(result).not.toHaveProperty('aField');
       });
@@ -1139,7 +1275,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { foo: 'a', bar: 'b', extra: 'drop' };
         // boolean condition bypasses isValid; no setReturnValues needed
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toMatchObject({ foo: 'a', bar: 'b' });
       });
 
@@ -1154,7 +1290,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { type: 'B', aField: 'drop' };
         // isValid returns false → condition not met → else (branch) is undefined → target returned unchanged
         testValidator.setReturnValues({ isValid: [false] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ type: 'B' });
       });
 
@@ -1173,7 +1309,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { type: 'A', p_field: 'keep', extra: 'drop' };
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ type: 'A', p_field: 'keep' });
       });
 
@@ -1188,7 +1324,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { extra: 'keep' };
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({});
       });
 
@@ -1204,7 +1340,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { foo: 'hello', extra: 'drop' };
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ foo: 'hello' });
       });
     });
@@ -1217,7 +1353,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
             { type: 'object', properties: { bar: { type: 'string' } } },
           ],
         };
-        expect(omitExtraData(testValidator, schema, schema, undefined)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema)).toBeUndefined();
       });
 
       it('applies all anyOf branches when source is an empty object', () => {
@@ -1226,7 +1362,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           anyOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
           properties: { base: { type: 'string' } },
         };
-        expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, {})).toEqual({});
       });
 
       it('returns source unchanged when anyOf contains a permissive (true) branch and source is empty object', () => {
@@ -1237,7 +1373,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const schema: RJSFSchema = {
           anyOf: [true, { properties: { foo: { type: 'string' } } }],
         };
-        expect(omitExtraData(testValidator, schema, schema, {})).toEqual({});
+        expect(omitExtraData({ validator: testValidator }, schema, schema, {})).toEqual({});
       });
 
       it('delegates to oneOf matching logic when source is non-empty', () => {
@@ -1248,7 +1384,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { foo: 'hello', bar: 'world', extra: 'drop' };
         // isValid: first option matches (true for first candidate)
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toBeDefined();
         // Result should only contain keys from the best-matching anyOf branch
         expect(result).not.toHaveProperty('extra');
@@ -1263,7 +1399,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
           items: { type: 'string' },
         };
-        expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, [] as any)).toEqual([]);
       });
 
       it('reuses an array target already built by anyOf when outer schema is also type:array', () => {
@@ -1276,7 +1412,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           anyOf: [{ type: 'array', items: { type: 'string' } }],
           items: { type: 'string' },
         };
-        expect(omitExtraData(testValidator, schema, schema, [] as any)).toEqual([]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, [] as any)).toEqual([]);
       });
     });
 
@@ -1288,7 +1424,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { name: 'Alice', extra: 'data' };
         // isValid: first candidate (true→{}) matches
         testValidator.setReturnValues({ isValid: [true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toBeDefined();
       });
 
@@ -1299,7 +1435,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { name: 'Alice' };
         // isValid: first candidate (false→{not:{}}) does not match, second matches
         testValidator.setReturnValues({ isValid: [false, true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ name: 'Alice' });
       });
     });
@@ -1316,7 +1452,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: 'Alice', age: 30, extra: 'drop' };
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toMatchObject({ name: 'Alice', age: 30 });
         expect(result).not.toHaveProperty('extra');
       });
@@ -1335,7 +1471,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: 'Alice', age: 30, extra: 'drop' };
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ name: 'Alice', age: 30 });
       });
 
@@ -1349,7 +1485,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { name: 'Alice' };
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ name: 'Alice' });
       });
     });
@@ -1370,7 +1506,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // Scoring uses the resolved+relaxed schema so isValid sees the Strict definition without
         // additionalProperties:false — the first option matches.
         testValidator.setReturnValues({ isValid: [false, true, false, true] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         // The best-matching option is the resolved Strict schema; extra key is dropped.
         expect(result).toEqual({ name: 'Alice' });
       });
@@ -1403,7 +1539,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           ],
         };
         const formData = { list: ['a', 'b'] };
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ list: ['a', 'b'] });
       });
     });
@@ -1480,7 +1616,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // getClosestMatchingOption checks [JUNK, option] for each oneOf entry:
         //   [false (JUNK), true (option0 matches mode=0), false (JUNK), false (option1 rejects mode=0)]
         testValidator.setReturnValues({ isValid: [false, true, false, false] });
-        const result = omitExtraData(testValidator, schema, schema, formData);
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ route: { mode: 0, mux: { p2s: [{ id_format: 0, id: '11' }] } } });
         // The original p2s array must not have grown (the old bug caused it to grow unboundedly).
         expect(formData.route.mux.p2s).toHaveLength(1);

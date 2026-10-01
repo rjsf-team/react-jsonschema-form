@@ -774,14 +774,14 @@ const validator = customizeValidator({ suppressDuplicateFiltering: 'all' });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-For a precompiled validator, pass the value as the fourth argument to `createPrecompiledValidator()`:
+For a precompiled validator, pass the value in the options object `createPrecompiledValidator()` takes after the schema:
 
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
 import yourSchema from 'path_to/yourSchema';
 
-const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, undefined, 'all');
+const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, { suppressDuplicateFiltering: 'all' });
 ```
 
 ### Localization (L10n) support

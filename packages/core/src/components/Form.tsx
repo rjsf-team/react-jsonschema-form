@@ -14,6 +14,7 @@ import type {
   RegistryWidgetsType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   SchemaUtilsType,
   TemplatesType,
   UiSchema,
@@ -412,10 +413,11 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   prev: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> | undefined,
 ): Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> {
   const { schema, validator, defaultFormStateBehavior, customMergeAllOf } = props;
-  if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(validator, schema, defaultFormStateBehavior, customMergeAllOf)) {
+  const schemaContext: SchemaContext<S, F> = { validator, defaultFormStateBehavior, customMergeAllOf };
+  if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
     return prev;
   }
-  const schemaUtils = createSchemaUtils<T, S, F>(validator, schema, defaultFormStateBehavior, customMergeAllOf);
+  const schemaUtils = createSchemaUtils<T, S, F>(schemaContext, schema);
   // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved schema (only
   // the schema's own top-level `dependencies`/`if` get resolved into it), so comparing the retrieved schema to the
   // previous one can't detect it (#5250). `hasNestedConditionalSchema` lets sanitization run anyway when that's
@@ -565,9 +567,25 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
 
+  // The data handed to `customValidate` carries defaults computed here rather than inside the validator, so they honor
+  // the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way to know.
+  // They are the schema's defaults rather than this form's current ones: `initialDefaultsGenerated` is deliberately
+  // left unset, as it was in v6, so `ui:initialValue` is applied again and a field the user has cleared reaches
+  // `customValidate` holding its initial value. Passed as a function so the work happens only if the validator uses
+  // it, and so defaults that come out `undefined` are still an answer rather than looking like no answer at all
+  const getCustomValidateFormData = customValidate
+    ? () => schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T
+    : undefined;
   const schemaValidation = schemaUtils
     .getValidator()
-    .validateFormData(validationFormData, validationSchema, customValidate, transformErrors, uiSchema);
+    .validateFormData(
+      validationFormData,
+      validationSchema,
+      customValidate,
+      transformErrors,
+      uiSchema,
+      getCustomValidateFormData,
+    );
   // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
   // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
   // Read off the same props as `uiSchema`, not the context's registry, which lags the props until the form commits

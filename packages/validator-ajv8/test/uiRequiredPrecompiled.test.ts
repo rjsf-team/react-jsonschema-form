@@ -14,7 +14,7 @@ describe('ui:required with a precompiled validator', () => {
     const schemaValidation = validator.validateFormData(formData, superSchema);
     const merged = validationDataMerge(
       schemaValidation,
-      getUiRequiredErrorSchema(validator, superSchema, uiSchema, formData),
+      getUiRequiredErrorSchema({ validator }, superSchema, uiSchema, formData),
     );
 
     expect(toErrorList(merged.errorSchema).some((e) => e.property === '.price')).toBe(true);
@@ -23,7 +23,7 @@ describe('ui:required with a precompiled validator', () => {
     const okValidation = validator.validateFormData(filled, superSchema);
     const okMerged = validationDataMerge(
       okValidation,
-      getUiRequiredErrorSchema(validator, superSchema, uiSchema, filled),
+      getUiRequiredErrorSchema({ validator }, superSchema, uiSchema, filled),
     );
     expect(toErrorList(okMerged.errorSchema).some((e) => e.property === '.price')).toBe(false);
   });

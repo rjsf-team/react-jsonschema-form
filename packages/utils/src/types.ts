@@ -90,17 +90,18 @@ export interface ArrayMinItems {
    * - `never`: Ignore `minItems` on a field even the field is required.
    */
   populate?: 'all' | 'requiredOnly' | 'never';
-  /** A function that determines whether to skip populating the array with default values based on the provided validator,
-   * schema, and root schema.
+  /** A function that determines whether to skip populating the array with default values based on the provided
+   * `SchemaContext`, schema, and root schema.
    * If the function returns true, the array will not be populated with default values.
    * If the function returns false, the array will be populated with default values according to the `populate` option.
-   * @param validator - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
-   * @param schema - The schema for which resolving a condition is desired
+   * @param context - The `SchemaContext` in effect, to pass along to any schema function the callback calls. Within a
+   *        `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+   * @param schema - The array schema whose defaults are being computed
    * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.
    */
   computeSkipPopulate?: <S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-    validator: ValidatorType<S, F>,
+    context: SchemaContext<S, F>,
     schema: S,
     rootSchema?: S,
   ) => boolean;
@@ -177,6 +178,47 @@ export interface DefaultFormStateBehavior {
  * @returns The merged schema
  */
 export type CustomMergeAllOf<S extends StrictRJSFSchema = RJSFSchema> = (schema: S) => S;
+
+/** The settings every `@rjsf/utils` schema function resolves schemas with. They generally do not change across a
+ * `Form`, so the schema functions take them as one object and pass that object along to every schema function they
+ * call, which keeps a `customMergeAllOf` or `defaultFormStateBehavior` from being dropped partway down a call chain.
+ */
+export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType> {
+  /** An implementation of the `ValidatorType` interface used to validate data against schemas */
+  readonly validator: ValidatorType<S, F>;
+  /** Optional function that allows for custom merging of `allOf` schemas */
+  readonly customMergeAllOf?: CustomMergeAllOf<S>;
+  /** Optional configuration object, if provided, allows users to override default form state behavior */
+  readonly defaultFormStateBehavior?: DefaultFormStateBehavior;
+}
+
+/** The props for the `getDefaultFormState()` schema function */
+export interface GetDefaultFormStateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
+  /** The schema for which the default state is desired */
+  schema: S;
+  /** The current formData, if any, onto which to provide any missing defaults */
+  formData?: T;
+  /** The root schema, used to primarily to look up `$ref`s */
+  rootSchema?: S;
+  /** Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause
+   * undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested
+   * object properties. Defaults to false.
+   */
+  includeUndefinedValues?: boolean | 'excludeObjectChildren';
+  /** Optional flag, indicates whether or not initial defaults have been generated */
+  initialDefaultsGenerated?: boolean;
+  /** Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults */
+  uiSchema?: UiSchema<T, S, F>;
+  /** Optional `ui:definitions`, applied at every `$ref`-resolved node the same way `SchemaField` applies them.
+   * Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is itself a sub-uiSchema (an array
+   * item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that doesn't carry the root's own `ui:definitions`.
+   */
+  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+}
 
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
@@ -1680,6 +1722,13 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+   *        already applied. `Form` supplies it so those defaults honor the `customMergeAllOf` and
+   *        `defaultFormStateBehavior` it was given, which a validator has no way to know. It is a function rather than
+   *        the data so that `undefined` is a value it can return rather than a way of saying it was not supplied, and
+   *        so an implementation that computes the defaults itself never makes the caller compute them too. Left out,
+   *        the validator computes them with whatever it knows of the form's settings, which for most implementations is
+   *        nothing: the default `allOf` merge and no `defaultFormStateBehavior`
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
@@ -1687,6 +1736,7 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T>;
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
@@ -1720,9 +1770,9 @@ export interface FoundFieldType<S extends StrictRJSFSchema = RJSFSchema> {
 }
 
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`
- * directory such that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both
- * the `validator` and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified
- * set of APIs to the `@rjsf/core` components and the various themes as well.
+ * directory such that one does not have to explicitly pass the `SchemaContext` or `rootSchema` to each method. Since
+ * both generally do not change across a `Form`, this allows for providing a simplified set of APIs to the `@rjsf/core`
+ * components and the various themes as well.
  */
 export interface SchemaUtilsType<
   T = unknown,
@@ -1739,22 +1789,15 @@ export interface SchemaUtilsType<
    * @returns - The `ValidatorType`
    */
   getValidator(): ValidatorType<S, F>;
-  /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
-   * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
-   * of a new `SchemaUtilsType` with incomplete properties.
+  /** Determines whether either the `context` or `rootSchema` differ from the ones associated with this instance of the
+   * `SchemaUtilsType`. If either `context.validator` or `rootSchema` are falsy, then return false to prevent the
+   * creation of a new `SchemaUtilsType` with incomplete properties.
    *
-   * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
+   * @param context - The `SchemaContext` that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
-   * @param [customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
-   * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
+   * @returns - True if the `SchemaUtilsType` differs from the given `context` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(
-    validator: ValidatorType<S, F>,
-    rootSchema: S,
-    defaultFormStateBehavior?: DefaultFormStateBehavior,
-    customMergeAllOf?: CustomMergeAllOf<S>,
-  ): boolean;
+  doesSchemaUtilsDiffer(context: SchemaContext<S, F>, rootSchema: S): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return.

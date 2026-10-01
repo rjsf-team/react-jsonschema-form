@@ -30,7 +30,7 @@ describe('SchemaField', () => {
           a: { type: 'string' },
         },
       };
-      const schemaUtils = createSchemaUtils(validator, schema);
+      const schemaUtils = createSchemaUtils({ validator }, schema);
 
       createFormComponent({
         schema,
@@ -70,7 +70,7 @@ describe('SchemaField', () => {
           a: { type: 'string' },
         },
       };
-      const schemaUtils = createSchemaUtils(validator, schema);
+      const schemaUtils = createSchemaUtils({ validator }, schema);
 
       createFormComponent({
         schema,

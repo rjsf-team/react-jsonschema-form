@@ -127,6 +127,9 @@ export default class ATAValidator<
   /** Runs raw validation against the given schema. Equivalent to
    * `AJV8Validator#rawValidation`: returns ata's error array (already in
    * AJV-compatible shape) plus any compilation error encountered.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
    */
   rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined;
@@ -158,6 +161,14 @@ export default class ATAValidator<
   /** Validates `formData` and returns RJSF's `ValidationData<T>`. See
    * `processRawValidationErrors` for the shape of the post-processing
    * pipeline (custom validation, transform hook, ui-title resolution).
+   *
+   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [customValidate] - An optional function that is used to perform custom validation
+   * @param [transformErrors] - An optional function that is used to transform errors after ata validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
@@ -165,10 +176,11 @@ export default class ATAValidator<
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -176,6 +188,7 @@ export default class ATAValidator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 

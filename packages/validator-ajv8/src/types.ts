@@ -1,3 +1,4 @@
+import type { CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
@@ -26,6 +27,19 @@ export interface CustomValidatorOptionsType {
    * - `'oneOf'`: disables filtering for `oneOf` errors only (anyOf duplicates are still filtered)
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+}
+
+/** The options a precompiled validator is constructed with, all optional */
+export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** If provided, is used to localize a list of Ajv `ErrorObject`s */
+  localizer?: Localizer;
+  /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors` */
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The form's `customMergeAllOf`, used when resolving this validator's own root schema to check the schema it is
+   * handed against it. Without it that resolution uses the default `allOf` merge, so a form with a `customMergeAllOf`
+   * and an `allOf` in its root schema is rejected with "the schema ... differs from the rootSchema"
+   */
+  customMergeAllOf?: CustomMergeAllOf<S>;
 }
 
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them

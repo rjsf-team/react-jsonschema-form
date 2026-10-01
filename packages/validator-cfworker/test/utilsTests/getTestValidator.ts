@@ -1,4 +1,4 @@
-import type { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, RJSFSchema, UiSchema, ValidationData } from '@rjsf/utils';
 
 import type { TestValidatorType } from '../../../utils/test/schema/index.ts';
 import type { CustomValidatorOptionsType } from '../../src/index.ts';
@@ -12,8 +12,17 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
       transformErrors?: ErrorTransformer<T>,
+      uiSchema?: UiSchema<T>,
+      getCustomValidateFormData?: () => T,
     ): ValidationData<T> {
-      return validator.validateFormData(formData, schema, customValidate, transformErrors);
+      return validator.validateFormData(
+        formData,
+        schema,
+        customValidate,
+        transformErrors,
+        uiSchema,
+        getCustomValidateFormData,
+      );
     },
     isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);

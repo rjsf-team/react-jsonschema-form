@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -181,7 +181,7 @@ export function transformRJSFValidationErrors<
 
 /** Processes raw validation errors and applies optional error transforms and custom validation.
  *
- * @param validator - The validator used to derive default form state for custom validation
+ * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
  * @param rawErrors - The raw cfworker errors and any engine exception
  * @param formData - The form data being validated
  * @param schema - The schema against which the form data is validated
@@ -189,6 +189,9 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - A function that transforms errors before custom validation
  * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+ *        already applied. `Form` supplies it so those defaults honor its `customMergeAllOf` and
+ *        `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
  * @returns - The processed validation errors and error schema
  */
 export default function processRawValidationErrors<
@@ -196,7 +199,7 @@ export default function processRawValidationErrors<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,
@@ -204,6 +207,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -224,17 +228,16 @@ export default function processRawValidationErrors<
 
   // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
   // and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(
-    validator,
-    schema,
-    formData,
-    schema,
-    true,
-    undefined,
-    undefined,
-    undefined,
-    uiSchema,
-  ) as T;
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
   return validationDataMerge<T>({ errors, errorSchema }, userErrorSchema);

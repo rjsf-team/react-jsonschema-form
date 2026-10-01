@@ -88,14 +88,17 @@ The signature and documentation for this property is as follow:
 
 ##### computeSkipPopulate &lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
+A function that determines whether to skip populating the array with default values based on the provided `SchemaContext`, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
 If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
+Replacing the callback alone does not take effect: the form compares a new `defaultFormStateBehavior` against the one it holds, and that comparison treats any two functions as equal, so a form keeps calling the callback it was first given until some other setting, the `validator` or the `schema` changes.
+Define the behavior the callback needs from its `schema` and `rootSchema` arguments rather than from values captured when it was created, since a callback closing over changing state goes stale.
+
 ###### Parameters
 
-- validator: ValidatorType&lt;S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
-- schema: S - The schema for which resolving a condition is desired
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
 ###### Returns
@@ -125,11 +128,11 @@ const schema: RJSFSchema = {
   required: ['stringArray', 'numberArray'],
 };
 
-const computeSkipPopulateNumberArrays = (validator, schema, rootSchema) =>
+const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   // These conditions are needed to narrow down the type of the schema.items
   !Array.isArray(schema?.items) &&
   typeof schema?.items !== 'boolean' &&
-  schema?.items?.type === 'number',
+  schema?.items?.type === 'number';
 
 render(
   <Form
@@ -479,7 +482,7 @@ Only `undefined` means "not passed". `null`, `false`, `0` and `''` are values, s
 
 Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick are applied one after another, each to the value you stored for the previous one, so a value you transform or decline stays that way. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
 
-The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils(validator, schema).getDefaultFormState(schema, record)`, passing the same `defaultFormStateBehavior` you pass to the form.
+The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils({ validator, customMergeAllOf, defaultFormStateBehavior }, schema).getDefaultFormState(schema, record)`, passing the same `customMergeAllOf` and `defaultFormStateBehavior` you pass to the form: computing defaults merges `allOf`s, so a context missing either setting seeds data the form itself would not produce.
 
 `reset()` on such a form clears its local errors only; the data is yours to reset by passing a new `formData`. For an editable form that should own its data, use [`initialFormData`](#initialformdata) instead.
 
