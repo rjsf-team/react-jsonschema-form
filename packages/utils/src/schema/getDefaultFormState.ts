@@ -743,10 +743,10 @@ export function getArrayDefaults<
     uiSchema,
     uiSchemaDefinitions,
   }: ComputeDefaultsProps<T, S, F> = {},
-  initialDefaults?: T | T[] | null,
+  initialDefaults?: T[],
 ): T[] | undefined {
   const { defaultFormStateBehavior } = context;
-  let defaults: T[] | undefined = Array.isArray(initialDefaults) ? initialDefaults : undefined;
+  let defaults = initialDefaults;
   const schema: S = rawSchema;
 
   const arrayMinItemsStateBehavior = defaultFormStateBehavior?.arrayMinItems ?? {};
@@ -761,7 +761,7 @@ export function getArrayDefaults<
   const emptyDefault: T[] | undefined = isSkipEmptyDefaults ? undefined : [];
 
   // Inject defaults into existing array defaults
-  if (defaults) {
+  if (Array.isArray(defaults)) {
     defaults = defaults.map((item, idx) => {
       const schemaItem: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Fallback, idx);
       const itemFormData = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
@@ -806,7 +806,7 @@ export function getArrayDefaults<
     }
   }
 
-  const defaultsLength = defaults?.length ?? 0;
+  const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
 
   if (neverPopulate) {
     if (shouldMergeDefaultsIntoFormData && !required) {
@@ -833,7 +833,7 @@ export function getArrayDefaults<
     // we don't want undefined defaults unless it is both not required or not required as root
     arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
-    const defaultEntries: T[] = defaults ?? [];
+    const defaultEntries: T[] = Array.isArray(defaults) ? defaults : [];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
     const fillerDefault = fillerSchema.default;
 
@@ -895,7 +895,7 @@ export function getDefaultBasedOnSchemaType<
       return getObjectDefaults(context, rawSchema, computeDefaultsProps, defaults);
     }
     case 'array': {
-      return getArrayDefaults(context, rawSchema, computeDefaultsProps, defaults);
+      return getArrayDefaults(context, rawSchema, computeDefaultsProps, defaults as T[]);
     }
     case 'boolean': {
       // A required boolean with no explicit default gets false — it must be
