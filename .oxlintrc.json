@@ -528,7 +528,7 @@
     "typescript/method-signature-style": "off", // Consider setting this to ["error", "property"],
     "typescript/no-confusing-non-null-assertion": "error",
     "typescript/no-array-delete": "error",
-    "typescript/no-base-to-string": "off", // TODO: off until its violations are fixed in a follow-up PR
+    "typescript/no-base-to-string": "error",
     "typescript/no-confusing-void-expression": ["error", { "ignoreArrowShorthand": true }],
     "typescript/no-deprecated": "error",
     "typescript/no-duplicate-enum-values": "error",
@@ -601,7 +601,7 @@
     "typescript/related-getter-setter-pairs": "error",
     "typescript/require-array-sort-compare": "off",
     "typescript/restrict-plus-operands": "error",
-    "typescript/restrict-template-expressions": "off", // TODO: off until its violations are fixed in a follow-up PR
+    "typescript/restrict-template-expressions": "error",
     "typescript/return-await": ["error", "in-try-catch"],
     "typescript/triple-slash-reference": "error",
     "typescript/unbound-method": "error",

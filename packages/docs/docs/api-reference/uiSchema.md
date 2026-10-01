@@ -589,6 +589,8 @@ const uiSchema: UiSchema = {
 
 Allows a user to provide labels for enum values in the schema. Can be an array (matched by index) or a map (matched by value).
 
+A map's keys are strings, so it names a string, number, boolean or `null` value by its `String()` form, and can't name an object or array value; use the array form for those. An object or array value without a name is labelled with its JSON.
+
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 

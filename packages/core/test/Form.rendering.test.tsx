@@ -2099,7 +2099,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           {children}
           {errors}
           {help}
-          <span className='raw-help'>{`${rawHelp} rendered from the raw format`}</span>
+          <span className='raw-help'>
+            {typeof rawHelp === 'string' ? `${rawHelp} rendered from the raw format` : rawHelp}
+          </span>
           <span className='raw-description'>{`${rawDescription} rendered from the raw format`}</span>
           {rawErrors ? (
             <ul>

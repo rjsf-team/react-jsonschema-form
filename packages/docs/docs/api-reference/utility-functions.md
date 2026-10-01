@@ -446,8 +446,11 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 
 ### enumOptionValueLabel()
 
-Returns the label for an enum option with no title of its own: its value, with an object or array spelled out as JSON,
-since `String()` would label every one of them `[object Object]`
+Returns the label for an enum option with no title of its own: its value, with a plain object or array spelled out as
+JSON, since `String()` would label every one of them `[object Object]`. Any other value, such as a `Date` or a `Map`,
+and any value nested in the JSON that JSON has no form for, such as a `BigInt` or a `RegExp`, is spelled the way
+`String()` spells it, as RJSF's warnings spell it. A circular plain object or array falls back to `String()`, and a
+value `String()` throws for is spelled as its type
 
 #### Parameters
 

@@ -1,3 +1,4 @@
+import { isValidElement } from 'react';
 import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { errorId } from '@rjsf/utils';
 
@@ -18,8 +19,10 @@ export default function FieldErrorTemplate<
 
   return (
     <div id={id}>
-      {errors.map((error) => (
-        <div key={`field-${id}-error-${error}`}>{error}</div>
+      {errors.map((error, index) => (
+        <div key={`field-${id}-error-${isValidElement(error) && error.key !== null ? `k-${error.key}` : `i-${index}`}`}>
+          {error}
+        </div>
       ))}
     </div>
   );

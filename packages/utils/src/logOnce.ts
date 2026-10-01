@@ -1,3 +1,5 @@
+import toDisplayString from './toDisplayString.ts';
+
 /** The console methods `logOnce()` can log through */
 export type LogOnceLevel = 'warn' | 'error';
 
@@ -8,10 +10,10 @@ export type LogOnceLevel = 'warn' | 'error';
  * the number is larger than the mistakes a form could plausibly contain — the warnings are raised per field, not per
  * mistake, so an array of a thousand rows whose item schema is misconfigured twice is two thousand distinct messages.
  * What is bounded is the number of remembered messages, at twice this; how much memory they take follows what callers
- * pass, since a remembered message holds the `message` and the `String()` of the `error`, both of which can carry
- * arbitrary text. Two full generations of the warnings raised inside this library, which run a few hundred bytes each,
- * stay under a megabyte. The cap is a ceiling rather than an allocation, so a form warning about a handful of fields
- * holds a handful of strings.
+ * pass, since a remembered message holds the `message` and the string form of the `error`, both of which can carry
+ * arbitrary text, and a plain-object or array `error` is held as its whole JSON. Two full generations of the warnings
+ * raised inside this library, which run a few hundred bytes each, stay under a megabyte. The cap is a ceiling rather
+ * than an allocation, so a form warning about a handful of fields holds a handful of strings.
  */
 export const LOG_ONCE_MAX_MESSAGES = 2000;
 
@@ -29,28 +31,23 @@ let previousMessages = new Set<string>();
 
 /** Logs `message` (followed by `error`, when there is one) through `console.warn()` or `console.error()`, but only the
  * first time that combination of `level`, `message` and `error` is seen, so that a warning raised while rendering isn't
- * repeated on every re-render. The `error` is compared by its `String()` form, falling back to its type when that can't
- * be converted, so two distinct values with the same string (two plain objects, say, which are both `[object Object]`)
- * are treated as one message. A message that has to be told apart from another must say so itself, as the field
- * warnings do by naming the field; one that identifies nothing, or only something as generic as a `dependencies` key,
- * is reported for whichever schema reaches it first and stays silent for the rest until the page is reloaded.
+ * repeated on every re-render. The `error` is compared by its type and its `toDisplayString()` form, so two distinct
+ * values of the same type and form (two `Error`s of the same class and message, say) are treated as one message. A
+ * message that has to be told apart from another must say so itself, as the field warnings do by naming the field; one
+ * that identifies nothing, or only something as generic as a `dependencies` key, is reported for whichever schema
+ * reaches it first and stays silent for the rest until the page is reloaded.
  *
  * @param message - The message to log
  * @param [level='warn'] - Which console method to log through
  * @param [error] - The error, or any other value, to pass to the console method after the `message`
  */
 export default function logOnce(message: string, level: LogOnceLevel = 'warn', error?: unknown) {
-  let key: string;
-  try {
-    // The control characters keep these three cases apart: no error at all, an error that converted (so `logOnce(m)`
-    // and `logOnce(m, 'warn', '')` are two messages), and one that didn't
-    key = error === undefined ? `${level}\u0000${message}` : `${level}\u0000${message}\u0000\u0002${String(error)}`;
-  } catch {
-    // Logging must never throw: `error` came out of a `catch`, so converting it can throw whatever a user's code threw.
-    // `typeof` can't throw, and still keeps the message from being logged on every render, at the cost of not telling
-    // two unconvertible errors apart.
-    key = `${level}\u0000${message}\u0000\u0001${typeof error}`;
-  }
+  // The trailing separator keeps `logOnce(m)` and `logOnce(m, 'warn', '')` two messages, and the type keeps an error
+  // that `toDisplayString()` could only spell as its type apart from a string error of that text
+  const key =
+    error === undefined
+      ? `${level}\u0000${message}`
+      : `${level}\u0000${message}\u0000${typeof error}\u0000${toDisplayString(error)}`;
   // A message found in `previousMessages` is deliberately left there rather than promoted into `currentMessages`, so
   // one seen on every render is logged a second time once two rotations have displaced it. Promoting it would hold it
   // forever, at the cost of a slot in the current generation too, which is what caps how large a working set stays

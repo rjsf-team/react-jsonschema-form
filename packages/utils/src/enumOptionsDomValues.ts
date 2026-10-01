@@ -1,13 +1,21 @@
 import { ENUM_OPTION_INDEX_PREFIX } from './constants.ts';
 import type { EnumOptionsType, OptionValueFormat, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
-/** Whether `value` is encoded as its prefixed index whatever the other options are */
-function alwaysEncodesAsIndex(value: unknown): boolean {
-  return (
-    typeof value === 'object' ||
-    value === '' ||
-    (typeof value === 'string' && value.startsWith(ENUM_OPTION_INDEX_PREFIX))
-  );
+/** The `String()` of a primitive or function `value` that may be encoded as itself, or `undefined` for any value that
+ * must be encoded as its prefixed index
+ */
+function plainEncoding(value: unknown): string | undefined {
+  if (
+    (typeof value === 'string' && value !== '' && !value.startsWith(ENUM_OPTION_INDEX_PREFIX)) ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'bigint' ||
+    typeof value === 'symbol' ||
+    typeof value === 'function'
+  ) {
+    return String(value);
+  }
+  return undefined;
 }
 
 /** The DOM value of an option that is encoded as its prefixed index, whose position in `enumOptions` is `index` */
@@ -28,24 +36,17 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
   const seen = new Set<string>();
   const shared = new Set<string>();
   for (const { value } of Array.isArray(enumOptions) ? enumOptions : []) {
-    // `undefined` is encoded as the empty string, so it shares nothing with a `'undefined'` option
-    if (value !== undefined && !alwaysEncodesAsIndex(value)) {
-      const encoded = String(value);
-      if (seen.has(encoded)) {
-        shared.add(encoded);
-      } else {
-        seen.add(encoded);
-      }
+    const encoded = plainEncoding(value);
+    if (encoded !== undefined) {
+      (seen.has(encoded) ? shared : seen).add(encoded);
     }
   }
   return (value) => {
     if (value === undefined) {
       return '';
     }
-    if (alwaysEncodesAsIndex(value) || shared.has(String(value))) {
-      return undefined;
-    }
-    return String(value);
+    const encoded = plainEncoding(value);
+    return encoded === undefined || shared.has(encoded) ? undefined : encoded;
   };
 }
 
@@ -57,10 +58,10 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * When `format` is `'realValue'`, primitive values are converted via `String()`.
  * Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX`, since
- * `String()` would produce `"[object Object]"`. So do `null`, since `String()` would make it indistinguishable
- * from the string `'null'`, and the empty string, which is the value of a select's empty placeholder. The prefix keeps
- * that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts
- * with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
+ * `String()` would produce `"[object Object]"`. `null` does too, since `String()` would make it indistinguishable from
+ * the string `'null'`, and so does the empty string, which is the value of a select's empty placeholder. The prefix
+ * keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself
+ * starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
  * Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index, so every option keeps a
  * DOM value of its own. That includes options with the very same value, such as two `'US'` constants titled `USA` and
  * `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or

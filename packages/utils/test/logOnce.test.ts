@@ -46,8 +46,20 @@ describe('logOnce()', () => {
     logOnce('a message:', 'warn', new Error('second'));
     expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
   });
+  it('logs the same message separately for distinct plain-object and non-Error payloads', () => {
+    logOnce('a message:', 'warn', { a: 1 });
+    logOnce('a message:', 'warn', { a: 2 });
+    logOnce('a message:', 'warn', { a: 2 });
+    logOnce('a message:', 'warn', /first/);
+    logOnce('a message:', 'warn', /second/);
+    logOnce('a message:', 'warn', { cause: new Error('first') });
+    logOnce('a message:', 'warn', { cause: new Error('second') });
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(6);
+  });
   it('remembers a message, without throwing, when the error cannot be converted for comparison', () => {
-    const nullPrototype = Object.assign(Object.create(null), { a: 1 });
+    const nullPrototype: Record<string, unknown> = {};
+    Object.setPrototypeOf(nullPrototype, null);
+    nullPrototype.self = nullPrototype;
     const unprintableError = new Error('boom');
     unprintableError.toString = () => {
       throw new Error('no string for you');
@@ -63,6 +75,17 @@ describe('logOnce()', () => {
     expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
     expect(consoleErrorSpy).toHaveBeenCalledWith('a message:', nullPrototype);
     expect(consoleErrorSpy).toHaveBeenCalledWith('another message:', unprintableError);
+  });
+  it('tells an error that converts to the same text apart from a string error, by its type', () => {
+    const unprintableError = new Error('boom');
+    unprintableError.toString = () => {
+      throw new Error('no string for you');
+    };
+    logOnce('a message:', 'error', unprintableError);
+    logOnce('a message:', 'error', 'object');
+    logOnce('a message:', 'error', 10);
+    logOnce('a message:', 'error', '10');
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(4);
   });
   it('tells an absent error apart from one that converts to an empty string', () => {
     logOnce('a message');

@@ -33,6 +33,14 @@ describe('enumOptionsDomValues', () => {
         `${ENUM_OPTION_INDEX_PREFIX}1`,
       ]);
     });
+    it('converts BigInt, symbol and function values via String()', () => {
+      expect(
+        enumOptionsDomValues(
+          toOptions(10n, Symbol('s'), () => 1),
+          'realValue',
+        ),
+      ).toEqual(['10', 'Symbol(s)', '() => 1']);
+    });
     it('returns the empty string for undefined', () => {
       expect(enumOptionsDomValues(toOptions(undefined), 'realValue')).toEqual(['']);
     });

@@ -1,7 +1,10 @@
 import type { ArrayFieldTemplateProps, ArrayFieldItemTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import IconButton from '../src/components/templates/ButtonTemplates/IconButton.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -319,5 +322,20 @@ describe('ArrayFieldTemplate', () => {
       data = node.querySelectorAll('.test-data');
       expect(data).toHaveLength(formData.length + 1);
     });
+  });
+});
+
+describe('IconButton', () => {
+  const registry = getTestRegistry({});
+
+  it('renders a string icon as a glyphicon', () => {
+    const { container } = render(<IconButton icon='plus' registry={registry} />);
+    expect(container.querySelector('button > i')).toHaveClass('glyphicon', 'glyphicon-plus');
+  });
+
+  it('renders a React element icon as-is', () => {
+    const { container } = render(<IconButton icon={<svg data-testid='custom-icon' />} registry={registry} />);
+    expect(container.querySelector('button > svg[data-testid="custom-icon"]')).toBeInTheDocument();
+    expect(container.querySelector('i')).not.toBeInTheDocument();
   });
 });
