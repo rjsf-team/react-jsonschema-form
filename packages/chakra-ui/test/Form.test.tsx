@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -7,6 +8,10 @@ import { generateTemplates, generateTheme, generateWidgets } from '../src/index.
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
+
+function BareFieldTemplate({ children }: { children?: ReactNode }) {
+  return <div>{children}</div>;
+}
 
 formTests(WrappedForm);
 themeTests({ generateTemplates, generateTheme, generateWidgets });
@@ -28,7 +33,6 @@ describe('chakra-ui AltDateWidget', () => {
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
 
-  // A disabled field renders inside a disabled `<fieldset>`, which already blocks the click before it reaches the hook
   test.each(['Now', 'Clear'])('a readonly alt-date ignores its %s button', async (button) => {
     const onChange = vi.fn();
     render(
@@ -44,4 +48,26 @@ describe('chakra-ui AltDateWidget', () => {
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  // The stock `FieldTemplate` renders a disabled field inside a disabled `<fieldset>`, which blocks the click before it
+  // reaches the hook, so only a template without one shows the widget honoring `disabled` itself
+  test.each(['Now', 'Clear'])(
+    'a disabled alt-date under a custom FieldTemplate ignores its %s button',
+    async (button) => {
+      const onChange = vi.fn();
+      render(
+        <WrappedForm
+          schema={{ type: 'string', format: 'date' }}
+          uiSchema={{ 'ui:widget': 'alt-date', 'ui:disabled': true }}
+          formData='2020-01-02'
+          templates={{ FieldTemplate: BareFieldTemplate }}
+          validator={validator}
+          onChange={onChange}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: button }));
+      expect(onChange).not.toHaveBeenCalled();
+    },
+  );
 });
