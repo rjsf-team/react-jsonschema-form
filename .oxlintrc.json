@@ -15,7 +15,8 @@
   },
   "ignorePatterns": [
     "**/node_modules/**",
-    "**/lib/**",
+    // Only the build output: packages/shadcn/src/lib is source
+    "packages/*/lib/**",
     "**/lib-test/**",
     "**/dist/**",
     "**/coverage/**",
