@@ -1,11 +1,11 @@
 import type { FocusEvent } from 'react';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import type {
-  ErrorSchema,
+  ErrorSchemaChange,
+  FieldChange,
   FieldPath,
   FieldProps,
   FormContextType,
-  GenericObjectType,
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -32,6 +32,7 @@ import {
   ONE_OF_KEY,
   REF_KEY,
   isObject,
+  mapFieldChange,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -84,6 +85,67 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
 ) {
   return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
+}
+
+/** An additional property's row. Its `id` is the property's React key, kept through renames so the row, and the
+ * focus in its key input, survives them (#5010). The rows' order is the order the properties render in, which the
+ * data itself can't hold for integer-like names (#5156).
+ */
+interface AdditionalPropertyRow {
+  id: string;
+  name: string;
+}
+
+/** Returns `preferredKey`, or the first `preferredKey{separator}{n}` that `isTaken` doesn't report as taken
+ *
+ * @param preferredKey - The preferred name of the key
+ * @param isTaken - Whether a key is already in use
+ * @param separator - The separator between the name and the index of a de-duplicated key
+ * @returns - The first key that isn't taken
+ */
+function firstAvailableKey(preferredKey: string, isTaken: (key: string) => boolean, separator: string) {
+  let index = 0;
+  let key = preferredKey;
+  while (isTaken(key)) {
+    index += 1;
+    key = `${preferredKey}${separator}${index}`;
+  }
+  return key;
+}
+
+/** Suffixes a row id with a character property names don't use in practice, so the id stays clear of names */
+const ROW_ID_SEPARATOR = '\u0000';
+
+/** Matches the rows to the additional properties the data holds, returning `rows` itself when they already match. The
+ * data is what names a property: a rename only proposes a name, which the form may de-duplicate against keys the
+ * rows never saw or a controlled parent may decline. So when exactly one row lost its name and exactly one new name
+ * arrived, which is how any single rename lands, that row takes the new name and keeps its place and React key.
+ * Otherwise rows whose name left the data are dropped and each new name gets a row of its own at the end, with its
+ * name as its id unless another row holds that id.
+ *
+ * @param rows - The rows from the previous render
+ * @param names - The additional properties the data holds, in the data's order
+ * @returns - The rows, one per name in `names`
+ */
+function reconcileAdditionalRows(rows: AdditionalPropertyRow[], names: string[]): AdditionalPropertyRow[] {
+  const nameSet = new Set(names);
+  const rowNames = new Set(rows.map((row) => row.name));
+  const orphans = rows.filter((row) => !nameSet.has(row.name));
+  const arrivals = names.filter((name) => !rowNames.has(name));
+  if (orphans.length === 0 && arrivals.length === 0) {
+    return rows;
+  }
+  if (orphans.length === 1 && arrivals.length === 1) {
+    return rows.map((row) => (row === orphans[0] ? { ...row, name: arrivals[0] } : row));
+  }
+  const kept = rows.filter((row) => nameSet.has(row.name));
+  const ids = new Set(kept.map((row) => row.id));
+  for (const name of arrivals) {
+    const id = firstAvailableKey(name, (candidate) => ids.has(candidate), ROW_ID_SEPARATOR);
+    ids.add(id);
+    kept.push({ id, name });
+  }
+  return kept;
 }
 
 /** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. Without an
@@ -161,18 +223,23 @@ function ObjectFieldPropertyFn<
    * descendant of this property, is forwarded to `onChange()` untouched.
    */
   const onPropertyChange = useCallback(
-    (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (value: FieldChange<T | undefined>, path: FieldPath, newErrorSchema?: ErrorSchemaChange<T>, id?: string) => {
       // An `additionalProperties` value lives at this property's own path, so clearing its widget to `undefined`
       // would drop the key from the formData and take the key input with it. Coerce that one case to the empty
-      // string.
+      // string, for an updater's result as well as for a value.
       // A descendant's path is this property's path plus at least one segment, so comparing to this
       // property's own path (rather than merely its length) tells apart "this property changed" from "a
       // descendant changed"; a cleared descendant must stay `undefined` so it is omitted from the formData
       // exactly like a cleared property declared in `properties` (#5222).
-      let normalizedValue = value;
-      if (value === undefined && addedByAdditionalProperties && path === innerFieldPath) {
-        normalizedValue = '' as unknown as T;
-      }
+      const normalizedValue =
+        addedByAdditionalProperties && path === innerFieldPath
+          ? mapFieldChange(value, (next) => {
+              if (next === undefined) {
+                return '' as unknown as T;
+              }
+              return next;
+            })
+          : value;
       onChange(normalizedValue, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties, innerFieldPath],
@@ -270,17 +337,20 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  const formDataRef = useRef(formData);
-  formDataRef.current = formData;
   const schema: S = useMemo(
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),
     [schemaUtils, rawSchema, formData],
   );
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
-  const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
   const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
-  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
+  const [storedRows, setStoredRows] = useState<AdditionalPropertyRow[]>(() =>
+    schemaAdditionalProperties.map((property) => ({ id: property, name: property })),
+  );
+  const additionalRows = reconcileAdditionalRows(storedRows, schemaAdditionalProperties);
+  if (additionalRows !== storedRows) {
+    setStoredRows(additionalRows);
+  }
   const definedPropertyOrder = useMemo(() => {
     const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
@@ -336,50 +406,45 @@ export default function ObjectField<
   const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
   let orderedProperties: string[] = [];
+  const separator = uiOptions.duplicateKeySuffixSeparator ?? '-';
 
   /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one
    * that is already not assigned is found.
    *
    * @param preferredKey - The preferred name of a new key
-   * @param [formData] - The form data in which to check if the desired key already exists
+   * @param [existingFormData] - The form data in which to check if the desired key already exists
    * @returns - The name of the next available key from `preferredKey`
    */
   const getAvailableKey = useCallback(
-    (preferredKey: string, existingFormData?: T) => {
-      const { duplicateKeySuffixSeparator = '-' } = uiOptions;
-
-      let index = 0;
-      let newKey = preferredKey;
-      while (hasByPath(existingFormData, newKey)) {
-        index += 1;
-        newKey = `${preferredKey}${duplicateKeySuffixSeparator}${index}`;
-      }
-      return newKey;
-    },
-    [uiOptions],
+    (preferredKey: string, existingFormData?: T) =>
+      firstAvailableKey(preferredKey, (key) => hasByPath(existingFormData, key), separator),
+    [separator],
   );
 
-  /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
-   * default data for that field has been added to the formData.
+  /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback with an
+   * updater that adds the new property's default data to the data the form holds, so an add made in the same tick as a
+   * rename or another add applies to the data that one produced.
    */
   const onAddProperty = useCallback(() => {
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const newFormData = { ...formData } as T;
-    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
-    // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
-    // with none left means a custom template is offering it anyway, and adding no property beats adding one the
-    // schema forbids
-    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
-    if (freeNames?.length === 0) {
-      return;
-    }
-    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
-    const newKey = getAvailableKey(preferredKey, newFormData);
-    if (schema.patternProperties) {
-      setByPath(newFormData, newKey, null);
-    } else {
+    onChange((current) => {
+      // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
+      // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
+      // with none left means a custom template is offering it anyway, and adding no property beats adding one the
+      // schema forbids
+      const freeNames = getFreePropertyNames<T, S>(resolvedSchema, current);
+      if (freeNames?.length === 0) {
+        return current;
+      }
+      const newFormData = { ...current } as T;
+      const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
+      const newKey = getAvailableKey(preferredKey, newFormData);
+      if (schema.patternProperties) {
+        setByPath(newFormData, newKey, null);
+        return newFormData;
+      }
       let type: RJSFSchema['type'] = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
@@ -390,7 +455,7 @@ export default function ObjectField<
         let apSchema = schema.additionalProperties;
         const wasRef = REF_KEY in apSchema;
         if (wasRef) {
-          apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
+          apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, current);
           type = apSchema.type;
           constValue = apSchema.const;
         }
@@ -410,19 +475,11 @@ export default function ObjectField<
           uiSchemaDefinitions,
         ) as RJSFSchema['default'];
       }
-
       const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
       setByPath(newFormData, newKey, newValue);
-    }
-
-    if (lastRenamedProperty.current.previousKey === newKey) {
-      lastRenamedProperty.current.currentKey = newKey;
-      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
-    }
-    setAdditionalPropertyOrder((order) => [...order, newKey]);
-    onChange(newFormData, fieldPath);
+      return newFormData;
+    }, fieldPath);
   }, [
-    formData,
     onChange,
     translateString,
     schemaUtils,
@@ -443,30 +500,32 @@ export default function ObjectField<
    */
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string) => {
-      if (oldKey !== newKey) {
-        const currentFormData = formDataRef.current;
-        const actualNewKey = getAvailableKey(newKey, currentFormData);
-        const newFormData: GenericObjectType = {
-          ...(currentFormData as GenericObjectType),
-        };
-        const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
-        const keyValues = Object.keys(newFormData).map((key) => {
-          // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
-          const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
-          return { [mappedKey]: newFormData[key] };
-        });
-        const renamedObj = Object.assign({}, ...keyValues);
-
-        formDataRef.current = renamedObj as T;
-        if (oldKey !== lastRenamedProperty.current.currentKey) {
-          lastRenamedProperty.current.previousKey = oldKey;
-        }
-        lastRenamedProperty.current.currentKey = actualNewKey;
-        setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        onChange(renamedObj, fieldPath);
+      if (oldKey === newKey) {
+        return;
       }
+      // The row follows the rename to the name the rows leave free, so renames made before a re-render keep their
+      // places; where the data settles on another name, `reconcileAdditionalRows()` moves the row to it
+      setStoredRows((rows) => {
+        const names = new Set(rows.map((row) => row.name));
+        const renamedTo = firstAvailableKey(newKey, (key) => names.has(key), separator);
+        return rows.map((row) => (row.name === oldKey ? { ...row, name: renamedTo } : row));
+      });
+      // An updater, so a second rename made before this one renders applies to the data this one produced (#5031)
+      onChange((current) => {
+        if (!isObject(current)) {
+          return current;
+        }
+        const renamedTo = getAvailableKey(newKey, current);
+        // Every key is taken out and put back in order, so the renamed key keeps its place
+        const renamed = { ...current };
+        for (const [key, value] of Object.entries(current)) {
+          Reflect.deleteProperty(renamed, key);
+          Reflect.set(renamed, key === oldKey ? renamedTo : key, value);
+        }
+        return renamed;
+      }, fieldPath);
     },
-    [onChange, fieldPath, getAvailableKey],
+    [onChange, fieldPath, separator, getAvailableKey],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
@@ -474,39 +533,26 @@ export default function ObjectField<
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
       onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
     },
     [onChange, fieldPath],
   );
 
-  /** Returns the stable React key for a property. For the most recently renamed
-   * additional property, returns the previous key so that React reuses the
-   * existing component instance instead of unmounting/remounting it. This
-   * preserves DOM focus naturally without manual focus management.
+  const { rowIdByName, rowIds } = useMemo(() => {
+    const idByName = new Map(additionalRows.map((row) => [row.name, row.id]));
+    return { rowIdByName: idByName, rowIds: new Set(idByName.values()) };
+  }, [additionalRows]);
+  /** Returns the React key for a property: an additional property's row id, which a rename keeps, so React reuses the
+   * component instance and the focus stays where it was. A declared property keys by its name, unless a row that was
+   * renamed away from that name still uses it as its id.
    */
-  const getStableKey = useCallback((property: string) => {
-    if (lastRenamedProperty.current.currentKey === property) {
-      return lastRenamedProperty.current.previousKey;
-    }
-    return property;
-  }, []);
+  const getStableKey = (property: string) =>
+    rowIdByName.get(property) ?? (rowIds.has(property) ? `${property}${ROW_ID_SEPARATOR}` : property);
 
   if (!renderOptionalField || hasFormData) {
     try {
-      const definedPropertySet = new Set(definedPropertyOrder);
-      // A set, since an add or rename the parent declined leaves its key in the order, and proposing that key again
-      // appends it a second time
-      const orderedSet = new Set(additionalPropertyOrder);
-      const currentAdditionalProperties = [...orderedSet].filter(
-        (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
-      );
-      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
-      // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
-      // whose order is known
-      const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
       orderedProperties = orderProperties(
-        [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
+        [...definedPropertyOrder, ...additionalRows.map((row) => row.name)],
         uiOptions.order,
       );
     } catch (err) {

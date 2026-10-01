@@ -10,7 +10,7 @@ import type {
   ObjectFieldTemplateProps,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
@@ -1344,6 +1344,40 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should add both properties when one click adds two', async () => {
+      function AddTwoTemplate({ properties, onAddProperty }: ObjectFieldTemplateProps) {
+        return (
+          <div>
+            {properties.map((property) => property.content)}
+            <button
+              type='button'
+              className='add-two'
+              onClick={() => {
+                onAddProperty();
+                onAddProperty();
+              }}
+            >
+              Add two
+            </button>
+          </div>
+        );
+      }
+      const { onChange } = createFormComponent({
+        schema,
+        initialFormData: { first: 1 },
+        templates: { ObjectFieldTemplate: AddTwoTemplate },
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add two' }));
+
+      // Each add is an updater applied to the data the previous one produced, so the second takes the next free name
+      expectToHaveBeenCalledWithFormData(
+        onChange,
+        { first: 1, newKey: expect.any(String), 'newKey-1': expect.any(String) },
+        'root',
+      );
+    });
+
     it('should preserve all properties when two keys are renamed in quick succession', async () => {
       const formData = {
         first: 1,
@@ -1560,6 +1594,91 @@ describe('ObjectField', () => {
       const renamedKeyInput = node.querySelector<HTMLInputElement>('#root_first-1-key')!;
       expect(renamedKeyInput).not.toBeNull();
       expect(renamedKeyInput.value).toBe('first-1');
+    });
+
+    it('should keep a property in place when renaming it after its data arrived after mount', async () => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ schema, initialFormData: {}, ref });
+      act(() => ref.current?.setFieldValue('', { x: '1', a: '2', y: '3' }));
+
+      const keyInput = screen.getByDisplayValue('a');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'b');
+      await user.tab();
+
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+        (input) => input.value,
+      );
+      expect(propertyKeys).toEqual(['x', 'b', 'y']);
+    });
+
+    it('should keep the renamed row, not its namesake, on a name taken after mount', async () => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ schema, initialFormData: {}, ref });
+      act(() => ref.current?.setFieldValue('', { a: '1', x: '2' }));
+      const aValueInput = node.querySelector('#root_a');
+      const xValueInput = node.querySelector('#root_x');
+
+      const keyInput = screen.getByDisplayValue('a');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'x');
+      await user.tab();
+
+      // The form de-duplicates the name to `x-1`, which takes over the renamed row rather than `x`'s
+      expect(node.querySelector('#root_x-1')).toBe(aValueInput);
+      expect(node.querySelector('#root_x')).toBe(xValueInput);
+    });
+
+    it("should keep a declared property's title when an additional property is renamed onto its name", async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { name: { type: 'string', title: 'Full name' } },
+          additionalProperties: { type: 'string' },
+        },
+        initialFormData: { name: 'Ann', extra: 'x' },
+      });
+      const extraValueInput = node.querySelector('#root_extra');
+
+      const keyInput = screen.getByDisplayValue('extra');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'name');
+      await user.tab();
+
+      expect(node.querySelector('#root_name-1')).toBe(extraValueInput);
+      expect(node.querySelector('label[for="root_name"]')).toHaveTextContent('Full name');
+    });
+
+    it('should keep a property mounted when its controlled parent declines the rename', async () => {
+      // The `onChange` mock never hands the proposal back, so `formData` keeps the old key
+      const { node } = createFormComponent({ schema, formData: { a: '1' } });
+      const aValueInput = node.querySelector('#root_a');
+
+      const keyInput = screen.getByDisplayValue('a');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'b');
+      await user.tab();
+
+      expect(node.querySelector('#root_a')).toBe(aValueInput);
+    });
+
+    it('should keep an additional property that a custom field clears with an updater', async () => {
+      function ClearingField({ fieldPath, onChange }: FieldProps) {
+        return (
+          <button type='button' className='clear-value' onClick={() => onChange(() => undefined, fieldPath)}>
+            clear
+          </button>
+        );
+      }
+      const { onChange } = createFormComponent({
+        schema,
+        uiSchema: { additionalProperties: { 'ui:field': ClearingField } },
+        initialFormData: { first: 'x' },
+      });
+
+      await user.click(screen.getByRole('button', { name: 'clear' }));
+
+      expect(onChange.mock.lastCall?.[0].formData).toStrictEqual({ first: '' });
     });
 
     it('should have an expand button', () => {
