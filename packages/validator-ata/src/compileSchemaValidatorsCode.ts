@@ -1,4 +1,4 @@
-import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
@@ -14,12 +14,15 @@ import type { CustomValidatorOptionsType } from './types.ts';
  *
  * @param schema - The schema to compile
  * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
+ * @param [parserOptions={}] - The `SchemaParserOptions` the schema is parsed with. Its `customMergeAllOf` must merge the
+ *        same way as the one passed to the form, or the form can validate against sub-schemas that were not compiled
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   options: CustomValidatorOptionsType = {},
+  parserOptions: SchemaParserOptions<S> = {},
 ) {
-  const schemaMaps = schemaParser(schema);
+  const schemaMaps = schemaParser(schema, parserOptions);
   const keys = Object.keys(schemaMaps);
   const schemas = Object.values(schemaMaps);
 

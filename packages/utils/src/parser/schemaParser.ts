@@ -2,7 +2,7 @@ import { ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
-import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
 
@@ -28,7 +28,9 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     if (sameSchemaIndex === -1) {
       recurseList.push(localSchema);
       const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(context, localSchema, rootSchema, true);
-      allOptions.forEach((s) => {
+      // Merging an option into the schema can replace one of the schema's own subschemas (a property's `oneOf`, say),
+      // so the schema is parsed alongside its options rather than being taken as covered by them
+      new Set([localSchema, ...allOptions]).forEach((s) => {
         // A schema with both keywords resolves one at a time, leaving the other on each option to be parsed in turn
         if (s !== localSchema && getXxxOfKey<S>(s)) {
           parseSchema<T, S, F>(context, recurseList, rootSchema, s);
@@ -48,16 +50,18 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
  * the hash of the schema to schema/sub-schema.
  *
  * @param rootSchema - The root schema to parse for sub-schemas used by `isValid()` calls
+ * @param [options={}] - The `SchemaParserOptions` to parse with; pass the same `customMergeAllOf` the form uses, so the
+ *        parsed sub-schemas match the ones the form validates against
  * @returns - The `SchemaMap` of all schemas that were parsed
  */
 export default function schemaParser<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(rootSchema: S): SchemaMap<S> {
+>(rootSchema: S, options: SchemaParserOptions<S> = {}): SchemaMap<S> {
   const validator = new ParserValidator<S, F>(rootSchema);
   const recurseList: S[] = [];
 
-  parseSchema({ validator }, recurseList, rootSchema, rootSchema);
+  parseSchema({ ...options, validator }, recurseList, rootSchema, rootSchema);
 
   return validator.getSchemaMap();
 }

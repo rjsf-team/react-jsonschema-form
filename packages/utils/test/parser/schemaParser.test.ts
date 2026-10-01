@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { schemaParser } from '../../src/index.ts';
+import { mergeSchemas, schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -149,5 +149,97 @@ describe('schemaParser()', () => {
   it('parse schema with allof not able to merge', () => {
     const schemaMap = schemaParser(SCHEMA_WITH_ALLOF_CANNOT_MERGE);
     expect(schemaMap).toMatchSnapshot();
+  });
+  it('parses the properties that only a oneOf option has', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { properties: { a: { oneOf: [{ const: 'x1' }, { const: 'x2' }] } } },
+        { properties: { b: { type: 'string' } } },
+      ],
+    };
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 'x1' }));
+  });
+  it('parses the options of a property that every oneOf option redefines', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { oneOf: [{ const: 'p1' }, { const: 'p2' }] } },
+      oneOf: [
+        { properties: { a: { oneOf: [{ const: 'o1' }, { const: 'o2' }] } } },
+        { properties: { a: { oneOf: [{ const: 'o3' }] } } },
+      ],
+    };
+    const schemas = Object.values(schemaParser(rootSchema));
+    expect(schemas).toContainEqual(expect.objectContaining({ const: 'p1' }));
+    expect(schemas).toContainEqual(expect.objectContaining({ const: 'o1' }));
+  });
+  it('parses the items that only a oneOf option has', () => {
+    const rootSchema: RJSFSchema = {
+      oneOf: [{ type: 'array', items: { oneOf: [{ const: 1 }, { const: 2 }] } }, { type: 'string' }],
+    };
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 1 }));
+  });
+  describe('with a customMergeAllOf', () => {
+    // Titles the `choice` options, so the options the form validates against differ from the unmerged ones
+    const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
+      const { allOf, ...rest } = schema;
+      const merged = (allOf as RJSFSchema[]).reduce((acc, s) => mergeSchemas(acc, s) as RJSFSchema, rest);
+      const choice = merged.properties?.choice as RJSFSchema | undefined;
+      if (!choice?.oneOf) {
+        return merged;
+      }
+      const oneOf = choice.oneOf.map((o) => ({ ...(o as RJSFSchema), title: `Option ${(o as RJSFSchema).const}` }));
+      return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
+    };
+    const customOption = expect.objectContaining({ const: 'b', title: 'Option b' });
+    const choice: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
+
+    it('parses an allOf merged with it', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
+      };
+      expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
+      expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
+    });
+    it('parses the allOf merged for a pattern-matching property with it', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { type: 'object', properties: { x: { type: 'string' } } } },
+        patternProperties: { '^p$': { properties: { choice } } },
+      };
+      expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
+      expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
+    });
+    it('resolves an allOf merged with it further, as the form does', () => {
+      // The `patternProperties` only applies to `p` once the `allOf` is merged
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { properties: { p: { type: 'object', properties: { x: { type: 'string' } } } } },
+          { patternProperties: { '^p$': { properties: { choice } } } },
+        ],
+      };
+      expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
+      expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
+    });
+    it('keeps a merge that leaves the allOf in place without expanding it again', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
+      };
+      const identityMergeAllOf = (schema: RJSFSchema) => schema;
+      expect(schemaParser(rootSchema, { customMergeAllOf: identityMergeAllOf })).toEqual(schemaParser(rootSchema));
+    });
+    it('parses the allOf branches alone when it throws', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
+      };
+      const throwingMergeAllOf = () => {
+        throw new Error('cannot merge');
+      };
+      expect(schemaParser(rootSchema, { customMergeAllOf: throwingMergeAllOf })).toEqual(schemaParser(rootSchema));
+    });
   });
 });
