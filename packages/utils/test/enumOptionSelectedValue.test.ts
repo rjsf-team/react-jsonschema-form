@@ -1,5 +1,3 @@
-import { expectTypeOf } from 'vitest';
-
 import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
 import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
 

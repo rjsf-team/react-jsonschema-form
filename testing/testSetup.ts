@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom/vitest';
 import { mockResizeObserver } from 'jsdom-testing-mocks';
-import { beforeEach } from 'vitest';
 
 // Imported by path rather than as `@rjsf/utils`, which isn't resolvable from here; it's the same source file the tests
 // resolve `@rjsf/utils` to, so it shares the module instance whose logged messages need clearing.
