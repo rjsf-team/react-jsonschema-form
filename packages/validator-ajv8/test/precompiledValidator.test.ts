@@ -388,7 +388,7 @@ describe('AJV8PrecompiledValidator', () => {
     let localizer: Localizer;
     beforeAll(() => {
       localizer = vi.fn().mockImplementation(noop);
-      validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, localizer);
+      validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, { localizer });
     });
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
@@ -445,7 +445,9 @@ describe('AJV8PrecompiledValidator', () => {
   });
   describe('with suppressDuplicateFiltering option', () => {
     it('should store the suppressDuplicateFiltering value on the instance', () => {
-      const validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, undefined, 'all');
+      const validator = new AJV8PrecompiledValidator(validateOptionsFns, rootSchema, {
+        suppressDuplicateFiltering: 'all',
+      });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
   });
@@ -498,9 +500,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     const validator = new AJV8PrecompiledValidator(
       evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
@@ -512,9 +512,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     const validator = new AJV8PrecompiledValidator(
       evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
@@ -525,9 +523,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     const validator = new AJV8PrecompiledValidator(
       evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);

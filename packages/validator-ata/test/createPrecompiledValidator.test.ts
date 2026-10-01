@@ -30,7 +30,7 @@ describe('createPrecompiledValidator()', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns and rootSchema', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, undefined, undefined);
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined);
     });
   });
   describe('passing validatorFns, rootSchema and localizer to createPrecompiledValidator', () => {
@@ -39,26 +39,28 @@ describe('createPrecompiledValidator()', () => {
     beforeAll(() => {
       localizer = vi.fn();
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator(validateFns, rootSchema, localizer);
+      custom = createPrecompiledValidator(validateFns, rootSchema, { localizer });
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('defaultValidator was constructed with validateFns, rootSchema and the localizer', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, localizer, undefined, undefined);
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, { localizer });
     });
   });
   describe('passing suppressDuplicateFiltering to createPrecompiledValidator', () => {
     let custom: any;
     beforeAll(() => {
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator(validateFns, rootSchema, undefined, 'all');
+      custom = createPrecompiledValidator(validateFns, rootSchema, { suppressDuplicateFiltering: 'all' });
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns, rootSchema, undefined, and suppressDuplicateFiltering', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, 'all', undefined);
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, {
+        suppressDuplicateFiltering: 'all',
+      });
     });
   });
 });

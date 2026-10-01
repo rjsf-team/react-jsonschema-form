@@ -80,8 +80,8 @@ class SchemaUtils<
       );
     }
     // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
-    // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because `getSchemaContext()` hands
-    // the snapshot itself to every `computeSkipPopulate()` callback. Only the context's own keys
+    // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because the snapshot itself is what
+    // reaches every `computeSkipPopulate()` callback. Only the context's own keys
     // are covered: the settings objects reached through them stay the caller's, so mutating one in place still changes
     // how this instance behaves and still reads as "no difference" — they are documented as owned by the caller
     this.context = Object.freeze({ ...context });
@@ -93,14 +93,6 @@ class SchemaUtils<
    */
   getRootSchema() {
     return this.rootSchema;
-  }
-
-  /** Returns the `SchemaContext` that the `SchemaUtilsType` forwards to all the schema functions
-   *
-   * @returns - The `SchemaContext`
-   */
-  getSchemaContext() {
-    return this.context;
   }
 
   /** Returns the `ValidatorType` in the `SchemaUtilsType`

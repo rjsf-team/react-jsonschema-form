@@ -1,5 +1,4 @@
 import type {
-  CustomMergeAllOf,
   CustomValidator,
   ErrorTransformer,
   FormContextType,
@@ -18,6 +17,7 @@ import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
   CompiledValidateFunction,
   Localizer,
+  PrecompiledValidatorOptionsType,
   SuppressDuplicateFilteringType,
   ValidatorFunctions,
 } from './types.ts';
@@ -78,13 +78,8 @@ export default class ATAPrecompiledValidator<
    *        schema this validator is handed
    * @throws - Error when the base schema of the precompiled validator does not have a matching validator function
    */
-  constructor(
-    validateFns: ValidatorFunctions,
-    rootSchema: S,
-    localizer?: Localizer,
-    suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-    customMergeAllOf?: CustomMergeAllOf<S>,
-  ) {
+  constructor(validateFns: ValidatorFunctions, rootSchema: S, options: PrecompiledValidatorOptionsType<S> = {}) {
+    const { localizer, suppressDuplicateFiltering, customMergeAllOf } = options;
     this.rootSchema = rootSchema;
     this.validateFns = validateFns;
     this.localizer = localizer;

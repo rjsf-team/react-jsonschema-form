@@ -365,7 +365,7 @@ describe('ATAPrecompiledValidator', () => {
     let localizer: Localizer;
     beforeAll(() => {
       localizer = vi.fn().mockImplementation(noop);
-      validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, localizer);
+      validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, { localizer });
     });
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
@@ -418,7 +418,9 @@ describe('ATAPrecompiledValidator', () => {
   });
   describe('with suppressDuplicateFiltering option', () => {
     it('should store the suppressDuplicateFiltering value on the instance', () => {
-      const validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, undefined, 'all');
+      const validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, {
+        suppressDuplicateFiltering: 'all',
+      });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
   });
@@ -471,9 +473,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     const validator = new ATAPrecompiledValidator(
       loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
@@ -485,9 +485,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     const validator = new ATAPrecompiledValidator(
       loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
@@ -498,9 +496,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     const validator = new ATAPrecompiledValidator(
       loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
       allOfSchema,
-      undefined,
-      undefined,
-      customMergeAllOf,
+      { customMergeAllOf },
     );
     const formData = { name: 'x' };
     const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);

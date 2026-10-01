@@ -37,10 +37,6 @@ describe('createSchemaUtils()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
   });
 
-  it('getSchemaContext()', () => {
-    expect(schemaUtils.getSchemaContext()).toEqual({ validator: testValidator, defaultFormStateBehavior });
-  });
-
   it('getUiRequiredErrorSchema()', () => {
     const requiredSchema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const requiredUtils = createSchemaUtils({ validator: testValidator }, requiredSchema);

@@ -1783,11 +1783,6 @@ export interface SchemaUtilsType<
    * @returns - The rootSchema
    */
   getRootSchema(): S;
-  /** Returns the `SchemaContext` that the `SchemaUtilsType` forwards to all the schema functions
-   *
-   * @returns - The `SchemaContext`
-   */
-  getSchemaContext(): SchemaContext<S, F>;
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *
    * @returns - The `ValidatorType`

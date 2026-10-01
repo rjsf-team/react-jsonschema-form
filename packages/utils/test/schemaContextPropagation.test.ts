@@ -181,7 +181,11 @@ describe('SchemaContext propagation', () => {
         rootSchema,
       );
       schemaUtils.getDefaultFormState(rootSchema);
-      expect(computeSkipPopulate).toHaveBeenCalledWith(schemaUtils.getSchemaContext(), rootSchema, rootSchema);
+      expect(computeSkipPopulate).toHaveBeenCalledWith(
+        { validator, defaultFormStateBehavior: { arrayMinItems: { computeSkipPopulate } } },
+        rootSchema,
+        rootSchema,
+      );
     });
   });
 
