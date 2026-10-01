@@ -61,7 +61,7 @@ export default function RangeWidget<
           disabled={disabled || readonly}
           min={schema.minimum}
           max={schema.maximum}
-          step={schema.multipleOf || 1}
+          step={schema.multipleOf ?? 1}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

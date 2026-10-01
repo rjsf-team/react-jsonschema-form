@@ -48,7 +48,7 @@ export default function resolveUiSchema<
 
   let result: UiSchema<T, S, F>;
   if (!definitionUiSchema) {
-    result = localUiSchema || {};
+    result = localUiSchema ?? {};
   } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
     result = { ...definitionUiSchema };
   } else {

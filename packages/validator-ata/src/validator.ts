@@ -115,7 +115,7 @@ export default class ATAValidator<
     const optionsWithSchemas = {
       ...this.options,
       ataOptionsOverrides: {
-        ...(this.options.ataOptionsOverrides || {}),
+        ...(this.options.ataOptionsOverrides ?? {}),
         ...(siblingRoots.length ? { schemas: siblingRoots } : {}),
       },
     };

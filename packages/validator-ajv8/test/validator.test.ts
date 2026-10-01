@@ -262,6 +262,15 @@ describe('AJV8Validator', () => {
         expect(result2.validationError).toBeInstanceOf(Error);
       });
 
+      it.each([null, 5, true, {}])('rawValidation returns a validationError for a schema whose $id is %j', (id) => {
+        const v = new AJV8Validator({});
+        const schema: RJSFSchema = { type: 'string' };
+        Reflect.set(schema, '$id', id);
+
+        expect(v.rawValidation(schema, 'a').validationError).toBeInstanceOf(Error);
+        expect(v.rawValidation(schema, 'a').validationError).toBeInstanceOf(Error);
+      });
+
       it('rawValidation returns a validationError when the schema was previously cached by isValid', () => {
         const v = new AJV8Validator({});
         // isValid uses addSchema (no meta-schema validation) so the broken schema

@@ -901,8 +901,8 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const validation: ValidationData<T> = isErrorStateReset
     ? { errors: [], errorSchema: {} }
     : {
-        errors: current?.schemaValidationErrors || [],
-        errorSchema: current?.schemaValidationErrorSchema || {},
+        errors: current?.schemaValidationErrors ?? [],
+        errorSchema: current?.schemaValidationErrorSchema ?? {},
       };
   let schemaValidationErrorSchema = validation.errorSchema;
   let schemaValidationErrors = validation.errors;
@@ -1545,7 +1545,7 @@ function applySubmit<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ...current,
     formData,
     errors: extraErrors ? toErrorList(extraErrors) : [],
-    errorSchema: extraErrors || {},
+    errorSchema: extraErrors ?? {},
     schemaValidationErrors: [],
     schemaValidationErrorSchema: {},
   };

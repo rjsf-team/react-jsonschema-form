@@ -94,7 +94,7 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const rawPropertyNames: string[] = [
-      ...(params.deps?.split(', ') || []),
+      ...(typeof params.deps === 'string' ? params.deps.split(', ') : []),
       params.missingProperty,
       params.property,
     ].filter((item) => item);
@@ -169,9 +169,9 @@ export function transformRJSFValidationErrors<
       }
     }
 
-    // If params.missingProperty is undefined, it is removed from rawPropertyNames by filter((item) => item).
-    if ('missingProperty' in params) {
-      property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
+    const { missingProperty } = params;
+    if (typeof missingProperty === 'string') {
+      property = property ? `${property}.${missingProperty}` : missingProperty;
     }
 
     // put data in expected format

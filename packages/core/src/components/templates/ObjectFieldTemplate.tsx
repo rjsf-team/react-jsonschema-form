@@ -39,7 +39,7 @@ export default function ObjectFieldTemplate<
 
   // For "pure union" schemas (oneOf/anyOf without properties), skip rendering the empty fieldset wrapper.
   // The AnyOfField/OneOfField will handle rendering the union selector and selected variant's content directly.
-  const isPureUnionSchema = (schema.oneOf || schema.anyOf) && !schema.properties && properties.length === 0;
+  const isPureUnionSchema = (schema.oneOf ?? schema.anyOf) && !schema.properties && properties.length === 0;
 
   if (isPureUnionSchema) {
     return null;

@@ -86,12 +86,11 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
 
-    const p = params as Record<string, any>;
-    const rawPropertyNames: string[] = [
-      ...((p?.deps as string | undefined)?.split(', ') || []),
-      p?.missingProperty,
-      p?.property,
-    ].filter((item) => Boolean(item));
+    const rawPropertyNames = [
+      ...(typeof params?.deps === 'string' ? params.deps.split(', ') : []),
+      params?.missingProperty,
+      params?.property,
+    ].filter((item): item is string => typeof item === 'string' && item !== '');
 
     if (rawPropertyNames.length > 0) {
       rawPropertyNames.forEach((currentProperty) => {
@@ -161,8 +160,9 @@ export function transformRJSFValidationErrors<
       }
     }
 
-    if (p && 'missingProperty' in p) {
-      property = property ? `${property}.${p.missingProperty}` : p.missingProperty;
+    const missingProperty = params?.missingProperty;
+    if (typeof missingProperty === 'string') {
+      property = property ? `${property}.${missingProperty}` : missingProperty;
     }
 
     return {
