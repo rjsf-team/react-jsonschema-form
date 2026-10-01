@@ -302,7 +302,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the multiple `SelectWidget` with object options and the `realValue` option value format, and the single one's focus and blur value ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - `WrapIfAdditionalTemplate` no longer interpolates an absent `classNames` into its class attribute, which produced a literal `undefined` class on an additional property rendered by a custom field that passes none ([#5327](https://github.com/rjsf-team/react-jsonschema-form/issues/5327))
-- `TextareaWidget` no longer replaces a `ui:options.rows` of `0` with the default of 5 rows. React leaves a `rows` of `0` off the textarea, so it gets the browser's default height of 2 rows, as with `@rjsf/core`'s `TextareaWidget` ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
+- `TextareaWidget` no longer replaces a `ui:options.rows` of `0` with the default of 5 rows. React leaves a `rows` of `0` off the textarea, so it gets the browser's default height of 2 rows, as with `@rjsf/core`'s `TextareaWidget`, or the `Textarea`'s `min-h-16` minimum height when that's taller ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
 
 ## @rjsf/snapshot-tests
 
