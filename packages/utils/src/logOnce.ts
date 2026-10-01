@@ -32,10 +32,10 @@ let previousMessages = new Set<string>();
 /** Logs `message` (followed by `error`, when there is one) through `console.warn()` or `console.error()`, but only the
  * first time that combination of `level`, `message` and `error` is seen, so that a warning raised while rendering isn't
  * repeated on every re-render. The `error` is compared by its type and its `toDisplayString()` form, so two distinct
- * values with the same of both (two `Error`s of the same type and message, say) are treated as one message. A message that has to be told
- * apart from another must say so itself, as the field warnings do by naming the field; one that identifies nothing, or
- * only something as generic as a `dependencies` key, is reported for whichever schema reaches it first and stays silent
- * for the rest until the page is reloaded.
+ * values of the same type and form (two `Error`s of the same class and message, say) are treated as one message. A
+ * message that has to be told apart from another must say so itself, as the field warnings do by naming the field; one
+ * that identifies nothing, or only something as generic as a `dependencies` key, is reported for whichever schema
+ * reaches it first and stays silent for the rest until the page is reloaded.
  *
  * @param message - The message to log
  * @param [level='warn'] - Which console method to log through
