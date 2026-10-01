@@ -25,7 +25,11 @@ const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) =>
 });
 
 export const __createChakraFrameProvider = (props: { children: ReactNode }) =>
-  function ChakraFrame({ document = globalThis.document }: { document?: Document }) {
+  function ChakraFrame({ document }: { document?: Document }) {
+    // Falling back to the host page's document would inject chakra's styles outside the frame and render it unstyled
+    if (!document) {
+      throw new Error('__createChakraFrameProvider must be rendered inside a frame that provides a document');
+    }
     return (
       <div style={{ margin: 2 }}>
         <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
