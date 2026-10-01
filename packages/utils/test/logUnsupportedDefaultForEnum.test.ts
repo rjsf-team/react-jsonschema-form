@@ -26,11 +26,16 @@ describe('logUnsupportedDefaultForEnum()', () => {
   it('logs, without throwing, a default JSON.stringify() cannot convert', () => {
     const circular: unknown[] = [];
     circular.push(circular);
-    const unprintable = Object.create(null) as Record<string, unknown>;
+    const unprintable: Record<string, unknown> = {};
+    Object.setPrototypeOf(unprintable, null);
     unprintable.self = unprintable;
     const options = [{ label: 'Red', value: 'red' }];
     // A schema built in JS can hold a default no JSON schema could
-    const jsBuilt = (value: unknown) => ({ default: value }) as RJSFSchema;
+    const jsBuilt = (value: unknown) => {
+      const schema: RJSFSchema = {};
+      Reflect.set(schema, 'default', value);
+      return schema;
+    };
 
     expect(() => {
       logUnsupportedDefaultForEnum('root_big', jsBuilt([10n]), options);

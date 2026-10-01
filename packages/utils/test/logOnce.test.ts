@@ -57,7 +57,8 @@ describe('logOnce()', () => {
     expect(consoleWarnSpy).toHaveBeenCalledTimes(6);
   });
   it('remembers a message, without throwing, when the error cannot be converted for comparison', () => {
-    const nullPrototype = Object.create(null) as Record<string, unknown>;
+    const nullPrototype: Record<string, unknown> = {};
+    Object.setPrototypeOf(nullPrototype, null);
     nullPrototype.self = nullPrototype;
     const unprintableError = new Error('boom');
     unprintableError.toString = () => {

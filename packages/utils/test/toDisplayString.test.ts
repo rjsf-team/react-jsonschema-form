@@ -27,7 +27,8 @@ describe('toDisplayString()', () => {
     expect(toDisplayString(new Money())).toBe('USD 5');
   });
   it('spells plain objects and arrays out as JSON', () => {
-    const nullPrototype = Object.assign(Object.create(null) as object, { a: 1 });
+    const nullPrototype = { a: 1 };
+    Object.setPrototypeOf(nullPrototype, null);
     expect(toDisplayString({ a: 1 })).toBe('{"a":1}');
     expect(toDisplayString(nullPrototype)).toBe('{"a":1}');
     expect(toDisplayString([1, 'b'])).toBe('[1,"b"]');
@@ -47,7 +48,8 @@ describe('toDisplayString()', () => {
     expect(toDisplayString({ toJSON: () => undefined })).toBe('[object Object]');
   });
   it('throws where String() does, for a circular object with no prototype', () => {
-    const circular = Object.create(null) as Record<string, unknown>;
+    const circular: Record<string, unknown> = {};
+    Object.setPrototypeOf(circular, null);
     circular.self = circular;
     expect(() => toDisplayString(circular)).toThrow(TypeError);
   });
