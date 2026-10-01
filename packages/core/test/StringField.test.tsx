@@ -171,6 +171,16 @@ describe('StringField', () => {
       expect([...options].map((option) => option.value)).toEqual(['a']);
     });
 
+    it('should render no datalist and point the input at none when no example can be suggested (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['string', 'null'], examples: [null, { a: 1 }] },
+      });
+      const input = node.querySelector('.rjsf-field input');
+      expect(node.querySelector('.rjsf-field datalist')).toBeNull();
+      expect(input).not.toHaveAttribute('list');
+      expect(input?.getAttribute('aria-describedby')).not.toContain('__examples');
+    });
+
     it('should not suggest an undefined example as the string "undefined"', () => {
       const { node } = createFormComponent({
         // JSON can't hold `undefined`, but a schema built in code can

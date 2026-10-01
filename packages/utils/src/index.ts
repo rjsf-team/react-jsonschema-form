@@ -37,6 +37,7 @@ import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
@@ -128,6 +129,8 @@ import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidge
 import useAltDateWidgetProps, { DateElement } from './useAltDateWidgetProps.tsx';
 import type { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps.ts';
 import useFileWidgetProps from './useFileWidgetProps.ts';
+import type { UseOptionFocusHandlersResult } from './useOptionFocusHandlers.ts';
+import useOptionFocusHandlers from './useOptionFocusHandlers.ts';
 import type { UseSelectFocusHandlersResult } from './useSelectFocusHandlers.ts';
 import useSelectFocusHandlers from './useSelectFocusHandlers.ts';
 import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
@@ -155,6 +158,7 @@ export type {
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
+  UseOptionFocusHandlersResult,
   UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
   VisibleErrorsProps,
@@ -198,6 +202,7 @@ export {
   getDateTimeLocalValue,
   getDecimalSeparator,
   getDiscriminatorFieldFromSchema,
+  getExampleSuggestions,
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
@@ -289,6 +294,7 @@ export {
   unwrapErrorHandler,
   useAltDateWidgetProps,
   useFileWidgetProps,
+  useOptionFocusHandlers,
   useSelectFocusHandlers,
   useTimeWidgetProps,
   utcToLocal,

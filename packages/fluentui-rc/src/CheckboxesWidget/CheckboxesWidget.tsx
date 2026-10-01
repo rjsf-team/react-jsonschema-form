@@ -1,10 +1,9 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { Label, Checkbox } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionValueDecoder,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsSelected,
@@ -12,6 +11,7 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -38,7 +38,7 @@ export default function CheckboxesWidget<
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
@@ -53,10 +53,7 @@ export default function CheckboxesWidget<
       }
     };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <>
@@ -83,8 +80,8 @@ export default function CheckboxesWidget<
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange(index)}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
                 aria-describedby={ariaDescribedByIds(id)}
               />
             );

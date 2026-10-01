@@ -4,7 +4,14 @@ import type { InputProps } from '@fluentui/react-components';
 import { Input, Label, makeStyles } from '@fluentui/react-components';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, labelValue } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  labelValue,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   input: {
@@ -64,6 +71,8 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <>
       {labelValue(
@@ -84,18 +93,18 @@ export default function BaseInputTemplate<
         input={{
           className: classes.input,
           // Due to Fluent UI this does not work correctly
-          list: schema.examples ? examplesId(id) : undefined,
+          list: hasExamples ? examplesId(id) : undefined,
         }}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

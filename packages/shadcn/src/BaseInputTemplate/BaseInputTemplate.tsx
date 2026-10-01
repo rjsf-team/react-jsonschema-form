@@ -2,7 +2,14 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, hasVisibleErrors } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  hasVisibleErrors,
+} from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
@@ -65,6 +72,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <div className='p-0.5'>
       <Input
@@ -80,20 +89,20 @@ export default function BaseInputTemplate<
           { 'border-destructive focus-visible:ring-0': hasVisibleErrors({ rawErrors, hideError }) },
           className,
         )}
-        list={schema.examples ? examplesId(id) : undefined}
+        list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </div>
   );
 }

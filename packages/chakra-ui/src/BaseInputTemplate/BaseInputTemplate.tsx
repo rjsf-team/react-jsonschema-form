@@ -6,6 +6,7 @@ import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSch
 import {
   ariaDescribedByIds,
   examplesId,
+  getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
   hasVisibleErrors,
@@ -59,6 +60,8 @@ export default function BaseInputTemplate<
 
   const chakraProps = getChakra({ uiSchema });
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <Field
       mb={1}
@@ -80,13 +83,13 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         title={getNumericInputTitle(inputProps, registry.translateString)}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        list={hasExamples ? examplesId(id) : undefined}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={onClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </Field>
   );
 }

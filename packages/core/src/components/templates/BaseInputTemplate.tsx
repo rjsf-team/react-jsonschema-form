@@ -1,7 +1,14 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, getNumericInputTitle, getSchemaType } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  getSchemaType,
+} from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
 
@@ -86,6 +93,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <>
       <input
@@ -98,16 +107,16 @@ export default function BaseInputTemplate<
         value={inputValue}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
+        list={hasExamples ? examplesId(id) : undefined}
         onChange={onChangeOverride || handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

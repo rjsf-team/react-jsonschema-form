@@ -1,33 +1,28 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { examplesId } from '@rjsf/utils';
+import { examplesId, getExampleSuggestions } from '@rjsf/utils';
 
 export interface SchemaExamplesProps<S extends StrictRJSFSchema = RJSFSchema> {
   /** The id of the input element this datalist is for */
   id: string;
   /** The JSON schema object containing examples and default value */
   schema: S;
+  /** The suggestions to render, when the caller already has them from `getExampleSuggestions(schema)` */
+  suggestions?: string[];
 }
 
-/** Renders a `<datalist>` element containing options from schema examples and default value.
- * A datalist suggests strings, so examples and a default that share a `String()` are one option. For example, if
- * examples are `["5432", 5432]` and default is `5432`, a single `5432` option is rendered.
+/** Renders a `<datalist>` element containing options from schema examples and default value, as
+ * `getExampleSuggestions()` returns them, or nothing when there are none.
  *
  * @param props - The `SchemaExamplesProps` for this component
  */
 export default function SchemaExamples<S extends StrictRJSFSchema = RJSFSchema>(props: SchemaExamplesProps<S>) {
-  const { id, schema } = props;
-  const { examples, default: schemaDefault } = schema;
-  if (!Array.isArray(examples)) {
+  const { id, schema, suggestions = getExampleSuggestions<S>(schema) } = props;
+  if (suggestions.length === 0) {
     return null;
   }
-  // `String()` spells `null` and `undefined` as a `'null'` or `'undefined'` a user could pick, and an object or array as
-  // nothing a user could type
-  const suggestions = new Set(
-    [...examples, schemaDefault].filter((example) => example !== undefined && typeof example !== 'object').map(String),
-  );
   return (
     <datalist key={`datalist_${id}`} id={examplesId(id)}>
-      {[...suggestions].map((example) => (
+      {suggestions.map((example) => (
         // oxlint-disable-next-line jsx-a11y/control-has-associated-label
         <option key={example} value={example} />
       ))}

@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
@@ -6,9 +5,9 @@ import {
   enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
-  enumOptionValueDecoder,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
@@ -45,7 +44,7 @@ export default function CheckboxesWidget<
   onFocus,
   onBlur,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, emptyValue } = options;
+  const { enumOptions } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const selected = useMemo(() => (Array.isArray(value) ? value : []), [value]);
@@ -69,25 +68,7 @@ export default function CheckboxesWidget<
     [onChange, selected, enumOptions],
   );
 
-  /** Handles focus events for accessibility */
-  const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, optionValueFormat, emptyValue],
-  );
-
-  /** Handles blur events for accessibility */
-  const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, optionValueFormat, emptyValue],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <div className='form-control'>
@@ -106,8 +87,8 @@ export default function CheckboxesWidget<
               disabled={disabled || readonly}
               data-index={index}
               onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+              onFocus={focusHandlers[index]}
+              onBlur={blurHandlers[index]}
             />
             <span className='label-text'>{option.label}</span>
           </label>

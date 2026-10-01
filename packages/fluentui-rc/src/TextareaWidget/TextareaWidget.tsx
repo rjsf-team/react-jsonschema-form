@@ -36,7 +36,6 @@ export default function TextareaWidget<
     onFocus,
     autofocus,
     options,
-    schema,
   } = props;
   const classes = useStyles();
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
@@ -68,7 +67,7 @@ export default function TextareaWidget<
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id)}
         rows={rows}
       />
     </>

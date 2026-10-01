@@ -328,6 +328,7 @@ Non-primitive values (objects, arrays) fall back to their index, prefixed with `
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
+That includes options with the very same value, such as two `'US'` constants titled `USA` and `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or showing which is selected; both still decode to the value they share.
 An `undefined` option is encoded as the empty string.
 
 #### Parameters
@@ -747,6 +748,21 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 #### Returns
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
+
+### getExampleSuggestions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the suggestions a text input offers for `schema`: its `examples` and `default`, as the strings a user could pick from a `<datalist>`.
+Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
+A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
+A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+
+#### Parameters
+
+- schema: S - The schema whose `examples` and `default` are suggested
+
+#### Returns
+
+- string[]: The distinct suggestions, in the order of `examples` followed by the `default`
 
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2053,6 +2069,22 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 #### Returns
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+
+### useOptionFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Hook which builds the focus and blur handlers of the options of a widget that renders one focusable element per option,
+such as a `CheckboxesWidget`. Each handler reports its option's value from `enumOptions`, rather than decoding the
+focused element's DOM `value`, so it holds whether or not a theme's component forwards that attribute. To be used by
+theme specific `CheckboxesWidget` implementations.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'options' | 'onFocus' | 'onBlur'> - The `id`, `options`, `onFocus` and
+  `onBlur` from the `WidgetProps` of the widget
+
+#### Returns
+
+- UseOptionFocusHandlersResult: The `focusHandlers` and `blurHandlers` arrays, holding the `onFocus` and `onBlur` handler of each option by its position
 
 ### useSelectFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

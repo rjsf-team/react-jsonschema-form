@@ -1,15 +1,14 @@
-import type { ChangeEvent, FocusEvent } from 'react';
-import { useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionValueDecoder,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -33,22 +32,12 @@ function CheckboxesWidget<
   onFocus,
   htmlName,
 }: WidgetProps<T, S, F>) {
-  const { inline = false, enumOptions, enumDisabled, emptyValue } = options;
+  const { inline = false, enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
-
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) =>
-      onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue)),
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <div className='checkboxes' id={id}>
@@ -77,8 +66,8 @@ function CheckboxesWidget<
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
                 aria-describedby={ariaDescribedByIds(id)}
               />
               <span>{option.label}</span>

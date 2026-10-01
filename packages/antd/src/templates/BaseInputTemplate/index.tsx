@@ -8,7 +8,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 const INPUT_STYLE = {
@@ -76,6 +76,8 @@ export default function BaseInputTemplate<
   // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   const input = isNumeric ? (
     <InputNumber
       disabled={disabled || (readonlyAsDisabled && readonly)}
@@ -88,13 +90,13 @@ export default function BaseInputTemplate<
       required={required}
       style={INPUT_STYLE}
       changeOnWheel={false}
-      list={schema.examples ? examplesId(id) : undefined}
+      list={hasExamples ? examplesId(id) : undefined}
       {...restInputProps}
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
       value={value}
-      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, hasExamples)}
     />
   ) : (
     <Input
@@ -107,10 +109,10 @@ export default function BaseInputTemplate<
       placeholder={placeholder}
       required={required}
       style={INPUT_STYLE}
-      list={schema.examples ? examplesId(id) : undefined}
+      list={hasExamples ? examplesId(id) : undefined}
       {...inputProps}
       value={value}
-      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, hasExamples)}
     />
   );
 
@@ -120,7 +122,7 @@ export default function BaseInputTemplate<
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }
