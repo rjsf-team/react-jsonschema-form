@@ -37,7 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+- Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types, plus one that holds `jsdom` at `~30.0.1` because 30.1 needs the global `Iterator` that Node 20 lacks. Renamed the vitest configs to `.mts` so Vite's `native` config loader can load them as ESM ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 
 # 6.11.0
 

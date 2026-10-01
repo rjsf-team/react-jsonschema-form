@@ -146,7 +146,7 @@ When making a change to a widget or template, consider if the change should be g
 
 ## Testing
 
-- Vitest, jsdom, Testing Library; shared config in `testing/vitest.base.ts`, extended per package
+- Vitest, jsdom, Testing Library; shared config in `testing/vitest.base.mts`, extended per package
 - Tests resolve `@rjsf/*` imports to TypeScript source via the `@rjsf/source` export condition, so no build is needed before running them
 - `@rjsf/utils` and the validator packages enforce 100% coverage
 - Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
