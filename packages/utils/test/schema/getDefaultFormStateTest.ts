@@ -2253,7 +2253,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             default: value,
             items: { type: 'string', default: 'x' },
           };
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(['x', 'x']);
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['x', 'x']);
         },
       );
 
@@ -2263,7 +2263,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           default: { tags: 0 },
           properties: { tags: { type: 'array', minItems: 2, items: { type: 'string', default: 'x' } } },
         };
-        expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({ tags: ['x', 'x'] });
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+          tags: ['x', 'x'],
+        });
       });
 
       describe('array with defaults with no formData', () => {
