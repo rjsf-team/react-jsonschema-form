@@ -10,6 +10,7 @@ import type {
 } from '@rjsf/utils';
 import {
   enumOptionsDeselectValue,
+  enumOptionValueLabel,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
@@ -30,14 +31,14 @@ function getDisplayValue(val: unknown) {
   }
   if (typeof val === 'object') {
     if ('name' in val && val.name) {
-      return String(val.name);
+      return enumOptionValueLabel(val.name);
     }
     if ('label' in val && val.label) {
-      return String(val.label);
+      return enumOptionValueLabel(val.label);
     }
     return JSON.stringify(val);
   }
-  return String(val);
+  return enumOptionValueLabel(val);
 }
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
