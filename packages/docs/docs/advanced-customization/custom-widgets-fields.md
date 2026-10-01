@@ -396,7 +396,7 @@ A field component will always be passed the following props:
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone. It is unset for a field rendered beside a `oneOf`/`anyOf` option selector, which is given the errors instead
 - `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
-- `onChange`: The field change event handler; called with the updated field value, the optional change path for the value (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
+- `onChange`: The field change event handler; call it with the new value, the `FieldPath` of the value (usually the `fieldPath` prop), an optional ErrorSchema and the optional id of the field being changed. The value and the ErrorSchema may each be an updater instead, `(current) => next`, which the form applies to what it holds at that path when it processes the change, the way React's `setState()` accepts a function. Use one when the new value depends on the current one, such as removing a list item: the handler then needs no `formData` of its own, so it can keep a stable identity, and two changes made before a re-render both apply
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 
@@ -516,25 +516,28 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 
 Sometimes you just need to customize the properties that are passed to an existing field.
 
-Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler to look for a specific kind of bad data:
+Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler to look for a specific kind of bad data. A change that depends on the current data, such as an array item added or a key renamed below this field, arrives as an updater function rather than a value, so `mapFieldChange()` runs the check on what the updater returns:
 
 ```tsx
 import { useCallback } from 'react';
-import { FieldProps } from '@rjsf/utils';
+import type { ErrorSchemaChange, FieldChange, FieldPath, FieldProps } from '@rjsf/utils';
+import { mapFieldChange } from '@rjsf/utils';
 import { ObjectField } from '@rjsf/core';
 
 import checkBadData from './checkBadData';
 
+function fixBadData(data: unknown) {
+  if (checkBadData(data)) {
+    // Fix the `data` here
+  }
+  return data;
+}
+
 function MyObjectField(props: FieldProps) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: T | undefined, path: (number | string)[], es?: ErrorSchema<T>, id?: string) => {
-      let data = newFormData;
-      let error = es;
-      if (checkBadData(newFormData)) {
-        // Format the `error` and fix the `data` here
-      }
-      onChange(data, path, error, id);
+    (newFormData: FieldChange<unknown>, path: FieldPath, es?: ErrorSchemaChange<unknown>, id?: string) => {
+      onChange(mapFieldChange(newFormData, fixBadData), path, es, id);
     },
     [onChange],
   );

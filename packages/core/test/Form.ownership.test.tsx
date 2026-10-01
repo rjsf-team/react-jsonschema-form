@@ -2,7 +2,7 @@ import { createRef, StrictMode, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { createSchemaUtils, getTemplates, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { IChangeEvent } from '../src/index.ts';
@@ -397,6 +397,49 @@ describe('form data ownership', () => {
         { a: 'first', b: '' },
         { a: '', b: 'second' },
       ]);
+    });
+
+    it("a field's two updaters in one click both reach a parent that stores each proposal as a value", async () => {
+      // The queue runs the second updater only after the parent has committed the first proposal, so it applies to
+      // that value rather than to the one the field rendered with
+      function IncrementTwiceField({ fieldPath, formData, onChange }: FieldProps<number>) {
+        return (
+          <button
+            type='button'
+            onClick={() => {
+              onChange((current) => (current ?? 0) + 1, fieldPath);
+              onChange((current) => (current ?? 0) + 1, fieldPath);
+            }}
+          >
+            {String(formData)}
+          </button>
+        );
+      }
+      interface CountData {
+        count?: number;
+      }
+      const proposals: CountData[] = [];
+      function CountParent() {
+        const [data, setData] = useState<CountData>({ count: 1 });
+        return (
+          <Form<CountData>
+            schema={{ type: 'object', properties: { count: { type: 'number' } } }}
+            uiSchema={{ count: { 'ui:field': IncrementTwiceField } }}
+            validator={validator}
+            formData={data}
+            onChange={(event) => {
+              proposals.push(event.formData);
+              setData(event.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<CountParent />);
+
+      await user.click(screen.getByRole('button', { name: '1' }));
+
+      expect(proposals).toEqual([{ count: 2 }, { count: 3 }]);
+      expect(container.querySelector('button[type=button]')).toHaveTextContent('3');
     });
 
     it('a change made from inside onChange is queued behind the one being handled', async () => {
