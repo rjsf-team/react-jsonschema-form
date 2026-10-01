@@ -938,10 +938,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
-      it('resolves each allOf entry once per call, however many array rows reach it', () => {
-        // `omit()` recurses per data node while the `allOf` entries belong to the schema, so every row of an array
-        // would otherwise re-resolve the same entries. The resolution is observable through the entries the merge is
-        // handed: one per entry, shared by every row, rather than a fresh copy per row
+      it('merges each allOf schema once per call, however many array rows reach it', () => {
+        // `omit()` recurses per data node while the `allOf` belongs to the schema, so every row of an array would
+        // otherwise repeat a merge that can only reach the same answer. The merge is the observable part: one call
+        // for the rows together, rather than one a row
         const schema: RJSFSchema = {
           type: 'object',
           definitions: { audit: { type: 'object', properties: { at: { type: 'string' } } } },
@@ -965,11 +965,14 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
             { at: 'b', n: 2 },
           ],
         });
-        // One merge per row, each handed the entries resolved for the first of them
-        expect(customMergeAllOf).toHaveBeenCalledTimes(2);
-        const [firstRow, secondRow] = customMergeAllOf.mock.calls.map(([merged]) => merged.allOf as RJSFSchema[]);
-        expect(secondRow[0]).toBe(firstRow[0]);
-        expect(secondRow[1]).toBe(firstRow[1]);
+        // Both rows share the one merge, whose entries were resolved for it
+        expect(customMergeAllOf).toHaveBeenCalledTimes(1);
+        const [{ allOf: mergedEntries }] = customMergeAllOf.mock.calls[0];
+        const [refEntry, inlineEntry] = (mergedEntries ?? []) as RJSFSchema[];
+        // Resolved rather than hoisted, so the merge sees the referenced properties
+        expect(refEntry).not.toHaveProperty('$ref');
+        expect(refEntry.properties).toEqual({ at: { type: 'string' } });
+        expect(inlineEntry).toEqual({ properties: { n: { type: 'number' } } });
       });
 
       it('leaves a boolean allOf entry alone, since only a subschema object can carry references', () => {

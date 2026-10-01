@@ -176,16 +176,14 @@ describe('SchemaContext propagation', () => {
     });
     it('receives the SchemaContext, the array schema and the root schema when called through SchemaUtils', () => {
       const computeSkipPopulate = vi.fn(() => false);
-      const schemaUtils = createSchemaUtils(
-        { validator, defaultFormStateBehavior: { arrayMinItems: { computeSkipPopulate } } },
-        rootSchema,
-      );
+      const context: SchemaContext = {
+        validator,
+        defaultFormStateBehavior: { arrayMinItems: { computeSkipPopulate } },
+      };
+      const schemaUtils = createSchemaUtils(context, rootSchema);
       schemaUtils.getDefaultFormState(rootSchema);
-      expect(computeSkipPopulate).toHaveBeenCalledWith(
-        { validator, defaultFormStateBehavior: { arrayMinItems: { computeSkipPopulate } } },
-        rootSchema,
-        rootSchema,
-      );
+      // The frozen snapshot the constructor took, so what the callback sees equals what the form passed in
+      expect(computeSkipPopulate).toHaveBeenCalledWith(context, rootSchema, rootSchema);
     });
   });
 

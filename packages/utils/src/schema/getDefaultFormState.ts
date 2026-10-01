@@ -170,8 +170,8 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  *          false when computing defaults for any nested object properties.
  * @param isParentRequired - The optional boolean that indicates whether the parent field is required
  * @param requiredFields - The list of fields that are required
- * @param defaultFormStateBehavior - Optional configuration object, if provided, allows users to override
- *        default form state behavior
+ * @param emptyObjectFields - How to treat an empty object field, stated by the caller rather than read off the
+ *        context, since the `additionalProperties` pass deliberately does not apply the form's setting
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
  * @param isNullType - The type of the schema is null
  */
@@ -182,12 +182,10 @@ function maybeAddDefaultToObject<T = unknown>(
   includeUndefinedValues: boolean | 'excludeObjectChildren',
   isParentRequired?: boolean,
   requiredFields: string[] = [],
-  defaultFormStateBehavior: DefaultFormStateBehavior = {},
+  emptyObjectFields: NonNullable<DefaultFormStateBehavior['emptyObjectFields']> = 'populateAllDefaults',
   isConst = false,
   isNullType = false,
 ) {
-  const { emptyObjectFields = 'populateAllDefaults' } = defaultFormStateBehavior;
-
   if (includeUndefinedValues === true || isConst) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
@@ -238,21 +236,14 @@ function maybeAddDefaultToObject<T = unknown>(
   }
 }
 
-// The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so the two shapes
-// cannot drift apart as options are added. Each recursive call still names the props it forwards, so an added option
-// reaches the recursion only once every call site passes it on. `schema` and `formData` are omitted because the
-// recursion takes them as its own positional `rawSchema` and `rawFormData`, and `uiSchemaDefinitions` is inherited but
-// redeclared below, since only its documentation differs here
+// The forwarded props are inherited rather than restated, so the two shapes cannot drift apart as options are added.
+// `schema` and `formData` are omitted because the recursion takes them as its own positional `rawSchema` and
+// `rawFormData`
 interface ComputeDefaultsProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
-  /** Optional `ui:definitions`, applied at every `$ref`-resolved node the same way `SchemaField` applies them. Unlike
-   * `getDefaultFormState()`, the recursion does not fall back to `uiSchema['ui:definitions']`: it is passed the root's
-   * definitions once and forwards that same value down, so a caller reaching this function directly has to supply them
-   */
-  uiSchemaDefinitions?: GetDefaultFormStateProps<T, S, F>['uiSchemaDefinitions'];
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
   /** The current formData, if any, onto which to provide any missing defaults */
@@ -438,7 +429,7 @@ export function computeDefaults<
     // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by
     // `getDefaultBasedOnSchemaType()`
     if (picksWholeOption) {
-      if (rawFormData === undefined && !skipsOneOfConstants && defaultFormStateBehavior?.constAsDefaults !== 'never') {
+      if (rawFormData === undefined && contextToCompute.defaultFormStateBehavior?.constAsDefaults !== 'never') {
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {
@@ -643,7 +634,7 @@ export function getObjectDefaults<
           includeUndefinedValues,
           required,
           retrievedSchema.required,
-          defaultFormStateBehavior,
+          defaultFormStateBehavior?.emptyObjectFields,
           hasConst,
           propertySchema?.type === 'null',
         );
@@ -689,7 +680,6 @@ export function getObjectDefaults<
           uiSchema: uiSchema?.additionalProperties as UiSchema<T, S, F> | undefined,
           uiSchemaDefinitions,
         });
-        // Since these are additional properties we don't need to add the `defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
           objectDefaults as GenericObjectType,
           key,
@@ -697,6 +687,9 @@ export function getObjectDefaults<
           includeUndefinedValues,
           required,
           formDataRequired,
+          // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
+          // `emptyObjectFields` says about the properties the schema names
+          'populateAllDefaults',
         );
       });
     }

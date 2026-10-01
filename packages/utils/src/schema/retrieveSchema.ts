@@ -650,10 +650,13 @@ export function stubExistingAdditionalProperties<
 }
 
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
- * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise. Every `allOf` merge goes through here,
- * so a new merge site cannot quietly default away a form's `customMergeAllOf`, nor forget that a merge can fail: a
- * `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never throws. It warns once and
- * returns the schema without its `allOf`, reporting the failure through `merged` for a caller that has to react to it.
+ * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise. A `customMergeAllOf` may reject
+ * subschemas it considers irreconcilable, so this never throws: it warns once and returns the schema without its
+ * `allOf`, reporting the failure through `merged` for a caller that has to react to it.
+ *
+ * The entries are expected to have their `$ref`s resolved already. The shallow merge hoists an entry's `$ref` onto the
+ * merged schema rather than following it, so an unresolved entry loses the referenced schema's properties and hands a
+ * `customMergeAllOf` a `$ref` the form's own merge never sees.
  *
  * @param context - The `SchemaContext` whose `customMergeAllOf`, if any, does the merging
  * @param schema - The schema containing an `allOf` keyword

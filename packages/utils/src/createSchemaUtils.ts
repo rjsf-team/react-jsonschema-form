@@ -70,20 +70,16 @@ class SchemaUtils<
       this.rootSchema = rootSchema;
     }
     this.rawRootSchema = rootSchema;
-    // A v6 caller passed the validator here, and spreading one copies its own fields while leaving `validator`
-    // undefined, so the first schema function fails with a `TypeError` from inside `retrieveSchema()` that names
-    // nothing. A warning rather than a throw, because this is a diagnostic for a signature that TypeScript already
-    // rejects, and a library should not start throwing where the previous version merely misbehaved
+    // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
+    // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it
     if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
       logOnce(
         'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
       );
     }
-    // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
-    // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because the snapshot itself is what
-    // reaches every `computeSkipPopulate()` callback. Only the context's own keys
-    // are covered: the settings objects reached through them stay the caller's, so mutating one in place still changes
-    // how this instance behaves and still reads as "no difference" — they are documented as owned by the caller
+    // Snapshotted so a caller swapping a setting on the object it passed cannot change how this instance behaves
+    // behind `doesSchemaUtilsDiffer()`, and frozen because the snapshot is what reaches `computeSkipPopulate()`. The
+    // settings objects it points at stay the caller's, as `SchemaContext` documents
     this.context = Object.freeze({ ...context });
   }
 
@@ -118,13 +114,10 @@ class SchemaUtils<
       return false;
     }
 
-    // `deepEquals()` treats any two functions as equal, so a `defaultFormStateBehavior` differing only in a
-    // function-valued setting -- `arrayMinItems.computeSkipPopulate` is the only one -- reads as no difference and this
-    // instance keeps calling the callback it was built with. Comparing those by identity instead would rebuild
-    // `SchemaUtils` on every render for the common case of an inline callback, discarding the `retrieveSchema()` caches,
-    // so the stale read is the deliberate trade; `Form`'s own `defaultsBehavior` comparison keeps the old object for the
-    // same reason, so the two stay consistent
-
+    // `deepEquals()` treats any two functions as equal, so a `defaultFormStateBehavior` differing only in
+    // `arrayMinItems.computeSkipPopulate` reads as no difference and this instance keeps the callback it was built
+    // with. Comparing by identity would rebuild on every render for the common case of an inline callback, discarding
+    // the `retrieveSchema()` caches, so the stale read is the deliberate trade
     return (
       this.context.validator !== context.validator ||
       !deepEquals(this.rawRootSchema, rootSchema) ||
