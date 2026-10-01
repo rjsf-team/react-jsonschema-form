@@ -1,7 +1,7 @@
-// An oxlint override replaces a rule's options rather than adding to them, so the `no-restricted-globals` overrides
-// in .oxlintrc.json each repeat the root list, and one narrowed to some packages' `src` repeats the published-src
-// list too. This fails when one of them stops covering the list it repeats, or when a published package's `src` is
-// missing from the override that keeps it off the tests' Node and Vitest globals.
+// An oxlint override replaces a rule's options rather than adding to them, so the `no-restricted-globals` and
+// `no-restricted-properties` overrides in .oxlintrc.json each repeat the root list, and one narrowed to some packages'
+// `src` repeats the published-src list too. This fails when one of them stops covering the list it repeats, or when
+// a published package's `src` is missing from the override that keeps it off the tests' Node and Vitest globals.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 // Its `src` holds the shared Vitest suites themselves
@@ -11,23 +11,23 @@ const config = JSON.parse(
   readFileSync('.oxlintrc.json', 'utf8').replaceAll(/("(?:\\.|[^"\\])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, '$1'),
 );
 
-const ruleEntries = (rules) => (rules['no-restricted-globals'] ?? []).slice(1).map((entry) => JSON.stringify(entry));
-const rootEntries = ruleEntries(config.rules);
 const problems = [];
-
 const publishedOverride = config.overrides.find((override) =>
   override.files.some((glob) => /^packages\/\{[^}]+\}\/src\/\*\*$/.test(glob)),
 );
-const publishedEntries = ruleEntries(publishedOverride.rules);
-
 const narrowsPublished = (override) =>
   override !== publishedOverride && override.files.every((glob) => /^packages\/[^/]+\/src\//.test(glob));
 
-for (const override of config.overrides.filter((candidate) => ruleEntries(candidate.rules).length > 0)) {
-  const entries = new Set(ruleEntries(override.rules));
-  const required = narrowsPublished(override) ? publishedEntries : rootEntries;
-  for (const missing of required.filter((entry) => !entries.has(entry))) {
-    problems.push(`The override for ${override.files.join(', ')} is missing the no-restricted-globals ${missing}`);
+for (const rule of ['no-restricted-globals', 'no-restricted-properties']) {
+  const ruleEntries = (rules) => (rules[rule] ?? []).slice(1).map((entry) => JSON.stringify(entry));
+  const rootEntries = ruleEntries(config.rules);
+  const publishedEntries = ruleEntries(publishedOverride.rules);
+  for (const override of config.overrides.filter((candidate) => ruleEntries(candidate.rules).length > 0)) {
+    const entries = new Set(ruleEntries(override.rules));
+    const required = narrowsPublished(override) ? publishedEntries : rootEntries;
+    for (const missing of required.filter((entry) => !entries.has(entry))) {
+      problems.push(`The override for ${override.files.join(', ')} is missing the ${rule} ${missing}`);
+    }
   }
 }
 

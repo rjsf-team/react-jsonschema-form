@@ -260,8 +260,9 @@
     "no-redeclare": "off",
     "no-regex-spaces": "error",
     "no-restricted-exports": "off",
-    // Repeated in the overrides for published `src` below, since an override replaces a rule's options; a name added
-    // here goes there too, which scripts/check-oxlint-overrides.mjs (run by `pnpm run lint`) checks
+    // This and no-restricted-properties are repeated in the overrides for published `src` below, since an override
+    // replaces a rule's options; an entry added here goes there too, which scripts/check-oxlint-overrides.mjs (run by
+    // `pnpm run lint`) checks
     "no-restricted-globals": [
       "error",
       { "name": "isFinite", "message": "Use Number.isFinite instead." },
@@ -882,6 +883,49 @@
                 "message": "Published code runs in browsers; Node built-ins are for tests and tooling."
               }
             ]
+          }
+        ],
+        "no-restricted-properties": [
+          "error",
+          { "object": "arguments", "property": "callee", "message": "arguments.callee is deprecated" },
+          { "object": "global", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "self", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "window", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "global", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "self", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "window", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "property": "__defineGetter__", "message": "Please use Object.defineProperty instead." },
+          { "property": "__defineSetter__", "message": "Please use Object.defineProperty instead." },
+          { "object": "Math", "property": "pow", "message": "Use the exponentiation operator (**) instead." },
+          {
+            "object": "globalThis",
+            "property": "process",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "Buffer",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "global",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "require",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
           }
         ]
       }
