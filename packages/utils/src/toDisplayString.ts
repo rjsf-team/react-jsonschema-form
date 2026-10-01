@@ -50,7 +50,7 @@ export default function toDisplayString(value: unknown): string {
         return json;
       }
     } catch {
-      // A circular value; `String()` below still gives it a form, as `join()` tolerates cycles
+      // A cycle, or a `toJSON()`, getter or nested `String()` that throws; the fallback below still gives it a form
     }
     return stringOrType(value) || typeof value;
   }

@@ -76,6 +76,17 @@ describe('logOnce()', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('a message:', nullPrototype);
     expect(consoleErrorSpy).toHaveBeenCalledWith('another message:', unprintableError);
   });
+  it('tells an error that converts to the same text apart from a string error, by its type', () => {
+    const unprintableError = new Error('boom');
+    unprintableError.toString = () => {
+      throw new Error('no string for you');
+    };
+    logOnce('a message:', 'error', unprintableError);
+    logOnce('a message:', 'error', 'object');
+    logOnce('a message:', 'error', 10);
+    logOnce('a message:', 'error', '10');
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(4);
+  });
   it('tells an absent error apart from one that converts to an empty string', () => {
     logOnce('a message');
     logOnce('a message', 'warn', '');
