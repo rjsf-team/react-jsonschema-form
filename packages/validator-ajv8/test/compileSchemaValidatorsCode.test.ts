@@ -1,6 +1,11 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { getDefaultFormState, mergeSchemas, retrieveSchema, schemaParser } from '@rjsf/utils';
+import { getDefaultFormState, retrieveSchema, schemaParser } from '@rjsf/utils';
 
+import {
+  MERGED_PATTERN_PROPERTY_FORM_DATA,
+  SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
+  titleChoiceMergeAllOf as customMergeAllOf,
+} from '../../utils/test/testUtils/customMergeAllOfData.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -70,26 +75,8 @@ describe('compileSchemaValidatorsCode()', () => {
 });
 
 describe('compileSchemaValidatorsCode() with a customMergeAllOf', () => {
-  // `p` is both a named property and a patternProperties match, so the parser merges `{ allOf: [p, pattern] }`
-  const rootSchema: RJSFSchema = {
-    type: 'object',
-    properties: { p: { type: 'object', properties: { x: { type: 'string' } } } },
-    patternProperties: {
-      '^p$': { properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } } },
-    },
-  };
-  // Produces `oneOf` options that differ from the default merge's, so their hashes differ too
-  const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
-    const { allOf, ...rest } = schema;
-    const merged = (allOf as RJSFSchema[]).reduce((acc, s) => mergeSchemas(acc, s) as RJSFSchema, rest);
-    const choice = merged.properties?.choice as RJSFSchema | undefined;
-    if (!choice?.oneOf) {
-      return merged;
-    }
-    const oneOf = choice.oneOf.map((o) => ({ ...(o as RJSFSchema), title: `Option ${(o as RJSFSchema).const}` }));
-    return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
-  };
-  const formData = { p: { choice: 'b' } };
+  const rootSchema = SCHEMA_MERGED_FOR_PATTERN_PROPERTY;
+  const formData = MERGED_PATTERN_PROPERTY_FORM_DATA;
 
   it('misses the custom-merged sub-schemas when compiled without it', () => {
     const validator = createPrecompiledValidator(

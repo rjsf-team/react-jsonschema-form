@@ -63,8 +63,11 @@ compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
 ```
 
 If your `Form` is given a `customMergeAllOf`, pass it in the optional fourth parameter too, `{ customMergeAllOf }`, so the precompiled validator functions cover the sub-schemas it merges.
-Each function is looked up by a hash of the schema it validates, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
+Each function is looked up by the `$id` of the schema it validates, or by a hash of that schema when it has none, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
 If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
+A sub-schema that carries its own `$id` is compiled once, from the first form of it the compile encounters, since the lookup cannot tell two schemas with the same `$id` apart.
+Any other form of it the form resolves is then validated against that one function rather than its own, so give a sub-schema whose resolved forms differ no `$id`, or a distinct one, to have each compiled on its own.
+The non-precompiled validators cache by `$id` the same way, so they answer such a sub-schema identically.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';

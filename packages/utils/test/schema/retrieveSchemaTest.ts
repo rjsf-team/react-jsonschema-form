@@ -1027,7 +1027,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.any(Error),
         );
       });
-      it('should return allOf and top level schemas when expand all', () => {
+      it('should merge the allOf when expanding all branches, as a form does', () => {
+        const schema: RJSFSchema = {
+          properties: { test: { type: 'string' } },
+          allOf: [{ minLength: 2 }, { maxLength: 5 }],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
+          { properties: { test: { type: 'string' } }, minLength: 2, maxLength: 5 },
+        ]);
+      });
+      it('should drop an allOf it cannot merge when expanding all branches, as a form does', () => {
         const schema: RJSFSchema = {
           properties: { test: { type: 'string' } },
           allOf: [{ type: 'string' }, { type: 'boolean' }],
@@ -1036,9 +1047,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = {};
         const { allOf, ...restOfSchema } = schema;
         expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
-          ...allOf!,
           restOfSchema,
         ]);
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error),
+        );
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {
