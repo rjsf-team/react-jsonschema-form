@@ -394,7 +394,7 @@ export default function ObjectField<
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           constValue = apSchema.const;
         }
-        type = getSchemaType<S>(apSchema as S);
+        type = getSchemaType(apSchema);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -412,8 +412,7 @@ export default function ObjectField<
         ) as RJSFSchema['default'];
       }
 
-      // Compared to `undefined` rather than `??` so that an explicit `null` `const` or `default` is kept
-      const newValue = [constValue, defaultValue].find((value) => value !== undefined);
+      const newValue = constValue !== undefined ? constValue : defaultValue;
       setByPath(
         newFormData,
         newKey,

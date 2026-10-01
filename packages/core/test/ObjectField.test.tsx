@@ -1617,12 +1617,12 @@ describe('ObjectField', () => {
     });
 
     it('should add a numeric default for an integer additionalProperties schema', async () => {
-      const { node, onChange } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: { ...schema, additionalProperties: { type: 'integer' } },
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(screen.getByRole('button', { name: 'Add' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
     });
@@ -1632,12 +1632,12 @@ describe('ObjectField', () => {
       [['number', 'null'], 0],
       [['boolean', 'null'], false],
     ])('should add a typed default for a nullable %j additionalProperties schema', async (type, expected) => {
-      const { node, onChange } = createFormComponent({
+      const { onChange } = createFormComponent({
         schema: { ...schema, additionalProperties: { type } },
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(screen.getByRole('button', { name: 'Add' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });

@@ -1,6 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from './WrappedForm.tsx';
@@ -13,7 +13,7 @@ describe('UpDownWidget focus handlers', () => {
   function renderForm() {
     const onFocus = vi.fn();
     const onBlur = vi.fn();
-    const { container } = render(
+    render(
       <Form
         schema={schema}
         uiSchema={{ 'ui:widget': 'updown' }}
@@ -23,13 +23,13 @@ describe('UpDownWidget focus handlers', () => {
         onBlur={onBlur}
       />,
     );
-    return { container, onFocus, onBlur };
+    return { onFocus, onBlur };
   }
 
   it("reports the input's value on focus and blur", async () => {
-    const { container, onFocus, onBlur } = renderForm();
+    const { onFocus, onBlur } = renderForm();
 
-    await user.click(container.querySelector('input')!);
+    await user.click(screen.getByRole('spinbutton'));
     await user.tab();
 
     expect(onFocus).toHaveBeenCalledWith('root', '5');
@@ -37,8 +37,8 @@ describe('UpDownWidget focus handlers', () => {
   });
 
   it('reports no value for a focus that lands on an increment or decrement trigger', () => {
-    const { container, onFocus } = renderForm();
-    const trigger = container.querySelector<HTMLButtonElement>('button[data-part="increment-trigger"]')!;
+    const { onFocus } = renderForm();
+    const trigger = screen.getByRole('button', { name: 'increment value' });
 
     // Programmatic, because a click on a trigger keeps focus in the input, and the trigger's tabindex of -1 keeps it
     // out of the tab order; a script or assistive technology can still focus it

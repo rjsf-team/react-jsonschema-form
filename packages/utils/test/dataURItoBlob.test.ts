@@ -49,6 +49,14 @@ describe('dataURItoBlob()', () => {
     );
   });
 
+  it('should stringify a decoding failure that is not an Error', () => {
+    const nonError: unknown = 'bad input';
+    vi.spyOn(globalThis, 'atob').mockImplementationOnce(() => {
+      throw nonError;
+    });
+    expect(() => dataURItoBlob('data:text/plain;base64,SGVsbG8=')).toThrow(new Error('File is invalid: bad input'));
+  });
+
   it('should return the name of the file if present', () => {
     const { blob, name } = dataURItoBlob('data:image/png;name=test.png;base64,VGVzdC5wbmc=');
     expect(name).toEqual('test.png');
