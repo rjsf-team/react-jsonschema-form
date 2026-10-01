@@ -1,13 +1,13 @@
-import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionValueDecoder,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -37,14 +37,12 @@ export default function CheckboxesWidget<
   onFocus,
   className,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>((target as any)?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <div className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}>
@@ -70,9 +68,10 @@ export default function CheckboxesWidget<
                 }}
                 className={className}
                 checked={checked}
+                value={domValues[index]}
                 autoFocus={autofocus && index === 0}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
+                onBlur={blurHandlers[index]}
+                onFocus={focusHandlers[index]}
                 aria-describedby={ariaDescribedByIds(id)}
               />
               <Label className='leading-tight' htmlFor={optionId(id, index)}>

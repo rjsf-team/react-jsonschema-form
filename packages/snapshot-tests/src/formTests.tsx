@@ -1473,4 +1473,21 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} formData={{ answer: true }} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
+  // A theme whose select keys or validates its items by value, like chakra's or mantine's, fails on options sharing one
+  describe.each(['select', 'radio'])(
+    '%s widget with options sharing a String() in the realValue format (#5315)',
+    (widget) => {
+      test('renders each option with a value of its own', () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { const: 1, title: 'Number' },
+            { const: '1', title: 'String' },
+          ],
+        };
+        const uiSchema: UiSchema = { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} formData='1' validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+    },
+  );
 }

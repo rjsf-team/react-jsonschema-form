@@ -52,3 +52,35 @@ describe('CheckboxesWidget invalid state', () => {
     expect(invalidCheckboxes(container)).toHaveLength(0);
   });
 });
+
+describe('CheckboxesWidget focus and blur', () => {
+  it.each(['indexed', 'realValue'] as const)(
+    'reports the focused option value in the %s format, apart from an option sharing its String() (#5315)',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'array', uniqueItems: true, items: { enum: [1, '1'] } }}
+          uiSchema={{ 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat } }}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus.mock.calls).toEqual([
+        ['root', 1],
+        ['root', '1'],
+      ]);
+      expect(onBlur.mock.calls).toEqual([
+        ['root', 1],
+        ['root', '1'],
+      ]);
+    },
+  );
+});

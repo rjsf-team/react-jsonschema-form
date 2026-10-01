@@ -1801,6 +1801,70 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-radio-group"
+        id="root"
+        role="radiogroup"
+      >
+        <div
+          class="radio "
+        >
+          <label>
+            <span>
+              <input
+                aria-describedby="root__error root__description root__help"
+                id="root-0"
+                name="root"
+                type="radio"
+                value="__rjsf_index:0"
+              />
+              <span>
+                Number
+              </span>
+            </span>
+          </label>
+        </div>
+        <div
+          class="radio "
+        >
+          <label>
+            <span>
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked=""
+                id="root-1"
+                name="root"
+                type="radio"
+                value="__rjsf_index:1"
+              />
+              <span>
+                String
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from a nested oneOf of constants without a type 1`] = `
 <DocumentFragment>
   <form
@@ -2086,6 +2150,47 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           value="1"
         >
           No
+        </option>
+      </select>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-string"
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        class="form-control"
+        id="root"
+        name="root"
+      >
+        <option
+          value=""
+        />
+        <option
+          value="__rjsf_index:0"
+        >
+          Number
+        </option>
+        <option
+          value="__rjsf_index:1"
+        >
+          String
         </option>
       </select>
     </div>

@@ -215,7 +215,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -224,7 +224,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -247,7 +247,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -256,7 +256,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -279,7 +279,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -288,7 +288,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -311,7 +311,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -320,7 +320,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -343,7 +343,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -352,7 +352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1152,7 +1152,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -1161,7 +1161,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1184,7 +1184,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -1193,7 +1193,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1216,7 +1216,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -1225,7 +1225,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1248,7 +1248,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -1257,7 +1257,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1280,7 +1280,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -1289,7 +1289,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2121,7 +2121,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -2130,7 +2130,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2153,7 +2153,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -2162,7 +2162,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2185,7 +2185,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -2194,7 +2194,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2217,7 +2217,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -2226,7 +2226,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2249,7 +2249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -2258,7 +2258,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2924,7 +2924,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -2933,7 +2933,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2956,7 +2956,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -2965,7 +2965,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2988,7 +2988,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -2997,7 +2997,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3020,7 +3020,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -3029,7 +3029,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3052,7 +3052,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -3061,7 +3061,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3850,7 +3850,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-0"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="0"
                     />
                     <input
                       aria-hidden="true"
@@ -3859,7 +3859,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="0"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3882,7 +3882,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-1"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="1"
                     />
                     <input
                       aria-hidden="true"
@@ -3891,7 +3891,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="1"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3914,7 +3914,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-2"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="2"
                     />
                     <input
                       aria-hidden="true"
@@ -3923,7 +3923,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="2"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3946,7 +3946,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-3"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="3"
                     />
                     <input
                       aria-hidden="true"
@@ -3955,7 +3955,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="3"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3978,7 +3978,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-4"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="4"
                     />
                     <input
                       aria-hidden="true"
@@ -3987,7 +3987,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="4"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4402,7 +4402,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-0"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="0"
                     />
                     <input
                       aria-hidden="true"
@@ -4411,7 +4411,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="0"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4434,7 +4434,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-1"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="1"
                     />
                     <input
                       aria-hidden="true"
@@ -4443,7 +4443,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="1"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4466,7 +4466,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-2"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="2"
                     />
                     <input
                       aria-hidden="true"
@@ -4475,7 +4475,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="2"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4498,7 +4498,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-3"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="3"
                     />
                     <input
                       aria-hidden="true"
@@ -4507,7 +4507,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="3"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4530,7 +4530,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-4"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="4"
                     />
                     <input
                       aria-hidden="true"
@@ -4539,7 +4539,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="4"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"

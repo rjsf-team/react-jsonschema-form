@@ -5,8 +5,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   enumOptionSelectedValue,
+  enumOptionsDomValues,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -37,6 +37,7 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (_: any, data: RadioGroupOnChangeData) =>
     onChange(enumOptionValueDecoder<S>(data.value, enumOptions, optionValueFormat, emptyValue));
@@ -73,7 +74,7 @@ export default function RadioWidget<
               <Radio
                 id={optionId(id, index)}
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={domValues[index]}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}
                 disabled={disabled || itemDisabled || readonly}

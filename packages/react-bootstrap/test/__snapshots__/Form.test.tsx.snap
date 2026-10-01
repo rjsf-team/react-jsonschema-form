@@ -879,6 +879,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-0"
                         name="root[choices][]"
                         type="checkbox"
+                        value="0"
                       />
                       <label
                         class="form-check-label"
@@ -897,6 +898,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-1"
                         name="root[choices][]"
                         type="checkbox"
+                        value="1"
                       />
                       <label
                         class="form-check-label"
@@ -915,6 +917,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-2"
                         name="root[choices][]"
                         type="checkbox"
+                        value="2"
                       />
                       <label
                         class="form-check-label"
@@ -1290,19 +1293,16 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       value=""
                     />
                     <option
-                      id="red"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
                       value="2"
                     >
                       blue
@@ -2540,19 +2540,16 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       value=""
                     />
                     <option
-                      id="red"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
                       value="2"
                     >
                       blue
@@ -2707,6 +2704,76 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <div
+          class="mb-0"
+        >
+          <div
+            class="form-check"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="form-check-input"
+              id="root-0"
+              name="root"
+              type="radio"
+              value="__rjsf_index:0"
+            />
+            <label
+              class="form-check-label"
+              for="root-0"
+              title=""
+            >
+              Number
+            </label>
+          </div>
+          <div
+            class="form-check"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked=""
+              class="form-check-input"
+              id="root-1"
+              name="root"
+              type="radio"
+              value="__rjsf_index:1"
+            />
+            <label
+              class="form-check-label"
+              for="root-1"
+              title=""
+            >
+              String
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from a nested oneOf of constants without a type 1`] = `
 <DocumentFragment>
   <form
@@ -2751,13 +2818,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         name="root_region__oneof_select"
                       >
                         <option
-                          id="None"
                           value="0"
                         >
                           None
                         </option>
                         <option
-                          id="Europe"
                           value="1"
                         >
                           Europe
@@ -2787,13 +2852,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               value=""
                             />
                             <option
-                              id="France"
                               value="0"
                             >
                               France
                             </option>
                             <option
-                              id="Germany"
                               value="1"
                             >
                               Germany
@@ -2845,7 +2908,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             value=""
           />
           <option
-            id="Subscribed"
             value="0"
           >
             Subscribed
@@ -2888,19 +2950,16 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             value=""
           />
           <option
-            id="Never"
             value="0"
           >
             Never
           </option>
           <option
-            id="Once"
             value="1"
           >
             Once
           </option>
           <option
-            id="Unlimited"
             value="2"
           >
             Unlimited
@@ -2943,19 +3002,16 @@ exports[`select widget from oneOf boolean constants with a null option without a
             value=""
           />
           <option
-            id="Unknown"
             value="0"
           >
             Unknown
           </option>
           <option
-            id="Yes"
             value="1"
           >
             Yes
           </option>
           <option
-            id="No"
             value="2"
           >
             No
@@ -2998,13 +3054,11 @@ exports[`select widget from oneOf constants without a type 1`] = `
             value=""
           />
           <option
-            id="Foo"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
             value="1"
           >
             Bar
@@ -3047,16 +3101,61 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             value=""
           />
           <option
-            id="Yes"
             value="0"
           >
             Yes
           </option>
           <option
-            id="No"
             value="1"
           >
             No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="__rjsf_index:0"
+          >
+            Number
+          </option>
+          <option
+            value="__rjsf_index:1"
+          >
+            String
           </option>
         </select>
       </div>
@@ -3462,6 +3561,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3480,6 +3580,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3498,6 +3599,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -3516,6 +3618,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-3"
               name="root"
               type="checkbox"
+              value="3"
             />
             <label
               class="form-check-label"
@@ -3566,6 +3669,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3584,6 +3688,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3602,6 +3707,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -3669,6 +3775,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3687,6 +3794,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3705,6 +3813,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -5168,19 +5277,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -5282,19 +5388,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -6143,19 +6246,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -6258,19 +6358,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -9664,13 +9761,11 @@ exports[`single fields > select field 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
@@ -9711,25 +9806,21 @@ exports[`single fields > select field multiple choice 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9770,26 +9861,22 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9832,6 +9919,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -9851,6 +9939,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -9869,6 +9958,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -9887,6 +9977,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-3"
               name="root"
               type="checkbox"
+              value="3"
             />
             <label
               class="form-check-label"
@@ -9932,25 +10023,21 @@ exports[`single fields > select field multiple choice formData 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9991,19 +10078,16 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           name="root"
         >
           <option
-            id="Blue"
             value="0"
           >
             Blue
           </option>
           <option
-            id="Red"
             value="1"
           >
             Red
           </option>
           <option
-            id="Green"
             value="2"
           >
             Green
@@ -10046,14 +10130,12 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
             value="1"
           >
             bar
@@ -10238,13 +10320,11 @@ exports[`single fields > select field single choice formData 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
@@ -10290,13 +10370,11 @@ exports[`single fields > select field single choice optgroups 1`] = `
             label="Group A"
           >
             <option
-              id="foo"
               value="0"
             >
               foo
             </option>
             <option
-              id="bar"
               value="1"
             >
               bar
@@ -10306,14 +10384,12 @@ exports[`single fields > select field single choice optgroups 1`] = `
             label="Group B"
           >
             <option
-              id="baz"
               value="2"
             >
               baz
             </option>
           </optgroup>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -10359,14 +10435,12 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             label="Group A"
           >
             <option
-              id="foo"
               value="0"
             >
               foo
             </option>
             <option
               disabled=""
-              id="bar"
               value="1"
             >
               bar
@@ -10376,14 +10450,12 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             label="Group B"
           >
             <option
-              id="baz"
               value="2"
             >
               baz
             </option>
           </optgroup>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -10499,13 +10571,11 @@ exports[`single fields > select widget with description in schema and FieldTempl
             value=""
           />
           <option
-            id="Yes"
             value="0"
           >
             Yes
           </option>
           <option
-            id="No"
             value="1"
           >
             No
@@ -10560,13 +10630,11 @@ exports[`single fields > select widget with selected oneOf option description 1`
             value=""
           />
           <option
-            id="Foo"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
             value="1"
           >
             Bar
@@ -10613,13 +10681,11 @@ exports[`single fields > select widget with selected oneOf option description an
             value=""
           />
           <option
-            id="Foo"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
             value="1"
           >
             Bar
@@ -11511,13 +11577,11 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       value=""
                     />
                     <option
-                      id="Yes"
                       value="0"
                     >
                       Yes
                     </option>
                     <option
-                      id="No"
                       value="1"
                     >
                       No

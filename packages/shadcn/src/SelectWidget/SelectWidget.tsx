@@ -10,8 +10,8 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
+  enumOptionsDomValues,
   enumOptionsValueForIndex,
-  enumOptionValueEncoder,
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
@@ -80,6 +80,7 @@ export default function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const { handleFocus: handleFancyFocus, handleBlur: handleFancyBlur } = useSelectFocusHandlers<T, S, F>({
@@ -91,7 +92,7 @@ export default function SelectWidget<
   });
 
   const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
-    value: multiple ? option.value : enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+    value: multiple ? option.value : domValues[option.index],
     label: option.label,
     index: option.index,
     disabled: option.disabled,

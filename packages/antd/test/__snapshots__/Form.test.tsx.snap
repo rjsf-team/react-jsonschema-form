@@ -4681,6 +4681,95 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  aria-describedby="root__error root__description root__help"
+                  class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-ypkju9 css-var-root ant-radio-css-var"
+                  id="root"
+                  role="radiogroup"
+                >
+                  <label
+                    class="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-ypkju9 css-var-root ant-radio-css-var"
+                  >
+                    <span
+                      class="ant-radio ant-wave-target"
+                    >
+                      <input
+                        class="ant-radio-input"
+                        id="root-0"
+                        name="root"
+                        type="radio"
+                        value="__rjsf_index:0"
+                      />
+                    </span>
+                    <span
+                      class="ant-radio-label"
+                    >
+                      Number
+                    </span>
+                  </label>
+                  <label
+                    class="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-ypkju9 css-var-root ant-radio-css-var"
+                  >
+                    <span
+                      class="ant-radio ant-wave-target ant-radio-checked"
+                    >
+                      <input
+                        checked=""
+                        class="ant-radio-input"
+                        id="root-1"
+                        name="root"
+                        type="radio"
+                        value="__rjsf_index:1"
+                      />
+                    </span>
+                    <span
+                      class="ant-radio-label"
+                    >
+                      String
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from a nested oneOf of constants without a type 1`] = `
 <DocumentFragment>
   <form
@@ -5289,6 +5378,94 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                     title="No"
                   >
                     No
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="off"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="search"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-ypkju9 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-ypkju9 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-ypkju9 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-ypkju9 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="String"
+                  >
+                    String
                     <input
                       aria-autocomplete="list"
                       aria-describedby="root__error root__description root__help"

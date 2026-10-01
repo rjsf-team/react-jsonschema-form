@@ -11,7 +11,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -46,6 +46,7 @@ export default function RadioWidget<
     props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (_: any, enumValue: any) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
@@ -89,7 +90,7 @@ export default function RadioWidget<
                   <Radio {...muiSlotProps?.radio} name={htmlName || id} id={optionId(id, index)} color='primary' />
                 }
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                value={domValues[index]}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}
                 disabled={disabled || itemDisabled || readonly}

@@ -318,10 +318,32 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 
 - EnumOptionsType&lt;S>["value"][]: The updated `selected` list with the `value` removed from it
 
+### enumOptionsDomValues&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Encodes every option of `enumOptions` for its DOM value attribute, in a single pass over the list.
+A widget reads an option's value at its position, and `enumOptionValueDecoder()` and `enumOptionSelectedValue()` encode against the same list, so they agree with it.
+When `format` is `'indexed'` (the default), each option's value is its index as a string.
+When `format` is `'realValue'`, primitive values are converted via `String()`.
+Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
+So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
+The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
+Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
+That includes options with the very same value, such as two `'US'` constants titled `USA` and `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or showing which is selected; both still decode to the value they share, so a multiple widget that takes its selection from `enumOptionSelectedValue()` shows only the first of them as selected.
+An `undefined` option is encoded as the empty string.
+
+#### Parameters
+
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
+- [format='indexed']: OptionValueFormat - How to encode the values for the DOM attribute: `'indexed'` for each option's index, `'realValue'` for the values themselves
+
+#### Returns
+
+- string[]: The DOM value attribute of each option, in the order of `enumOptions`
+
 ### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Computes the value to pass to a select element's `value` attribute.
-When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
+When `format` is `'realValue'`, encodes form data values as `enumOptionsDomValues()` encodes the options' values.
 A lone non-array value of a `multiple` selection is encoded as a one-item selection.
 When `format` is `'indexed'` (the default), resolves to index-based values via `enumOptionsIndexForValue`.
 Returns `emptyValue` when the current value is empty.
@@ -405,7 +427,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Decodes a string from a DOM value attribute back to a typed enum value.
-When `format` is `'realValue'`, does a reverse lookup: finds the first enum option that `enumOptionValueEncoder()` encodes as the input string and returns the original typed value, including object, array and `null` values, which are encoded as their prefixed index. Options whose `String()` is the same, such as `1` and `'1'`, share a DOM value and decode to the first of them.
+When `format` is `'realValue'`, does a reverse lookup: finds the enum option that `enumOptionsDomValues()` encodes as the input string and returns the original typed value, including object, array and `null` values and options that share a `String()`, which are encoded as their prefixed index.
 A bare index is not an option's position here, since it can't be told apart from a number option's own value; a widget holding a position resolves it with `enumOptionsValueForIndex()` instead.
 When `format` is `'indexed'` (the default), uses index-based resolution via `enumOptionsValueForIndex`.
 
@@ -419,25 +441,6 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 #### Returns
 
 - unknown: The original typed enum value(s)
-
-### enumOptionValueEncoder()
-
-Encodes an enum option value into a string for a DOM value attribute.
-When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to the index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
-So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
-The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
-When `format` is `'indexed'` (the default), returns the index as a string.
-
-#### Parameters
-
-- value: unknown - The typed enum value
-- index: number - The option's position in the enumOptions array
-- [format='indexed']: OptionValueFormat - How to encode the value for the DOM attribute
-
-#### Returns
-
-- string: The string to use as the DOM value attribute
 
 ### enumOptionValueLabel()
 
@@ -746,6 +749,21 @@ Computes whether a date-time field's `schema.format` is `iso-date-time`, and the
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
 
+### getExampleSuggestions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the suggestions a text input offers for `schema`: its `examples` and `default`, as the strings a user could pick from a `<datalist>`.
+Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
+A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
+A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+
+#### Parameters
+
+- schema: S - The schema whose `examples` and `default` are suggested
+
+#### Returns
+
+- string[]: The distinct suggestions, in the order of `examples` followed by the `default`
+
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
@@ -879,7 +897,7 @@ Using this everywhere an option is resolved, rather than only where one is rende
 
 Resolves the effective `optionValueFormat` for enum-backed widgets.
 Provides a single source of truth for the default DOM encoding format (`'indexed'`) used by `SelectWidget`, `RadioWidget`, and `CheckboxesWidget`.
-Widgets should call this helper once and pass the result to `enumOptionValueEncoder`, `enumOptionValueDecoder`, and `enumOptionSelectedValue` rather than reading `options.optionValueFormat` directly.
+Widgets should call this helper once and pass the result to `enumOptionsDomValues`, `enumOptionValueDecoder`, and `enumOptionSelectedValue` rather than reading `options.optionValueFormat` directly.
 
 #### Parameters
 
@@ -1082,7 +1100,7 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (needed by [enumOptionValueEncoder()](#enumoptionvalueencoder) for the `indexed` `optionValueFormat`) and its `disabled` status (from `ui:enumDisabled`).
+Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (where a widget reads the option's DOM value in [enumOptionsDomValues()](#enumoptionsdomvaluess-extends-strictrjsfschema--rjsfschema)) and its `disabled` status (from `ui:enumDisabled`).
 Each theme's `SelectWidget` calls it and renders the result with whatever grouping primitive its own UI library provides.
 
 When no `optgroups` is given, the same flat list of options is returned, just tagged, so a widget can use one rendering path whether or not grouping is in effect.
@@ -2051,6 +2069,22 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 #### Returns
 
 - UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+
+### useOptionFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Hook which builds the focus and blur handlers of the options of a widget that renders one focusable element per option,
+such as a `CheckboxesWidget`. Each handler reports its option's value from `enumOptions`, rather than decoding the
+focused element's DOM `value`, so it holds whether or not a theme's component forwards that attribute. To be used by
+theme specific `CheckboxesWidget` implementations.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'options' | 'onFocus' | 'onBlur'> - The `id`, `options`, `onFocus` and
+  `onBlur` from the `WidgetProps` of the widget
+
+#### Returns
+
+- UseOptionFocusHandlersResult: The `focusHandlers` and `blurHandlers` arrays, holding the `onFocus` and `onBlur` handler of each option by its position
 
 ### useSelectFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -24,6 +24,7 @@
   "peerDependencies": {
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "markdown-to-jsx": "^9.8.2",

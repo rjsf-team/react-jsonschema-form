@@ -17,7 +17,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   groupEnumOptions,
   hasVisibleErrors,
@@ -78,6 +78,7 @@ export default function SelectWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const isMultiple = typeof multiple === 'undefined' ? false : !!multiple;
 
@@ -97,11 +98,7 @@ export default function SelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
-      <MenuItem
-        key={option.index}
-        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
-        disabled={option.disabled}
-      >
+      <MenuItem key={option.index} value={domValues[option.index]} disabled={option.disabled}>
         {option.label}
       </MenuItem>
     );

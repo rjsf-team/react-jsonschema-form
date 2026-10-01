@@ -3,9 +3,9 @@ import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   getOptionValueFormat,
   groupEnumOptions,
   hasVisibleErrors,
@@ -57,6 +57,7 @@ function SelectWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   // One scan of the options finds the selection, which both the displayed labels and the selected options come from.
   // The options' own values are encoded in the `optionValueFormat`, so the selection is encoded in that format too
@@ -68,9 +69,7 @@ function SelectWidget<
           .concat(matchedIndexes)
           .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
   const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
-  const selectedOptions = selectedOptionsWithIndex.map((option) =>
-    enumOptionValueEncoder(option.value, option.index, optionValueFormat),
-  );
+  const selectedOptions = selectedOptionsWithIndex.map((option) => domValues[option.index]);
 
   const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
   const handleChange = (_: any, data: OptionOnSelectData) => {
@@ -82,11 +81,7 @@ function SelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (
-      <Option
-        key={option.index}
-        value={enumOptionValueEncoder(option.value, option.index, optionValueFormat)}
-        disabled={option.disabled}
-      >
+      <Option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
         {option.label}
       </Option>
     );

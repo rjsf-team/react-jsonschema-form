@@ -1,10 +1,15 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Templates from '../src/templates/index.ts';
 import CheckboxesWidget from '../src/widgets/CheckboxesWidget.tsx';
+import Form from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = {
   type: 'array',
@@ -111,6 +116,38 @@ describe('Checkboxes', () => {
       renderWidget({ value: null, options: { optionValueFormat } });
       expect(screen.getAllByRole('checkbox')).toHaveLength(4);
       screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).not.toBeChecked());
+    },
+  );
+});
+
+describe('CheckboxesWidget focus and blur', () => {
+  it.each(['indexed', 'realValue'] as const)(
+    'reports the focused option value in the %s format, apart from an option sharing its String() (#5315)',
+    async (optionValueFormat) => {
+      const onFocus = vi.fn();
+      const onBlur = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'array', uniqueItems: true, items: { enum: [1, '1'] } }}
+          uiSchema={{ 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat } }}
+          validator={validator}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />,
+      );
+
+      await user.tab();
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus.mock.calls).toEqual([
+        ['root', 1],
+        ['root', '1'],
+      ]);
+      expect(onBlur.mock.calls).toEqual([
+        ['root', 1],
+        ['root', '1'],
+      ]);
     },
   );
 });

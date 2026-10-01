@@ -1,13 +1,14 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionValueDecoder,
   enumOptionsDeselectValue,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -28,8 +29,9 @@ export default function CheckboxesWidget<
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const handleChange =
@@ -42,10 +44,7 @@ export default function CheckboxesWidget<
       }
     };
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <Form.Group>
@@ -61,6 +60,7 @@ export default function CheckboxesWidget<
               inline={inline}
               required={required}
               checked={checked}
+              value={domValues[index]}
               className='bg-transparent border-0'
               type='checkbox'
               id={optionId(id, index)}
@@ -68,8 +68,8 @@ export default function CheckboxesWidget<
               label={option.label}
               autoFocus={autofocus && index === 0}
               onChange={handleChange(index)}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
+              onBlur={blurHandlers[index]}
+              onFocus={focusHandlers[index]}
               disabled={disabled || itemDisabled || readonly}
               aria-describedby={ariaDescribedByIds(id)}
             />

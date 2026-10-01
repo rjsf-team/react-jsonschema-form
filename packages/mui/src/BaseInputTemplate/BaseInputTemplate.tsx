@@ -16,6 +16,7 @@ import type {
 import {
   ariaDescribedByIds,
   examplesId,
+  getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
   hasVisibleErrors,
@@ -91,6 +92,8 @@ export default function BaseInputTemplate<
 
   const callerHtmlInput = { ...slotProps?.htmlInput, ...muiSlotProps?.htmlInput };
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them. The title explains
   // the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no longer in force
   const htmlInputProps = {
@@ -103,7 +106,7 @@ export default function BaseInputTemplate<
     pattern,
     autoCapitalize,
     ...callerHtmlInput,
-    ...(schema.examples ? { list: examplesId(id) } : undefined),
+    ...(hasExamples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -161,9 +164,9 @@ export default function BaseInputTemplate<
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

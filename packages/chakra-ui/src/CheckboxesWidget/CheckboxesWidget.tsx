@@ -1,15 +1,15 @@
-import type { FocusEvent } from 'react';
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   hasVisibleErrors,
   labelValue,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -24,11 +24,9 @@ export default function CheckboxesWidget<
     props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
@@ -58,10 +56,10 @@ export default function CheckboxesWidget<
                   key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                  value={domValues[index]}
                   disabled={disabled || itemDisabled || readonly}
-                  onBlur={handleBlur}
-                  onFocus={handleFocus}
+                  onBlur={blurHandlers[index]}
+                  onFocus={focusHandlers[index]}
                 >
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>

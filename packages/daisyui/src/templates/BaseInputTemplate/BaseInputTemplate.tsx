@@ -2,7 +2,13 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getInputProps, getNumericInputTitle, ariaDescribedByIds, examplesId } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+} from '@rjsf/utils';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -52,7 +58,9 @@ export default function BaseInputTemplate<
   }
   // Extract step, min, max, accept from inputProps
   const { step, min, max, accept, ...rest } = inputProps;
-  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const htmlInputProps = { step, min, max, accept, ...(hasExamples ? { list: examplesId(id) } : undefined) };
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -99,14 +107,14 @@ export default function BaseInputTemplate<
             onChange={onChangeOverride || handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+            aria-describedby={ariaDescribedByIds(id, hasExamples)}
           />
           {options.allowClearTextInputs && !readonly && !disabled && value && (
             <ClearButton registry={registry} onClick={handleClear} />
           )}
         </div>
       </div>
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

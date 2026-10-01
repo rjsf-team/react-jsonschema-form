@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import { examplesId, getExampleSuggestions, getInputProps, labelValue } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
@@ -77,6 +77,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   const componentProps = {
     id,
     name: htmlName || id,
@@ -88,7 +90,7 @@ export default function BaseInputTemplate<
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
     error: useVisibleErrors(props),
-    list: schema.examples ? examplesId(id) : undefined,
+    list: hasExamples ? examplesId(id) : undefined,
   };
 
   const { min, max, ...restInputProps } = inputProps;
@@ -98,7 +100,7 @@ export default function BaseInputTemplate<
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   const ariaDescribedByProps = useAriaDescribedByProps(isNumeric ? 'NumberInput' : 'TextInput', id, options, {
-    includeExamples: !!schema.examples,
+    includeExamples: hasExamples,
   });
 
   const input = isNumeric ? (
@@ -134,7 +136,7 @@ export default function BaseInputTemplate<
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

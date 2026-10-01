@@ -11,7 +11,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -59,6 +59,10 @@ export default function SelectWidget<
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = useMemo(
+    () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
+    [enumOptions, optionValueFormat],
+  );
 
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
@@ -96,7 +100,7 @@ export default function SelectWidget<
       const toOptionType = (option: IndexedEnumOptionType<S>): DefaultOptionType => ({
         disabled: option.disabled,
         key: String(option.index),
-        value: enumOptionValueEncoder(option.value, option.index, optionValueFormat),
+        value: domValues[option.index],
         label: option.label,
       });
       const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(
@@ -112,7 +116,7 @@ export default function SelectWidget<
       return enumOptionsList;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, optionValueFormat]);
+  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, domValues]);
 
   return (
     <>

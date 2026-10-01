@@ -2,9 +2,9 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
 import {
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -44,6 +44,7 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   /** Handles focus events for accessibility */
   const handleFocus = useCallback(
@@ -89,7 +90,7 @@ export default function RadioWidget<
               id={optionId(id, index)}
               className='radio'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+              value={domValues[index]}
               checked={enumOptionsIsSelected<S>(option.value, value, false)}
               required={required}
               disabled={disabled || readonly}

@@ -1,13 +1,13 @@
-import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
@@ -26,6 +26,7 @@ export default function CheckboxesWidget<
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
@@ -37,23 +38,7 @@ export default function CheckboxesWidget<
     [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, emptyValue, optionValueFormat],
-  );
-
-  const handleFocus = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, emptyValue, optionValueFormat],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
   const selectedValues: string[] = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat) ?? [];
@@ -80,12 +65,12 @@ export default function CheckboxesWidget<
                 key={i}
                 id={optionId(id, i)}
                 name={htmlName || id}
-                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                value={domValues[i]}
                 label={option.label}
                 disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
                 autoFocus={i === 0 && autofocus}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
+                onBlur={blurHandlers[i]}
+                onFocus={focusHandlers[i]}
                 {...describedOptionProps}
               />
             ))

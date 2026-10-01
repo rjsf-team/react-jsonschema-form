@@ -1,12 +1,12 @@
+import { indexDomValue, realValueEncoder } from './enumOptionsDomValues.ts';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
-import enumOptionValueEncoder, { encodesAsIndex } from './enumOptionValueEncoder.ts';
 import type { EnumOptionsType, OptionValueFormat, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 const NO_MATCH = Symbol('no match');
 
 /** Computes the value to pass to a select element's `value` attribute.
  *
- * When `format` is `'realValue'`, encodes form data values with `enumOptionValueEncoder`, matching the options' values.
+ * When `format` is `'realValue'`, encodes form data values as `enumOptionsDomValues()` encodes the options' values.
  * When `format` is `'indexed'` (the default), resolves to index-based values via
  * `enumOptionsIndexForValue`. Returns `emptyValue` when the current value is empty.
  *
@@ -37,14 +37,15 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
 
   if (format === 'realValue') {
     // Encoded the same way as the options' values so they match, e.g. `null` is its option's index on both sides
+    const encodeValue = realValueEncoder<S>(enumOptions);
     const encode = (item: any, noMatch: any) => {
+      const encoded = encodeValue(item);
       // Only a value encoded as its index needs the scan that searches for one
-      if (!encodesAsIndex(item)) {
-        return enumOptionValueEncoder(item, 0, format);
+      if (encoded !== undefined) {
+        return encoded;
       }
       const index = enumOptionsIndexForValue<S>(item, enumOptions);
-      // A value with no matching option has no index to encode, which would otherwise render as the string `NaN`
-      return index === undefined ? noMatch : enumOptionValueEncoder(item, Number(index), format);
+      return index === undefined ? noMatch : indexDomValue(Number(index));
     };
     if (!multiple) {
       return encode(value, emptyValue);

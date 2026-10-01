@@ -146,6 +146,50 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
     });
 
+    it('should render examples that share a String() as one option, without duplicate keys (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          default: 'true',
+          examples: [1, '1', true, 2],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['1', 'true', '2']);
+      expect(consoleErrorSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not suggest a null default or example as the string "null"', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: ['string', 'null'],
+          default: null,
+          examples: ['a', null],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
+    it('should render no datalist and point the input at none when no example can be suggested (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['string', 'null'], examples: [null, { a: 1 }] },
+      });
+      const input = node.querySelector('.rjsf-field input');
+      expect(node.querySelector('.rjsf-field datalist')).toBeNull();
+      expect(input).not.toHaveAttribute('list');
+      expect(input?.getAttribute('aria-describedby')).not.toContain('__examples');
+    });
+
+    it('should not suggest an undefined example as the string "undefined"', () => {
+      const { node } = createFormComponent({
+        // JSON can't hold `undefined`, but a schema built in code can
+        schema: { type: 'string', examples: ['a', undefined] as unknown as string[] },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
     it('should include default in datalist when types mismatch and values differ', () => {
       const { node } = createFormComponent({
         schema: {

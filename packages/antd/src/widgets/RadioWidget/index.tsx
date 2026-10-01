@@ -4,7 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -38,6 +38,7 @@ export default function RadioWidget<
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
@@ -70,7 +71,7 @@ export default function RadioWidget<
             disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.includes(option.value))}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
-            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+            value={domValues[i]}
           >
             {option.label}
           </Radio>

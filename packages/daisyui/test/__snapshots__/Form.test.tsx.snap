@@ -3459,6 +3459,83 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
 </DocumentFragment>
 `;
 
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <div
+          class="form-control"
+        >
+          <div
+            class="flex flex-col gap-2 mt-1"
+            id="root"
+            role="radiogroup"
+          >
+            <label
+              class="flex items-center cursor-pointer gap-2"
+            >
+              <input
+                class="radio"
+                data-index="0"
+                id="root-0"
+                name="root"
+                type="radio"
+                value="__rjsf_index:0"
+              />
+              <span
+                class="label-text"
+              >
+                Number
+              </span>
+            </label>
+            <label
+              class="flex items-center cursor-pointer gap-2"
+            >
+              <input
+                checked=""
+                class="radio"
+                data-index="1"
+                id="root-1"
+                name="root"
+                type="radio"
+                value="__rjsf_index:1"
+              />
+              <span
+                class="label-text"
+              >
+                String
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`select widget from a nested oneOf of constants without a type 1`] = `
 <DocumentFragment>
   <form
@@ -4145,6 +4222,101 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 >
                   <span>
                     No
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-string"
+    >
+      <div
+        class="field-template mb-3 rjsf-field rjsf-field-string"
+      >
+        <div
+          class="form-control w-full"
+        >
+          <div
+            class="dropdown w-full"
+          >
+            <button
+              aria-describedby="root__error root__description root__help"
+              class="btn btn-outline w-full text-left flex justify-between items-center "
+              id="root"
+              tabindex="0"
+              type="button"
+            >
+              <span
+                class="truncate"
+                id="root__value"
+              >
+                String
+              </span>
+              <span
+                aria-hidden="true"
+                class="ml-2"
+              >
+                ▼
+              </span>
+            </button>
+            <ul
+              class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              role="listbox"
+            >
+              <li
+                aria-selected="false"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                data-value="0"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    Number
+                  </span>
+                </div>
+              </li>
+              <li
+                aria-selected="true"
+                class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                data-value="1"
+                role="option"
+                tabindex="0"
+              >
+                <div
+                  class="flex items-center gap-2"
+                >
+                  <span>
+                    String
                   </span>
                 </div>
               </li>
