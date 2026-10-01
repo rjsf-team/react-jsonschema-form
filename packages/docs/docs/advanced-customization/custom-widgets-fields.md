@@ -396,7 +396,7 @@ A field component will always be passed the following props:
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone. It is unset for a field rendered beside a `oneOf`/`anyOf` option selector, which is given the errors instead
 - `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
-- `onChange`: The field change event handler; call it with the new value, the `FieldPath` of the value (usually the `fieldPath` prop), an optional ErrorSchema and the optional id of the field being changed. The value and the ErrorSchema may each be an updater instead, `(current) => next`, which the form applies to what it holds at that path when it processes the change, the way React's `setState()` accepts a function. Use one when the new value depends on the current one, such as removing a list item: the handler then needs no `formData` of its own, so it can keep a stable identity, and two changes made before a re-render both apply. A handler your field passes to a child's `onChange` must accept both forms, for the value and for the errors, which TypeScript checks: transform an updater with `mapFieldChange()`, or tell one from a value with `isFieldUpdater()`
+- `onChange`: The field change event handler. Call it with the new value, the `FieldPath` of the value (usually the `fieldPath` prop), an optional ErrorSchema and the optional id of the field being changed. Instead of the value you can pass an updater, `(current) => next`, which the form calls with the value it holds at that path, the way React's `setState()` takes a function; the ErrorSchema can be an updater too. Use an updater when the new value depends on the current one, such as removing an item from a list. A handler your field passes to a child field's `onChange` receives both forms; see [Wrapping an existing field](#wrapping-an-existing-field-to-customize-it)
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 
@@ -516,7 +516,9 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 
 Sometimes you just need to customize the properties that are passed to an existing field.
 
-Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler to look for a specific kind of bad data. A change that depends on the current data, such as an array item added or a key renamed below this field, arrives as an updater function rather than a value, so `mapFieldChange()` runs the check on what the updater returns:
+Here, `MyObjectField` wraps `ObjectField` and checks every change for a specific kind of bad data before passing it on.
+
+A change reaches the handler in one of two forms. Usually it is the new value. An edit that depends on the current data, such as an item added to an array below this field or a key renamed, arrives as an updater instead: a function the form calls with the value it holds. `mapFieldChange()` handles both. It applies your fix to a value directly, and to whatever an updater returns:
 
 ```tsx
 import { useCallback } from 'react';
@@ -536,11 +538,13 @@ function fixBadData(data: unknown) {
 function MyObjectField(props: FieldProps) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: FieldChange<unknown>, path: FieldPath, es?: ErrorSchemaChange<unknown>, id?: string) => {
-      onChange(mapFieldChange(newFormData, fixBadData), path, es, id);
+    (change: FieldChange<unknown>, path: FieldPath, es?: ErrorSchemaChange<unknown>, id?: string) => {
+      onChange(mapFieldChange(change, fixBadData), path, es, id);
     },
     [onChange],
   );
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }
 ```
+
+The handler's parameter types, `FieldChange` and `ErrorSchemaChange`, accept both forms, and TypeScript insists on it: a handler typed for plain values does not compile as `onChange`. If your wrapper only needs to look at the value, check it with `isFieldUpdater()` and pass the change on untouched. The [v7 upgrade guide](../migration-guides/v7.x%20upgrade%20guide.md#a-fields-onchange-can-receive-an-updater-breaking-change) has a recipe for each case, including a wrapper that shows its child a sorted or filtered view of the data.
