@@ -1,36 +1,40 @@
 import type { EnumOptionsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 
+/** Declared apart from the schemas that hold it so a test needing the option schemas themselves -- which is what a
+ * discriminated field is handed as its `options` prop -- has them already typed as `RJSFSchema[]`
+ */
+export const SIMPLE_ONEOF_SCHEMAS: RJSFSchema[] = [
+  {
+    title: 'Choice 1',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        default: '1',
+        readOnly: true,
+      },
+    },
+    required: ['answer'],
+  },
+  {
+    title: 'Choice 2',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        default: '2',
+        readOnly: true,
+      },
+    },
+  },
+];
 export const SIMPLE_ONEOF: RJSFSchema = {
   title: 'Simple',
   type: 'object',
   discriminator: {
     propertyName: 'answer',
   },
-  oneOf: [
-    {
-      title: 'Choice 1',
-      type: 'object',
-      properties: {
-        answer: {
-          type: 'string',
-          default: '1',
-          readOnly: true,
-        },
-      },
-      required: ['answer'],
-    },
-    {
-      title: 'Choice 2',
-      type: 'object',
-      properties: {
-        answer: {
-          type: 'string',
-          default: '2',
-          readOnly: true,
-        },
-      },
-    },
-  ],
+  oneOf: SIMPLE_ONEOF_SCHEMAS,
 };
 export const SAMPLE_SCHEMA: RJSFSchema = {
   title: 'My Title',

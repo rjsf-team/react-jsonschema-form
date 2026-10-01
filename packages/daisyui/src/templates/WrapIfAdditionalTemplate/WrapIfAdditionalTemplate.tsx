@@ -14,6 +14,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     children,
     classNames,
+    style,
     disabled,
     id,
     label,
@@ -41,11 +42,15 @@ export default function WrapIfAdditionalTemplate<
   const margin = displayLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
-    return <div className={`flex-grow ${classNames}`}>{children}</div>;
+    return (
+      <div className={`flex-grow ${classNames ?? ''}`.trim()} style={style}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
+    <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
           {displayLabel && (

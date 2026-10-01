@@ -9,7 +9,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -24,7 +24,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -52,7 +52,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -99,7 +99,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -127,7 +127,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -174,7 +174,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -221,7 +221,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -317,7 +317,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -332,7 +332,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -401,7 +401,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -533,7 +533,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -548,7 +548,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -595,7 +595,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -645,7 +645,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="flex-grow rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -689,7 +689,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -713,7 +713,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -838,7 +838,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1034,7 +1034,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1049,7 +1049,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1096,7 +1096,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1143,7 +1143,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1218,7 +1218,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1233,7 +1233,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-object"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-object"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control "
@@ -1261,7 +1261,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-string"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-string"
+                            class="field-template mb-3"
                           >
                             <label
                               class="label"
@@ -1308,7 +1308,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="flex-grow rjsf-field rjsf-field-object"
                         >
                           <div
-                            class="field-template mb-3 rjsf-field rjsf-field-object"
+                            class="field-template mb-3"
                           >
                             <div
                               class="form-control "
@@ -1336,7 +1336,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -1383,7 +1383,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="flex-grow rjsf-field rjsf-field-string"
                                   >
                                     <div
-                                      class="field-template mb-3 rjsf-field rjsf-field-string"
+                                      class="field-template mb-3"
                                     >
                                       <label
                                         class="label"
@@ -1479,7 +1479,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1494,7 +1494,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1541,7 +1541,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1591,7 +1591,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="flex-grow rjsf-field rjsf-field-array"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-array"
+                  class="field-template mb-3"
                 >
                   <div
                     class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -1615,7 +1615,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1740,7 +1740,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1936,7 +1936,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -1951,7 +1951,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -1998,7 +1998,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -2045,7 +2045,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -2120,7 +2120,7 @@ exports[`object fields > additionalProperties 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2157,7 +2157,7 @@ exports[`object fields > additionalProperties 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -2289,7 +2289,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2398,7 +2398,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -2540,7 +2540,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2577,7 +2577,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -2748,7 +2748,7 @@ exports[`object fields > additionalProperties, description 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2785,7 +2785,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -2927,7 +2927,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -2964,7 +2964,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -3096,7 +3096,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3133,7 +3133,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -3172,7 +3172,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -3316,7 +3316,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3425,7 +3425,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -3557,7 +3557,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3666,7 +3666,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -3798,7 +3798,7 @@ exports[`object fields > object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3813,7 +3813,7 @@ exports[`object fields > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3860,7 +3860,7 @@ exports[`object fields > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -3935,7 +3935,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -3972,7 +3972,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4104,7 +4104,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4164,7 +4164,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4296,7 +4296,7 @@ exports[`object fields > with title and description > object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4334,7 +4334,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -4391,7 +4391,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -4476,7 +4476,7 @@ exports[`object fields > with title and description > show add button and fields
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4536,7 +4536,7 @@ exports[`object fields > with title and description > show add button and fields
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4668,7 +4668,7 @@ exports[`object fields > with title and description from both > additionalProper
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4728,7 +4728,7 @@ exports[`object fields > with title and description from both > additionalProper
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4860,7 +4860,7 @@ exports[`object fields > with title and description from both > object 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -4898,7 +4898,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -4955,7 +4955,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5040,7 +5040,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5100,7 +5100,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5232,7 +5232,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5270,7 +5270,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5327,7 +5327,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -5412,7 +5412,7 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5472,7 +5472,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5604,7 +5604,7 @@ exports[`object fields > with title and description with global label off > addi
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5631,7 +5631,7 @@ exports[`object fields > with title and description with global label off > addi
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -5752,7 +5752,7 @@ exports[`object fields > with title and description with global label off > obje
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5767,7 +5767,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -5803,7 +5803,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="flex-grow rjsf-field rjsf-field-number"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-number"
+                  class="field-template mb-3"
                 >
                   <div
                     class="form-control"
@@ -5867,7 +5867,7 @@ exports[`object fields > with title and description with global label off > show
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -5894,7 +5894,7 @@ exports[`object fields > with title and description with global label off > show
                     />
                   </div>
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"

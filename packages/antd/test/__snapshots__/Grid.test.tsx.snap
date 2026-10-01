@@ -882,7 +882,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-ypkju9 css-var-root"
                           style="margin: 44px 0px 30px;"
                         >
-                          <div>
+                          <div
+                            class="rjsf-field rjsf-field-undefined"
+                          >
                             <div
                               class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
                             >
@@ -2153,7 +2155,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-ypkju9 css-var-root"
                           style="margin: 44px 0px 30px;"
                         >
-                          <div>
+                          <div
+                            class="rjsf-field rjsf-field-undefined"
+                          >
                             <div
                               class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
                             >
@@ -3480,7 +3484,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-ypkju9 css-var-root"
                           style="margin: 44px 0px 30px;"
                         >
-                          <div>
+                          <div
+                            class="rjsf-field rjsf-field-undefined"
+                          >
                             <div
                               class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
                             >
@@ -4546,7 +4552,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-ypkju9 css-var-root"
                           style="margin: 44px 0px 30px;"
                         >
-                          <div>
+                          <div
+                            class="rjsf-field rjsf-field-undefined"
+                          >
                             <div
                               class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-ypkju9 ant-form-item-horizontal"
                             >

@@ -36,8 +36,10 @@ import getDateElementProps from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
+import getDeprecatedHandling from './getDeprecatedHandling.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getExampleSuggestions from './getExampleSuggestions.ts';
+import getFieldClassNames from './getFieldClassNames.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
@@ -103,6 +105,7 @@ import mergeSchemas from './mergeSchemas.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
+import omitConsumedStyling from './omitConsumedStyling.ts';
 import optionsList from './optionsList.ts';
 import orderProperties from './orderProperties.ts';
 import pad from './pad.ts';
@@ -201,8 +204,10 @@ export {
   getDateElementProps,
   getDateTimeLocalValue,
   getDecimalSeparator,
+  getDeprecatedHandling,
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
+  getFieldClassNames,
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
@@ -256,6 +261,7 @@ export {
   mergeSchemas,
   noop,
   offsetTimeToLocalTime,
+  omitConsumedStyling,
   optionalControlsId,
   optionId,
   optionsList,

@@ -714,7 +714,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             style="margin: 26px 0px;"
           >
             <div
-              class="form-group"
+              class="form-group rjsf-field rjsf-field-undefined"
             >
               <label
                 class="control-label"
@@ -1902,7 +1902,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             style="margin: 26px 0px;"
           >
             <div
-              class="form-group"
+              class="form-group rjsf-field rjsf-field-undefined"
             >
               <label
                 class="control-label"
@@ -3114,7 +3114,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             style="margin: 26px 0px;"
           >
             <div
-              class="form-group"
+              class="form-group rjsf-field rjsf-field-undefined"
             >
               <label
                 class="control-label"
@@ -3936,7 +3936,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             style="margin: 26px 0px;"
           >
             <div
-              class="form-group"
+              class="form-group rjsf-field rjsf-field-undefined"
             >
               <label
                 class="control-label"

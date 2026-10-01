@@ -53,7 +53,7 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <>
-      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames}`} style={style}>
+      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames ?? ''}`.trim()} style={style}>
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {displayLabel && (

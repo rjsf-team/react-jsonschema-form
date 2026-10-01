@@ -117,6 +117,7 @@ export default function FieldTemplate<
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
+      style={style}
       disabled={divProps.disabled}
       id={id}
       label={label}
@@ -133,10 +134,13 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div
-        className={`field-template mb-3 ${classNames || ''} ${daisy.className || ''}`.trim()}
+        // `ui:classNames` and `ui:style` are the wrapper's to apply, as they are in `@rjsf/core`, so that a border
+        // or padding is drawn once and both land on the same element. Only `ui:options.daisy`, this theme's own
+        // per-field theming of this div, belongs here
+        className={`field-template mb-3 ${daisy.className || ''}`.trim()}
         data-theme={daisy.theme}
         {...divProps}
-        style={{ ...style, ...daisy.style }}
+        style={daisy.style}
       >
         {displayLabel && !widgetRendersLabel && !!label && (
           <label id={fieldLabelId(id)} htmlFor={id} className='label'>

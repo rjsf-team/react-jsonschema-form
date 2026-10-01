@@ -9,7 +9,7 @@ exports[`array fields > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -91,7 +91,7 @@ exports[`array fields > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -109,7 +109,7 @@ exports[`array fields > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -239,7 +239,7 @@ exports[`array fields > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -428,7 +428,7 @@ exports[`array fields > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -553,7 +553,7 @@ exports[`array fields > empty errors array 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -568,7 +568,7 @@ exports[`array fields > empty errors array 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -640,7 +640,7 @@ exports[`array fields > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -658,7 +658,7 @@ exports[`array fields > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -695,7 +695,7 @@ exports[`array fields > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -772,7 +772,7 @@ exports[`array fields > has errors 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -787,7 +787,7 @@ exports[`array fields > has errors 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -863,7 +863,7 @@ exports[`array fields > no errors 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -878,7 +878,7 @@ exports[`array fields > no errors 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
@@ -950,7 +950,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -968,7 +968,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -983,7 +983,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1030,7 +1030,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1164,7 +1164,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -1179,7 +1179,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1226,7 +1226,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -1419,7 +1419,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -1437,7 +1437,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -1546,7 +1546,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -1714,7 +1714,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -1839,7 +1839,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -1857,7 +1857,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -1894,7 +1894,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -1934,7 +1934,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-boolean"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -1991,7 +1991,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-array"
@@ -2009,7 +2009,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                    class="field-template mb-3"
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2027,7 +2027,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
                                 <div
                                   class="form-control"
@@ -2136,7 +2136,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
                                 <div
                                   class="form-control"
@@ -2363,7 +2363,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                    class="field-template mb-3"
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2381,7 +2381,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
                                 <div
                                   class="form-control"
@@ -2490,7 +2490,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
                                 <div
                                   class="form-control"
@@ -2776,7 +2776,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -2794,7 +2794,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -2809,7 +2809,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -2856,7 +2856,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -2990,7 +2990,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -3005,7 +3005,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -3052,7 +3052,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
@@ -3245,7 +3245,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -3263,7 +3263,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -3372,7 +3372,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -3540,7 +3540,7 @@ exports[`with title and description > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -3636,7 +3636,7 @@ exports[`with title and description > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -3668,7 +3668,7 @@ exports[`with title and description > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -3824,7 +3824,7 @@ exports[`with title and description > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4039,7 +4039,7 @@ exports[`with title and description > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -4185,7 +4185,7 @@ exports[`with title and description > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -4217,7 +4217,7 @@ exports[`with title and description > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4280,7 +4280,7 @@ exports[`with title and description > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4372,7 +4372,7 @@ exports[`with title and description from both > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4468,7 +4468,7 @@ exports[`with title and description from both > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4500,7 +4500,7 @@ exports[`with title and description from both > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4656,7 +4656,7 @@ exports[`with title and description from both > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -4871,7 +4871,7 @@ exports[`with title and description from both > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -5017,7 +5017,7 @@ exports[`with title and description from both > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -5049,7 +5049,7 @@ exports[`with title and description from both > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5112,7 +5112,7 @@ exports[`with title and description from both > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5204,7 +5204,7 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5300,7 +5300,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5332,7 +5332,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5488,7 +5488,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5703,7 +5703,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
@@ -5849,7 +5849,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -5881,7 +5881,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -5944,7 +5944,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
@@ -6036,7 +6036,7 @@ exports[`with title and description with global label off > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6118,7 +6118,7 @@ exports[`with title and description with global label off > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6136,7 +6136,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -6266,7 +6266,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -6455,7 +6455,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -6580,7 +6580,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -6598,7 +6598,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
@@ -6635,7 +6635,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
