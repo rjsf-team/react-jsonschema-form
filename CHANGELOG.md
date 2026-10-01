@@ -18,13 +18,26 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.11.1
 
+## @rjsf/core
+
+- Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+
+## @rjsf/shadcn
+
+- Fixed `RadioWidget` not showing the selected value with `@radix-ui/react-radio-group` 1.4.x, which ignores the per-item `checked` prop. The `RadioGroup` is now controlled by the encoded option value, so it also follows a form reset or an outside `formData` change ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+- Updated `lucide-react` to `^1.49.0`, which makes `Trash2` an alias of `Trash`: the remove button's icon class changes from `lucide-trash2` to `lucide-trash`, and the `PlusCircle`/`AlertCircle` icons gain `lucide-plus-circle`/`lucide-alert-circle` classes. Update any CSS or test selectors that target `.lucide-trash2` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+
 ## @rjsf/utils
 
 - Upgraded `@x0k/json-schema-merge` to `^1.1.0`, which merges `if`/`then`/`else`, `properties`/`patternProperties`/`additionalProperties` and `items`/`additionalItems` as groups. `omitExtraData()` merges an object's `allOf` before evaluating its conditions, and the older merge could pair one entry's `else` with another entry's `if`, so data from an inactive branch was kept. The same merge in `retrieveSchema()` no longer lets an `additionalProperties` or `additionalItems` from one `allOf` entry act on another entry's `properties`/`patternProperties`/`items`
 
+## @rjsf/validator-ata
+
+- Updated `ata-validator` from `^1.23.0` to `^1.40.1` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+
 ## Dev / docs / playground
 
-- Upgraded all packages with minor or patch version bumps, except the build, lint and formatting libraries
+- Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 
 # 6.11.0
 

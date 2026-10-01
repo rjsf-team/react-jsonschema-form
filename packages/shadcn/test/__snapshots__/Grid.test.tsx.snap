@@ -632,20 +632,47 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center gap-2"
                       >
                         <button
-                          aria-checked="false"
+                          aria-checked="true"
                           class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                           data-orientation="horizontal"
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
-                          data-state="unchecked"
+                          data-state="checked"
                           id="root_employment-0"
                           role="radio"
                           tabindex="-1"
                           type="button"
                           value="0"
-                        />
+                        >
+                          <span
+                            class="relative flex items-center justify-center"
+                            data-slot="radio-group-indicator"
+                            data-state="checked"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="lucide lucide-circle fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                            </svg>
+                          </span>
+                        </button>
                         <input
                           aria-hidden="true"
+                          checked=""
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1571,20 +1598,47 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center gap-2"
                       >
                         <button
-                          aria-checked="false"
+                          aria-checked="true"
                           class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                           data-orientation="horizontal"
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
-                          data-state="unchecked"
+                          data-state="checked"
                           id="root_employment-1"
                           role="radio"
                           tabindex="-1"
                           type="button"
                           value="1"
-                        />
+                        >
+                          <span
+                            class="relative flex items-center justify-center"
+                            data-slot="radio-group-indicator"
+                            data-state="checked"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="lucide lucide-circle fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                            </svg>
+                          </span>
+                        </button>
                         <input
                           aria-hidden="true"
+                          checked=""
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -2542,20 +2596,47 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center gap-2"
                       >
                         <button
-                          aria-checked="false"
+                          aria-checked="true"
                           class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                           data-orientation="horizontal"
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
-                          data-state="unchecked"
+                          data-state="checked"
                           id="root_employment-2"
                           role="radio"
                           tabindex="-1"
                           type="button"
                           value="2"
-                        />
+                        >
+                          <span
+                            class="relative flex items-center justify-center"
+                            data-slot="radio-group-indicator"
+                            data-state="checked"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="lucide lucide-circle fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                            </svg>
+                          </span>
+                        </button>
                         <input
                           aria-hidden="true"
+                          checked=""
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -3255,20 +3336,47 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center gap-2"
                       >
                         <button
-                          aria-checked="false"
+                          aria-checked="true"
                           class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                           data-orientation="horizontal"
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
-                          data-state="unchecked"
+                          data-state="checked"
                           id="root_employment-0"
                           role="radio"
                           tabindex="-1"
                           type="button"
                           value="0"
-                        />
+                        >
+                          <span
+                            class="relative flex items-center justify-center"
+                            data-slot="radio-group-indicator"
+                            data-state="checked"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              class="lucide lucide-circle fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                              />
+                            </svg>
+                          </span>
+                        </button>
                         <input
                           aria-hidden="true"
+                          checked=""
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
