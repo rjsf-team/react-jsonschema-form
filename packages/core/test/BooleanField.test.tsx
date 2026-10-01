@@ -788,7 +788,7 @@ describe('BooleanField', () => {
     expect(texts(node)).toEqual(['', 'Y', 'N']);
   });
 
-  describe('an enum alongside a oneOf that is not made of constants (#5319)', () => {
+  describe('an enum alongside an anyOf or oneOf that is not made of constants (#5319)', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
     const schema: RJSFSchema = { type: 'boolean', enum: [true, false], oneOf: [{ title: 'Y' }, { title: 'N' }] };
 
@@ -898,11 +898,50 @@ describe('BooleanField', () => {
         { type: 'boolean', enum: [true, false], oneOf: [{ description: 'x' }, { not: { const: true } }] },
         { 'ui:widget': 'radio' },
       ],
+      [
+        'the oneOf read after a non-constant anyOf has no titles to hide',
+        {
+          type: 'boolean',
+          enum: [true, false],
+          anyOf: [{ not: { const: null } }],
+          oneOf: [{ const: true }, { const: false }],
+        },
+        { 'ui:widget': 'select' },
+      ],
     ])('should not warn when %s', (_, unwarnedSchema, uiSchema) => {
       createFormComponent({ schema: unwarnedSchema, uiSchema });
 
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(
         expect.stringContaining('has an `enum` beside'),
+      );
+    });
+
+    it.each<[string, RJSFSchema['oneOf'], UiSchema]>([
+      [
+        'its own titles',
+        [
+          { const: true, title: 'Y' },
+          { const: false, title: 'N' },
+        ],
+        { 'ui:widget': 'select' },
+      ],
+      [
+        'a ui:title in uiSchema.oneOf',
+        [{ const: true }, { const: false }],
+        { 'ui:widget': 'select', oneOf: [{}, { 'ui:title': 'N' }] },
+      ],
+    ])('should warn that a oneOf read after a non-constant anyOf, titled by %s, is not shown', (_, oneOf, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { type: 'boolean', enum: [true, false], anyOf: [{ not: { const: null } }], oneOf },
+        uiSchema,
+      });
+
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining(
+          '"root" has an `enum` beside an `anyOf` whose options aren\'t all `const` schemas and which is read ' +
+            "before its `oneOf`, so its options come from the `enum` and the `oneOf` titles aren't shown.",
+        ),
       );
     });
   });

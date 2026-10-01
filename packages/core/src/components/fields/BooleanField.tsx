@@ -9,6 +9,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ANY_OF_KEY,
   deepEquals,
   fieldPathToName,
   getUiOptions,
@@ -16,6 +17,7 @@ import {
   getXxxOfKey,
   isConstantOptionList,
   logOnce,
+  ONE_OF_KEY,
   optionsList,
   toConstant,
   TranslatableString,
@@ -150,14 +152,26 @@ function BooleanField<
       altKey &&
       altSchemas &&
       // Checked on the options left once `ui:enumOrder` has dropped any, since an unnamed value it drops isn't shown
-      enumOptions?.some(({ value }) => unnamedValues.has(value)) &&
-      hasOptionLabels<T, S, F>(altSchemas, altKey, uiSchema)
+      enumOptions?.some(({ value }) => unnamedValues.has(value))
     ) {
-      logOnce(
-        `${fieldLabelForLog(fieldId, fieldPath)} has an \`enum\` beside \`${altKey}\` options that aren't all ` +
-          `\`const\` schemas, so its options come from the \`enum\` and the \`${altKey}\` titles aren't shown. ` +
-          `Label the \`enum\` values with ui:enumNames, or make every \`${altKey}\` option a \`const\` schema.`,
-      );
+      if (hasOptionLabels<T, S, F>(altSchemas, altKey, uiSchema)) {
+        logOnce(
+          `${fieldLabelForLog(fieldId, fieldPath)} has an \`enum\` beside \`${altKey}\` options that aren't all ` +
+            `\`const\` schemas, so its options come from the \`enum\` and the \`${altKey}\` titles aren't shown. ` +
+            `Label the \`enum\` values with ui:enumNames, or make every \`${altKey}\` option a \`const\` schema.`,
+        );
+      } else if (
+        // `getXxxOfKey()` reads a non-empty `anyOf` first, so a titled `oneOf` behind it is hidden as well
+        altKey === ANY_OF_KEY &&
+        Array.isArray(schema[ONE_OF_KEY]) &&
+        hasOptionLabels<T, S, F>(schema[ONE_OF_KEY], ONE_OF_KEY, uiSchema)
+      ) {
+        logOnce(
+          `${fieldLabelForLog(fieldId, fieldPath)} has an \`enum\` beside an \`anyOf\` whose options aren't all ` +
+            `\`const\` schemas and which is read before its \`oneOf\`, so its options come from the \`enum\` and ` +
+            `the \`oneOf\` titles aren't shown. Label the \`enum\` values with ui:enumNames.`,
+        );
+      }
     }
   }
   const onWidgetChange = useCallback(
