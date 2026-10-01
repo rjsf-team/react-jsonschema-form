@@ -19,6 +19,7 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
+import { mapFieldChange, resolveFieldChange } from './fieldChange.ts';
 import {
   ROOT_FIELD_PATH,
   fieldPathEndsWithIndex,
@@ -258,6 +259,7 @@ export {
   logOnce,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,
+  mapFieldChange,
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
@@ -276,6 +278,7 @@ export {
   replaceStringParameters,
   resetLogOnce,
   resolveDefaultWidget,
+  resolveFieldChange,
   resolveUiSchema,
   resolveWidget,
   schemaHasNestedConditional,

@@ -1536,6 +1536,20 @@ If no such value exists, return the `fallback` value.
 
 - R: The value associated with `toLookup` in the form context or `fallback`
 
+### mapFieldChange&lt;V>()
+
+Applies `transform` to what a `FieldChange` stands for: to the value itself, or to what its updater returns.
+A field that transforms the value a child passes to `onChange` forwards `mapFieldChange(value, transform)`, since the value may be an updater.
+
+#### Parameters
+
+- change: FieldChange&lt;V> - The value, or an updater computing it
+- transform: (value: V) => V - The transform to apply to the value
+
+#### Returns
+
+- FieldChange&lt;V>: The transformed value, or an updater returning the transformed result of `change`'s updater
+
 ### mergeDefaultsWithFormData&lt;T = unknown>()
 
 Merges the `defaults` object of type `T` into the `formData` of type `T`
@@ -1799,6 +1813,20 @@ The default is `select` when `schema` has enumerable options, the schema's `form
 #### Returns
 
 - \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
+
+### resolveFieldChange&lt;V, A extends unknown[] = []>()
+
+Returns the value a `FieldChange` or `ErrorSchemaChange` stands for: the value itself, or what its updater computes from `current` and any further arguments the updater takes.
+
+#### Parameters
+
+- change: V | ((current: V, ...args: A) => V) - The value, or an updater computing it
+- current: V - What the updater is applied to
+- ...args: A - Further arguments passed to the updater
+
+#### Returns
+
+- V: The value `change` stands for
 
 ### resolveUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

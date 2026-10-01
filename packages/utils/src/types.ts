@@ -711,6 +711,22 @@ export interface Registry<
   readonly uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
+/** A change a field proposes for its `FieldPath`: the new value itself, or an updater that computes it from the value the
+ * form holds at that path when it applies the change, the way React's `setState()` accepts a function. An updater
+ * lets a field describe an edit, such as removing an array item, without reading its own latest props, so the handler
+ * that makes the edit can keep a stable identity. Form data is JSON, so a function value is always an updater.
+ */
+export type FieldChange<V> = V | ((current: V) => V);
+
+/** A change a field proposes for the errors at its `FieldPath`: the `ErrorSchema` itself, or an updater that computes it
+ * from the errors the form holds at that path and the value the form held there before this change, so an edit that
+ * moves items' errors can agree with the edit it makes to the value
+ */
+export type ErrorSchemaChange<T> =
+  | ErrorSchema<T>
+  | undefined
+  | ((current: ErrorSchema<T> | undefined, value: T | undefined) => ErrorSchema<T> | undefined);
+
 /** The properties that are passed to a `Field` implementation */
 export interface FieldProps<
   T = unknown,
@@ -730,9 +746,13 @@ export interface FieldProps<
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated field value, the `FieldPath` of the value
-   * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed
+   * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed. The value
+   * and the ErrorSchema may each be an updater instead, a `FieldChange` and an `ErrorSchemaChange`, which the form
+   * applies to what it holds at `fieldPath` when it processes the change
    */
-  onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
+  onChange: Bivariant<
+    [newValue: FieldChange<T | undefined>, fieldPath: FieldPath, es?: ErrorSchemaChange<T>, id?: string]
+  >;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
