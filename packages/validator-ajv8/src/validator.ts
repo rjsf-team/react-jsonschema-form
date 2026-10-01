@@ -112,8 +112,15 @@ export default class AJV8Validator<
       // for anonymous schemas AJV uses the object reference as the key.
       // Guard with compiledValidator === undefined so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
+      // A truthy non-string $id makes AJV throw before it caches anything, and
+      // removeSchema() would throw on it too, so there is nothing to remove.
       if (compiledValidator === undefined) {
-        this.ajv.removeSchema(schema[ID_KEY] ?? schema);
+        const id = schema[ID_KEY];
+        if (typeof id === 'string') {
+          this.ajv.removeSchema(id);
+        } else if (!id) {
+          this.ajv.removeSchema(schema);
+        }
       }
     }
 
