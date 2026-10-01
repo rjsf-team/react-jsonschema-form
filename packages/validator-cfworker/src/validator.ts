@@ -35,20 +35,19 @@ interface CachedValidator {
  * @param data - The form data to normalize
  * @returns - The form data with `undefined` values converted to JSON-compatible values
  */
-export function normalizeFormDataForValidation<D>(data: D): D {
+export function normalizeFormDataForValidation(data: unknown): unknown {
   if (data === undefined) {
-    return null as D;
+    return null;
   }
   if (Array.isArray(data)) {
-    return data.map((value: unknown) => normalizeFormDataForValidation(value)) as D;
+    return data.map((value: unknown) => normalizeFormDataForValidation(value));
   }
   if (data !== null && typeof data === 'object') {
-    const normalized = Object.fromEntries(
+    return Object.fromEntries(
       Object.entries(data).flatMap(([key, value]) =>
         value === undefined ? [] : [[key, normalizeFormDataForValidation(value)]],
       ),
     );
-    return normalized as D;
   }
   return data;
 }

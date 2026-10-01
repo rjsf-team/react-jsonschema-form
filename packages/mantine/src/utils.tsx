@@ -362,7 +362,7 @@ const rootSlotKeys = ['classNames', 'styles', 'attributes'];
 
 function withoutRootSlot(value: unknown): unknown {
   if (typeof value === 'function') {
-    return (...args: unknown[]) => withoutRootSlot((value as (...args: unknown[]) => unknown)(...args));
+    return (...args: unknown[]) => withoutRootSlot(Reflect.apply(value, undefined, args));
   }
   if (!isObject(value)) {
     return value;
