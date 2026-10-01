@@ -149,15 +149,6 @@ describe('enumOptionSelectedValue', () => {
     it('returns String(value) for a single numeric value', () => {
       expect(enumOptionSelectedValue(10, numericOptions, false, 'realValue', '')).toBe('10');
     });
-    it('encodes a BigInt value as the index of the option it matches, as the option itself is encoded', () => {
-      const bigintOptions: EnumOptionsType[] = [
-        { value: 'a', label: 'a' },
-        { value: 10n, label: '10' },
-      ];
-      expect(enumOptionSelectedValue(10n, bigintOptions, false, 'realValue', '')).toBe(
-        enumOptionsDomValues(bigintOptions, 'realValue')[1],
-      );
-    });
     it('returns value.map(String) for multiple values', () => {
       expect(enumOptionSelectedValue(['foo', 'baz'], stringOptions, true, 'realValue', [])).toEqual(['foo', 'baz']);
     });

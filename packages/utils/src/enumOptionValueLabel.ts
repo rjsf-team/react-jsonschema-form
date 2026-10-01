@@ -6,7 +6,6 @@ import toDisplayString from './toDisplayString.ts';
  *
  * @param value - The option's value
  * @returns - The text to label the option with
- * @throws - The `TypeError` `String()` throws for a circular object with no prototype
  */
 export default function enumOptionValueLabel(value: unknown): string {
   return toDisplayString(value);

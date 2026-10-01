@@ -22,13 +22,7 @@ export default function logUnsupportedDefaultForEnum<S extends StrictRJSFSchema 
     schema.default !== undefined &&
     enumOptionsIndexForValue<S>(schema.default, enumOptions, multiple) === undefined
   ) {
-    let defaultText: string;
-    try {
-      defaultText = toDisplayString(schema.default);
-    } catch {
-      // Logging must never throw, and this runs during a widget's render
-      defaultText = typeof schema.default;
-    }
+    const defaultText = toDisplayString(schema.default);
     logOnce(
       `The schema default value "${defaultText}" is not one of the values in the enum options for "${id}"`,
       'error',

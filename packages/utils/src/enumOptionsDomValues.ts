@@ -1,14 +1,17 @@
 import { ENUM_OPTION_INDEX_PREFIX } from './constants.ts';
 import type { EnumOptionsType, OptionValueFormat, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
-/** The `String()` of a string, number or boolean `value` that may be encoded as itself, or `undefined` for any value
- * that must be encoded as its prefixed index
+/** The `String()` of a primitive or function `value` that may be encoded as itself, or `undefined` for any value that
+ * must be encoded as its prefixed index
  */
 function plainEncoding(value: unknown): string | undefined {
   if (
     (typeof value === 'string' && value !== '' && !value.startsWith(ENUM_OPTION_INDEX_PREFIX)) ||
     typeof value === 'number' ||
-    typeof value === 'boolean'
+    typeof value === 'boolean' ||
+    typeof value === 'bigint' ||
+    typeof value === 'symbol' ||
+    typeof value === 'function'
   ) {
     return String(value);
   }
@@ -53,13 +56,12 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * When `format` is `'indexed'` (the default), each option's value is its index as a string.
  *
- * When `format` is `'realValue'`, string, number and boolean values are converted via `String()`.
+ * When `format` is `'realValue'`, primitive values are converted via `String()`.
  * Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX`, since
- * `String()` would produce `"[object Object]"`. A `BigInt`, symbol or function, none of which a JSON schema can hold,
- * falls back to its index as well, as does `null`, since `String()` would make it indistinguishable from the string
- * `'null'`, and the empty string, which is the value of a select's empty placeholder. The prefix keeps
- * that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts
- * with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
+ * `String()` would produce `"[object Object]"`. `null` does too, since `String()` would make it indistinguishable from
+ * the string `'null'`, and so does the empty string, which is the value of a select's empty placeholder. The prefix
+ * keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself
+ * starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
  * Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index, so every option keeps a
  * DOM value of its own. That includes options with the very same value, such as two `'US'` constants titled `USA` and
  * `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or

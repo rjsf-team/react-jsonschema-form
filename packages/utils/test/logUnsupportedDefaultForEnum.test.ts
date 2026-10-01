@@ -44,7 +44,7 @@ describe('logUnsupportedDefaultForEnum()', () => {
     }).not.toThrow();
     expect(consoleErrorSpy.mock.calls).toEqual([
       ['The schema default value "["10"]" is not one of the values in the enum options for "root_big"'],
-      ['The schema default value "" is not one of the values in the enum options for "root_circular"'],
+      ['The schema default value "object" is not one of the values in the enum options for "root_circular"'],
       ['The schema default value "object" is not one of the values in the enum options for "root_unprintable"'],
     ]);
   });

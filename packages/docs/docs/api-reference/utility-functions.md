@@ -325,8 +325,8 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 Encodes every option of `enumOptions` for its DOM value attribute, in a single pass over the list.
 A widget reads an option's value at its position, and `enumOptionValueDecoder()` and `enumOptionSelectedValue()` encode against the same list, so they agree with it.
 When `format` is `'indexed'` (the default), each option's value is its index as a string.
-When `format` is `'realValue'`, string, number and boolean values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`, and so do the `BigInt`s, symbols and functions a JSON schema can't hold.
+When `format` is `'realValue'`, primitive values are converted via `String()`.
+Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
@@ -449,8 +449,8 @@ When `format` is `'indexed'` (the default), uses index-based resolution via `enu
 Returns the label for an enum option with no title of its own: its value, with a plain object or array spelled out as
 JSON, since `String()` would label every one of them `[object Object]`. Any other value, such as a `Date` or a `Map`,
 and any value nested in the JSON that JSON has no form for, such as a `BigInt` or a `RegExp`, is spelled the way
-`String()` spells it, as RJSF's warnings spell it. A circular plain object or array falls back to `String()` rather
-than throwing
+`String()` spells it, as RJSF's warnings spell it. A circular plain object or array falls back to `String()`, and a
+value `String()` throws for is spelled as its type
 
 #### Parameters
 
@@ -459,10 +459,6 @@ than throwing
 #### Returns
 
 - string: The text to label the option with
-
-#### Throws
-
-- The `TypeError` `String()` throws for a circular object with no prototype
 
 ### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

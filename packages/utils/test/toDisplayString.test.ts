@@ -47,10 +47,18 @@ describe('toDisplayString()', () => {
     expect(toDisplayString(circularArray)).toBe('1,');
     expect(toDisplayString({ toJSON: () => undefined })).toBe('[object Object]');
   });
-  it('throws where String() does, for a circular object with no prototype', () => {
+  it('falls back to the type of a value String() throws for, or gives nothing for', () => {
     const circular: Record<string, unknown> = {};
     Object.setPrototypeOf(circular, null);
     circular.self = circular;
-    expect(() => toDisplayString(circular)).toThrow(TypeError);
+    const selfOnly: unknown[] = [];
+    selfOnly.push(selfOnly);
+    const unprintableError = new Error('boom');
+    unprintableError.toString = () => {
+      throw new Error('no string for you');
+    };
+    expect(toDisplayString(circular)).toBe('object');
+    expect(toDisplayString(selfOnly)).toBe('object');
+    expect(toDisplayString(unprintableError)).toBe('object');
   });
 });
