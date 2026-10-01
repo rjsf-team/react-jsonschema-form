@@ -1052,7 +1052,7 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 #### Returns
 
-- TemplatesType&lt;T, S, F> - The templates from either the `uiSchema` or `registry`
+- Readonly- TemplatesType&lt;T, S, F> - The templates from either the `uiSchema` or `registry`lt;TemplatesType- TemplatesType&lt;T, S, F> - The templates from either the `uiSchema` or `registry`lt;T, S, F>> - The templates from either the `uiSchema` or `registry`
 
 ### getTestIds()
 

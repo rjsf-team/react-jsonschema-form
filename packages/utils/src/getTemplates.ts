@@ -16,7 +16,7 @@ export default function getTemplates<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, uiOptions: UIOptionsType<T, S, F> = {}): TemplatesType<T, S, F> {
+>(registry: Registry<T, S, F>, uiOptions: UIOptionsType<T, S, F> = {}): Readonly<TemplatesType<T, S, F>> {
   // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
   // unless an override actually applies
   let templates: TemplatesType<T, S, F> | undefined;
