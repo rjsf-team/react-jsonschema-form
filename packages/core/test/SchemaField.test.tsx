@@ -1,5 +1,6 @@
 import type {
   FieldProps,
+  GenericObjectType,
   RJSFSchema,
   UiSchema,
   DescriptionFieldProps,
@@ -786,7 +787,7 @@ describe('SchemaField', () => {
             ...hideUiSchema,
             'ui:field': (props: FieldProps) => {
               const { uiSchema, ...fieldProps } = props;
-              const uiSchemaFromJson: UiSchema = JSON.parse('{ "ui:hideError": null }');
+              const uiSchemaFromJson: GenericObjectType = { 'ui:hideError': null };
               return <SchemaField {...fieldProps} uiSchema={uiSchemaFromJson} />;
             },
           },

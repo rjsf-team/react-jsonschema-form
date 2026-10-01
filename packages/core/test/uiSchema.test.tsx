@@ -2922,7 +2922,7 @@ describe('uiSchema', () => {
           foo: { type: 'string' },
         },
       };
-      const uiSchema: UiSchema = JSON.parse('{ "foo": { "ui:required": null } }');
+      const uiSchema: GenericObjectType = { foo: { 'ui:required': null } };
       const { node } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
     });

@@ -55,6 +55,7 @@ describe('dataURItoBlob()', () => {
       throw nonError;
     });
     expect(() => dataURItoBlob('data:text/plain;base64,SGVsbG8=')).toThrow(new Error('File is invalid: bad input'));
+    vi.restoreAllMocks();
   });
 
   it('should return the name of the file if present', () => {

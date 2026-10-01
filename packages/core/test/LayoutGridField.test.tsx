@@ -1572,9 +1572,10 @@ describe('LayoutGridField', () => {
     'renderField passes a ui:required of %s to a required discriminated field as required: false',
     (uiRequired) => {
       const fieldName = 'employment';
+      const uiRequiredFromJson: GenericObjectType = { 'ui:required': uiRequired };
       const props = getProps({
         schema: { ...GRID_FORM_SCHEMA, required: [fieldName] },
-        uiSchema: { ...gridFormUISchema, [fieldName]: JSON.parse(JSON.stringify({ 'ui:required': uiRequired })) },
+        uiSchema: { ...gridFormUISchema, [fieldName]: uiRequiredFromJson },
         formData: {},
         fieldPath: ROOT_FIELD_PATH,
         id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
