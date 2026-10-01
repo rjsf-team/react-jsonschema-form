@@ -16,6 +16,8 @@ export default defineConfig({
   // The packages run in browsers and SSR alike; `neutral` also keeps the `.js`/`.d.ts` extensions.
   platform: 'neutral',
   sourcemap: true,
+  // Not tsconfig.json: editors and type-aware lint would open that as a program of its own
+  tsconfig: 'tsconfig.lib.json',
   // Every dependency, workspace packages included, stays an import; nothing is inlined into lib/.
   deps: { neverBundle: true },
   // TypeScript 7 no longer ships the JS compiler API, so declarations come from its native binary. rolldown-plugin-dts

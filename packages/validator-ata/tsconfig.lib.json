@@ -3,8 +3,10 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
+    "lib": ["ESNext"],
     "outDir": "lib",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "types": ["node"]
   },
-  "references": [{ "path": "../core" }, { "path": "../utils" }]
+  "references": [{ "path": "../utils/tsconfig.lib.json" }]
 }

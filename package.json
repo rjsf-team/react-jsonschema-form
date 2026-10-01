@@ -11,7 +11,7 @@
     "test:update": "nx run-many --parallel=2 --target=test:update",
     "lint": "oxlint",
     "typecheck": "tsc --build tsconfig.typecheck.json tsconfig.typecheck-bundler.json --checkers 2",
-    "knip": "knip",
+    "knip": "knip --tsConfig tsconfig.lib.json",
     "cs-check": "oxfmt --check",
     "cs-format": "oxfmt",
     "clean-build": "rimraf packages/*/tsconfig.tsbuildinfo && rimraf packages/*/lib && pnpm run build",

@@ -10,5 +10,9 @@
     "outDir": "lib",
     "emitDeclarationOnly": true
   },
-  "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
+  "references": [
+    { "path": "../core/tsconfig.lib.json" },
+    { "path": "../utils/tsconfig.lib.json" },
+    { "path": "../validator-ajv8/tsconfig.lib.json" }
+  ]
 }

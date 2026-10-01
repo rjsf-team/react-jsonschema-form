@@ -6,5 +6,5 @@
     "outDir": "lib",
     "emitDeclarationOnly": true
   },
-  "references": [{ "path": "../core" }, { "path": "../utils" }]
+  "references": [{ "path": "../utils/tsconfig.lib.json" }, { "path": "../validator-ajv8/tsconfig.lib.json" }]
 }
