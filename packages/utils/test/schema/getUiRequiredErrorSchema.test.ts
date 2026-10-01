@@ -38,7 +38,7 @@ describe('getUiRequiredErrorSchema()', () => {
   it.each([1, 'true'])('reports a missing field whose untyped JSON ui:required is the truthy %j', (value) => {
     const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const uiSchema: UiSchema = JSON.parse(JSON.stringify({ nick: { 'ui:required': value } }));
-    const errorSchema = getUiRequiredErrorSchema(testValidator, schema, uiSchema, {});
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
     expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.nick']);
   });
 
