@@ -1,7 +1,7 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { theme } from 'antd';
 
@@ -230,5 +230,42 @@ describe('antd specific tests', () => {
     const formContext = { descriptionLocation: 'tooltip' };
     const { asFragment } = render(<Form schema={schema} validator={validator} formContext={formContext} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  test('alt-datetime renders the time selects and its Now button emits a date-time', async () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'date-time' }}
+        uiSchema={{ 'ui:widget': 'alt-datetime' }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    expect(container.querySelector('#root_hour')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Now' }));
+    expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
+  });
+
+  test.each([
+    ['ui:readonly', 'Now'],
+    ['ui:readonly', 'Clear'],
+    ['ui:disabled', 'Now'],
+    ['ui:disabled', 'Clear'],
+  ])('a %s alt-date ignores its %s button', async (flag, button) => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'string', format: 'date' }}
+        uiSchema={{ 'ui:widget': 'alt-date', [flag]: true }}
+        formData='2020-01-02'
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: button }));
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

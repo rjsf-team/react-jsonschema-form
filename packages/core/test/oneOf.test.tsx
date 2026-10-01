@@ -2257,10 +2257,10 @@ describe('oneOf', () => {
     });
 
     it('should tell the oneOf selector widget that its errors are hidden', async () => {
-      let selectorProps: WidgetProps | undefined;
+      const recordSelectorProps = vi.fn<(props: WidgetProps) => void>();
       function RecordingSelectWidget(props: WidgetProps) {
         if (props.name?.endsWith('__oneof_select')) {
-          selectorProps = props;
+          recordSelectorProps(props);
         }
         return <SelectWidget {...props} />;
       }
@@ -2274,7 +2274,7 @@ describe('oneOf', () => {
 
       await submitForm(node, user);
 
-      expect(selectorProps?.hideError).toBe(true);
+      expect(recordSelectorProps.mock.lastCall?.[0]?.hideError).toBe(true);
     });
   });
 

@@ -238,14 +238,14 @@ describe('LayoutMultiSchemaField', () => {
    * how the props this field builds for itself -- rather than receiving through `SchemaField` -- are asserted on
    */
   function renderRecording(overrideProps: Partial<FieldProps> = {}) {
-    let templateProps: FieldTemplateProps | undefined;
-    let widgetProps: WidgetProps | undefined;
+    const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+    const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
     function RecordingFieldTemplate(props: FieldTemplateProps) {
-      templateProps = props;
+      recordTemplateProps(props);
       return <FakeFieldTemplate {...props} />;
     }
     function RecordingRadioWidget(props: WidgetProps) {
-      widgetProps = props;
+      recordWidgetProps(props);
       return <WrappedRadioWidget {...props} />;
     }
     const props = getProps(overrideProps);
@@ -262,7 +262,7 @@ describe('LayoutMultiSchemaField', () => {
       />,
     );
 
-    return { templateProps, widgetProps };
+    return { templateProps: recordTemplateProps.mock.lastCall?.[0], widgetProps: recordWidgetProps.mock.lastCall?.[0] };
   }
   setupConsoleErrorSuppression();
   test('throws when no selectorField is provided', () => {

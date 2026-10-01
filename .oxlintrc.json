@@ -421,15 +421,15 @@
     "react/button-has-type": "error",
     "react/capitalized-calls": "error",
     "react/checked-requires-onchange-or-readonly": "error",
-    "react/display-name": "off",
+    "react/display-name": "error",
     "react/error-boundaries": "error",
     "react/exhaustive-deps": "error",
     "react/exhaustive-effect-dependencies": "error",
     "react/forward-ref-uses-ref": "error",
-    "react/globals": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/globals": "error",
     "react/hook-use-state": "error",
     "react/iframe-missing-sandbox": "error",
-    "react/immutability": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/immutability": "error",
     "react/incompatible-library": "error",
     "react/invariant": "error",
     "react/jsx-boolean-value": ["error", "never", { "always": [] }],
@@ -472,8 +472,8 @@
     "react/no-will-update-set-state": "error",
     "react/prefer-es6-class": ["error", "always"],
     "react/prefer-function-component": "off",
-    "react/preserve-manual-memoization": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
-    "react/purity": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/preserve-manual-memoization": "error",
+    "react/purity": "error",
     "react/react-in-jsx-scope": "off",
     "react/refs": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
     "react/require-render-return": "error",

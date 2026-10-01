@@ -983,9 +983,9 @@ describe('NumberField', () => {
     });
 
     it('should pass a number, not a string, to a custom widget', () => {
-      let receivedValue: unknown;
+      const recordValue = vi.fn<(value: unknown) => void>();
       const CustomWidget = (props: WidgetProps) => {
-        receivedValue = props.value;
+        recordValue(props.value);
         return <div id='custom-widget' />;
       };
 
@@ -1003,13 +1003,13 @@ describe('NumberField', () => {
       });
 
       expect(node.querySelector('#custom-widget')).toBeInTheDocument();
-      expect(receivedValue).toBe(2.3);
+      expect(recordValue.mock.lastCall?.[0]).toBe(2.3);
     });
 
     it('should pass a number, not a string, to a format-registered widget', () => {
-      let receivedValue: unknown;
+      const recordValue = vi.fn<(value: unknown) => void>();
       const CustomFormatWidget = (props: WidgetProps) => {
-        receivedValue = props.value;
+        recordValue(props.value);
         return <div id='custom-format-widget' />;
       };
 
@@ -1025,7 +1025,7 @@ describe('NumberField', () => {
       });
 
       expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
-      expect(receivedValue).toBe(2.3);
+      expect(recordValue.mock.lastCall?.[0]).toBe(2.3);
     });
 
     it('should let the browser accept the "." formatted value a custom widget renders through BaseInputTemplate', () => {

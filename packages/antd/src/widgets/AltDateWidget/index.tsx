@@ -6,16 +6,11 @@ export default function AltDateWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ autofocus = false, disabled = false, options, readonly = false, time = false, ...props }: WidgetProps<T, S, F>) {
-  const { id, name, onBlur, onFocus, registry } = props;
+>(props: WidgetProps<T, S, F>) {
+  const { autofocus = false, disabled = false, id, name, onBlur, onFocus, options, readonly = false, registry } = props;
   const { formContext, translateString } = registry;
   const { rowGutter = 24 } = formContext as GenericObjectType;
-  const realOptions = { yearsRange: [1900, new Date().getFullYear() + 2], ...options };
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps({
-    ...props,
-    autofocus,
-    options: realOptions,
-  });
+  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>

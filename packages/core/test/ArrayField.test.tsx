@@ -2849,9 +2849,9 @@ describe('ArrayField', () => {
         ['a list', { type: 'array', items: { type: 'string' } }],
         ['a fixed items list', { type: 'array', items: [{ type: 'string' }] }],
       ] satisfies [string, RJSFSchema][])('hands the errorSchema of %s to its template', async (_, foo) => {
-        let templateProps: ArrayFieldTemplateProps | undefined;
+        const recordTemplateProps = vi.fn<(props: ArrayFieldTemplateProps) => void>();
         function RecordingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
-          templateProps = props;
+          recordTemplateProps(props);
           return <div>{props.items}</div>;
         }
         function addItemError(_formData: any | undefined, errors: FormValidation) {
@@ -2868,7 +2868,7 @@ describe('ArrayField', () => {
         });
         await submitForm(node, user);
 
-        expect(templateProps?.errorSchema?.[0]?.__errors).toEqual(['item error']);
+        expect(recordTemplateProps.mock.lastCall?.[0]?.errorSchema?.[0]?.__errors).toEqual(['item error']);
       });
     });
   });
