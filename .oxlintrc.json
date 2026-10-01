@@ -930,7 +930,7 @@
       }
     },
     {
-      // The validators also run where there's no DOM. An override replaces the rule's options, so the list above is
+      // The validators also run where there's no DOM. An override replaces the rule's options, so both lists above are
       // repeated here
       "files": ["packages/validator-*/src/**"],
       "rules": {
@@ -1022,7 +1022,6 @@
           { "name": "test", "message": "Vitest globals are for tests." },
           { "name": "expect", "message": "Vitest globals are for tests." },
           { "name": "vi", "message": "Vitest globals are for tests." },
-
           { "name": "beforeEach", "message": "Vitest globals are for tests." },
           { "name": "afterEach", "message": "Vitest globals are for tests." },
           { "name": "beforeAll", "message": "Vitest globals are for tests." },
@@ -1073,6 +1072,79 @@
           },
           {
             "name": "prompt",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "HTMLElement",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "Element",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "DOMParser",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "XMLHttpRequest",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "Image",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          }
+        ],
+        "no-restricted-properties": [
+          "error",
+          { "object": "arguments", "property": "callee", "message": "arguments.callee is deprecated" },
+          { "object": "global", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "self", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "window", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "global", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "self", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "window", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "property": "__defineGetter__", "message": "Please use Object.defineProperty instead." },
+          { "property": "__defineSetter__", "message": "Please use Object.defineProperty instead." },
+          { "object": "Math", "property": "pow", "message": "Use the exponentiation operator (**) instead." },
+          {
+            "object": "globalThis",
+            "property": "process",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "Buffer",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "global",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "require",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "document",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "object": "globalThis",
+            "property": "window",
             "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
           }
         ]
