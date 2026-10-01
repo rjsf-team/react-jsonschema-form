@@ -1,6 +1,7 @@
 import { ID_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import hashForSchema from '../hashForSchema.ts';
+import logOnce from '../logOnce.ts';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -59,12 +60,24 @@ export default class ParserValidator<
    * @param hash - The hash value at which to map the schema
    */
   addSchema(schema: S, hash: string) {
-    const key = schema[ID_KEY] ?? hash;
+    const ownId = schema[ID_KEY];
+    const key = ownId ?? hash;
     const identifiedSchema = { ...schema, [ID_KEY]: key };
     const existing = this.schemaMap[key];
     if (!existing) {
       this.schemaMap[key] = identifiedSchema;
     } else if (!deepEquals(existing, identifiedSchema)) {
+      if (ownId !== undefined) {
+        // A schema's own `$id` is the key a precompiled validator is looked up by, so variants of it that the resolution
+        // produces -- a merged `allOf` rewriting the options of a `oneOf`, say -- are all validated by the function
+        // compiled for the first one. There is nothing to compile the rest as, so they are left out rather than failing
+        // the parse; the regular validators cache by `$id` the same way, so they answer such a variant identically
+        logOnce(
+          `a schema with the $id "${key}" was parsed more than once with differing content. Only the first one is compiled, and it is the one every variant of it validates against; remove or rename the $id to have each compiled on its own`,
+          'warn',
+        );
+        return;
+      }
       // oxlint-disable-next-line no-console
       console.error('existing schema:', JSON.stringify(existing, null, 2));
       // oxlint-disable-next-line no-console

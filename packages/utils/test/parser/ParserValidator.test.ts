@@ -87,6 +87,17 @@ describe('ParserValidator', () => {
       ),
     );
   });
+  it('calling isValid() with a differing schema that has a matching $id keeps the first one', () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const first: RJSFSchema = { [ID_KEY]: 'shared', const: 'a' };
+    const second: RJSFSchema = { [ID_KEY]: 'shared', const: 'a', title: 'Option a' };
+    const idValidator = new ParserValidator(RECURSIVE_REF);
+    expect(idValidator.isValid(first, undefined, RECURSIVE_REF)).toBe(false);
+    expect(idValidator.isValid(second, undefined, RECURSIVE_REF)).toBe(false);
+    expect(idValidator.getSchemaMap().shared).toEqual(first);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringMatching(/the \$id "shared" was parsed more than once/));
+    consoleWarnSpy.mockRestore();
+  });
   it('when exception is thrown, console.error is called twice', () => {
     expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
   });
