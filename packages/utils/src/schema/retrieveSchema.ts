@@ -111,7 +111,7 @@ export function resolveCondition<
 
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
-  const conditionValue = context.validator.isValid(context, expression as S, formData ?? {}, rootSchema);
+  const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
@@ -1102,7 +1102,7 @@ export function withExactlyOneSubschema<
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return context.validator.isValid(context, conditionSchema, formData, rootSchema) || expandAllBranches;
+      return context.validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
     }
     return false;
   });

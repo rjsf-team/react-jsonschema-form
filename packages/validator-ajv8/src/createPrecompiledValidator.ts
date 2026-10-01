@@ -1,4 +1,4 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '@rjsf/utils';
+import type { CustomMergeAllOf, FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '@rjsf/utils';
 
 import AJV8PrecompiledValidator from './precompiledValidator.ts';
 import type { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } from './types.ts';
@@ -13,6 +13,8 @@ import type { Localizer, SuppressDuplicateFilteringType, ValidatorFunctions } fr
  * @param rootSchema - The root schema that was used with the `compileSchemaValidators()` function
  * @param [localizer] - If provided, is used to localize a list of Ajv `ErrorObject`s
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
+ * @param [customMergeAllOf] - The `customMergeAllOf` the schemas were compiled with, which must match the one passed
+ *        to `compileSchemaValidatorsCode()` so the sub-schemas it builds hash to entries the precompiled map holds
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
 export default function createPrecompiledValidator<
@@ -23,6 +25,13 @@ export default function createPrecompiledValidator<
   rootSchema: S,
   localizer?: Localizer,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): ValidatorType<S, F> {
-  return new AJV8PrecompiledValidator<S, F>(validateFns, rootSchema, localizer, suppressDuplicateFiltering);
+  return new AJV8PrecompiledValidator<S, F>(
+    validateFns,
+    rootSchema,
+    localizer,
+    suppressDuplicateFiltering,
+    customMergeAllOf,
+  );
 }

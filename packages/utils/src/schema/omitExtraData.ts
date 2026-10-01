@@ -230,7 +230,7 @@ export default function omitExtraData<
       return target;
     }
     const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(context, condition as S, source, rootSchema)
+      ? validator.isValid(condition as S, source, rootSchema)
       : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
@@ -358,6 +358,15 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
+      // Resolve each entry's references before merging, the way `resolveSchema()` runs every `allOf` entry through
+      // `retrieveSchemaInternal()` before the parent is merged. Two things go wrong otherwise: the shallow merge hoists
+      // an entry's `$ref` onto the merged schema rather than following it, so the referenced schema's properties are
+      // taken for extra data and deleted; and a `customMergeAllOf` is handed a `$ref` the form's own merge never sees,
+      // so it can reject a schema that renders and take the fallback below for data the user can see and edit
+      localSchema = {
+        ...localSchema,
+        allOf: allOf.map((entry) => (isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry)),
+      };
       try {
         localSchema = mergeAllOf<S, F>(context, localSchema);
       } catch (e) {

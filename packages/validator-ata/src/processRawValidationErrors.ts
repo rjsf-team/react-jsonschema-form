@@ -195,6 +195,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  customValidateFormData?: T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -223,13 +224,17 @@ export default function processRawValidationErrors<
 
   // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
   // and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(context, {
-    schema,
-    formData,
-    rootSchema: schema,
-    includeUndefinedValues: true,
-    uiSchema,
-  }) as T;
+  // `Form` passes the defaults it computed with its own `SchemaUtils`, so they honor the form's `customMergeAllOf`
+  // and `defaultFormStateBehavior`; without them they are computed here with the default `allOf` merge
+  const newFormData =
+    customValidateFormData ??
+    (getDefaultFormState<T, S, F>(context, {
+      schema,
+      formData,
+      rootSchema: schema,
+      includeUndefinedValues: true,
+      uiSchema,
+    }) as T);
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

@@ -1717,50 +1717,40 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * transform them in what ever way it chooses. The form data type `T` is a parameter of the call rather than of the
    * validator, since a validator checks data of any shape against a schema and one instance serves every `Form`.
    *
-   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`. An
-   *        implementation computes those defaults with itself, whatever validator the context names, since it is the one
-   *        being asked to validate; a validator that delegates to another therefore replaces `context.validator` with
-   *        itself rather than passing the context through unchanged
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults already
+   *        applied. `Form` computes it with its own `SchemaUtils`, so those defaults honor the `customMergeAllOf` and
+   *        `defaultFormStateBehavior` the form was given. Left out, the validator computes them itself, which it can
+   *        only do with the default `allOf` merge
    */
   validateFormData<T = unknown>(
-    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    customValidateFormData?: T,
   ): ValidationData<T>;
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
-   * @param context - The `SchemaContext` of the form, so a `rootSchema` this resolves is resolved the way the form
-   *        resolved it
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S): boolean;
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
-   * @param [context] - The optional `SchemaContext` of the form, so a `rootSchema` this resolves is resolved the way
-   *        the form resolved it. An implementation that resolves no schemas of its own ignores it, but should still
-   *        declare it, so that a validator wrapping or delegating to another one can forward it without knowing which
-   *        kind it holds
    */
-  rawValidation<Result = any>(
-    schema: S,
-    formData?: unknown,
-    context?: SchemaContext<S, F>,
-  ): { errors?: Result[]; validationError?: Error };
+  rawValidation<Result = any>(schema: S, formData?: unknown): { errors?: Result[]; validationError?: Error };
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */

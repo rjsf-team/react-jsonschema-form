@@ -3,7 +3,6 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
-  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -131,13 +130,8 @@ export default class ATAValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
-   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    */
-  rawValidation<Result = any>(
-    schema: S,
-    formData?: unknown,
-    _context?: SchemaContext<S, F>,
-  ): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
@@ -169,17 +163,16 @@ export default class ATAValidator<
    * pipeline (custom validation, transform hook, ui-title resolution).
    */
   validateFormData<T = unknown>(
-    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    customValidateFormData?: T,
   ): ValidationData<T> {
-    const validationContext = { ...context, validator: this };
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData, validationContext);
+    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
-      validationContext,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -187,6 +180,7 @@ export default class ATAValidator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      customValidateFormData,
     );
   }
 
@@ -218,7 +212,7 @@ export default class ATAValidator<
   /** Boolean validation entrypoint. Returns false on validation failure or
    * compilation error. Mirrors `AJV8Validator#isValid` semantics.
    */
-  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {

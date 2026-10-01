@@ -37,7 +37,7 @@ describe('ParserValidator', () => {
     });
   });
   it('isValid() throws error when rootSchema differs', () => {
-    expect(() => validator.isValid({ validator }, TINY_SCHEMA, undefined, ID_SCHEMA)).toThrow(
+    expect(() => validator.isValid(TINY_SCHEMA, undefined, ID_SCHEMA)).toThrow(
       new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema'),
     );
   });
@@ -52,12 +52,12 @@ describe('ParserValidator', () => {
     );
   });
   it('validateFormData() throws error when called', () => {
-    expect(() => validator.validateFormData({ validator }, {}, TINY_SCHEMA)).toThrow(
+    expect(() => validator.validateFormData({}, TINY_SCHEMA)).toThrow(
       new Error('Unexpectedly calling the `validateFormData()` method during schema parsing'),
     );
   });
   it('calling isValid() with TINY_SCHEMA returns false', () => {
-    expect(validator.isValid({ validator }, TINY_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
+    expect(validator.isValid(TINY_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
   });
   it('the TINY_SCHEMA was added to the map, with the hash injected as the ID_KEY', () => {
     expect(validator.getSchemaMap()).toEqual({
@@ -66,10 +66,10 @@ describe('ParserValidator', () => {
     });
   });
   it('calling isValid() with TINY_SCHEMA again returns false, and tests other branch', () => {
-    expect(validator.isValid({ validator }, TINY_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
+    expect(validator.isValid(TINY_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
   });
   it('calling isValid() with ID_SCHEMA returns false', () => {
-    expect(validator.isValid({ validator }, ID_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
+    expect(validator.isValid(ID_SCHEMA, undefined, RECURSIVE_REF)).toBe(false);
   });
   it('the ID_SCHEMA was added to the map without injecting the hash because it has an ID', () => {
     expect(validator.getSchemaMap()).toEqual({
@@ -81,7 +81,7 @@ describe('ParserValidator', () => {
   it('calling isValid() with a schema that has a matching key throws error', () => {
     // Force the error condition
     validator.schemaMap[DUPLICATE_HASH] = TINY_SCHEMA;
-    expect(() => validator.isValid({ validator }, DUPLICATE_SCHEMA, undefined, RECURSIVE_REF)).toThrow(
+    expect(() => validator.isValid(DUPLICATE_SCHEMA, undefined, RECURSIVE_REF)).toThrow(
       new Error(
         `Two different schemas exist with the same key ${DUPLICATE_HASH}! What a bad coincidence. If possible, try adding an $id to one of the schemas`,
       ),

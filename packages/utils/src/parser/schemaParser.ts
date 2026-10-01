@@ -2,7 +2,7 @@ import { ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
-import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
 
@@ -48,16 +48,18 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
  * the hash of the schema to schema/sub-schema.
  *
  * @param rootSchema - The root schema to parse for sub-schemas used by `isValid()` calls
+ * @param [customMergeAllOf] - The `customMergeAllOf` the form will resolve with. The walk merges `allOf`s to build the
+ *        sub-schemas it records, so a form whose merge differs from this one asks for hashes that were never recorded
  * @returns - The `SchemaMap` of all schemas that were parsed
  */
 export default function schemaParser<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(rootSchema: S): SchemaMap<S> {
+>(rootSchema: S, customMergeAllOf?: CustomMergeAllOf<S>): SchemaMap<S> {
   const validator = new ParserValidator<S, F>(rootSchema);
   const recurseList: S[] = [];
 
-  parseSchema({ validator }, recurseList, rootSchema, rootSchema);
+  parseSchema({ validator, customMergeAllOf }, recurseList, rootSchema, rootSchema);
 
   return validator.getSchemaMap();
 }

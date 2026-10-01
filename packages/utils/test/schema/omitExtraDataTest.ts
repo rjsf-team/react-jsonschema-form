@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
+import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
@@ -922,6 +922,59 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         );
         expect(customMerge).toHaveBeenCalled();
         expect(result).toEqual({ foo: 'hi', bar: 1 });
+      });
+
+      it('keeps the properties of an allOf entry that is a $ref, which the form renders', () => {
+        // `shallowAllOfMerge()` hoists an entry's `$ref` onto the merged schema instead of following it, so without
+        // resolving the entries first the referenced schema's properties are taken for extra data and deleted
+        const schema: RJSFSchema = {
+          definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },
+          allOf: [{ $ref: '#/definitions/a' }, { type: 'object', properties: { y: { type: 'string' } } }],
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { x: 'X', y: 'Y', z: 'Z' })).toEqual({
+          x: 'X',
+          y: 'Y',
+        });
+      });
+
+      it('leaves a boolean allOf entry alone, since only a subschema object can carry references', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'string' } },
+          allOf: [true, { properties: { y: { type: 'string' } } }],
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { x: 'X', y: 'Y', z: 'Z' })).toEqual({
+          x: 'X',
+          y: 'Y',
+        });
+      });
+
+      it('hands customMergeAllOf the same resolved entries the form resolved with, so it agrees with what rendered', () => {
+        // `resolveSchema()` runs each `allOf` entry through `retrieveSchemaInternal()` before the parent is merged, so
+        // a merger that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input,
+        // or it takes the merge-failure fallback and deletes data the user can see and edit
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },
+          properties: { top: { type: 'string' } },
+          allOf: [{ $ref: '#/definitions/a' }, { type: 'object', properties: { y: { type: 'string' } } }],
+        };
+        const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) => {
+          const entries = (allOf ?? []) as RJSFSchema[];
+          if (entries.some((entry) => isObject(entry) && '$ref' in entry)) {
+            throw new Error('cannot merge an unresolved $ref');
+          }
+          const merged: RJSFSchema = { ...rest, properties: { ...(rest.properties ?? {}) } };
+          entries.forEach((entry) => Object.assign(merged.properties!, entry.properties ?? {}));
+          return merged;
+        };
+        const data = { top: 'T', x: 'X', y: 'Y', z: 'Z' };
+        const utils = createSchemaUtils(
+          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
+          schema,
+        );
+        expect(Object.keys(utils.retrieveSchema(schema, data).properties ?? {})).toEqual(['top', 'x', 'y']);
+        expect(utils.omitExtraData(schema, data)).toEqual({ top: 'T', x: 'X', y: 'Y' });
       });
 
       it('drops the allOf and warns when customMergeAllOf throws, rather than propagating out of Form', () => {

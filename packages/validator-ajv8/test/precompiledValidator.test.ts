@@ -76,7 +76,7 @@ describe('AJV8PrecompiledValidator', () => {
           [RJSF_REF_KEY]: '#/definitions/foo',
         };
 
-        expect(validator.isValid({ validator }, schema, { name: 'bar' }, rootSchema)).toBe(true);
+        expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
       });
       it('should return false if the data is not valid against the schema', () => {
         const schema: RJSFSchema = {
@@ -92,7 +92,7 @@ describe('AJV8PrecompiledValidator', () => {
           [RJSF_REF_KEY]: '#/definitions/foo',
         };
 
-        expect(validator.isValid({ validator }, schema, { name: 12345 }, rootSchema)).toBe(false);
+        expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
       });
       it('should return false if junk option id is passed', () => {
         const schema: RJSFSchema = {
@@ -102,12 +102,12 @@ describe('AJV8PrecompiledValidator', () => {
           },
           $id: JUNK_OPTION_ID,
         };
-        expect(validator.isValid({ validator }, schema, { name: 'foo' }, rootSchema)).toBe(false);
+        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
         const hash = hashForSchema(schema);
-        expect(() => validator.isValid({ validator }, schema, { name: 'bar' }, rootSchema)).toThrow(
+        expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrow(
           new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );
       });
@@ -118,7 +118,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.isValid({ validator }, schema, { foo: { name: 'bar' } }, schema)).toThrow(
+        expect(() => validator.isValid(schema, { foo: { name: 'bar' } }, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -133,7 +133,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.validateFormData({ validator }, {}, schema)).toThrow(
+        expect(() => validator.validateFormData({}, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -143,7 +143,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { foo: '42' }, rootSchema);
+          const result = validator.validateFormData({ foo: '42' }, rootSchema);
           errors = result.errors;
         });
 
@@ -156,7 +156,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errorSchema: ErrorSchema;
 
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { foo: 42 }, rootSchema);
+          const result = validator.validateFormData({ foo: 42 }, rootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -173,7 +173,7 @@ describe('AJV8PrecompiledValidator', () => {
       describe('Validating multipleOf with a float', () => {
         let errors: RJSFValidationError[];
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { price: 1.05 }, rootSchema);
+          const result = validator.validateFormData({ price: 1.05 }, rootSchema);
           errors = result.errors;
         });
         it('should not return an error', () => {
@@ -184,7 +184,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { price: 0.14 }, rootSchema);
+          const result = validator.validateFormData({ price: 0.14 }, rootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -208,7 +208,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData({ validator }, formData, rootSchema);
+            const result = validator.validateFormData(formData, rootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -219,7 +219,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is not provided at top level', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData({ validator }, formData, rootSchema);
+            const result = validator.validateFormData(formData, rootSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -237,7 +237,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { anything: { foo: '42' } }, rootSchema);
+          const result = validator.validateFormData({ anything: { foo: '42' } }, rootSchema);
           errors = result.errors;
         });
 
@@ -250,7 +250,7 @@ describe('AJV8PrecompiledValidator', () => {
         let errorSchema: ErrorSchema;
 
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { anything: { foo: 42 } }, rootSchema);
+          const result = validator.validateFormData({ anything: { foo: 42 } }, rootSchema);
           errors = result.errors;
           errorSchema = result.errorSchema;
         });
@@ -275,14 +275,7 @@ describe('AJV8PrecompiledValidator', () => {
           };
           newErrorMessage = 'Better error message';
           transformErrors = vi.fn((errors: RJSFValidationError[]) => [{ ...errors[0], message: newErrorMessage }]);
-          const result = validator.validateFormData(
-            { validator },
-            { name: 42 },
-            rootSchema,
-            undefined,
-            transformErrors,
-            uiSchema,
-          );
+          const result = validator.validateFormData({ name: 42 }, rootSchema, undefined, transformErrors, uiSchema);
           errors = result.errors;
         });
 
@@ -314,14 +307,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided and passes custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'a' } };
-            const result = validator.validateFormData(
-              { validator },
-              formData,
-              rootSchema,
-              validate,
-              undefined,
-              uiSchema,
-            );
+            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -335,14 +321,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is provided, but fails custom validation', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a', pass2: 'b' } };
-            const result = validator.validateFormData(
-              { validator },
-              formData,
-              rootSchema,
-              validate,
-              undefined,
-              uiSchema,
-            );
+            const result = validator.validateFormData(formData, rootSchema, validate, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -361,7 +340,7 @@ describe('AJV8PrecompiledValidator', () => {
         describe('formData is missing data', () => {
           beforeAll(() => {
             const formData = { passwords: { pass1: 'a' } };
-            const result = validator.validateFormData({ validator }, formData, rootSchema, validate);
+            const result = validator.validateFormData(formData, rootSchema, validate);
             errors = result.errors;
             errorSchema = result.errorSchema;
           });
@@ -382,21 +361,21 @@ describe('AJV8PrecompiledValidator', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;name=file1.txt;base64,x=',
           };
-          const result = validator.validateFormData({ validator }, formData, rootSchema);
+          const result = validator.validateFormData(formData, rootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url without name is accepted', () => {
           const formData = {
             dataUrlWithName: 'data:text/plain;base64,x=',
           };
-          const result = validator.validateFormData({ validator }, formData, rootSchema);
+          const result = validator.validateFormData(formData, rootSchema);
           expect(result.errors).toHaveLength(0);
         });
         it('Data-Url with bad data generates error', () => {
           const formData = {
             dataUrlWithName: 'x=',
           };
-          const result = validator.validateFormData({ validator }, formData, rootSchema);
+          const result = validator.validateFormData(formData, rootSchema);
           expect(result.errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors).toHaveLength(1);
           expect(result.errorSchema.dataUrlWithName!.__errors![0]).toEqual('must match format "data-url"');
@@ -415,7 +394,7 @@ describe('AJV8PrecompiledValidator', () => {
       let errors: RJSFValidationError[];
       beforeAll(() => {
         vi.mocked(localizer).mockClear();
-        const result = validator.validateFormData({ validator }, { foo: 42 }, rootSchema);
+        const result = validator.validateFormData({ foo: 42 }, rootSchema);
         errors = result.errors;
       });
       it('should return 1 error about formData', () => {
@@ -445,14 +424,14 @@ describe('AJV8PrecompiledValidator', () => {
     });
     describe('validating using custom string formats', () => {
       it('should not return a validation error if proper string format is used', () => {
-        const result = validator.validateFormData({ validator }, { phone: '800-555-2368' }, rootSchema);
+        const result = validator.validateFormData({ phone: '800-555-2368' }, rootSchema);
         expect(result.errors).toHaveLength(0);
       });
       describe('validating using a custom formats', () => {
         let errors: RJSFValidationError[];
 
         beforeAll(() => {
-          const result = validator.validateFormData({ validator }, { phone: '800.555.2368' }, rootSchema);
+          const result = validator.validateFormData({ phone: '800.555.2368' }, rootSchema);
           errors = result.errors;
         });
         it('should return 1 error about formData', () => {
@@ -500,9 +479,7 @@ describe('AJV8PrecompiledValidator checking a rootSchema it is handed', () => {
     otherValidator.isValid.mockClear();
 
     // So had the check resolved with the context's validator, it would have rejected a root schema that does match
-    expect(() =>
-      validator.isValid({ validator: otherValidator }, conditionalSchema, formData, resolvedRootSchema),
-    ).not.toThrow();
+    expect(() => validator.isValid(conditionalSchema, formData, resolvedRootSchema)).not.toThrow();
     expect(otherValidator.isValid).not.toHaveBeenCalled();
   });
 });
@@ -517,40 +494,53 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
   const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) =>
     ({ ...(mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema), title: 'Custom merge' }) as RJSFSchema;
 
-  it('accepts the root schema the form resolved with its customMergeAllOf', () => {
+  it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {
     const validator = new AJV8PrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
       allOfSchema,
+      undefined,
+      undefined,
+      customMergeAllOf,
     );
-    const context = { validator, customMergeAllOf };
     const formData = { name: 'x' };
-    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
     expect(resolvedRootSchema.title).toBe('Custom merge');
-    expect(validator.validateFormData(context, formData, resolvedRootSchema).errors).toEqual([]);
+    expect(validator.validateFormData(formData, resolvedRootSchema).errors).toEqual([]);
   });
 
   it('accepts that root schema through isValid(), which the schema functions reach while scoring options', () => {
     const validator = new AJV8PrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
       allOfSchema,
+      undefined,
+      undefined,
+      customMergeAllOf,
     );
-    const context = { validator, customMergeAllOf };
     const formData = { name: 'x' };
-    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
-    expect(validator.isValid(context, allOfSchema, formData, resolvedRootSchema)).toBe(true);
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(validator.isValid(allOfSchema, formData, resolvedRootSchema)).toBe(true);
   });
 
-  it('accepts that root schema through rawValidation(), which takes the context as an optional argument', () => {
+  it('accepts that root schema through rawValidation()', () => {
+    const validator = new AJV8PrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
+      allOfSchema,
+      undefined,
+      undefined,
+      customMergeAllOf,
+    );
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(validator.rawValidation(resolvedRootSchema, formData).errors).toBeUndefined();
+  });
+
+  it('rejects that root schema when constructed without the customMergeAllOf, which resolves it the default way', () => {
     const validator = new AJV8PrecompiledValidator(
       evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
       allOfSchema,
     );
-    const context = { validator, customMergeAllOf };
     const formData = { name: 'x' };
-    const resolvedRootSchema = retrieveSchema(context, allOfSchema, allOfSchema, formData);
-    expect(validator.rawValidation(resolvedRootSchema, formData, context).errors).toBeUndefined();
-    // Omitting the context resolves the root schema with the default merge instead, which no longer matches, so the
-    // context argument is what makes the call above succeed
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
     expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
       'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
     );

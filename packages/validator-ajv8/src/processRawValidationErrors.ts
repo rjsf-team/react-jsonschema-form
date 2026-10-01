@@ -201,6 +201,9 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
  * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
+ * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults already
+ *        applied. `Form` computes it with its own `SchemaUtils`, so the defaults honor the form's `customMergeAllOf`
+ *        and `defaultFormStateBehavior`; without it they are computed here, which only the default `allOf` merge can do
  */
 export default function processRawValidationErrors<
   T = unknown,
@@ -215,6 +218,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  customValidateFormData?: T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -243,13 +247,15 @@ export default function processRawValidationErrors<
 
   // Include form data with undefined values, which is required for custom validation. `uiSchema` is threaded through
   // so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed and rendered.
-  const newFormData = getDefaultFormState<T, S, F>(context, {
-    schema,
-    formData,
-    rootSchema: schema,
-    includeUndefinedValues: true,
-    uiSchema,
-  }) as T;
+  const newFormData =
+    customValidateFormData ??
+    (getDefaultFormState<T, S, F>(context, {
+      schema,
+      formData,
+      rootSchema: schema,
+      includeUndefinedValues: true,
+      uiSchema,
+    }) as T);
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

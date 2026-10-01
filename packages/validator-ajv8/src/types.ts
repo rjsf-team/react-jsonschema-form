@@ -1,3 +1,4 @@
+import type { CustomMergeAllOf } from '@rjsf/utils';
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
@@ -26,6 +27,11 @@ export interface CustomValidatorOptionsType {
    * - `'oneOf'`: disables filtering for `oneOf` errors only (anyOf duplicates are still filtered)
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The `customMergeAllOf` the form will resolve with. `compileSchemaValidatorsCode()` merges `allOf`s while walking
+   * the schema for the sub-schemas it precompiles, so a form whose merge differs from this one asks the precompiled
+   * map for hashes it never recorded. Pass the same function here and to `createPrecompiledValidator()`
+   */
+  customMergeAllOf?: CustomMergeAllOf;
 }
 
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them

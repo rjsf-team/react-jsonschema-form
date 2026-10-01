@@ -20,7 +20,7 @@ describe('createPrecompiledValidator()', () => {
       expect(custom).toBeInstanceOf(AJV8PrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns and rootSchema', () => {
-      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, undefined);
+      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, undefined, undefined);
     });
   });
   describe('passing validatorFns, rootSchema and localizer to createPrecompiledValidator', () => {
@@ -35,7 +35,7 @@ describe('createPrecompiledValidator()', () => {
       expect(custom).toBeInstanceOf(AJV8PrecompiledValidator);
     });
     it('defaultValidator was constructed with validateFns, rootSchema and the localizer', () => {
-      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, localizer, undefined);
+      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, localizer, undefined, undefined);
     });
   });
   describe('passing suppressDuplicateFiltering to createPrecompiledValidator', () => {
@@ -48,7 +48,7 @@ describe('createPrecompiledValidator()', () => {
       expect(custom).toBeInstanceOf(AJV8PrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns, rootSchema, undefined, and suppressDuplicateFiltering', () => {
-      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, 'all');
+      expect(AJV8PrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, 'all', undefined);
     });
   });
 });

@@ -154,6 +154,29 @@ describe('createSchemaUtils()', () => {
       });
     });
 
+    describe('constructed from a draft 2020-12 root schema with an $id', () => {
+      // The constructor stores the root with every relative `$ref` rewritten against the `$id`, so comparing that
+      // rewritten copy against the schema a caller passes back would never match and `Form` would rebuild its
+      // `SchemaUtils` on every render, discarding the `retrieveSchema()` caches and re-validating a `liveValidate` form
+      const schema2020: RJSFSchema = {
+        $schema: JSON_SCHEMA_DRAFT_2020_12,
+        $id: 'https://example.com/root',
+        $defs: { a: { type: 'string' } },
+        properties: { x: { $ref: '#/$defs/a' } },
+      };
+
+      it('returns false when passed the same root schema back', () => {
+        const utils2020 = createSchemaUtils({ validator: testValidator }, schema2020);
+        expect(utils2020.doesSchemaUtilsDiffer({ validator: testValidator }, schema2020)).toBe(false);
+      });
+      it('still returns true for a genuinely different root schema', () => {
+        const utils2020 = createSchemaUtils({ validator: testValidator }, schema2020);
+        expect(utils2020.doesSchemaUtilsDiffer({ validator: testValidator }, { ...schema2020, title: 'changed' })).toBe(
+          true,
+        );
+      });
+    });
+
     describe('constructed from a context that is later mutated', () => {
       it('returns true, having snapshotted the context it was constructed with', () => {
         const context = { validator: testValidator, defaultFormStateBehavior };

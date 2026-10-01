@@ -43,6 +43,11 @@ class SchemaUtils<
 > implements SchemaUtilsType<T, S, F> {
   private readonly context: SchemaContext<S, F>;
   rootSchema: S;
+  /** The `rootSchema` exactly as the caller passed it. A draft 2020-12 root is stored above with every relative `$ref`
+   * rewritten against its `$id`, so comparing that rewritten copy with what a caller passes back would never match and
+   * `doesSchemaUtilsDiffer()` would report a difference on every render
+   */
+  private readonly rawRootSchema: S;
   /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
    * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
    * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
@@ -62,6 +67,7 @@ class SchemaUtils<
     } else {
       this.rootSchema = rootSchema;
     }
+    this.rawRootSchema = rootSchema;
     // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
     // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because `getSchemaContext()` hands
     // the snapshot itself to the validator and to every `computeSkipPopulate()` callback. Only the context's own keys
@@ -111,7 +117,7 @@ class SchemaUtils<
 
     return (
       this.context.validator !== context.validator ||
-      !deepEquals(this.rootSchema, rootSchema) ||
+      !deepEquals(this.rawRootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
       this.context.customMergeAllOf !== context.customMergeAllOf
     );

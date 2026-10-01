@@ -11,7 +11,7 @@ describe('ui:required with a precompiled validator', () => {
     const formData = {};
 
     // Mirrors what Form.validate() does: validate the untouched schema, then merge ui:required errors in.
-    const schemaValidation = validator.validateFormData({ validator }, formData, superSchema);
+    const schemaValidation = validator.validateFormData(formData, superSchema);
     const merged = validationDataMerge(
       schemaValidation,
       getUiRequiredErrorSchema({ validator }, superSchema, uiSchema, formData),
@@ -20,7 +20,7 @@ describe('ui:required with a precompiled validator', () => {
     expect(toErrorList(merged.errorSchema).some((e) => e.property === '.price')).toBe(true);
 
     const filled = { price: 3 };
-    const okValidation = validator.validateFormData({ validator }, filled, superSchema);
+    const okValidation = validator.validateFormData(filled, superSchema);
     const okMerged = validationDataMerge(
       okValidation,
       getUiRequiredErrorSchema({ validator }, superSchema, uiSchema, filled),

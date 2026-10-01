@@ -4,7 +4,6 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
-  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -134,14 +133,9 @@ export default class CFWorkerValidator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
-   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(
-    schema: S,
-    formData?: unknown,
-    _context?: SchemaContext<S, F>,
-  ): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
@@ -157,7 +151,6 @@ export default class CFWorkerValidator<
 
   /** Validates form data and applies RJSF error transformation and custom validation.
    *
-   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - A function that adds application-specific validation errors
@@ -166,17 +159,16 @@ export default class CFWorkerValidator<
    * @returns - The processed validation errors and error schema
    */
   validateFormData<T = unknown>(
-    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    customValidateFormData?: T,
   ): ValidationData<T> {
-    const validationContext = { ...context, validator: this };
-    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData, validationContext);
+    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
     return processRawValidationErrors(
-      validationContext,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -184,6 +176,7 @@ export default class CFWorkerValidator<
       transformErrors,
       uiSchema,
       this.options.suppressDuplicateFiltering,
+      customValidateFormData,
     );
   }
 
@@ -214,13 +207,12 @@ export default class CFWorkerValidator<
 
   /** Validates data against a schema, returning false if the schema is invalid.
    *
-   * @param _context - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S): boolean {
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean {
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {

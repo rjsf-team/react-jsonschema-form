@@ -8,7 +8,6 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
-  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -85,13 +84,12 @@ export default class ParserValidator<
   /** Implements the `ValidatorType` `isValid()` method to capture the `schema` in the `schemaMap`. Throws an error when
    * the `rootSchema` is not the same as the root schema provided during construction.
    *
-   * @param _context - The context parameter that is ignored
    * @param schema - The schema to record in the `schemaMap`
    * @param _formData - The formData parameter that is ignored
    * @param rootSchema - The root schema associated with the schema
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
-  isValid(_context: SchemaContext<S, F>, schema: S, _formData: unknown, rootSchema: S): boolean {
+  isValid(schema: S, _formData: unknown, rootSchema: S): boolean {
     if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
@@ -121,7 +119,6 @@ export default class ParserValidator<
   /** Implements the `ValidatorType` `validateFormData()` method to throw an error since it is never supposed to be
    * called
    *
-   * @param _context - The context parameter that is ignored
    * @param _formData - The formData parameter that is ignored
    * @param _schema - The schema parameter that is ignored
    * @param _customValidate - The customValidate parameter that is ignored
@@ -129,7 +126,6 @@ export default class ParserValidator<
    * @param _uiSchema - The uiSchema parameter that is ignored
    */
   validateFormData<T = unknown>(
-    _context: SchemaContext<S, F>,
     _formData: T | undefined,
     _schema: S,
     _customValidate?: CustomValidator<T, S, F>,

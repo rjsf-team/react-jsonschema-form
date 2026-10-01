@@ -45,7 +45,7 @@ export default function getFirstMatchingOption<
       : undefined;
     if (discriminatorField && discriminator !== undefined) {
       const value = getByPath<T>(formData, discriminatorField);
-      if (context.validator.isValid(context, discriminator, value, rootSchema)) {
+      if (context.validator.isValid(discriminator, value, rootSchema)) {
         return i;
       }
     } else if (option[PROPERTIES_KEY]) {
@@ -90,10 +90,10 @@ export default function getFirstMatchingOption<
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      if (context.validator.isValid(context, augmentedSchema, formData, rootSchema)) {
+      if (context.validator.isValid(augmentedSchema, formData, rootSchema)) {
         return i;
       }
-    } else if (context.validator.isValid(context, option, formData, rootSchema)) {
+    } else if (context.validator.isValid(option, formData, rootSchema)) {
       return i;
     }
   }

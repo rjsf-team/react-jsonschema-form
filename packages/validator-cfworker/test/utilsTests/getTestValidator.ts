@@ -1,4 +1,4 @@
-import type { CustomValidator, ErrorTransformer, RJSFSchema, SchemaContext, ValidationData } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, RJSFSchema, UiSchema, ValidationData } from '@rjsf/utils';
 
 import type { TestValidatorType } from '../../../utils/test/schema/index.ts';
 import type { CustomValidatorOptionsType } from '../../src/index.ts';
@@ -8,23 +8,30 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
   const validator = customizeValidator(options);
   return {
     validateFormData<T = unknown>(
-      context: SchemaContext,
       formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
       transformErrors?: ErrorTransformer<T>,
+      uiSchema?: UiSchema<T>,
+      customValidateFormData?: T,
     ): ValidationData<T> {
-      return validator.validateFormData(context, formData, schema, customValidate, transformErrors);
+      return validator.validateFormData(
+        formData,
+        schema,
+        customValidate,
+        transformErrors,
+        uiSchema,
+        customValidateFormData,
+      );
     },
-    isValid(context: SchemaContext, schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
-      return validator.isValid(context, schema, formData, rootSchema);
+    isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
+      return validator.isValid(schema, formData, rootSchema);
     },
     rawValidation<Result = any>(
       schema: RJSFSchema,
       formData?: unknown,
-      context?: SchemaContext,
     ): { errors?: Result[]; validationError?: Error } {
-      return validator.rawValidation(schema, formData, context);
+      return validator.rawValidation(schema, formData);
     },
     setReturnValues() {
       /* The real validator does not use injected return values. */

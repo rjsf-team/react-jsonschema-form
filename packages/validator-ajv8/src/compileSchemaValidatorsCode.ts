@@ -20,7 +20,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   schema: S,
   options: CustomValidatorOptionsType = {},
 ) {
-  const schemaMaps = schemaParser(schema);
+  const schemaMaps = schemaParser(schema, options.customMergeAllOf);
   const schemas = Object.values(schemaMaps);
 
   const {

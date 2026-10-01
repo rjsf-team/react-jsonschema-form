@@ -1,3 +1,4 @@
+import type { CustomMergeAllOf } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
@@ -54,6 +55,11 @@ export interface CustomValidatorOptionsType {
    * `processRawValidationErrors#filterDuplicateErrors`.
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The `customMergeAllOf` the form will resolve with. `compileSchemaValidatorsCode()` merges `allOf`s while walking
+   * the schema for the sub-schemas it precompiles, so a form whose merge differs from this one asks the precompiled
+   * map for hashes it never recorded. Pass the same function here and to `createPrecompiledValidator()`
+   */
+  customMergeAllOf?: CustomMergeAllOf;
 }
 
 /** The simplified `ValidateFunction` shape produced by ata's compiled

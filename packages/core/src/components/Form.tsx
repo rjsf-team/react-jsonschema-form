@@ -567,15 +567,22 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
 
-  const schemaContext = schemaUtils.getSchemaContext();
-  const schemaValidation = schemaContext.validator.validateFormData(
-    schemaContext,
-    validationFormData,
-    validationSchema,
-    customValidate,
-    transformErrors,
-    uiSchema,
-  );
+  // The data handed to `customValidate` carries the form's defaults, computed here rather than inside the validator so
+  // they honor the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way
+  // to know. Only computed when there is a `customValidate` to receive it
+  const customValidateFormData = customValidate
+    ? (schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T)
+    : undefined;
+  const schemaValidation = schemaUtils
+    .getValidator()
+    .validateFormData(
+      validationFormData,
+      validationSchema,
+      customValidate,
+      transformErrors,
+      uiSchema,
+      customValidateFormData,
+    );
   // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
   // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
   // Read off the same props as `uiSchema`, not the context's registry, which lags the props until the form commits

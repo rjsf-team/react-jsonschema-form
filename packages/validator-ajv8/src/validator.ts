@@ -3,7 +3,6 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
-  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -93,13 +92,8 @@ export default class AJV8Validator<
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
-   * @param [_context] - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    */
-  rawValidation<Result = any>(
-    schema: S,
-    formData?: unknown,
-    _context?: SchemaContext<S, F>,
-  ): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
@@ -184,25 +178,24 @@ export default class AJV8Validator<
    * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
    * transform them in what ever way it chooses.
    *
-   * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
    * @param formData - The form data to validate
    * @param schema - The schema against which to validate the form data
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults applied
    */
   validateFormData<T = unknown>(
-    context: SchemaContext<S, F>,
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    customValidateFormData?: T,
   ): ValidationData<T> {
-    const validationContext = { ...context, validator: this };
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData, validationContext);
+    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(
-      validationContext,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -210,6 +203,7 @@ export default class AJV8Validator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      customValidateFormData,
     );
   }
 
@@ -241,12 +235,11 @@ export default class AJV8Validator<
    * false otherwise. If the schema is invalid, then this function will return
    * false.
    *
-   * @param _context - The `SchemaContext` parameter that is ignored, since this validator resolves no schemas itself
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(_context: SchemaContext<S, F>, schema: S, formData: unknown, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;
