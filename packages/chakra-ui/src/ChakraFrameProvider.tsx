@@ -25,10 +25,7 @@ const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) =>
 });
 
 export const __createChakraFrameProvider = (props: { children: ReactNode }) =>
-  function ChakraFrame({ document }: { document?: Document }) {
-    if (!document) {
-      return null;
-    }
+  function ChakraFrame({ document = globalThis.document }: { document?: Document }) {
     return (
       <div style={{ margin: 2 }}>
         <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
