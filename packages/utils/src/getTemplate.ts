@@ -18,20 +18,14 @@ export default function getTemplate<
   if (name === 'ButtonTemplates') {
     return templates[name];
   }
+  const customTemplates: Record<string, unknown> = templates;
+  const uiOverrides: Record<string, unknown> = uiOptions;
   // Allow templates to be customized per-field by using string keys from the registry
-  if (
-    Object.hasOwn(uiOptions, name) &&
-    typeof uiOptions[name] === 'string' &&
-    Object.hasOwn(templates, uiOptions[name])
-  ) {
-    const key = uiOptions[name];
-    // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent
-    // To avoid that, we widen templates to a string-keyed record before accessing the key field
-    return (templates as Record<string, unknown>)[key] as TemplatesType<T, S, F>[Name];
+  const key = uiOverrides[name];
+  if (typeof key === 'string' && Object.hasOwn(uiOverrides, name) && Object.hasOwn(customTemplates, key)) {
+    // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
+    // complex to represent, so both are read through string-keyed views and the result is cast back to the template type
+    return customTemplates[key] as TemplatesType<T, S, F>[Name];
   }
-  return (
-    // Evaluating uiOptions[name] results in TS2590: Expression produces a union type that is too complex to represent
-    // To avoid that, we cast uiOptions to `any` before accessing the name field
-    ((uiOptions as any)[name] as TemplatesType<T, S, F>[Name]) || templates[name]
-  );
+  return (uiOverrides[name] as TemplatesType<T, S, F>[Name]) || templates[name];
 }

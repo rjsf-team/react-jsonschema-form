@@ -11,19 +11,12 @@ import {
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import type { Localizer, ValidatorFunctions } from '../src/index.ts';
+import type { Localizer } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
+import loadModule from './harness/loadModule.ts';
 import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
-
-function loadModule(code: string): ValidatorFunctions {
-  const module = { exports: {} as ValidatorFunctions };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  const load = new Function('module', 'exports', code) as (m: typeof module, e: ValidatorFunctions) => void;
-  load(module, module.exports);
-  return module.exports;
-}
 
 const PHONE_US = /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 

@@ -1,17 +1,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import type { ValidatorFunctions } from '../src/index.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
-
-// Evaluate generated CJS module source into an exports object.
-function loadModule(code: string): ValidatorFunctions {
-  const module = { exports: {} as ValidatorFunctions };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  const load = new Function('module', 'exports', code) as (m: typeof module, e: ValidatorFunctions) => void;
-  load(module, module.exports);
-  return module.exports;
-}
+import loadModule from './harness/loadModule.ts';
 
 const schema: RJSFSchema = {
   $id: 'root',

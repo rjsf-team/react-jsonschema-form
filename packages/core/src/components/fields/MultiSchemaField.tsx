@@ -28,7 +28,7 @@ import formDataForNewOption from './formDataForNewOption.ts';
  * @param props - The `FieldProps` for this template
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F>,
+  props: FieldProps<T, S, F> & { options: S[] },
 ) {
   const {
     name,
@@ -41,13 +41,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onBlur,
     onChange,
     onFocus,
+    options,
     readonly,
     registry,
     required = false,
     schema,
     uiSchema,
   } = props;
-  const options = props.options as S[];
   const { schemaUtils } = registry;
 
   // Hash formData by value so the memo only invalidates when data actually changes, not on every

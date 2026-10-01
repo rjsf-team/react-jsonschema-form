@@ -29,11 +29,13 @@ function getDisplayValue(val: unknown) {
     return '';
   }
   if (typeof val === 'object') {
-    const named = val as { name?: string; label?: string };
-    if (named.name) {
-      return named.name;
+    if ('name' in val && val.name) {
+      return String(val.name);
     }
-    return named.label || JSON.stringify(val);
+    if ('label' in val && val.label) {
+      return String(val.label);
+    }
+    return JSON.stringify(val);
   }
   return String(val);
 }

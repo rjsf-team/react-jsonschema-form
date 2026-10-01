@@ -220,7 +220,8 @@ function asObject(value: unknown): GenericObjectType | undefined {
 }
 
 function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined): string {
-  return (ownSuccessProps?.id as string | undefined) || `${id}-success`;
+  const ownId: unknown = ownSuccessProps?.id;
+  return typeof ownId === 'string' && ownId ? ownId : `${id}-success`;
 }
 
 /** Whether `Input.Wrapper` renders the element with `id`, which it lists in its context's `describedBy` when it does */

@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, fieldLabelId, triggerValueId } from '@rjsf/utils';
+import { ariaDescribedByIds, fieldLabelId, isObject, triggerValueId } from '@rjsf/utils';
 
 import type { DaisyProps } from './types/DaisyProps.ts';
 
@@ -28,7 +28,8 @@ export function getDaisy<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({ uiSchema }: GetDaisyProps<T, S, F>): DaisyProps {
-  return (uiSchema?.['ui:options']?.daisy as DaisyProps | undefined) || {};
+  const daisy: unknown = uiSchema?.['ui:options']?.daisy;
+  return isObject(daisy) ? daisy : {};
 }
 
 interface GroupProps {

@@ -83,4 +83,4 @@ export default function DateWidget<
  * "generator" function.
  */
 DateWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
-  node.parentNode as HTMLElement;
+  node.parentElement ?? node;

@@ -45,11 +45,12 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const {
-    colSpan = 24,
-    labelAlign = 'right',
-    rowGutter = 24,
-  } = formContext as { colSpan?: number | Record<string, number>; labelAlign?: string; rowGutter?: RowProps['gutter'] };
+  const antdContext: {
+    colSpan?: number | Record<string, number>;
+    labelAlign?: string;
+    rowGutter?: RowProps['gutter'];
+  } = formContext;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = antdContext;
 
   const findSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): S => element.content.props.schema;
 
