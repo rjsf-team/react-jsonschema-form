@@ -111,9 +111,10 @@ function BooleanField<
       // Read without `globalUiOptions`, as `optionsList()` reads them
       const { enumNames, enumOrder } = getUiOptions<T, S, F>(uiSchema);
       // No order shows on a checkbox, and an order that would leave the options as they are has nothing to ignore
-      const orderIgnored =
-        showsOptions && enumOrder !== undefined && enumOrderChangesOptions<T, S, F>(altSchemas, uiSchema);
-      if (Object.keys(enumNames ?? {}).length > 0 || orderIgnored) {
+      const uiOptionsIgnored =
+        Object.keys(enumNames ?? {}).length > 0 ||
+        (showsOptions && enumOrder !== undefined && enumOrderChangesOptions<T, S, F>(altSchemas, uiSchema));
+      if (uiOptionsIgnored) {
         // A checkbox shows neither list, and dropping the `anyOf`/`oneOf` wouldn't turn it into a widget that shows the
         // `enum`, so only a widget that lists the options is pointed at the `enum`, and only at one with values to show
         const showsOverEnum = showsOptions && Boolean(schema.enum?.length);
