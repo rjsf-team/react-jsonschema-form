@@ -9,13 +9,26 @@ const headSha = process.argv[3];
 // run leaves an empty file; treat both as "no data".
 /** @typedef {{ name: string, size: number, passed?: boolean }} SizeCheck */
 /**
+ * @param {unknown} check
+ * @returns {check is SizeCheck}
+ */
+const isSizeCheck = (check) =>
+  typeof check === 'object' &&
+  check !== null &&
+  'name' in check &&
+  typeof check.name === 'string' &&
+  'size' in check &&
+  typeof check.size === 'number' &&
+  (!('passed' in check) || check.passed === undefined || typeof check.passed === 'boolean');
+/**
  * @param {string} f
  * @returns {SizeCheck[]}
  */
 const read = (f) => {
   try {
+    /** @type {unknown} */
     const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-    return Array.isArray(data) ? /** @type {SizeCheck[]} */ (data) : [];
+    return Array.isArray(data) ? data.filter(isSizeCheck) : [];
   } catch {
     return [];
   }

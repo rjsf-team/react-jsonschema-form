@@ -11,9 +11,7 @@ const ROOT = join(__dirname, '..', '..');
 /**
  * @typedef {{ label: string, import: string, limit: string }} Canary
  * @typedef {{ installed?: string, own?: string, canaries?: Canary[], nodeOnly?: string[] }} Budget
- * @typedef {string | { default?: string }} ExportTarget
- * @typedef {Record<string, string>} DependencyMap
- * @typedef {{ name: string, private?: boolean, dependencies?: DependencyMap, peerDependencies?: DependencyMap, peerDependenciesMeta?: Record<string, unknown>, exports?: Record<string, ExportTarget> }} PackageJson
+ * @typedef {{ name: string, private: boolean, dependencies?: Record<string, unknown>, peerDependencies?: Record<string, unknown>, peerDependenciesMeta?: Record<string, unknown>, exports?: Record<string, unknown> }} PackageJson
  * @type {Record<string, Budget>}
  */
 const PACKAGES = {
@@ -30,16 +28,44 @@ const PACKAGES = {
   '@rjsf/validator-ata': { nodeOnly: ['./compileSchemaValidators'] },
 };
 
+/**
+ * @param {unknown} value
+ * @returns {value is Record<string, unknown>}
+ */
+const isRecord = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/**
+ * @param {string} dir
+ * @returns {PackageJson}
+ */
+function readPackageJson(dir) {
+  /** @type {unknown} */
+  const json = JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8'));
+  if (!isRecord(json) || typeof json.name !== 'string') {
+    throw new Error(`packages/${dir}/package.json has no name`);
+  }
+  /** @param {unknown} value */
+  const record = (value) => (isRecord(value) ? value : undefined);
+  return {
+    name: json.name,
+    private: json.private === true,
+    dependencies: record(json.dependencies),
+    peerDependencies: record(json.peerDependencies),
+    peerDependenciesMeta: record(json.peerDependenciesMeta),
+    exports: record(json.exports),
+  };
+}
+
 // The `default` condition is what a consumer's bundler resolves; a subpath without one has no browser entry to measure
 /**
  * @param {PackageJson} pkg
  * @param {string} key
- * @param {ExportTarget} target
+ * @param {unknown} target
  * @returns {string}
  */
 function subpathEntry(pkg, key, target) {
-  const entry = typeof target === 'string' ? target : target.default;
-  if (!entry) {
+  const entry = isRecord(target) ? target.default : target;
+  if (typeof entry !== 'string' || !entry) {
     throw new Error(`${pkg.name} exports "${key}" without a "default" condition; add one or list it in nodeOnly`);
   }
   return entry;
@@ -49,7 +75,7 @@ const released = readdirSync(join(ROOT, 'packages'))
   .filter((dir) => existsSync(join(ROOT, 'packages', dir, 'package.json')))
   .map((dir) => ({
     dir,
-    pkg: /** @type {PackageJson} */ (JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8'))),
+    pkg: readPackageJson(dir),
   }))
   // @rjsf/snapshot-tests is a test harness for the themes, not a bundle a
   // consumer installs.
