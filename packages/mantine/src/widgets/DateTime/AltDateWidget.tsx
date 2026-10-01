@@ -5,11 +5,19 @@ import type {
   DateObject,
   FormContextType,
   GenericObjectType,
+  Registry,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { dateRangeOptions, isObject, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  dateElementLabel,
+  dateRangeOptions,
+  isObject,
+  titleId,
+  TranslatableString,
+  useAltDateWidgetProps,
+} from '@rjsf/utils';
 
 import { useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
 
@@ -23,6 +31,7 @@ interface AltDatePartProps {
   invalid: boolean;
   success: boolean;
   labelled: boolean;
+  translateString: Registry['translateString'];
   onChange: (property: keyof DateObject, value?: string) => void;
   onBlur: (id: string, value: unknown) => void;
   onFocus: (id: string, value: unknown) => void;
@@ -42,11 +51,13 @@ function AltDatePart({
   invalid,
   success,
   labelled,
+  translateString,
   onChange,
   onBlur,
   onFocus,
 }: AltDatePartProps) {
   const partId = `${id}_${part.type}`;
+  const partLabel = dateElementLabel(part.type, translateString);
   // The widget's state holds -1 for an unset part, and a string once one is picked
   const partValue = part.value === undefined || Number(part.value) < 0 ? undefined : Number(part.value);
   const [start, end] = part.range;
@@ -62,8 +73,8 @@ function AltDatePart({
       <Select
         id={partId}
         name={partId}
-        placeholder={part.type}
-        aria-label={part.type}
+        placeholder={partLabel}
+        aria-label={partLabel}
         aria-labelledby={labelled ? `${titleId(id)} ${partId}` : undefined}
         disabled={disabled}
         autoFocus={autofocus}
@@ -164,6 +175,7 @@ export default function AltDateWidget<
             required={required}
             invalid={invalid}
             labelled={!!label}
+            translateString={translateString}
             fieldSuccessId={successId}
             onChange={handleChange}
             onBlur={onBlur}

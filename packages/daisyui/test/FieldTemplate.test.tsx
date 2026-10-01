@@ -284,9 +284,10 @@ describe('FieldTemplate', () => {
     test('associates each of its labels with the control it names', () => {
       renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
 
-      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with
+      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with. Its `aria-label`
+      // names it, and starts with the field's title so the visible label alone doesn't leave the part out of context
       for (const type of ['year', 'month', 'day']) {
-        expect(screen.getByLabelText(type)).toBe(screen.getByRole('button', { name: type }));
+        expect(screen.getByLabelText(type)).toBe(screen.getByRole('button', { name: `Agree, ${type}` }));
       }
     });
 
@@ -304,13 +305,14 @@ describe('FieldTemplate', () => {
         { type: 'object' as const, properties: { agree: { ...dateSchema, title: 'Agree' } } },
         { agree: '2020-05-03' },
         { agree: altDate },
+        'Agree, ',
       ],
-      ['a root field', dateSchema, '2020-05-03', altDate],
-    ])('for %s', (_, schema, formData, uiSchema) => {
+      ['a root field', dateSchema, '2020-05-03', altDate, ''],
+    ])('for %s', (_, schema, formData, uiSchema, namePrefix) => {
       test('names each of its selects with its own label, and describes it with the value it shows', () => {
         render(<Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />);
 
-        // Each label reaches its own select through `htmlFor`, replacing the contents that display the value, so the
+        // Each select is named by its `aria-label`, replacing the contents that display the value, so the
         // value is exposed as the description instead. Both are spelled out rather than read back off the elements,
         // which would pass for the wrong value as readily as the right one
         for (const [part, shown] of [
@@ -318,7 +320,7 @@ describe('FieldTemplate', () => {
           ['month', '05'],
           ['day', '03'],
         ]) {
-          expect(screen.getByRole('button', { name: part })).toHaveAccessibleDescription(shown);
+          expect(screen.getByRole('button', { name: `${namePrefix}${part}` })).toHaveAccessibleDescription(shown);
         }
       });
     });

@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, dateElementLabel, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -46,7 +46,7 @@ export default function AltDateWidget<
             {/* Naming each select, which is otherwise left to whatever it happens to be displaying. A single control is
                 named by this association alone, and announces the value it displays after it */}
             <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
-              <span className='label-text capitalize'>{elemProps.type}</span>
+              <span className='label-text capitalize'>{dateElementLabel(elemProps.type, translateString)}</span>
             </label>
             <DateElement
               rootId={id}
@@ -54,6 +54,8 @@ export default function AltDateWidget<
               // its own right, and a field with no property name of its own — a root field, an array item — would
               // otherwise leave the label above replacing the value its select displays rather than preceding it
               name={dateElementId(id, elemProps.type)}
+              label={label}
+              hideLabel={hideLabel}
               className='select select-bordered select-sm'
               select={handleChange}
               type={elemProps.type}

@@ -70,6 +70,7 @@ export default function SelectWidget<
   onFocus,
   registry,
   uiSchema,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
@@ -194,8 +195,12 @@ export default function SelectWidget<
           }`}
           /* The label naming this button replaces its contents as its name, so the option it displays is announced
              as its description instead — the same split a native control makes between its name and its value, and
-             the same one `DatePickerTrigger` makes, through the predicate both share */
-          aria-describedby={getTriggerDescribedBy({ id, label, name, hideLabel, hasValue })}
+             the same one `DatePickerTrigger` makes, through the predicate both share. An `aria-label` names it the
+             same way, whether or not a label points at it */
+          aria-label={ariaLabel}
+          aria-describedby={getTriggerDescribedBy(
+            ariaLabel ? { id, label: ariaLabel, hasValue } : { id, label, name, hideLabel, hasValue },
+          )}
         >
           <span id={triggerValueId(id)} className='truncate'>
             {hasValue ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
