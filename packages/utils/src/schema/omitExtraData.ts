@@ -4,7 +4,6 @@ import getSchemaType from '../getSchemaType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
-import logOnce from '../logOnce.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
@@ -362,20 +361,15 @@ export default function omitExtraData<
       // `retrieveSchemaInternal()` before the parent is merged. Two things go wrong otherwise: the shallow merge hoists
       // an entry's `$ref` onto the merged schema rather than following it, so the referenced schema's properties are
       // taken for extra data and deleted; and a `customMergeAllOf` is handed a `$ref` the form's own merge never sees,
-      // so it can reject a schema that renders and take the fallback below for data the user can see and edit
+      // so it can reject a schema that renders, and a rejected merge drops the `allOf` along with data the user can
+      // see and edit
       localSchema = {
         ...localSchema,
         allOf: allOf.map((entry) => (isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry)),
       };
-      try {
-        localSchema = mergeAllOf<S, F>(context, localSchema);
-      } catch (e) {
-        // A `customMergeAllOf` may throw on subschemas it considers irreconcilable, and omission has to agree with the
-        // schema the form rendered rather than propagate out of `Form`'s change and submit handlers
-        logOnce('could not merge subschemas in allOf:\n', 'warn', e);
-        const { allOf: unmergedAllOf, ...schemaWithoutAllOf } = localSchema;
-        localSchema = schemaWithoutAllOf as S;
-      }
+      // A failed merge comes back without its `allOf`, so omission agrees with the schema the form rendered instead of
+      // throwing out of `Form`'s change and submit handlers
+      ({ schema: localSchema } = mergeAllOf<S, F>(context, localSchema));
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

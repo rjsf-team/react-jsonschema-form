@@ -651,17 +651,28 @@ export function stubExistingAdditionalProperties<
 
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
  * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise. Every `allOf` merge goes through here,
- * so a new merge site cannot quietly default away a form's `customMergeAllOf`.
+ * so a new merge site cannot quietly default away a form's `customMergeAllOf`, nor forget that a merge can fail: a
+ * `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never throws. It warns once and
+ * returns the schema without its `allOf`, reporting the failure through `merged` for a caller that has to react to it.
  *
  * @param context - The `SchemaContext` whose `customMergeAllOf`, if any, does the merging
  * @param schema - The schema containing an `allOf` keyword
- * @returns The schema with allOf schemas merged
+ * @returns The merged schema and whether the merge succeeded; on failure the schema is the one given, less its `allOf`
  */
 export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
   schema: S,
-): S {
-  return context.customMergeAllOf ? context.customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
+): { schema: S; merged: boolean } {
+  try {
+    return {
+      schema: context.customMergeAllOf ? context.customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S),
+      merged: true,
+    };
+  } catch (e) {
+    logOnce('could not merge subschemas in allOf:\n', 'warn', e);
+    const { allOf, ...schemaWithoutAllOf } = schema;
+    return { schema: schemaWithoutAllOf as S, merged: false };
+  }
 }
 
 /** Internal handler that retrieves an expanded schema that has had all of its conditions, additional properties,
@@ -727,27 +738,27 @@ export function retrieveSchemaInternal<
         const { allOf, ...restOfSchema } = resolvedSchema;
         return [...(allOf as S[]), restOfSchema as S];
       }
-      try {
-        // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
-        // (external library) only operates on string keys and will drop them.
-        const allOfSymbols: Record<symbol, unknown> = {};
-        resolvedSchema.allOf?.forEach((allOfItem) => {
-          // A boolean subschema carries no symbols; `getOwnPropertySymbols` coerces it and returns an empty list
-          for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
-            if (!(sym in allOfSymbols)) {
-              allOfSymbols[sym] = (allOfItem as any)[sym];
-            }
+      // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
+      // (external library) only operates on string keys and will drop them.
+      const allOfSymbols: Record<symbol, unknown> = {};
+      resolvedSchema.allOf?.forEach((allOfItem) => {
+        // A boolean subschema carries no symbols; `getOwnPropertySymbols` coerces it and returns an empty list
+        for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
+          if (!(sym in allOfSymbols)) {
+            allOfSymbols[sym] = (allOfItem as any)[sym];
           }
-        });
-        resolvedSchema = mergeAllOf<S, F>(context, resolvedSchema);
-        // Re-apply collected Symbol properties that the merge dropped.
-        for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
-          (resolvedSchema as any)[sym] = allOfSymbols[sym];
         }
-      } catch (e) {
-        logOnce('could not merge subschemas in allOf:\n', 'warn', e);
-        const { allOf, ...resolvedSchemaWithoutAllOf } = resolvedSchema;
-        return resolvedSchemaWithoutAllOf as S;
+      });
+      const { schema: mergedSchema, merged } = mergeAllOf<S, F>(context, resolvedSchema);
+      if (!merged) {
+        // The rest of this function describes a merged schema, so a failed merge stops here with the `allOf` already
+        // dropped rather than running the `patternProperties` and `additionalProperties` steps over an unmerged one
+        return mergedSchema;
+      }
+      resolvedSchema = mergedSchema;
+      // Re-apply collected Symbol properties that the merge dropped.
+      for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
+        (resolvedSchema as any)[sym] = allOfSymbols[sym];
       }
     }
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
