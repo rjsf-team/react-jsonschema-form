@@ -318,7 +318,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         test('computeDefaults', () => {
-          expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema }));
+          expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual(expected);
         });
 
         test('getDefaultBasedOnSchemaType', () => {
@@ -791,7 +791,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         test('computeDefaults', () => {
-          expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema, includeUndefinedValues }));
+          expect(
+            computeDefaults({ validator: testValidator }, schema, { rootSchema: schema, includeUndefinedValues }),
+          ).toEqual(expected);
         });
 
         test('getDefaultBasedOnSchemaType', () => {
