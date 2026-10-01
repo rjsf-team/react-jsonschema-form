@@ -41,7 +41,7 @@ pnpm run clean-build
 ```
 
 The first command will delete all of the `node_modules` directories in the environment and then rerun `pnpm install`.
-The second command deletes every package's built `lib/` before retrying the build. `pnpm run typecheck` keeps its cache in `node_modules/.cache/typecheck`, so the first command clears that too.
+The second command deletes every package's built `lib/` before retrying the build.
 
 Worst case scenario when neither of those commands work, try running `pnpm run nuke-build-env` and then rerun the two commands.
 

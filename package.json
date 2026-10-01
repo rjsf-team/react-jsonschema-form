@@ -9,8 +9,7 @@
   "scripts": {
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
-    "lint": "oxlint",
-    "typecheck": "tsc --build tsconfig.typecheck.json tsconfig.typecheck-bundler.json --checkers 2",
+    "lint": "oxlint --type-check",
     "knip": "knip",
     "cs-check": "oxfmt --check",
     "cs-format": "oxfmt",

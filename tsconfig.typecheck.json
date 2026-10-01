@@ -5,8 +5,6 @@
   // published packages' `src` is what keeps published code off them
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": "node_modules/.cache/typecheck/main.tsbuildinfo",
     "noEmit": true,
     "rewriteRelativeImportExtensions": false,
     "allowImportingTsExtensions": true,

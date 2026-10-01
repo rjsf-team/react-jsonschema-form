@@ -128,7 +128,7 @@ describe('MUI Theme-Specific Props', () => {
   });
 
   it('should accept the input-only attributes a caller documents for slotProps.htmlInput', () => {
-    // A type-level check: `pnpm run typecheck` fails here if `htmlInput` stops accepting these attributes
+    // A type-level check: `pnpm run lint` fails here if `htmlInput` stops accepting these attributes
     const muiOptions: BaseInputTemplateMuiProps = {
       slotProps: { htmlInput: { pattern: '[0-9]*', inputMode: 'numeric', step: 5, min: 0, max: 100, accept: '.pdf' } },
     };

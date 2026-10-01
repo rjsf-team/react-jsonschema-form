@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.typecheck.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "node_modules/.cache/typecheck/bundler.tsbuildinfo",
     // @rjsf/chakra-ui: @chakra-ui/react's declarations do not resolve under "nodenext" (see packages/chakra-ui/tsconfig.lib.json).
     // The playground is a Vite app, so a bundler's resolution is the one it runs under; its Vite globals come from
     // packages/playground/src/vite-env.d.ts
