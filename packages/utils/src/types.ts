@@ -1618,34 +1618,12 @@ type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
 type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? any : StrictUiSchema<Checks, V, S, F>;
 
-/** @internal The keys `UiSchema` and `StrictUiSchema` share that don't nest another uiSchema. A type alias rather than
- * an interface, which has no implicit index signature and so would stop `UiSchema` being assignable to
- * `Record<string, unknown>`. The keys that nest another uiSchema are written out in each type instead: an alias taking
- * `UiSchema` as an argument would make `UiSchema` circular.
- */
-// oxlint-disable-next-line typescript/consistent-type-definitions -- see the comment above
-type UiSchemaSharedKeys = {
-  /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
-   * Registry for use everywhere.
-   */
-  'ui:globalOptions'?: GlobalUISchemaOptions;
-  /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
-   * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
-   * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-   * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
-   * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
-   * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
-   */
-  'ui:fieldReplacesAnyOrOneOf'?: boolean;
-  /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
-   * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
-   */
-  classNames?: string;
-};
-
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
  * the opt-in form that narrows them to a `Checks` vocabulary.
+ *
+ * Its fixed keys are written as type literals rather than a shared interface: an interface has no implicit index
+ * signature, and would stop a `UiSchema` being assignable to `Record<string, unknown>`.
  */
 export type UiSchema<
   T = unknown,
@@ -1653,7 +1631,23 @@ export type UiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & UiSchemaSharedKeys & {
+} & MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
+    /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
+     * Registry for use everywhere.
+     */
+    'ui:globalOptions'?: GlobalUISchemaOptions;
+    /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
+     * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
+     * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
+     * By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be
+     * omitted, so just one instance of the custom field will be rendered. If the flag is omitted or set to `false`,
+     * your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+     */
+    'ui:fieldReplacesAnyOrOneOf'?: boolean;
+    /** Class names applied to the field, consumed by `SchemaField` rather than passed down. `ui:classNames` is the
+     * prefixed spelling of the same thing; this unprefixed one is kept for backwards compatibility.
+     */
+    classNames?: string;
     /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items, an array of
      * per-tuple-position uiSchemas for a fixed (tuple) `items` schema, or a function that returns a dynamic uiSchema
      * based on the item's data and index.
@@ -1701,8 +1695,13 @@ export type StrictUiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: StrictUiSchemaChild<Checks, UiSchemaChildData<T>[K], S, F>;
-} & StrictUiVocabulary<T, S, F, Checks> &
-  UiSchemaSharedKeys & {
+} & StrictUiVocabulary<T, S, F, Checks> & {
+    /** As `UiSchema`'s `ui:globalOptions` */
+    'ui:globalOptions'?: GlobalUISchemaOptions;
+    /** As `UiSchema`'s `ui:fieldReplacesAnyOrOneOf` */
+    'ui:fieldReplacesAnyOrOneOf'?: boolean;
+    /** As `UiSchema`'s `classNames` */
+    classNames?: string;
     /** As `UiSchema`'s `items` */
     items?:
       | StrictUiSchema<Checks, ArrayElement<T>, S, F>
