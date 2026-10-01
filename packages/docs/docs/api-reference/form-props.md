@@ -92,6 +92,9 @@ A function that determines whether to skip populating the array with default val
 If the function returns `true`, the array will not be populated with default values.
 If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
+Replacing the callback alone does not take effect: the form compares a new `defaultFormStateBehavior` against the one it holds, and that comparison treats any two functions as equal, so a form keeps calling the callback it was first given until some other setting, the `validator` or the `schema` changes.
+Define the behavior the callback needs from its `schema` and `rootSchema` arguments rather than from values captured when it was created, since a callback closing over changing state goes stale.
+
 ###### Parameters
 
 - context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`

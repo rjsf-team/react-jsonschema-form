@@ -1,6 +1,7 @@
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
+import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
   findFieldInSchema,
@@ -21,6 +22,7 @@ import {
 import type {
   FormContextType,
   FoundFieldType,
+  GenericObjectType,
   GlobalUISchemaOptions,
   RJSFSchema,
   SchemaContext,
@@ -68,6 +70,15 @@ class SchemaUtils<
       this.rootSchema = rootSchema;
     }
     this.rawRootSchema = rootSchema;
+    // A v6 caller passed the validator here, and spreading one copies its own fields while leaving `validator`
+    // undefined, so the first schema function fails with a `TypeError` from inside `retrieveSchema()` that names
+    // nothing. Warn instead of throwing, since `doesSchemaUtilsDiffer()` deliberately tolerates a context with no
+    // validator while a form is still loading one
+    if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
+      logOnce(
+        'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
+      );
+    }
     // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
     // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because `getSchemaContext()` hands
     // the snapshot itself to the validator and to every `computeSkipPopulate()` callback. Only the context's own keys
@@ -114,6 +125,13 @@ class SchemaUtils<
     if (!context?.validator || !rootSchema) {
       return false;
     }
+
+    // `deepEquals()` treats any two functions as equal, so a `defaultFormStateBehavior` differing only in a
+    // function-valued setting -- `arrayMinItems.computeSkipPopulate` is the only one -- reads as no difference and this
+    // instance keeps calling the callback it was built with. Comparing those by identity instead would rebuild
+    // `SchemaUtils` on every render for the common case of an inline callback, discarding the `retrieveSchema()` caches,
+    // so the stale read is the deliberate trade; `Form`'s own `defaultsBehavior` comparison keeps the old object for the
+    // same reason, so the two stay consistent
 
     return (
       this.context.validator !== context.validator ||

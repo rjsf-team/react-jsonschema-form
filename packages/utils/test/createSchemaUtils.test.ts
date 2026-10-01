@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+
 import type {
   DefaultFormStateBehavior,
   RJSFSchema,
@@ -9,6 +11,7 @@ import {
   createSchemaUtils,
   ID_KEY,
   JSON_SCHEMA_DRAFT_2020_12,
+  noop,
   PROPERTIES_KEY,
   REF_KEY,
   SCHEMA_KEY,
@@ -92,6 +95,29 @@ describe('createSchemaUtils()', () => {
     });
   });
 
+  describe('constructed with a validator where a SchemaContext belongs', () => {
+    // Spreading a validator leaves `validator` undefined, so the first schema function would fail with a `TypeError`
+    // from inside `retrieveSchema()` naming nothing. A v6 caller gets told what changed instead
+    let consoleWarnSpy: MockInstance;
+    beforeAll(() => {
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    });
+    afterAll(() => {
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('warns naming the SchemaContext', () => {
+      createSchemaUtils(testValidator as unknown as SchemaContext, rootSchema);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringMatching(/createSchemaUtils\(\) takes a SchemaContext rather than a validator/),
+      );
+    });
+    it('does not warn for a real context', () => {
+      consoleWarnSpy.mockClear();
+      createSchemaUtils({ validator: testValidator }, rootSchema);
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+  });
   describe('doesSchemaUtilsDiffer()', () => {
     describe('constructed without defaultFormStateBehavior', () => {
       const schemaUtils: SchemaUtilsType = createSchemaUtils({ validator: testValidator }, rootSchema);
