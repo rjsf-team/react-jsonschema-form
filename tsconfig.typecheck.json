@@ -11,6 +11,5 @@
     "customConditions": ["@rjsf/source"]
   },
   "include": ["packages/*/src", "packages/*/test", "testing"],
-  // chakra-ui and the playground need "bundler" resolution, so they're in tsconfig.typecheck-bundler.json
   "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
 }
