@@ -3,7 +3,7 @@ import type {
   ArrayFieldItemButtonsTemplateProps,
   ArrayFieldItemTemplateProps,
   DescriptionFieldProps,
-  ErrorSchema,
+  ErrorSchemaChange,
   FieldPath,
   FieldProps,
   GenericObjectType,
@@ -173,7 +173,12 @@ const ArrayFieldTestItemTemplate = (props: ArrayFieldItemTemplateProps) => {
 };
 
 const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
-  const onChangeTest = (newFormData: unknown, path: FieldPath, errorSchema?: ErrorSchema<unknown[]>, id?: string) => {
+  const onChangeTest = (
+    newFormData: unknown,
+    path: FieldPath,
+    errorSchema?: ErrorSchemaChange<unknown[]>,
+    id?: string,
+  ) => {
     let newErrorSchema = errorSchema;
     if (newFormData !== 'Appie') {
       newErrorSchema = {

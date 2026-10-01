@@ -1365,6 +1365,19 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
+### isFieldUpdater&lt;V>()
+
+Returns whether a `FieldChange` is an updater rather than a value.
+A field that handles what a child passes to `onChange` branches on it: a value can be read or transformed as it is, an updater only through what it returns, see `mapFieldChange()`.
+
+#### Parameters
+
+- change: FieldChange&lt;V> - The value, or an updater computing it
+
+#### Returns
+
+- boolean: True when `change` is an updater
+
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Detects whether the given `schema` contains fixed items.

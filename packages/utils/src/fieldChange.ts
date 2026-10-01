@@ -1,4 +1,4 @@
-import type { FieldChange } from './types.ts';
+import type { FieldChange, FieldUpdater } from './types.ts';
 
 /** Whether `change` is an updater. Form data is JSON, so a function value is always an updater, never a value
  *
@@ -25,6 +25,17 @@ export function resolveFieldChange<V, A extends unknown[] = []>(
   ...args: A
 ): V {
   return isUpdater(change) ? change(current, ...args) : change;
+}
+
+/** Whether a `FieldChange` is an updater rather than a value. A field that handles what a child passes to `onChange`
+ * branches on it: a value can be read or transformed as it is, an updater only through what it returns, see
+ * `mapFieldChange()`
+ *
+ * @param change - The value, or an updater computing it
+ * @returns - True when `change` is an updater
+ */
+export function isFieldUpdater<V>(change: FieldChange<V>): change is FieldUpdater<V> {
+  return isUpdater(change);
 }
 
 /** Applies `transform` to what a `FieldChange` stands for: to the value itself, or to what its updater returns. A
