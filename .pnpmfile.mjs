@@ -5,6 +5,12 @@ const TYPES_FOR_PEER = {
   'react-dom': '@types/react-dom',
 };
 
+/**
+ * @typedef {Record<string, string>} DependencyMap
+ * @typedef {{ name?: string, dependencies?: DependencyMap, peerDependencies?: DependencyMap, peerDependenciesMeta?: Record<string, { optional?: boolean }> }} PackageManifest
+ * @param {PackageManifest} pkg
+ * @returns {PackageManifest}
+ */
 function readPackage(pkg) {
   // Workspace packages already reach @types/react through the root node_modules; adding the peer to them would
   // record @types/react as a dependency of the published @rjsf/* packages in the lockfile.

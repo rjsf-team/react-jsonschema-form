@@ -597,7 +597,7 @@ describe('oneOf', () => {
       ...(requiredOnParent ? { required: ['arr'] } : {}),
       oneOf: requiredOnParent ? [optionFor('a'), optionFor('b')] : [optionFor('a', ['arr']), optionFor('b', ['arr'])],
     });
-    const switchToB = async (requiredOnParent: boolean) => {
+    const switchToB = async (requiredOnParent: boolean): Promise<unknown> => {
       const { node, onChange } = createFormComponent({
         schema: schemaFor(requiredOnParent),
         defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
@@ -2195,7 +2195,7 @@ describe('oneOf', () => {
       },
     };
 
-    function customValidate(_: any, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation<{ userId?: number | string }>) {
       errors.userId?.addError('test');
       return errors;
     }

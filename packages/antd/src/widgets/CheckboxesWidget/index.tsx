@@ -48,7 +48,7 @@ export default function CheckboxesWidget<
   // spread on via `extraProps` to avoid a typescript error
   const extraProps = { id };
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -67,7 +67,9 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+              disabled={
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
+              }
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}

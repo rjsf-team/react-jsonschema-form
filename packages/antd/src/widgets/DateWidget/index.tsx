@@ -2,6 +2,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, Generi
 import { ariaDescribedByIds, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 
 const DATE_PICKER_STYLE = {
   width: '100%',
@@ -41,7 +42,7 @@ export default function DateWidget<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
-  const handleChange = (nextValue: any) => {
+  const handleChange = (nextValue: Dayjs | null) => {
     if (!nextValue) {
       onChange(nextValue);
     } else if (isIsoDateTime) {
@@ -79,6 +80,9 @@ export default function DateWidget<
 
 /** Give the playground a place to hook into the `getPopupContainer` callback generation function so that it can be
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
- * "generator" function.
+ * "generator" function. The default never returns `undefined`; the return type allows it because that is how the
+ * playground's replacement turns the callback off. A trigger without a parent element gets `document.body`, antd's own
+ * default container.
  */
-DateWidget.getPopupContainerCallback = () => (node: any) => node.parentNode;
+DateWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentElement ?? document.body;

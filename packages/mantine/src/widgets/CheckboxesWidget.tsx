@@ -41,7 +41,7 @@ export default function CheckboxesWidget<
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
-  const selectedValues: string[] = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat) ?? [];
+  const selectedValues: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
 
@@ -67,7 +67,9 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 value={domValues[i]}
                 label={option.label}
-                disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
+                disabled={
+                  Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
+                }
                 autoFocus={i === 0 && autofocus}
                 onBlur={blurHandlers[i]}
                 onFocus={focusHandlers[i]}

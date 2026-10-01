@@ -23,7 +23,7 @@ export default function canExpand<
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);
   if (expandable === false) {
-    return expandable;
+    return false;
   }
   // A `propertyNames.enum` caps the object the way `maxProperties` does, one level of indirection away: once every
   // name it allows is taken, a new property could only be added under a name the schema forbids. Both caps have to

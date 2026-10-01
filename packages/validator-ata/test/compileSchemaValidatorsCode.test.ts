@@ -2,14 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
-
-// Evaluate generated CJS module source into an exports object.
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
+import loadModule from './harness/loadModule.ts';
 
 const schema: RJSFSchema = {
   $id: 'root',

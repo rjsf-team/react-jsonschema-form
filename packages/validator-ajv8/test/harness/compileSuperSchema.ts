@@ -17,9 +17,9 @@ export const SUPER_SCHEMA_OPTIONS: CustomValidatorOptionsType = {
  * on the schema's keywords/formats, may `require()` AJV runtime helpers — so both are provided.
  */
 export function evalValidatorCode(code: string): ValidatorFunctions {
-  const validateFns = {};
+  const validateFns: ValidatorFunctions = {};
   // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
-  new Function('exports', 'require', code)(validateFns, require);
+  new Function('exports', 'require', code).call(undefined, validateFns, require);
   return validateFns;
 }
 

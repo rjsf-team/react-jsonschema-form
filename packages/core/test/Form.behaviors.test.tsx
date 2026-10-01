@@ -1,5 +1,13 @@
 import { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
-import type { DefaultFormStateBehavior, ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  CustomValidator,
+  DefaultFormStateBehavior,
+  ErrorSchema,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1829,7 +1837,7 @@ describe('customValidate', () => {
       type: 'object',
       properties: { name: { type: 'string', default: 'Jo' }, fixed: { type: 'string', const: 'constant' } },
     };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     const { node } = createFormComponent({
       schema,
       customValidate,

@@ -46,7 +46,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -70,7 +70,8 @@ export default function RadioWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+              const itemDisabled =
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
 
               return (
                 <Radio

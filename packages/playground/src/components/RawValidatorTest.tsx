@@ -18,7 +18,7 @@ export default function RawValidatorTest({ validator, schema, formData }: RawVal
       rawValidation.errors || rawValidation.validationError
         ? JSON.stringify(
             rawValidation,
-            (_, value: any) => {
+            (_, value: unknown) => {
               if (value instanceof Error) {
                 return {
                   name: value.name,

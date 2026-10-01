@@ -22,9 +22,7 @@ const { SelectWidget, DateWidget } = Widgets;
 // function because, when it is active, the `SelectPatcher` code below along with the `ConfigProvider` for the antd
 // theme conditional branch won't take effect as the antd component `getPopupContainer()` supercedes it, so we make it
 // return undefined to disable it.
-// @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
 SelectWidget.getPopupContainerCallback = () => undefined;
-// @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
 // DateWidget also covers DateTimeWidget since it delegates to DateWidget internally
 DateWidget.getPopupContainerCallback = () => undefined;
 
@@ -67,7 +65,7 @@ SOFTWARE.
  *
  * @param frameDoc - The iFrame document of the playground
  */
-function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
+function AntdPopupPatcher({ frameDoc }: { frameDoc?: Document }) {
   useEffect(() => {
     if (!frameDoc) {
       return () => {};

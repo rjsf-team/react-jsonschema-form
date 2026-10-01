@@ -2620,15 +2620,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { trigger: 'value' };
-        const customMergeAllOf = vi.fn().mockImplementation((schema) => {
+        const customMergeAllOf = vi.fn().mockImplementation((schema: RJSFSchema) => {
           // Custom merge logic that combines all properties
           const allProperties: any = {};
           if (schema.properties) {
             Object.assign(allProperties, schema.properties);
           }
           if (schema.allOf) {
-            schema.allOf.forEach((subSchema: any) => {
-              if (subSchema.properties) {
+            schema.allOf.forEach((subSchema) => {
+              if (typeof subSchema === 'object' && subSchema.properties) {
                 Object.assign(allProperties, subSchema.properties);
               }
             });
@@ -2797,14 +2797,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         };
         const formData = { dep1: 'value' };
-        const customMergeAllOf = vi.fn().mockImplementation((schema) => {
+        const customMergeAllOf = vi.fn().mockImplementation((schema: RJSFSchema) => {
           const allProperties: any = {};
           if (schema.properties) {
             Object.assign(allProperties, schema.properties);
           }
           if (schema.allOf) {
-            schema.allOf.forEach((subSchema: any) => {
-              if (subSchema.properties) {
+            schema.allOf.forEach((subSchema) => {
+              if (typeof subSchema === 'object' && subSchema.properties) {
                 Object.assign(allProperties, subSchema.properties);
               }
             });

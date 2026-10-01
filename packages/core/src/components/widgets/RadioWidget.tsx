@@ -53,7 +53,8 @@ function RadioWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const itemDisabled =
+            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = () => onChange(option.value);

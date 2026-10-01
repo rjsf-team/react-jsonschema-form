@@ -169,7 +169,7 @@ overrides:
 
 packageExtensionsChecksum: sha256-og1hEpEpL7sIhW33i8d7xs+fsSg/YbRRmW2NDg/52mU=
 
-pnpmfileChecksum: sha256-P920nXHhqu38bJLClwRddBx5pDKnRjtcKSGDyqzlQBQ=
+pnpmfileChecksum: sha256-3woiilIUsQ+k/m+JKMlB84ostK9qVZWWefgvFtMAD8c=
 
 importers:
 
@@ -364,6 +364,9 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^3.3.1
         version: 3.3.1(@fortawesome/fontawesome-svg-core@7.2.0)(@types/react@19.3.0)(react@19.3.0)
+      daisyui:
+        specifier: ^5.0.29
+        version: 5.5.23
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -395,9 +398,6 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(@types/react@19.3.0)(react@19.3.0))(react@19.3.0)
-      daisyui:
-        specifier: ^5.5.23
-        version: 5.5.23
 
   packages/docs:
     dependencies:

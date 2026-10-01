@@ -7,10 +7,28 @@ const dir = process.argv[2];
 const headSha = process.argv[3];
 // size-limit prints `{"error": "..."}` when it fails internally, and a crashed
 // run leaves an empty file; treat both as "no data".
+/** @typedef {{ name: string, size: number, passed?: boolean }} SizeCheck */
+/**
+ * @param {unknown} check
+ * @returns {check is SizeCheck}
+ */
+const isSizeCheck = (check) =>
+  typeof check === 'object' &&
+  check !== null &&
+  'name' in check &&
+  typeof check.name === 'string' &&
+  'size' in check &&
+  typeof check.size === 'number' &&
+  (!('passed' in check) || check.passed === undefined || typeof check.passed === 'boolean');
+/**
+ * @param {string} f
+ * @returns {SizeCheck[]}
+ */
 const read = (f) => {
   try {
+    /** @type {unknown} */
     const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-    return Array.isArray(data) ? data : [];
+    return Array.isArray(data) ? data.filter(isSizeCheck) : [];
   } catch {
     return [];
   }
@@ -20,13 +38,13 @@ const base = new Map(read('base.json').map((c) => [c.name, c]));
 
 // The json comes from the PR's own build, and this text is posted by a
 // write-token workflow: keep names inert and the row count bounded.
-const safe = (name) =>
+const safe = (/** @type {string} */ name) =>
   String(name)
     .replace(/[^\w ()@/+.,:-]/g, '')
     .slice(0, 80);
 // size-limit budgets are decimal via bytes-iec.
-const fmt = (bytes) => `${(bytes / 1000).toFixed(2)} kB`;
-const formatDelta = (diff) => {
+const fmt = (/** @type {number} */ bytes) => `${(bytes / 1000).toFixed(2)} kB`;
+const formatDelta = (/** @type {number | null} */ diff) => {
   if (diff === null) {
     return 'new';
   }

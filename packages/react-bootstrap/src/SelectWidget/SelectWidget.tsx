@@ -52,9 +52,9 @@ export default function SelectWidget<
    * options are put back into enum order before they reach form data: turning a group on or off must not reorder the
    * array a form submits.
    */
-  function getValue(event: FocusEvent | ChangeEvent | any, isMultiple?: boolean) {
+  function getValue(event: FocusEvent<HTMLSelectElement> | ChangeEvent<HTMLSelectElement>, isMultiple?: boolean) {
     if (isMultiple) {
-      return Array.from<HTMLOptionElement>(event.target.options)
+      return Array.from(event.target.options)
         .map((option, position) => ({ option, position }))
         .filter(({ option }) => option.selected)
         .sort((a, b) => enumIndexByPosition[a.position] - enumIndexByPosition[b.position])
@@ -62,7 +62,7 @@ export default function SelectWidget<
     }
     return event.target.value;
   }
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
@@ -87,19 +87,19 @@ export default function SelectWidget<
         className={hasVisibleErrors({ rawErrors, hideError }) ? 'is-invalid' : ''}
         onBlur={
           onBlur &&
-          ((event: FocusEvent) => {
+          ((event: FocusEvent<HTMLSelectElement>) => {
             const newValue = getValue(event, multiple);
             onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
           })
         }
         onFocus={
           onFocus &&
-          ((event: FocusEvent) => {
+          ((event: FocusEvent<HTMLSelectElement>) => {
             const newValue = getValue(event, multiple);
             onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
           })
         }
-        onChange={(event: ChangeEvent) => {
+        onChange={(event: ChangeEvent<HTMLSelectElement>) => {
           const newValue = getValue(event, multiple);
           onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
         }}

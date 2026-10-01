@@ -47,7 +47,7 @@ export default function CheckboxesWidget<
   const { enumOptions } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
-  const selected = useMemo(() => (Array.isArray(value) ? value : []), [value]);
+  const selected = useMemo((): unknown[] => (Array.isArray(value) ? value : []), [value]);
 
   /** Handles changes to a checkbox's checked state */
   const handleChange = useCallback(

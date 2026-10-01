@@ -1290,7 +1290,7 @@ export type EnumValue = string | number | boolean;
 /** This type represents an element used to render an enum option */
 export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
   /** The value for the enum option */
-  value: any;
+  value: unknown;
   /** The label for the enum options */
   label: string;
   /** The schema associated with the enum option when the option represents a `oneOf` or `anyOf` choice */
@@ -1383,11 +1383,11 @@ type UIOptionsBaseType<
     /** Flag, if set to `true`, will mark all child widgets from a given field as disabled */
     disabled?: boolean;
     /** The default value to use when an input for a field is empty */
-    emptyValue?: any;
+    emptyValue?: unknown;
     /** Pre-fills the field on initial render and after a form reset. Takes priority over `schema.default`, but never
      * overrides form data the user (or caller) has already provided.
      */
-    initialValue?: any;
+    initialValue?: unknown;
     /** Overrides the schema's `required` status for the field on the UI side only: `true` shows the required
      * indicator and adds the field to the effective required set used for validation; `false` hides the indicator
      * but does not suppress schema-level validation for a field the schema itself marks required.
@@ -1440,7 +1440,7 @@ export type UIOptionsType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = UIOptionsBaseType<T, S, F> & Record<string, boolean | number | string | object | any[] | null | undefined>;
+> = UIOptionsBaseType<T, S, F> & Record<string, unknown>;
 
 /**
  * A utility type that extracts the element type from an array type.

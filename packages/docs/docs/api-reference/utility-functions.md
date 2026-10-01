@@ -245,7 +245,7 @@ If `start` and `stop` are negative numbers (or zero), then they will be treated 
 
 #### Returns
 
-- EnumOptionsType&lt;S>[]: The list of EnumOptionsType for the date range between `start` and `stop`
+- (EnumOptionsType&lt;S> & \{ value: number })[]: The list of EnumOptionsType for the date range between `start` and `stop`
 
 #### Throws
 
@@ -342,7 +342,7 @@ An `undefined` option is encoded as the empty string.
 
 - string[]: The DOM value attribute of each option, in the order of `enumOptions`
 
-### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema, E = undefined>()
 
 Computes the value to pass to a select element's `value` attribute.
 When `format` is `'realValue'`, encodes form data values as `enumOptionsDomValues()` encodes the options' values.
@@ -352,15 +352,15 @@ Returns `emptyValue` when the current value is empty.
 
 #### Parameters
 
-- value: any - The current form data value
+- value: unknown - The current form data value
 - enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
 - multiple: boolean - Whether the select allows multiple selections
 - [format='indexed']: OptionValueFormat - How option values are encoded on the DOM
-- emptyValue: any - The value to return when the selection is empty
+- [emptyValue]: E - The value to return when the selection is empty
 
 #### Returns
 
-- any: The value to use for the select element's `value` attribute
+- string | string[] | E: The value to use for the select element's `value` attribute, a `string[]` when `multiple` and a `string` otherwise, or `emptyValue` (`undefined` when it is omitted)
 
 ### enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1671,7 +1671,7 @@ An option is labelled with the first of its names. One with no name is labelled 
 
 #### Returns
 
-- \{ schema?: S, label: string, value: any }[] | undefined: The list of options from the schema, or `undefined` when it has none
+- \{ schema?: S, label: string, value: unknown }[] | undefined: The list of options from the schema, or `undefined` when it has none
 
 ### orderProperties()
 

@@ -17,6 +17,7 @@ import {
   ErrorSchemaBuilder,
   getDiscriminatorFieldFromSchema,
   getVisibleErrors,
+  isObject,
   ONE_OF_KEY,
   optionsList,
   toFieldPath,
@@ -39,7 +40,7 @@ import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
-  resolveWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
+  resolveWidget: vi.fn().mockImplementation((_schema: unknown, widget: unknown, widgets: Record<string, unknown>) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // Picks the registry widget directly, so the test controls which one renders without resolving the schema
     return { Widget: widgets[widgetToUse] };
@@ -387,7 +388,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(props.onBlur).toHaveBeenCalledWith(DEFAULT_ID, oneOfData.name);
 
     // OnChange was called with the correct event
-    const retrievedOptions = props.options.map((opt: object) =>
+    const retrievedOptions = (Array.isArray(props.options) ? props.options.filter(isObject) : []).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
     const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
@@ -429,7 +430,7 @@ describe('LayoutMultiSchemaField', () => {
     // select the second option, whose schema has the `unique_to_second` field
     await user.selectOptions(button, '1');
 
-    const retrievedOptions = props.options.map((opt: object) =>
+    const retrievedOptions = (Array.isArray(props.options) ? props.options.filter(isObject) : []).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
     const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(

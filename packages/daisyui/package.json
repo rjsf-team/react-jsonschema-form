@@ -48,8 +48,7 @@
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/react": "^16.3.3",
-    "daisyui": "^5.5.23"
+    "@testing-library/react": "^16.3.3"
   },
   "repository": {
     "type": "git",

@@ -39,7 +39,7 @@ export default function RadioWidget<
   return (
     <div className='mb-0'>
       <RadioGroup
-        defaultValue={value?.toString()}
+        defaultValue={value == null ? undefined : String(value)}
         required={required}
         disabled={disabled || readonly}
         onValueChange={(e: string) => {
@@ -53,7 +53,8 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled =
+              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
             const checked = enumOptionsIsSelected<S>(option.value, value, false);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>

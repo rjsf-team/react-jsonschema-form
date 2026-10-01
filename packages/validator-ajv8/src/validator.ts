@@ -137,13 +137,13 @@ export default class AJV8Validator<
               error.params[key] = `'${error.params[key]}'`;
             }
           });
-          if (error.params?.deps) {
+          if (typeof error.params?.deps === 'string') {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
             // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
-              .map((v: string) => `'${v}'`)
+              .map((v) => `'${v}'`)
               .join(', ');
           }
         });
@@ -151,17 +151,18 @@ export default class AJV8Validator<
         // Revert to originals
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
+            const quoted: unknown = error.params?.[key];
+            if (typeof quoted === 'string') {
               // oxlint-disable-next-line no-param-reassign
-              error.params[key] = error.params[key].slice(1, -1);
+              error.params[key] = quoted.slice(1, -1);
             }
           });
-          if (error.params?.deps) {
+          if (typeof error.params?.deps === 'string') {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
             // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
-              .map((v: string) => v.slice(1, -1))
+              .map((v) => v.slice(1, -1))
               .join(', ');
           }
         });

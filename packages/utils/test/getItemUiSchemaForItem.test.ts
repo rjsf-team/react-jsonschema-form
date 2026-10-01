@@ -1,3 +1,5 @@
+import type { MockInstance } from 'vitest';
+
 import getItemUiSchemaForItem from '../src/getItemUiSchemaForItem.ts';
 import type { FieldPath, UiSchema } from '../src/index.ts';
 
@@ -9,7 +11,7 @@ describe('getItemUiSchemaForItem()', () => {
         throw error;
       },
     };
-    let consoleErrorStub: ReturnType<typeof vi.spyOn>;
+    let consoleErrorStub: MockInstance<typeof console.error>;
 
     beforeEach(() => {
       consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(() => {});

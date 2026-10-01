@@ -2,21 +2,15 @@ import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
-import type { Localizer, ValidatorFunctions } from '../src/index.ts';
+import type { Localizer } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
+import loadModule from './harness/loadModule.ts';
 import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 vi.mock('../src/precompiledValidator');
 
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
-
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
-const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema)) as ValidatorFunctions;
+const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema));
 const mockedValidator = vi.mocked(ATAPrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
