@@ -20,12 +20,18 @@ export default function getTemplate<
   }
   const customTemplates: Record<string, unknown> = templates;
   const uiOverrides: Record<string, unknown> = uiOptions;
-  // Allow templates to be customized per-field by using string keys from the registry
-  const key = uiOverrides[name];
-  if (typeof key === 'string' && Object.hasOwn(uiOverrides, name) && Object.hasOwn(customTemplates, key)) {
-    // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
-    // complex to represent, so both are read through string-keyed views and the result is cast back to the template type
-    return customTemplates[key] as TemplatesType<T, S, F>[Name];
+  const override = uiOverrides[name];
+  // Allow templates to be customized per-field by using string keys from the registry; a string naming no registered
+  // template is not a component, so the registry's own template is used instead
+  let template = override;
+  if (typeof override === 'string') {
+    template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
   }
-  return (uiOverrides[name] as TemplatesType<T, S, F>[Name]) || templates[name];
+  if (!template) {
+    return templates[name];
+  }
+  // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
+  // complex to represent, so both are read through string-keyed views. Nothing checks the props a `ui:options` or
+  // registry entry accepts, so this is the one place the found component is asserted to be the template type
+  return template as TemplatesType<T, S, F>[Name];
 }
