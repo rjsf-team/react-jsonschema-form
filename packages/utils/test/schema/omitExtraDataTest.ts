@@ -937,6 +937,33 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('resolves an allOf entry once for every row of an array, not once per row', () => {
+        // `omit()` recurses per data node while the `allOf` entries belong to the schema, so every row of an array
+        // would otherwise re-resolve the same entries. Both rows are filtered identically, from one resolution each
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: { audit: { type: 'object', properties: { at: { type: 'string' } } } },
+          properties: {
+            rows: {
+              type: 'array',
+              items: { allOf: [{ $ref: '#/definitions/audit' }, { properties: { n: { type: 'number' } } }] },
+            },
+          },
+        };
+        const data = {
+          rows: [
+            { at: 'a', n: 1, drop: 'x' },
+            { at: 'b', n: 2, drop: 'y' },
+          ],
+        };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, data)).toEqual({
+          rows: [
+            { at: 'a', n: 1 },
+            { at: 'b', n: 2 },
+          ],
+        });
+      });
+
       it('leaves a boolean allOf entry alone, since only a subschema object can carry references', () => {
         const schema: RJSFSchema = {
           type: 'object',

@@ -247,8 +247,7 @@ export default function processRawValidationErrors<
 
   // Include form data with undefined values, which is required for custom validation. `uiSchema` is threaded through
   // so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed and rendered.
-  // Called rather than read, so defaults that legitimately come out `undefined` are not mistaken for "not supplied"
-  // and silently recomputed here, with neither the form's `customMergeAllOf` nor its `defaultFormStateBehavior`
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
   const newFormData = getCustomValidateFormData
     ? getCustomValidateFormData()
     : (getDefaultFormState<T, S, F>(context, {

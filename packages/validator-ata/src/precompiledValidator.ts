@@ -4,6 +4,7 @@ import type {
   ErrorTransformer,
   FormContextType,
   RJSFSchema,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
@@ -58,14 +59,14 @@ export default class ATAPrecompiledValidator<
    */
   readonly suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 
-  /** The `customMergeAllOf` the schemas were compiled with, used to resolve this validator's own root schema the way
-   * the form resolves it. It belongs here rather than on each call because a precompiled validator is tied to one root
-   * schema, compiled once: a merge that differs from the one `compileSchemaValidatorsCode()` used would build
-   * sub-schemas whose hashes the precompiled map does not hold
+  /** The context this validator resolves schemas with: itself, plus the `customMergeAllOf` its schemas were compiled
+   * with. The merge belongs here rather than on each call because a precompiled validator is tied to one root schema,
+   * compiled once: a merge differing from the one `compileSchemaValidatorsCode()` used would build sub-schemas whose
+   * hashes the precompiled map does not hold. Built once, since neither member can change after construction
    *
    * @private
    */
-  readonly customMergeAllOf?: CustomMergeAllOf<S>;
+  private readonly schemaContext: SchemaContext<S, F>;
 
   /** Constructs an `ATAPrecompiledValidator` instance using the `validateFns` and `rootSchema`
    *
@@ -88,7 +89,7 @@ export default class ATAPrecompiledValidator<
     this.validateFns = validateFns;
     this.localizer = localizer;
     this.suppressDuplicateFiltering = suppressDuplicateFiltering;
-    this.customMergeAllOf = customMergeAllOf;
+    this.schemaContext = { validator: this, customMergeAllOf };
     this.mainValidator = this.getValidator(rootSchema);
   }
 
@@ -120,12 +121,7 @@ export default class ATAPrecompiledValidator<
       // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
       // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
       // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution
-      const resolvedRootSchema = retrieveSchema(
-        { validator: this, customMergeAllOf: this.customMergeAllOf },
-        this.rootSchema,
-        this.rootSchema,
-        formData,
-      );
+      const resolvedRootSchema = retrieveSchema(this.schemaContext, this.rootSchema, this.rootSchema, formData);
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
@@ -180,7 +176,7 @@ export default class ATAPrecompiledValidator<
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
-      { validator: this, customMergeAllOf: this.customMergeAllOf },
+      this.schemaContext,
       rawErrors,
       formData,
       schema,

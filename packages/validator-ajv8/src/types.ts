@@ -27,9 +27,15 @@ export interface CustomValidatorOptionsType {
    * - `'oneOf'`: disables filtering for `oneOf` errors only (anyOf duplicates are still filtered)
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
-  /** The `customMergeAllOf` the form will resolve with. `compileSchemaValidatorsCode()` merges `allOf`s while walking
-   * the schema for the sub-schemas it precompiles, so a form whose merge differs from this one asks the precompiled
-   * map for hashes it never recorded. Pass the same function here and to `createPrecompiledValidator()`
+}
+
+/** The options `compileSchemaValidatorsCode()` takes: everything `customizeValidator()` accepts, plus the
+ * `customMergeAllOf` only the compile step reads
+ */
+export interface CompileValidatorOptionsType extends CustomValidatorOptionsType {
+  /** The `customMergeAllOf` the form will resolve with. The compile step merges `allOf`s while walking the schema for
+   * the sub-schemas it precompiles, so a form whose merge differs from this one asks the precompiled map for hashes it
+   * never recorded. Pass the same function here and to `createPrecompiledValidator()`
    */
   customMergeAllOf?: CustomMergeAllOf;
 }

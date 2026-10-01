@@ -72,8 +72,8 @@ class SchemaUtils<
     this.rawRootSchema = rootSchema;
     // A v6 caller passed the validator here, and spreading one copies its own fields while leaving `validator`
     // undefined, so the first schema function fails with a `TypeError` from inside `retrieveSchema()` that names
-    // nothing. Warn instead of throwing, since `doesSchemaUtilsDiffer()` deliberately tolerates a context with no
-    // validator while a form is still loading one
+    // nothing. A warning rather than a throw, because this is a diagnostic for a signature that TypeScript already
+    // rejects, and a library should not start throwing where the previous version merely misbehaved
     if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
       logOnce(
         'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
@@ -81,7 +81,7 @@ class SchemaUtils<
     }
     // Snapshot the context so a caller that swaps a setting on the object it passed can neither change how this
     // instance behaves nor hide that change from `doesSchemaUtilsDiffer()`. Frozen because `getSchemaContext()` hands
-    // the snapshot itself to the validator and to every `computeSkipPopulate()` callback. Only the context's own keys
+    // the snapshot itself to every `computeSkipPopulate()` callback. Only the context's own keys
     // are covered: the settings objects reached through them stay the caller's, so mutating one in place still changes
     // how this instance behaves and still reads as "no difference" — they are documented as owned by the caller
     this.context = Object.freeze({ ...context });

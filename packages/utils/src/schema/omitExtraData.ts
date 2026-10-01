@@ -1,3 +1,5 @@
+import type { JSONSchema7Definition } from 'json-schema';
+
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -328,6 +330,30 @@ export default function omitExtraData<
     return result;
   }
 
+  /** Each `allOf` entry resolved once per call rather than once per data node. The entries belong to the schema, so
+   * the result is the same every time, while `omit()` recurses per array element and per object property: a 200-row
+   * array resolved the same handful of entries thousands of times. Keyed on the entry, so it is only valid for this
+   * call's `rootSchema`, which is why it lives here rather than at module scope
+   */
+  const resolvedAllOfEntries = new WeakMap<object, S>();
+
+  /** Resolves the references of one `allOf` entry, reusing the result for an entry already resolved in this call
+   *
+   * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
+   * @returns - The entry with its references resolved
+   */
+  function resolveAllOfEntry(entry: JSONSchema7Definition): S | boolean {
+    if (!isObject(entry)) {
+      return entry;
+    }
+    let resolved = resolvedAllOfEntries.get(entry);
+    if (!resolved) {
+      resolved = resolveAllReferences<S>(entry as S, rootSchema, []);
+      resolvedAllOfEntries.set(entry, resolved);
+    }
+    return resolved;
+  }
+
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
    * handlers (`handleObject`, `handleArray`) and keyword handlers (`handleAnyOf`, `handleOneOf`,
    * `handleConditions`, `handleDependencies`). Returns `undefined` when `source` is undefined or
@@ -358,18 +384,10 @@ export default function omitExtraData<
     }
     if (allOf) {
       // Resolve each entry's references before merging, the way `resolveSchema()` runs every `allOf` entry through
-      // `retrieveSchemaInternal()` before the parent is merged. Two things go wrong otherwise: the shallow merge hoists
-      // an entry's `$ref` onto the merged schema rather than following it, so the referenced schema's properties are
-      // taken for extra data and deleted; and a `customMergeAllOf` is handed a `$ref` the form's own merge never sees,
-      // so it can reject a schema that renders, and a rejected merge drops the `allOf` along with data the user can
-      // see and edit
-      localSchema = {
-        ...localSchema,
-        allOf: allOf.map((entry) => (isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry)),
-      };
-      // A failed merge comes back without its `allOf`, so omission agrees with the schema the form rendered instead of
-      // throwing out of `Form`'s change and submit handlers
-      ({ schema: localSchema } = mergeAllOf<S, F>(context, localSchema));
+      // `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the
+      // merged schema rather than following it, so the referenced schema's properties would be taken for extra data,
+      // and a `customMergeAllOf` would be handed a `$ref` the form's own merge never sees
+      localSchema = mergeAllOf<S, F>(context, { ...localSchema, allOf: allOf.map(resolveAllOfEntry) }).schema;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.
