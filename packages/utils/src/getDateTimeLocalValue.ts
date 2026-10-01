@@ -1,11 +1,12 @@
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import utcToLocal from './utcToLocal.ts';
 
 export interface DateTimeLocalValueResult {
   /** True when `schema.format` is `iso-date-time`, meaning a timezone offset is optional rather than required */
   isIsoDateTime: boolean;
-  /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged; `undefined` when `value`
-   * is not a string */
+  /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged; a finite epoch number or a
+   * valid `Date` is converted to its UTC ISO string, or to local wall-clock time when `isIsoDateTime`; `undefined` for any other `value` */
   localValue: string | undefined;
 }
 
@@ -24,8 +25,25 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
   value: unknown,
 ): DateTimeLocalValueResult {
   const isIsoDateTime = schema.format === 'iso-date-time';
-  if (typeof value !== 'string') {
+  let stringValue: string | undefined;
+  if (typeof value === 'string') {
+    stringValue = value;
+  } else if (typeof value === 'number' || value instanceof Date) {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) {
+      // An epoch or `Date` is an exact instant, so `iso-date-time` shows it at the reader's local wall-clock time
+      const iso = date.toISOString();
+      return {
+        isIsoDateTime,
+        localValue: isIsoDateTime ? utcToLocal(iso) : iso,
+      };
+    }
+  }
+  if (stringValue === undefined) {
     return { isIsoDateTime, localValue: undefined };
   }
-  return { isIsoDateTime, localValue: isIsoDateTime ? offsetTimeToLocalTime(value) : value };
+  return {
+    isIsoDateTime,
+    localValue: isIsoDateTime ? offsetTimeToLocalTime(stringValue) : stringValue,
+  };
 }
