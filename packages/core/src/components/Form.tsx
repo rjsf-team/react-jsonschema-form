@@ -1235,12 +1235,9 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const isRootPath = path.length === 0;
   // An updater is applied to what the form holds now, which the queue guarantees includes every earlier change
   const oldValue = isRootPath ? current.formData : getByPath<T | undefined>(current.formData, path);
+  const oldErrorSchema = isRootPath ? current.errorSchema : getByPath<ErrorSchema<T>>(current.errorSchema, path);
   const newValue = resolveFieldChange(change.newValue, oldValue);
-  const newErrorSchema = resolveFieldChange(
-    change.newErrorSchema,
-    isRootPath ? current.errorSchema : getByPath<ErrorSchema<T>>(current.errorSchema, path),
-    oldValue,
-  );
+  const newErrorSchema = resolveFieldChange(change.newErrorSchema, oldErrorSchema, oldValue);
   // oxlint-disable-next-line typescript/no-deprecated
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
   const { formData: oldFormData, schemaValidationErrorSchema, schemaValidationErrors } = current;
@@ -1359,10 +1356,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (oldValidationError && Object.keys(oldValidationError).length > 0) {
       // What the field displays beyond the validator's own errors is supplied by `extraErrors`/`customErrors`; the
       // rest of the raise is the field's own say over the validator's errors at this path, an empty rest included
-      const supplied = countMessages(
-        isRootPath ? current.errorSchema : getByPath(current.errorSchema, path),
-        isArrayRaise,
-      );
+      const supplied = countMessages(oldErrorSchema, isArrayRaise);
       const raisedErrorSchema = withoutSupplied(
         newErrorSchema,
         countMessages(oldValidationError, isArrayRaise, supplied, -1),

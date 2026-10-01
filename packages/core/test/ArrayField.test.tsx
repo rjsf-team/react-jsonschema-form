@@ -3928,6 +3928,24 @@ describe('ArrayField', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const rowKeys = (node: Element) =>
       Array.from(node.querySelectorAll('.rjsf-array-item')).map((row) => row.getAttribute(ArrayKeyDataAttr));
+    function RemoveThenMoveUpItemTemplate(props: ArrayFieldItemTemplateProps) {
+      const { onRemoveItem, onMoveUpItem } = props.buttonsProps;
+      return (
+        <div className='rjsf-array-item'>
+          {props.children}
+          <button
+            type='button'
+            className='remove-then-move-up'
+            onClick={(event) => {
+              onRemoveItem(event);
+              onMoveUpItem(event);
+            }}
+          >
+            Remove, then move up
+          </button>
+        </div>
+      );
+    }
 
     it('should apply every add when one click adds several items', async () => {
       function AddThreeTemplate(props: ArrayFieldTemplateProps) {
@@ -3962,24 +3980,6 @@ describe('ArrayField', () => {
     });
 
     it('should add no item when a move queued behind a remove names an index the remove took away', async () => {
-      function RemoveThenMoveUpItemTemplate(props: ArrayFieldItemTemplateProps) {
-        const { onRemoveItem, onMoveUpItem } = props.buttonsProps;
-        return (
-          <div className='rjsf-array-item'>
-            {props.children}
-            <button
-              type='button'
-              className='remove-then-move-up'
-              onClick={(event) => {
-                onRemoveItem(event);
-                onMoveUpItem(event);
-              }}
-            >
-              Remove, then move up
-            </button>
-          </div>
-        );
-      }
       const { node, onChange } = createFormComponent({
         schema,
         initialFormData: ['a', 'b', 'c'],
@@ -3993,24 +3993,6 @@ describe('ArrayField', () => {
     });
 
     it('should keep the errors in place when a move queued behind a remove names an index the remove took away', async () => {
-      function RemoveThenMoveUpItemTemplate(props: ArrayFieldItemTemplateProps) {
-        const { onRemoveItem, onMoveUpItem } = props.buttonsProps;
-        return (
-          <div className='rjsf-array-item'>
-            {props.children}
-            <button
-              type='button'
-              className='remove-then-move-up'
-              onClick={(event) => {
-                onRemoveItem(event);
-                onMoveUpItem(event);
-              }}
-            >
-              Remove, then move up
-            </button>
-          </div>
-        );
-      }
       const { node, onChange } = createFormComponent({
         schema: { type: 'array', items: { type: 'string', minLength: 2 } },
         initialFormData: ['aa', 'b', 'cc'],

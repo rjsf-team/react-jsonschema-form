@@ -1365,14 +1365,14 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
-### isFieldUpdater&lt;V>()
+### isFieldUpdater&lt;V, A extends unknown[] = []>()
 
-Returns whether a `FieldChange` is an updater rather than a value.
+Returns whether a `FieldChange` or an `ErrorSchemaChange` is an updater rather than a value.
 A field that handles what a child passes to `onChange` branches on it: a value can be read or transformed as it is, an updater only through what it returns, see `mapFieldChange()`.
 
 #### Parameters
 
-- change: FieldChange&lt;V> - The value, or an updater computing it
+- change: V | ((current: V, ...args: A) => V) - The value, or an updater computing it
 
 #### Returns
 

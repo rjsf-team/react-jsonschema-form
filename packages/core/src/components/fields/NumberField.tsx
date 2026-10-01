@@ -69,12 +69,14 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
-      let processed: ReturnType<typeof asNumber> | T = normalizedValue;
-      if (typeof normalizedValue === 'string') {
-        processed = trailingCharMatcherWithPrefix.exec(normalizedValue)
-          ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
-          : asNumber(normalizedValue);
-      }
+      const processed =
+        typeof normalizedValue === 'string'
+          ? asNumber(
+              trailingCharMatcherWithPrefix.exec(normalizedValue)
+                ? normalizedValue.replace(trailingCharMatcher, '')
+                : normalizedValue,
+            )
+          : normalizedValue;
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },

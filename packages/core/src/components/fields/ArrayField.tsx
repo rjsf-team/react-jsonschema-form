@@ -62,9 +62,11 @@ function keyedToPlainFormData<T>(keyedFormData: KeyedFormDataType<T> | KeyedForm
   return [];
 }
 
+const NO_ITEMS: never[] = [];
+
 /** Returns the array field's current items, treating anything that isn't an array as having none */
 function toItems<T>(value: T[] | undefined): T[] {
-  return Array.isArray(value) ? value : [];
+  return Array.isArray(value) ? value : NO_ITEMS;
 }
 
 /** Returns a copy of `rows` with `row` inserted at `index` */
@@ -84,11 +86,10 @@ function moveRow<X>(rows: X[], from: number, to: number): X[] {
 
 /** An edit to the array's rows, described once and applied alike to the row keys, the items and the items' errors:
  * given the number of rows, it returns for each row after the edit the index of the row it was before, or `undefined`
- * for a row the edit inserts. It returns `undefined` when an index an earlier queued edit left past the end makes the
- * edit a no-op. The keys apply it at once, the items and errors only when the form commits it, so the three agree
- * only for a committed edit: when a controlled parent declines a reorder, the keys move and the items don't (a
- * declined add, copy or remove leaves the keys and the items different lengths, so `useKeyedFormData()` regenerates
- * the keys)
+ * for a row the edit inserts. It returns `undefined` itself when an index an earlier queued edit left past the end makes
+ * the edit a no-op. The keys take it at once and the items only when the form commits it, so the two agree only once
+ * every edit is committed: a reorder a controlled parent declines moves the keys alone, and on the commits between
+ * several edits made in one event the lengths differ and `useKeyedFormData()` regenerates the keys
  */
 type RowEdit = (length: number) => (number | undefined)[] | undefined;
 
@@ -120,8 +121,11 @@ function applyRowEditToErrors<T>(
   items: T[] | undefined,
   edit: RowEdit,
 ): ErrorSchema<T[]> | undefined {
+  if (!errorSchema) {
+    return errorSchema;
+  }
   const sources = edit(toItems(items).length);
-  if (!errorSchema || !sources) {
+  if (!sources) {
     return errorSchema;
   }
   const remapped: ErrorSchema<T[]> = ERRORS_KEY in errorSchema ? { [ERRORS_KEY]: errorSchema[ERRORS_KEY] } : {};
@@ -869,11 +873,9 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 interface KeyedFormDataState<T = unknown> {
   /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
-  /** Sets the row keys; each edit applies to them the same list edit it proposes for the items */
+  /** The row keys' setter */
   setKeys: Dispatch<SetStateAction<string[]>>;
 }
-
-const NO_ITEMS: never[] = [];
 
 /** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
  * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
@@ -882,8 +884,8 @@ const NO_ITEMS: never[] = [];
  * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
  * regenerated.
  */
-function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
-  const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
+function useKeyedFormData<T = unknown>(formData: T[] | undefined): KeyedFormDataState<T> {
+  const items = toItems(formData);
   const freshKeys = () => items.map(generateRowId);
   const [keys, setKeys] = useState<string[]>(freshKeys);
 
@@ -909,15 +911,12 @@ export default function ArrayField<
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, setKeys } = useKeyedFormData<T>(formData);
-  // The item edits below are updaters: the form applies each one to the items and errors it holds when it processes
-  // the change, so the handlers read neither and keep their identity while the array's data changes. Each edit is one
-  // `RowEdit`, applied to the row keys through React's own updater and to the items and errors through the form's;
-  // updaters stay pure, so the form may apply them to any data
 
-  /** Applies `edit` to the row keys, the items and the items' errors
+  /** Applies `edit` to the row keys at once, and to the items and their errors through updaters the form applies to
+   * what it holds, so the handlers read no data and keep their identity while the array's data changes
    *
    * @param edit - The edit to apply
-   * @param [newItem] - Creates the item the edit inserts at `index`, from the items before the edit
+   * @param [newItem] - Creates the item an inserting edit, an add or a copy, puts at `index`, from the items before it
    */
   const commitRowEdit = useCallback(
     (edit: RowEdit, newItem: (items: T[], index: number) => T = (items, index) => items[index]) => {

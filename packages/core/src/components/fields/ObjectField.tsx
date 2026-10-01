@@ -16,6 +16,7 @@ import {
   getByPath,
   hasByPath,
   setByPath,
+  unsetByPath,
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -128,6 +129,10 @@ const ROW_ID_SEPARATOR = '\u0000';
  * @returns - The rows, one per name in `names`
  */
 function reconcileAdditionalRows(rows: AdditionalPropertyRow[], names: string[]): AdditionalPropertyRow[] {
+  // Most renders rename, add and remove nothing, and those allocate nothing
+  if (rows.length === names.length && rows.every((row, index) => row.name === names[index])) {
+    return rows;
+  }
   const nameSet = new Set(names);
   const rowNames = new Set(rows.map((row) => row.name));
   const orphans = rows.filter((row) => !nameSet.has(row.name));
@@ -408,19 +413,6 @@ export default function ObjectField<
   let orderedProperties: string[] = [];
   const separator = uiOptions.duplicateKeySuffixSeparator ?? '-';
 
-  /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one
-   * that is already not assigned is found.
-   *
-   * @param preferredKey - The preferred name of a new key
-   * @param [existingFormData] - The form data in which to check if the desired key already exists
-   * @returns - The name of the next available key from `preferredKey`
-   */
-  const getAvailableKey = useCallback(
-    (preferredKey: string, existingFormData?: T) =>
-      firstAvailableKey(preferredKey, (key) => hasByPath(existingFormData, key), separator),
-    [separator],
-  );
-
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback with an
    * updater that adds the new property's default data to the data the form holds, so an add made in the same tick as a
    * rename or another add applies to the data that one produced.
@@ -440,7 +432,7 @@ export default function ObjectField<
       }
       const newFormData = { ...current } as T;
       const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
-      const newKey = getAvailableKey(preferredKey, newFormData);
+      const newKey = firstAvailableKey(preferredKey, (key) => hasByPath(current, key), separator);
       if (schema.patternProperties) {
         setByPath(newFormData, newKey, null);
         return newFormData;
@@ -484,19 +476,17 @@ export default function ObjectField<
     translateString,
     schemaUtils,
     fieldPath,
-    getAvailableKey,
+    separator,
     schema,
     resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
   ]);
 
-  /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
-   * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
+  /** Renames an additional property's key, moving its data under the new key
    *
    * @param oldKey - The old key for the field
    * @param newKey - The new key for the field
-   * @returns - The key change callback function
    */
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string) => {
@@ -515,17 +505,17 @@ export default function ObjectField<
         if (!isObject(current)) {
           return current;
         }
-        const renamedTo = getAvailableKey(newKey, current);
+        const renamedTo = firstAvailableKey(newKey, (key) => hasByPath(current, key), separator);
         // Every key is taken out and put back in order, so the renamed key keeps its place
         const renamed = { ...current };
         for (const [key, value] of Object.entries(current)) {
-          Reflect.deleteProperty(renamed, key);
-          Reflect.set(renamed, key === oldKey ? renamedTo : key, value);
+          unsetByPath(renamed, [key]);
+          setByPath(renamed, [key === oldKey ? renamedTo : key], value);
         }
         return renamed;
       }, fieldPath);
     },
-    [onChange, fieldPath, separator, getAvailableKey],
+    [onChange, fieldPath, separator],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
