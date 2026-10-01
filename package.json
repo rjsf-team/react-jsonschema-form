@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
-    "lint": "node scripts/check-oxlint-overrides.mjs && oxlint",
+    "lint": "oxlint",
     "typecheck": "tsc --build tsconfig.typecheck.json tsconfig.typecheck-bundler.json --checkers 2",
     "knip": "knip",
     "cs-check": "oxfmt --check",

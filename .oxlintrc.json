@@ -261,8 +261,7 @@
     "no-regex-spaces": "error",
     "no-restricted-exports": "off",
     // This and no-restricted-properties are repeated in the overrides for published `src` below, since an override
-    // replaces a rule's options; an entry added here goes there too, which scripts/check-oxlint-overrides.mjs (run by
-    // `pnpm run lint`) checks
+    // replaces a rule's options; an entry added here goes there too
     "no-restricted-globals": [
       "error",
       { "name": "isFinite", "message": "Use Number.isFinite instead." },
@@ -776,7 +775,7 @@
       // The typecheck program gives package sources the tests' Node and Vitest globals and modules, so this keeps
       // published code off them. snapshot-tests' sources are Vitest suites and the playground isn't published, so
       // they're left out. An override replaces the rule's options, so the root entries are repeated here; a new
-      // published package goes in `files`. scripts/check-oxlint-overrides.mjs, run by `pnpm run lint`, checks both
+      // published package goes in `files`
       "files": [
         "packages/{antd,chakra-ui,core,daisyui,fluentui-rc,mantine,mui,react-bootstrap,shadcn,utils,validator-ajv8,validator-ata,validator-cfworker}/src/**"
       ],
@@ -932,7 +931,7 @@
     },
     {
       // The validators also run where there's no DOM. An override replaces the rule's options, so the list above is
-      // repeated here; scripts/check-oxlint-overrides.mjs, run by `pnpm run lint`, fails when the copies drift
+      // repeated here
       "files": ["packages/validator-*/src/**"],
       "rules": {
         "no-restricted-globals": [
