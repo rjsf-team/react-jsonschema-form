@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Upgraded `@x0k/json-schema-merge` to `^1.1.0`, which merges `if`/`then`/`else`, `properties`/`patternProperties`/`additionalProperties` and `items`/`additionalItems` as groups. `omitExtraData()` merges an object's `allOf` before evaluating its conditions, and the older merge could pair one entry's `else` with another entry's `if`, so data from an inactive branch was kept. The same merge in `retrieveSchema()` no longer lets an `additionalProperties` or `additionalItems` from one `allOf` entry act on another entry's `properties`/`patternProperties`/`items`
 
+## Dev / docs / playground
+
+- Upgraded all packages with minor or patch version bumps, except the build, lint and formatting libraries
+
 # 6.11.0
 
 ## @rjsf/core

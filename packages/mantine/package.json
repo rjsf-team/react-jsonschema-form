@@ -79,7 +79,7 @@
     "@rjsf/utils": "workspace:^"
   },
   "dependencies": {
-    "dayjs": "^1.11.21"
+    "dayjs": "^1.11.23"
   },
   "publishConfig": {
     "access": "public"
