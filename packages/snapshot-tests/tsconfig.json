@@ -5,7 +5,7 @@
     "rootDir": "src",
     "outDir": "lib",
     "emitDeclarationOnly": true,
-    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"]
+    "types": ["vitest/globals", "node"]
   },
   "references": [{ "path": "../core" }, { "path": "../utils" }, { "path": "../validator-ajv8" }]
 }

@@ -698,33 +698,38 @@
       }
     },
     {
-      "files": ["**/test/**/*.ts", "**/test/**/*.tsx", "**/test/**/*.js"],
+      // Also covers the shared suites in snapshot-tests/src and the shared setup in testing/, which sit outside a
+      // `test/` directory; the relaxed rules below stay limited to `test/`, since snapshot-tests/src is published
+      "files": [
+        "**/test/**/*.ts",
+        "**/test/**/*.tsx",
+        "**/test/**/*.js",
+        "packages/snapshot-tests/src/**",
+        "testing/**"
+      ],
       "plugins": ["vitest"],
       "env": {
         "vitest": true
       },
       "rules": {
-        "import/no-named-as-default": "off",
-        "no-shadow": "off",
-        "no-unused-vars": "off",
-        "no-use-before-define": "off",
-        "react/display-name": "off",
-        "typescript/method-signature-style": "off",
-        "typescript/no-confusing-void-expression": "off",
-        "typescript/no-explicit-any": "off",
-        "typescript/no-misused-promises": "off",
-        "typescript/no-misused-spread": "off",
-        "typescript/no-non-null-assertion": "off",
-        "typescript/no-redundant-type-constituents": "off",
-        "typescript/no-require-imports": "off",
-        "typescript/prefer-optional-chain": "off",
-        "typescript/promise-function-async": "off",
-        "typescript/unbound-method": "off",
+        // Unlike `vitest/no-importing-vitest-globals`, which only sees unaliased named imports, this also catches
+        // aliased, namespace and default imports and re-exports
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "vitest",
+                "allowTypeImports": true,
+                "message": "Vitest's runtime API is global here; import only types, with `import type`."
+              }
+            ]
+          }
+        ],
         "vitest/no-commented-out-tests": "error",
         "vitest/no-disabled-tests": "off",
         "vitest/no-focused-tests": "error",
         "vitest/no-import-node-test": "error",
-        "vitest/no-importing-vitest-globals": "error",
         "vitest/no-interpolation-in-snapshots": "error",
         "vitest/no-mocks-import": "error",
         "vitest/no-standalone-expect": "error",
@@ -744,15 +749,24 @@
       }
     },
     {
-      // Shared test suites that every theme package runs, living outside a `test/` directory
-      "files": ["packages/snapshot-tests/src/**"],
-      "plugins": ["vitest"],
-      "env": {
-        "vitest": true
-      },
+      "files": ["**/test/**/*.ts", "**/test/**/*.tsx", "**/test/**/*.js"],
       "rules": {
-        "vitest/no-importing-vitest-globals": "error",
-        "vitest/valid-expect": ["error", { "maxArgs": 2 }]
+        "import/no-named-as-default": "off",
+        "no-shadow": "off",
+        "no-unused-vars": "off",
+        "no-use-before-define": "off",
+        "react/display-name": "off",
+        "typescript/method-signature-style": "off",
+        "typescript/no-confusing-void-expression": "off",
+        "typescript/no-explicit-any": "off",
+        "typescript/no-misused-promises": "off",
+        "typescript/no-misused-spread": "off",
+        "typescript/no-non-null-assertion": "off",
+        "typescript/no-redundant-type-constituents": "off",
+        "typescript/no-require-imports": "off",
+        "typescript/prefer-optional-chain": "off",
+        "typescript/promise-function-async": "off",
+        "typescript/unbound-method": "off"
       }
     },
     {
