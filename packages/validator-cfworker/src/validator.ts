@@ -156,7 +156,8 @@ export default class CFWorkerValidator<
    * @param [customValidate] - A function that adds application-specific validation errors
    * @param [transformErrors] - A function that transforms errors before custom validation
    * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
-   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults applied
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    * @returns - The processed validation errors and error schema
    */
   validateFormData<T = unknown>(
@@ -165,7 +166,7 @@ export default class CFWorkerValidator<
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
-    customValidateFormData?: T,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
     return processRawValidationErrors(
@@ -177,7 +178,7 @@ export default class CFWorkerValidator<
       transformErrors,
       uiSchema,
       this.options.suppressDuplicateFiltering,
-      customValidateFormData,
+      getCustomValidateFormData,
     );
   }
 

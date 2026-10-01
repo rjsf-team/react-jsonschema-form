@@ -3156,8 +3156,18 @@ describe('validateFormData() and the data handed to customValidate', () => {
     const customValidate = vi.fn((_formData, errors) => errors);
     // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
     // `defaultFormStateBehavior` it was given, which a validator has no way to know
-    validator.validateFormData({}, schema, customValidate, undefined, undefined, { a: 'fromTheForm' });
+    validator.validateFormData({}, schema, customValidate, undefined, undefined, () => ({ a: 'fromTheForm' }));
     expect(customValidate.mock.calls[0][0]).toEqual({ a: 'fromTheForm' });
+  });
+
+  it('hands customValidate an undefined the caller computed, rather than recomputing its own defaults', () => {
+    const validator = new AJV8Validator({});
+    // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
+    // could not say that, and the validator would recompute `[]` here with neither of the form's settings
+    const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+    const customValidate = vi.fn((_formData, errors) => errors);
+    validator.validateFormData(undefined, schema, customValidate, undefined, undefined, () => undefined);
+    expect(customValidate.mock.calls[0][0]).toBeUndefined();
   });
 
   it('computes them itself, with the default allOf merge, when the caller supplies none', () => {

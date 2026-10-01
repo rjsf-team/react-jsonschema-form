@@ -167,7 +167,8 @@ export default class ATAPrecompiledValidator<
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after ata validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
-   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults applied
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
@@ -175,7 +176,7 @@ export default class ATAPrecompiledValidator<
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
-    customValidateFormData?: T,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
@@ -187,7 +188,7 @@ export default class ATAPrecompiledValidator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
-      customValidateFormData,
+      getCustomValidateFormData,
     );
   }
 

@@ -1722,10 +1722,12 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
-   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults already
-   *        applied. `Form` computes it with its own `SchemaUtils`, so those defaults honor the `customMergeAllOf` and
-   *        `defaultFormStateBehavior` the form was given. Left out, the validator computes them itself, which it can
-   *        only do with the default `allOf` merge
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+   *        already applied. `Form` supplies it so those defaults honor the `customMergeAllOf` and
+   *        `defaultFormStateBehavior` it was given, which a validator has no way to know. It is a function rather than
+   *        the data so that `undefined` is a value it can return rather than a way of saying it was not supplied, and
+   *        so an implementation that computes the defaults itself never makes the caller compute them too. Left out,
+   *        the validator computes them, which it can only do with the default `allOf` merge
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
@@ -1733,7 +1735,7 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
-    customValidateFormData?: T,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T>;
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return

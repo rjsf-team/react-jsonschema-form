@@ -13,7 +13,7 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
       customValidate?: CustomValidator<T>,
       transformErrors?: ErrorTransformer<T>,
       uiSchema?: UiSchema<T>,
-      customValidateFormData?: T,
+      getCustomValidateFormData?: () => T,
     ): ValidationData<T> {
       return validator.validateFormData(
         formData,
@@ -21,7 +21,7 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
         customValidate,
         transformErrors,
         uiSchema,
-        customValidateFormData,
+        getCustomValidateFormData,
       );
     },
     isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {

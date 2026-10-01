@@ -189,9 +189,9 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - A function that transforms errors before custom validation
  * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
- * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults already
- *        applied. `Form` computes it with its own `SchemaUtils`, so the defaults honor the form's `customMergeAllOf`
- *        and `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
+ * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+ *        already applied. `Form` supplies it so those defaults honor its `customMergeAllOf` and
+ *        `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
  * @returns - The processed validation errors and error schema
  */
 export default function processRawValidationErrors<
@@ -207,7 +207,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-  customValidateFormData?: T,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -228,17 +228,17 @@ export default function processRawValidationErrors<
 
   // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
   // and rendered.
-  // `Form` passes the defaults it computed with its own `SchemaUtils`, so they honor the form's `customMergeAllOf`
-  // and `defaultFormStateBehavior`; without them they are computed here with the default `allOf` merge
-  const newFormData =
-    customValidateFormData ??
-    (getDefaultFormState<T, S, F>(context, {
-      schema,
-      formData,
-      rootSchema: schema,
-      includeUndefinedValues: true,
-      uiSchema,
-    }) as T);
+  // Called rather than read, so defaults that legitimately come out `undefined` are not mistaken for "not supplied"
+  // and silently recomputed here, with neither the form's `customMergeAllOf` nor its `defaultFormStateBehavior`
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
   return validationDataMerge<T>({ errors, errorSchema }, userErrorSchema);

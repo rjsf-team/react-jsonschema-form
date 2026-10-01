@@ -567,11 +567,12 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
 
-  // The data handed to `customValidate` carries the form's defaults, computed here rather than inside the validator so
-  // they honor the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way
-  // to know. Only computed when there is a `customValidate` to receive it
-  const customValidateFormData = customValidate
-    ? (schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T)
+  // The data handed to `customValidate` carries this form's defaults, computed here rather than inside the validator
+  // so they honor the `customMergeAllOf` and `defaultFormStateBehavior` it was given, which a validator has no way to
+  // know. Passed as a function so the work happens only if the validator uses it, and so defaults that come out
+  // `undefined` are still an answer rather than looking like no answer at all
+  const getCustomValidateFormData = customValidate
+    ? () => schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T
     : undefined;
   const schemaValidation = schemaUtils
     .getValidator()
@@ -581,7 +582,7 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
       customValidate,
       transformErrors,
       uiSchema,
-      customValidateFormData,
+      getCustomValidateFormData,
     );
   // ui:required only exists in the uiSchema, so it is enforced here rather than by rewriting the schema the
   // validator sees: that keeps the submit and live paths, precompiled validators and AJV error paths unchanged.
