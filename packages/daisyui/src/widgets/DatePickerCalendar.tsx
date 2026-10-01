@@ -10,6 +10,7 @@ import 'react-day-picker/dist/style.css';
  */
 export const CALENDAR_MIN_WIDTH = 320;
 
+// Module scope because react/purity rejects `new Date()` during render, so the year range is fixed when the module loads
 const END_MONTH = new Date(new Date().getFullYear() + 10, 11);
 
 /** DayPicker's own elements, painted with DaisyUI classes. Shared so the two pickers cannot drift into two calendars

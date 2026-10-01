@@ -50,6 +50,10 @@ describe('render stability across sibling fields', () => {
     return counts;
   }
 
+  function renderCount(id: string): number {
+    return onFieldTemplateRender.mock.calls.filter(([calledId]) => calledId === id).length;
+  }
+
   function CountingFieldTemplate(props: FieldTemplateProps) {
     onFieldTemplateRender(props.id);
     return <DefaultFieldTemplate {...props} />;
@@ -66,17 +70,17 @@ describe('render stability across sibling fields', () => {
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
-    const secondBefore = renderCounts().root_second;
-    const nestedBefore = renderCounts().root_nested;
-    const innerBefore = renderCounts().root_nested_inner;
-    const firstBefore = renderCounts().root_first;
+    const secondBefore = renderCount('root_second');
+    const nestedBefore = renderCount('root_nested');
+    const innerBefore = renderCount('root_nested_inner');
+    const firstBefore = renderCount('root_first');
 
     await user.type(node.querySelector('#root_first')!, 'abc');
 
-    expect(renderCounts().root_first).toBeGreaterThan(firstBefore);
-    expect(renderCounts().root_second).toBe(secondBefore);
-    expect(renderCounts().root_nested).toBe(nestedBefore);
-    expect(renderCounts().root_nested_inner).toBe(innerBefore);
+    expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
+    expect(renderCount('root_nested')).toBe(nestedBefore);
+    expect(renderCount('root_nested_inner')).toBe(innerBefore);
   });
 
   it('typing in a nested field does not re-render fields outside its branch', async () => {
@@ -86,15 +90,15 @@ describe('render stability across sibling fields', () => {
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
-    const firstBefore = renderCounts().root_first;
-    const secondBefore = renderCounts().root_second;
-    const innerBefore = renderCounts().root_nested_inner;
+    const firstBefore = renderCount('root_first');
+    const secondBefore = renderCount('root_second');
+    const innerBefore = renderCount('root_nested_inner');
 
     await user.type(node.querySelector('#root_nested_inner')!, 'abc');
 
-    expect(renderCounts().root_nested_inner).toBeGreaterThan(innerBefore);
-    expect(renderCounts().root_first).toBe(firstBefore);
-    expect(renderCounts().root_second).toBe(secondBefore);
+    expect(renderCount('root_nested_inner')).toBeGreaterThan(innerBefore);
+    expect(renderCount('root_first')).toBe(firstBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
   });
 
   it('typing in a layout grid cell does not re-render the other cells', async () => {
@@ -108,13 +112,13 @@ describe('render stability across sibling fields', () => {
       templates: { FieldTemplate: CountingFieldTemplate },
     });
 
-    const secondBefore = renderCounts().root_second;
-    const innerBefore = renderCounts().root_nested_inner;
+    const secondBefore = renderCount('root_second');
+    const innerBefore = renderCount('root_nested_inner');
 
     await user.type(node.querySelector('#root_first')!, 'abc');
 
-    expect(renderCounts().root_second).toBe(secondBefore);
-    expect(renderCounts().root_nested_inner).toBe(innerBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
+    expect(renderCount('root_nested_inner')).toBe(innerBefore);
   });
 
   it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
@@ -136,9 +140,9 @@ describe('render stability across sibling fields', () => {
     }
     const { container } = render(<Parent />);
 
-    const secondBefore = renderCounts().root_second;
-    const nestedBefore = renderCounts().root_nested;
-    const innerBefore = renderCounts().root_nested_inner;
+    const secondBefore = renderCount('root_second');
+    const nestedBefore = renderCount('root_nested');
+    const innerBefore = renderCount('root_nested_inner');
 
     await user.type(container.querySelector('#root_first')!, 'abc');
 
@@ -147,9 +151,9 @@ describe('render stability across sibling fields', () => {
     // Each proposal becomes the next prop, so it must share unchanged subtrees with the value it was applied to
     const nestedInstances = new Set(proposals.map((formData) => formData?.nested));
     expect(nestedInstances.size).toBe(1);
-    expect(renderCounts().root_second).toBe(secondBefore);
-    expect(renderCounts().root_nested).toBe(nestedBefore);
-    expect(renderCounts().root_nested_inner).toBe(innerBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
+    expect(renderCount('root_nested')).toBe(nestedBefore);
+    expect(renderCount('root_nested_inner')).toBe(innerBefore);
   });
 
   it('a parent re-render with equal but rebuilt props re-renders no field', () => {
@@ -187,12 +191,12 @@ describe('render stability across sibling fields', () => {
     });
     await user.type(node.querySelector('#root_first')!, 'a');
     expect(node.textContent).toContain('must NOT have fewer than 3 characters');
-    const secondBefore = renderCounts().root_second;
+    const secondBefore = renderCount('root_second');
     expect(secondBefore).toBeGreaterThan(0);
 
     await user.type(node.querySelector('#root_first')!, 'bc');
 
-    expect(renderCounts().root_second).toBe(secondBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
   });
 
   it('live validation on blur leaves sibling fields alone', async () => {
@@ -203,14 +207,14 @@ describe('render stability across sibling fields', () => {
       templates: { FieldTemplate: CountingFieldTemplate },
     });
     await user.type(node.querySelector('#root_first')!, 'abc');
-    const secondBefore = renderCounts().root_second;
-    const innerBefore = renderCounts().root_nested_inner;
+    const secondBefore = renderCount('root_second');
+    const innerBefore = renderCount('root_nested_inner');
     expect(secondBefore).toBeGreaterThan(0);
 
     await user.tab();
 
-    expect(renderCounts().root_second).toBe(secondBefore);
-    expect(renderCounts().root_nested_inner).toBe(innerBefore);
+    expect(renderCount('root_second')).toBe(secondBefore);
+    expect(renderCount('root_nested_inner')).toBe(innerBefore);
   });
 
   it('a submit that changes no errors re-renders no field', async () => {
@@ -233,12 +237,12 @@ describe('render stability across sibling fields', () => {
       initialFormData: ['', ''],
       templates: { FieldTemplate: CountingFieldTemplate },
     });
-    const otherBefore = renderCounts().root_1;
+    const otherBefore = renderCount('root_1');
     expect(otherBefore).toBeGreaterThan(0);
 
     await user.type(node.querySelector('#root_0')!, 'abc');
 
-    expect(renderCounts().root_1).toBe(otherBefore);
+    expect(renderCount('root_1')).toBe(otherBefore);
   });
 
   it('a replaced widget takes effect even when both are forwardRef components', () => {
@@ -278,16 +282,16 @@ describe('render stability across sibling fields', () => {
       const { container } = render(
         <RejectingParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
       );
-      const secondBefore = renderCounts().root_second;
-      const innerBefore = renderCounts().root_nested_inner;
+      const secondBefore = renderCount('root_second');
+      const innerBefore = renderCount('root_nested_inner');
       expect(secondBefore).toBeGreaterThan(0);
 
       await user.type(container.querySelector('#root_first')!, 'abc');
 
       expect(log.proposals.map((proposal) => proposal?.first)).toEqual(['a', 'b', 'c']);
       expect(container.querySelector('#root_first')).toHaveValue('');
-      expect(renderCounts().root_second).toBe(secondBefore);
-      expect(renderCounts().root_nested_inner).toBe(innerBefore);
+      expect(renderCount('root_second')).toBe(secondBefore);
+      expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
 
     it('a transforming parent re-renders only the field whose value it transformed', async () => {
@@ -299,17 +303,17 @@ describe('render stability across sibling fields', () => {
           transform={(proposal) => proposal && { ...proposal, first: proposal.first.toUpperCase() }}
         />,
       );
-      const firstBefore = renderCounts().root_first;
-      const secondBefore = renderCounts().root_second;
-      const innerBefore = renderCounts().root_nested_inner;
+      const firstBefore = renderCount('root_first');
+      const secondBefore = renderCount('root_second');
+      const innerBefore = renderCount('root_nested_inner');
       expect(secondBefore).toBeGreaterThan(0);
 
       await user.type(container.querySelector('#root_first')!, 'ab');
 
       expect(container.querySelector('#root_first')).toHaveValue('AB');
-      expect(renderCounts().root_first).toBeGreaterThan(firstBefore);
-      expect(renderCounts().root_second).toBe(secondBefore);
-      expect(renderCounts().root_nested_inner).toBe(innerBefore);
+      expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
+      expect(renderCount('root_second')).toBe(secondBefore);
+      expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
 
     it('replaced extraErrors re-render only the fields whose errors changed, and a deep-equal replacement none', () => {
@@ -327,13 +331,13 @@ describe('render stability across sibling fields', () => {
         );
       }
       const { rerender } = render(<Parent />);
-      const firstBefore = renderCounts().root_first;
-      const secondBefore = renderCounts().root_second;
+      const firstBefore = renderCount('root_first');
+      const secondBefore = renderCount('root_second');
       expect(secondBefore).toBeGreaterThan(0);
 
       rerender(<Parent extraErrors={serverError()} />);
-      expect(renderCounts().root_first).toBeGreaterThan(firstBefore);
-      expect(renderCounts().root_second).toBe(secondBefore);
+      expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
+      expect(renderCount('root_second')).toBe(secondBefore);
 
       const before = renderCounts();
       rerender(<Parent extraErrors={serverError()} />);
@@ -356,13 +360,13 @@ describe('render stability across sibling fields', () => {
       const { container } = render(
         <AcceptingParent schema={withChoice} initialValue={{ first: '', choice: '' }} templates={templates} />,
       );
-      const firstBefore = renderCounts().root_first;
+      const firstBefore = renderCount('root_first');
       expect(firstBefore).toBeGreaterThan(0);
 
       await user.selectOptions(container.querySelector('#root_choice__oneof_select')!, '1');
 
       expect(container.querySelector('#root_choice')).toHaveAttribute('inputmode', 'decimal');
-      expect(renderCounts().root_first).toBe(firstBefore);
+      expect(renderCount('root_first')).toBe(firstBefore);
     });
 
     it('array add, remove and reorder keep the count of items whose data and position are unchanged', async () => {
@@ -370,22 +374,22 @@ describe('render stability across sibling fields', () => {
       const { container } = render(
         <AcceptingParent<string[]> schema={arraySchema} initialValue={['a', 'b', 'c']} templates={templates} />,
       );
-      const firstBefore = renderCounts().root_0;
-      const secondBefore = renderCounts().root_1;
-      const thirdBefore = renderCounts().root_2;
+      const firstBefore = renderCount('root_0');
+      const secondBefore = renderCount('root_1');
+      const thirdBefore = renderCount('root_2');
       expect(thirdBefore).toBeGreaterThan(0);
 
       await user.click(container.querySelector('.rjsf-array-item-add button')!);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(4);
-      expect(renderCounts().root_0).toBe(firstBefore);
-      expect(renderCounts().root_1).toBe(secondBefore);
-      expect(renderCounts().root_2).toBe(thirdBefore);
+      expect(renderCount('root_0')).toBe(firstBefore);
+      expect(renderCount('root_1')).toBe(secondBefore);
+      expect(renderCount('root_2')).toBe(thirdBefore);
 
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[3]);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
-      expect(renderCounts().root_0).toBe(firstBefore);
-      expect(renderCounts().root_1).toBe(secondBefore);
-      expect(renderCounts().root_2).toBe(thirdBefore);
+      expect(renderCount('root_0')).toBe(firstBefore);
+      expect(renderCount('root_1')).toBe(secondBefore);
+      expect(renderCount('root_2')).toBe(thirdBefore);
 
       await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
       expect([...container.querySelectorAll<HTMLInputElement>('input[type=text]')].map((el) => el.value)).toEqual([
@@ -393,7 +397,7 @@ describe('render stability across sibling fields', () => {
         'a',
         'c',
       ]);
-      expect(renderCounts().root_2).toBe(thirdBefore);
+      expect(renderCount('root_2')).toBe(thirdBefore);
     });
 
     it('a controlled reset re-renders only the fields whose errors cleared', async () => {
@@ -415,18 +419,18 @@ describe('render stability across sibling fields', () => {
       await act(async () => {
         ref.current!.validateForm();
       });
-      const firstBefore = renderCounts().root_first;
-      const secondBefore = renderCounts().root_second;
-      const innerBefore = renderCounts().root_nested_inner;
+      const firstBefore = renderCount('root_first');
+      const secondBefore = renderCount('root_second');
+      const innerBefore = renderCount('root_nested_inner');
       expect(secondBefore).toBeGreaterThan(0);
 
       act(() => {
         ref.current!.reset();
       });
 
-      expect(renderCounts().root_first).toBeGreaterThan(firstBefore);
-      expect(renderCounts().root_second).toBe(secondBefore);
-      expect(renderCounts().root_nested_inner).toBe(innerBefore);
+      expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
+      expect(renderCount('root_second')).toBe(secondBefore);
+      expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
   });
 });
