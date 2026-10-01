@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
@@ -55,18 +55,26 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   });
 }
 
-/** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned. The
- * label will be the same as the `value`.
+/** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned,
+ * reordered by the `ui:enumOrder` of the `uiSchema` when it has one.
  *
  * If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is
  * the list of either:
- * - The `const` values from the schema if present
- * - If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
- * provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
- * objects containing `ui:title` then the UI schema values will replace the values from the schema.
+ * - The `const` values from the schema if present, except for an option that declares the property a selector names
+ * - If the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, read
+ * from every option when they aren't all constants, and otherwise from each constant option that declares it
+ *
+ * An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value
+ * (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
+ * - An `enum` value's name is its non-empty `ui:enumNames` entry in the `uiSchema`
+ * - A `oneOf`/`anyOf` option's name is the `ui:title` of its entry in `uiSchema.anyOf`/`uiSchema.oneOf`, then the
+ * `title` of its selector property when there is one, then its own `title`. An empty title is kept as the label
  *
  * @param schema - The schema from which to extract the options list
  * @param [uiSchema] - The optional uiSchema from which to get alternate labels for the options
+ * @param [fallbackLabel] - Labels an option that has no name. It is called once for each such option, before
+ *        `ui:enumOrder` drops any, and for no other option. An option it returns `undefined` for is labelled with its
+ *        value
  * @returns - The list of options from the schema, or `undefined` when it has none, including when its `anyOf`/`oneOf`
  *        options are not all constants and no selector field names where their values are
  */
@@ -74,7 +82,12 @@ export default function optionsList<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: S, uiSchema?: UiSchema<T, S, F>): EnumOptionsType<S>[] | undefined {
+>(
+  schema: S,
+  uiSchema?: UiSchema<T, S, F>,
+  fallbackLabel?: (value: unknown) => string | undefined,
+): EnumOptionsType<S>[] | undefined {
+  const unnamedLabel = (value: unknown) => fallbackLabel?.(value) ?? enumOptionValueLabel(value);
   if (schema.enum) {
     let enumNames: string[] | Record<string | number, string> | undefined;
     let enumOrder: EnumValue[] | undefined;
@@ -86,7 +99,7 @@ export default function optionsList<
     let options = schema.enum.map((value, i) => {
       // A map is keyed by strings, which can't name an object or array value
       const name = Array.isArray(enumNames) ? enumNames[i] : !isContainerValue(value) && enumNames?.[String(value)];
-      return { label: name || enumOptionValueLabel(value), value };
+      return { label: name || unnamedLabel(value), value };
     });
     if (enumOrder) {
       options = applyEnumOrder(options, enumOrder);
@@ -103,9 +116,10 @@ export default function optionsList<
     const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
     selectorField = optionsSchemaSelector;
   }
+  const isConstantList = isConstantOptionList<S>(altSchemas);
   // Without a selector, each option's value is its constant, which `toConstant()` throws for when there isn't one, so a
   // list that isn't made of constants has no options to offer rather than taking down the render
-  if (!selectorField && altSchemas && !isConstantOptionList<S>(altSchemas)) {
+  if (!isConstantList && !selectorField && altSchemas) {
     return undefined;
   }
   return altSchemas?.map((aSchemaDef, index) => {
@@ -113,14 +127,20 @@ export default function optionsList<
     const aSchema = aSchemaDef as S;
     let value: EnumOptionsType<S>['value'];
     let label = title;
-    if (selectorField) {
-      const innerSchema = getPropertySchema<S>(aSchema, selectorField);
+    // A selector names a property of object options, so a constant that doesn't declare it is read by its constant. An
+    // object constant that does keeps its property's value, which is what `LayoutMultiSchemaField` matches a pick by
+    const field =
+      selectorField && (!isConstantList || aSchema[PROPERTIES_KEY]?.[selectorField] !== undefined)
+        ? selectorField
+        : undefined;
+    if (field) {
+      const innerSchema = getPropertySchema<S>(aSchema, field);
       value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
       // Use nullish coalescing so that an explicitly empty string title is preserved
-      label = label ?? innerSchema?.title ?? aSchema.title ?? enumOptionValueLabel(value);
+      label = label ?? innerSchema?.title ?? aSchema.title ?? unnamedLabel(value);
     } else {
       value = toConstant(aSchema);
-      label = label ?? aSchema.title ?? enumOptionValueLabel(value);
+      label = label ?? aSchema.title ?? unnamedLabel(value);
     }
     return {
       schema: aSchema,
