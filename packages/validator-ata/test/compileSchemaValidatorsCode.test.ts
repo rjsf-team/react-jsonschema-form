@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { getDefaultFormState, mergeSchemas, retrieveSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -118,5 +119,64 @@ describe('compileSchemaValidatorsCode', () => {
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(apSchema)), apSchema);
     const { errors } = validator.validateFormData({ a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
     expect(errors.map((e) => e.property).sort()).toEqual(['.also', '.bad']);
+  });
+
+  describe('with a customMergeAllOf', () => {
+    // `p` is both a named property and a patternProperties match, so the parser merges `{ allOf: [p, pattern] }`
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { p: { type: 'object', properties: { x: { type: 'string' } } } },
+      patternProperties: {
+        '^p$': { properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } } },
+      },
+    };
+    // Produces `oneOf` options that differ from the default merge's, so their hashes differ too
+    const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
+      const { allOf, ...rest } = schema;
+      const merged = (allOf as RJSFSchema[]).reduce((acc, s) => mergeSchemas(acc, s) as RJSFSchema, rest);
+      const choice = merged.properties?.choice as RJSFSchema | undefined;
+      if (!choice?.oneOf) {
+        return merged;
+      }
+      const oneOf = choice.oneOf.map((o) => ({ ...(o as RJSFSchema), title: `Option ${(o as RJSFSchema).const}` }));
+      return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
+    };
+    const formData = { p: { choice: 'b' } };
+
+    test('misses the custom-merged sub-schemas when compiled without it', () => {
+      const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+      expect(() =>
+        getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
+      ).toThrow('No precompiled validator function was found for the given schema');
+    });
+    test('covers the custom-merged sub-schemas when compiled with it', () => {
+      const validator = createPrecompiledValidator(
+        loadModule(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+        rootSchema,
+      );
+      expect(
+        getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
+      ).toEqual(formData);
+    });
+    test.each([
+      ['on submit, against the root schema', false],
+      ['under live validation, against the root schema the form resolved', true],
+    ])('validates %s with a customValidate when compiled with it', (_when, resolveRoot) => {
+      const validator = createPrecompiledValidator(
+        loadModule(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+        rootSchema,
+        { customMergeAllOf },
+      );
+      const context = { validator, customMergeAllOf };
+      const invalidFormData = { p: { choice: 'b', x: 5 } };
+      const schema = resolveRoot ? retrieveSchema(context, rootSchema, rootSchema, invalidFormData) : rootSchema;
+      // A `customValidate` makes the validator compute the form's defaults, which validate the custom-merged `oneOf`
+      const customValidate = vi.fn((_formData, errors) => errors);
+
+      const { errors } = validator.validateFormData(invalidFormData, schema, customValidate);
+
+      expect(errors.map((e) => e.property)).toEqual(['.p.x']);
+      expect(customValidate).toHaveBeenCalledWith(invalidFormData, expect.anything(), undefined, expect.anything());
+    });
   });
 });

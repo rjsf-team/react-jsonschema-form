@@ -1,4 +1,4 @@
-import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import fs from 'fs';
 
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode.ts';
@@ -16,16 +16,19 @@ export { compileSchemaValidatorsCode };
  * @param [options={}] - The set of `CustomValidatorOptionsType` information used to alter the AJV validator used for
  *        compiling the schema. They are the same options that are passed to the `customizeValidator()` function in
  *        order to modify the behavior of the regular AJV-based validator.
+ * @param [parserOptions={}] - The `SchemaParserOptions` the schema is parsed with. Its `customMergeAllOf` must merge the
+ *        same way as the one passed to the form, or the form can validate against sub-schemas that were not compiled
  */
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   output: string,
   options: CustomValidatorOptionsType = {},
+  parserOptions: SchemaParserOptions<S> = {},
 ) {
   // oxlint-disable-next-line no-console
   console.log('parsing the schema');
 
-  const moduleCode = compileSchemaValidatorsCode(schema, options);
+  const moduleCode = compileSchemaValidatorsCode(schema, options, parserOptions);
   // oxlint-disable-next-line no-console
   console.log(`writing ${output}`);
   fs.writeFileSync(output, moduleCode);

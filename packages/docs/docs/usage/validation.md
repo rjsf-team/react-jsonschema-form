@@ -62,6 +62,19 @@ const options = {
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
 ```
 
+If your `Form` is given a `customMergeAllOf`, pass it in the optional fourth parameter too, `{ customMergeAllOf }`, so the precompiled validator functions cover the sub-schemas it merges.
+Each function is looked up by a hash of the schema it validates, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
+If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
+
+```js
+import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import { customMergeAllOf } from 'path_to/yourCustomMergeAllOf.js';
+
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options, { customMergeAllOf });
+```
+
+Give the same `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator) as well, since the validator resolves the root schema it is handed with it.
+
 It is highly recommended to create a `compileYourSchema.js` file (or what ever name you want) with code similar to what is shown above and then, using node, run the code as follows:
 
 ```
@@ -110,6 +123,7 @@ const code = compileSchemaValidatorsCode(schema, options);
 ```
 
 For the most part it is the same as `compileSchemaValidators`, but instead of writing the file - it returns generated code directly.
+It takes the same optional `{ customMergeAllOf }` as its third parameter.
 
 To use it on browser side - some modifications are needed to provide runtime dependencies in generated code needs to be provided.
 

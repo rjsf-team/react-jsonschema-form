@@ -1,4 +1,4 @@
-import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 // Node's ESM resolver has no directory-index lookup, so the file has to be named explicitly.
 import standaloneCode from 'ajv/dist/standalone/index.js';
@@ -15,12 +15,15 @@ import type { CustomValidatorOptionsType } from './types.ts';
  * @param [options={}] - The set of `CustomValidatorOptionsType` information used to alter the AJV validator used for
  *        compiling the schema. They are the same options that are passed to the `customizeValidator()` function in
  *        order to modify the behavior of the regular AJV-based validator.
+ * @param [parserOptions={}] - The `SchemaParserOptions` the schema is parsed with. Its `customMergeAllOf` must merge the
+ *        same way as the one passed to the form, or the form can validate against sub-schemas that were not compiled
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   options: CustomValidatorOptionsType = {},
+  parserOptions: SchemaParserOptions<S> = {},
 ) {
-  const schemaMaps = schemaParser(schema);
+  const schemaMaps = schemaParser(schema, parserOptions);
   const schemas = Object.values(schemaMaps);
 
   const {

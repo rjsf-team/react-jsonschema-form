@@ -739,7 +739,36 @@ export function retrieveSchemaInternal<
       // resolve allOf schemas
       if (expandAllBranches) {
         const { allOf, ...restOfSchema } = resolvedSchema;
-        return [...(allOf as S[]), restOfSchema as S];
+        const branches = [...(allOf as S[]), restOfSchema as S];
+        if (!context.customMergeAllOf) {
+          return branches;
+        }
+        // A form merges the `allOf` with its `customMergeAllOf`, which can produce subschemas that none of the
+        // branches contain, so the merged schema is expanded too; a merge the form can't make is skipped, as the form
+        // skips it
+        let merged: S;
+        try {
+          merged = context.customMergeAllOf(resolvedSchema);
+        } catch {
+          return branches;
+        }
+        // A merge that leaves an `allOf` in place would be expanded again forever, so it is kept as it is
+        if (ALL_OF_KEY in merged) {
+          return [...branches, merged];
+        }
+        return [
+          ...branches,
+          ...retrieveSchemaInternal<T, S, F>(
+            context,
+            merged,
+            rootSchema,
+            rawFormData,
+            expandAllBranches,
+            recurseList,
+            resolveAnyOfOrOneOfRefs,
+            preserveDependencies,
+          ),
+        ];
       }
       // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
       // (external library) only operates on string keys and will drop them.
