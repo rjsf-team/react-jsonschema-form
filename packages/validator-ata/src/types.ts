@@ -63,21 +63,11 @@ export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJ
   localizer?: Localizer;
   /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors` */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
-  /** The `customMergeAllOf` the schemas were compiled with, which must be the one passed to
-   * `compileSchemaValidatorsCode()` so the sub-schemas it builds hash to entries the precompiled map holds
+  /** The form's `customMergeAllOf`, used when resolving this validator's own root schema to check the schema it is
+   * handed against it. Without it that resolution uses the default `allOf` merge, so a form with a `customMergeAllOf`
+   * and an `allOf` in its root schema is rejected with "the schema ... differs from the rootSchema"
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
-}
-
-/** The options `compileSchemaValidatorsCode()` takes: everything `customizeValidator()` accepts, plus the
- * `customMergeAllOf` only the compile step reads
- */
-export interface CompileValidatorOptionsType extends CustomValidatorOptionsType {
-  /** The `customMergeAllOf` the form will resolve with. The compile step merges `allOf`s while walking the schema for
-   * the sub-schemas it precompiles, so a form whose merge differs from this one asks the precompiled map for hashes it
-   * never recorded. Pass the same function here and to `createPrecompiledValidator()`
-   */
-  customMergeAllOf?: CustomMergeAllOf;
 }
 
 /** The simplified `ValidateFunction` shape produced by ata's compiled

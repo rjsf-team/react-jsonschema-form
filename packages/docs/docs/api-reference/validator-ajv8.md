@@ -44,7 +44,7 @@ For more information about AJV code compilation see: https://ajv.js.org/standalo
 
 - schema: S - The schema to be compiled into a set of precompiled validators functions
 - output: string - The name of the file into which the precompiled validator functions will be generated
-- [options={}]: CompileValidatorOptionsType - The set of `CompileValidatorOptionsType` information used to alter the AJV validator used for compiling the schema. It extends `CustomValidatorOptionsType` with `customMergeAllOf`, the merge the form will resolve with: the compile step merges `allOf`s while walking the schema for the sub-schemas it precompiles, so a form whose merge differs asks the precompiled map for hashes it never recorded. Pass the same function to `createPrecompiledValidator()`. They are the same options that are passed to the `customizeValidator()` function in order to modify the behavior of the regular AJV-based validator.
+- [options={}]: CustomValidatorOptionsType - The set of `CustomValidatorOptionsType` information used to alter the AJV validator used for compiling the schema. They are the same options that are passed to the `customizeValidator()` function in order to modify the behavior of the regular AJV-based validator.
 
 ### createPrecompiledValidator&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

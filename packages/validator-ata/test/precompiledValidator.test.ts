@@ -471,7 +471,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {
     const validator = new ATAPrecompiledValidator(
-      loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
+      loadModule(compileSchemaValidatorsCode(allOfSchema)) as ValidatorFunctions,
       allOfSchema,
       { customMergeAllOf },
     );
@@ -483,7 +483,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts that root schema through isValid(), which the schema functions reach while scoring options', () => {
     const validator = new ATAPrecompiledValidator(
-      loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
+      loadModule(compileSchemaValidatorsCode(allOfSchema)) as ValidatorFunctions,
       allOfSchema,
       { customMergeAllOf },
     );
@@ -494,7 +494,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts that root schema through rawValidation()', () => {
     const validator = new ATAPrecompiledValidator(
-      loadModule(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })) as ValidatorFunctions,
+      loadModule(compileSchemaValidatorsCode(allOfSchema)) as ValidatorFunctions,
       allOfSchema,
       { customMergeAllOf },
     );

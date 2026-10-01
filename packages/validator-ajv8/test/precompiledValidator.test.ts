@@ -498,7 +498,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {
     const validator = new AJV8PrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
       allOfSchema,
       { customMergeAllOf },
     );
@@ -510,7 +510,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts that root schema through isValid(), which the schema functions reach while scoring options', () => {
     const validator = new AJV8PrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
       allOfSchema,
       { customMergeAllOf },
     );
@@ -521,7 +521,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
 
   it('accepts that root schema through rawValidation()', () => {
     const validator = new AJV8PrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema, { customMergeAllOf })),
+      evalValidatorCode(compileSchemaValidatorsCode(allOfSchema)),
       allOfSchema,
       { customMergeAllOf },
     );

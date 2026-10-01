@@ -3,7 +3,7 @@ import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
@@ -13,13 +13,13 @@ import type { CompileValidatorOptionsType } from './types.ts';
  * the schemas so the precompiled validator can look each one up.
  *
  * @param schema - The schema to compile
- * @param [options={}] - The `CompileValidatorOptionsType` used to build the validator
+ * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CompileValidatorOptionsType = {},
+  options: CustomValidatorOptionsType = {},
 ) {
-  const schemaMaps = schemaParser(schema, options.customMergeAllOf);
+  const schemaMaps = schemaParser(schema);
   const keys = Object.keys(schemaMaps);
   const schemas = Object.values(schemaMaps);
 
