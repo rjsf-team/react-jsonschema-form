@@ -1387,7 +1387,7 @@ type UIOptionsBaseType<
     /** Pre-fills the field on initial render and after a form reset. Takes priority over `schema.default`, but never
      * overrides form data the user (or caller) has already provided.
      */
-    initialValue?: any;
+    initialValue?: unknown;
     /** Overrides the schema's `required` status for the field on the UI side only: `true` shows the required
      * indicator and adds the field to the effective required set used for validation; `false` hides the indicator
      * but does not suppress schema-level validation for a field the schema itself marks required.

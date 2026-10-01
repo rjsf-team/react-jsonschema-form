@@ -469,7 +469,7 @@ export function computeDefaults<
   if (uiSchema) {
     const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
     if (initialValue !== undefined && !initialDefaultsGenerated) {
-      defaults = initialValue as unknown as T;
+      defaults = initialValue as T;
     } else if (defaults === undefined && emptyValue !== undefined) {
       defaults = emptyValue as unknown as T;
     }
