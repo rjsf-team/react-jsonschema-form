@@ -6,8 +6,10 @@ import type {
   ErrorSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
 } from '@rjsf/utils';
 import {
+  deepEquals,
   fieldPathToName,
   getUiOptions,
   getWidget,
@@ -15,11 +17,28 @@ import {
   isConstantOptionList,
   logOnce,
   optionsList,
+  toConstant,
   TranslatableString,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+
+/** Whether `ui:enumOrder` would reorder or drop any of the constant `options` if it applied to them
+ *
+ * @param options - The constant options of the keyword being rendered
+ * @param [uiSchema] - The `uiSchema` for the field, which holds the `ui:enumOrder`
+ * @returns - True when the order differs from the order the options already have
+ */
+function enumOrderChangesOptions<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(options: S[], uiSchema?: UiSchema<T, S, F>): boolean {
+  const constants = options.map((option) => toConstant(option));
+  const ordered = optionsList<T, S, F>({ enum: constants } as S, uiSchema)?.map(({ value }) => value);
+  return !deepEquals(ordered, constants);
+}
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -57,6 +76,8 @@ function BooleanField<
     title: uiTitle,
     // Unlike the other fields, don't use `getDisplayLabel()` since it always returns false for the boolean type
     label: displayLabel = true,
+    // Applied through the `enumOptions` it labels, and ignored by constant options, so a widget mustn't apply it again
+    enumNames: _enumNames,
     placeholder,
     ...options
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
@@ -87,18 +108,20 @@ function BooleanField<
     if (showsOptions || (!widget && altSchemas.length > 1)) {
       // Read without `globalUiOptions`, as `optionsList()` reads them
       const { enumNames, enumOrder } = getUiOptions<T, S, F>(uiSchema);
-      // No order shows on a checkbox, and a lone `'*'` keeps the order the options already have
-      const orderIgnored = showsOptions && Boolean(enumOrder?.some((entry) => entry !== '*'));
+      // No order shows on a checkbox, and an order that would leave the options as they are has nothing to ignore
+      const orderIgnored =
+        showsOptions && enumOrder !== undefined && enumOrderChangesOptions<T, S, F>(altSchemas, uiSchema);
       if (Object.keys(enumNames ?? {}).length > 0 || orderIgnored) {
         // A checkbox shows neither list, and dropping the `anyOf`/`oneOf` wouldn't turn it into a widget that shows the
         // `enum`, so only a widget that lists the options is pointed at the `enum`, and only at one with values to show
-        const [source, alternative] =
-          showsOptions && Boolean(schema.enum?.length)
-            ? [
-                `it shows its constant \`${altKey}\` options rather than its \`enum\``,
-                `, or drop the \`${altKey}\` to show the \`enum\``,
-              ]
-            : [`its options come from its constant \`${altKey}\``, ''];
+        const showsOverEnum = showsOptions && Boolean(schema.enum?.length);
+        // Dropping the keyword shows the `enum` only when the other keyword wouldn't take its place with constants
+        const nextKey = getXxxOfKey<S>({ ...schema, [altKey]: undefined });
+        const enumBehind = !nextKey || !isConstantOptionList<S>(schema[nextKey], true);
+        const source = showsOverEnum
+          ? `it shows its constant \`${altKey}\` options rather than its \`enum\``
+          : `its options come from its constant \`${altKey}\``;
+        const alternative = showsOverEnum && enumBehind ? `, or drop the \`${altKey}\` to show the \`enum\`` : '';
         logOnce(
           `${fieldLabelForLog(fieldId, fieldPath)} sets ui:enumNames or ui:enumOrder, which apply only to \`enum\` ` +
             `values, but ${source}, so they are ignored. Label those options with a \`title\` or a \`ui:title\` in ` +
@@ -109,15 +132,21 @@ function BooleanField<
     // Without the `enum`, which `optionsList()` would list instead
     enumOptions = optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel);
   } else {
-    const unnamedValues = new Set<unknown>();
-    enumOptions = optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, (value) => {
-      // `optionsList()` calls the fallback for each value `ui:enumNames` doesn't name, and for no other
-      unnamedValues.add(value);
-      return yesNoLabel(value);
-    });
+    // Only tracked when the warning below can fire, since this runs on every render of every boolean field
+    const unnamedValues = showsOptions && schema.enum && altSchemas ? new Set<unknown>() : undefined;
+    enumOptions = optionsList<T, S, F>(
+      { enum: schema.enum ?? [true, false] } as S,
+      uiSchema,
+      unnamedValues
+        ? (value) => {
+            // `optionsList()` calls the fallback for each value `ui:enumNames` doesn't name, and for no other
+            unnamedValues.add(value);
+            return yesNoLabel(value);
+          }
+        : yesNoLabel,
+    );
     if (
-      showsOptions &&
-      schema.enum &&
+      unnamedValues &&
       altKey &&
       altSchemas &&
       // Checked on the options left once `ui:enumOrder` has dropped any, since an unnamed value it drops isn't shown

@@ -1586,8 +1586,8 @@ If `ui:enumOrder` is provided, the options will be reordered accordingly.
 
 If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is the list of either:
 
-- The `const` values from the schema if present. When the options aren't all constants and there is no selector, there is no list and `undefined` is returned
-- If the options aren't all constants and the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property
+- The `const` values from the schema if present, except for an option that declares the property a selector names. When the options aren't all constants and there is no selector, there is no list and `undefined` is returned
+- If the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, read from every option when they aren't all constants, and otherwise from each constant option that declares it
 
 An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
 

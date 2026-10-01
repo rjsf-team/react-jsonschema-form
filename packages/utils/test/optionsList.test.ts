@@ -789,6 +789,26 @@ describe('optionsList()', () => {
       };
       expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['a', 'b']);
     });
+    it('should read object constants that declare the discriminator property by that property', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', title: 'Cat', properties: { kind: { const: 'cat' } }, enum: [{ kind: 'cat' }] },
+          { type: 'object', title: 'Dog', properties: { kind: { const: 'dog' } }, enum: [{ kind: 'dog' }] },
+        ],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', 'dog']);
+    });
+    it('should read a constant option that does not declare the discriminator property by its constant', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', title: 'Cat', properties: { kind: { const: 'cat' } }, enum: [{ kind: 'cat' }] },
+          { title: 'None', const: 'none' },
+        ],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', 'none']);
+    });
     it('should read constant options by their constants under ui:optionsSchemaSelector', () => {
       const schema: RJSFSchema = { anyOf: [{ const: true }, { const: false }] };
       const uiSchema: UiSchema = { 'ui:options': { optionsSchemaSelector: 'kind' } };

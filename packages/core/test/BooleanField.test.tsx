@@ -220,6 +220,21 @@ describe('BooleanField', () => {
     expect(description).toHaveTextContent('my description');
   });
 
+  it('should not pass ui:enumNames to the widget, whose enumOptions already apply it', () => {
+    const widget = vi.fn((_: WidgetProps) => null);
+    createFormComponent({
+      schema: { type: 'boolean' },
+      uiSchema: { 'ui:widget': widget, 'ui:enumNames': ['On', 'Off'] },
+    });
+
+    const { options } = widget.mock.lastCall![0];
+    expect(options).not.toHaveProperty('enumNames');
+    expect(options.enumOptions).toEqual([
+      { label: 'On', value: true },
+      { label: 'Off', value: false },
+    ]);
+  });
+
   it('should pass uiSchema to custom widget', () => {
     const CustomCheckboxWidget = ({ uiSchema }: WidgetProps) => (
       <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>
@@ -663,14 +678,38 @@ describe('BooleanField', () => {
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(ignoredWarning);
     });
 
-    it('should not warn for a ui:enumOrder of only a wildcard, which keeps the order the options already have', () => {
+    it.each<[string, RJSFSchema, UiSchema['ui:enumOrder'], string[]]>([
+      ['only a wildcard', titledSchema, ['*'], ['', 'Y', 'N']],
+      ['the order the options already have', titledSchema, [true, false], ['', 'Y', 'N']],
+      ['the only option', { type: 'boolean', oneOf: [{ const: true, title: 'Y' }] }, [true], ['', 'Y']],
+    ])('should not warn for a ui:enumOrder of %s, which changes nothing', (_, schema, enumOrder, expected) => {
+      const { node } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': enumOrder } });
+
+      expect(texts(node)).toEqual(expected);
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);
+    });
+
+    it('should not point at the enum when dropping the anyOf would show the constant oneOf instead', () => {
       const { node } = createFormComponent({
-        schema: titledSchema,
-        uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': ['*'] },
+        schema: {
+          type: 'boolean',
+          enum: [true, false],
+          anyOf: [{ const: true }, { const: false }],
+          oneOf: [
+            { const: true, title: 'A' },
+            { const: false, title: 'B' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Accept', 'Decline'] },
       });
 
-      expect(texts(node)).toEqual(['', 'Y', 'N']);
-      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);
+      expect(texts(node)).toEqual(['', 'Yes', 'No']);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.stringContaining(
+          'but it shows its constant `anyOf` options rather than its `enum`, so they are ignored. Label those ' +
+            'options with a `title` or a `ui:title` in `uiSchema.anyOf`, and list them in the order to show them.',
+        ),
+      );
     });
 
     it('should not point a checkbox beside an enum at the enum, which dropping the oneOf would not show', () => {

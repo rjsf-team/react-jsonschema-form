@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY } from './constants.ts';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
@@ -60,9 +60,9 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it does in `isSelect()`), then the value is
  * the list of either:
- * - The `const` values from the schema if present
- * - If the options aren't all constants and the schema has a discriminator (or the uiSchema a
- * `ui:optionsSchemaSelector`), the value of that property
+ * - The `const` values from the schema if present, except for an option that declares the property a selector names
+ * - If the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, read
+ * from every option when they aren't all constants, and otherwise from each constant option that declares it
  *
  * An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value
  * (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
@@ -109,30 +109,32 @@ export default function optionsList<
   const xxxOfKey = getXxxOfKey<S>(schema);
   const altSchemas: S['anyOf'] | S['oneOf'] = xxxOfKey && schema[xxxOfKey];
   const altUiSchemas: UiSchema<T, S, F>[] | undefined = xxxOfKey && uiSchema?.[xxxOfKey];
-  let selectorField: string | undefined;
-  // A selector names a property of object options, which constants don't have, so a constant's value is the constant
-  // itself even under a `discriminator` or `ui:optionsSchemaSelector`
-  if (!isConstantOptionList<S>(altSchemas)) {
-    // See if there is a discriminator path specified in the schema, and if so, use it as the selectorField, otherwise
-    // pull one from the uiSchema
-    selectorField = getDiscriminatorFieldFromSchema<S>(schema);
-    if (uiSchema) {
-      const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
-      selectorField = optionsSchemaSelector;
-    }
-    // Without a selector, each option's value is its constant, which `toConstant()` throws for when there isn't one, so
-    // a list that isn't made of constants has no options to offer rather than taking down the render
-    if (!selectorField && altSchemas) {
-      return undefined;
-    }
+  // See if there is a discriminator path specified in the schema, and if so, use it as the selectorField, otherwise
+  // pull one from the uiSchema
+  let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
+  if (uiSchema) {
+    const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
+    selectorField = optionsSchemaSelector;
+  }
+  const isConstantList = isConstantOptionList<S>(altSchemas);
+  // Without a selector, each option's value is its constant, which `toConstant()` throws for when there isn't one, so a
+  // list that isn't made of constants has no options to offer rather than taking down the render
+  if (!isConstantList && !selectorField && altSchemas) {
+    return undefined;
   }
   return altSchemas?.map((aSchemaDef, index) => {
     const { title } = getUiOptions<T, S, F>(altUiSchemas?.[index]);
     const aSchema = aSchemaDef as S;
     let value: EnumOptionsType<S>['value'];
     let label = title;
-    if (selectorField) {
-      const innerSchema = getPropertySchema<S>(aSchema, selectorField);
+    // A selector names a property of object options, so a constant that doesn't declare it is read by its constant. An
+    // object constant that does keeps its property's value, which is what `LayoutMultiSchemaField` matches a pick by
+    const field =
+      selectorField && (!isConstantList || aSchema[PROPERTIES_KEY]?.[selectorField] !== undefined)
+        ? selectorField
+        : undefined;
+    if (field) {
+      const innerSchema = getPropertySchema<S>(aSchema, field);
       value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
       // Use nullish coalescing so that an explicitly empty string title is preserved
       label = label ?? innerSchema?.title ?? aSchema.title ?? unnamedLabel(value);
