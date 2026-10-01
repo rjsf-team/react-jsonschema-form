@@ -49,10 +49,8 @@ export default function resolveUiSchema<
   let result: UiSchema<T, S, F>;
   if (!definitionUiSchema) {
     result = localUiSchema ?? {};
-  } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
-    result = { ...definitionUiSchema } as UiSchema<T, S, F>;
   } else {
-    result = mergeObjects(definitionUiSchema, localUiSchema) as UiSchema<T, S, F>;
+    result = mergeObjects(definitionUiSchema, localUiSchema ?? {}) as UiSchema<T, S, F>;
   }
 
   // The same goes for `ui:options`: consumers spread it and use `in` on it, both of which assume an object

@@ -1,7 +1,8 @@
 {
-  // The whole repo as one program, resolving @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type
-  // graph once rather than once per package. The tests' Node and Vitest globals are visible in `src` too, so the
-  // `no-restricted-globals` lint override for `packages/*/src` is what keeps published code off them
+  // Every package but chakra-ui and the playground (see tsconfig.typecheck-bundler.json) as one program, resolving
+  // @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type graph once rather than once per package.
+  // The tests' Node and Vitest globals and modules are visible in `src` too, so the .oxlintrc.json override for the
+  // published packages' `src` is what keeps published code off them
   "extends": "./tsconfig.test.json",
   "compilerOptions": {
     "composite": false,
