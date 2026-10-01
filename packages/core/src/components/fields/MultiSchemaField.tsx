@@ -25,7 +25,10 @@ import formDataForNewOption from './formDataForNewOption.ts';
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
- * @param props - The `FieldProps` for this template
+ * @param props - The `FieldProps` for this template. `options` is not a declared `FieldProps` key, so it would be read
+ *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it as `S[]` here names what
+ *   `SchemaField` passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only
+ *   knows `FieldProps`
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F> & { options: S[] },
