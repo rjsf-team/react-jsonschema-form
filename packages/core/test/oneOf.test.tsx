@@ -3785,6 +3785,33 @@ describe('oneOf', () => {
     expect(onChange.mock.lastCall![0].errorSchema.__errors).toEqual(['must NOT have fewer than 2 items']);
   });
 
+  it.each([
+    ['rendered beside its selector', 'removes', 0, 'root_0__remove'],
+    ['rendered beside its selector', 'copies', 0, 'root_0__copy'],
+    ['rendered beside its selector', 'moves', 0, 'root_0__moveDown'],
+    ['rendered as the selected option', 'removes', 1, 'root_0__remove'],
+    ['rendered as the selected option', 'copies', 1, 'root_0__copy'],
+    ['rendered as the selected option', 'moves', 1, 'root_0__moveDown'],
+  ])('keeps the own errors of an array %s when it %s an item', async (_, __, rendering, buttonId) => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 3,
+        oneOf: [{ items: { type: 'string' }, maxItems: 5 }],
+      },
+      uiSchema: { 'ui:field': 'ArrayField', 'ui:options': { copyable: true } },
+      initialFormData: ['a', 'b'],
+      showErrorList: false,
+    });
+    await submitForm(node, user);
+
+    // Both renderings give their items the same ids, the one beside the selector first
+    await user.click(node.querySelectorAll(`[id="${buttonId}"]`)[rendering]);
+
+    expect(onChange.mock.lastCall?.[0].errorSchema.__errors).toEqual(['must NOT have fewer than 3 items']);
+  });
+
   it('keeps the fields of an object beside its selector mounted as its own errors come and go', () => {
     const props = {
       schema: {
