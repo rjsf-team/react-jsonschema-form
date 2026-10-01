@@ -2312,7 +2312,7 @@ Returns the superset of `formData` that includes the given set updated to includ
   - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
   - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
   - [uiSchema]: UiSchema&lt;T, S, F> - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
-  - [uiSchemaDefinitions]: UiSchemaDefinitions&lt;T, S, F> - Optional `ui:definitions`, defaulting to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is a sub-uiSchema that doesn't carry the root's own `ui:definitions`
+  - [uiSchemaDefinitions]: UiSchemaDefinitions&lt;S, F> - Optional `ui:definitions`, defaulting to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is a sub-uiSchema that doesn't carry the root's own `ui:definitions`
 
 #### Returns
 
@@ -2413,7 +2413,7 @@ The schema handed to the validator is left untouched, so this behaves identicall
 - rootSchema: S - The root schema to walk
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema the `ui:required` flags are read from
 - [formData]: T - The current formData, whose missing values the errors are raised for
-- [uiSchemaDefinitions=uiSchema['ui:definitions']]: UiSchemaDefinitions&lt;T, S, F> - The `ui:definitions` a `$ref`'d uiSchema is resolved through
+- [uiSchemaDefinitions=uiSchema['ui:definitions']]: UiSchemaDefinitions&lt;S, F> - The `ui:definitions` a `$ref`'d uiSchema is resolved through
 - [globalUiOptions]: GlobalUISchemaOptions - The global uiSchema options, read as the fields themselves read them
 - [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
 

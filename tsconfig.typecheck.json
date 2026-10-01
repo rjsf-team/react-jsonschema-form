@@ -1,0 +1,16 @@
+{
+  // Every package but chakra-ui and the playground (see tsconfig.typecheck-bundler.json) as one program, resolving
+  // @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type graph once rather than once per package.
+  // The tests' Node and Vitest globals and modules are visible in `src` too, so the .oxlintrc.json override for the
+  // published packages' `src` is what keeps published code off them
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true,
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"],
+    "customConditions": ["@rjsf/source"]
+  },
+  "include": ["packages/*/src", "packages/*/test", "testing"],
+  "exclude": ["packages/chakra-ui", "packages/docs", "packages/playground"]
+}

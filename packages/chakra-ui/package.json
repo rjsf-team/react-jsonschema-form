@@ -7,7 +7,10 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": "./lib/index.js",
+    ".": {
+      "@rjsf/source": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
     "./lib": "./lib/index.js",
     "./lib/*.js": "./lib/*.js"
   },
@@ -19,8 +22,7 @@
     "build": "tsdown -c ../../tsdown.base.mts",
     "test": "vitest run",
     "test:update": "vitest run --update",
-    "test:watch": "vitest",
-    "type-check": "tsc -b tsconfig.json test/tsconfig.json"
+    "test:watch": "vitest"
   },
   "engineStrict": false,
   "engines": {

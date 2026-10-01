@@ -27,7 +27,7 @@ export function fullCoverage(extraExcludes: string[] = []) {
     enabled: true,
     reportsDirectory: 'coverage',
     include: ['src/**'],
-    exclude: ['node_modules/**', 'test/**', '**/tsconfig.json', ...extraExcludes],
+    exclude: ['node_modules/**', 'test/**', ...extraExcludes],
     thresholds: {
       branches: 100,
       functions: 100,

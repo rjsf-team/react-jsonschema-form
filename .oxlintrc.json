@@ -15,7 +15,8 @@
   },
   "ignorePatterns": [
     "**/node_modules/**",
-    "**/lib/**",
+    // Only the build output: packages/shadcn/src/lib is source
+    "packages/*/lib/**",
     "**/lib-test/**",
     "**/dist/**",
     "**/coverage/**",
@@ -260,6 +261,8 @@
     "no-redeclare": "off",
     "no-regex-spaces": "error",
     "no-restricted-exports": "off",
+    // This and no-restricted-properties are repeated in the overrides for published `src` below, since an override
+    // replaces a rule's options; an entry added here goes there too
     "no-restricted-globals": [
       "error",
       { "name": "isFinite", "message": "Use Number.isFinite instead." },
@@ -767,6 +770,395 @@
         "typescript/prefer-optional-chain": "off",
         "typescript/promise-function-async": "off",
         "typescript/unbound-method": "off"
+      }
+    },
+    {
+      // The typecheck program gives package sources the tests' Node and Vitest globals and modules, so this keeps
+      // published code off them. snapshot-tests' sources are Vitest suites and the playground isn't published, so
+      // they're left out. An override replaces the rule's options, so the root entries are repeated here; a new
+      // published package goes in `files`
+      "files": [
+        "packages/{antd,chakra-ui,core,daisyui,fluentui-rc,mantine,mui,react-bootstrap,shadcn,utils,validator-ajv8,validator-ata,validator-cfworker}/src/**"
+      ],
+      "rules": {
+        "no-restricted-globals": [
+          "error",
+          { "name": "isFinite", "message": "Use Number.isFinite instead." },
+          { "name": "isNaN", "message": "Use Number.isNaN instead." },
+          { "name": "addEventListener" },
+          { "name": "blur" },
+          { "name": "close" },
+          { "name": "closed" },
+          { "name": "confirm" },
+          { "name": "defaultStatus" },
+          { "name": "defaultstatus" },
+          { "name": "event" },
+          { "name": "external" },
+          { "name": "find" },
+          { "name": "focus" },
+          { "name": "frameElement" },
+          { "name": "frames" },
+          { "name": "history" },
+          { "name": "innerHeight" },
+          { "name": "innerWidth" },
+          { "name": "length" },
+          { "name": "location" },
+          { "name": "locationbar" },
+          { "name": "menubar" },
+          { "name": "moveBy" },
+          { "name": "moveTo" },
+          { "name": "name" },
+          { "name": "onblur" },
+          { "name": "onerror" },
+          { "name": "onfocus" },
+          { "name": "onload" },
+          { "name": "onresize" },
+          { "name": "onunload" },
+          { "name": "open" },
+          { "name": "opener" },
+          { "name": "opera" },
+          { "name": "outerHeight" },
+          { "name": "outerWidth" },
+          { "name": "pageXOffset" },
+          { "name": "pageYOffset" },
+          { "name": "parent" },
+          { "name": "print" },
+          { "name": "removeEventListener" },
+          { "name": "resizeBy" },
+          { "name": "resizeTo" },
+          { "name": "screen" },
+          { "name": "screenLeft" },
+          { "name": "screenTop" },
+          { "name": "screenX" },
+          { "name": "screenY" },
+          { "name": "scroll" },
+          { "name": "scrollbars" },
+          { "name": "scrollBy" },
+          { "name": "scrollTo" },
+          { "name": "scrollX" },
+          { "name": "scrollY" },
+          { "name": "self" },
+          { "name": "status" },
+          { "name": "statusbar" },
+          { "name": "stop" },
+          { "name": "toolbar" },
+          { "name": "top" },
+          { "name": "Buffer", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "process", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "global", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "require", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "module", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          {
+            "name": "__dirname",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "__filename",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          { "name": "describe", "message": "Vitest globals are for tests." },
+          { "name": "it", "message": "Vitest globals are for tests." },
+          { "name": "test", "message": "Vitest globals are for tests." },
+          { "name": "expect", "message": "Vitest globals are for tests." },
+          { "name": "vi", "message": "Vitest globals are for tests." },
+          { "name": "beforeEach", "message": "Vitest globals are for tests." },
+          { "name": "afterEach", "message": "Vitest globals are for tests." },
+          { "name": "beforeAll", "message": "Vitest globals are for tests." },
+          { "name": "afterAll", "message": "Vitest globals are for tests." }
+        ],
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^(node:.*|assert|async_hooks|buffer|child_process|cluster|console|constants|crypto|dgram|diagnostics_channel|dns|domain|events|fs|http|http2|https|inspector|module|net|os|path|perf_hooks|process|punycode|querystring|readline|repl|stream|string_decoder|sys|timers|tls|trace_events|tty|url|util|v8|vm|wasi|worker_threads|zlib)(/.*)?$",
+                "message": "Published code runs in browsers; Node built-ins are for tests and tooling."
+              }
+            ]
+          }
+        ],
+        "no-restricted-properties": [
+          "error",
+          { "object": "arguments", "property": "callee", "message": "arguments.callee is deprecated" },
+          { "object": "global", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "self", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "window", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "global", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "self", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "window", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "property": "__defineGetter__", "message": "Please use Object.defineProperty instead." },
+          { "property": "__defineSetter__", "message": "Please use Object.defineProperty instead." },
+          { "object": "Math", "property": "pow", "message": "Use the exponentiation operator (**) instead." },
+          {
+            "object": "globalThis",
+            "property": "process",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "Buffer",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "global",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "require",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          }
+        ]
+      }
+    },
+    {
+      // The validators also run where there's no DOM. An override replaces the rule's options, so both lists above are
+      // repeated here
+      "files": ["packages/validator-*/src/**"],
+      "rules": {
+        "no-restricted-globals": [
+          "error",
+          { "name": "isFinite", "message": "Use Number.isFinite instead." },
+          { "name": "isNaN", "message": "Use Number.isNaN instead." },
+          { "name": "addEventListener" },
+          { "name": "blur" },
+          { "name": "close" },
+          { "name": "closed" },
+          { "name": "confirm" },
+          { "name": "defaultStatus" },
+          { "name": "defaultstatus" },
+          { "name": "event" },
+          { "name": "external" },
+          { "name": "find" },
+          { "name": "focus" },
+          { "name": "frameElement" },
+          { "name": "frames" },
+          { "name": "history" },
+          { "name": "innerHeight" },
+          { "name": "innerWidth" },
+          { "name": "length" },
+          { "name": "location" },
+          { "name": "locationbar" },
+          { "name": "menubar" },
+          { "name": "moveBy" },
+          { "name": "moveTo" },
+          { "name": "name" },
+          { "name": "onblur" },
+          { "name": "onerror" },
+          { "name": "onfocus" },
+          { "name": "onload" },
+          { "name": "onresize" },
+          { "name": "onunload" },
+          { "name": "open" },
+          { "name": "opener" },
+          { "name": "opera" },
+          { "name": "outerHeight" },
+          { "name": "outerWidth" },
+          { "name": "pageXOffset" },
+          { "name": "pageYOffset" },
+          { "name": "parent" },
+          { "name": "print" },
+          { "name": "removeEventListener" },
+          { "name": "resizeBy" },
+          { "name": "resizeTo" },
+          { "name": "screen" },
+          { "name": "screenLeft" },
+          { "name": "screenTop" },
+          { "name": "screenX" },
+          { "name": "screenY" },
+          { "name": "scroll" },
+          { "name": "scrollbars" },
+          { "name": "scrollBy" },
+          { "name": "scrollTo" },
+          { "name": "scrollX" },
+          { "name": "scrollY" },
+          { "name": "self" },
+          { "name": "status" },
+          { "name": "statusbar" },
+          { "name": "stop" },
+          { "name": "toolbar" },
+          { "name": "top" },
+          { "name": "Buffer", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "process", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "global", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "require", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          { "name": "module", "message": "Published code runs in browsers; Node globals are for tests and tooling." },
+          {
+            "name": "__dirname",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "__filename",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "name": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          { "name": "describe", "message": "Vitest globals are for tests." },
+          { "name": "it", "message": "Vitest globals are for tests." },
+          { "name": "test", "message": "Vitest globals are for tests." },
+          { "name": "expect", "message": "Vitest globals are for tests." },
+          { "name": "vi", "message": "Vitest globals are for tests." },
+          { "name": "beforeEach", "message": "Vitest globals are for tests." },
+          { "name": "afterEach", "message": "Vitest globals are for tests." },
+          { "name": "beforeAll", "message": "Vitest globals are for tests." },
+          { "name": "afterAll", "message": "Vitest globals are for tests." },
+          {
+            "name": "document",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "window",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "navigator",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "localStorage",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "sessionStorage",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "customElements",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "getComputedStyle",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "matchMedia",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "requestAnimationFrame",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "cancelAnimationFrame",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "alert",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "prompt",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "HTMLElement",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "Element",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "DOMParser",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "XMLHttpRequest",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "name": "Image",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          }
+        ],
+        "no-restricted-properties": [
+          "error",
+          { "object": "arguments", "property": "callee", "message": "arguments.callee is deprecated" },
+          { "object": "global", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "self", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "window", "property": "isFinite", "message": "Please use Number.isFinite instead" },
+          { "object": "global", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "self", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "object": "window", "property": "isNaN", "message": "Please use Number.isNaN instead" },
+          { "property": "__defineGetter__", "message": "Please use Object.defineProperty instead." },
+          { "property": "__defineSetter__", "message": "Please use Object.defineProperty instead." },
+          { "object": "Math", "property": "pow", "message": "Use the exponentiation operator (**) instead." },
+          {
+            "object": "globalThis",
+            "property": "process",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "Buffer",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "global",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "require",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "setImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "clearImmediate",
+            "message": "Published code runs in browsers; Node globals are for tests and tooling."
+          },
+          {
+            "object": "globalThis",
+            "property": "document",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          },
+          {
+            "object": "globalThis",
+            "property": "window",
+            "message": "The validators run without a DOM, e.g. validator-cfworker in Workers."
+          }
+        ]
+      }
+    },
+    {
+      // Node-only precompile scripts, which write the generated validators to disk
+      "files": [
+        "packages/validator-ajv8/src/compileSchemaValidators.ts",
+        "packages/validator-ata/src/compileSchemaValidators.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
       }
     },
     {

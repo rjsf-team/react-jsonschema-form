@@ -13,6 +13,18 @@ import type {
   UiSchema,
 } from './types.ts';
 
+/** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
+ * by unknown data, since TypeScript can't follow a `$ref` to the fields it lands on, so the merge is where it is taken
+ * to describe the referencing field's `T`: the `$ref` is what makes that so at runtime, and this is the one place
+ * `resolveUiSchema()` asserts it
+ */
+function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  definition: UiSchema<unknown, S, F>,
+  localUiSchema: UiSchema<T, S, F>,
+): UiSchema<T, S, F> {
+  return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
+}
+
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *
  * Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding
@@ -49,10 +61,8 @@ export default function resolveUiSchema<
   let result: UiSchema<T, S, F>;
   if (!definitionUiSchema) {
     result = localUiSchema ?? {};
-  } else if (!localUiSchema || Object.keys(localUiSchema).length === 0) {
-    result = { ...definitionUiSchema };
   } else {
-    result = mergeObjects(definitionUiSchema, localUiSchema) as UiSchema<T, S, F>;
+    result = mergeDefinition(definitionUiSchema, localUiSchema ?? {});
   }
 
   // The same goes for `ui:options`: consumers spread it and use `in` on it, both of which assume an object
@@ -85,8 +95,7 @@ export default function resolveUiSchema<
           const option = schemaOptions[i] as GenericObjectType | undefined;
           const optionRef = ((option as RJSFMarkedSchema)?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
           if (optionRef && optionRef in definitions) {
-            const optionUiSchema = (uiSchemaArray[i] || {}) as GenericObjectType;
-            uiSchemaArray[i] = mergeObjects(definitions[optionRef], optionUiSchema) as UiSchema<T, S, F>;
+            uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;
           }
         }

@@ -66,7 +66,7 @@ function optionDeclaresValueFor<
 interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> {
   newOptionUiSchema?: UiSchema<T, S, F>;
   oldOptionUiSchema?: UiSchema<T, S, F>;
-  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.

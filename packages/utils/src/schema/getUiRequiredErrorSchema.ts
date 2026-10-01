@@ -102,7 +102,7 @@ function resolveArrayItemUiSchema<T, S extends StrictRJSFSchema, F extends FormC
 interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   schemaContext: SchemaContext<S, F>;
   rootSchema: S;
-  uiSchemaDefinitions?: UiSchemaDefinitions<T, S, F>;
+  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
   globalUiOptions?: GlobalUISchemaOptions;
   formContext?: F;
   builder: ErrorSchemaBuilder<T>;
@@ -274,7 +274,7 @@ const mightHaveUiRequiredCache = new WeakMap<object, WeakMap<object, boolean>>()
  */
 function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T, S, F> | undefined,
-  uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined,
+  uiSchemaDefinitions: UiSchemaDefinitions<S, F> | undefined,
 ): boolean {
   const scan = () =>
     hasUiRequiredOption<T, S, F>(uiSchema) ||
@@ -311,7 +311,7 @@ export default function getUiRequiredErrorSchema<
   rootSchema: S,
   uiSchema: UiSchema<T, S, F> | undefined,
   formData: T | undefined,
-  uiSchemaDefinitions: UiSchemaDefinitions<T, S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
+  uiSchemaDefinitions: UiSchemaDefinitions<S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
   globalUiOptions?: GlobalUISchemaOptions,
   formContext?: F,
 ): ErrorSchema<T> {

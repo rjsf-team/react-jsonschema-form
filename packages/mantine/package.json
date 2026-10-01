@@ -7,7 +7,10 @@
   "sideEffects": false,
   "description": "Mantine theme, fields and widgets for react-jsonschema-form",
   "exports": {
-    ".": "./lib/index.js",
+    ".": {
+      "@rjsf/source": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
     "./lib": "./lib/index.js",
     "./lib/*.js": "./lib/*.js"
   },
