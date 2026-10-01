@@ -390,6 +390,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `UiSchemaDefinitions<S, F>` drops its `T` parameter and types every entry as `UiSchema<unknown, S, F>`, the type `UiSchema`'s `ui:definitions` key now uses too. A definition applies to whichever field references it, so typing it by the root form's data rejected the nested keys of the field it describes ([#5372](https://github.com/rjsf-team/react-jsonschema-form/pull/5372))
 - `dataURItoBlob()` keeps the decoding error it catches as the `cause` of the `File is invalid` error it throws ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - `getUiRequiredErrorSchema()` adds the `required` error for a non-boolean truthy `ui:required`, such as `1` or `'true'` from an untyped JSON uiSchema, which `SchemaField` already marks as required. That includes the string `'false'`, which is truthy ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
+- `enumOptionsValueForIndex()` and `enumOptionsDeselectValue()` return `unknown` rather than `any`, and the `selected`/`value` parameters of `enumOptionsDeselectValue()`, `enumOptionsIndexForValue()` and `enumOptionsIsSelected()` that took a value or a list of values take `unknown`. Narrow a result before assigning it to a typed variable ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 
 ## @rjsf/validator-ajv8
 
@@ -400,6 +401,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `validateFormData()` takes an optional trailing `getCustomValidateFormData`, returning the data to hand `customValidate` with the form's defaults applied; `Form` supplies it so those defaults honor its `customMergeAllOf` and `defaultFormStateBehavior`. The precompiled validator takes the `customMergeAllOf` at construction, from `createPrecompiledValidator()`, and resolves the root schema it is handed with it ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
 - **BREAKING CHANGE** `createPrecompiledValidator()` takes its `localizer`, `suppressDuplicateFiltering` and `customMergeAllOf` in one options object after the `rootSchema`, rather than as three trailing positional parameters, so a call supplying only the merge no longer has to pass two `undefined`s. ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
 - Fixed `validateFormData()` and `rawValidation()` throwing for a schema whose `$id` is not a string, such as `null`, `5`, `true` or `{}`, which ajv rejects: they now report that as a validation error, as for any other schema that fails to compile ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
+- `CompiledValidateFunction` is `(data: unknown): boolean`, dropping its `this: Ajv | any` parameter. The functions `compileSchemaValidators()` generates still fit; a hand-written validator whose `data` parameter is narrower than `unknown` no longer type checks ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 
 ## @rjsf/validator-ata
 

@@ -14,7 +14,7 @@ import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
  *        of indexes for (each of) the value(s) in `value`.
  */
 export default function enumOptionsIndexForValue<S extends StrictRJSFSchema = RJSFSchema>(
-  value: EnumOptionsType<S>['value'],
+  value: unknown,
   allEnumOptions: EnumOptionsType<S>[] = [],
   multiple = false,
 ): string | string[] | undefined {

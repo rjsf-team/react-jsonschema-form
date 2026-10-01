@@ -15,7 +15,7 @@ export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJ
   valueIndex: string | number | (string | number)[],
   allEnumOptions: EnumOptionsType<S>[] = [],
   emptyValue?: EnumOptionsType<S>['value'],
-): EnumOptionsType<S>['value'] {
+): unknown {
   if (Array.isArray(valueIndex)) {
     return (
       valueIndex
