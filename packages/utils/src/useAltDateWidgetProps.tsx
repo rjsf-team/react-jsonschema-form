@@ -126,7 +126,7 @@ export default function useAltDateWidgetProps<
     (property: keyof DateObject, newValue?: string) => {
       const nextState = {
         ...state,
-        [property]: typeof newValue === 'undefined' ? -1 : newValue,
+        [property]: typeof newValue === 'undefined' ? -1 : Number(newValue),
       };
 
       if (readyForChange(nextState)) {

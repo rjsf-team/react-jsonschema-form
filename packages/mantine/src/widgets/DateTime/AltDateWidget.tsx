@@ -47,9 +47,8 @@ function AltDatePart({
   onFocus,
 }: AltDatePartProps) {
   const partId = `${id}_${part.type}`;
-  // The widget's state holds -1 for an unset part, and a string once one is picked, though the part is typed a number
-  const rawValue: unknown = part.value;
-  const partValue = rawValue === undefined || Number(rawValue) < 0 ? undefined : Number(rawValue);
+  // The widget's state holds -1 for an unset part
+  const partValue = part.value === undefined || part.value < 0 ? undefined : part.value;
   const [start, end] = part.range;
   const data = useMemo(() => dateRangeOptions(start, end).map((item) => item.value.toString()), [start, end]);
   const handleChange = useCallback(

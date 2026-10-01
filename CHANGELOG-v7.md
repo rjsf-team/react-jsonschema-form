@@ -392,6 +392,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `getUiRequiredErrorSchema()` adds the `required` error for a non-boolean truthy `ui:required`, such as `1` or `'true'` from an untyped JSON uiSchema, which `SchemaField` already marks as required. That includes the string `'false'`, which is truthy ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - `enumOptionsValueForIndex()` and `enumOptionsDeselectValue()` return `unknown` rather than `any`, and the `selected`/`value` parameters of `enumOptionsDeselectValue()`, `enumOptionsIndexForValue()` and `enumOptionsIsSelected()` that took a value or a list of values take `unknown`. Narrow a result before assigning it to a typed variable ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - Added `uiBooleanOption()`, which reads a boolean `ui:` option such as `ui:required`, `ui:hideError` or `ui:label` as `Boolean()` does, or `undefined` when it is not set, since an untyped JSON uiSchema may hold `0`, `1`, `null` or a string there ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
+- `useAltDateWidgetProps()`'s `handleChange()` stores a picked part as a number, so `elements[].value` is the `number` that `DateElementProp` declares rather than the string a widget passed in ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 
 ## @rjsf/validator-ajv8
 
