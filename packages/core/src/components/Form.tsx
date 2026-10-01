@@ -567,10 +567,12 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
 
-  // The data handed to `customValidate` carries this form's defaults, computed here rather than inside the validator
-  // so they honor the `customMergeAllOf` and `defaultFormStateBehavior` it was given, which a validator has no way to
-  // know. Passed as a function so the work happens only if the validator uses it, and so defaults that come out
-  // `undefined` are still an answer rather than looking like no answer at all
+  // The data handed to `customValidate` carries defaults computed here rather than inside the validator, so they honor
+  // the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way to know.
+  // They are the schema's defaults rather than this form's current ones: `initialDefaultsGenerated` is deliberately
+  // left unset, as it was in v6, so `ui:initialValue` is applied again and a field the user has cleared reaches
+  // `customValidate` holding its initial value. Passed as a function so the work happens only if the validator uses
+  // it, and so defaults that come out `undefined` are still an answer rather than looking like no answer at all
   const getCustomValidateFormData = customValidate
     ? () => schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T
     : undefined;
