@@ -38,6 +38,7 @@ export default function SelectWidget<
   hideError,
   registry,
   uiSchema,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
@@ -103,6 +104,7 @@ export default function SelectWidget<
           const newValue = getValue(event, multiple);
           onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
         }}
+        aria-label={ariaLabel}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}

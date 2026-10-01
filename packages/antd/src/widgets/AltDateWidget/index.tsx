@@ -21,6 +21,8 @@ export default function AltDateWidget<
             <DateElement
               rootId={id}
               name={name}
+              label={props.label}
+              hideLabel={props.hideLabel}
               select={handleChange}
               {...elemProps}
               disabled={disabled}

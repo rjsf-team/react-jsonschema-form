@@ -12,6 +12,7 @@ import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
+import dateElementLabel, { DATE_ELEMENT_LABELS, dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
@@ -199,6 +200,9 @@ export {
   DateElement,
   dataURItoBlob,
   dateElementId,
+  DATE_ELEMENT_LABELS,
+  dateElementAriaLabel,
+  dateElementLabel,
   dateRangeOptions,
   deepEquals,
   deepEqualsUndefinedAsMissing,

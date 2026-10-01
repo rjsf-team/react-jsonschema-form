@@ -54,6 +54,7 @@ function SelectWidget<
   placeholder,
   registry,
   uiSchema,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -89,7 +90,8 @@ function SelectWidget<
 
   return (
     <Field
-      label={labelValue(label, hideLabel)}
+      // A label element, even an empty one, names the control over its `aria-label`
+      label={ariaLabel ? undefined : labelValue(label, hideLabel)}
       validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
       required={required}
     >
@@ -105,6 +107,7 @@ function SelectWidget<
         onFocus={handleFocus}
         onOptionSelect={handleChange}
         selectedOptions={selectedOptions}
+        aria-label={ariaLabel}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}

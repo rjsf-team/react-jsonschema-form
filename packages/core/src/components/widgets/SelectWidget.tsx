@@ -56,6 +56,7 @@ function SelectWidget<
   htmlName,
   registry,
   uiSchema,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
@@ -129,6 +130,7 @@ function SelectWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         onChange={handleChange}
+        aria-label={ariaLabel}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}

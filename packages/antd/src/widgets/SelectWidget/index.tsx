@@ -52,6 +52,7 @@ export default function SelectWidget<
   value,
   schema,
   uiSchema,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
@@ -137,6 +138,7 @@ export default function SelectWidget<
         // When the open change is called, set the open state, needed so that the select opens properly in the playground
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
+        aria-label={ariaLabel}
         aria-describedby={ariaDescribedByIds(id)}
         options={selectOptions}
       />

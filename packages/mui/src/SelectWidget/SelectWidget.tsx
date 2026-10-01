@@ -74,6 +74,7 @@ export default function SelectWidget<
     registry,
     uiSchema,
     hideError,
+    'aria-label': ariaLabel,
     ...textFieldProps
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
@@ -132,6 +133,10 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
+          // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root
+          ...(ariaLabel && {
+            htmlInput: { ...(muiSlotProps as GenericObjectType | undefined)?.htmlInput, 'aria-label': ariaLabel },
+          }),
         }}
         aria-describedby={ariaDescribedByIds(id)}
       >

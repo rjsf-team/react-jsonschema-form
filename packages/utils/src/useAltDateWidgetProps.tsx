@@ -3,6 +3,7 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 
+import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
@@ -27,7 +28,17 @@ export type DateElementProps<
   F extends FormContextType = FormContextType,
 > = Pick<
   WidgetProps<T, S, F>,
-  'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
+  | 'value'
+  | 'name'
+  | 'disabled'
+  | 'readonly'
+  | 'autofocus'
+  | 'registry'
+  | 'onBlur'
+  | 'onFocus'
+  | 'className'
+  | 'label'
+  | 'hideLabel'
 > & {
   /** The root id of the field */
   rootId: string;
@@ -40,7 +51,9 @@ export type DateElementProps<
 };
 
 /** The `DateElement` component renders one of the 6 date element selectors for an `AltDateWidget`, using the `select`
- * widget from the registry.
+ * widget from the registry. The selector has no label of its own, so it is named through `aria-label` by the field's
+ * `label` followed by the translated name of the element, such as `When, year`, and shows that translated name as its
+ * placeholder.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -63,9 +76,12 @@ export function DateElement<
     registry,
     onBlur,
     onFocus,
+    label,
+    hideLabel,
   } = props;
   const id = dateElementId(rootId, type);
-  const { SelectWidget } = registry.widgets;
+  const { widgets, translateString } = registry;
+  const { SelectWidget } = widgets;
   const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   return (
     <SelectWidget
@@ -74,7 +90,7 @@ export function DateElement<
       name={name}
       className={className}
       options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
-      placeholder={type}
+      placeholder={dateElementLabel(type, translateString)}
       value={value}
       disabled={disabled}
       readonly={readonly}
@@ -84,6 +100,7 @@ export function DateElement<
       onFocus={onFocus}
       registry={registry}
       label=''
+      aria-label={dateElementAriaLabel(type, translateString, label, hideLabel)}
       aria-describedby={ariaDescribedByIds(rootId)}
     />
   );

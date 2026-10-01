@@ -27,11 +27,14 @@ interface SelectTriggerProps extends ChakraSelect.ControlProps {
  * @param props - The properties for the select trigger component.
  * @param [props.clearable] - Whether the trigger is clearable.
  * @param [props.children] - The content to display inside the trigger.
+ * @param [props.aria-label] - The accessible name given to the trigger itself, rather than to its control.
  * @returns The rendered select trigger component.
  */
-export const SelectTrigger = ({ children, clearable, ref, ...rest }: SelectTriggerProps) => (
+export const SelectTrigger = ({ children, clearable, ref, 'aria-label': ariaLabel, ...rest }: SelectTriggerProps) => (
   <ChakraSelect.Control {...rest}>
-    <ChakraSelect.Trigger ref={ref}>{children}</ChakraSelect.Trigger>
+    <ChakraSelect.Trigger ref={ref} aria-label={ariaLabel}>
+      {children}
+    </ChakraSelect.Trigger>
     <ChakraSelect.IndicatorGroup>
       {clearable && <SelectClearTrigger />}
       <ChakraSelect.Indicator />

@@ -79,6 +79,7 @@ export default function SelectWidget<
   registry,
   uiSchema,
   label,
+  'aria-label': ariaLabel,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -127,6 +128,7 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholderText}
+          ariaLabel={ariaLabel}
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

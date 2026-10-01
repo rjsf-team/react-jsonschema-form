@@ -15,6 +15,8 @@ An `additionalProperties` schema that constrains the value some other way withou
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
+`DATE_ELEMENT_LABELS` maps the `type` of each date element an `AltDateWidget` renders (`year`, `month`, `day`, `hour`, `minute` and `second`) to the `TranslatableString` that names it; see [dateElementLabel()](#dateelementlabel).
+
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
 
 ## Types
@@ -66,6 +68,7 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 ### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
+The `SelectWidget` receives the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, and its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`, which every theme's `SelectWidget` gives to the control it renders.
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
 #### Props
@@ -83,6 +86,8 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
+- [label]: string - Optional label of the field, which starts the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
+- [hideLabel]: boolean - Optional flag, if true, the field's label is left out of the element's accessible name
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -261,6 +266,43 @@ Note that the separator here is always `_`, independent of the form's `idSeparat
 ```typescript
 dateElementId('root_birthday', 'year'); // 'root_birthday_year'
 ```
+
+### dateElementAriaLabel()
+
+Return the accessible name of a date element: the field's label followed by the translated name of the element.
+The field's label is left out when it is empty or hidden, leaving the element's name alone.
+
+#### Parameters
+
+- type: string - The type of the date element, as given by its `DateElementProp`
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+- [label]: string - The label of the field the date element belongs to
+- [hideLabel]: boolean - Flag, if true, the field's label is hidden and is left out of the name
+
+#### Returns
+
+- string: The accessible name of the date element
+
+#### Example
+
+```typescript
+dateElementAriaLabel('year', englishStringTranslator, 'When'); // 'When, year'
+dateElementAriaLabel('year', englishStringTranslator, 'When', true); // 'year'
+```
+
+### dateElementLabel()
+
+Return the translated name of a date element, through the `TranslatableString` that `DATE_ELEMENT_LABELS` maps its `type` to.
+A `type` with no entry in `DATE_ELEMENT_LABELS` is returned as it is.
+
+#### Parameters
+
+- type: string - The type of the date element, as given by its `DateElementProp`
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+
+#### Returns
+
+- string: The translated name of the date element
 
 ### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
