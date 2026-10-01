@@ -152,6 +152,13 @@ describe('UiSchema key openness', () => {
 
     expect([fieldNamesClosed, directivesOpen]).toEqual([true, true]);
   });
+
+  it('stays assignable to a string-indexed record', () => {
+    const ui: Known = { name: { 'ui:widget': 'textarea' } };
+    const record: Record<string, unknown> = ui;
+
+    expect(record).toBe(ui);
+  });
 });
 
 // A self-referential shape (no depth cap), matching how a recursive `$ref` (e.g.

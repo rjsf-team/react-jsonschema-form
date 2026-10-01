@@ -198,7 +198,8 @@ function getValueUiSchema<
 ): UiSchema<T, S, F> {
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
-  const valueUiSchema = { ...(uiSchema ?? ({} as UiSchema<T, S, F>)) };
+  const noUiSchema: UiSchema<T, S, F> = {};
+  const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
   delete valueUiSchema[HELP_UI_KEY];
   delete valueUiSchema[UI_FIELD_KEY];
   if (!keepsWidget) {
