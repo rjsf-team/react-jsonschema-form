@@ -175,7 +175,7 @@ export default function LayoutMultiSchemaField<
   // a discriminated cell behaves like the same schema rendered outside a layout grid. A selector with nothing to
   // select from is this field's own reason to be disabled, which no other field has
   const isDisabled =
-    Boolean(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
+    (uiBooleanOption(uiOptions.disabled) ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
   const widgetLabel = (title || schema.title) ?? '';
   // Only the template's label carries the deprecation marker, as in `SchemaField`: the widget's own label names its
   // control, and decorating it would make a group pointing at it announce the decoration twice.
