@@ -94,7 +94,7 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const rawPropertyNames: string[] = [
-      ...(params.deps?.split(', ') || []),
+      ...(typeof params.deps === 'string' ? params.deps.split(', ') : []),
       params.missingProperty,
       params.property,
     ].filter((item) => item);

@@ -182,23 +182,24 @@ export default function DemoFrame(props: DemoFrameProps) {
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
-  const [container, setContainer] = useState();
-  const [window, setWindow] = useState();
+  const [container, setContainer] = useState<HTMLElement>();
+  const [window, setWindow] = useState<Window>();
 
-  const instanceRef = useRef<any>(undefined);
+  const instanceRef = useRef<HTMLIFrameElement>(null);
 
   const onContentDidMount = useCallback(() => {
+    const frameDoc = instanceRef.current?.contentDocument;
     setReady(true);
     setEmotionCache(
       createCache({
         key: 'css',
         prepend: true,
-        container: instanceRef.current.contentWindow[DEMO_FRAME_JSS],
+        container: frameDoc?.getElementById(DEMO_FRAME_JSS) ?? undefined,
       }),
     );
-    setContainer(instanceRef.current.contentDocument.body);
-    setWindow(() => instanceRef.current.contentWindow);
-  }, [instanceRef]);
+    setContainer(frameDoc?.body);
+    setWindow(instanceRef.current?.contentWindow ?? undefined);
+  }, []);
 
   let body: ReactNode = children;
   if (theme === 'mui') {
@@ -218,14 +219,18 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'antd') {
     body = ready ? (
       <FrameContextConsumer>
-        {({ document: frameDoc }) => {
-          const jssContainer =
-            frameDoc?.getElementById(DEMO_FRAME_JSS) ?? instanceRef.current.contentWindow[DEMO_FRAME_JSS];
+        {({ document: contextDoc }) => {
+          const frameDoc = contextDoc ?? instanceRef.current?.contentDocument;
+          const jssContainer = frameDoc?.getElementById(DEMO_FRAME_JSS);
+          if (!frameDoc || !jssContainer?.parentElement) {
+            return null;
+          }
+          const popupContainer = jssContainer.parentElement;
           return (
             <>
-              <AntdPopupPatcher frameDoc={frameDoc ?? instanceRef.current.contentDocument} />
+              <AntdPopupPatcher frameDoc={frameDoc} />
               <AntdStyleProvider container={jssContainer}>
-                <ConfigProvider getPopupContainer={() => jssContainer.parentElement}>{children}</ConfigProvider>
+                <ConfigProvider getPopupContainer={() => popupContainer}>{children}</ConfigProvider>
               </AntdStyleProvider>
             </>
           );
