@@ -372,7 +372,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -425,7 +425,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -772,7 +772,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   >
                                     <svg
                                       aria-hidden="true"
-                                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                       fill="none"
                                       height="24"
                                       stroke="currentColor"
@@ -908,7 +908,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   >
                                     <svg
                                       aria-hidden="true"
-                                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                       fill="none"
                                       height="24"
                                       stroke="currentColor"
@@ -954,7 +954,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="lucide lucide-circle-plus"
+                                  class="lucide lucide-circle-plus lucide-plus-circle"
                                   fill="none"
                                   height="16"
                                   stroke="currentColor"
@@ -1583,7 +1583,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   >
                                     <svg
                                       aria-hidden="true"
-                                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                       fill="none"
                                       height="24"
                                       stroke="currentColor"
@@ -1719,7 +1719,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   >
                                     <svg
                                       aria-hidden="true"
-                                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                       fill="none"
                                       height="24"
                                       stroke="currentColor"
@@ -1765,7 +1765,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="lucide lucide-circle-plus"
+                                  class="lucide lucide-circle-plus lucide-plus-circle"
                                   fill="none"
                                   height="16"
                                   stroke="currentColor"
@@ -2045,7 +2045,7 @@ exports[`object fields > additionalProperties 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -2098,7 +2098,7 @@ exports[`object fields > additionalProperties 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -2242,7 +2242,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                 >
                                   <svg
                                     aria-hidden="true"
-                                    class="lucide lucide-circle-plus"
+                                    class="lucide lucide-circle-plus lucide-plus-circle"
                                     fill="none"
                                     height="16"
                                     stroke="currentColor"
@@ -2288,7 +2288,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -2341,7 +2341,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -2495,7 +2495,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -2548,7 +2548,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -2681,7 +2681,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -2734,7 +2734,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -2909,7 +2909,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -2962,7 +2962,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -3198,7 +3198,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -3251,7 +3251,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -3408,7 +3408,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -3461,7 +3461,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -3769,7 +3769,7 @@ exports[`object fields > with title and description > show add button and fields
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -3822,7 +3822,7 @@ exports[`object fields > with title and description > show add button and fields
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -3979,7 +3979,7 @@ exports[`object fields > with title and description from both > additionalProper
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -4032,7 +4032,7 @@ exports[`object fields > with title and description from both > additionalProper
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -4340,7 +4340,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -4393,7 +4393,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -4701,7 +4701,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -4754,7 +4754,7 @@ exports[`object fields > with title and description from uiSchema > show add but
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -4875,7 +4875,7 @@ exports[`object fields > with title and description with global label off > addi
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -4928,7 +4928,7 @@ exports[`object fields > with title and description with global label off > addi
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"
@@ -5140,7 +5140,7 @@ exports[`object fields > with title and description with global label off > show
                   >
                     <svg
                       aria-hidden="true"
-                      class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                      class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                       fill="none"
                       height="24"
                       stroke="currentColor"
@@ -5193,7 +5193,7 @@ exports[`object fields > with title and description with global label off > show
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-plus"
+                  class="lucide lucide-circle-plus lucide-plus-circle"
                   fill="none"
                   height="16"
                   stroke="currentColor"

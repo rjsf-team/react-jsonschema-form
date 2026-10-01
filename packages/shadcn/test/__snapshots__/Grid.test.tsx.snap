@@ -673,7 +673,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="0"
@@ -704,7 +704,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="1"
@@ -735,7 +735,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="2"
@@ -1581,7 +1581,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="0"
@@ -1639,7 +1639,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="1"
@@ -1670,7 +1670,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="2"
@@ -2548,7 +2548,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="0"
@@ -2579,7 +2579,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="1"
@@ -2637,7 +2637,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="2"
@@ -3377,7 +3377,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="0"
@@ -3408,7 +3408,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="1"
@@ -3439,7 +3439,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
-                          style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px; width: 0px; height: 0px;"
+                          style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
                           value="2"

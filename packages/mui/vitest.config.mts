@@ -1,9 +1,9 @@
 import { mergeConfig } from 'vitest/config';
 
-import base, { fullCoverage } from '../../testing/vitest.base.ts';
+import base from '../../testing/vitest.base.mts';
 
 export default mergeConfig(base, {
   test: {
-    coverage: fullCoverage(),
+    setupFiles: ['./test/setup-vitest.ts'],
   },
 });

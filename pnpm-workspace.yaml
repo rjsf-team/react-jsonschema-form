@@ -17,6 +17,11 @@ overrides:
   'serialize-javascript': ^7.0.6
   # Fixes security issues in http-proxy-middleware by overriding to safe version
   'http-proxy-middleware': ^2.0.10
+  # Keeps optional @types/react peers on React 18 types, matching our sources
+  '@types/react': ^18.3.31
+  '@types/react-dom': ^18.3.7
+  # jsdom 30.1 extends the global Iterator, which Node 20 lacks
+  'jsdom': ~30.0.1
 
 onlyBuiltDependencies:
   - '@parcel/watcher'

@@ -1645,12 +1645,34 @@ exports[`array fields > checkboxes 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -7020,12 +7042,34 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -14217,12 +14261,34 @@ exports[`with title and description > checkboxes 1`] = `
   background-color: #fff;
 }
 
+.emotion-4~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-4 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-4:focus {
   border-radius: 4px;
 }
 
 .emotion-4.emotion-4.emotion-4 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-4.MuiSelect-select {
@@ -17341,12 +17407,34 @@ exports[`with title and description from both > checkboxes 1`] = `
   background-color: #fff;
 }
 
+.emotion-4~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-4 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-4:focus {
   border-radius: 4px;
 }
 
 .emotion-4.emotion-4.emotion-4 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-4.MuiSelect-select {
@@ -20465,12 +20553,34 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
   background-color: #fff;
 }
 
+.emotion-4~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-4 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-4:focus {
   border-radius: 4px;
 }
 
 .emotion-4.emotion-4.emotion-4 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-4.MuiSelect-select {
@@ -23303,12 +23413,34 @@ exports[`with title and description with global label off > checkboxes 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {

@@ -42,7 +42,7 @@
         "default",
         "^default",
         "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.ts"
+        "{workspaceRoot}/vitest.config.mts"
       ]
     },
     "test:update": {
@@ -51,7 +51,7 @@
         "default",
         "^default",
         "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.ts"
+        "{workspaceRoot}/vitest.config.mts"
       ]
     },
     "test:watch": {
