@@ -1610,13 +1610,19 @@ type UnionMembersMerged<T> = {
 /** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `any` when it has none */
 type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : any;
 
-/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was */
+/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was. It
+ * is `any` rather than `unknown` so that reading a nested entry off an untyped uiSchema, such as
+ * `uiSchema.field['ui:options']` in a widget, keeps compiling; the loose `UiSchema` can't stand in, since the string
+ * index signature it would sit under also covers the `ui:` keys, whose values aren't uiSchemas
+ */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? any : UiSchema<V, S, F>;
 
-/** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
+/** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild`, but read
+ * back as `unknown` rather than `any`, since this type has no existing readers to keep compiling
+ */
 type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? any : StrictUiSchema<Checks, V, S, F>;
+  IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
