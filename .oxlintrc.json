@@ -1185,7 +1185,7 @@
     },
     {
       // Node tooling scripts: module-scope functions are correct there, and printing is their output
-      "files": [".github/**", "scripts/**", "**/tailwind.config.js"],
+      "files": [".github/**", "scripts/**"],
       "rules": {
         "no-console": "off",
         "no-implicit-globals": "off"
