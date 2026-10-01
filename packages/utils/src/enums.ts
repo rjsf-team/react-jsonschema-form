@@ -40,6 +40,18 @@ export const TranslatableString = {
   NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */
   ClearLabel: 'Clear',
+  /** Year element label, used by AltDateWidget */
+  YearLabel: 'year',
+  /** Month element label, used by AltDateWidget */
+  MonthLabel: 'month',
+  /** Day element label, used by AltDateWidget */
+  DayLabel: 'day',
+  /** Hour element label, used by AltDateTimeWidget */
+  HourLabel: 'hour',
+  /** Minute element label, used by AltDateTimeWidget */
+  MinuteLabel: 'minute',
+  /** Second element label, used by AltDateTimeWidget */
+  SecondLabel: 'second',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
   /** File preview label, used by FileWidget */

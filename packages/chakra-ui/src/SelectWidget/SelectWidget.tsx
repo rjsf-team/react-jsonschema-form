@@ -43,6 +43,7 @@ export default function SelectWidget<
     onChange,
     schema,
     uiSchema,
+    'aria-label': ariaLabel,
   } = props;
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -134,7 +135,7 @@ export default function SelectWidget<
         positioning={{ placement: 'bottom' }}
       >
         <ChakraSelect.Control>
-          <SelectTrigger>
+          <SelectTrigger aria-label={ariaLabel}>
             <SelectValueText placeholder={placeholder} />
           </SelectTrigger>
         </ChakraSelect.Control>

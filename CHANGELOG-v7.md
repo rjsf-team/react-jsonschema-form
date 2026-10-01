@@ -31,6 +31,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldHelpTemplate` is registered in the theme's templates and restates antd's description color on help text when the field has errors. antd tints its whole `help` slot as an error in that case, and help shares the very element that carries the error text, so the tint would render help as a second error message. This is deliberately the opposite of the `hasErrors`-keyed danger tint `@rjsf/react-bootstrap` and `@rjsf/shadcn` apply, where help is its own element below the field. It is an inline style because it has to beat the inherited tint, so a consumer restyling `.help-block`'s color needs `!important` to take the error case back ([#5326](https://github.com/rjsf-team/react-jsonschema-form/issues/5326))
 - Fixed object options in `RadioWidget` and object/array selects in `FieldTemplate`, and `SelectWidget` reports its form data value on focus and blur ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309), [#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its control ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/chakra-ui
 
@@ -48,6 +49,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - Fixed object options in `RadioWidget` and `CheckboxesWidget`, and `SelectWidget` reports its form data value on focus and blur and offers an empty string option in the `realValue` format ([#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its trigger ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/core
 
@@ -151,6 +153,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; the examples `<datalist>` no longer renders duplicate keys or suggests `null`, object or array values, and isn't rendered or referenced by the input when nothing is left to suggest ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - **BREAKING CHANGE:** `BooleanField` labels every boolean `enum` value `ui:enumNames` doesn't name Yes/No, and applies `ui:enumOrder` to its Yes/No options, a plain boolean's included, dropping a value the order doesn't list as it does for any `enum`. A constant option's empty `title` is kept as an empty label rather than read as Yes or No. `ui:enumNames` and `ui:enumOrder` apply only to `enum` values, and it warns when they're set beside constant options or when an `enum` beside a non-constant `anyOf`/`oneOf` hides option titles. See the upgrade guide ([#5319](https://github.com/rjsf-team/react-jsonschema-form/issues/5319))
 - `Form` computes the `formData` handed to `customValidate` with its own `SchemaUtilsType` and passes it to the validator, so those defaults honor the form's `customMergeAllOf` and `defaultFormStateBehavior`, which they never did before ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its `<select>` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/daisyui
 
@@ -208,6 +211,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `SelectWidget` hides the dropdown arrow from the accessible name its own contents give it where no label points at the button — a root field, a `oneOf` option selector — which otherwise ended in the glyph's spoken name, as `DatePickerTrigger`'s icon already did not ([#5318](https://github.com/rjsf-team/react-jsonschema-form/issues/5318))
 - `AltDateWidget` names each of its selects by the date part it holds where the field has no property name, since the label it renders above each one points at it either way: a root field left that label replacing the year, month or day the select displays rather than being announced before it ([#5318](https://github.com/rjsf-team/react-jsonschema-form/issues/5318))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- `AltDateWidget`'s date parts are named by the field's label and the part, such as `When, year`, where they were named by the part alone, and their visible labels go through `translateString`; `SelectWidget` gives an `aria-label` it is passed to its button, which it then describes with the option it displays ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/fluentui-rc
 
@@ -219,6 +223,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - Fixed `SelectWidget`, `RadioWidget` and `CheckboxesWidget` with object options and the `realValue` option value format ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its dropdown ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/mantine
 
@@ -251,6 +256,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the widget of a `oneOf`/`anyOf` option showing the errors its selector already shows ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed `SelectWidget`, `RadioWidget` and `CheckboxesWidget` with object options and the `realValue` option value format ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- `AltDateWidget`'s date part names and placeholders go through `translateString` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/mui
 
@@ -265,6 +271,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed object options in `RadioWidget` and `CheckboxesWidget`, and `SelectWidget` reports its form data value on focus and blur ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309), [#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed a theme callback given as `sx` in a `ui:options.mui.rjsfSlotProps` target (e.g. `titleBox`, `errorBox`) being silently dropped: it is now applied, composed after the theme's default styles. An array or callback passed as the default `sx` to `computeSxProps()` (deep-importable from `@rjsf/mui/lib/util.js`) is composed the same way instead of being spread into an object ([#5386](https://github.com/rjsf-team/react-jsonschema-form/pull/5386))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its combobox ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/react-bootstrap
 
@@ -277,6 +284,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - Fixed object options in `RadioWidget` and `CheckboxesWidget` ([#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur; `SelectWidget` options no longer render an `id`, as in the other themes ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its `<select>` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/shadcn
 
@@ -291,11 +299,13 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - Fixed the multiple `SelectWidget` with object options and the `realValue` option value format, and the single one's focus and blur value ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its button, which it then describes with the option it displays ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/snapshot-tests
 
 - The suites no longer mock `getTestIds` themselves. A theme using them adds `@rjsf/snapshot-tests/lib/setup.js` to its vitest `setupFiles`, and `server: { deps: { inline: [/@rjsf\//] } }` so the mock also reaches the `@rjsf/core` it installed from npm
 - Added `realValue` select and radio cases with options sharing a `String()`; `@rjsf/validator-ajv8` is now a peer dependency ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Added `altDateTests()`, which checks the accessible name of each date part an `AltDateWidget` renders, in english and through `translateString` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/utils
 
@@ -363,6 +373,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `ValidatorType` keeps its v6 signatures: `validateFormData()`, `isValid()` and `rawValidation()` take no `SchemaContext`, so a custom validator needs no change. A context carries a `validator`, so passing one to a validator would have meant every implementation discarding the validator it was handed in favor of itself. `validateFormData()` gains one optional trailing `getCustomValidateFormData`, returning the data to hand `customValidate` with the form's defaults applied; left out, the validator computes them as it did in v6. It returns the data rather than being the data so that defaults which come out `undefined` are still an answer, and so a validator computing its own never makes the caller compute them too ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
 - `omitExtraData()` resolves each `allOf` entry's references before merging, as `resolveSchema()` does for the schema the form renders. An entry that is a `$ref` had its properties hoisted rather than followed, so the referenced schema's data was taken for extra data and deleted on submit; and a `customMergeAllOf` was handed a `$ref` the form's own merge never sees, so one that rejects it fell back to dropping the `allOf` and deleted fields the user could see and edit. The merge is also wrapped in a `try`/`catch` like `retrieveSchema()`'s, warning once and continuing without the `allOf` rather than throwing out of `Form`'s change and submit handlers ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
 - `createSchemaUtils()` warns, once, when it is handed a validator where the `SchemaContext` belongs, as a v6 call did. Spreading a validator leaves `validator` undefined, so the first schema function failed with a `TypeError` from inside `retrieveSchema()` that named nothing ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
+- Added `TranslatableString.YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` and `SecondLabel`, the `DATE_ELEMENT_LABELS` table mapping each date element type to one, and `dateElementLabel()` and `dateElementAriaLabel()`. `DateElement` takes the field's `label` and `hideLabel`, and gives its `SelectWidget` the translated part as its `placeholder` and `When, year` as its `aria-label` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/validator-ajv8
 
