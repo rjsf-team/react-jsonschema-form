@@ -1,5 +1,5 @@
 import type { FieldPath, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { getTemplate, isObject, noop, toFieldPath } from '@rjsf/utils';
+import { getTemplates, isObject, noop, toFieldPath } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -13,7 +13,7 @@ function UiField(props: FieldProps) {
   };
 
   const { StringField, NumberField } = fields;
-  const FieldTemplate = getTemplate('FieldTemplate', registry);
+  const { FieldTemplate } = getTemplates(registry);
   const schema1 = (schema.anyOf?.[0] || {}) as RJSFSchema;
   const schema2 = (schema.anyOf?.[1] || {}) as RJSFSchema;
   const cityLabel = 'City';

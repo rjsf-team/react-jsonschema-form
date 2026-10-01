@@ -5,11 +5,10 @@ import type {
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
-  UIOptionsType,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getTemplate, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
+import { getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
 
 import RichDescription from '../RichDescription.tsx';
 
@@ -49,14 +48,12 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   registry,
   preview,
   onRemove,
-  options,
   uiSchema,
 }: {
   filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
   preview?: boolean;
   onRemove: (index: number) => void;
-  options: UIOptionsType<T, S, F>;
   uiSchema?: UiSchema<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
@@ -64,7 +61,7 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   }
   const { translateString } = registry;
 
-  const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, options);
+  const { RemoveButton } = registry.templates.ButtonTemplates;
 
   return (
     <ul className='file-info'>
@@ -97,7 +94,7 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 ) {
   const { disabled, readonly, required, multiple, onChange, value, options, registry, uiSchema } = props;
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
 
   const handleOnChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
     // Some pickers re-fire `change` with an empty FileList on cancel; an empty list would clear the value
@@ -124,7 +121,6 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         onRemove={handleRemove}
         registry={registry}
         preview={options.filePreview}
-        options={options}
         uiSchema={uiSchema}
       />
     </div>

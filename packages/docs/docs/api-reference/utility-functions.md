@@ -1038,6 +1038,22 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 
 - TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
 
+### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate()`
+resolves it. Only templates the registry already holds are resolved: an override for a name the registry lacks is
+left out. Destructure the templates a component renders from the result, e.g.
+`const { FieldTemplate, FieldErrorTemplate } = getTemplates(registry, uiOptions)`.
+
+#### Parameters
+
+- registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
+- [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
+
+#### Returns
+
+- Readonly- TemplatesType&lt;T, S, F> - The templates from either the `uiSchema` or `registry`lt;TemplatesType- TemplatesType&lt;T, S, F> - The templates from either the `uiSchema` or `registry`lt;T, S, F>> - The templates from either the `uiSchema` or `registry`
+
 ### getTestIds()
 
 Returns an object of test IDs that can only be used in test mode.
@@ -1801,6 +1817,25 @@ Resolution order (later sources override earlier):
 #### Returns
 
 - UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
+
+### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. Destructure
+it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, registry.widgets)`.
+
+#### Parameters
+
+- schema: RJSFSchema - The schema for the field
+- [widget]: Widget&lt;T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
+- [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
+
+#### Returns
+
+- \{ Widget: Widget&lt;T, S, F> }: An object whose `Widget` is the `Widget` component to use
+
+#### Throws
+
+- An error if there is no `Widget` component that can be returned
 
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

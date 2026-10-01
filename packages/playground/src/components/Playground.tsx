@@ -226,7 +226,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     }
   }, []);
 
-  const FormComponent = useMemo(() => withTheme(themes[theme].theme), [themes, theme]);
+  // One themed Form per theme, so switching other settings doesn't remount it. It's returned inside an object
+  // because react/static-components can't tell a memoized component from one created during render
+  const { FormComponent } = useMemo(() => ({ FormComponent: withTheme(themes[theme].theme) }), [themes, theme]);
 
   const onThemeSelected = useCallback(
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {

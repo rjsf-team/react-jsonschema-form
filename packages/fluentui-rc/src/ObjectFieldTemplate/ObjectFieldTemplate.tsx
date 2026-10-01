@@ -1,6 +1,6 @@
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -29,12 +29,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

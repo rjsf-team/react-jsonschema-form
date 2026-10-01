@@ -11,7 +11,7 @@ import type {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -56,16 +56,7 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

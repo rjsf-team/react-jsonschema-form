@@ -39,10 +39,10 @@ import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
-  getWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
+  resolveWidget: vi.fn().mockImplementation((_schema, widget, widgets) => {
     const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
-    // The real implementation wraps the resulting widget in another component, so we'll just do the simple thing
-    return widgets[widgetToUse];
+    // Picks the registry widget directly, so the test controls which one renders without resolving the schema
+    return { Widget: widgets[widgetToUse] };
   }),
 }));
 
@@ -178,7 +178,7 @@ function WrappedSelectWidget(props: WidgetProps) {
   );
 }
 
-const RadioWidgetTestId = 'select-widget-testid';
+const RadioWidgetTestId = 'radio-widget-testid';
 
 function WrappedRadioWidget(props: WidgetProps) {
   return (
@@ -295,7 +295,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(fakeFieldTemplate).toBeInTheDocument();
 
     // Renders the formControl that is the outer wrapper of the RadioWidget
-    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(RadioWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     // Renders formGroup
@@ -652,7 +652,7 @@ describe('LayoutMultiSchemaField', () => {
 
     render(<LayoutMultiSchemaField {...props} />);
 
-    const radios = within(screen.getByTestId(SelectWidgetTestId)).getAllByRole('radio');
+    const radios = within(screen.getByTestId(RadioWidgetTestId)).getAllByRole('radio');
     await user.click(radios[1]);
 
     expect(props.onChange).toHaveBeenCalledWith(
@@ -733,7 +733,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(fakeFieldTemplate).toBeInTheDocument();
 
     // Renders the formControl that is the outer wrapper of the RadioWidget
-    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(RadioWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     const formGroup = within(formControl).getByRole('radiogroup');

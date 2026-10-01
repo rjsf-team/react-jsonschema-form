@@ -24,16 +24,16 @@ import {
   PROPERTIES_KEY,
   descriptionId,
   getDeprecatedHandling,
-  getTemplate,
+  getTemplates,
   getFieldClassNames,
   getPropertySchema,
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
-  getWidget,
   noop,
   omitConsumedStyling,
   TranslatableString,
+  resolveWidget,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -189,14 +189,10 @@ export default function LayoutMultiSchemaField<
       : widgetLabel;
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
+  const { DescriptionFieldTemplate, FieldErrorTemplate, FieldHelpTemplate, FieldTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
-  const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
@@ -205,7 +201,7 @@ export default function LayoutMultiSchemaField<
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
-  const Widget = getWidget<T, S, F>(optionSchema, widget, widgets);
+  const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children

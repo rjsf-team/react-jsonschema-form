@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, getTemplate, localToUTC, padTimeSeconds, utcToLocal } from '@rjsf/utils';
+import { getDateTimeLocalValue, getTemplates, localToUTC, padTimeSeconds, utcToLocal } from '@rjsf/utils';
 
 /** The `DateTimeWidget` component uses the `BaseInputTemplate` changing the type to `datetime-local` and transforms
  * the value to/from utc using the appropriate utility functions. When `schema.format` is `iso-date-time`, a
@@ -15,7 +15,7 @@ export default function DateTimeWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { onChange, value, options, registry, schema } = props;
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
+  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
   const { isIsoDateTime, localValue: isoLocalValue } = getDateTimeLocalValue(schema, value);
   const localValue = isIsoDateTime ? isoLocalValue : utcToLocal(value);
   const handleChange = (newValue: string) =>

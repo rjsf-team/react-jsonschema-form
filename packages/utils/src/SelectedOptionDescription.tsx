@@ -1,5 +1,5 @@
 import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
-import getTemplate from './getTemplate.ts';
+import getTemplates from './getTemplates.ts';
 import getUiOptions from './getUiOptions.ts';
 import { descriptionId } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
@@ -31,11 +31,7 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
       id={descriptionId(id)}

@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -56,11 +56,7 @@ export default function FieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const hasError = hasVisibleErrors({ rawErrors, hideError });
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;

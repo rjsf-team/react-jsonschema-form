@@ -1,5 +1,5 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` component renders a layout for object fields in the form
  * with DaisyUI styling. It handles:
@@ -33,12 +33,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

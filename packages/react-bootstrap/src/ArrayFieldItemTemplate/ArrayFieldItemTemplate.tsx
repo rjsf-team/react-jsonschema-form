@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 import { Col, Row } from 'react-bootstrap';
 
 export default function ArrayFieldItemTemplate<
@@ -10,11 +10,7 @@ export default function ArrayFieldItemTemplate<
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
-    'ArrayFieldItemButtonsTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,

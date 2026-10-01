@@ -139,3 +139,26 @@ export default function getWidget<
 
   throw new Error(`No widget '${widget}' for type '${type}' in schema: ${JSON.stringify(schema)}`);
 }
+
+/** Returns the widget `getWidget()` returns as the `Widget` of an object, throwing the same errors. A component
+ * destructures `Widget` from it: React's static-components rule doesn't follow a destructure, so it accepts the widget
+ * where it reports the result of a `getWidget()` call. It can't check it either, so this relies on the widget being
+ * defined at module scope.
+ *
+ * @param schema - The schema for the field
+ * @param [widget] - Either the name of the widget OR a `Widget` implementation to use
+ * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
+ * @returns - An object whose `Widget` is the `Widget` component to use
+ * @throws - An error if there is no `Widget` component that can be returned
+ */
+export function resolveWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schema: RJSFSchema,
+  widget?: Widget<T, S, F> | string,
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {},
+): { Widget: Widget<T, S, F> } {
+  return { Widget: getWidget<T, S, F>(schema, widget, registeredWidgets) };
+}

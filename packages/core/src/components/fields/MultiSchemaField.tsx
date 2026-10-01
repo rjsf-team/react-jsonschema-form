@@ -5,15 +5,15 @@ import {
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
-  getTemplate,
+  getTemplates,
   getUiOptions,
   getXxxOfKey,
-  getWidget,
   hashObject,
   isFormDataAvailable,
   logOnce,
   mergeSchemas,
   ONE_OF_KEY,
+  resolveWidget,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
@@ -201,15 +201,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
-    'MultiSchemaFieldTemplate',
-    registry,
-    globalUiOptions,
-  );
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
 
-  const Widget = getWidget<T, S, F>({ type: 'number' }, widget, widgets);
+  const { Widget } = resolveWidget<T, S, F>({ type: 'number' }, widget, widgets);
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];

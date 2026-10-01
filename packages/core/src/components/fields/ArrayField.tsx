@@ -17,14 +17,14 @@ import {
   allowAdditionalItems,
   getItemUiSchemaForItem,
   getStaticItemsUiSchema,
-  getTemplate,
+  getTemplates,
   getUiOptions,
-  getWidget,
   isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
   isObject,
   optionsList,
+  resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
   fieldPathEndsWithIndex,
@@ -220,7 +220,7 @@ function ArrayAsMultiSelect<
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   return (
@@ -277,7 +277,7 @@ function ArrayAsCustomWidget<
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   return (
@@ -339,7 +339,7 @@ function ArrayAsFiles<
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
-  const Widget = getWidget<T[], S, F>(schema, widget, widgets);
+  const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   return (
@@ -452,11 +452,7 @@ function ArrayFieldItemInner<
   const fieldPath = toFieldPath(index, parentFieldPath);
   const fieldId = fieldPathToId(fieldPath, globalFormOptions);
   const ItemSchemaField = ArraySchemaField || SchemaField;
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T[], S, F>(
-    'ArrayFieldItemTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
   const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
@@ -690,7 +686,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     optionalDataControl,
   };
 
-  const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
+  const { ArrayFieldTemplate: Template } = getTemplates<T[], S, F>(registry, uiOptions);
   return <Template {...arrayProps} />;
 }
 
@@ -822,7 +818,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     optionalDataControl,
   };
 
-  const Template = getTemplate<'ArrayFieldTemplate', T[], S, F>('ArrayFieldTemplate', registry, uiOptions);
+  const { ArrayFieldTemplate: Template } = getTemplates<T[], S, F>(registry, uiOptions);
   return <Template {...arrayProps} />;
 }
 
@@ -1034,11 +1030,7 @@ export default function ArrayField<
   const isMissingItems = !(ITEMS_KEY in schema);
   if (isMissingItems && !globalFormOptions.useFallbackUiForUnsupportedType) {
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-    const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
-      'UnsupportedFieldTemplate',
-      registry,
-      uiOptions,
-    );
+    const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
     return (
       <UnsupportedFieldTemplate

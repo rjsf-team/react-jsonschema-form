@@ -1,6 +1,6 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import { buttonId, canExpand, descriptionId, getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = unknown,
@@ -23,12 +23,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

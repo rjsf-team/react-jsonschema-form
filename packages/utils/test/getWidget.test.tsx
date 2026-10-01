@@ -4,7 +4,7 @@ import { forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import { getWidget, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -181,5 +181,16 @@ describe('getWidget()', () => {
     const TheWidget = memo(TestWidget);
     const { asFragment } = render(<TheWidget {...widgetProps} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+});
+
+describe('resolveWidget()', () => {
+  it('should return the widget getWidget() resolves as Widget', () => {
+    expect(resolveWidget(subschema, 'select', { SelectWidget: TestWidget })).toEqual({ Widget: TestWidget });
+    expect(resolveWidget(schema, TestWidget)).toEqual({ Widget: TestWidget });
+  });
+
+  it('should throw the error getWidget() throws', () => {
+    expect(() => resolveWidget(schema)).toThrow(`Unsupported widget definition: undefined in schema: ${schemaStr}`);
   });
 });

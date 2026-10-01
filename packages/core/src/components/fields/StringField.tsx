@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { fieldPathToName, getUiOptions, getWidget, resolveDefaultWidget } from '@rjsf/utils';
+import { fieldPathToName, getUiOptions, resolveDefaultWidget, resolveWidget } from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -34,7 +34,7 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? schemaTitle ?? name;
-  const Widget = getWidget<T, S, F>(schema, widget, widgets);
+  const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
     [onChange, fieldPath],

@@ -1,5 +1,5 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
+import { buttonId, getTemplates, getUiOptions } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -25,16 +25,7 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {

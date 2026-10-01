@@ -2,7 +2,7 @@ import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
 import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplates, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Field } from '../components/ui/field.tsx';
@@ -30,11 +30,7 @@ export default function CheckboxWidget<
     schema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const uiOptions = getUiOptions(uiSchema);
   const isCheckbox = uiOptions.widget === 'checkbox';
   const description = isCheckbox ? undefined : (options.description ?? schema.description);

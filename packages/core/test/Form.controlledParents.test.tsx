@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -66,7 +66,7 @@ describe('controlled parent harnesses', () => {
     function changeOnMount<V extends string | null | undefined>(from: string, to: string) {
       return function Widget(props: WidgetProps<V>) {
         const { value, id, onChange, uiSchema, registry } = props;
-        const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, getUiOptions(uiSchema));
+        const { BaseInputTemplate } = getTemplates(registry, getUiOptions(uiSchema));
         useEffect(() => {
           if (value === from) {
             onChange(to, undefined, id);

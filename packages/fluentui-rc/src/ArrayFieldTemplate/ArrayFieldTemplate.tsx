@@ -1,7 +1,7 @@
 import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayItemList: {
@@ -34,16 +34,7 @@ export default function ArrayFieldTemplate<
   } = props;
   const classes = useStyles();
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
