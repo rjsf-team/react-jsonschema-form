@@ -1,5 +1,4 @@
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
-import '@testing-library/jest-dom';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';

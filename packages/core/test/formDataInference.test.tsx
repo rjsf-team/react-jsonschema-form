@@ -10,7 +10,6 @@ import type {
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-import { expectTypeOf } from 'vitest';
 
 import type { IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';

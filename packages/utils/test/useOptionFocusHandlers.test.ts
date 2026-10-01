@@ -1,6 +1,5 @@
 /** @vitest-environment jsdom */
 import { renderHook } from '@testing-library/react';
-import { vi } from 'vitest';
 
 import type { WidgetProps } from '../src/index.ts';
 import { useOptionFocusHandlers } from '../src/index.ts';

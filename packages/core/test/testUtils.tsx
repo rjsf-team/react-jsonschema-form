@@ -3,7 +3,6 @@ import { createRef, useState } from 'react';
 import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
 import { createSchemaUtils, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import '@testing-library/jest-dom';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { Mock, MockInstance } from 'vitest';

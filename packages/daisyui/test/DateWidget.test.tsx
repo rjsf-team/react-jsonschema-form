@@ -1,7 +1,6 @@
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';

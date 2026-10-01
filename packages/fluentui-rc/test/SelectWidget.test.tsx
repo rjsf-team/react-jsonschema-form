@@ -2,7 +2,6 @@ import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import SelectWidget from '../src/SelectWidget/SelectWidget.tsx';
 

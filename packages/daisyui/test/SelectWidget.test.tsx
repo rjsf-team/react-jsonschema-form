@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import SelectWidget from '../src/widgets/SelectWidget/SelectWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';

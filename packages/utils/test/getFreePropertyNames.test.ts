@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { getFreePropertyNames } from '../src/index.ts';
 import type { RJSFSchema } from '../src/types.ts';
 
