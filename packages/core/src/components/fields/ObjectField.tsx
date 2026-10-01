@@ -72,7 +72,6 @@ function getDefaultValue<
     case 'object':
       return {};
     case 'string':
-    case undefined:
     default:
       // We don't have a datatype for some reason (perhaps additionalProperties was true)
       return translateString(TranslatableString.NewStringDefault);
@@ -413,8 +412,13 @@ export default function ObjectField<
         ) as RJSFSchema['default'];
       }
 
-      const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
-      setByPath(newFormData, newKey, newValue);
+      // Compared to `undefined` rather than `??` so that an explicit `null` `const` or `default` is kept
+      const newValue = [constValue, defaultValue].find((value) => value !== undefined);
+      setByPath(
+        newFormData,
+        newKey,
+        newValue === undefined ? getDefaultValue<T, S, F>(translateString, type) : newValue,
+      );
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {

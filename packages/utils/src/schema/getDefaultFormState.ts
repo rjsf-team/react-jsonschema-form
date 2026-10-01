@@ -908,7 +908,6 @@ export function getDefaultBasedOnSchemaType<
       }
       return undefined;
     }
-    case undefined:
     default:
       return undefined;
   }

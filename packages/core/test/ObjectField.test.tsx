@@ -10,7 +10,7 @@ import type {
   ObjectFieldTemplateProps,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
@@ -1641,6 +1641,23 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
+
+    it.each<[string, RJSFSchema]>([
+      ['default', { type: ['integer', 'null'], default: null }],
+      ['const', { type: ['integer', 'null'], const: null }],
+    ])(
+      'should keep an explicit null %s for a nullable additionalProperties schema',
+      async (_, additionalProperties) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: null }, 'root');
+      },
+    );
 
     it('should add a string item if additionalProperties is true', async () => {
       // Specify that additionalProperties is true
