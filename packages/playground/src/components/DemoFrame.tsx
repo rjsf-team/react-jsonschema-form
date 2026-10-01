@@ -219,18 +219,18 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'antd') {
     body = ready ? (
       <FrameContextConsumer>
-        {({ document: contextDoc }) => {
-          const frameDoc = contextDoc ?? instanceRef.current?.contentDocument;
-          const jssContainer = frameDoc?.getElementById(DEMO_FRAME_JSS);
-          if (!frameDoc || !jssContainer?.parentElement) {
+        {({ document: frameDoc }) => {
+          if (!frameDoc) {
             return null;
           }
-          const popupContainer = jssContainer.parentElement;
+          const jssContainer = frameDoc.getElementById(DEMO_FRAME_JSS) ?? undefined;
           return (
             <>
               <AntdPopupPatcher frameDoc={frameDoc} />
               <AntdStyleProvider container={jssContainer}>
-                <ConfigProvider getPopupContainer={() => popupContainer}>{children}</ConfigProvider>
+                <ConfigProvider getPopupContainer={() => jssContainer?.parentElement ?? frameDoc.body}>
+                  {children}
+                </ConfigProvider>
               </AntdStyleProvider>
             </>
           );
