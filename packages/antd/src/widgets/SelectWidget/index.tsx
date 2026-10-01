@@ -157,4 +157,4 @@ export default function SelectWidget<
  * "generator" function.
  */
 SelectWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
-  node.parentElement ?? node;
+  node.parentElement ?? document.body;
