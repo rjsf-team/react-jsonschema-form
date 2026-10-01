@@ -238,10 +238,11 @@ function maybeAddDefaultToObject<T = unknown>(
   }
 }
 
-// The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so an option added to
-// the public shape cannot be silently dropped on the way into the recursion. `schema` and `formData` are omitted because
-// the recursion takes them as its own positional `rawSchema` and `rawFormData`, and `uiSchemaDefinitions` is inherited
-// but redeclared below, since only its documentation differs here
+// The props `getDefaultFormState()` forwards straight through are inherited rather than restated, so the two shapes
+// cannot drift apart as options are added. Each recursive call still names the props it forwards, so an added option
+// reaches the recursion only once every call site passes it on. `schema` and `formData` are omitted because the
+// recursion takes them as its own positional `rawSchema` and `rawFormData`, and `uiSchemaDefinitions` is inherited but
+// redeclared below, since only its documentation differs here
 interface ComputeDefaultsProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,

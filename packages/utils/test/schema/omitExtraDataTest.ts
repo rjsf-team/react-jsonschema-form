@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '../../src/index.ts';
 import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
@@ -937,9 +938,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
-      it('resolves an allOf entry once for every row of an array, not once per row', () => {
+      it('resolves each allOf entry once per call, however many array rows reach it', () => {
         // `omit()` recurses per data node while the `allOf` entries belong to the schema, so every row of an array
-        // would otherwise re-resolve the same entries. Both rows are filtered identically, from one resolution each
+        // would otherwise re-resolve the same entries. The resolution is observable through the entries the merge is
+        // handed: one per entry, shared by every row, rather than a fresh copy per row
         const schema: RJSFSchema = {
           type: 'object',
           definitions: { audit: { type: 'object', properties: { at: { type: 'string' } } } },
@@ -956,12 +958,18 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
             { at: 'b', n: 2, drop: 'y' },
           ],
         };
-        expect(omitExtraData({ validator: testValidator }, schema, schema, data)).toEqual({
+        const customMergeAllOf = vi.fn((aSchema: RJSFSchema) => shallowAllOfMerge(aSchema) as RJSFSchema);
+        expect(omitExtraData({ validator: testValidator, customMergeAllOf }, schema, schema, data)).toEqual({
           rows: [
             { at: 'a', n: 1 },
             { at: 'b', n: 2 },
           ],
         });
+        // One merge per row, each handed the entries resolved for the first of them
+        expect(customMergeAllOf).toHaveBeenCalledTimes(2);
+        const [firstRow, secondRow] = customMergeAllOf.mock.calls.map(([merged]) => merged.allOf as RJSFSchema[]);
+        expect(secondRow[0]).toBe(firstRow[0]);
+        expect(secondRow[1]).toBe(firstRow[1]);
       });
 
       it('leaves a boolean allOf entry alone, since only a subschema object can carry references', () => {

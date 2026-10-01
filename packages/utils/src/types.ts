@@ -1727,7 +1727,8 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    *        `defaultFormStateBehavior` it was given, which a validator has no way to know. It is a function rather than
    *        the data so that `undefined` is a value it can return rather than a way of saying it was not supplied, and
    *        so an implementation that computes the defaults itself never makes the caller compute them too. Left out,
-   *        the validator computes them, which it can only do with the default `allOf` merge
+   *        the validator computes them with whatever it knows of the form's settings, which for most implementations is
+   *        nothing: the default `allOf` merge and no `defaultFormStateBehavior`
    */
   validateFormData<T = unknown>(
     formData: T | undefined,

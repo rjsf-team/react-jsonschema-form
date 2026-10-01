@@ -132,7 +132,7 @@ const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   // These conditions are needed to narrow down the type of the schema.items
   !Array.isArray(schema?.items) &&
   typeof schema?.items !== 'boolean' &&
-  schema?.items?.type === 'number',
+  schema?.items?.type === 'number';
 
 render(
   <Form
