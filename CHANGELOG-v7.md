@@ -286,6 +286,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** The default `Form` export is a `ThemedForm` (see `@rjsf/core`): generic over the form data, so `<Form formData={data} />` infers `T` and `<Form<MyData> />` names it. The `Theme`, `Templates` and `Widgets` exports keep each component's own generic type instead of being instantiated at the default `T` (`any` in 6.x), so `withTheme<MyData>(Theme)` and `{ ...Templates, FieldTemplate: MyFieldTemplate }` typecheck for any `T`. `generateForm()` returns a `ThemedForm<T, S, F>`; `generateTheme()`, `generateTemplates()` and `generateWidgets()` keep their signatures, apart from the new `unknown`/`FormContextType` defaults, and still build a fresh object on every call
 - Fixed object options in `RadioWidget` and `CheckboxesWidget` ([#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur; `SelectWidget` options no longer render an `id`, as in the other themes ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- `TextareaWidget` no longer replaces a `ui:options.rows` of `0` with the default of 5 rows. React leaves a `rows` of `0` off the textarea, so it gets the browser's default height of 2 rows, as with `@rjsf/core`'s `TextareaWidget` ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
 
 ## @rjsf/shadcn
 
@@ -301,6 +302,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the multiple `SelectWidget` with object options and the `realValue` option value format, and the single one's focus and blur value ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - `WrapIfAdditionalTemplate` no longer interpolates an absent `classNames` into its class attribute, which produced a literal `undefined` class on an additional property rendered by a custom field that passes none ([#5327](https://github.com/rjsf-team/react-jsonschema-form/issues/5327))
+- `TextareaWidget` no longer replaces a `ui:options.rows` of `0` with the default of 5 rows. React leaves a `rows` of `0` off the textarea, so it gets the browser's default height of 2 rows, as with `@rjsf/core`'s `TextareaWidget` ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
 
 ## @rjsf/snapshot-tests
 

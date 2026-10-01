@@ -46,7 +46,7 @@ export default function TextareaWidget<
         value={value}
         required={required}
         autoFocus={autofocus}
-        rows={options.rows || 5}
+        rows={options.rows ?? 5}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
