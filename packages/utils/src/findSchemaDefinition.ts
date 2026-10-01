@@ -130,12 +130,10 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
     if (Array.isArray(subSchema)) {
       result = {
         ...result,
-        [key]: subSchema.map((item: unknown) =>
-          isObject(item) ? makeAllReferencesAbsolute(item as S, currentURI) : item,
-        ),
+        [key]: subSchema.map((item: unknown) => (isObject(item) ? makeAllReferencesAbsolute(item, currentURI) : item)),
       };
     } else if (isObject(subSchema)) {
-      result = { ...result, [key]: makeAllReferencesAbsolute(subSchema as S, currentURI) };
+      result = { ...result, [key]: makeAllReferencesAbsolute(subSchema, currentURI) };
     }
   }
   return result;

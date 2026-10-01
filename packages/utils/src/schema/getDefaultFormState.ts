@@ -471,7 +471,7 @@ export function computeDefaults<
     if (initialValue !== undefined && !initialDefaultsGenerated) {
       defaults = initialValue as T;
     } else if (defaults === undefined && emptyValue !== undefined) {
-      defaults = emptyValue as unknown as T;
+      defaults = emptyValue as T;
     }
   }
 
