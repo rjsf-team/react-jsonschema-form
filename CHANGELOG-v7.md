@@ -277,6 +277,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `SelectWidget`, `RadioWidget` and `CheckboxesWidget` with object options and the `realValue` option value format ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - Fixed `DateTimeInput` leaving a field blank for an epoch number or a `Date` when `ui:options` sets a custom `valueFormat`: text converted from a number or `Date` is ISO-ordered, so it is now parsed without `valueFormat` ([#5393](https://github.com/rjsf-team/react-jsonschema-form/issues/5393))
+- `AltDateWidget`'s date part names and placeholders go through `translateString` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/mui
 
@@ -291,6 +292,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed object options in `RadioWidget` and `CheckboxesWidget`, and `SelectWidget` reports its form data value on focus and blur ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309), [#5317](https://github.com/rjsf-team/react-jsonschema-form/issues/5317))
 - Fixed a theme callback given as `sx` in a `ui:options.mui.rjsfSlotProps` target (e.g. `titleBox`, `errorBox`) being silently dropped: it is now applied, composed after the theme's default styles. An array or callback passed as the default `sx` to `computeSxProps()` (deep-importable from `@rjsf/mui/lib/util.js`) is composed the same way instead of being spread into an object ([#5386](https://github.com/rjsf-team/react-jsonschema-form/pull/5386))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value; `CheckboxesWidget` reports the focused option on focus and blur ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `AltDateWidget`'s date parts having no accessible name: each is named by the field's label and the translated part, such as `When, year`, which `SelectWidget` gives an `aria-label` it is passed to its combobox ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/react-bootstrap
 
@@ -325,6 +327,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - The suites no longer mock `getTestIds` themselves. A theme using them adds `@rjsf/snapshot-tests/lib/setup.js` to its vitest `setupFiles`, and `server: { deps: { inline: [/@rjsf\//] } }` so the mock also reaches the `@rjsf/core` it installed from npm
 - Added `realValue` select and radio cases with options sharing a `String()`; `@rjsf/validator-ajv8` is now a peer dependency ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Added `altDateTests()`, which checks the accessible name of each date part an `AltDateWidget` renders, in english and through `translateString` ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 
 ## @rjsf/utils
 
