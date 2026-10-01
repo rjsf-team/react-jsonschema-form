@@ -34,6 +34,7 @@ import {
   omitConsumedStyling,
   TranslatableString,
   resolveWidget,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -205,9 +206,7 @@ export default function LayoutMultiSchemaField<
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  // `unknown` and `Boolean()` because uiSchemas are often untyped JSON, so `ui:hideError` may not be a boolean
-  const uiHideError: unknown = uiSchemaHideError;
-  const hideFieldError = uiHideError === undefined ? hideError : Boolean(uiHideError);
+  const hideFieldError = uiBooleanOption(uiSchemaHideError) ?? hideError;
 
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;

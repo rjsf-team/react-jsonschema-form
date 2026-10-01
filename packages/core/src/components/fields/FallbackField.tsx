@@ -30,6 +30,7 @@ import {
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
+  uiBooleanOption,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
@@ -376,14 +377,13 @@ function FallbackUiField<
   // one naming a template: a template says how any field renders rather than what this one holds, so a form-wide
   // `FieldTemplate` lays the selector out as it lays out every other field
   const typeSelectorUiSchema = useMemo(() => {
-    // `unknown` like getDisplayLabel() reads it, so a non-boolean falsy `ui:label` from untyped JSON hides this label too
-    const { label = true }: { label?: unknown } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+    const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const options = Object.fromEntries(
       Object.keys(globalUiOptions ?? {})
         .filter((key) => !Object.hasOwn(templates, key))
         .map((key) => [key, undefined]),
     ) as UIOptionsType<T, S, F>;
-    if (!label) {
+    if (uiBooleanOption(label) === false) {
       options.label = false;
     }
     return { [UI_OPTIONS_KEY]: options };

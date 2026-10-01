@@ -31,6 +31,7 @@ import {
   UI_OPTIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   ITEMS_KEY,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -716,9 +717,7 @@ function LayoutGridFieldComponent<
     // computed here.
     let requiredForField = isRequired;
     if (optionsInfo?.hasDiscriminator) {
-      // `unknown` and `Boolean()` because uiSchemas are often untyped JSON, so `ui:required` may not be a boolean
-      const uiRequired: unknown = getUiOptions<T, S, F>(fieldUiSchema).required;
-      requiredForField = uiRequired !== undefined ? Boolean(uiRequired) : isRequired;
+      requiredForField = uiBooleanOption(getUiOptions<T, S, F>(fieldUiSchema).required) ?? isRequired;
     }
     const namePath = toPath(name);
 

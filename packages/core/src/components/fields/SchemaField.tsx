@@ -46,6 +46,7 @@ import {
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -491,13 +492,10 @@ function SchemaFieldRender<
     initialValue: fieldInitialValue,
     emptyValue: fieldEmptyValue,
   } = getUiOptions<T, S, F>(uiSchema);
-  // `unknown` and `Boolean()` because uiSchemas are often untyped JSON, where a `"ui:required": 0` would reach the
-  // template as is
-  const uiRequired: unknown = fieldUiRequired;
-  const effectiveRequired = uiRequired !== undefined ? Boolean(uiRequired) : required;
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
   if (
-    uiRequired !== undefined &&
-    !effectiveRequired &&
+    uiRequired === false &&
     required &&
     // Checked field-only (no globalUiOptions), matching computeDefaults()'s own resolution of these options: a
     // global ui:emptyValue/ui:initialValue wouldn't actually be applied to this field's default, so it must not
@@ -514,10 +512,8 @@ function SchemaFieldRender<
         'will still fail if it is left empty.',
     );
   }
-  // `unknown` for the same untyped-JSON reason as `uiRequired`
-  const uiSchemaHideError: unknown = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
+  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;

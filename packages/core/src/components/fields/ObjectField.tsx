@@ -34,6 +34,7 @@ import {
   REF_KEY,
   isObject,
   TranslatableString,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
@@ -538,9 +539,8 @@ export default function ObjectField<
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
-  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`, read as `unknown`
-  // like getDisplayLabel() does since uiSchemas are often untyped JSON and `"ui:label": 0` must hide the title too
-  const { label: showLabel = true }: { label?: unknown } = uiOptions;
+  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+  const showLabel = uiBooleanOption(uiOptions.label) ?? true;
   const templateProps = {
     title: showLabel ? templateTitle : '',
     description: showLabel ? description : undefined,
