@@ -29,6 +29,19 @@ export interface CustomValidatorOptionsType {
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
+/** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
+ * plus the form's `customMergeAllOf`, since the sub-schemas that get compiled are the ones that merge produces
+ */
+export interface CompileValidatorOptionsType<
+  S extends StrictRJSFSchema = RJSFSchema,
+> extends CustomValidatorOptionsType {
+  /** The form's `customMergeAllOf`, used to parse the schema for the sub-schemas to compile. It must merge the same way
+   * as the one passed to the form, or the form can validate against sub-schemas that were never compiled. Pass the same
+   * one to `createPrecompiledValidator()`, which resolves the root schema with it
+   */
+  customMergeAllOf?: CustomMergeAllOf<S>;
+}
+
 /** The options a precompiled validator is constructed with, all optional */
 export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
   /** If provided, is used to localize a list of Ajv `ErrorObject`s */

@@ -2,7 +2,9 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { getDefaultFormState, retrieveSchema, schemaParser } from '@rjsf/utils';
 
 import {
+  MERGED_PATTERN_KEY_FORM_DATA,
   MERGED_PATTERN_PROPERTY_FORM_DATA,
+  SCHEMA_MERGED_FOR_PATTERN_KEY,
   SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
   titleChoiceMergeAllOf as customMergeAllOf,
 } from '../../utils/test/testUtils/customMergeAllOfData.ts';
@@ -89,7 +91,7 @@ describe('compileSchemaValidatorsCode() with a customMergeAllOf', () => {
   });
   it('covers the custom-merged sub-schemas when compiled with it', () => {
     const validator = createPrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
       rootSchema,
     );
     expect(getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData })).toEqual(
@@ -101,7 +103,7 @@ describe('compileSchemaValidatorsCode() with a customMergeAllOf', () => {
     ['under live validation, against the root schema the form resolved', true],
   ])('validates %s with a customValidate when compiled with it', (_when, resolveRoot) => {
     const validator = createPrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, {}, { customMergeAllOf })),
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
       rootSchema,
       { customMergeAllOf },
     );
@@ -115,5 +117,20 @@ describe('compileSchemaValidatorsCode() with a customMergeAllOf', () => {
 
     expect(errors.map((e) => e.property)).toEqual(['.p.x']);
     expect(customValidate).toHaveBeenCalledWith(invalidFormData, expect.anything(), undefined, expect.anything());
+  });
+});
+
+describe('compileSchemaValidatorsCode() with a customMergeAllOf, for a key only patternProperties match', () => {
+  const rootSchema = SCHEMA_MERGED_FOR_PATTERN_KEY;
+  const formData = MERGED_PATTERN_KEY_FORM_DATA;
+
+  it('covers the sub-schemas of the merge the form makes for that key', () => {
+    const validator = createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
+      rootSchema,
+    );
+    expect(getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData })).toEqual(
+      formData,
+    );
   });
 });

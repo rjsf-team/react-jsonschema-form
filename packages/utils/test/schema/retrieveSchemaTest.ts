@@ -1038,6 +1038,30 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { properties: { test: { type: 'string' } }, minLength: 2, maxLength: 5 },
         ]);
       });
+      it('should expand the branches of a property merged with the patternProperties that match it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              type: 'object',
+              properties: { t: { type: 'string' } },
+              if: { properties: { t: { const: 'yes' } } },
+              then: { properties: { c: { type: 'number' } } },
+              else: { properties: { c: { type: 'boolean' } } },
+            },
+          },
+          patternProperties: { '^p$': { properties: { extra: { type: 'string' } } } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const properties = (expanded: RJSFSchema) => (expanded.properties!.p as RJSFSchema).properties;
+        // Merging `p` with its matching pattern resolves it, so the branches of that resolution are expanded too
+        expect(
+          retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true).map(properties),
+        ).toEqual([
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'number' } },
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'boolean' } },
+        ]);
+      });
       it('should drop an allOf it cannot merge when expanding all branches, as a form does', () => {
         const schema: RJSFSchema = {
           properties: { test: { type: 'string' } },

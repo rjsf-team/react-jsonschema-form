@@ -62,18 +62,16 @@ const options = {
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
 ```
 
-If your `Form` is given a `customMergeAllOf`, pass it in the optional fourth parameter too, `{ customMergeAllOf }`, so the precompiled validator functions cover the sub-schemas it merges.
+If your `Form` is given a `customMergeAllOf`, put it in those same options so the precompiled validator functions cover the sub-schemas it merges.
 Each function is looked up by the `$id` of the schema it validates, or by a hash of that schema when it has none, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
 If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
-A sub-schema that carries its own `$id` is compiled once, from the first form of it the compile encounters, since the lookup cannot tell two schemas with the same `$id` apart.
-Any other form of it the form resolves is then validated against that one function rather than its own, so give a sub-schema whose resolved forms differ no `$id`, or a distinct one, to have each compiled on its own.
-The non-precompiled validators cache by `$id` the same way, so they answer such a sub-schema identically.
+Give two sub-schemas that differ distinct `$id`s, or none, since the lookup cannot tell two schemas with the same `$id` apart and the compile fails rather than leave one of them out.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';
 import { customMergeAllOf } from 'path_to/yourCustomMergeAllOf.js';
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options, { customMergeAllOf });
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', { ...options, customMergeAllOf });
 ```
 
 Give the same `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator) as well, since the validator resolves the root schema it is handed with it.
@@ -126,7 +124,7 @@ const code = compileSchemaValidatorsCode(schema, options);
 ```
 
 For the most part it is the same as `compileSchemaValidators`, but instead of writing the file - it returns generated code directly.
-It takes the same optional `{ customMergeAllOf }` as its third parameter.
+It takes the same options, including the `customMergeAllOf`.
 
 To use it on browser side - some modifications are needed to provide runtime dependencies in generated code needs to be provided.
 
