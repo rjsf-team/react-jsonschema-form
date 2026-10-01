@@ -1,6 +1,7 @@
 {
+  // Each package's tsconfig.lib.json only extends this, and tsdown builds its declarations from it
+  "include": ["${configDir}/src"],
   "compilerOptions": {
-    "composite": true,
     "target": "esnext",
     "module": "nodenext",
     "lib": ["DOM", "ESNext"],

@@ -1,15 +1,1 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "include": ["src"],
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "lib",
-    "emitDeclarationOnly": true,
-    "types": ["vitest/globals", "node"]
-  },
-  "references": [
-    { "path": "../core/tsconfig.lib.json" },
-    { "path": "../utils/tsconfig.lib.json" },
-    { "path": "../validator-ajv8/tsconfig.lib.json" }
-  ]
-}
+{ "extends": "../../tsconfig.base.json" }

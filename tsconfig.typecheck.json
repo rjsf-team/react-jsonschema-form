@@ -3,11 +3,14 @@
   // @rjsf/* imports to source, so TypeScript resolves the shared T/S/F type graph once rather than once per package.
   // The tests' Node and Vitest globals and modules are visible in `src` too, so the .oxlintrc.json override for the
   // published packages' `src` is what keeps published code off them
-  "extends": "./tsconfig.test.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": false,
     "incremental": true,
     "tsBuildInfoFile": "node_modules/.cache/typecheck/main.tsbuildinfo",
+    "noEmit": true,
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true,
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"],
     "customConditions": ["@rjsf/source"]
   },
   "include": ["packages/*/src", "packages/*/test", "testing"],
