@@ -10,4 +10,9 @@ describe('enumOptionValueLabel()', () => {
     expect(enumOptionValueLabel({ a: 1 })).toBe('{"a":1}');
     expect(enumOptionValueLabel([1, 2])).toBe('[1,2]');
   });
+  it('spells a value the way toDisplayString() does, so a label matches the warnings', () => {
+    const date = new Date(0);
+    expect(enumOptionValueLabel(date)).toBe(String(date));
+    expect(enumOptionValueLabel({ a: 10n })).toBe('{"a":"10"}');
+  });
 });

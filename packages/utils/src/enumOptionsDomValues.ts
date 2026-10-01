@@ -1,13 +1,19 @@
 import { ENUM_OPTION_INDEX_PREFIX } from './constants.ts';
 import type { EnumOptionsType, OptionValueFormat, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
-/** Whether `value` is encoded as its prefixed index whatever the other options are */
-function alwaysEncodesAsIndex(value: unknown): boolean {
-  return (
-    typeof value === 'object' ||
-    value === '' ||
-    (typeof value === 'string' && value.startsWith(ENUM_OPTION_INDEX_PREFIX))
-  );
+/** The `String()` of `value` when it is encoded by it rather than as its prefixed index whatever the other options are.
+ * Only a string, number or boolean is: an object or array would read `[object Object]`, and a `BigInt`, symbol or
+ * function is no value a JSON schema can hold
+ */
+function plainEncoding(value: unknown): string | undefined {
+  if (
+    (typeof value === 'string' && value !== '' && !value.startsWith(ENUM_OPTION_INDEX_PREFIX)) ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
+    return String(value);
+  }
+  return undefined;
 }
 
 /** The DOM value of an option that is encoded as its prefixed index, whose position in `enumOptions` is `index` */
@@ -28,24 +34,19 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
   const seen = new Set<string>();
   const shared = new Set<string>();
   for (const { value } of Array.isArray(enumOptions) ? enumOptions : []) {
-    // `undefined` is encoded as the empty string, so it shares nothing with a `'undefined'` option
-    if (value !== undefined && !alwaysEncodesAsIndex(value)) {
-      const encoded = String(value);
-      if (seen.has(encoded)) {
-        shared.add(encoded);
-      } else {
-        seen.add(encoded);
-      }
+    const encoded = plainEncoding(value);
+    if (encoded !== undefined && seen.has(encoded)) {
+      shared.add(encoded);
+    } else if (encoded !== undefined) {
+      seen.add(encoded);
     }
   }
   return (value) => {
     if (value === undefined) {
       return '';
     }
-    if (alwaysEncodesAsIndex(value) || shared.has(String(value))) {
-      return undefined;
-    }
-    return String(value);
+    const encoded = plainEncoding(value);
+    return encoded === undefined || shared.has(encoded) ? undefined : encoded;
   };
 }
 
@@ -55,9 +56,9 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * When `format` is `'indexed'` (the default), each option's value is its index as a string.
  *
- * When `format` is `'realValue'`, primitive values are converted via `String()`.
+ * When `format` is `'realValue'`, string, number and boolean values are converted via `String()`.
  * Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX`, since
- * `String()` would produce `"[object Object]"`. So do `null`, since `String()` would make it indistinguishable
+ * `String()` would produce `"[object Object]"`, and so do the `BigInt`s, symbols and functions a JSON schema can't hold. So do `null`, since `String()` would make it indistinguishable
  * from the string `'null'`, and the empty string, which is the value of a select's empty placeholder. The prefix keeps
  * that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts
  * with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
