@@ -64,7 +64,9 @@ export function realValueEncoder<S extends StrictRJSFSchema = RJSFSchema>(
  * Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index, so every option keeps a
  * DOM value of its own. That includes options with the very same value, such as two `'US'` constants titled `USA` and
  * `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or
- * showing which is selected; both still decode to the value they share. An `undefined` option is encoded as the empty string.
+ * showing which is selected; both still decode to the value they share, so a multiple widget that takes its selection
+ * from `enumOptionSelectedValue()` shows only the first of them as selected. An `undefined` option is encoded as the
+ * empty string.
  *
  * @param enumOptions - The available enum options
  * @param [format='indexed'] - How to encode the values for the DOM attribute

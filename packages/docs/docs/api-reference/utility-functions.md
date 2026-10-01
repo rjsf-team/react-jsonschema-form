@@ -328,7 +328,7 @@ Non-primitive values (objects, arrays) fall back to their index, prefixed with `
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
-That includes options with the very same value, such as two `'US'` constants titled `USA` and `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or showing which is selected; both still decode to the value they share.
+That includes options with the very same value, such as two `'US'` constants titled `USA` and `United States`, since options sharing a DOM value can't be told apart by any select, whether for picking one or showing which is selected; both still decode to the value they share, so a multiple widget that takes its selection from `enumOptionSelectedValue()` shows only the first of them as selected.
 An `undefined` option is encoded as the empty string.
 
 #### Parameters
