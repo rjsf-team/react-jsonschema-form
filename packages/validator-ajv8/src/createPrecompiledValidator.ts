@@ -12,7 +12,8 @@ import type { PrecompiledValidatorOptionsType, ValidatorFunctions } from './type
  * @param validateFns - The map of the validation functions that are created by the `compileSchemaValidators()` function
  * @param rootSchema - The root schema that was used with the `compileSchemaValidators()` function
  * @param [options] - The `PrecompiledValidatorOptionsType` the validator is constructed with: a `localizer`, a
- *        `suppressDuplicateFiltering` and the `customMergeAllOf` the schemas were compiled with
+ *        `suppressDuplicateFiltering` and the form's `customMergeAllOf`, used when the validator resolves its own root
+ *        schema
  * @returns - The precompiled validator implementation resulting from the set of parameters provided
  */
 export default function createPrecompiledValidator<

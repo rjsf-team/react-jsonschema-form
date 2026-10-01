@@ -1780,7 +1780,6 @@ This is what a validator package's `compileSchemaValidatorsCode()` uses to decid
 #### Parameters
 
 - rootSchema: S - The root schema to parse for the sub-schemas that `isValid()` is called with
-- [customMergeAllOf]: CustomMergeAllOf&lt;S&gt; - The `customMergeAllOf` the form will resolve with; see `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) prop. The walk merges `allOf`s to build the sub-schemas it records, so a form whose merge differs from this one asks for hashes that were never recorded
 
 #### Returns
 
