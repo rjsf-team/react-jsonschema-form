@@ -19,8 +19,7 @@ export const SUPER_SCHEMA_OPTIONS: CustomValidatorOptionsType = {
 export function evalValidatorCode(code: string): ValidatorFunctions {
   const validateFns: ValidatorFunctions = {};
   // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
-  const load = new Function('exports', 'require', code) as (e: ValidatorFunctions, r: NodeJS.Require) => void;
-  load(validateFns, require);
+  new Function('exports', 'require', code).call(undefined, validateFns, require);
   return validateFns;
 }
 

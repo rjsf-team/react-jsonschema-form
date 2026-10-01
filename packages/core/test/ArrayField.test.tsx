@@ -190,12 +190,13 @@ describe('ArrayField', () => {
 
   const CustomSelectComponent = (props: WidgetProps) => (
     <select>
-      {(props.value as string[]).map((item, index) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <option key={index} id='custom-select'>
-          {item}
-        </option>
-      ))}
+      {Array.isArray(props.value) &&
+        props.value.map((item: unknown, index: number) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <option key={index} id='custom-select'>
+            {String(item)}
+          </option>
+        ))}
     </select>
   );
   beforeAll(() => {

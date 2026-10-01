@@ -603,12 +603,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -668,9 +670,9 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (
-                _formData: any,
+                _formData: unknown,
                 errors: FormValidation<{ pass1?: string }>,
-                _uiSchema?: any,
+                _uiSchema?: UiSchema,
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
@@ -709,7 +711,7 @@ describe('AJV8Validator', () => {
         });
         describe('uiSchema declares ui:initialValue', () => {
           it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
-            const validate = vi.fn((_formData: any, errors: FormValidation) => errors);
+            const validate = vi.fn((_formData: unknown, errors: FormValidation) => errors);
             const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
             const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
             validator.validateFormData({}, schema, validate, undefined, uiSchema);
@@ -1098,12 +1100,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -1163,9 +1167,9 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (
-                _formData: any,
+                _formData: unknown,
                 errors: FormValidation<{ pass1?: string }>,
-                _uiSchema?: any,
+                _uiSchema?: UiSchema,
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
@@ -2236,12 +2240,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<{ pass2?: string }>) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -2301,9 +2307,9 @@ describe('AJV8Validator', () => {
           beforeAll(() => {
             validate = vi.fn(
               (
-                _formData: any,
+                _formData: unknown,
                 errors: FormValidation<{ pass1?: string }>,
-                _uiSchema?: any,
+                _uiSchema?: UiSchema,
                 errorSchema?: ErrorSchema<{ pass1: string }>,
               ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {

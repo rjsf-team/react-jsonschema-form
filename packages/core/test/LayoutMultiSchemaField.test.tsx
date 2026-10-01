@@ -17,6 +17,7 @@ import {
   ErrorSchemaBuilder,
   getDiscriminatorFieldFromSchema,
   getVisibleErrors,
+  isObject,
   ONE_OF_KEY,
   optionsList,
   toFieldPath,
@@ -387,7 +388,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(props.onBlur).toHaveBeenCalledWith(DEFAULT_ID, oneOfData.name);
 
     // OnChange was called with the correct event
-    const retrievedOptions = (props.options as RJSFSchema[]).map((opt) =>
+    const retrievedOptions = (Array.isArray(props.options) ? props.options.filter(isObject) : []).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
     const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
@@ -429,7 +430,7 @@ describe('LayoutMultiSchemaField', () => {
     // select the second option, whose schema has the `unique_to_second` field
     await user.selectOptions(button, '1');
 
-    const retrievedOptions = (props.options as RJSFSchema[]).map((opt) =>
+    const retrievedOptions = (Array.isArray(props.options) ? props.options.filter(isObject) : []).map((opt) =>
       props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
     const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(

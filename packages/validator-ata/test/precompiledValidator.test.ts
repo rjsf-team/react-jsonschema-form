@@ -268,12 +268,17 @@ describe('ATAPrecompiledValidator', () => {
             name: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation<{ passwords?: { pass2?: string } }>) => {
-            if (formData.passwords.pass1 !== formData.passwords.pass2) {
-              errors.passwords!.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (
+              formData: { passwords: { pass1?: string; pass2?: string } },
+              errors: FormValidation<{ passwords?: { pass2?: string } }>,
+            ) => {
+              if (formData.passwords.pass1 !== formData.passwords.pass2) {
+                errors.passwords?.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided and passes custom validation', () => {
           beforeAll(() => {
