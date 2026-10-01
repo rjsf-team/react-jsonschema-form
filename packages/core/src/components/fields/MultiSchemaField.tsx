@@ -101,8 +101,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
       // describes it
       const chosen = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
-      const schemaContext = schemaUtils.getSchemaContext();
-      if (chosen && schemaContext.validator.isValid(chosen, formData, registry.rootSchema)) {
+      if (chosen && schemaUtils.getValidator().isValid(chosen, formData, registry.rootSchema)) {
         return;
       }
     } else if (!isFormDataChanged) {

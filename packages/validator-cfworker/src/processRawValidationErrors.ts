@@ -189,6 +189,9 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - A function that transforms errors before custom validation
  * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed
+ * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults already
+ *        applied. `Form` computes it with its own `SchemaUtils`, so the defaults honor the form's `customMergeAllOf`
+ *        and `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
  * @returns - The processed validation errors and error schema
  */
 export default function processRawValidationErrors<

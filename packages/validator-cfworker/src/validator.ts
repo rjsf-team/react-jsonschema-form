@@ -156,6 +156,7 @@ export default class CFWorkerValidator<
    * @param [customValidate] - A function that adds application-specific validation errors
    * @param [transformErrors] - A function that transforms errors before custom validation
    * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
+   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults applied
    * @returns - The processed validation errors and error schema
    */
   validateFormData<T = unknown>(

@@ -161,6 +161,13 @@ export default class ATAValidator<
   /** Validates `formData` and returns RJSF's `ValidationData<T>`. See
    * `processRawValidationErrors` for the shape of the post-processing
    * pipeline (custom validation, transform hook, ui-title resolution).
+   *
+   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [customValidate] - An optional function that is used to perform custom validation
+   * @param [transformErrors] - An optional function that is used to transform errors after ata validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [customValidateFormData] - The `formData` to hand `customValidate`, with the form's defaults applied
    */
   validateFormData<T = unknown>(
     formData: T | undefined,
