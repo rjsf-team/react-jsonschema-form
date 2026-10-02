@@ -66,6 +66,8 @@ If your `Form` is given a `customMergeAllOf`, put it in those same options so th
 Each function is looked up by the `$id` of the schema it validates, or by a hash of that schema when it has none, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
 If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
 Give two sub-schemas that differ distinct `$id`s, or none, since the lookup cannot tell two schemas with the same `$id` apart and the compile fails rather than leave one of them out.
+An `$id` of the empty string names nothing, so a schema carrying one is looked up by its hash instead.
+An object may have at most 16 `patternProperties` for the compile, since a key can match any subset of them and a form renders it with the merge of the subset it matches, so every subset has to be compiled.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';

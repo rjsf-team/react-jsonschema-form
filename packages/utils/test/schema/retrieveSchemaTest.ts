@@ -6,6 +6,7 @@ import {
   GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
+  isObject,
   PROPERTIES_KEY,
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
@@ -1629,7 +1630,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           patternProperties: { '^p$': { properties: { extra: { type: 'string' } } } },
         };
         const rootSchema: RJSFSchema = { definitions: {} };
-        const properties = (expanded: RJSFSchema) => (expanded.properties!.p as RJSFSchema).properties;
+        const properties = ({ properties: expanded }: RJSFSchema) => isObject(expanded?.p) && expanded.p.properties;
         // Merging `p` with its matching pattern resolves it, so the branches of that resolution are expanded too
         expect(
           retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true).map(properties),
@@ -1637,6 +1638,38 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'number' } },
           { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'boolean' } },
         ]);
+      });
+      it('should ignore a dependency oneOf that qualifies no option when expanding all branches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          dependencies: { a: { oneOf: [{ required: ['b'] }] } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // No option names `a`, so expanding qualifies none of them and the `oneOf` is ignored, as it is when the form
+        // data picks no single valid one
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toEqual([
+          { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        ]);
+      });
+      it('should vary the branches of pattern-matched properties one at a time, not in every combination', () => {
+        const conditional: RJSFSchema = {
+          type: 'object',
+          if: { properties: { a: { const: 'x' } } },
+          then: { properties: { c: { type: 'number' } } },
+          else: { properties: { c: { type: 'boolean' } } },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p0: { type: 'object' }, p1: { type: 'object' }, p2: { type: 'object' } },
+          patternProperties: { '^p': conditional },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // Each property contributes its own extra branch rather than multiplying the ones before it, so three
+        // two-branch properties make `1 + 3` variants and not `2 ** 3`
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toHaveLength(
+          4,
+        );
       });
       it('should drop an allOf it cannot merge when expanding all branches, as a form does', () => {
         const schema: RJSFSchema = {

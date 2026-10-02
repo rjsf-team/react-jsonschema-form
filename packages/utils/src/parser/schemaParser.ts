@@ -1,4 +1,10 @@
-import { ADDITIONAL_PROPERTIES_KEY, ITEMS_KEY, PATTERN_PROPERTIES_KEY, PROPERTIES_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ITEMS_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PROPERTIES_KEY,
+} from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
@@ -7,9 +13,9 @@ import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
 
 /** The state that one `schemaParser()` call shares across its recursive `parseSchema()` calls. Both sets hold the
- * `sortedJSONStringify()` of a schema, the string `hashForSchema()` hashes: it compares as `deepEquals()` does, in
- * constant time rather than by scanning a list, and unlike the hash it cannot collide two schemas into one, which would
- * silently leave a sub-schema out of the compiled map
+ * `sortedJSONStringify()` of a schema, the string `hashForSchema()` hashes: it compares as `deepEquals()` does, and
+ * unlike the hash it cannot collide two schemas into one, which would silently leave a sub-schema out of the
+ * compiled map
  */
 interface ParseState {
   /** The schemas already passed to `parseSchema()`. A schema resolves to the same thing however it was reached, and an
@@ -30,14 +36,26 @@ function isSchemaObject<S extends StrictRJSFSchema = RJSFSchema>(valueSchema: un
   return isObject(valueSchema);
 }
 
+/** The most `patternProperties` one schema may have for the combinations of them to be enumerated. There are
+ * `2^n - 1` of those, so the work doubles with each pattern past this and a schema that exceeds it is reported rather
+ * than parsed for minutes
+ */
+const MAX_COMBINED_PATTERN_PROPERTIES = 16;
+
 /** Returns every non-empty combination of the given `values`, each keeping the order they were given in. There are
  * `2^n - 1` of them: a form reads only the combination of `patternProperties` that a form data key actually matches,
  * which a parse that has no form data cannot know, so every one of them has to be covered.
  *
  * @param values - The values to combine
  * @returns - The list of every non-empty combination of the `values`
+ * @throws - Error when there are more than `MAX_COMBINED_PATTERN_PROPERTIES` values to combine
  */
 function combinationsOf<V>(values: V[]): V[][] {
+  if (values.length > MAX_COMBINED_PATTERN_PROPERTIES) {
+    throw new Error(
+      `A schema has ${values.length} patternProperties, more than the ${MAX_COMBINED_PATTERN_PROPERTIES} whose combinations can be enumerated. A key can match any subset of them, and a form renders it with the merge of the subset it matches, so every subset has to be compiled. Give the object fewer patternProperties, nesting the values they describe if need be.`,
+    );
+  }
   return values.reduce<V[][]>(
     (combinations, value) => [...combinations, [value], ...combinations.map((combination) => [...combination, value])],
     [],
@@ -65,6 +83,18 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     return;
   }
   state.parsed.add(parsedKey);
+  const { [ALL_OF_KEY]: allOf, ...withoutAllOf } = schema;
+  if (allOf) {
+    // A form does not validate only against the merge of an `allOf`: `getObjectDefaults()` reads a nested object's
+    // unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place. So the entries and what
+    // the schema declares besides them are parsed alongside the merged schema rather than being taken as covered by it
+    parseSchema<T, S, F>(context, state, rootSchema, withoutAllOf as S);
+    for (const subSchema of allOf) {
+      if (isSchemaObject<S>(subSchema)) {
+        parseSchema<T, S, F>(context, state, rootSchema, subSchema);
+      }
+    }
+  }
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
