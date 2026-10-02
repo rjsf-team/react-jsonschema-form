@@ -10,7 +10,7 @@ import type {
   ObjectFieldTemplateProps,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
@@ -1615,6 +1615,49 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: [] }, 'root');
     });
+
+    it('should add a numeric default for an integer additionalProperties schema', async () => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: 'integer' } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+    });
+
+    it.each<[RJSFSchema['type'], unknown]>([
+      [['integer', 'null'], 0],
+      [['number', 'null'], 0],
+      [['boolean', 'null'], false],
+    ])('should add a typed default for a nullable %j additionalProperties schema', async (type, expected) => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['default', { type: ['integer', 'null'], default: null }],
+      ['const', { type: ['integer', 'null'], const: null }],
+    ])(
+      'should keep an explicit null %s for a nullable additionalProperties schema',
+      async (_, additionalProperties) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: null }, 'root');
+      },
+    );
 
     it('should add a string item if additionalProperties is true', async () => {
       // Specify that additionalProperties is true

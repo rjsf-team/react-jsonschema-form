@@ -352,7 +352,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         const formData = ['aaa', 'bbb', 'ccc'];
 
         function customValidate(formData: FormProps['formData'], errors: FormValidation) {
-          if ((formData as string[]).indexOf('bbb') !== -1) {
+          if (Array.isArray(formData) && formData.includes('bbb')) {
             errors.addError('Forbidden value: bbb');
           }
           return errors;

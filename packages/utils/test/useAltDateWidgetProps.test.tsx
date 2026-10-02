@@ -152,7 +152,7 @@ describe('useAltDateWidgetProps()', () => {
     });
     act(() => result.current.handleChange('year', '2020'));
     expect(PROPS.onChange).not.toHaveBeenCalled();
-    expect(result.current.elements[0].value).toBe('2020');
+    expect(result.current.elements[0].value).toBe(2020);
     rerender({ ...PROPS, value: DATE_STR });
     expect(result.current.elements).toEqual(
       getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),

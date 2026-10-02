@@ -711,20 +711,24 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#own-widget')).toBeInTheDocument();
     });
 
-    it('hides the type selector label along with the label of the field it sits in', () => {
-      const { node } = createFormComponent({
-        schema: multiTypeSchema,
-        uiSchema: { multi: { 'ui:options': { label: false } } },
-        useFallbackUiForUnsupportedType: true,
-        formData: { multi: 'a string' },
-      });
+    // `0` and `null` stand in for an untyped JSON uiSchema, which the field's own label already treats as `false`
+    it.each([false, 0, null])(
+      'hides the type selector label along with the label of the field it sits in for a ui:label of %s',
+      (label) => {
+        const { node } = createFormComponent({
+          schema: multiTypeSchema,
+          uiSchema: { multi: { 'ui:options': { label } } },
+          useFallbackUiForUnsupportedType: true,
+          formData: { multi: 'a string' },
+        });
 
-      // Asserted first so that a selector gone missing fails here rather than passing the label check below, which a
-      // field rendered without one satisfies just as well
-      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
-      // The selector is a control within the field, so the option that turns the field's label off turns its own off
-      expect(Array.from(node.querySelectorAll('label')).map((aLabel) => aLabel.textContent)).toEqual([]);
-    });
+        // Asserted first so that a selector gone missing fails here rather than passing the label check below, which a
+        // field rendered without one satisfies just as well
+        expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+        // The selector is a control within the field, so the option that turns the field's label off turns its own off
+        expect(Array.from(node.querySelectorAll('label')).map((aLabel) => aLabel.textContent)).toEqual([]);
+      },
+    );
 
     it('offers no type selector for an additional property constrained without a type', () => {
       const { node } = createFormComponent({

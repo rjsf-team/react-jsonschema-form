@@ -44,6 +44,8 @@ interface FancyMultiSelectProps {
   id: string;
 }
 
+const NO_ITEMS: FancySelectItem[] = [];
+
 /**
  * A fancy multi-select component that allows users to select multiple items from a dropdown
  * @param props - The component props
@@ -51,7 +53,7 @@ interface FancyMultiSelectProps {
  */
 export function FancyMultiSelect({
   multiple,
-  items = [],
+  items = NO_ITEMS,
   sections,
   selected,
   onValueChange,
