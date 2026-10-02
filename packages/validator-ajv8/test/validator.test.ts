@@ -6,7 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
+import { ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -53,6 +53,13 @@ describe('AJV8Validator', () => {
         };
 
         expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
+      });
+      it('should key a schema whose $id is empty by its hash, since an empty $id names nothing', () => {
+        const emptyIdRootSchema: RJSFSchema = { type: 'object' };
+
+        expect(validator.isValid({ $id: '', type: 'string' }, 'a', emptyIdRootSchema)).toBe(true);
+        // Keyed by the empty `$id`, this would be answered by the function compiled for the schema above
+        expect(validator.isValid({ $id: '', type: 'number' }, 'a', emptyIdRootSchema)).toBe(false);
       });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
@@ -226,6 +233,34 @@ describe('AJV8Validator', () => {
 
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
+      });
+    });
+    describe('scoring an option whose $id is the base of a relative $ref', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          b: { $id: 'http://example.com/b.json', type: 'string', minLength: 3 },
+          a: {
+            $id: 'http://example.com/a.json',
+            type: 'object',
+            properties: { x: { type: 'string', not: { $ref: 'b.json' } } },
+          },
+        },
+        type: 'object',
+        properties: {
+          pick: {
+            oneOf: [
+              { type: 'object', properties: { other: { type: 'number' } }, required: ['other'] },
+              { $ref: '#/definitions/a' },
+            ],
+          },
+        },
+      };
+
+      it('resolves the $ref against the option it augments, which the derived $id keeps as its base', () => {
+        const options = (rootSchema.properties!.pick as RJSFSchema).oneOf as RJSFSchema[];
+        const retrieved = options.map((option) => retrieveSchema({ validator }, option, rootSchema, {}));
+
+        expect(getFirstMatchingOption({ validator }, { x: 'ab' }, retrieved, rootSchema)).toBe(1);
       });
     });
     describe('compilation error caching (issue #3933)', () => {

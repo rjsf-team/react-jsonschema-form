@@ -139,7 +139,9 @@ export default class CFWorkerValidator<
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      // An empty `$id` names nothing, so the schema is keyed by its hash instead, as in `isValid()`: the two share
+      // the cache `getOrBuild()` keeps, where schemas carrying one would take turns evicting each other
+      const id = schema[ID_KEY] || hashForSchema(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(normalizeFormDataForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -220,7 +222,9 @@ export default class CFWorkerValidator<
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      // An empty `$id` names nothing, so the schema is keyed by its hash instead; two different schemas that both
+      // carry one would otherwise take turns evicting each other from the cache that `getOrBuild()` keeps
+      id = schemaWithIdRefPrefix[ID_KEY] || hashForSchema(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {

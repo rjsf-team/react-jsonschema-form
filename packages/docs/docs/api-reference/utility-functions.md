@@ -1863,6 +1863,8 @@ Parses `rootSchema` and returns every schema and sub-schema that validation will
 It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through the sub-schemas a form renders a value with: `properties`, the `patternProperties` and `additionalProperties` a form renders the keys they describe with, and `items`, including every position of a tuple `items` and the `additionalItems` beyond it.
 It stops at a schema it has already collected, so that a recursive `$ref` cannot loop.
 A key a form's data brings is rendered with the merge of every `patternProperties` entry matching it, so each combination of them is parsed as the `allOf` that merge is made from, which a `customMergeAllOf` sees exactly as the form's does.
+A schema may have at most 16 `patternProperties` for this, since there are `2 ** n - 1` combinations of them; one with more is reported rather than parsed.
+An `allOf` is parsed both merged and as it stands, because a form reads it both ways: `getObjectDefaults()` reads a nested object's unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place.
 This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the key it maps them under is the one the validator looks them up by at runtime; see [validator-ajv8](./validator-ajv8.md).
 
 #### Parameters
@@ -2392,6 +2394,7 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.
+An object option is validated as an augmented copy of itself, which is not the schema its `$id` names, so that copy is given an `$id` of `<the option's>?rjsf=<the copy's hash>` the same way [`relaxOptionsForScoring()`](#relaxoptionsforscoringsextendsstrictrjsfschemarjsfschema) does.
 
 #### Parameters
 
@@ -2474,6 +2477,7 @@ Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not
 Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
 When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences` so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
 Any option whose `additionalProperties` is `false` is widened to `true` so that `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
+A widened option is not the schema its `$id` names, so it is given an `$id` of `<the option's>?rjsf=<the widened option's hash>`: distinct enough that a validator compiles a function for it rather than reusing the option's, while keeping the option's `$id` as the base that a relative `$ref` inside it resolves against.
 
 #### Parameters
 

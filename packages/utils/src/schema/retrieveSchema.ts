@@ -32,7 +32,7 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
-import getFirstMatchingOption from './getFirstMatchingOption.ts';
+import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -763,32 +763,39 @@ export function retrieveSchemaInternal<
       }
     }
     let withMergedProperties = [resolvedSchema];
-    if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
-      withMergedProperties = Object.keys(resolvedSchema.properties!).reduce(
-        (schemas: S[], key) =>
-          schemas.flatMap((schemaSoFar) => {
-            const matchingProperties = getMatchingPatternProperties(schemaSoFar, key);
-            if (Object.keys(matchingProperties).length === 0) {
-              return schemaSoFar;
-            }
-            // Each branch of the merged property is one a form can render it with, so `expandAllBranches` is passed on
-            // rather than keeping only the branch this call's form data picks
-            return retrieveSchemaInternal<T, S, F>(
-              context,
-              { allOf: [schemaSoFar.properties![key], ...Object.values(matchingProperties)] } as S,
-              rootSchema,
-              getByPath<T>(rawFormData, key),
-              expandAllBranches,
-              undefined,
-              undefined,
-              preserveDependencies,
-            ).map((mergedProperty) => ({
-              ...schemaSoFar,
-              properties: { ...schemaSoFar.properties, [key]: mergedProperty },
-            }));
-          }),
-        [{ ...resolvedSchema, properties: { ...resolvedSchema.properties } } as S],
-      );
+    const { properties } = resolvedSchema;
+    if (properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
+      // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
+      // are varied one property at a time rather than in every combination with the other properties': what reads a
+      // branch reads one property, and the combinations grow as the product of the branch counts
+      const branchesByKey = Object.keys(properties).flatMap((key) => {
+        const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
+        if (Object.keys(matchingProperties).length === 0) {
+          return [];
+        }
+        const branches = retrieveSchemaInternal<T, S, F>(
+          context,
+          { allOf: [properties[key], ...Object.values(matchingProperties)] } as S,
+          rootSchema,
+          getByPath<T>(rawFormData, key),
+          expandAllBranches,
+          undefined,
+          undefined,
+          preserveDependencies,
+        );
+        return [{ key, branches }];
+      });
+      const firstBranches = Object.fromEntries(branchesByKey.map(({ key, branches: [first] }) => [key, first]));
+      const withFirstBranches: S = { ...resolvedSchema, properties: { ...properties, ...firstBranches } };
+      withMergedProperties = [
+        withFirstBranches,
+        ...branchesByKey.flatMap(({ key, branches }) =>
+          branches.slice(1).map((branch) => ({
+            ...withFirstBranches,
+            properties: { ...withFirstBranches.properties, [key]: branch },
+          })),
+        ),
+      ];
     }
     return withMergedProperties.flatMap((schemaWithProperties) => {
       const hasAdditionalProperties =
@@ -813,13 +820,21 @@ export function retrieveSchemaInternal<
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema, defaults to an empty object
+ * @param [recurseList=[]] - The list of recursive references already processed
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function resolveAnyOrOneOfSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  expandAllBranches: boolean,
+  rawFormData?: T,
+  recurseList: string[] = [],
+) {
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
     const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...withoutOptions } = schema;
@@ -849,6 +864,19 @@ export function resolveAnyOrOneOfSchemas<
       // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
       const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
       getFirstMatchingOption<T, S, F>(context, formData, relaxed, rootSchema, discriminator);
+      // `MultiSchemaField` scores the options it has retrieved rather than the ones the schema declares, so an option
+      // that resolves into something else -- one that is an `allOf`, say -- is scored in that resolved form too
+      const retrievedOptions = anyOrOneOf.flatMap((item) =>
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
+      );
+      getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
+      getFirstMatchingOption<T, S, F>(
+        context,
+        formData,
+        relaxOptionsForScoring<S>(retrievedOptions),
+        rootSchema,
+        discriminator,
+      );
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
     return [mergeSchemas(remaining, anyOrOneOf[option]) as S];
@@ -883,10 +911,9 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
     if (schema.additionalProperties !== false) {
       return schema;
     }
-    // Relaxing makes a schema that the option's `$id` does not name, so it is dropped for the same reason
-    // `getFirstMatchingOption()` drops it from the schema it augments
-    const { [ID_KEY]: _id, ...relaxed } = schema;
-    return { ...relaxed, additionalProperties: true } as S;
+    // Relaxing makes a schema the option's `$id` does not name, so it is derived for the same reason
+    // `getFirstMatchingOption()` derives one for the schema it augments
+    return withVariantId<S>({ ...schema, additionalProperties: true });
   });
 }
 
@@ -922,6 +949,7 @@ export function resolveDependencies<
     rootSchema,
     expandAllBranches,
     formData,
+    recurseList,
   );
   return resolvedSchemas.flatMap((resolvedSchema) =>
     processDependencies<T, S, F>(
@@ -1131,7 +1159,9 @@ export function withExactlyOneSubschema<
     return false;
   });
 
-  if (!expandAllBranches && validSubschemas.length !== 1) {
+  // Expanding all branches keeps every subschema that names the dependency key, but a `oneOf` whose options all leave
+  // it out qualifies none of them, and the rest of this function describes a chosen subschema
+  if (validSubschemas.length === 0 || (!expandAllBranches && validSubschemas.length !== 1)) {
     logOnce(
       `ignoring oneOf in dependencies of "${dependencyKey}" because there isn't exactly one subschema that is valid`,
     );

@@ -281,10 +281,11 @@ describe('schemaParser()', () => {
     };
     const schemaMap = schemaParser(rootSchema);
     // With no `properties` to augment, the option is validated as it stands, so its own `$id` does name it; the variant
-    // scored with `additionalProperties` relaxed is a schema of its own and is keyed by its content
+    // scored with `additionalProperties` relaxed is a schema of its own, keyed by an `$id` derived from that one so
+    // that a relative `$ref` inside it still resolves against the same base
     expect(schemaMap.bare).toEqual(expect.objectContaining({ additionalProperties: false }));
     const relaxed = Object.entries(schemaMap).filter(([, schema]) => schema.additionalProperties === true);
-    expect(relaxed).toEqual([[expect.not.stringContaining('bare'), expect.objectContaining({ type: 'object' })]]);
+    expect(relaxed).toEqual([[expect.stringMatching(/^bare\?rjsf=.+/), expect.objectContaining({ type: 'object' })]]);
   });
   it('parses each combination of patternProperties a key can match, as the form merges every one it matches', () => {
     const rootSchema: RJSFSchema = {
@@ -307,6 +308,22 @@ describe('schemaParser()', () => {
     // A key of `xy` matches only the first pattern, `yx` only the second and `x` both, so a form can merge any of the
     // three and the sub-schemas of all three have to be parsed
     expect(mergedLists).toEqual([['first'], ['second'], ['first', 'second']]);
+  });
+  it('parses nothing of a boolean entry in an allOf, which constrains no value of its own', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      allOf: [true, { properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } } }],
+    };
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 'b' }));
+  });
+  it('reports a schema with more patternProperties than the combinations of them can be enumerated for', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      patternProperties: Object.fromEntries(
+        Array.from({ length: 17 }, (_, i) => [`^p${i}`, { properties: { [`v${i}`]: { type: 'string' } } }]),
+      ),
+    };
+    expect(() => schemaParser(rootSchema)).toThrow(/A schema has 17 patternProperties, more than the 16/);
   });
   it('parses the conditional branches of a property its patternProperties also match', () => {
     const rootSchema: RJSFSchema = {
@@ -336,8 +353,9 @@ describe('schemaParser()', () => {
       return allOf.reduce<GenericObjectType>((acc, s) => (isObject(s) ? mergeSchemas(acc, s) : acc), rest);
     };
     schemaParser(rootSchema, { customMergeAllOf });
-    // One merge per `allOf`, rather than one per combination of the branches of the nested ones
-    expect(merges).toBe(7);
+    // Two merges per nested `allOf` -- one reached through the root's merge and one parsing the entry in its own
+    // right -- plus the root's own, rather than one per combination of the branches of the nested ones
+    expect(merges).toBe(13);
   });
   describe('with a customMergeAllOf', () => {
     const customOption = expect.objectContaining(TITLED_CHOICE_OPTION);
@@ -372,26 +390,29 @@ describe('schemaParser()', () => {
       expect(Object.values(schemaParser(rootSchema))).not.toContainEqual(customOption);
       expect(Object.values(schemaParser(rootSchema, { customMergeAllOf }))).toContainEqual(customOption);
     });
-    it('parses the options it merges rather than the unmerged ones', () => {
+    it('parses the options it merges alongside the unmerged ones a form also validates', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
         allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
       };
-      // The form only ever validates against the options the merge produced, so the unmerged ones are left uncompiled
+      // `getObjectDefaults()` reads a nested object's unmerged `properties` and `omitExtraData()` reads the entries a
+      // merge leaves in place, so both forms of an option are validated against and both have to be parsed
       const schemas = Object.values(schemaParser(rootSchema, { customMergeAllOf }));
       expect(schemas).toContainEqual(customOption);
-      expect(schemas).not.toContainEqual(expect.objectContaining({ const: 'b', title: undefined }));
+      expect(schemas).toContainEqual(expect.objectContaining({ const: 'b', $id: expect.any(String) }));
     });
-    it('parses nothing of an allOf it leaves in place, as the form renders nothing of one', () => {
+    it('parses the entries of an allOf it leaves in place, as omitExtraData() scores them', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
         allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
       };
       const identityMergeAllOf = (schema: RJSFSchema) => schema;
-      // A merge that returns its input leaves the form with no `properties` to render, so there is nothing to validate
-      expect(Object.values(schemaParser(rootSchema, { customMergeAllOf: identityMergeAllOf }))).toEqual([
-        expect.objectContaining({ allOf: expect.any(Array) }),
-      ]);
+      // A merge that returns its input leaves the `allOf` for `omitExtraData()` to walk, scoring the options of each
+      // entry it finds there
+      const schemas = Object.values(schemaParser(rootSchema, { customMergeAllOf: identityMergeAllOf }));
+      expect(schemas).toContainEqual(expect.objectContaining({ allOf: expect.any(Array) }));
+      expect(schemas).toContainEqual(expect.objectContaining({ const: 'a' }));
+      expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
     });
     it('parses the allOf with it dropped when it throws, as the form does', () => {
       const rootSchema: RJSFSchema = {
@@ -403,9 +424,10 @@ describe('schemaParser()', () => {
         throw new Error('cannot merge');
       };
       const schemas = Object.values(schemaParser(rootSchema, { customMergeAllOf: throwingMergeAllOf }));
-      // The form drops an `allOf` it cannot merge, keeping the rest of the schema, and validates against that
+      // The form drops an `allOf` it cannot merge, keeping the rest of the schema, and validates against that. The
+      // entries are still parsed, since what reads them unmerged reads them whether or not a merge of them succeeds
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'k1' }));
-      expect(schemas).not.toContainEqual(expect.objectContaining({ const: 'b' }));
+      expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
     });
   });
 });

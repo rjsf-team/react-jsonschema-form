@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { getDefaultFormState, retrieveSchema, schemaParser } from '@rjsf/utils';
+import { createSchemaUtils, getDefaultFormState, omitExtraData, retrieveSchema, schemaParser } from '@rjsf/utils';
 
 import {
   MERGED_PATTERN_KEY_FORM_DATA,
@@ -8,6 +8,17 @@ import {
   SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
   titleChoiceMergeAllOf as customMergeAllOf,
 } from '../../utils/test/testUtils/customMergeAllOfData.ts';
+import {
+  identityMergeAllOf,
+  NESTED_ALL_OF_FORM_DATA,
+  SCHEMA_NESTED_ALL_OF,
+  SCHEMA_ONE_OF_ALL_OF_REF,
+  SCHEMA_TWO_MATCHING_PATTERNS,
+  SCHEMA_UNMERGED_ALL_OF,
+  TWO_MATCHING_PATTERNS_FORM_DATA,
+  UNMERGED_ALL_OF_FORM_DATA,
+  UNMERGED_ALL_OF_OMITTED,
+} from '../../utils/test/testUtils/parsedSchemaData.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -132,5 +143,61 @@ describe('compileSchemaValidatorsCode() with a customMergeAllOf, for a key only 
     expect(getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData })).toEqual(
       formData,
     );
+  });
+});
+
+describe('compileSchemaValidatorsCode() for the sub-schemas a form validates against unmerged', () => {
+  it('covers a nested allOf unmerged, as getObjectDefaults() reads it', () => {
+    const rootSchema = SCHEMA_NESTED_ALL_OF;
+    const validator = createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf })),
+      rootSchema,
+      { customMergeAllOf },
+    );
+    expect(
+      getDefaultFormState(
+        { validator, customMergeAllOf },
+        { schema: rootSchema, rootSchema, formData: NESTED_ALL_OF_FORM_DATA },
+      ),
+    ).toEqual(NESTED_ALL_OF_FORM_DATA);
+  });
+  it('covers the entries a merge leaves in the allOf, as omitExtraData() reads them', () => {
+    const rootSchema = SCHEMA_UNMERGED_ALL_OF;
+    const validator = createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf: identityMergeAllOf })),
+      rootSchema,
+      { customMergeAllOf: identityMergeAllOf },
+    );
+    expect(
+      omitExtraData(
+        { validator, customMergeAllOf: identityMergeAllOf },
+        rootSchema,
+        rootSchema,
+        UNMERGED_ALL_OF_FORM_DATA,
+      ),
+    ).toEqual(UNMERGED_ALL_OF_OMITTED);
+  });
+  it('covers an option retrieved from a $ref to an allOf, as MultiSchemaField scores it', () => {
+    const rootSchema = SCHEMA_ONE_OF_ALL_OF_REF;
+    const validator = createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema)),
+      rootSchema,
+    );
+    const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+    const formData = { meow: 'x' };
+    const options = (rootSchema.properties!.pet as RJSFSchema).oneOf as RJSFSchema[];
+    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, formData));
+
+    expect(schemaUtils.getClosestMatchingOption(formData, retrieved, 0)).toBe(0);
+  });
+  it('covers the merge of two patternProperties that match the same key', () => {
+    const rootSchema = SCHEMA_TWO_MATCHING_PATTERNS;
+    const validator = createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema)),
+      rootSchema,
+    );
+    expect(
+      getDefaultFormState({ validator }, { schema: rootSchema, rootSchema, formData: TWO_MATCHING_PATTERNS_FORM_DATA }),
+    ).toEqual(TWO_MATCHING_PATTERNS_FORM_DATA);
   });
 });
