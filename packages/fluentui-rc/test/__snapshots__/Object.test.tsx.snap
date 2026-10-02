@@ -349,6 +349,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -356,7 +357,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -380,6 +381,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -387,7 +389,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -520,6 +522,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="12"
                       viewBox="0 0 12 12"
@@ -527,7 +530,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M9.76 3.2c.3.29.32.76.04 1.06l-4.25 4.5a.75.75 0 0 1-1.08.02L2.22 6.53a.75.75 0 0 1 1.06-1.06l1.7 1.7L8.7 3.24a.75.75 0 0 1 1.06-.04Z"
+                        d="M9.76 3.2c.3.29.32.76.04 1.06l-4.25 4.5a.75.75 0 0 1-1.08.02L2.22 6.53a.75.75 0 0 1 1.06-1.06l1.7 1.7L8.7 3.24a.75.75 0 0 1 1.06-.04"
                         fill="currentColor"
                       />
                     </svg>
@@ -630,6 +633,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -637,7 +641,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -656,6 +660,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -663,7 +668,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -682,6 +687,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -689,7 +695,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                               fill="currentColor"
                             />
                           </svg>
@@ -755,6 +761,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -762,7 +769,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -782,6 +789,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -789,7 +797,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -808,6 +816,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -815,7 +824,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                               fill="currentColor"
                             />
                           </svg>
@@ -838,6 +847,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         <svg
                           aria-hidden="true"
                           class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          data-fui-icon=""
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -845,7 +855,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                            d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                             fill="currentColor"
                           />
                         </svg>
@@ -1365,6 +1375,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1372,7 +1383,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -1391,6 +1402,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1398,7 +1410,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -1417,6 +1429,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1424,7 +1437,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                               fill="currentColor"
                             />
                           </svg>
@@ -1490,6 +1503,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1497,7 +1511,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0V4.71Z"
+                              d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -1517,6 +1531,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1524,7 +1539,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0v11.79Z"
+                              d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
                               fill="currentColor"
                             />
                           </svg>
@@ -1543,6 +1558,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -1550,7 +1566,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                              d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                               fill="currentColor"
                             />
                           </svg>
@@ -1573,6 +1589,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         <svg
                           aria-hidden="true"
                           class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          data-fui-icon=""
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -1580,7 +1597,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                            d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                             fill="currentColor"
                           />
                         </svg>
@@ -1830,6 +1847,7 @@ exports[`object fields > additionalProperties 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -1837,7 +1855,7 @@ exports[`object fields > additionalProperties 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -1861,6 +1879,7 @@ exports[`object fields > additionalProperties 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -1868,7 +1887,7 @@ exports[`object fields > additionalProperties 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -1934,6 +1953,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       aria-expanded="false"
                       aria-labelledby="field-_r_q___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
+                      data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
                       name="root_foo-key"
                       role="combobox"
@@ -1948,6 +1968,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         <svg
                           aria-hidden="true"
                           class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          data-fui-icon=""
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -1955,7 +1976,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0"
                             fill="currentColor"
                           />
                         </svg>
@@ -1969,6 +1990,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       <svg
                         aria-hidden="true"
                         class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                        data-fui-icon=""
                         fill="currentColor"
                         height="1em"
                         viewBox="0 0 20 20"
@@ -1976,7 +1998,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z"
+                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07z"
                           fill="currentColor"
                         />
                       </svg>
@@ -2039,6 +2061,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2046,7 +2069,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2070,6 +2093,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2077,7 +2101,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -2189,6 +2213,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                           <svg
                             aria-hidden="true"
                             class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                            data-fui-icon=""
                             fill="currentColor"
                             height="1em"
                             viewBox="0 0 20 20"
@@ -2196,7 +2221,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                              d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                               fill="currentColor"
                             />
                           </svg>
@@ -2223,6 +2248,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2230,7 +2256,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2254,6 +2280,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2261,7 +2288,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -2388,6 +2415,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2395,7 +2423,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2419,6 +2447,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2426,7 +2455,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -2542,6 +2571,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2549,7 +2579,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2573,6 +2603,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2580,7 +2611,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -2729,6 +2760,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2736,7 +2768,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2760,6 +2792,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2767,7 +2800,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -2833,6 +2866,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       aria-expanded="false"
                       aria-labelledby="field-_r_m___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
+                      data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
                       name="root_foo-key"
                       role="combobox"
@@ -2847,6 +2881,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         <svg
                           aria-hidden="true"
                           class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          data-fui-icon=""
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -2854,7 +2889,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0"
                             fill="currentColor"
                           />
                         </svg>
@@ -2868,6 +2903,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       <svg
                         aria-hidden="true"
                         class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                        data-fui-icon=""
                         fill="currentColor"
                         height="1em"
                         viewBox="0 0 20 20"
@@ -2875,7 +2911,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z"
+                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07z"
                           fill="currentColor"
                         />
                       </svg>
@@ -2927,6 +2963,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -2934,7 +2971,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -2958,6 +2995,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -2965,7 +3003,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -3031,6 +3069,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       aria-expanded="false"
                       aria-labelledby="field-_r_u___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
+                      data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
                       name="root_foo-key"
                       role="combobox"
@@ -3045,6 +3084,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         <svg
                           aria-hidden="true"
                           class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                          data-fui-icon=""
                           fill="currentColor"
                           height="1em"
                           viewBox="0 0 20 20"
@@ -3052,7 +3092,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0Z"
+                            d="M15.85 7.65c.2.2.2.5 0 .7l-5.46 5.49a.55.55 0 0 1-.78 0L4.15 8.35a.5.5 0 1 1 .7-.7L10 12.8l5.15-5.16c.2-.2.5-.2.7 0"
                             fill="currentColor"
                           />
                         </svg>
@@ -3066,6 +3106,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       <svg
                         aria-hidden="true"
                         class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                        data-fui-icon=""
                         fill="currentColor"
                         height="1em"
                         viewBox="0 0 20 20"
@@ -3073,7 +3114,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z"
+                          d="m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07z"
                           fill="currentColor"
                         />
                       </svg>
@@ -3125,6 +3166,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3132,7 +3174,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -3156,6 +3198,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3163,7 +3206,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -3377,6 +3420,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3384,7 +3428,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -3408,6 +3452,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3415,7 +3460,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -3553,6 +3598,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3560,7 +3606,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -3584,6 +3630,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3591,7 +3638,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -3871,6 +3918,7 @@ exports[`object fields > with title and description > show add button and fields
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -3878,7 +3926,7 @@ exports[`object fields > with title and description > show add button and fields
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -3902,6 +3950,7 @@ exports[`object fields > with title and description > show add button and fields
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -3909,7 +3958,7 @@ exports[`object fields > with title and description > show add button and fields
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -4047,6 +4096,7 @@ exports[`object fields > with title and description from both > additionalProper
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4054,7 +4104,7 @@ exports[`object fields > with title and description from both > additionalProper
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -4078,6 +4128,7 @@ exports[`object fields > with title and description from both > additionalProper
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4085,7 +4136,7 @@ exports[`object fields > with title and description from both > additionalProper
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -4365,6 +4416,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4372,7 +4424,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -4396,6 +4448,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4403,7 +4456,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -4683,6 +4736,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4690,7 +4744,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -4714,6 +4768,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4721,7 +4776,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -4823,6 +4878,7 @@ exports[`object fields > with title and description with global label off > addi
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -4830,7 +4886,7 @@ exports[`object fields > with title and description with global label off > addi
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -4854,6 +4910,7 @@ exports[`object fields > with title and description with global label off > addi
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -4861,7 +4918,7 @@ exports[`object fields > with title and description with global label off > addi
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>
@@ -5049,6 +5106,7 @@ exports[`object fields > with title and description with global label off > show
                     <svg
                       aria-hidden="true"
                       class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                      data-fui-icon=""
                       fill="currentColor"
                       height="1em"
                       viewBox="0 0 20 20"
@@ -5056,7 +5114,7 @@ exports[`object fields > with title and description with global label off > show
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10Z"
+                        d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
                         fill="currentColor"
                       />
                     </svg>
@@ -5080,6 +5138,7 @@ exports[`object fields > with title and description with global label off > show
                 <svg
                   aria-hidden="true"
                   class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
                   fill="currentColor"
                   height="1em"
                   viewBox="0 0 20 20"
@@ -5087,7 +5146,7 @@ exports[`object fields > with title and description with global label off > show
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
                     fill="currentColor"
                   />
                 </svg>

@@ -96,7 +96,7 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.ts` also lists the shared setup file. Without it the tests still pass, but the snapshots pick up numbered `data-testid` values that the other themes don't produce:
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.mts` also lists the shared setup file. Without it the tests still pass, but the snapshots pick up numbered `data-testid` values that the other themes don't produce:
 
 ```ts
 export default mergeConfig(base, {
