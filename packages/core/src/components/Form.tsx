@@ -911,7 +911,9 @@ export default class Form<
 
     // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
     // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
-    const validationFormData = formData ? JSON.parse(JSON.stringify(formData)) : undefined;
+    // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
+    const serializedFormData = JSON.stringify(formData);
+    const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
 
     return schemaUtils
       .getValidator()
