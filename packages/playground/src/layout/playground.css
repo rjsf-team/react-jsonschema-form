@@ -1,0 +1,67 @@
+.playground-shell {
+  min-height: 100vh;
+  background: #fff;
+  color: #333;
+}
+
+.playground-appearance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.playground-appearance label {
+  margin: 0;
+}
+
+.playground-shell--dark {
+  background: #161b22;
+  color: #e6edf3;
+}
+
+.playground-shell--dark a {
+  color: #82b5ff;
+}
+
+.playground-shell--dark .panel,
+.playground-shell--dark .panel-default,
+.playground-shell--dark .panel-default > .panel-heading,
+.playground-shell--dark .well {
+  background: #212833;
+  border-color: #485463;
+  color: #e6edf3;
+}
+
+.playground-shell--dark .btn-default,
+.playground-shell--dark .form-control,
+.playground-shell--dark select {
+  background: #212833;
+  border-color: #687586;
+  color: #e6edf3;
+}
+
+.playground-shell--dark .btn-default:hover,
+.playground-shell--dark .btn-default:focus {
+  background: #364151;
+  border-color: #93a4b8;
+  color: #fff;
+}
+
+.playground-shell--dark .form-control::placeholder {
+  color: #b3c0ce;
+}
+
+.playground-shell--dark .text-muted {
+  color: #aab7c5;
+}
+
+.playground-shell--dark legend,
+.playground-shell--dark .help-block {
+  color: #e6edf3;
+}
+
+.playground-shell--dark legend,
+.playground-shell--dark hr {
+  border-color: #485463;
+}
