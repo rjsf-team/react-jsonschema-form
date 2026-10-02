@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixes [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
+- Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixes [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404) ([#5423](https://github.com/rjsf-team/react-jsonschema-form/pull/5423))
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 
 ## @rjsf/shadcn
