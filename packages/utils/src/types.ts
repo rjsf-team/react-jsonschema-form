@@ -192,6 +192,12 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly defaultFormStateBehavior?: DefaultFormStateBehavior;
 }
 
+/** The settings of a `SchemaContext` that decide which sub-schemas a form validates against, which `schemaParser()`
+ * parses a schema with; they must match the ones the form's `SchemaContext` holds, so the parsed sub-schemas are the
+ * ones the form validates against
+ */
+export type SchemaParserOptions<S extends StrictRJSFSchema = RJSFSchema> = Pick<SchemaContext<S>, 'customMergeAllOf'>;
+
 /** The props for the `getDefaultFormState()` schema function */
 export interface GetDefaultFormStateProps<
   T = unknown,

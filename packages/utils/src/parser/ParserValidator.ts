@@ -59,7 +59,9 @@ export default class ParserValidator<
    * @param hash - The hash value at which to map the schema
    */
   addSchema(schema: S, hash: string) {
-    const key = schema[ID_KEY] ?? hash;
+    // An empty `$id` names nothing, and a validator looks a schema up by `schema[ID_KEY] || hashForSchema(schema)`, so
+    // one is mapped under its hash here too or the lookup finds nothing compiled
+    const key = schema[ID_KEY] || hash;
     const identifiedSchema = { ...schema, [ID_KEY]: key };
     const existing = this.schemaMap[key];
     if (!existing) {

@@ -1,5 +1,5 @@
-import type { RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, getFirstMatchingOption, noop } from '../../src/index.ts';
+import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
+import { createSchemaUtils, getFirstMatchingOption, JUNK_OPTION_ID, noop } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function getFirstMatchingOptionTest(testValidator: TestValidatorType) {
@@ -35,6 +35,36 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         },
       ];
       expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema)).toEqual(0);
+    });
+    it("calls isValid() with an $id derived from the option it augments, keeping only the junk option's", () => {
+      const validated: RJSFSchema[] = [];
+      // What the augmentation is handed to validate is what a validator keys the function it compiles by, so it is read
+      // from a validator that records it rather than from whichever one this suite is running against. Failing every
+      // option is what makes both of them reach `isValid()`
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      const options: RJSFSchema[] = [
+        { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } },
+        { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } } },
+      ];
+      expect(getFirstMatchingOption({ validator: recordingValidator }, { id: 'a' }, options, rootSchema)).toEqual(0);
+      expect(validated).toEqual([
+        // The derived `$id` keeps the option's as its base so a relative `$ref` left inside it still resolves
+        {
+          $id: expect.stringMatching(/^anOption\?rjsf=.+/),
+          type: 'object',
+          properties: { id: { enum: ['a'] } },
+          anyOf: [{ required: ['id'] }],
+        },
+        // The precompiled validators recognise the junk option by its `$id` and answer it without a compiled function
+        { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } }, anyOf: [{ required: ['id'] }] },
+      ]);
     });
     it('should handle undefined formData when a discriminator field is present in an option', () => {
       const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];

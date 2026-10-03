@@ -1,7 +1,28 @@
-import { PROPERTIES_KEY } from '../constants.ts';
+import { ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
+import hashForSchema from '../hashForSchema.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+
+/** Returns the `schema` with any `$id` it carries replaced by one derived from it and from the schema's own content. A
+ * schema derived from an option -- augmented for scoring, or relaxed -- is not the schema that the option's `$id`
+ * names, and a validator caches the function it compiles for a schema under that `$id`, so an unchanged `$id` would
+ * validate the derived schema against the option's own function. The original `$id` is kept as the base of the derived
+ * one because a relative `$ref` that the schema left for the validator to resolve resolves against it.
+ *
+ * @param schema - The schema derived from one that may carry an `$id`
+ * @returns - The schema, carrying an `$id` that names it rather than the one it was derived from
+ */
+export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  const { [ID_KEY]: id, ...withoutId } = schema;
+  if (!id) {
+    return schema;
+  }
+  // Relative resolution replaces the last path segment and drops the query, so a `$ref` inside the schema resolves
+  // against the same base the original `$id` gave it. The suffix goes in the query because an `$id` that already has
+  // one still parses, where a second fragment would not
+  return { ...schema, [ID_KEY]: `${id}?rjsf=${hashForSchema(withoutId as S)}` };
+}
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
  * Always returns the first option if there is nothing that matches.
@@ -89,6 +110,12 @@ export default function getFirstMatchingOption<
       // Remove the "required" field as it's likely that not all fields have
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
+
+      // The junk option is the exception to deriving an `$id`: the precompiled validators recognise it by its own
+      // `$id` and answer it without a compiled function at all
+      if (augmentedSchema[ID_KEY] !== JUNK_OPTION_ID) {
+        augmentedSchema = withVariantId(augmentedSchema);
+      }
 
       if (context.validator.isValid(augmentedSchema, formData, rootSchema)) {
         return i;

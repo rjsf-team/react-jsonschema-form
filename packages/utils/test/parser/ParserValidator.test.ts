@@ -104,4 +104,13 @@ describe('ParserValidator', () => {
     validator.reset();
     expect(validator.schemaMap).toEqual({});
   });
+  it('calling isValid() with an empty $id maps the schema under its hash, as a validator looks it up', () => {
+    const emptyIdSchema: RJSFSchema = { [ID_KEY]: '', type: 'boolean' };
+    const emptyIdValidator = new ParserValidator(RECURSIVE_REF);
+    expect(emptyIdValidator.isValid(emptyIdSchema, undefined, RECURSIVE_REF)).toBe(false);
+    expect(emptyIdValidator.getSchemaMap()).toEqual({
+      [RECURSIVE_HASH]: { ...RECURSIVE_REF, [ID_KEY]: RECURSIVE_HASH },
+      [hashForSchema(emptyIdSchema)]: { ...emptyIdSchema, [ID_KEY]: hashForSchema(emptyIdSchema) },
+    });
+  });
 });

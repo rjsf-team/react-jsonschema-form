@@ -6,6 +6,7 @@ import {
   GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
+  isObject,
   PROPERTIES_KEY,
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
@@ -1027,7 +1028,74 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.any(Error),
         );
       });
-      it('should return allOf and top level schemas when expand all', () => {
+      it('should merge the allOf when expanding all branches, as a form does', () => {
+        const schema: RJSFSchema = {
+          properties: { test: { type: 'string' } },
+          allOf: [{ minLength: 2 }, { maxLength: 5 }],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
+          { properties: { test: { type: 'string' } }, minLength: 2, maxLength: 5 },
+        ]);
+      });
+      it('should expand the branches of a property merged with the patternProperties that match it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              type: 'object',
+              properties: { t: { type: 'string' } },
+              if: { properties: { t: { const: 'yes' } } },
+              then: { properties: { c: { type: 'number' } } },
+              else: { properties: { c: { type: 'boolean' } } },
+            },
+          },
+          patternProperties: { '^p$': { properties: { extra: { type: 'string' } } } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const properties = ({ properties: expanded }: RJSFSchema) => isObject(expanded?.p) && expanded.p.properties;
+        // Merging `p` with its matching pattern resolves it, so the branches of that resolution are expanded too
+        expect(
+          retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true).map(properties),
+        ).toEqual([
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'number' } },
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'boolean' } },
+        ]);
+      });
+      it('should ignore a dependency oneOf that qualifies no option when expanding all branches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          dependencies: { a: { oneOf: [{ required: ['b'] }] } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // No option names `a`, so expanding qualifies none of them and the `oneOf` is ignored, as it is when the form
+        // data picks no single valid one
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toEqual([
+          { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        ]);
+      });
+      it('should vary the branches of pattern-matched properties one at a time, not in every combination', () => {
+        const conditional: RJSFSchema = {
+          type: 'object',
+          if: { properties: { a: { const: 'x' } } },
+          then: { properties: { c: { type: 'number' } } },
+          else: { properties: { c: { type: 'boolean' } } },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p0: { type: 'object' }, p1: { type: 'object' }, p2: { type: 'object' } },
+          patternProperties: { '^p': conditional },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // Each property contributes its own extra branch rather than multiplying the ones before it, so three
+        // two-branch properties make `1 + 3` variants and not `2 ** 3`
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toHaveLength(
+          4,
+        );
+      });
+      it('should drop an allOf it cannot merge when expanding all branches, as a form does', () => {
         const schema: RJSFSchema = {
           properties: { test: { type: 'string' } },
           allOf: [{ type: 'string' }, { type: 'boolean' }],
@@ -1036,9 +1104,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = {};
         const { allOf, ...restOfSchema } = schema;
         expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
-          ...allOf!,
           restOfSchema,
         ]);
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error),
+        );
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {

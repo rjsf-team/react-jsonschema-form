@@ -223,7 +223,9 @@ export default class AJV8Validator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
+    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
@@ -256,7 +258,9 @@ export default class AJV8Validator<
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      // An empty `$id` names nothing, so the schema is keyed by its hash instead; two different schemas that both
+      // carry one would otherwise share the first one's compiled function
+      schemaId = schemaWithIdRefPrefix[ID_KEY] || hashForSchema(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
       // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
