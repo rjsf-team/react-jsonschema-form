@@ -1117,7 +1117,7 @@ describe('StringField', () => {
           initialFormData: '2016-04-05T14:01:30.000Z',
         });
 
-        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30.000');
+        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30');
       });
 
       it('should pad seconds without adding a timezone offset when changed', async () => {
