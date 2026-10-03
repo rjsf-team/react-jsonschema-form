@@ -84,7 +84,7 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
         return;
       }
 
-      const trigger = frameDoc.querySelector(triggerSelector) as HTMLElement | null;
+      const trigger = frameDoc.querySelector(triggerSelector);
       if (!trigger) {
         // The popup is still visible but the trigger's open class is already gone — it's in the
         // process of closing. Restore our last known position so it doesn't flash to (0, 0)
