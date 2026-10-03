@@ -41,6 +41,19 @@ describe('ATAValidator', () => {
       expect(v.isValid(rootSchema, { first: 'A' }, rootSchema)).toBe(false);
     });
 
+    it('resolves $ref against a rootSchema whose $id is empty, since an empty $id names nothing', () => {
+      const v = customizeValidator();
+      const rootSchema: RJSFSchema = {
+        $id: '',
+        definitions: { name: { type: 'string', minLength: 2 } },
+        type: 'object',
+        properties: { first: { $ref: '#/definitions/name' } },
+      };
+      // Registered under the empty `$id`, the root would not answer the `__rjsf_rootSchema#/...` ref rewritten here
+      expect(v.isValid({ $ref: '#/definitions/name' }, 'Al', rootSchema)).toBe(true);
+      expect(v.isValid({ $ref: '#/definitions/name' }, 'A', rootSchema)).toBe(false);
+    });
+
     // ata is permissive on unrecognized `type` strings (treats them as
     // annotation-only) and does not throw at compile time, so the
     // AJV-validator's "malformed schema -> false" assertion does not have a

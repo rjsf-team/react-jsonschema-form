@@ -18,8 +18,9 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   if (!id) {
     return schema;
   }
-  // A query may itself contain a `?`, so this resolves a relative `$ref` against the same base even when the original
-  // `$id` already has one
+  // Relative resolution replaces the last path segment and drops the query, so a `$ref` inside the schema resolves
+  // against the same base the original `$id` gave it. The suffix goes in the query because an `$id` that already has
+  // one still parses, where a second fragment would not
   return { ...schema, [ID_KEY]: `${id}?rjsf=${hashForSchema(withoutId as S)}` };
 }
 
