@@ -1,8 +1,15 @@
 import { createRef, useEffect } from 'react';
-import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  DefaultFormStateBehavior,
+  FieldProps,
+  GenericObjectType,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
@@ -852,6 +859,36 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(node.querySelector(notApplicableInputID)).not.toBeChecked();
         expect(node.querySelector('#root_b')).toBeInTheDocument();
       });
+    });
+
+    it('applies each updater a field passes to onChange to the data the form holds when it runs', async () => {
+      // Both updaters run against the latest data, so the second sees the first's result rather than the formData the
+      // field rendered with
+      function IncrementTwiceField({ fieldPath, formData, onChange }: FieldProps<number>) {
+        return (
+          <button
+            type='button'
+            onClick={() => {
+              onChange((current) => (current ?? 0) + 1, fieldPath);
+              onChange((current) => (current ?? 0) + 1, fieldPath);
+            }}
+          >
+            {String(formData)}
+          </button>
+        );
+      }
+      const onChange = vi.fn<(event: IChangeEvent, id?: string) => void>();
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { count: { type: 'number' } } },
+        uiSchema: { count: { 'ui:field': IncrementTwiceField } },
+        initialFormData: { count: 1 },
+        onChange,
+      });
+
+      await user.click(screen.getByRole('button', { name: '1' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { count: 3 }, 'root_count');
+      expect(node.querySelector('button[type=button]')).toHaveTextContent('3');
     });
   });
 

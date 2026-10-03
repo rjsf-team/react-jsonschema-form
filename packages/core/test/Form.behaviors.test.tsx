@@ -1661,8 +1661,6 @@ describe('Calling onChange right after updating a Form with props formData', () 
   const ArrayThatTriggersOnChangeRightAfterUpdated = (fieldProps: FieldProps) => {
     const { ArrayField } = fieldProps.registry.fields;
     const isMounted = useRef(false);
-    const latestProps = useRef(fieldProps);
-    latestProps.current = fieldProps;
     useEffect(() => {
       if (!isMounted.current) {
         isMounted.current = true;
@@ -1672,10 +1670,8 @@ describe('Calling onChange right after updating a Form with props formData', () 
         return;
       }
       changed = true;
-      latestProps.current.onChange(
-        'test',
-        toFieldPath((latestProps.current.formData as unknown[]).length, latestProps.current.fieldPath),
-      );
+      const length = Array.isArray(fieldProps.formData) ? fieldProps.formData.length : 0;
+      fieldProps.onChange('test', toFieldPath(length, fieldProps.fieldPath));
     });
     return <ArrayField {...fieldProps} />;
   };

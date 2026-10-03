@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
+  FieldChange,
   FormContextType,
   RegistryWidgetsType,
   RJSFMarkedSchema,
@@ -19,6 +20,7 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasWidget,
+  isFieldUpdater,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -422,8 +424,9 @@ function FallbackUiField<
   // its own that every later validation then has to merge, dropping message-less errors as it goes
   const hasErrorsToClear = !!rawErrors?.length || Object.keys(errorSchema ?? {}).length > 0;
 
-  const onTypeChange = (newType: T | undefined) => {
-    if (newType != null) {
+  const onTypeChange = (newType: FieldChange<T | undefined>) => {
+    // The type selector is a select of the type names, which sends a name, never an updater
+    if (newType != null && !isFieldUpdater(newType)) {
       setSelectedType(newType as JSONSchema7TypeName);
       onChange(
         castToNewType<T>(formData as T, newType as JSONSchema7TypeName),

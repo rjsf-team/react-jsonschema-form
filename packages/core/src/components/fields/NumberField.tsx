@@ -1,6 +1,14 @@
 import { useState, useCallback } from 'react';
-import type { ErrorSchema, FieldPath, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { asNumber, getDecimalSeparator, getUiOptions, resolveDefaultWidget } from '@rjsf/utils';
+import type {
+  ErrorSchemaChange,
+  FieldChange,
+  FieldPath,
+  FieldProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
+import { asNumber, getDecimalSeparator, getUiOptions, isFieldUpdater, resolveDefaultWidget } from '@rjsf/utils';
 
 // Static matchers for standard '.' separator used during normalization inside handleChange
 const trailingCharMatcherWithPrefix = /\.([0-9]*0)*$/;
@@ -39,7 +47,12 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (newValue: FieldProps<T, S, F>['value'], path: FieldPath, errorSchema?: ErrorSchema<T>, id?: string) => {
+    (newValue: FieldChange<T | undefined>, path: FieldPath, errorSchema?: ErrorSchemaChange<T>, id?: string) => {
+      // The `StringField` below sends the text it holds, never an updater; one would have no text to normalize
+      if (isFieldUpdater(newValue)) {
+        onChange(newValue, path, errorSchema, id);
+        return;
+      }
       // Cache the original value in component state
       setLastValue(newValue);
 
@@ -57,9 +70,13 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
       const processed =
-        typeof normalizedValue === 'string' && trailingCharMatcherWithPrefix.exec(normalizedValue)
-          ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
-          : asNumber(normalizedValue);
+        typeof normalizedValue === 'string'
+          ? asNumber(
+              trailingCharMatcherWithPrefix.exec(normalizedValue)
+                ? normalizedValue.replace(trailingCharMatcher, '')
+                : normalizedValue,
+            )
+          : normalizedValue;
 
       onChange(processed as unknown as T, path, errorSchema, id);
     },

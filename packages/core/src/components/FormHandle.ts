@@ -28,7 +28,8 @@ export interface FormHandle<T = unknown> {
    */
   reset(): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
-   * root. Passing `undefined` clears the field.
+   * root. Passing `undefined` clears the field. A function is an updater, called with the field's current value when
+   * the queued change runs, the way a field's `onChange` treats one.
    */
   setFieldValue(fieldPath: string | FieldPathList, newValue?: unknown): void;
   /** Validates the current form data, filtering extra data first when `omitExtraData` is set, and calls `onError` as a

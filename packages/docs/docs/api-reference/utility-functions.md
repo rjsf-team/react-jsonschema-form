@@ -27,6 +27,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`FieldPath`** — The identity of a field in a form: a canonical string path such as `friends[0].firstName`, with the root form as the empty string (`ROOT_FIELD_PATH`). Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped, so the grammar is unambiguous even when property names contain dots or brackets. It is a branded `string`, so a plain string (such as a DOM id) cannot be passed where a `FieldPath` is expected; build one with [toFieldPath()](#tofieldpath) and derive the HTML id, HTML name or segment list from it with [fieldPathToId()](#fieldpathtoid), [fieldPathToName()](#fieldpathtoname) and [fieldPathToList()](#fieldpathtolist).
 
+**`FieldChange<V>`** — What a field passes to `onChange` for its value: the new value, or a **`FieldUpdater<V>`**, a function from the current value to the new one, which the form calls with the value it holds at the field's path when it applies the change. **`ErrorSchemaChange<T>`** is the same for the error argument, and its updater, **`ErrorSchemaUpdater<T>`**, also receives the value held before the change. `FieldProps['onChange']` is typed **`FieldOnChange<T>`**, which requires a handler passed as `onChange` to accept both forms; `isFieldUpdater()` tells them apart and `mapFieldChange()` transforms either.
+
 **`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf` and `defaultFormStateBehavior` (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) and [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
@@ -1365,6 +1367,26 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
+### isFieldUpdater&lt;V, A extends unknown[] = []>()
+
+Returns whether a change is an updater, a function from the current value to the new one, rather than the value itself.
+A field that looks at what its child sends to `onChange` uses it to read a value only when there is one, and passes an updater on untouched:
+
+```ts
+if (!isFieldUpdater(change)) {
+  track(change);
+}
+onChange(change, path, es, id);
+```
+
+#### Parameters
+
+- change: V | ((current: V, ...args: A) => V) - The value, or an updater computing it
+
+#### Returns
+
+- boolean: True when `change` is an updater
+
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Detects whether the given `schema` contains fixed items.
@@ -1535,6 +1557,24 @@ If no such value exists, return the `fallback` value.
 #### Returns
 
 - R: The value associated with `toLookup` in the form context or `fallback`
+
+### mapFieldChange&lt;V>()
+
+Applies `transform` to a change: to the value itself, or, when the change is an updater, to what the updater returns.
+A field that transforms what its child sends to `onChange` uses it, so the transform also covers the edits that arrive as updaters, such as an item added to an array:
+
+```ts
+onChange(mapFieldChange(change, normalize), path, es, id);
+```
+
+#### Parameters
+
+- change: FieldChange&lt;V> - The value, or an updater computing it
+- transform: (value: V) => V - The transform to apply to the value
+
+#### Returns
+
+- FieldChange&lt;V>: The transformed value, or an updater returning the transformed result of `change`'s updater
 
 ### mergeDefaultsWithFormData&lt;T = unknown>()
 
@@ -1799,6 +1839,21 @@ The default is `select` when `schema` has enumerable options, the schema's `form
 #### Returns
 
 - \{ defaultWidget: string, enumOptions: EnumOptionsType&lt;S>[] | undefined }: The default widget name and the `enumOptions`, if any, computed along the way
+
+### resolveFieldChange&lt;V, A extends unknown[] = []>()
+
+Returns the value a change stands for: the value itself, or what its updater returns for `current` and any further arguments it takes, as an `ErrorSchemaChange` updater takes the value held before the change.
+The form uses it to apply a field's change; a field rarely needs it.
+
+#### Parameters
+
+- change: V | ((current: V, ...args: A) => V) - The value, or an updater computing it
+- current: V - What the updater is applied to
+- ...args: A - Further arguments passed to the updater
+
+#### Returns
+
+- V: The value `change` stands for
 
 ### resolveUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

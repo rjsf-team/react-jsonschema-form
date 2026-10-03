@@ -3,6 +3,8 @@ import { PureComponent, createRef } from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
+  ErrorSchemaChange,
+  FieldChange,
   ErrorTransformer,
   FieldPath,
   FieldPathList,
@@ -43,6 +45,7 @@ import {
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
+  resolveFieldChange,
   schemaHasNestedConditional,
   SUBMIT_BTN_OPTIONS_KEY,
   toErrorList,
@@ -354,10 +357,10 @@ function toIChangeEvent<
 interface PendingChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
   fieldPath: FieldPath;
-  /** The new value to set into the formData */
-  newValue?: T;
-  /** The new errors to be set into the errorSchema, if any */
-  newErrorSchema?: ErrorSchema<T>;
+  /** The new value to set into the formData, or an updater computing it from the value at `fieldPath` */
+  newValue?: FieldChange<T | undefined>;
+  /** The new errors to be set into the errorSchema, if any, or an updater computing them from the errors at `fieldPath` */
+  newErrorSchema?: ErrorSchemaChange<T>;
   /** The optional id of the field for which the change is being made */
   id?: string;
 }
@@ -1226,9 +1229,15 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   deferLiveValidate: boolean,
 ): FormState<T, S, F> {
-  const { newValue, fieldPath, newErrorSchema } = change;
+  const { fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
+  const isRootPath = path.length === 0;
+  // An updater is applied to what the form holds now, which the queue guarantees includes every earlier change
+  const oldValue = isRootPath ? current.formData : getByPath<T | undefined>(current.formData, path);
+  const oldErrorSchema = isRootPath ? current.errorSchema : getByPath<ErrorSchema<T>>(current.errorSchema, path);
+  const newValue = resolveFieldChange(change.newValue, oldValue);
+  const newErrorSchema = resolveFieldChange(change.newErrorSchema, oldErrorSchema, oldValue);
   // oxlint-disable-next-line typescript/no-deprecated
   const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
   const { formData: oldFormData, schemaValidationErrorSchema, schemaValidationErrors } = current;
@@ -1244,7 +1253,6 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The stored validator result, when a raise made part of it stale
   let storedValidation: Partial<Pick<FormState<T, S, F>, 'schemaValidationErrors' | 'schemaValidationErrorSchema'>> =
     {};
-  const isRootPath = path.length === 0;
   let formData: T | undefined;
   if (isRootPath) {
     formData = newValue;
@@ -1283,7 +1291,8 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newValue === undefined) {
         const lastSegment = path[path.length - 1];
         if (typeof lastSegment === 'number') {
-          // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
+          // A cleared array item is stored as `null` because validators skip an `undefined` item instead of
+          // reporting it (https://github.com/tdegrunt/jsonschema/issues/206)
           valueForPath = null;
         } else {
           const { field: leaf } = current.schemaUtils.findFieldInSchema(current.schema, path, oldFormData);
@@ -1347,10 +1356,7 @@ function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (oldValidationError && Object.keys(oldValidationError).length > 0) {
       // What the field displays beyond the validator's own errors is supplied by `extraErrors`/`customErrors`; the
       // rest of the raise is the field's own say over the validator's errors at this path, an empty rest included
-      const supplied = countMessages(
-        isRootPath ? current.errorSchema : getByPath(current.errorSchema, path),
-        isArrayRaise,
-      );
+      const supplied = countMessages(oldErrorSchema, isArrayRaise);
       const raisedErrorSchema = withoutSupplied(
         newErrorSchema,
         countMessages(oldValidationError, isArrayRaise, supplied, -1),
@@ -1735,7 +1741,7 @@ export default class Form<
    * that is what makes a cleared item resolve to `null` rather than `undefined`.
    *
    * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
-   * @param [newValue] - The new value for the field
+   * @param [newValue] - The new value for the field, or an updater computing it from the field's current value
    */
   setFieldValue = (fieldPath: string | FieldPathList, newValue?: unknown) => {
     const { registry } = this.state;
@@ -1797,12 +1803,19 @@ export default class Form<
 
   /** Queues a change to the field at `fieldPath`, see `processChange()`
    *
-   * @param newValue - The new form data from a change to a field
+   * @param newValue - The new form data from a change to a field, or an updater computing it from the data at
+   *        `fieldPath`
    * @param fieldPath - The `FieldPath` of the change at which to set the formData
-   * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
+   * @param [newErrorSchema] - The new `ErrorSchema` based on the field change, or an updater computing them from the
+   *        errors at `fieldPath`
    * @param [id] - The id of the field that caused the change
    */
-  onChange = (newValue: T | undefined, fieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+  onChange = (
+    newValue: FieldChange<T | undefined>,
+    fieldPath: FieldPath,
+    newErrorSchema?: ErrorSchemaChange<T>,
+    id?: string,
+  ) => {
     this.enqueue((advance) => this.processChange({ newValue, fieldPath, newErrorSchema, id }, advance), true);
   };
 

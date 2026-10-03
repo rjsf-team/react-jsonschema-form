@@ -711,6 +711,45 @@ export interface Registry<
   readonly uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
+/** A change a field proposes for its `FieldPath`: the new value itself, or an updater that computes it from the value the
+ * form holds at that path when it applies the change, the way React's `setState()` accepts a function. An updater
+ * lets a field describe an edit, such as removing an array item, without reading its own latest props, so the handler
+ * that makes the edit can keep a stable identity. Form data is JSON, so a function value is always an updater.
+ */
+export type FieldChange<V> = V | FieldUpdater<V>;
+
+/** The updater half of a `FieldChange`: computes the new value from the value the form holds at the change's path. Its
+ * parameter is checked bivariantly, so a `FieldChange` of a narrower value type stays assignable to a wider one
+ */
+export type FieldUpdater<V> = Bivariant<[current: V], V>;
+
+/** A change a field proposes for the errors at its `FieldPath`: the `ErrorSchema` itself, or an updater that computes it
+ * from the errors the form holds at that path and the value the form held there before this change, so an edit that
+ * moves items' errors can agree with the edit it makes to the value
+ */
+export type ErrorSchemaChange<T> = ErrorSchema<T> | undefined | ErrorSchemaUpdater<T>;
+
+/** The updater half of an `ErrorSchemaChange` */
+export type ErrorSchemaUpdater<T> = Bivariant<
+  [current: ErrorSchema<T> | undefined, value: T | undefined],
+  ErrorSchema<T> | undefined
+>;
+
+/** The overloads of `FieldProps['onChange']`. The first is the one a field calls: a value or an updater, with an
+ * `ErrorSchema` or an updater for the errors. The second, an updater for both, is what an array edit sends, and it
+ * constrains a handler passed as `onChange`: one that takes only plain values or only plain errors, such as a custom
+ * field that transforms what its child sends, does not accept it, so it fails to type-check where it is passed rather
+ * than receiving an updater function at run time. Declared as methods, so each is checked bivariantly and
+ * `FieldProps` stays covariant in `T`
+ */
+interface FieldChangeHandler<T> {
+  handle(newValue: FieldChange<T | undefined>, fieldPath: FieldPath, es?: ErrorSchemaChange<T>, id?: string): void;
+  handle(newValue: FieldUpdater<T | undefined>, fieldPath: FieldPath, es: ErrorSchemaUpdater<T>, id?: string): void;
+}
+
+/** The type of `FieldProps['onChange']`, see `FieldChangeHandler` */
+export type FieldOnChange<T> = FieldChangeHandler<T>['handle'];
+
 /** The properties that are passed to a `Field` implementation */
 export interface FieldProps<
   T = unknown,
@@ -730,9 +769,12 @@ export interface FieldProps<
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated field value, the `FieldPath` of the value
-   * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed
+   * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed. The value
+   * and the ErrorSchema may each be an updater instead, a `FieldChange` and an `ErrorSchemaChange`, which the form
+   * applies to what it holds at `fieldPath` when it processes the change. A handler passed as `onChange` must accept
+   * both forms, see `FieldOnChange`
    */
-  onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
+  onChange: FieldOnChange<T>;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */

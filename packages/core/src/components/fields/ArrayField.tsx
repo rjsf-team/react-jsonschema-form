@@ -1,5 +1,5 @@
-import type { MouseEvent } from 'react';
-import { memo, use, useCallback, useMemo, useRef, useState } from 'react';
+import type { Dispatch, MouseEvent, SetStateAction } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ErrorSchema,
@@ -27,7 +27,6 @@ import {
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
-  fieldPathEndsWithIndex,
   fieldPathToId,
   fieldPathToName,
   ERRORS_KEY,
@@ -36,7 +35,6 @@ import {
 } from '@rjsf/utils';
 
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
-import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** An item of the `formData` paired with its stable React key */
 interface KeyedFormDataType<T> {
@@ -64,28 +62,78 @@ function keyedToPlainFormData<T>(keyedFormData: KeyedFormDataType<T> | KeyedForm
   return [];
 }
 
-/** Moves each item's errors to the index `newIndexOf` returns, dropping them when it returns `undefined`, and keeps
- * the array's own errors (such as `minItems`), which belong to no item
+const NO_ITEMS: never[] = [];
+
+/** Returns the array field's current items, treating anything that isn't an array as having none */
+function toItems<T>(value: T[] | undefined): T[] {
+  return Array.isArray(value) ? value : NO_ITEMS;
+}
+
+/** Returns a copy of `rows` with `row` inserted at `index` */
+function insertAt<X>(rows: X[], index: number, row: X): X[] {
+  const next = rows.slice();
+  next.splice(index, 0, row);
+  return next;
+}
+
+/** Returns a copy of `rows` with the row at `from` moved to `to` */
+function moveRow<X>(rows: X[], from: number, to: number): X[] {
+  const next = rows.slice();
+  next.splice(from, 1);
+  next.splice(to, 0, rows[from]);
+  return next;
+}
+
+/** An edit to the array's rows, described once and applied alike to the row keys, the items and the items' errors:
+ * given the number of rows, it returns for each row after the edit the index of the row it was before, or `undefined`
+ * for a row the edit inserts. It returns `undefined` itself when an index an earlier queued edit left past the end makes
+ * the edit a no-op. The keys take it at once and the items only when the form commits it, so the two agree only once
+ * every edit is committed: a reorder a controlled parent declines moves the keys alone, and on the commits between
+ * several edits made in one event the lengths differ and `useKeyedFormData()` regenerates the keys
+ */
+type RowEdit = (length: number) => (number | undefined)[] | undefined;
+
+/** Returns the indexes of `length` rows, the identity mapping a `RowEdit` edits */
+function rowIndexes(length: number): (number | undefined)[] {
+  return Array.from({ length }, (_, index) => index);
+}
+
+/** Applies `edit` to `rows`, creating each row it inserts with `newRow`
+ *
+ * @param rows - The rows to edit
+ * @param edit - The edit to apply
+ * @param newRow - Creates the row the edit inserts at `index`
+ * @returns - The edited rows, or `undefined` when the edit is a no-op
+ */
+function applyRowEdit<X>(rows: X[], edit: RowEdit, newRow: (index: number) => X): X[] | undefined {
+  return edit(rows.length)?.map((from, index) => (from === undefined ? newRow(index) : rows[from]));
+}
+
+/** Applies `edit` to the items' errors, keeping the array's own errors (such as `minItems`), which belong to no item
  *
  * @param errorSchema - The array's current `ErrorSchema`, its own errors included
- * @param newIndexOf - Maps an item's old index to its new one
- * @returns - The remapped `ErrorSchema`, or `undefined` when there was none
+ * @param items - The array's items before the edit, which the edit is decided against
+ * @param edit - The edit to apply
+ * @returns - The remapped `ErrorSchema`, or `errorSchema` itself when there was none or the edit is a no-op
  */
-function remapItemErrors<T>(
+function applyRowEditToErrors<T>(
   errorSchema: ErrorSchema<T[]> | undefined,
-  newIndexOf: (index: number) => number | undefined,
+  items: T[] | undefined,
+  edit: RowEdit,
 ): ErrorSchema<T[]> | undefined {
   if (!errorSchema) {
-    return undefined;
+    return errorSchema;
+  }
+  const sources = edit(toItems(items).length);
+  if (!sources) {
+    return errorSchema;
   }
   const remapped: ErrorSchema<T[]> = ERRORS_KEY in errorSchema ? { [ERRORS_KEY]: errorSchema[ERRORS_KEY] } : {};
-  for (const key of Object.keys(errorSchema)) {
-    const index = parseInt(key, 10);
-    const newIndex = Number.isNaN(index) ? undefined : newIndexOf(index);
-    if (newIndex !== undefined) {
-      setByPath(remapped, newIndex, errorSchema[index]);
+  sources.forEach((from, index) => {
+    if (from !== undefined && errorSchema[from] !== undefined) {
+      setByPath(remapped, index, errorSchema[from]);
     }
-  }
+  });
   return remapped;
 }
 
@@ -825,11 +873,9 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 interface KeyedFormDataState<T = unknown> {
   /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
-  /** Updates the keyed form data elements to the given value */
-  updateKeyedFormData: (newData: KeyedFormDataType<T>[]) => T[];
+  /** The row keys' setter */
+  setKeys: Dispatch<SetStateAction<string[]>>;
 }
-
-const NO_ITEMS: never[] = [];
 
 /** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
  * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
@@ -838,8 +884,8 @@ const NO_ITEMS: never[] = [];
  * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
  * regenerated.
  */
-function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
-  const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
+function useKeyedFormData<T = unknown>(formData: T[] | undefined): KeyedFormDataState<T> {
+  const items = toItems(formData);
   const freshKeys = () => items.map(generateRowId);
   const [keys, setKeys] = useState<string[]>(freshKeys);
 
@@ -851,12 +897,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
 
   const keyedFormData = useMemo(() => itemKeys.map((key, index) => ({ key, item: items[index] })), [itemKeys, items]);
 
-  const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    setKeys(newData.map((keyedItem) => keyedItem.key));
-    return keyedToPlainFormData(newData);
-  }, []);
-
-  return { keyedFormData, updateKeyedFormData };
+  return { keyedFormData, setKeys };
 }
 
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
@@ -867,23 +908,34 @@ export default function ArrayField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T[], S, F>) {
-  const { schema, uiSchema, errorSchema, rawErrors, fieldPath, id: fieldId, registry, formData, onChange } = props;
+  const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
-  const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  // Refs keep the latest values accessible inside stable useCallback closures without being in the dep array,
-  // so the four mutation handlers don't get new references on every keyedFormData / errorSchema change.
-  const keyedFormDataRef = useRef(keyedFormData);
-  keyedFormDataRef.current = keyedFormData;
-  const errorSchemaRef = useRef(errorSchema);
-  const withheldErrors = use(WithheldErrorsContext);
-  // `SchemaField` hands the array's own errors over as `rawErrors`, or withholds them beside a `oneOf`/`anyOf`
-  // selector, so they go back in for the handlers to carry over
-  const ownErrors = rawErrors ?? (withheldErrors?.fieldPath === fieldPath ? withheldErrors.errors : undefined);
-  errorSchemaRef.current = ownErrors ? { ...errorSchema, [ERRORS_KEY]: ownErrors } : errorSchema;
+  const { keyedFormData, setKeys } = useKeyedFormData<T>(formData);
 
-  /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
-   * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
-   * the state, and then returning `onChange()` with the plain form data converted from the keyed data
+  /** Applies `edit` to the row keys at once, and to the items and their errors through updaters the form applies to
+   * what it holds, so the handlers read no data and keep their identity while the array's data changes
+   *
+   * @param edit - The edit to apply
+   * @param [newItem] - Creates the item an inserting edit, an add or a copy, puts at `index`, from the items before it
+   */
+  const commitRowEdit = useCallback(
+    (edit: RowEdit, newItem: (items: T[], index: number) => T = (items, index) => items[index]) => {
+      const key = generateRowId();
+      setKeys((keys) => applyRowEdit(keys, edit, () => key) ?? keys);
+      onChange(
+        (current) => {
+          const items = toItems(current);
+          return applyRowEdit(items, edit, (index) => newItem(items, index)) ?? current;
+        },
+        fieldPath,
+        (errors, current) => applyRowEditToErrors(errors, current, edit),
+      );
+    },
+    [onChange, setKeys, fieldPath],
+  );
+
+  /** Callback handler for when the user clicks on the add or add at index buttons. Adds a new item, with a new row key,
+   * at the end of the list when no `index` is given, or at the `index` when it is
    *
    * @param event - The event for the click
    * @param [index] - The optional index at which to add the new data
@@ -893,29 +945,16 @@ export default function ArrayField<
       if (event) {
         event.preventDefault();
       }
-
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) =>
-        index === undefined || i < index ? i : i + 1,
+      commitRowEdit(
+        (length) => insertAt(rowIndexes(length), index ?? length, undefined),
+        (_, at) => getNewFormDataRow<T, S, F>(registry, schema, at, uiSchema),
       );
-
-      const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? keyedFormDataRef.current.length, uiSchema),
-      };
-      const newKeyedFormData = [...keyedFormDataRef.current];
-      if (index !== undefined) {
-        newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
-      } else {
-        newKeyedFormData.push(newKeyedFormDataRow);
-      }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
     },
-    [registry, schema, uiSchema, onChange, updateKeyedFormData, fieldPath],
+    [registry, schema, uiSchema, commitRowEdit],
   );
 
-  /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
-   * keyed form data at the `index` into the next position in the state, and then returning `onChange()` with the plain
-   * form data converted from the keyed data
+  /** Callback handler for when the user clicks on the copy button on an existing array element. Inserts a copy of the
+   * item at the `index` right after it, with a new row key
    *
    * @param index - The index at which the copy button is clicked
    */
@@ -924,27 +963,16 @@ export default function ArrayField<
       if (event) {
         event.preventDefault();
       }
-
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => (i <= index ? i : i + 1));
-
-      const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
-        item: structuredClone(keyedFormDataRef.current[index].item),
-      };
-      const newKeyedFormData = [...keyedFormDataRef.current];
-      if (index !== undefined) {
-        newKeyedFormData.splice(index + 1, 0, newKeyedFormDataRow);
-      } else {
-        newKeyedFormData.push(newKeyedFormDataRow);
-      }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRowEdit(
+        (length) => (index >= length ? undefined : insertAt(rowIndexes(length), index + 1, undefined)),
+        (items) => structuredClone(items[index]),
+      );
     },
-    [onChange, updateKeyedFormData, fieldPath],
+    [commitRowEdit],
   );
 
-  /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
-   * keyed form data at the `index` in the state, and then returning `onChange()` with the plain form data converted
-   * from the keyed data
+  /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the item at
+   * the `index` along with its row key and errors, moving the errors of the items after it
    *
    * @param index - The index at which the remove button is clicked
    */
@@ -953,22 +981,13 @@ export default function ArrayField<
       if (event) {
         event.preventDefault();
       }
-      // refs #195: revalidate to ensure properly reindexing errors
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
-        if (i === index) {
-          return undefined;
-        }
-        return i < index ? i : i - 1;
-      });
-      const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRowEdit((length) => (index >= length ? undefined : rowIndexes(length).filter((i) => i !== index)));
     },
-    [onChange, updateKeyedFormData, fieldPath],
+    [commitRowEdit],
   );
 
   /** Callback handler for when the user clicks on one of the move item buttons on an existing array element. Moves the
-   * row of keyed form data at the `index` to the `newIndex` in the state, and then returning `onChange()` with the
-   * plain form data converted from the keyed data
+   * item at the `index` to the `newIndex`, along with its row key and errors
    *
    * @param index - The index of the item to move
    * @param newIndex - The index to where the item is to be moved
@@ -979,44 +998,9 @@ export default function ArrayField<
         event.preventDefault();
         event.currentTarget.blur();
       }
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
-        if (i === index) {
-          return newIndex;
-        }
-        return i === newIndex ? index : i;
-      });
-
-      function reOrderArray() {
-        const newKeyedFormData = keyedFormDataRef.current.slice();
-        newKeyedFormData.splice(index, 1);
-        newKeyedFormData.splice(newIndex, 0, keyedFormDataRef.current[index]);
-        return newKeyedFormData;
-      }
-      const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRowEdit((length) => (index >= length ? undefined : moveRow(rowIndexes(length), index, newIndex)));
     },
-    [onChange, updateKeyedFormData, fieldPath],
-  );
-
-  /** Callback handler used to deal with changing the value of the data in the array at the `index`. Calls the
-   * `onChange` callback with the updated form data
-   *
-   * @param index - The index of the item being changed
-   */
-  const handleChange = useCallback(
-    (value: any, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
-      const lastPathIsItemIndex = fieldPathEndsWithIndex(changedFieldPath);
-      onChange(
-        // We need to treat undefined items as nulls to have validation.
-        // See https://github.com/tdegrunt/jsonschema/issues/206
-        // Only set to null for array items, and not for object properties within array items
-        lastPathIsItemIndex && value === undefined ? null : value,
-        changedFieldPath,
-        newErrorSchema,
-        id,
-      );
-    },
-    [onChange],
+    [commitRowEdit],
   );
 
   /** Callback handler used to change the value for a checkbox */
@@ -1060,7 +1044,6 @@ export default function ArrayField<
     handleRemoveItem,
     handleReorderItems,
     keyedFormData,
-    onChange: handleChange,
   };
   if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
     // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
