@@ -7,8 +7,6 @@ overrides:
   'dompurify': ^3.4.11
   # Fixes security issues in serialize-javascript by overriding to safe version
   'serialize-javascript': ^7.0.6
-  # jsdom 30.1 extends the global Iterator, which Node 20 lacks
-  'jsdom': ~30.0.1
 
 allowBuilds:
   '@parcel/watcher': true
