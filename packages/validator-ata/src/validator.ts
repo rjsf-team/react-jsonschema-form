@@ -202,7 +202,9 @@ export default class ATAValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
+    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.

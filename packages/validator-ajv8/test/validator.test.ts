@@ -61,6 +61,17 @@ describe('AJV8Validator', () => {
         // Keyed by the empty `$id`, this would be answered by the function compiled for the schema above
         expect(validator.isValid({ $id: '', type: 'number' }, 'a', emptyIdRootSchema)).toBe(false);
       });
+      it("should resolve a local $ref when the root schema's $id is empty, since an empty $id names nothing", () => {
+        const emptyIdRootSchema: RJSFSchema = {
+          $id: '',
+          type: 'object',
+          definitions: { aStr: { type: 'string' } },
+          properties: { a: { $ref: '#/definitions/aStr' } },
+        };
+
+        // Registered under the empty `$id`, the root would not answer the `__rjsf_rootSchema#/...` ref rewritten here
+        expect(validator.isValid({ $ref: '#/definitions/aStr' }, 'hello', emptyIdRootSchema)).toBe(true);
+      });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 

@@ -867,7 +867,9 @@ export function resolveAnyOrOneOfSchemas<
       // `MultiSchemaField` scores the options it has retrieved rather than the ones the schema declares, so an option
       // that resolves into something else -- one that is an `allOf`, say -- is scored in that resolved form too
       const retrievedOptions = anyOrOneOf.flatMap((item) =>
-        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
+        // Each option gets its own copy of the list, since a `$ref` one of them resolves is not one a sibling has
+        // already been through, the same reason the `properties` loop of `resolveAllReferences()` copies it
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, [...recurseList]),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
       getFirstMatchingOption<T, S, F>(
