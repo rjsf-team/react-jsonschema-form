@@ -191,12 +191,13 @@ describe('aria-labelledby', () => {
   });
 
   test('alt-date widget names each part by the field title and the part, whether the label is shown or hidden', () => {
-    const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-labelledby'));
+    const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-label'));
     const { rerender } = renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
 
     expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root_year', 'root_month', 'root_day']);
     for (const part of screen.getAllByRole('combobox')) {
-      expect(part).toHaveAccessibleName(`Birthday ${part.id.replace('root_', '')}`);
+      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root_', '')}`);
+      expect(part).not.toHaveAttribute('aria-labelledby');
     }
     expect(screen.getByText('Birthday')).toBeVisible();
     const shownNames = partNames();
@@ -210,7 +211,7 @@ describe('aria-labelledby', () => {
     );
 
     expect(partNames()).toEqual(shownNames);
-    expect(screen.getByRole('combobox', { name: 'Birthday year' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Birthday, year' })).toBeInTheDocument();
     expect(screen.getByText('Birthday')).not.toBeVisible();
   });
 
@@ -220,12 +221,12 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('combobox', { name: 'year' })).not.toHaveAttribute('aria-labelledby');
   });
 
-  test('alt-date widget names each part listbox by the part', () => {
+  test('alt-date widget names each part listbox the way it names the part', () => {
     renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
 
     expect(
       screen.getAllByRole('listbox', { hidden: true }).map((listbox) => listbox.getAttribute('aria-label')),
-    ).toEqual(['year', 'month', 'day']);
+    ).toEqual(['Birthday, year', 'Birthday, month', 'Birthday, day']);
   });
 
   test('alt-date widget keeps each part named, with unique ids, when the theme gives Select a label', () => {
@@ -241,7 +242,7 @@ describe('aria-labelledby', () => {
 
     const ids = Array.from(container.querySelectorAll('[id^="root"]'), (el) => el.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(screen.getByRole('combobox', { name: 'Birthday year' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Birthday, year' })).toBeInTheDocument();
   });
 
   // React warns about, rather than renders, an unknown prop with a function or boolean value, and only once per prop, so

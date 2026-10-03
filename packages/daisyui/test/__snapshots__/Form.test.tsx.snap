@@ -5808,6 +5808,7 @@ exports[`single fields > help and error display 1`] = `
         >
           <ul
             class="list-disc list-inside"
+            id="root__error"
           >
             <li>
               an error

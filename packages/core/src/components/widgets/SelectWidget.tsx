@@ -2,7 +2,6 @@ import type { ChangeEvent, FocusEvent, SyntheticEvent } from 'react';
 import { useCallback, useMemo } from 'react';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -12,6 +11,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 /** A multiple select only ever reports its selection in document order, and `optgroups` is presentational, so the
@@ -39,25 +39,25 @@ function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  schema,
-  id,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  multiple = false,
-  autofocus = false,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-  htmlName,
-  registry,
-  uiSchema,
-  'aria-label': ariaLabel,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    id,
+    options,
+    value,
+    required,
+    disabled,
+    readonly,
+    multiple = false,
+    autofocus = false,
+    onChange,
+    onBlur,
+    onFocus,
+    placeholder,
+    htmlName,
+    registry,
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
@@ -130,8 +130,7 @@ function SelectWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         onChange={handleChange}
-        aria-label={ariaLabel}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...widgetAriaProps(props)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
         {groupedOptions.map((item) =>

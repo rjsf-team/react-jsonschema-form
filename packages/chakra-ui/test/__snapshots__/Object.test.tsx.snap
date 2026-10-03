@@ -5848,7 +5848,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       foo Key
                     </label>
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="chakra-select__root emotion-7"
                       data-part="root"
                       data-scope="select"
@@ -5898,6 +5897,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         >
                           <button
                             aria-controls="select:root_foo-key:content"
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"
@@ -9337,7 +9337,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       foo Key
                     </label>
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="chakra-select__root emotion-7"
                       data-part="root"
                       data-scope="select"
@@ -9387,6 +9386,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         >
                           <button
                             aria-controls="select:root_foo-key:content"
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"
@@ -10377,7 +10377,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       foo (deprecated) Key
                     </label>
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="chakra-select__root emotion-7"
                       data-part="root"
                       data-scope="select"
@@ -10427,6 +10426,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         >
                           <button
                             aria-controls="select:root_foo-key:content"
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"

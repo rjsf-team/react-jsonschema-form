@@ -57,6 +57,9 @@ interface FancySelectInterface {
   autoFocus?: boolean;
   /** Accessible name given to the button that opens the dropdown, for a select that no label points at */
   ariaLabel?: string;
+  /** Whether something other than its own contents names the button, a label pointing at it or `ariaLabel`, which
+   * replaces the selected item it displays as its name, so that item is announced as its description instead */
+  named?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Aria placeholder text */
@@ -90,6 +93,7 @@ export function FancySelect({
   disabled = false,
   placeholder = 'Select...',
   ariaLabel,
+  named = false,
   ariaDescribedby,
   ariaPlaceholder,
   onFocus,
@@ -100,8 +104,8 @@ export function FancySelect({
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  // An `aria-label` replaces the button's contents as its name, so the item it displays is announced as a description
-  const valueId = ariaLabel && selectedItem && id ? triggerValueId(id) : undefined;
+  const valueId = named && selectedItem && id ? triggerValueId(id) : undefined;
+  const describedBy = [valueId, ariaDescribedby].filter(Boolean).join(' ') || undefined;
 
   useEffect(() => {
     if (open && selectedRef.current) {
@@ -156,7 +160,6 @@ export function FancySelect({
       aria-disabled={disabled}
       onBlur={handleBlur}
       onFocus={onFocus}
-      aria-describedby={ariaDescribedby}
       aria-placeholder={ariaPlaceholder}
     >
       <button
@@ -166,7 +169,7 @@ export function FancySelect({
         aria-expanded={open}
         aria-haspopup='listbox'
         aria-label={ariaLabel}
-        aria-describedby={valueId}
+        aria-describedby={describedBy}
         onClick={() => !disabled && setOpen(!open)}
         onKeyDown={(e) => {
           if ((e.key === 'Enter' || e.key === ' ') && !disabled) {

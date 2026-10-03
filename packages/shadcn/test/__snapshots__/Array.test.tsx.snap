@@ -540,6 +540,7 @@ exports[`array fields > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_0_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_1_"
                   autocomplete="off"
@@ -1820,6 +1821,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_f_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_g_"
                   autocomplete="off"
@@ -4459,6 +4461,7 @@ exports[`with title and description > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_4_"
                   autocomplete="off"
@@ -5292,6 +5295,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_9_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_a_"
                   autocomplete="off"
@@ -6125,6 +6129,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_7_"
                   autocomplete="off"
@@ -6868,6 +6873,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_c_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_d_"
                   autocomplete="off"

@@ -1,7 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -12,6 +11,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  widgetAriaProps,
 } from '@rjsf/utils';
 import { FormSelect } from 'react-bootstrap';
 
@@ -19,27 +19,27 @@ export default function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  schema,
-  id,
-  htmlName,
-  options,
-  required,
-  disabled,
-  readonly,
-  value,
-  multiple,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-  rawErrors,
-  hideError,
-  registry,
-  uiSchema,
-  'aria-label': ariaLabel,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    id,
+    htmlName,
+    options,
+    required,
+    disabled,
+    readonly,
+    value,
+    multiple,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    placeholder,
+    rawErrors,
+    hideError,
+    registry,
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
   const emptyValue = multiple ? [] : '';
@@ -104,8 +104,7 @@ export default function SelectWidget<
           const newValue = getValue(event, multiple);
           onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyValue));
         }}
-        aria-label={ariaLabel}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...widgetAriaProps(props)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
         {groupedOptions.map((item) =>

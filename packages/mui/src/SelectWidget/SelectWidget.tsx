@@ -14,7 +14,6 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -26,6 +25,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -38,6 +38,8 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
     inputLabel?: MuiInputLabelProps;
     /** Props applied to the `Select` element. */
     select?: MuiSelectProps;
+    /** Props applied to the element with the `combobox` role, as an object or as MUI's `(ownerState) => props`. */
+    htmlInput?: NonNullable<TextFieldProps['slotProps']>['htmlInput'];
   };
 }
 
@@ -74,7 +76,6 @@ export default function SelectWidget<
     registry,
     uiSchema,
     hideError,
-    'aria-label': ariaLabel,
     ...textFieldProps
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
@@ -94,6 +95,13 @@ export default function SelectWidget<
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
+  // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root
+  const ariaProps = widgetAriaProps(props);
+  const htmlInput = muiSlotProps?.htmlInput;
+  const htmlInputWithAria =
+    typeof htmlInput === 'function'
+      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...htmlInput(ownerState), ...ariaProps })
+      : { ...htmlInput, ...ariaProps };
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -133,12 +141,8 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root
-          ...(ariaLabel && {
-            htmlInput: { ...(muiSlotProps as GenericObjectType | undefined)?.htmlInput, 'aria-label': ariaLabel },
-          }),
+          htmlInput: htmlInputWithAria,
         }}
-        aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>

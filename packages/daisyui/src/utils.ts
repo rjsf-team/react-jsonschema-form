@@ -109,6 +109,8 @@ interface GetTriggerDescribedBy {
   name?: string;
   hideLabel?: boolean;
   hasValue: boolean;
+  named?: boolean;
+  describedBy?: string;
 }
 
 /** Builds the `aria-describedby` for a button that displays the field's value and opens a popup to change it — a
@@ -134,11 +136,22 @@ interface GetTriggerDescribedBy {
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
  * @param hasValue - Whether the button is displaying a value rather than falling back to the label
- * @returns - The button's `aria-describedby`, naming the value element only where the label names the button
+ * @param [named] - Whether the button is named by something other than that label, such as an `aria-label` its caller
+ *   passed, which replaces its contents the same way
+ * @param [describedBy=ariaDescribedByIds(id)] - The ids describing the field, which follow the value element
+ * @returns - The button's `aria-describedby`, naming the value element only where something names the button
  */
-export function getTriggerDescribedBy({ id, label, name, hideLabel, hasValue }: GetTriggerDescribedBy) {
-  if (!hasValue || !hasLabelToReference({ label, name, hideLabel })) {
-    return ariaDescribedByIds(id);
+export function getTriggerDescribedBy({
+  id,
+  label,
+  name,
+  hideLabel,
+  hasValue,
+  named = false,
+  describedBy = ariaDescribedByIds(id),
+}: GetTriggerDescribedBy) {
+  if (!hasValue || !(named || hasLabelToReference({ label, name, hideLabel }))) {
+    return describedBy;
   }
-  return `${triggerValueId(id)} ${ariaDescribedByIds(id)}`;
+  return `${triggerValueId(id)} ${describedBy}`;
 }

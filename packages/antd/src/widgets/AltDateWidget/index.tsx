@@ -7,7 +7,17 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus = false, disabled = false, id, name, onBlur, onFocus, options, readonly = false, registry } = props;
+  const {
+    autofocus = false,
+    disabled = false,
+    id,
+    label,
+    onBlur,
+    onFocus,
+    options,
+    readonly = false,
+    registry,
+  } = props;
   const { formContext, translateString } = registry;
   const { rowGutter = 24 } = formContext as GenericObjectType;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
@@ -20,9 +30,7 @@ export default function AltDateWidget<
           <Col flex='88px' key={elemId}>
             <DateElement
               rootId={id}
-              name={name}
-              label={props.label}
-              hideLabel={props.hideLabel}
+              label={label}
               select={handleChange}
               {...elemProps}
               disabled={disabled}

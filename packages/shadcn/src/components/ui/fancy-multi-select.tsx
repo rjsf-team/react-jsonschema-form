@@ -28,6 +28,8 @@ interface FancyMultiSelectProps {
   onValueChange?: (value: number[]) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
+  /** Accessible name given to the search input, for a select that no label points at */
+  ariaLabel?: string;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Aria placeholder text */
@@ -59,6 +61,7 @@ export function FancyMultiSelect({
   onValueChange,
   autoFocus = false,
   disabled = false,
+  ariaLabel,
   ariaDescribedby,
   ariaPlaceholder,
   onFocus,
@@ -179,7 +182,6 @@ export function FancyMultiSelect({
       aria-disabled={disabled}
       onBlur={onBlur}
       onFocus={handleFocus}
-      aria-describedby={ariaDescribedby}
       aria-placeholder={ariaPlaceholder}
     >
       <div
@@ -222,7 +224,10 @@ export function FancyMultiSelect({
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
             aria-controls={`command-item-input-${id}`}
-            aria-labelledby={`command-item-input-${id}`}
+            // A reference outranks an `aria-label`, so it is dropped when one is given
+            aria-labelledby={ariaLabel ? undefined : `command-item-input-${id}`}
+            aria-label={ariaLabel}
+            aria-describedby={ariaDescribedby}
             id={`command-item-input-${id}`}
           />
         </div>

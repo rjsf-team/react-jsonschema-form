@@ -89,6 +89,10 @@ export const TranslatableString = {
   KeyLabel: '%1 Key',
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
   DeprecatedLabel: '%1 (deprecated)',
+  /** Accessible name of one of the selects an AltDateWidget renders, where %1 will be replaced by the field's label
+   * and %2 by the translated name of the date element, such as `YearLabel`, as provided by DateElement
+   */
+  DateElementAriaLabel: '%1, %2',
   /** Cyclic schema message */
   CycleDetected:
     'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',

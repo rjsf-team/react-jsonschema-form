@@ -8,7 +8,6 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -18,6 +17,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -36,24 +36,24 @@ export default function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  autofocus,
-  disabled,
-  registry,
-  id,
-  htmlName,
-  multiple,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  placeholder,
-  readonly,
-  value,
-  schema,
-  uiSchema,
-  'aria-label': ariaLabel,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    autofocus,
+    disabled,
+    registry,
+    id,
+    htmlName,
+    multiple,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    value,
+    schema,
+    uiSchema,
+  } = props;
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -138,8 +138,7 @@ export default function SelectWidget<
         // When the open change is called, set the open state, needed so that the select opens properly in the playground
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
-        aria-label={ariaLabel}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...widgetAriaProps(props)}
         options={selectOptions}
       />
       <SelectedOptionDescription

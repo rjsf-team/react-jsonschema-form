@@ -3,7 +3,6 @@ import type { SelectValueChangeDetails } from '@chakra-ui/react';
 import { createListCollection, Select as ChakraSelect } from '@chakra-ui/react';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -16,6 +15,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -43,7 +43,6 @@ export default function SelectWidget<
     onChange,
     schema,
     uiSchema,
-    'aria-label': ariaLabel,
   } = props;
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -129,11 +128,10 @@ export default function SelectWidget<
         onFocus={handleFocus}
         autoFocus={autofocus}
         value={formValue}
-        aria-describedby={ariaDescribedByIds(id)}
         positioning={{ placement: 'bottom' }}
       >
         <ChakraSelect.Control>
-          <SelectTrigger aria-label={ariaLabel}>
+          <SelectTrigger {...widgetAriaProps(props)}>
             <SelectValueText placeholder={placeholder} />
           </SelectTrigger>
         </ChakraSelect.Control>

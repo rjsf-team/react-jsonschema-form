@@ -14,8 +14,6 @@ In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and 
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
 
-`DATE_ELEMENT_LABELS` maps the `type` of each date element an `AltDateWidget` renders (`year`, `month`, `day`, `hour`, `minute` and `second`) to the `TranslatableString` that names it; see [dateElementLabel()](#dateelementlabel).
-
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
 
 ## Types
@@ -67,13 +65,14 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 ### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
-The `SelectWidget` receives the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, and its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`, which every theme's `SelectWidget` gives to the control it renders.
+Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`, and the field's description, help and error ids as its `aria-describedby`.
+Every theme's `SelectWidget` gives those two to the control it renders through [widgetAriaProps()](#widgetariaprops).
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
 #### Props
 
 - value: any - The value currently selected for this element
-- name: string - The name of the field the element belongs to
+- [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
@@ -85,8 +84,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
-- [label]: string - Optional label of the field, which starts the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
-- [hideLabel]: boolean - Optional flag, if true, the field's label is left out of the element's accessible name
+- [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -216,6 +214,29 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 
 - \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
 
+### dateElementAriaLabel()
+
+Return the accessible name of a date element: the field's label combined with the element's translated name through `TranslatableString.DateElementAriaLabel` (`'%1, %2'` in english), so a locale controls both the order and the punctuation.
+The label is kept even when the field hides it on screen, since that is when the parts of two date fields are otherwise impossible to tell apart.
+Only an empty label leaves the element's name alone.
+
+#### Parameters
+
+- elementLabel: string - The translated name of the date element, as returned by [dateElementLabel()](#dateelementlabel)
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+- [label]: string - The label of the field the date element belongs to
+
+#### Returns
+
+- string: The accessible name of the date element
+
+#### Example
+
+```typescript
+dateElementAriaLabel('year', englishStringTranslator, 'When'); // 'When, year'
+dateElementAriaLabel('year', englishStringTranslator, ''); // 'year'
+```
+
 ### dateElementId()
 
 Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
@@ -237,33 +258,10 @@ Note that the separator here is always `_`, independent of the form's `idSeparat
 dateElementId('root_birthday', 'year'); // 'root_birthday_year'
 ```
 
-### dateElementAriaLabel()
-
-Return the accessible name of a date element: the field's label followed by the translated name of the element.
-The field's label is left out when it is empty or hidden, leaving the element's name alone.
-
-#### Parameters
-
-- type: string - The type of the date element, as given by its `DateElementProp`
-- translateString: Registry['translateString'] - The `translateString` function from the `registry`
-- [label]: string - The label of the field the date element belongs to
-- [hideLabel]: boolean - Flag, if true, the field's label is hidden and is left out of the name
-
-#### Returns
-
-- string: The accessible name of the date element
-
-#### Example
-
-```typescript
-dateElementAriaLabel('year', englishStringTranslator, 'When'); // 'When, year'
-dateElementAriaLabel('year', englishStringTranslator, 'When', true); // 'year'
-```
-
 ### dateElementLabel()
 
-Return the translated name of a date element, through the `TranslatableString` that `DATE_ELEMENT_LABELS` maps its `type` to.
-A `type` with no entry in `DATE_ELEMENT_LABELS` is returned as it is.
+Return the translated name of a date element, through the `TranslatableString` for its `type`: `YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` or `SecondLabel`.
+Any other `type` is returned as it is.
 
 #### Parameters
 
@@ -2409,6 +2407,29 @@ If no `additionalErrorSchema` is passed, then `validationData` is returned.
 #### Returns
 
 - ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+
+### widgetAriaProps()
+
+Return the `aria-label` and `aria-describedby` a widget gives the element a screen reader focuses, preferring what its caller passed over the widget's own default.
+A widget rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no description, help or error element is rendered for, so only its caller can name it and link it to its field.
+Every theme's `SelectWidget` spreads the result on its control, and a replacement `SelectWidget` should do the same.
+
+#### Parameters
+
+- props: WidgetAriaPropsInput - The widget's props, of which only `id`, `aria-label` and `aria-describedby` are read
+- [describedBy=ariaDescribedByIds(props.id)]: string - The `aria-describedby` to use when the caller passed none, for a widget that builds its own
+
+#### Returns
+
+- \{ 'aria-label'?: string, 'aria-describedby': string }: The props to spread on the focused element
+
+#### Example
+
+```typescript
+widgetAriaProps({ id: 'root' }); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
+widgetAriaProps({ id: 'root_when_year', 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' });
+// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' }
+```
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
