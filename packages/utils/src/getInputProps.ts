@@ -62,8 +62,8 @@ export default function getInputProps<
 ): InputPropsType {
   // Resolved rather than read off `schema.type` so that a nullable schema, which `SchemaField` renders through
   // `NumberField` just like a plain one, is treated as the number or integer it is. A union of more than one non-null
-  // type resolves to its first entry, which says nothing about what the others accept, so it keeps the plain text
-  // input it had before
+  // type resolves to its first non-null entry, which says nothing about what the others accept, so it keeps the plain
+  // text input it had before
   const schemaType = getSchemaType(schema);
   const nonNullTypes = Array.isArray(schema.type) ? schema.type.filter((type) => type !== 'null') : undefined;
   const isSingleOrNullableType = !nonNullTypes || nonNullTypes.length === 1;

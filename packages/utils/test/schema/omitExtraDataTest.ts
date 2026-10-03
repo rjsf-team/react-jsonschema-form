@@ -606,6 +606,22 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
+      it('keeps a value of any type a type list allows, pruning an object one by its properties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: { type: ['null', 'object', 'string', 'array', 'integer'], properties: { a: { type: 'string' } } },
+          },
+        };
+
+        for (const v of [null, 'abc', [1, 2], 3]) {
+          expect(omitExtraData({ validator: testValidator }, schema, schema, { v })).toEqual({ v });
+        }
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { v: { a: 'x', b: 'y' } })).toEqual({
+          v: { a: 'x' },
+        });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { v: true })).toEqual({});
+      });
       it('drops a null held by a key the schema does not describe', () => {
         const schema: RJSFSchema = {
           type: 'object',

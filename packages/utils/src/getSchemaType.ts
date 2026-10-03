@@ -8,7 +8,8 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * - schema.properties: Returns `object`
  * - schema.additionalProperties: Returns `object`
  * - schema.patternProperties: Returns `object`
- * - type is an array with a length of 2 and one type is 'null': Returns the other type
+ * - type is an array: Returns its first type other than 'null', since 'null' is the one type that holds no value to
+ *   edit; an array listing only 'null' returns 'null'
  *
  * @param schema - The schema for which to get the type
  * @returns - The type of the schema
@@ -31,12 +32,7 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   if (Array.isArray(type)) {
-    if (type.length === 2 && type.includes('null')) {
-      type = type.find((t) => t !== 'null');
-    } else {
-      // oxlint-disable-next-line prefer-destructuring
-      type = type[0];
-    }
+    type = type.find((t) => t !== 'null') ?? type[0];
   }
 
   return type;
