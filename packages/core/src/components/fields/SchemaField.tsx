@@ -306,7 +306,7 @@ function getFieldComponent<
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
-  // Without it the first type the schema lists is the one rendered.
+  // Without it the first type the schema lists other than `null` is the one rendered.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
   // of the union stays reachable from inside an option.

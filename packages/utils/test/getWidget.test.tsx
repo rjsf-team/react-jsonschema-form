@@ -93,9 +93,9 @@ describe('getWidget()', () => {
     expect(() => getWidget(unknownType, 'blabla')).toThrow(`No widget for type 'foo' in schema: {"type":"foo"}`);
   });
 
-  it('should return `SelectWidget` for a null type, which a select that lists null first among its types renders with', () => {
+  it('should return `SelectWidget` for a null type', () => {
     const registry = { SelectWidget: TestWidget };
-    expect(getWidget({ type: ['null', 'object', 'string'] }, 'select', registry)).toBe(TestWidget);
+    expect(getWidget({ type: 'null', enum: [null] }, 'select', registry)).toBe(TestWidget);
   });
 
   it('should fail if the object type has no such widget', () => {

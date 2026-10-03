@@ -135,6 +135,34 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('type list starting with null', () => {
+    it('should render the field for the first type that is not null', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'string', 'number'] } } },
+      });
+
+      expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+      await user.type(node.querySelector('#root_val')!, 'hi');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 'hi' } }), 'root_val');
+    });
+
+    it('should render an input within whichever oneOf option is selected', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['null', 'string', 'number'], oneOf: [{ title: 'A' }, { title: 'B' }] } },
+        },
+      });
+
+      expect(node.querySelectorAll('input')).toHaveLength(1);
+      await user.selectOptions(node.querySelector('select')!, 'B');
+
+      expect(node.querySelectorAll('input')).toHaveLength(1);
+      expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+    });
+  });
+
   describe('Custom SchemaField component', () => {
     const CustomSchemaField = function CustomSchemaField(props: FieldProps) {
       return (

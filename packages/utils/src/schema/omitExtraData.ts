@@ -3,12 +3,32 @@ import type { JSONSchema7Definition } from 'json-schema';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import guessType from '../guessType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
+
+/** Gets the type whose contents `value` is pruned as. A `type` list allows more than the one type `getSchemaType()`
+ * resolves it to, so a value of any listed type is pruned as that type rather than dropped for not being the resolved
+ * one, the way a `null`, a string or an array would be for a `['null', 'object', 'string']` that resolves to `object`.
+ *
+ * @param schema - The schema describing `value`
+ * @param value - The form data being pruned
+ * @returns - The type to prune `value` as
+ */
+function getPruningType<S extends StrictRJSFSchema>(schema: S, value: unknown) {
+  const { type } = schema;
+  if (Array.isArray(type) && value !== undefined) {
+    const valueType = guessType(value);
+    if (type.includes(valueType) || (valueType === 'number' && type.includes('integer'))) {
+      return valueType;
+    }
+  }
+  return getSchemaType<S>(schema);
+}
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -388,7 +408,7 @@ export default function omitExtraData<
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
     // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune
-    const type = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
+    const type = isWholeValueSelect<S>(localSchema) ? undefined : getPruningType<S>(localSchema, source);
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;

@@ -989,8 +989,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
-- type is an array with a length of 2 and one type is 'null': Returns the other type
-- type is an array allowing more than one non-'null' type: Returns the first type in the array, since no single field renders them all. Use [getUnionTypes()](#getuniontypes) to get every type such a schema allows
+- type is an array: Returns its first type other than 'null', since 'null' is the one type that holds no value to edit; an array listing only 'null' returns 'null'. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all
 
 #### Parameters
 
