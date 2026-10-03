@@ -43,19 +43,14 @@ export default function AltDateWidget<
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
-            {/* Naming each select, which is otherwise left to whatever it happens to be displaying. A single control is
-                named by this association alone, and announces the value it displays after it */}
+            {/* The part's name as the user sees it. The select's `aria-label`, which `DateElement` builds from the
+                field's label and this same translated name, outranks this association as its accessible name */}
             <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
               <span className='label-text capitalize'>{dateElementLabel(elemProps.type, translateString)}</span>
             </label>
             <DateElement
               rootId={id}
-              // The part's own id, as `@rjsf/mantine` and `@rjsf/chakra-ui` name theirs: each select is a control in
-              // its own right, and a field with no property name of its own — a root field, an array item — would
-              // otherwise leave the label above replacing the value its select displays rather than preceding it
-              name={dateElementId(id, elemProps.type)}
               label={label}
-              hideLabel={hideLabel}
               className='select select-bordered select-sm'
               select={handleChange}
               type={elemProps.type}

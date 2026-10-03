@@ -7,6 +7,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { DateElementProp, Registry, UseAltDateWidgetResult, WidgetProps } from '../src/index.ts';
 import {
+  ariaDescribedByIds,
   DateElement,
   englishStringTranslator,
   enumOptionsIndexForValue,
@@ -25,7 +26,9 @@ function SelectWidget({
   readonly,
   placeholder,
   onChange,
+  name,
   'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
 }: WidgetProps) {
   const { enumOptions } = options;
 
@@ -39,11 +42,13 @@ function SelectWidget({
   return (
     <select
       id={id}
+      name={name}
       value={typeof selectedIndexes === 'undefined' ? '' : selectedIndexes}
       required={required}
       disabled={disabled || readonly}
       onChange={handleChange}
       aria-label={ariaLabel}
+      aria-describedby={ariaDescribedBy}
     >
       <option value=''>{placeholder}</option>
       {Array.isArray(enumOptions) &&
@@ -60,20 +65,7 @@ function SelectWidget({
 function DateElementsTester(
   props: WidgetProps & { elements: DateElementProp[]; handleChange: UseAltDateWidgetResult['handleChange'] },
 ) {
-  const {
-    elements,
-    handleChange,
-    id,
-    name,
-    label,
-    hideLabel,
-    disabled,
-    readonly,
-    registry,
-    onBlur,
-    onFocus,
-    autofocus,
-  } = props;
+  const { elements, handleChange, id, label, disabled, readonly, registry, onBlur, onFocus, autofocus } = props;
   return (
     <>
       {elements.map((elemProps, i) => (
@@ -81,9 +73,7 @@ function DateElementsTester(
           // oxlint-disable-next-line react/no-array-index-key
           key={i}
           rootId={id}
-          name={name}
           label={label}
-          hideLabel={hideLabel}
           select={handleChange}
           {...elemProps}
           disabled={disabled}
@@ -455,18 +445,30 @@ describe('useAltDateWidgetProps()', () => {
       });
     });
 
-    test('names each element by the element alone when the label is empty or hidden', () => {
-      const { unmount } = renderElements({ label: '' });
-      expect(screen.getByRole('combobox', { name: 'year' })).toBeInTheDocument();
-      unmount();
-      renderElements({ label: 'When', hideLabel: true });
+    test('names each element by the element alone when the label is empty', () => {
+      renderElements({ label: '' });
       expect(screen.getByRole('combobox', { name: 'year' })).toBeInTheDocument();
     });
 
+    test('keeps the field label in the name when the label is hidden', () => {
+      renderElements({ label: 'When', hideLabel: true });
+      expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+    });
+
+    test('gives each element its own id as its name, and describes it by the field', () => {
+      renderElements({ label: 'When' });
+      const select = screen.getByRole('combobox', { name: 'When, year' });
+      expect(select).toHaveAttribute('id', `${TIME_PROPS.id}_year`);
+      expect(select).toHaveAttribute('name', `${TIME_PROPS.id}_year`);
+      expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds(TIME_PROPS.id));
+    });
+
     test('translates the name and the placeholder of each element', () => {
-      const translateString = vi.fn((key: string) => `[${key}]`);
+      const translateString = vi.fn((key: string, params?: string[]) =>
+        params ? `${params[1]} / ${params[0]}` : `[${key}]`,
+      );
       renderElements({ label: 'When' }, { ...REGISTRY, translateString });
-      const select = screen.getByRole('combobox', { name: 'When, [minute]' });
+      const select = screen.getByRole('combobox', { name: '[minute] / When' });
       expect(select).toHaveDisplayValue('[minute]');
     });
   });

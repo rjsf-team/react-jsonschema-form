@@ -13,6 +13,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
@@ -87,6 +88,8 @@ export default function SelectWidget<
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
   const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options);
+  // Mantine describes the input through its `InputWrapper` context, so only what a caller passes overrides it
+  const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = widgetAriaProps(props, '');
 
   const sharedProps = {
     id,
@@ -107,6 +110,8 @@ export default function SelectWidget<
     ...themeProps,
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
+    ...(ariaLabel && { 'aria-label': ariaLabel }),
+    ...(callerDescribedBy && { 'aria-describedby': callerDescribedBy }),
   };
 
   return (

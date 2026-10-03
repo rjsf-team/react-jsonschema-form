@@ -15,9 +15,7 @@ function AltDateWidget<
     autofocus = false,
     options,
     id,
-    name,
     label,
-    hideLabel,
     registry,
     onBlur,
     onFocus,
@@ -32,9 +30,7 @@ function AltDateWidget<
         <li className='list-inline-item' key={i}>
           <DateElement
             rootId={id}
-            name={name}
             label={label}
-            hideLabel={hideLabel}
             select={handleChange}
             {...elemProps}
             disabled={disabled}

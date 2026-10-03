@@ -28,7 +28,6 @@ function AltDateWidget<
                 autofocus={autofocus && i === 0}
                 disabled={disabled}
                 rootId={id}
-                name={id}
                 onBlur={onBlur}
                 onFocus={onFocus}
                 readonly={readonly}

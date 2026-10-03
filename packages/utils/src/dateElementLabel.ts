@@ -1,10 +1,7 @@
 import { TranslatableString } from './enums.ts';
 import type { Registry } from './types.ts';
 
-/** The `TranslatableString` naming each type of date element an `AltDateWidget` renders, keyed by the `type` of its
- * `DateElementProp`
- */
-export const DATE_ELEMENT_LABELS: Readonly<Record<string, TranslatableString>> = {
+const DATE_ELEMENT_LABELS: Readonly<Record<string, TranslatableString>> = {
   year: TranslatableString.YearLabel,
   month: TranslatableString.MonthLabel,
   day: TranslatableString.DayLabel,
@@ -14,7 +11,7 @@ export const DATE_ELEMENT_LABELS: Readonly<Record<string, TranslatableString>> =
 };
 
 /** Return the translated name of a date element, such as `year`, falling back to the `type` itself for a type that
- * `DATE_ELEMENT_LABELS` has no string for
+ * has no `TranslatableString` of its own
  *
  * @param type - The type of the date element, as given by its `DateElementProp`
  * @param translateString - The `translateString` function from the `registry`
@@ -25,22 +22,21 @@ export default function dateElementLabel(type: string, translateString: Registry
   return key ? translateString(key) : type;
 }
 
-/** Return the accessible name of a date element: the field's label followed by the translated name of the element,
- * such as `When, year`. The field's label is left out when it is empty or hidden, leaving the element's name alone,
- * since nothing on screen would match it
+/** Return the accessible name of a date element: the field's label combined with the element's translated name through
+ * `TranslatableString.DateElementAriaLabel`, such as `When, year`, so a locale controls both the order and the
+ * punctuation. The label is kept even when the field hides it on screen, since that is when the parts of two date
+ * fields are otherwise impossible to tell apart, and the visible name is still contained in it. Only an empty label
+ * leaves the element's name alone.
  *
- * @param type - The type of the date element, as given by its `DateElementProp`
+ * @param elementLabel - The translated name of the date element, as returned by `dateElementLabel()`
  * @param translateString - The `translateString` function from the `registry`
  * @param [label] - The label of the field the date element belongs to
- * @param [hideLabel] - Flag, if true, the field's label is hidden and is left out of the name
  * @returns - The accessible name of the date element
  */
 export function dateElementAriaLabel(
-  type: string,
+  elementLabel: string,
   translateString: Registry['translateString'],
   label?: string,
-  hideLabel?: boolean,
 ) {
-  const elementLabel = dateElementLabel(type, translateString);
-  return label && !hideLabel ? `${label}, ${elementLabel}` : elementLabel;
+  return label ? translateString(TranslatableString.DateElementAriaLabel, [label, elementLabel]) : elementLabel;
 }

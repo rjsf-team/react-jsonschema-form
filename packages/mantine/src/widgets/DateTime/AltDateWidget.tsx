@@ -11,10 +11,11 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
+  dateElementAriaLabel,
+  dateElementId,
   dateElementLabel,
   dateRangeOptions,
   isObject,
-  titleId,
   TranslatableString,
   useAltDateWidgetProps,
 } from '@rjsf/utils';
@@ -30,16 +31,16 @@ interface AltDatePartProps {
   required?: boolean;
   invalid: boolean;
   success: boolean;
-  labelled: boolean;
+  label?: string;
   translateString: Registry['translateString'];
   onChange: (property: keyof DateObject, value?: string) => void;
   onBlur: (id: string, value: unknown) => void;
   onFocus: (id: string, value: unknown) => void;
 }
 
-/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the field's title
- * followed by its own `aria-label`, which a self-reference in `aria-labelledby` resolves to, and which Mantine also
- * gives the part's listbox.
+/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the same
+ * `aria-label` every theme's `DateElement` gives its selects, such as `When, year`, which Mantine also gives the
+ * part's listbox.
  */
 function AltDatePart({
   id,
@@ -50,15 +51,15 @@ function AltDatePart({
   required,
   invalid,
   success,
-  labelled,
+  label,
   translateString,
   onChange,
   onBlur,
   onFocus,
 }: AltDatePartProps) {
-  const partId = `${id}_${part.type}`;
   // The widget's state holds -1 for an unset part
   const partValue = part.value === undefined || part.value < 0 ? undefined : part.value;
+  const partId = dateElementId(id, part.type);
   const partLabel = dateElementLabel(part.type, translateString);
   const [start, end] = part.range;
   const data = useMemo(() => dateRangeOptions(start, end).map((item) => item.value.toString()), [start, end]);
@@ -74,8 +75,7 @@ function AltDatePart({
         id={partId}
         name={partId}
         placeholder={partLabel}
-        aria-label={partLabel}
-        aria-labelledby={labelled ? `${titleId(id)} ${partId}` : undefined}
+        aria-label={dateElementAriaLabel(partLabel, translateString, label)}
         disabled={disabled}
         autoFocus={autofocus}
         // The parts are read-only while `searchable` is false, so this adds no constraint validation
@@ -174,7 +174,7 @@ export default function AltDateWidget<
             autofocus={autofocus}
             required={required}
             invalid={invalid}
-            labelled={!!label}
+            label={label}
             translateString={translateString}
             fieldSuccessId={successId}
             onChange={handleChange}
