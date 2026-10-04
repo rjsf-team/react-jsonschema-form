@@ -1,7 +1,7 @@
 import { getDateTimeLocalValue } from '../src/index.ts';
 
 describe('getDateTimeLocalValue()', () => {
-  // Mirrors packages/daisyui/test/helpers/pinTimeZone.ts: the iso-date-time cases below depend on the local zone
+  // Mirrors packages/daisyui/test/helpers/pinTimeZone.ts: the non date-time cases below depend on the local zone
   const realTZ = process.env.TZ;
   beforeAll(() => {
     process.env.TZ = 'America/Los_Angeles';
@@ -56,6 +56,16 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, date).localValue).toEqual(
       '2020-05-03T07:30:00.000',
     );
+  });
+
+  it.each([
+    ['no format', {}],
+    ['format: date', { format: 'date' }],
+  ])('should show a converted epoch number and Date at local wall-clock time for %s', (_name, extra) => {
+    const schema = { type: 'string', ...extra } as const;
+    const epoch = Date.UTC(2020, 4, 3, 2, 0);
+    expect(getDateTimeLocalValue(schema, epoch).localValue).toEqual('2020-05-02T19:00:00.000');
+    expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-02T19:00:00.000');
   });
 
   it.each([NaN, Infinity, 8.64e15 + 1])('should normalize the out-of-range number %s to undefined', (value) => {
