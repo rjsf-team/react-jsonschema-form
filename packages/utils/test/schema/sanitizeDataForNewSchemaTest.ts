@@ -964,6 +964,49 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toEqual(['a', 'b']);
     });
+    it('filters out object items a narrowed items enum rejects, like scalar items (#5346)', () => {
+      // An object item picked from a list of constants is held as a whole, so it is checked against the new options
+      // rather than sanitized property by property, which would leave an item the new enum rejects in place
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [{ id: 'a' }, { id: 'b' }], properties: { id: { type: 'string' } } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [{ id: 'a' }], properties: { id: { type: 'string' } } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('filters out object items a narrowed items oneOf of constants rejects (#5346)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', oneOf: [{ const: { id: 'a' } }, { const: { id: 'b' } }] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', oneOf: [{ const: { id: 'a' } }] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('keeps object items whose properties are edited rather than picked as a whole (#5346)', () => {
+      // Without an enum the items are a container, so they are sanitized per property and no item is dropped
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { id: { type: 'string' } } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { id: { type: 'string' } } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+        { id: 'b' },
+      ]);
+    });
     it('returns whole array when the new schema does not have maxItems for simple type', () => {
       const rootSchema: RJSFSchema = {
         definitions: {
