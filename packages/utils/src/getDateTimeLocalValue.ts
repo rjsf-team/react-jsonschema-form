@@ -33,29 +33,28 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
   schema: S,
   value: unknown,
 ): DateTimeLocalValueResult {
-  const isIsoDateTime = schema.format === 'iso-date-time';
-  const requiresOffset = schema.format === 'date-time' || schema.format === 'datetime';
+  const { format } = schema;
+  const isIsoDateTime = format === 'iso-date-time';
+  const requiresOffset = format === 'date-time' || format === 'datetime';
+  let localValue: string | undefined;
   if (typeof value === 'string') {
-    return { isIsoDateTime, requiresOffset, localValue: isIsoDateTime ? offsetTimeToLocalTime(value) : value };
-  }
-  if (typeof value === 'number' || value instanceof Date) {
+    localValue = isIsoDateTime ? offsetTimeToLocalTime(value) : value;
+  } else if (typeof value === 'number' || value instanceof Date) {
     const date = new Date(value);
     if (!Number.isNaN(date.getTime())) {
       // An epoch or `Date` is an exact instant; only formats that require an offset keep the UTC ISO string
-      const iso = date.toISOString();
+      const iso = date.toISOString(),
+        year = date.getFullYear();
       if (requiresOffset) {
-        return { isIsoDateTime, requiresOffset, localValue: iso };
-      }
-      // A day stored as a `Date` or epoch is its UTC midnight, which names that day rather than the evening before it
-      if (schema.format === 'date' && iso.endsWith('T00:00:00.000Z')) {
-        return { isIsoDateTime, requiresOffset, localValue: /^\d{4}-/.test(iso) ? iso.slice(0, 10) : undefined };
-      }
-      // Years outside 0-9999 have no four-digit local text that a picker can parse
-      const localYear = date.getFullYear();
-      if (localYear >= 0 && localYear <= 9999) {
-        return { isIsoDateTime, requiresOffset, localValue: utcToLocal(iso) };
+        localValue = iso;
+      } else if (format === 'date' && iso.endsWith('T00:00:00.000Z')) {
+        // A day stored as a `Date` or epoch is its UTC midnight, which names that day rather than the evening before it
+        localValue = /^\d{4}-/.test(iso) ? iso.slice(0, 10) : undefined;
+      } else if (year >= 0 && year <= 9999) {
+        // Years outside 0-9999 have no four-digit local text that a picker can parse
+        localValue = utcToLocal(iso);
       }
     }
   }
-  return { isIsoDateTime, requiresOffset, localValue: undefined };
+  return { isIsoDateTime, requiresOffset, localValue };
 }
