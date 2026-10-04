@@ -5,8 +5,9 @@ import utcToLocal from './utcToLocal.ts';
 export interface DateTimeLocalValueResult {
   /** True when `schema.format` is `iso-date-time`, meaning a timezone offset is optional rather than required */
   isIsoDateTime: boolean;
-  /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged; a finite epoch number or a
-   * valid `Date` is converted to its UTC ISO string, or to local wall-clock time when `isIsoDateTime`; `undefined` for any other `value` */
+  /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged. A finite epoch number or a
+   * valid `Date` is converted to its UTC ISO string for `date-time`/`datetime`, and to local wall-clock time for any
+   * other format. `undefined` for any other `value` */
   localValue: string | undefined;
 }
 
@@ -15,6 +16,9 @@ export interface DateTimeLocalValueResult {
  * format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead
  * of being converted to another timezone by a date/time picker that parses the offset as real. To be used by
  * theme specific `DateTimeWidget` implementations.
+ *
+ * A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when
+ * `schema.format` requires an offset (`date-time`/`datetime`), and to local wall-clock time for any other format.
  *
  * @param schema - The schema for the date-time field
  * @param value - The current value of the field
@@ -25,25 +29,17 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
   value: unknown,
 ): DateTimeLocalValueResult {
   const isIsoDateTime = schema.format === 'iso-date-time';
-  let stringValue: string | undefined;
   if (typeof value === 'string') {
-    stringValue = value;
-  } else if (typeof value === 'number' || value instanceof Date) {
+    return { isIsoDateTime, localValue: isIsoDateTime ? offsetTimeToLocalTime(value) : value };
+  }
+  if (typeof value === 'number' || value instanceof Date) {
     const date = new Date(value);
     if (!Number.isNaN(date.getTime())) {
-      // An epoch or `Date` is an exact instant, so `iso-date-time` shows it at the reader's local wall-clock time
+      // An epoch or `Date` is an exact instant; only formats that require an offset keep the UTC ISO string
       const iso = date.toISOString();
-      return {
-        isIsoDateTime,
-        localValue: isIsoDateTime ? utcToLocal(iso) : iso,
-      };
+      const requiresOffset = schema.format === 'date-time' || schema.format === 'datetime';
+      return { isIsoDateTime, localValue: requiresOffset ? iso : utcToLocal(iso) };
     }
   }
-  if (stringValue === undefined) {
-    return { isIsoDateTime, localValue: undefined };
-  }
-  return {
-    isIsoDateTime,
-    localValue: isIsoDateTime ? offsetTimeToLocalTime(stringValue) : stringValue,
-  };
+  return { isIsoDateTime, localValue: undefined };
 }
