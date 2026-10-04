@@ -77,9 +77,16 @@ export default function DateTimeWidget<
   // consumer (the calendar's month caption, the time input, the commit) would otherwise have to guard
   // against individually.
   //
-  // `getDateTimeLocalValue()` returns a string for text, and for a finite epoch number or valid `Date` a consumer left
-  // in the form data (converted to its ISO string), so it only returns `undefined` for a value the picker cannot read.
-  const initialDate = useMemo(() => readDateOnly(localValue) ?? readInstant(localValue), [localValue]);
+  // `getDateTimeLocalValue()` returns text as it was stored, and `undefined` for a value the picker cannot read. An
+  // epoch number or `Date` a consumer left in the form data is an exact instant, so it is read as one rather than from
+  // its wall-clock text, which cannot tell apart the two 01:30s on the night clocks go back. A `format: 'date'` value
+  // that is a UTC midnight is the exception: `localValue` names the day it stands for.
+  const initialDate = useMemo(() => {
+    if (localValue === undefined) {
+      return undefined;
+    }
+    return readDateOnly(localValue) ?? readInstant(typeof value === 'string' ? localValue : value);
+  }, [localValue, value]);
   const {
     isOpen,
     month,

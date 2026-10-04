@@ -221,6 +221,27 @@ describe('DateTimeWidget', () => {
     });
   });
 
+  // Wall-clock text cannot tell apart the two 01:30s on the night clocks go back, so an instant is read as one
+  describe('an instant in the hour clocks go back', () => {
+    pinTimeZone('America/Los_Angeles');
+
+    test('keeps the second 01:30 when the user picks another day', async () => {
+      const onChange = vi.fn();
+      const { container } = render(
+        <DateTimeWidget
+          {...makeWidgetMockProps({ value: Date.UTC(2020, 10, 1, 9, 30), onChange, schema: { type: 'string' } })}
+        />,
+      );
+
+      await openPicker(container);
+      await user.click(screen.getByRole('button', { name: /November 12th, 2020/ }));
+      await user.click(screen.getByText('Done'));
+
+      // 01:30 PST on Nov 12 is 09:30Z; reading the instant as 01:30 PDT would save 08:30Z
+      expect(onChange).toHaveBeenLastCalledWith('2020-11-12T09:30:00.000Z');
+    });
+  });
+
   // A field with no title leaves `FieldTemplate` no label to render, so the trigger has neither a name from outside nor
   // contents of its own to be named by
   test('names an untitled field with no value by the translated prompt', () => {

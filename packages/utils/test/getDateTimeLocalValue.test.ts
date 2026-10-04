@@ -68,6 +68,35 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-02T19:00:00.000');
   });
 
+  it('should read a UTC midnight as the day it names for format=date', () => {
+    const schema = { type: 'string', format: 'date' } as const;
+    const epoch = Date.UTC(2020, 4, 3);
+    expect(getDateTimeLocalValue(schema, epoch).localValue).toEqual('2020-05-03');
+    expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-03');
+  });
+
+  it('should not read a UTC midnight as a day for a format other than date', () => {
+    const epoch = Date.UTC(2020, 4, 3);
+    expect(getDateTimeLocalValue({ type: 'string' }, epoch).localValue).toEqual('2020-05-02T17:00:00.000');
+  });
+
+  it.each([8.64e15, Date.UTC(-3, 0, 1)])(
+    'should normalize the epoch %s with a local year outside 0-9999 to undefined',
+    (value) => {
+      expect(getDateTimeLocalValue({ type: 'string' }, value).localValue).toBeUndefined();
+    },
+  );
+
+  it.each([
+    ['date-time', true],
+    ['datetime', true],
+    ['iso-date-time', false],
+    ['date', false],
+    [undefined, false],
+  ])('should report requiresOffset for format=%s as %s', (format, expected) => {
+    expect(getDateTimeLocalValue({ type: 'string', format }, '2020-05-03').requiresOffset).toBe(expected);
+  });
+
   it.each([NaN, Infinity, 8.64e15 + 1])('should normalize the out-of-range number %s to undefined', (value) => {
     expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, value).localValue).toBeUndefined();
   });
