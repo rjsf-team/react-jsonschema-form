@@ -262,6 +262,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the widget of a `oneOf`/`anyOf` option showing the errors its selector already shows ([#5332](https://github.com/rjsf-team/react-jsonschema-form/issues/5332))
 - Fixed `SelectWidget`, `RadioWidget` and `CheckboxesWidget` with object options and the `realValue` option value format ([#5309](https://github.com/rjsf-team/react-jsonschema-form/issues/5309))
 - Fixed `realValue` options whose `String()` matches, such as `1` and `'1'`, sharing a DOM value ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
+- Fixed `DateTimeInput` leaving a field blank for an epoch number or a `Date` when `ui:options` sets a custom `valueFormat`: text converted from a number or `Date` is ISO-ordered, so it is now parsed without `valueFormat` ([#5393](https://github.com/rjsf-team/react-jsonschema-form/issues/5393))
 
 ## @rjsf/mui
 
@@ -383,6 +384,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `getDefaultFormState()` for an array with `minItems` whose `default` isn't an array: it's now ignored when filling the array, where a string default was concatenated into a string and any other non-array default (an object, a number, `true`) threw ([#5387](https://github.com/rjsf-team/react-jsonschema-form/pull/5387))
 - `logOnce()` compares a plain-object or array `error` by its JSON, so two different plain-object payloads logged with the same message are no longer taken for one, and the `logUnsupportedDefaultForEnum()` error spells an object default out as JSON rather than `[object Object]`. `enumOptionValueLabel()` spells a value the same way, so a value reads the same in an option label as in a warning: a `Date`, a `Map` or a nested `BigInt` is spelled as `String()` spells it, and a circular plain object or array no longer throws. ([#5382](https://github.com/rjsf-team/react-jsonschema-form/pull/5382))
 - **BREAKING CHANGE:** `UiSchemaDefinitions<S, F>` drops its `T` parameter and types every entry as `UiSchema<unknown, S, F>`, the type `UiSchema`'s `ui:definitions` key now uses too. A definition applies to whichever field references it, so typing it by the root form's data rejected the nested keys of the field it describes ([#5372](https://github.com/rjsf-team/react-jsonschema-form/pull/5372))
+- Fixed `getDateTimeLocalValue()` returning `undefined` for an epoch number or a `Date`: a finite number or a valid `Date` is now converted to its UTC ISO string for `date-time`/`datetime`, to the day it names for a `date` that is a UTC midnight, and to local wall-clock time for any other format. Its result also gains `requiresOffset`, true for `date-time`/`datetime` ([#5393](https://github.com/rjsf-team/react-jsonschema-form/issues/5393))
 
 ## @rjsf/validator-ajv8
 

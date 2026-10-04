@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
@@ -75,8 +75,7 @@ export default function DateTimeInput<
     schema,
   } = props;
 
-  const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
-  const requiresOffset = !isIsoDateTime && (schema.format === 'date-time' || schema.format === 'datetime');
+  const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
@@ -98,9 +97,10 @@ export default function DateTimeInput<
     }
   }, [onFocus, id, value]);
 
-  const parsedValue = requiresOffset
-    ? offsetValueParser(value as string | undefined)
-    : dateParser(localValue, valueFormat as string);
+  const parsedValue =
+    requiresOffset || typeof value !== 'string'
+      ? offsetValueParser(localValue)
+      : dateParser(localValue, valueFormat as string);
 
   const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
   const error = useVisibleErrors(props);
