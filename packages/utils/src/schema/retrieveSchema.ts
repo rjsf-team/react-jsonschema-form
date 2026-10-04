@@ -753,19 +753,19 @@ export function stubExistingAdditionalProperties<
         return;
       }
     }
-    if (ADDITIONAL_PROPERTIES_KEY in schema && schema.additionalProperties !== false) {
+    if (schema.additionalProperties !== false) {
       let additionalProperties: S['additionalProperties'];
-      if (typeof schema.additionalProperties !== 'boolean') {
-        if (REF_KEY in schema.additionalProperties!) {
+      if (isObject(schema.additionalProperties)) {
+        if (REF_KEY in schema.additionalProperties) {
           additionalProperties = retrieveSchema<T, S, F>(
             context,
             { [REF_KEY]: (schema.additionalProperties as S)[REF_KEY] } as S,
             rootSchema,
             formData[key],
           );
-        } else if ('type' in schema.additionalProperties!) {
+        } else if ('type' in schema.additionalProperties) {
           additionalProperties = { ...schema.additionalProperties };
-        } else if (ANY_OF_KEY in schema.additionalProperties! || ONE_OF_KEY in schema.additionalProperties!) {
+        } else if (ANY_OF_KEY in schema.additionalProperties || ONE_OF_KEY in schema.additionalProperties) {
           additionalProperties = {
             type: 'object',
             ...schema.additionalProperties,
@@ -774,7 +774,9 @@ export function stubExistingAdditionalProperties<
           additionalProperties = guessedTypeSchema<S>(formData[key], schema.additionalProperties as S);
         }
       } else {
-        // `additionalProperties: false` is excluded above, so the boolean here is always `true`: anything goes
+        // `additionalProperties: false` is excluded above, so what is left is `true` or no `additionalProperties` at
+        // all, which JSON Schema reads as `true`: anything goes, including a key none of the `patternProperties`
+        // patterns match, which the schema allows all the same and so gets a field for the data it holds
         additionalProperties = guessedTypeSchema<S>(formData[key]);
       }
 
@@ -783,7 +785,8 @@ export function stubExistingAdditionalProperties<
       // Set our additional property flag so we know it was dynamically added
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     } else {
-      // Invalid property
+      // `additionalProperties: false` forbids every key its `patternProperties` don't match, so the property has no
+      // subschema of its own to render it with and the schema allows no value for it
       schema.properties[key] = { type: 'null' };
       // Set our additional property flag so we know it was dynamically added
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;

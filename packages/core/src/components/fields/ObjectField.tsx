@@ -95,22 +95,35 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
 }
 
-/** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. Without an
- * `additionalProperties` schema to fall back on, a name matching none of the `patternProperties` patterns has no
- * subschema of its own and `retrieveSchema()` stubs it as the unusable `{ type: 'null' }`, so a name that does match
- * a pattern is worth more to the user than the first one the `enum` happens to list. It stays a preference rather
- * than a restriction: the schema allows every name it enumerates, and a field the user can still rename beats no new
- * property at all.
+/** Determines whether one of the `schema`'s `patternProperties` patterns matches the given `key`, i.e. whether the
+ * key takes its subschema from a pattern rather than from `additionalProperties`
+ *
+ * @param schema - The object schema whose `patternProperties` the key is matched against
+ * @param key - The property name to match
+ * @returns - True when at least one pattern matches the `key`
+ */
+function matchesPatternProperty<S extends StrictRJSFSchema = RJSFSchema>(schema: S, key: string) {
+  return Object.keys(getMatchingPatternProperties<S>(schema, key)).length > 0;
+}
+
+/** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. An
+ * `additionalProperties: false` forbids every name the `patternProperties` patterns don't match, leaving such a name
+ * no subschema of its own and `retrieveSchema()` nothing but the unusable `{ type: 'null' }` to stub it with, so a
+ * name that does match a pattern is worth more to the user than the first one the `enum` happens to list. Any other
+ * `additionalProperties` describes a name the patterns don't match, so there is nothing to prefer it over.
+ *
+ * It stays a preference rather than a restriction: `propertyNames` enumerates the forbidden name all the same, and a
+ * property the user can still rename beats no new property at all.
  *
  * @param schema - The object schema the property is being added to
  * @param freeNames - The allowed names no property and no form data key has taken
  * @returns - The free name to add under, or undefined when none is preferable to the first
  */
 function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(schema: S, freeNames: string[]) {
-  if (!schema.patternProperties || isObject(schema.additionalProperties)) {
+  if (!schema.patternProperties || schema.additionalProperties !== false) {
     return undefined;
   }
-  return freeNames.find((freeName) => Object.keys(getMatchingPatternProperties<S>(schema, freeName)).length > 0);
+  return freeNames.find((freeName) => matchesPatternProperty<S>(schema, freeName));
 }
 
 /** Props for the `ObjectFieldProperty` component */
@@ -403,7 +416,14 @@ export default function ObjectField<
     }
     const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
     const newKey = getAvailableKey(preferredKey, newFormData);
-    if (schema.patternProperties) {
+    // A key one of the `patternProperties` patterns matches takes its schema from that pattern, which the default
+    // pipeline below, reading `additionalProperties` alone, has nothing to seed from: it gets a `null` the field for
+    // the pattern's type renders as an empty value. So does a key none of them match under an
+    // `additionalProperties: false`, which forbids that key and leaves `retrieveSchema()` nothing but the
+    // `{ type: 'null' }` stub to render it with, so any other seed would be a value no field can show. Every other
+    // key the patterns don't match is described by `additionalProperties`, or by nothing at all, which allows any
+    // value, exactly as it would be in a schema with no `patternProperties`, so it is seeded the same way
+    if (matchesPatternProperty<S>(schema, newKey) || schema.additionalProperties === false) {
       setByPath(newFormData, newKey, null);
     } else {
       let type: ReturnType<typeof getFieldTypeForWidget> = undefined;

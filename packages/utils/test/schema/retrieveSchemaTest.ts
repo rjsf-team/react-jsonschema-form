@@ -2753,6 +2753,30 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ...schema,
           properties: {
             baz: {
+              type: 'number',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that does not match patternProperties, additionalProperties is false', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+            },
+          },
+          additionalProperties: false,
+        };
+        const formData = { baz: 1 };
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            baz: {
               type: 'null',
               [ADDITIONAL_PROPERTY_FLAG]: true,
             },
