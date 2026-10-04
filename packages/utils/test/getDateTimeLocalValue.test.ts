@@ -75,6 +75,13 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-03');
   });
 
+  it.each([Date.UTC(10000, 0, 1), Date.UTC(-3, 0, 1)])(
+    'should normalize the UTC midnight %s outside the years 0-9999 to undefined for format=date',
+    (value) => {
+      expect(getDateTimeLocalValue({ type: 'string', format: 'date' }, value).localValue).toBeUndefined();
+    },
+  );
+
   it('should not read a UTC midnight as a day for a format other than date', () => {
     const epoch = Date.UTC(2020, 4, 3);
     expect(getDateTimeLocalValue({ type: 'string' }, epoch).localValue).toEqual('2020-05-02T17:00:00.000');

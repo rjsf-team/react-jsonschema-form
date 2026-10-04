@@ -48,7 +48,7 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
       }
       // A day stored as a `Date` or epoch is its UTC midnight, which names that day rather than the evening before it
       if (schema.format === 'date' && iso.endsWith('T00:00:00.000Z')) {
-        return { isIsoDateTime, requiresOffset, localValue: iso.slice(0, 10) };
+        return { isIsoDateTime, requiresOffset, localValue: /^\d{4}-/.test(iso) ? iso.slice(0, 10) : undefined };
       }
       // Years outside 0-9999 have no four-digit local text that a picker can parse
       const localYear = date.getFullYear();
