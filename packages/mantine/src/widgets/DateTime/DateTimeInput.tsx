@@ -97,7 +97,10 @@ export default function DateTimeInput<
     }
   }, [onFocus, id, value]);
 
-  const parsedValue = requiresOffset ? offsetValueParser(localValue) : dateParser(localValue, valueFormat as string);
+  const parsedValue =
+    requiresOffset || typeof value !== 'string'
+      ? offsetValueParser(localValue)
+      : dateParser(localValue, valueFormat as string);
 
   const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
   const error = useVisibleErrors(props);
