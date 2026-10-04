@@ -5653,6 +5653,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('defaults with allOf', () => {
       let schema: RJSFSchema;
+      const conditionalItemSchema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'boolean' } },
+        allOf: [
+          {
+            if: { properties: { foo: { const: true } }, required: ['foo'] },
+            then: { properties: { bar: { type: 'boolean', default: true } }, required: ['bar'] },
+          },
+        ],
+      };
+      const conditionalArraySchema: RJSFSchema = { type: 'array', items: conditionalItemSchema };
 
       it('should populate root defaults for allOf', () => {
         schema = {
@@ -5814,6 +5825,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           });
         });
+
+        it('should populate the conditional defaults of an allOf in array items', () => {
+          expect(
+            getDefaultFormState(testValidator, conditionalArraySchema, [{ foo: true }], undefined, undefined, {
+              allOf: 'populateDefaults',
+            }),
+          ).toEqual([{ foo: true, bar: true }]);
+        });
       });
 
       describe('default form state behaviour: allOf = "skipDefaults"', () => {
@@ -5824,6 +5843,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
             }),
           ).toEqual({ animalInfo: { animal: 'Cat' } });
+        });
+
+        it('should populate the conditional defaults of a root allOf but not of the same allOf in array items', () => {
+          expect(
+            getDefaultFormState(testValidator, conditionalItemSchema, { foo: true }, undefined, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ foo: true, bar: true });
+          expect(
+            getDefaultFormState(testValidator, conditionalArraySchema, [{ foo: true }], undefined, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual([{ foo: true }]);
         });
       });
     });
