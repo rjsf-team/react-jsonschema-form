@@ -7,7 +7,7 @@ import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { Mock, MockInstance } from 'vitest';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
@@ -47,10 +47,12 @@ export interface ConsoleSuppressionResult {
 export interface ControlledParentLog<T> {
   value: T | undefined;
   proposals: (T | undefined)[];
+  /** Every event the form sent, for the errors a proposal carried */
+  events: IChangeEvent<T>[];
 }
 
 export function createParentLog<T>(): ControlledParentLog<T> {
-  return { value: undefined, proposals: [] };
+  return { value: undefined, proposals: [], events: [] };
 }
 
 export type ControlledParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
@@ -69,6 +71,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);
+        log?.events.push(event);
         setValue(event.formData);
       }}
     />
@@ -83,7 +86,10 @@ export function RejectingParent<T>({ initialValue, log, ...formProps }: Controll
       {...formProps}
       validator={validator}
       formData={initialValue}
-      onChange={(event) => log?.proposals.push(event.formData)}
+      onChange={(event) => {
+        log?.proposals.push(event.formData);
+        log?.events.push(event);
+      }}
     />
   );
 }
@@ -104,6 +110,7 @@ export function TransformingParent<T>({
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);
+        log?.events.push(event);
         setValue(transform(event.formData));
       }}
     />
