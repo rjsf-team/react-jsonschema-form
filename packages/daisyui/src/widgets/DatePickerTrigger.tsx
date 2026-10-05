@@ -33,6 +33,10 @@ interface DatePickerTriggerProps<
   triggerRef: RefObject<HTMLButtonElement | null>;
   /** Opens the popup, or closes it where a press here is the way out */
   onClick: (e: MouseEvent) => void;
+  /** Reports focus */
+  onFocus: () => void;
+  /** Reports blur */
+  onBlur: () => void;
   /** The field's registry, for the translated text a trigger with nothing else to show falls back to */
   registry: Registry<T, S, F>;
 }
@@ -62,6 +66,8 @@ export default function DatePickerTrigger<
   readonly,
   triggerRef,
   onClick,
+  onFocus,
+  onBlur,
   registry,
 }: DatePickerTriggerProps<T, S, F>) {
   const describedBy = getTriggerDescribedBy({ id, label, name, hideLabel, hasValue: !!formattedValue });
@@ -79,6 +85,8 @@ export default function DatePickerTrigger<
       // a field that cannot be edited is still one a keyboard user reads, and `SelectWidget` keeps its own reachable
       aria-disabled={readonly || undefined}
       onClick={readonly ? undefined : onClick}
+      onFocus={onFocus}
+      onBlur={onBlur}
       aria-haspopup='true'
       aria-expanded={isOpen}
       aria-describedby={describedBy}

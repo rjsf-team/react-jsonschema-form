@@ -67,7 +67,7 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, name, hideLabel, placeholder, disabled, readonly, schema, registry } = props;
+  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
@@ -92,7 +92,7 @@ export default function DateTimeWidget<
     handleFocus,
     handleBlur,
     handleDone,
-  } = useDatePicker({ ...props, initialDate, formatDate });
+  } = useDatePicker({ ...props, initialDate, formatDate, emptyValue: options.emptyValue });
 
   // Take the day the user picked, keeping the time the popup already holds.
   const handleSelect = useCallback(
@@ -143,7 +143,7 @@ export default function DateTimeWidget<
   const formattedValue = displayedDate ? format(displayedDate, 'PP p') : undefined;
 
   return (
-    <div className='form-control my-4 w-full relative' onFocus={handleFocus} onBlur={handleBlur}>
+    <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
         <DatePickerTrigger<T, S, F>
           id={id}
@@ -157,6 +157,8 @@ export default function DateTimeWidget<
           readonly={readonly}
           triggerRef={triggerRef}
           onClick={togglePicker}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           registry={registry}
         />
         {isOpen && (

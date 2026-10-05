@@ -1,3 +1,4 @@
+import { StrictMode, useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -16,7 +17,7 @@ async function openPicker(container: HTMLElement) {
   await user.click(container.querySelector('button[aria-haspopup]')!);
 }
 
-/** Picks a day other than the stored one to exercise immediate selection.
+/** Picks a day other than the stored one, since closing the picker stores what it holds only where the user chose it.
  * A day cell is a button named by its full date, e.g. "Sunday, May 17th, 2020"
  *
  * @param [year=2020] - The year the calendar is showing, which is the current one for a field holding no date
@@ -26,28 +27,88 @@ async function pickTheSeventeenth(year = 2020) {
 }
 
 describe('DateWidget', () => {
+  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
+    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
+      const onBlur = vi.fn();
+      const onChange = vi.fn();
+      function Parent() {
+        const [value, setValue] = useState('2020-05-03');
+        return (
+          <>
+            <DateWidget
+              {...makeWidgetMockProps({
+                value,
+                schema,
+                onBlur,
+                onChange: (next: string) => {
+                  onChange(next);
+                  if (mode !== 'reject') {
+                    setValue(mode === 'transform' ? '2020-05-20' : next);
+                  }
+                },
+              })}
+            />
+            <input aria-label='Elsewhere' />
+          </>
+        );
+      }
+      const { container } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
+      await openPicker(container);
+      await pickTheSeventeenth();
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onBlur).not.toHaveBeenCalled();
+      if (action === 'Done') {
+        await user.click(screen.getByText('Done'));
+      } else if (action === 'Escape') {
+        await user.keyboard('{Escape}');
+      } else {
+        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+      }
+      const acceptedValues = { accept: '2020-05-17', transform: '2020-05-20', reject: '2020-05-03' };
+      const expected = action === 'Escape' ? '2020-05-03' : acceptedValues[mode];
+      expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
+      if (action === 'Escape') {
+        expect(onChange).not.toHaveBeenCalled();
+      } else {
+        expect(onChange).toHaveBeenCalledExactlyOnceWith('2020-05-17');
+        expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
+      }
+      if (action === 'outside') {
+        await user.pointer({ keys: '[/MouseLeft]' });
+        expect(onBlur).toHaveBeenCalledTimes(1);
+      } else {
+        expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
+        await user.tab();
+        // As on v7, closing reports blur and a later native blur remains a separate notification.
+        expect(onBlur).toHaveBeenCalledTimes(2);
+        expect(onBlur).toHaveBeenLastCalledWith('test-id', expected);
+      }
+    });
+  });
+
   // These assertions are the timezone-robust half: `toISOString()` never produces a `YYYY-MM-DD` string, so they
   // fail in every zone, where the display assertions below only failed in a zone behind UTC
   describe('the value it commits', () => {
     test.each([
       ['the Done button', async () => user.click(screen.getByText('Done'))],
       ['a click outside', async () => user.click(document.body)],
-    ])('reports the selected day immediately without another change when closed by %s', async (_, close) => {
+    ])('commits the selected day as a date, not a UTC date-time, when closed by %s', async (_, close) => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />);
 
       await openPicker(container);
       await pickTheSeventeenth();
-      expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange).toHaveBeenCalledWith('2020-05-17');
       await close();
-      expect(onChange).toHaveBeenCalledTimes(1);
 
       expect(onChange).toHaveBeenCalledWith('2020-05-17');
     });
 
     // A value that arrived from the parent is not one the user was in the middle of choosing
-    test('shows a parent replacement immediately without reporting another change on close', async () => {
+    test('drops a pick made against a value the parent has since replaced', async () => {
       const onChange = vi.fn();
       const { container, rerender } = render(
         <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', onChange, schema })} />,
@@ -59,10 +120,10 @@ describe('DateWidget', () => {
 
       expect(screen.getByRole('button', { name: /January 10th, 2021, selected/ })).toBeInTheDocument();
       await user.click(screen.getByText('Done'));
-      expect(onChange.mock.calls).toEqual([['2020-05-17']]);
+      expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('does not replay a pick when the parent replaces the value and then restores it', async () => {
+    test('drops a pick when the parent replaces the value and then restores it', async () => {
       const onChange = vi.fn();
       const { container, rerender } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
@@ -72,23 +133,25 @@ describe('DateWidget', () => {
       rerender(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
       await user.click(screen.getByText('Done'));
-      expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/-17$/));
+      // A `''` is the one value Done rewrites without a pick, and it rewrites it to the empty value
+      expect(onChange.mock.calls).toEqual([[undefined]]);
     });
 
-    test('leaves an empty string unchanged when closing without a selection', async () => {
+    test('commits the empty value, not an empty string, when there is no date', async () => {
       const onChange = vi.fn();
       const { container } = render(<DateWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
       await openPicker(container);
       await user.click(screen.getByText('Done'));
 
-      expect(onChange).not.toHaveBeenCalled();
+      // `''` is not a `date`, so committing it would fail the format of a field the user never filled in
+      expect(onChange).toHaveBeenCalledWith(undefined);
     });
 
     // Reported as a change, an open and a dismiss the user made no edit in would show up in a dirty-state check, an
     // autosave or an analytics hook as one they never made
-    // Opening and closing without selecting is not an edit, regardless of ui:emptyValue.
+    // A field holding nothing is already empty, whatever `ui:emptyValue` would spell that as — including the `''` that
+    // dismissing a picker exists to replace
     test.each([
       ['no ui:emptyValue', {}],
       ['an empty string ui:emptyValue', { emptyValue: '' }],
@@ -105,7 +168,7 @@ describe('DateWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('does not emit ui:emptyValue merely because the calendar closes', async () => {
+    test('honors an explicit ui:emptyValue when there is no date', async () => {
       const onChange = vi.fn();
       const { container } = render(
         <DateWidget {...makeWidgetMockProps({ value: '', onChange, schema, options: { emptyValue: null } })} />,
@@ -114,7 +177,7 @@ describe('DateWidget', () => {
       await openPicker(container);
       await user.click(screen.getByText('Done'));
 
-      expect(onChange).not.toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalledWith(null);
     });
   });
 
@@ -292,12 +355,13 @@ describe('DateWidget', () => {
     });
   });
 
-  test('keeps an accepted selection after Escape and reports no extra changes on later close', async () => {
+  // Escape is the one way out of the popup that does not commit, so the day the user was trying out has to go with it
+  test('discards the day Escape closes the picker on, and does not commit it later either', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { birthday: { ...schema, title: 'Birthday' } } }}
-        initialFormData={{ birthday: '2020-05-03' }}
+        formData={{ birthday: '2020-05-03' }}
         validator={validator}
         onChange={onChange}
       />,
@@ -307,14 +371,15 @@ describe('DateWidget', () => {
     await user.click(screen.getByRole('button', { name: /May 17th/ }));
     await user.keyboard('{Escape}');
 
-    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 17, 2020');
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+    expect(onChange).not.toHaveBeenCalled();
 
+    // The discarded day would otherwise still be in local state, and the next close would store whatever that holds
     await openPicker(container);
     await user.click(document.body);
 
-    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 17, 2020');
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   // Escape unmounts the popup from under whatever inside it holds focus, which would fall to the document body and
@@ -487,7 +552,7 @@ describe('DateWidget', () => {
     test.each([
       ['label', (container: HTMLElement) => container.querySelector('label[for="root_birthday"]')!],
       ['trigger', (container: HTMLElement) => container.querySelector('button[aria-haspopup]')!],
-    ])('is closed again without another change by a second click on the %s', async (_, press) => {
+    ])('is closed again, committing its day, by a second click on the %s', async (_, press) => {
       const onChange = vi.fn();
       const { container } = render(
         <Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} onChange={onChange} />,
@@ -499,7 +564,8 @@ describe('DateWidget', () => {
       await user.click(press(container));
 
       expect(screen.queryByText('Done')).not.toBeInTheDocument();
-      expect(onChange).not.toHaveBeenCalled();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
     // With no label element the trigger's contents are its own name, so referencing them as well would have the date

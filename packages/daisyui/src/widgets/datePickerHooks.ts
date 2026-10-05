@@ -1,4 +1,4 @@
-import type { FocusEvent, MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
@@ -130,9 +130,30 @@ function useLatest<A extends unknown[]>(callback: (...args: A) => void) {
   return ref;
 }
 
-/** Keep the displayed month stable when a selected day is in the same month. */
+/** What the popup holds while it is open, tagged with the stored value it was seeded from */
+interface PickerDraft {
+  basis: { date: Date | undefined };
+  date: Date | undefined;
+  month: Date;
+  /** Whether the user chose `date`, which is what makes closing the popup store it */
+  picked: boolean;
+}
+
+/** The month to display for `date`, keeping `current` where `date` is in it or names no day: handing the calendar a
+ * fresh `Date` naming the same month would rebuild the whole calendar, its day grid and its year dropdown, for a
+ * caption that does not change
+ */
 function monthFor(current: Date, date: Date | undefined) {
   return date && !isSameMonth(current, date) ? date : current;
+}
+
+/** `saved`, where it was made against `basis`. A draft made against a value the parent has since replaced is discarded
+ * with it: a value that arrived from outside is not one the user was in the middle of choosing
+ */
+function draftFor(saved: PickerDraft, basis: PickerDraft['basis']): PickerDraft {
+  return saved.basis === basis
+    ? saved
+    : { basis, date: basis.date, month: monthFor(saved.month, basis.date), picked: false };
 }
 
 interface UseDatePickerProps<V> {
@@ -144,6 +165,8 @@ interface UseDatePickerProps<V> {
   initialDate?: Date;
   /** Formats the chosen date for the format the field declares */
   formatDate: (date: Date) => V;
+  /** What the field commits when it holds no date */
+  emptyValue: V;
   /** The widget's `onChange` */
   onChange: (value: V) => void;
   /** The widget's `onFocus` */
@@ -152,27 +175,58 @@ interface UseDatePickerProps<V> {
   onBlur?: (id: string, value: unknown) => void;
 }
 
-/** Share immediate selection and focus handling between the custom date pickers.
- * The parent value is authoritative; closing the calendar does not save or revert it.
+/** Runs the popup behind both picker widgets: the state it holds while it is open, every way out of it, and which of
+ * those ways stores what it holds. Shared so the one that gains a behavior does not leave the other behind — the two
+ * differ only in what their popup renders and how they format what it holds.
+ *
+ * Closing stores the date only where the user chose one. Merely opening the popup and dismissing it is not an edit,
+ * and a field whose stored value is a date-time this widget reads as a day would otherwise have that day written back
+ * over it — silently rewriting data the user never touched, and in a zone far enough from the value's own, a
+ * different day than it started with.
+ *
+ * @param props - The stored value and the day it names, with the formatter and the callbacks to report through
+ * @returns - The popup's state, the refs to attach, and the handler for each way in and out of it
  */
 export function useDatePicker<V>({
   id,
   value,
   initialDate,
   formatDate,
+  emptyValue,
   onChange,
   onFocus,
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
+  const pendingCloseBlur = useRef(false);
+  // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
+  // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
-  const [navigation, setNavigation] = useState(() => ({ basis, month: initialDate ?? new Date() }));
-  const month = navigation.basis === basis ? navigation.month : monthFor(navigation.month, initialDate);
+  const [savedDraft, setSavedDraft] = useState<PickerDraft>(() => ({
+    basis,
+    date: initialDate,
+    month: initialDate ?? new Date(),
+    picked: false,
+  }));
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  // Return focus before unmounting a focused popup control. Moving within the
-  // picker does not report blur; an outside focus change will report it normally.
+  // Derived during render, so a new value costs no second render
+  const draft = useMemo(() => draftFor(savedDraft, basis), [basis, savedDraft]);
+  const localDate = draft.date;
+
+  /** Take the value the form holds, discarding anything the popup was holding before: the date, the month displaying
+   * it, and the fact that the user chose a date at all. Done on the way in rather than on each way out, so a way out
+   * added later cannot forget it and leave the popup reopening on a date the form never took
+   */
+  const resetToStoredValue = useCallback(() => {
+    setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
+  }, [basis]);
+
+  /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
+   * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
+   * A press outside moved focus itself, so that one is left where the user put it
+   */
   const returnFocusFromPopup = useCallback(() => {
     const popup = containerRef.current;
     if (popup?.contains(documentOf(popup).activeElement)) {
@@ -180,30 +234,70 @@ export function useDatePicker<V>({
     }
   }, []);
 
+  /** Store what the popup is holding, which closing it does whenever the user chose a date. A field holding a `''`
+   * left over from a cleared one commits its empty value instead, since `''` is no more a date than it is a date-time
+   * and fails the format the field declares. That `''` is the only value dismissing the picker rewrites: a field
+   * holding nothing is already empty, whatever `ui:emptyValue` would spell that as, and a stored value this widget
+   * could not read is not one the user asked to throw away by dismissing a picker they chose no date in
+   */
+  const commitDate = useCallback(() => {
+    if (draft.picked && draft.date) {
+      onChange(formatDate(draft.date));
+    } else if (value === '' && value !== emptyValue) {
+      onChange(emptyValue);
+    }
+  }, [draft, emptyValue, formatDate, onChange, value]);
+
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does
+   */
   const closePicker = useCallback(() => {
+    pendingCloseBlur.current = true;
+    setIsOpen(false);
+    commitDate();
+  }, [commitDate]);
+
+  /** Close the popup without storing anything, which Escape does: a date the user was trying out in the calendar is
+   * not one they asked to store
+   */
+  const cancelPicker = useCallback(() => {
     returnFocusFromPopup();
     setIsOpen(false);
-  }, [returnFocusFromPopup]);
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [id, onBlur, returnFocusFromPopup, value]);
 
+  // Preserve blur-on-close, but wait for the parent to render its accepted value before reporting it.
+  // Consume the request first: changed callback identities or reentrant consumer code must not repeat it.
+  useEffect(() => {
+    if (!isOpen && pendingCloseBlur.current) {
+      pendingCloseBlur.current = false;
+      onBlur?.(id, value);
+    }
+  }, [isOpen, id, value, onBlur]);
+
+  const latestCancel = useLatest(cancelPicker);
   const latestClose = useLatest(closePicker);
 
-  // These listeners synchronize the open picker with its document, including
-  // when the form is rendered in an iframe.
+  // Close the popup on Escape, and on a press outside it. Both listeners are bound only while it is open: a closed
+  // picker has nothing to close, and a form of date fields would otherwise hold two document listeners apiece
   useEffect(() => {
     if (!isOpen) {
       return () => {};
     }
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        latestClose.current();
+        latestCancel.current();
       }
     };
-    const handlePressOutside = (e: globalThis.MouseEvent) => {
+    const handlePressOutside = (e: MouseEvent | globalThis.MouseEvent) => {
       if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
         return;
       }
       latestClose.current();
     };
+    // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
+    // ours, which would leave Done and the trigger as the only ways out of the popup
     const doc = documentOf(triggerRef.current);
     doc.addEventListener('keydown', handleEscape);
     doc.addEventListener('mousedown', handlePressOutside);
@@ -211,68 +305,85 @@ export function useDatePicker<V>({
       doc.removeEventListener('keydown', handleEscape);
       doc.removeEventListener('mousedown', handlePressOutside);
     };
-  }, [isOpen, latestClose]);
+  }, [isOpen, latestCancel, latestClose]);
 
+  /** Take a date the user chose in the popup, which is what makes closing it store one
+   *
+   * @param date - The date they chose
+   */
   const chooseDate = useCallback(
-    (date: Date) => {
-      setNavigation({ basis, month: monthFor(month, date) });
-      onChange(formatDate(date));
-    },
-    [basis, formatDate, month, onChange],
-  );
-
-  const handleMonthChange = useCallback(
-    (date: Date) => {
-      setNavigation({ basis, month: date });
-    },
+    (date: Date) =>
+      setSavedDraft((saved) => {
+        const current = draftFor(saved, basis);
+        return { basis, date, month: monthFor(current.month, date), picked: true };
+      }),
     [basis],
   );
 
+  /** Move the calendar to another month without choosing a date in it
+   *
+   * @param date - A date in the month to display
+   */
+  const handleMonthChange = useCallback(
+    (date: Date) => setSavedDraft((saved) => ({ ...draftFor(saved, basis), month: date })),
+    [basis],
+  );
+
+  /** Open the popup, or close it where a press on the trigger is the way out
+   *
+   * @param e - The press on the trigger
+   */
   const togglePicker = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
       if (isOpen) {
+        // The one way out of the popup that is a press on the trigger itself, or on the label pointing at it, which
+        // the press-outside listener leaves alone so that press does not close and reopen in one gesture
         closePicker();
-      } else {
-        setNavigation({ basis, month: initialDate ?? new Date() });
-        setIsOpen(true);
+        return;
+      }
+      resetToStoredValue();
+      setIsOpen(true);
+      if (onFocus) {
+        onFocus(id, value);
       }
     },
-    [basis, closePicker, initialDate, isOpen],
+    [closePicker, id, isOpen, onFocus, resetToStoredValue, value],
   );
 
-  const handleFocus = useCallback(
-    (e: FocusEvent<HTMLDivElement>) => {
-      if (!e.currentTarget.contains(e.relatedTarget)) {
-        onFocus?.(id, value);
-      }
-    },
-    [id, onFocus, value],
-  );
+  /** Report focus on the trigger
+   */
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [id, onFocus, value]);
 
-  const handleBlur = useCallback(
-    (e: FocusEvent<HTMLDivElement>) => {
-      if (!e.currentTarget.contains(e.relatedTarget)) {
-        // A real outside focus target also dismisses the popup. A null target
-        // can be the intermediate step of a label forwarding its click.
-        if (e.relatedTarget) {
-          setIsOpen(false);
-        }
-        onBlur?.(id, value);
-      }
-    },
-    [id, onBlur, value],
-  );
+  /** Report blur on the trigger, which the popup's own close paths report for themselves
+   */
+  const handleBlur = useCallback(() => {
+    if (!isOpen && onBlur) {
+      onBlur(id, value);
+    }
+  }, [id, isOpen, onBlur, value]);
 
+  /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
+   * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,
+   * leaves this press with no focus inside the popup to return from
+   */
   const handleDone = useCallback(() => {
+    closePicker();
     triggerRef.current?.focus();
-    setIsOpen(false);
-  }, []);
+  }, [closePicker]);
+
+  // What the trigger displays and the calendar selects: the date the user is choosing while the popup is open, and
+  // otherwise the one the form holds, so nothing the form did not take is left on screen once the popup is closed
+  const displayedDate = isOpen ? localDate : initialDate;
 
   return {
     isOpen,
-    month,
-    displayedDate: initialDate,
+    month: draft.month,
+    displayedDate,
     containerRef,
     triggerRef,
     chooseDate,
