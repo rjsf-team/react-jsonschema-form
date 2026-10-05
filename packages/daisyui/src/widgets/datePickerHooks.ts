@@ -198,8 +198,7 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [awaitingOutsideRelease, setAwaitingOutsideRelease] = useState(false);
-  const outsidePressPending = useRef(false);
+  const pendingCloseBlur = useRef(false);
   // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
   // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
@@ -249,10 +248,10 @@ export function useDatePicker<V>({
     }
   }, [draft, emptyValue, formatDate, onChange, value]);
 
-  /** Commit the pick and close the popup. Blur is reported by a later focus or release event, so a controlled
-   * parent has time to render its accepted value before blur validation runs.
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does
    */
   const closePicker = useCallback(() => {
+    pendingCloseBlur.current = true;
     setIsOpen(false);
     commitDate();
   }, [commitDate]);
@@ -263,67 +262,50 @@ export function useDatePicker<V>({
   const cancelPicker = useCallback(() => {
     returnFocusFromPopup();
     setIsOpen(false);
-  }, [returnFocusFromPopup]);
-
-  // Outside presses commit before release. Consume the pending report before calling consumer code to avoid
-  // duplicates from cancellation or reentrant events. State keeps the listeners attached until the press finishes.
-  const finishOutsidePress = useCallback(() => {
-    if (outsidePressPending.current) {
-      outsidePressPending.current = false;
-      setAwaitingOutsideRelease(false);
-      if (documentOf(triggerRef.current).activeElement !== triggerRef.current) {
-        onBlur?.(id, value);
-      }
+    if (onBlur) {
+      onBlur(id, value);
     }
-  }, [id, onBlur, value]);
-  const latestDismiss = useLatest((action: 'press' | 'release' | 'escape') => {
-    if (action === 'release') {
-      finishOutsidePress();
-    } else if (action === 'escape') {
-      finishOutsidePress();
-      cancelPicker();
-    } else if (isOpen && !outsidePressPending.current) {
-      outsidePressPending.current = true;
-      setAwaitingOutsideRelease(true);
-      closePicker();
-    }
-  });
+  }, [id, onBlur, returnFocusFromPopup, value]);
 
-  // Keep the document listeners until an outside press is released. The subscription does not report blur.
-  const listenForDismissal = isOpen || awaitingOutsideRelease;
+  // Preserve blur-on-close, but wait for the parent to render its accepted value before reporting it.
+  // Consume the request first: changed callback identities or reentrant consumer code must not repeat it.
   useEffect(() => {
-    if (!listenForDismissal) {
+    if (!isOpen && pendingCloseBlur.current) {
+      pendingCloseBlur.current = false;
+      onBlur?.(id, value);
+    }
+  }, [isOpen, id, value, onBlur]);
+
+  const latestCancel = useLatest(cancelPicker);
+  const latestClose = useLatest(closePicker);
+
+  // Close the popup on Escape, and on a press outside it. Both listeners are bound only while it is open: a closed
+  // picker has nothing to close, and a form of date fields would otherwise hold two document listeners apiece
+  useEffect(() => {
+    if (!isOpen) {
       return () => {};
     }
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        latestDismiss.current('escape');
+        latestCancel.current();
       }
     };
     const handlePressOutside = (e: MouseEvent | globalThis.MouseEvent) => {
       if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
         return;
       }
-      latestDismiss.current('press');
+      latestClose.current();
     };
-    const handleReleaseOutside = () => latestDismiss.current('release');
     // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
     // ours, which would leave Done and the trigger as the only ways out of the popup
     const doc = documentOf(triggerRef.current);
     doc.addEventListener('keydown', handleEscape);
     doc.addEventListener('mousedown', handlePressOutside);
-    doc.addEventListener('mouseup', handleReleaseOutside);
-    doc.addEventListener('pointercancel', handleReleaseOutside);
-    const win = doc.defaultView;
-    win?.addEventListener('blur', handleReleaseOutside);
     return () => {
       doc.removeEventListener('keydown', handleEscape);
       doc.removeEventListener('mousedown', handlePressOutside);
-      doc.removeEventListener('mouseup', handleReleaseOutside);
-      doc.removeEventListener('pointercancel', handleReleaseOutside);
-      win?.removeEventListener('blur', handleReleaseOutside);
     };
-  }, [listenForDismissal, latestDismiss]);
+  }, [isOpen, latestCancel, latestClose]);
 
   /** Take a date the user chose in the popup, which is what makes closing it store one
    *
@@ -377,13 +359,13 @@ export function useDatePicker<V>({
     }
   }, [id, onFocus, value]);
 
-  /** Report native blur unless focus moved into the popup or an outside press will report it on release.
+  /** Report blur on the trigger, which the popup's own close paths report for themselves
    */
   const handleBlur = useCallback(() => {
-    if (!isOpen && !awaitingOutsideRelease && onBlur) {
+    if (!isOpen && onBlur) {
       onBlur(id, value);
     }
-  }, [awaitingOutsideRelease, id, isOpen, onBlur, value]);
+  }, [id, isOpen, onBlur, value]);
 
   /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
    * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,

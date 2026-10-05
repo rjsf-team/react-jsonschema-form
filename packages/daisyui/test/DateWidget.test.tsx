@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { StrictMode, useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -27,42 +27,10 @@ async function pickTheSeventeenth(year = 2020) {
 }
 
 describe('DateWidget', () => {
-  test.each(['pointercancel', 'window blur'] as const)(
-    'finishes an outside press interrupted by %s once',
-    async (kind) => {
+  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
+    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
       const onBlur = vi.fn();
-      const props = makeWidgetMockProps({ value: '2020-05-03', onBlur, schema });
-      const { container, rerender } = render(
-        <>
-          <DateWidget {...props} />
-          <input aria-label='Elsewhere' />
-        </>,
-      );
-      await openPicker(container);
-      await pickTheSeventeenth();
-      await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
-      rerender(
-        <>
-          <DateWidget {...props} value='2020-05-17' />
-          <input aria-label='Elsewhere' />
-        </>,
-      );
-      expect(onBlur).not.toHaveBeenCalled();
-      if (kind === 'pointercancel') {
-        fireEvent.pointerCancel(document);
-      } else {
-        fireEvent(window, new Event('blur'));
-      }
-      expect(onBlur).toHaveBeenCalledExactlyOnceWith(props.id, '2020-05-17');
-      await user.pointer({ keys: '[/MouseLeft]' });
-      expect(onBlur).toHaveBeenCalledTimes(1);
-    },
-  );
-
-  test.each(['accept', 'transform', 'reject'] as const)(
-    'reports the %s parent value on outside release without an Effect notification',
-    async (mode) => {
-      const onBlur = vi.fn();
+      const onChange = vi.fn();
       function Parent() {
         const [value, setValue] = useState('2020-05-03');
         return (
@@ -73,6 +41,7 @@ describe('DateWidget', () => {
                 schema,
                 onBlur,
                 onChange: (next: string) => {
+                  onChange(next);
                   if (mode !== 'reject') {
                     setValue(mode === 'transform' ? '2020-05-20' : next);
                   }
@@ -83,38 +52,42 @@ describe('DateWidget', () => {
           </>
         );
       }
-      const { container } = render(<Parent />);
+      const { container } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
       await openPicker(container);
       await pickTheSeventeenth();
-      await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+      expect(onChange).not.toHaveBeenCalled();
       expect(onBlur).not.toHaveBeenCalled();
-      await user.pointer({ keys: '[/MouseLeft]' });
+      if (action === 'Done') {
+        await user.click(screen.getByText('Done'));
+      } else if (action === 'Escape') {
+        await user.keyboard('{Escape}');
+      } else {
+        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+      }
       const acceptedValues = { accept: '2020-05-17', transform: '2020-05-20', reject: '2020-05-03' };
-      const expected = acceptedValues[mode];
+      const expected = action === 'Escape' ? '2020-05-03' : acceptedValues[mode];
       expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
-    },
-  );
-
-  test.each([
-    { name: 'Done', close: async () => user.click(screen.getByText('Done')), accepted: '2020-05-17' },
-    { name: 'Escape', close: async () => user.keyboard('{Escape}'), accepted: '2020-05-03' },
-  ])('reports one native blur after $name returns focus to the trigger', async ({ close, accepted }) => {
-    const onChange = vi.fn();
-    const onBlur = vi.fn();
-    const props = makeWidgetMockProps({ value: '2020-05-03', onChange, onBlur, schema });
-    const { container, rerender } = render(<DateWidget {...props} />);
-
-    await openPicker(container);
-    await pickTheSeventeenth();
-    await close();
-
-    expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
-    expect(onBlur).not.toHaveBeenCalled();
-    // Echo the accepted value before the next user event, as a controlled parent does.
-    rerender(<DateWidget {...props} value={accepted} />);
-    await user.tab();
-
-    expect(onBlur).toHaveBeenCalledExactlyOnceWith(props.id, accepted);
+      if (action === 'Escape') {
+        expect(onChange).not.toHaveBeenCalled();
+      } else {
+        expect(onChange).toHaveBeenCalledExactlyOnceWith('2020-05-17');
+        expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
+      }
+      if (action === 'outside') {
+        await user.pointer({ keys: '[/MouseLeft]' });
+        expect(onBlur).toHaveBeenCalledTimes(1);
+      } else {
+        expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
+        await user.tab();
+        // As on v7, closing reports blur and a later native blur remains a separate notification.
+        expect(onBlur).toHaveBeenCalledTimes(2);
+        expect(onBlur).toHaveBeenLastCalledWith('test-id', expected);
+      }
+    });
   });
 
   // These assertions are the timezone-robust half: `toISOString()` never produces a `YYYY-MM-DD` string, so they
