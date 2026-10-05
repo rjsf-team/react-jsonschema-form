@@ -674,6 +674,40 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
 
         describe('with $ref in oneOf', () => {
+          it('does not flag a shared $ref as a cycle when several oneOf branches use it', () => {
+            testValidator.setReturnValues({
+              isValid: [
+                false, // SFTP branch does not match
+                true, // FTPS branch matches
+              ],
+            });
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: {
+                host: { type: 'string', title: 'Host' },
+                sftp: {
+                  properties: { protocol: { enum: ['SFTP'] }, host: { $ref: '#/definitions/host' } },
+                },
+                ftps: {
+                  properties: { protocol: { enum: ['FTPS'] }, host: { $ref: '#/definitions/host' } },
+                },
+              },
+              properties: {
+                protocol: { type: 'string', enum: ['SFTP', 'FTPS'], default: 'SFTP' },
+              },
+              dependencies: {
+                protocol: {
+                  oneOf: [{ $ref: '#/definitions/sftp' }, { $ref: '#/definitions/ftps' }],
+                },
+              },
+            };
+            const result = retrieveSchema(testValidator, schema, schema, { protocol: 'FTPS' });
+            expect(result.properties!.host).toEqual({
+              type: 'string',
+              title: 'Host',
+              [RJSF_REF_KEY]: '#/definitions/host',
+            });
+          });
           it('should retrieve referenced schemas', () => {
             // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({

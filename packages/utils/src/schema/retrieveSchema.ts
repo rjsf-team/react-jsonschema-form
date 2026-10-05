@@ -941,7 +941,15 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
       if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
         return [subschema as S];
       }
-      return resolveReference<T, S, F>(validator, subschema as S, rootSchema, expandAllBranches, recurseList, formData);
+      // Each oneOf branch gets its own copy so refs resolved in one branch are not treated as cycles in a sibling
+      return resolveReference<T, S, F>(
+        validator,
+        subschema as S,
+        rootSchema,
+        expandAllBranches,
+        [...recurseList],
+        formData,
+      );
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
@@ -1023,7 +1031,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList,
+      [...recurseList],
       experimental_customMergeAllOf,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
