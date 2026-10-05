@@ -249,9 +249,8 @@ export function useDatePicker<V>({
     }
   }, [draft, emptyValue, formatDate, onChange, value]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does. It reports no blur: one
-   * raised in the same handler as the change validates the value from before it, and a parent-owned form under
-   * `liveValidate: 'onBlur'` proposes that value back, undoing the pick. The native blur reports it once focus leaves
+  /** Commit the pick and close the popup. Blur is reported by a later focus or release event, so a controlled
+   * parent has time to render its accepted value before blur validation runs.
    */
   const closePicker = useCallback(() => {
     setIsOpen(false);
@@ -266,7 +265,8 @@ export function useDatePicker<V>({
     setIsOpen(false);
   }, [returnFocusFromPopup]);
 
-  // Commit on the outside press, then report blur on release after the parent has rendered its accepted value.
+  // Outside presses commit before release. Consume the pending report before calling consumer code to avoid
+  // duplicates from cancellation or reentrant events. State keeps the listeners attached until the press finishes.
   const finishOutsidePress = useCallback(() => {
     if (outsidePressPending.current) {
       outsidePressPending.current = false;
@@ -377,7 +377,7 @@ export function useDatePicker<V>({
     }
   }, [id, onFocus, value]);
 
-  /** Report blur on the trigger, which the popup's own close paths report for themselves
+  /** Report native blur unless focus moved into the popup or an outside press will report it on release.
    */
   const handleBlur = useCallback(() => {
     if (!isOpen && !awaitingOutsideRelease && onBlur) {
