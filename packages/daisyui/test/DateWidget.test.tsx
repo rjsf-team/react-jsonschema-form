@@ -26,6 +26,28 @@ async function pickTheSeventeenth(year = 2020) {
 }
 
 describe('DateWidget', () => {
+  test.each([
+    { name: 'Done', close: async () => user.click(screen.getByText('Done')), accepted: '2020-05-17' },
+    { name: 'Escape', close: async () => user.keyboard('{Escape}'), accepted: '2020-05-03' },
+  ])('reports one native blur after $name returns focus to the trigger', async ({ close, accepted }) => {
+    const onChange = vi.fn();
+    const onBlur = vi.fn();
+    const props = makeWidgetMockProps({ value: '2020-05-03', onChange, onBlur, schema });
+    const { container, rerender } = render(<DateWidget {...props} />);
+
+    await openPicker(container);
+    await pickTheSeventeenth();
+    await close();
+
+    expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
+    expect(onBlur).not.toHaveBeenCalled();
+    // Echo the accepted value before the next user event, as a controlled parent does.
+    rerender(<DateWidget {...props} value={accepted} />);
+    await user.tab();
+
+    expect(onBlur).toHaveBeenCalledExactlyOnceWith(props.id, accepted);
+  });
+
   // These assertions are the timezone-robust half: `toISOString()` never produces a `YYYY-MM-DD` string, so they
   // fail in every zone, where the display assertions below only failed in a zone behind UTC
   describe('the value it commits', () => {

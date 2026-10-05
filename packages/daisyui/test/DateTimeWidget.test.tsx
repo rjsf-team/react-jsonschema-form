@@ -70,6 +70,26 @@ describe('DateTimeWidget', () => {
       expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
     });
 
+    test('reports the blur after the pick when a press outside closes the picker', async () => {
+      const onChange = vi.fn();
+      const onBlur = vi.fn();
+      const { container } = render(
+        <>
+          <DateTimeWidget {...makeWidgetMockProps({ value: '2016-04-05T14:01:30.000Z', onChange, onBlur, schema })} />
+          <p>elsewhere</p>
+        </>,
+      );
+
+      await openPicker(container);
+      // Picking a day moves focus into the popup, so the trigger's own blur has already fired, suppressed
+      await pickTheTwelfth();
+      await user.click(screen.getByText('elsewhere'));
+
+      expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
+      expect(onBlur).toHaveBeenCalledTimes(1);
+      expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
+    });
+
     // A day the user never picked is a day they never asked to store, and the value they arrived with may be one this
     // widget does not write itself — an offset date-time, or one carrying seconds
     test('leaves the stored value alone when the picker is dismissed without a change', async () => {

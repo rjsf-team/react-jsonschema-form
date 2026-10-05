@@ -247,16 +247,14 @@ export function useDatePicker<V>({
     }
   }, [draft, emptyValue, formatDate, onChange, value]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does. It reports no blur: one
+   * raised in the same handler as the change validates the value from before it, and a parent-owned form under
+   * `liveValidate: 'onBlur'` proposes that value back, undoing the pick. The native blur reports it once focus leaves
    */
   const closePicker = useCallback(() => {
     setIsOpen(false);
     commitDate();
-    // Manually invoke the blur handler to ensure blur event is triggered
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  }, [commitDate, id, onBlur, value]);
+  }, [commitDate]);
 
   /** Close the popup without storing anything, which Escape does: a date the user was trying out in the calendar is
    * not one they asked to store
@@ -264,10 +262,19 @@ export function useDatePicker<V>({
   const cancelPicker = useCallback(() => {
     returnFocusFromPopup();
     setIsOpen(false);
-    if (onBlur) {
-      onBlur(id, value);
+  }, [returnFocusFromPopup]);
+
+  // Picking a day moves focus into the popup, so closing it by a press outside leaves nothing to blur: the blur is
+  // reported once the closed picker has rendered, after the pick was committed, never from the handler that called
+  // `onChange`. A way out that refocuses the trigger leaves the report to the trigger's native blur
+  const wasOpen = useRef(isOpen);
+  useEffect(() => {
+    const trigger = triggerRef.current;
+    if (wasOpen.current && !isOpen && documentOf(trigger).activeElement !== trigger) {
+      onBlur?.(id, value);
     }
-  }, [id, onBlur, returnFocusFromPopup, value]);
+    wasOpen.current = isOpen;
+  }, [isOpen, id, value, onBlur]);
 
   const latestCancel = useLatest(cancelPicker);
   const latestClose = useLatest(closePicker);
