@@ -25,7 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed `retrieveSchema()` marking a property as a `$ref` cycle when several `dependencies` `oneOf` branches reference the same definition. Each branch now resolves against its own copy of the visited-`$ref` list, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434)
+- Fixed `retrieveSchema()` marking a property as a `$ref` cycle when several `dependencies` `oneOf` branches reference the same definition. Each branch, each `dependencies`/`allOf` entry and each `then`/`else` now resolves against its own copy of the visited-`$ref` list, so a `$ref` shared with a root property or a sibling is no longer flagged, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434)
 
 ## @rjsf/shadcn
 

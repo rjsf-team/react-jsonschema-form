@@ -708,6 +708,93 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/host',
             });
           });
+          const hostResolved = { type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' };
+          it('does not flag a $ref used by a root property and by a dependencies oneOf branch', () => {
+            testValidator.setReturnValues({ isValid: [false, true] });
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: {
+                host: { type: 'string', title: 'Host' },
+                b1: { properties: { protocol: { enum: ['A'] }, w: { $ref: '#/definitions/host' } } },
+                b2: { properties: { protocol: { enum: ['B'] }, w: { $ref: '#/definitions/host' } } },
+              },
+              properties: {
+                protocol: { type: 'string', enum: ['A', 'B'] },
+                h: { $ref: '#/definitions/host' },
+              },
+              dependencies: {
+                protocol: { oneOf: [{ $ref: '#/definitions/b1' }, { $ref: '#/definitions/b2' }] },
+              },
+            };
+            const result = retrieveSchema(testValidator, schema, schema, { protocol: 'B' });
+            expect(result.properties!.h).toEqual(hostResolved);
+            expect(result.properties!.w).toEqual(hostResolved);
+          });
+          it('does not flag a $ref used by the dependency properties and by its oneOf branch', () => {
+            testValidator.setReturnValues({ isValid: [true] });
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: {
+                host: { type: 'string', title: 'Host' },
+                b1: { properties: { protocol: { enum: ['A'] }, z: { $ref: '#/definitions/host' } } },
+              },
+              properties: { protocol: { type: 'string', enum: ['A'] } },
+              dependencies: {
+                protocol: {
+                  properties: { h: { $ref: '#/definitions/host' } },
+                  oneOf: [{ $ref: '#/definitions/b1' }],
+                },
+              },
+            };
+            const result = retrieveSchema(testValidator, schema, schema, { protocol: 'A' });
+            expect(result.properties!.h).toEqual(hostResolved);
+            expect(result.properties!.z).toEqual(hostResolved);
+          });
+          it('does not flag a $ref shared by two dependencies keys', () => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: { host: { type: 'string', title: 'Host' } },
+              properties: { a: { type: 'string' }, b: { type: 'string' } },
+              dependencies: {
+                a: { properties: { x: { $ref: '#/definitions/host' } } },
+                b: { properties: { y: { $ref: '#/definitions/host' } } },
+              },
+            };
+            const result = retrieveSchema(testValidator, schema, schema, { a: '1', b: '2' });
+            expect(result.properties!.x).toEqual(hostResolved);
+            expect(result.properties!.y).toEqual(hostResolved);
+          });
+          it('does not flag a $ref shared by two allOf entries', () => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: { host: { type: 'string', title: 'Host' } },
+              allOf: [
+                { properties: { x: { $ref: '#/definitions/host' } } },
+                { properties: { y: { $ref: '#/definitions/host' } } },
+              ],
+            };
+            const result = retrieveSchema(testValidator, schema, schema, {});
+            expect(result.properties!.x).toEqual(hostResolved);
+            expect(result.properties!.y).toEqual(hostResolved);
+          });
+          it('does not flag a $ref shared by several oneOf branches when expanding all branches', () => {
+            testValidator.setReturnValues({ isValid: [true, true] });
+            const schema: RJSFSchema = {
+              type: 'object',
+              definitions: {
+                host: { type: 'string', title: 'Host' },
+                sftp: { properties: { protocol: { enum: ['SFTP'] }, host: { $ref: '#/definitions/host' } } },
+                ftps: { properties: { protocol: { enum: ['FTPS'] }, host: { $ref: '#/definitions/host' } } },
+              },
+              properties: { protocol: { type: 'string', enum: ['SFTP', 'FTPS'] } },
+              dependencies: {
+                protocol: { oneOf: [{ $ref: '#/definitions/sftp' }, { $ref: '#/definitions/ftps' }] },
+              },
+            };
+            const results = retrieveSchemaInternal(testValidator, schema, schema, { protocol: 'FTPS' }, true);
+            expect(results.length).toBeGreaterThan(0);
+            results.forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
+          });
           it('should retrieve referenced schemas', () => {
             // Mock isValid so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({

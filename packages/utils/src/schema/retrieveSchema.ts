@@ -121,7 +121,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -137,7 +137,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -155,7 +155,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -173,7 +173,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList,
+      [...recurseList],
       experimental_customMergeAllOf,
       undefined,
       preserveDependencies,
@@ -301,7 +301,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         formData,
         expandAllBranches,
-        recurseList,
+        [...recurseList],
         experimental_customMergeAllOf,
         undefined,
         preserveDependencies,
@@ -344,8 +344,13 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
-  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList, undefined, resolveAnyOfOrOneOfRefs);
+  // A schema with dependencies, allOf or if resolves its own properties against a copy, so refs found there are not
+  // seen as cycles by the dependency, allOf or if branches that are resolved next
+  const isolate = !(REF_KEY in schema) && (DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema || IF_KEY in schema);
+  const resolvedList = isolate ? [...recurseList] : recurseList;
+  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, resolvedList, undefined, resolveAnyOfOrOneOfRefs);
   if (updatedSchema !== schema) {
+    const nextList = isolate ? recurseList : resolvedList;
     // Only call this if the schema was actually changed by the `resolveAllReferences()` function
     return retrieveSchemaInternal<T, S, F>(
       validator,
@@ -353,7 +358,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList,
+      nextList,
       experimental_customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
       preserveDependencies,
@@ -801,7 +806,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       resolvedSchema,
       rootSchema,
       expandAllBranches,
-      recurseList,
+      [...recurseList],
       formData,
       experimental_customMergeAllOf,
     ),
@@ -853,7 +858,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           dependencyKey,
           dependencyValue as S,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           formData,
           experimental_customMergeAllOf,
         );
@@ -865,7 +870,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           schema,
           rootSchema,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           formData,
           experimental_customMergeAllOf,
         ),
@@ -926,7 +931,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     rootSchema,
     formData,
     expandAllBranches,
-    recurseList,
+    [...recurseList],
     experimental_customMergeAllOf,
   );
   return dependentSchemas.flatMap((dependent) => {
