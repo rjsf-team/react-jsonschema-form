@@ -88,7 +88,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const { id, value, label, name, hideLabel, placeholder, disabled, readonly, schema, registry } = props;
   const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
@@ -103,7 +103,7 @@ export default function DateWidget<
     handleFocus,
     handleBlur,
     handleDone,
-  } = useDatePicker({ ...props, initialDate, formatDate, emptyValue: options.emptyValue });
+  } = useDatePicker({ ...props, initialDate, formatDate });
 
   // Take the day the user picked, with no time component, since a `date` names none.
   const handleSelect = useCallback(
@@ -170,7 +170,7 @@ export default function DateWidget<
   const formattedValue = displayedDate ? format(displayedDate, 'PP') : undefined;
 
   return (
-    <div className='form-control my-4 w-full relative'>
+    <div className='form-control my-4 w-full relative' onFocus={handleFocus} onBlur={handleBlur}>
       <div className='w-full'>
         <DatePickerTrigger<T, S, F>
           id={id}
@@ -184,8 +184,6 @@ export default function DateWidget<
           readonly={readonly}
           triggerRef={triggerRef}
           onClick={togglePicker}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           registry={registry}
         />
         {isOpen && (

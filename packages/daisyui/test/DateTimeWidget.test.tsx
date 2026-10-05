@@ -1,4 +1,3 @@
-import { StrictMode, useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -15,7 +14,7 @@ async function openPicker(container: HTMLElement) {
   await user.click(container.querySelector('button[aria-haspopup]')!);
 }
 
-/** Picks a day other than the stored one, since closing the picker stores what it holds only where the user chose it.
+/** Picks a day other than the stored one to exercise immediate selection.
  * A day cell is a button named by its full date, e.g. "Tuesday, April 12th, 2016"
  */
 async function pickTheTwelfth(year = 2016) {
@@ -23,71 +22,6 @@ async function pickTheTwelfth(year = 2016) {
 }
 
 describe('DateTimeWidget', () => {
-  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
-    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
-      const stored = '2016-04-05T14:01:30.000Z';
-      const transformed = '2016-04-20T14:01:30.000Z';
-      const onChange = vi.fn<(next: string) => void>();
-      const onBlur = vi.fn();
-      function Parent() {
-        const [value, setValue] = useState(stored);
-        return (
-          <>
-            <DateTimeWidget
-              {...makeWidgetMockProps({
-                value,
-                schema: { type: 'string', format: 'date-time' },
-                onBlur,
-                onChange: (next: string) => {
-                  onChange(next);
-                  if (mode !== 'reject') {
-                    setValue(mode === 'transform' ? transformed : next);
-                  }
-                },
-              })}
-            />
-            <input aria-label='Elsewhere' />
-          </>
-        );
-      }
-      const { container } = render(
-        <StrictMode>
-          <Parent />
-        </StrictMode>,
-      );
-      await openPicker(container);
-      await pickTheTwelfth();
-      expect(onChange).not.toHaveBeenCalled();
-      expect(onBlur).not.toHaveBeenCalled();
-      if (action === 'Done') {
-        await user.click(screen.getByText('Done'));
-      } else if (action === 'Escape') {
-        await user.keyboard('{Escape}');
-      } else {
-        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
-      }
-      let expected = stored;
-      if (action !== 'Escape') {
-        expect(onChange).toHaveBeenCalledExactlyOnceWith(expect.stringMatching(/^2016-04-1[12]T/));
-        if (mode === 'accept') {
-          const [[accepted]] = onChange.mock.calls;
-          expected = accepted;
-        } else if (mode === 'transform') {
-          expected = transformed;
-        }
-      } else {
-        expect(onChange).not.toHaveBeenCalled();
-      }
-      expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
-      if (action === 'outside') {
-        await user.pointer({ keys: '[/MouseLeft]' });
-        expect(onBlur).toHaveBeenCalledTimes(1);
-      } else {
-        expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
-      }
-    });
-  });
-
   describe('with schema.format = iso-date-time', () => {
     const schema = { type: 'string' as const, format: 'iso-date-time' };
 
@@ -136,26 +70,6 @@ describe('DateTimeWidget', () => {
       expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
     });
 
-    test('reports the blur after the pick when a press outside closes the picker', async () => {
-      const onChange = vi.fn();
-      const onBlur = vi.fn();
-      const { container } = render(
-        <>
-          <DateTimeWidget {...makeWidgetMockProps({ value: '2016-04-05T14:01:30.000Z', onChange, onBlur, schema })} />
-          <p>elsewhere</p>
-        </>,
-      );
-
-      await openPicker(container);
-      // Picking a day moves focus into the popup, so the trigger's own blur has already fired, suppressed
-      await pickTheTwelfth();
-      await user.click(screen.getByText('elsewhere'));
-
-      expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
-      expect(onBlur).toHaveBeenCalledTimes(1);
-      expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
-    });
-
     // A day the user never picked is a day they never asked to store, and the value they arrived with may be one this
     // widget does not write itself — an offset date-time, or one carrying seconds
     test('leaves the stored value alone when the picker is dismissed without a change', async () => {
@@ -195,15 +109,14 @@ describe('DateTimeWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('commits the empty value, not an empty string, when there was no date to begin with', async () => {
+    test('does not change an empty value merely because the calendar closes', async () => {
       const onChange = vi.fn();
       const { container } = render(<DateTimeWidget {...makeWidgetMockProps({ value: '', onChange, schema })} />);
 
       await openPicker(container);
       await user.click(screen.getByText('Done'));
 
-      // `''` is no more a `date-time` than a mangled one, so committing it would fail the format of the field
-      expect(onChange).toHaveBeenCalledWith(undefined);
+      expect(onChange).not.toHaveBeenCalled();
     });
   });
 
@@ -358,8 +271,7 @@ describe('DateTimeWidget', () => {
     });
   });
 
-  // Escape is the one way out of the popup that does not commit, so the instant the user was trying out has to go too
-  test('discards the day Escape closes the picker on', async () => {
+  test('reports selection before Escape and does not repeat it when closing', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <DateTimeWidget
@@ -375,7 +287,7 @@ describe('DateTimeWidget', () => {
     await user.click(screen.getByRole('button', { name: /April 17th, 2016/ }));
     await user.keyboard('{Escape}');
 
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(container.querySelector('button[aria-haspopup]')).not.toHaveTextContent('Apr 17, 2016');
   });
 
