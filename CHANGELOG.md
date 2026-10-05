@@ -23,10 +23,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixing [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
 
-## @rjsf/utils
-
-- Fixed `retrieveSchema()` marking a property as a `$ref` cycle when several `dependencies` `oneOf` branches reference the same definition. Each branch, each `dependencies`/`allOf` entry and each `then`/`else` now resolves against its own copy of the visited-`$ref` list, so a `$ref` shared with a root property or a sibling is no longer flagged, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434)
-
 ## @rjsf/shadcn
 
 - Fixed `RadioWidget` not showing the selected value with `@radix-ui/react-radio-group` 1.4.x, which ignores the per-item `checked` prop. The `RadioGroup` is now controlled by the encoded option value, so it also follows a form reset or an outside `formData` change ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
@@ -34,6 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Fixed `retrieveSchema()` treating a `$ref` shared by several `dependencies` `oneOf` branches, `allOf` entries, `then`/`else` branches, `anyOf`/`oneOf` options or root properties as a recursion cycle, leaving it unresolved, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434). Reference resolution now tracks a path-scoped recursion stack, so a `$ref` is a cycle only when it is already being expanded on the current path, and previously expanded schemas keep their source ref on the path through `RJSF_REF_KEY`. Shared references resolve in every branch while recursive schemas still terminate
 - Upgraded `@x0k/json-schema-merge` to `^1.1.0`, which merges `if`/`then`/`else`, `properties`/`patternProperties`/`additionalProperties` and `items`/`additionalItems` as groups. `omitExtraData()` merges an object's `allOf` before evaluating its conditions, and the older merge could pair one entry's `else` with another entry's `if`, so data from an inactive branch was kept. The same merge in `retrieveSchema()` no longer lets an `additionalProperties` or `additionalItems` from one `allOf` entry act on another entry's `properties`/`patternProperties`/`items`
 
 ## @rjsf/validator-ata

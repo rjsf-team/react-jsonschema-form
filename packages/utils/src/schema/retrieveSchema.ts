@@ -344,13 +344,8 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
-  // A schema with dependencies, allOf or if resolves its own properties against a copy, so refs found there are not
-  // seen as cycles by the dependency, allOf or if branches that are resolved next
-  const isolate = !(REF_KEY in schema) && (DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema || IF_KEY in schema);
-  const resolvedList = isolate ? [...recurseList] : recurseList;
-  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, resolvedList, undefined, resolveAnyOfOrOneOfRefs);
+  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList, undefined, resolveAnyOfOrOneOfRefs);
   if (updatedSchema !== schema) {
-    const nextList = isolate ? recurseList : resolvedList;
     // Only call this if the schema was actually changed by the `resolveAllReferences()` function
     return retrieveSchemaInternal<T, S, F>(
       validator,
@@ -358,7 +353,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      nextList,
+      recurseList,
       experimental_customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
       preserveDependencies,
@@ -393,45 +388,46 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
   let resolvedSchema: S = schema;
   let currentBaseURI = baseURI;
+  // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
+  // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
+  // appears on the current path.
+  let pathList = recurseList;
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
     const { $ref, ...localSchema } = resolvedSchema;
     // Check for a recursive reference and stop the loop
-    if (recurseList.includes($ref!)) {
+    if (pathList.includes($ref!)) {
       return markCycleOnDetection ? ({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } as S) : resolvedSchema;
     }
-    recurseList.push($ref!);
+    pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.
     const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
     resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
     if (ID_KEY in resolvedSchema) {
       currentBaseURI = resolvedSchema[ID_KEY];
     }
+  } else {
+    // This schema may be the result of a previous expansion. Keep its source ref on the path so that a nested $ref
+    // back to it is still detected as a cycle when the schema is walked again, without re-expanding it.
+    const sourceRef = (resolvedSchema as Record<PropertyKey, unknown>)[RJSF_REF_KEY];
+    if (typeof sourceRef === 'string') {
+      pathList = [...pathList, sourceRef];
+    }
   }
 
   if (PROPERTIES_KEY in resolvedSchema) {
-    const childrenLists: string[][] = [];
     const updatedProps: RJSFSchema = {};
     for (const [key, value] of Object.entries(resolvedSchema[PROPERTIES_KEY] ?? {})) {
-      const childList: string[] = [...recurseList];
-      // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. When resolveAnyOfOrOneOfRefs=true
-      // (e.g. from ObjectField), options are resolved against a shared recurseList that accumulates
-      // refs across branches, causing false positives. In simple (non-anyOf) resolution, a $ref cycle
+      // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. In simple (non-anyOf) resolution, a $ref cycle
       // in an object property always causes an infinite render loop and must be caught.
       updatedProps[key] = resolveAllReferences(
         value as S,
         rootSchema,
-        childList,
+        pathList,
         currentBaseURI,
         resolveAnyOfOrOneOfRefs,
         !resolveAnyOfOrOneOfRefs,
       );
-      childrenLists.push(childList);
-    }
-    for (const ref of new Set(childrenLists.flat())) {
-      if (!recurseList.includes(ref)) {
-        recurseList.push(ref);
-      }
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
@@ -447,7 +443,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       items: resolveAllReferences(
         resolvedSchema.items as S,
         rootSchema,
-        recurseList,
+        pathList,
         currentBaseURI,
         resolveAnyOfOrOneOfRefs,
       ),
@@ -468,7 +464,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema = {
         ...resolvedSchema,
         [key]: schemas.map((s: S) =>
-          resolveAllReferences(s, rootSchema, recurseList, currentBaseURI, resolveAnyOfOrOneOfRefs),
+          resolveAllReferences(s, rootSchema, pathList, currentBaseURI, resolveAnyOfOrOneOfRefs),
         ),
       };
     }
