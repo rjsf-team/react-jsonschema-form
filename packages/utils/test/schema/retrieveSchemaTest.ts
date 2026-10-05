@@ -899,7 +899,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             });
           });
-          it('fails fast rather than overflowing when a recursive schema stops terminating', () => {
+          it('collapses a self-referencing property after one level', () => {
             const node: RJSFSchema = {
               type: 'object',
               properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } },
@@ -997,22 +997,122 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
-          it('fails fast with a clear error when the resolution pass-count backstop is exceeded', () => {
+          it('returns the schema resolved so far, flagged as a cycle, when the pass-count backstop is exceeded', () => {
             const schema: RJSFSchema = { definitions: { x: { type: 'string' } }, $ref: '#/definitions/x' };
-            expect(() =>
-              retrieveSchemaInternal(
-                testValidator,
-                schema,
-                schema,
-                {},
-                false,
-                [],
-                undefined,
-                undefined,
-                undefined,
-                101,
-              ),
-            ).toThrow('did not reach a fixpoint');
+            const [result] = retrieveSchemaInternal(
+              testValidator,
+              schema,
+              schema,
+              {},
+              false,
+              [],
+              undefined,
+              undefined,
+              undefined,
+              101,
+            );
+            expect(result).toEqual({ ...schema, [RJSF_REF_CYCLE_KEY]: true });
+          });
+          it('collapses a definition that reaches itself through allOf', () => {
+            const rootSchema: RJSFSchema = { definitions: { a: { allOf: [{ $ref: '#/definitions/a' }] } } };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/a' } as RJSFSchema, rootSchema);
+            expect(result).toEqual({ $ref: '#/definitions/a' });
+          });
+          it('collapses a definition that reaches itself through if/then', () => {
+            testValidator.setReturnValues({ isValid: [true] });
+            const rootSchema: RJSFSchema = {
+              definitions: {
+                a: {
+                  type: 'object',
+                  properties: { k: { type: 'string' } },
+                  if: { properties: { k: { const: 'x' } } },
+                  then: { $ref: '#/definitions/a' },
+                },
+              },
+            };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/a' } as RJSFSchema, rootSchema, {
+              k: 'x',
+            });
+            expect(result).toEqual({
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              $ref: '#/definitions/a',
+              [RJSF_REF_KEY]: '#/definitions/a',
+            });
+          });
+          it('collapses mutually recursive definitions that reach each other through allOf', () => {
+            const rootSchema: RJSFSchema = {
+              definitions: {
+                a: { allOf: [{ $ref: '#/definitions/b' }] },
+                b: { allOf: [{ $ref: '#/definitions/a' }] },
+              },
+            };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/a' } as RJSFSchema, rootSchema);
+            expect(result).toEqual({ $ref: '#/definitions/a' });
+          });
+          it('collapses a definition that reaches itself through dependencies', () => {
+            const rootSchema: RJSFSchema = {
+              definitions: {
+                node: {
+                  type: 'object',
+                  properties: { k: { type: 'string' } },
+                  dependencies: { k: { $ref: '#/definitions/node' } },
+                },
+              },
+            };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/node' } as RJSFSchema, rootSchema, {
+              k: 'a',
+            });
+            expect(result).toEqual({
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              $ref: '#/definitions/node',
+              [RJSF_REF_KEY]: '#/definitions/node',
+            });
+          });
+          it('collapses a dependent property that points back at its enclosing definition', () => {
+            const node: RJSFSchema = {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              dependencies: { k: { properties: { child: { $ref: '#/definitions/node' } } } },
+            };
+            const rootSchema: RJSFSchema = { definitions: { node } };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/node' } as RJSFSchema, rootSchema, {
+              k: 'a',
+            });
+            expect(result).toEqual({
+              type: 'object',
+              properties: { k: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+              [RJSF_REF_KEY]: '#/definitions/node',
+            });
+          });
+          it('collapses an OpenAPI-style discriminator pair that loops through if/then and allOf', () => {
+            testValidator.setReturnValues({ isValid: [true] });
+            const rootSchema: RJSFSchema = {
+              definitions: {
+                Pet: {
+                  type: 'object',
+                  properties: { petType: { type: 'string' } },
+                  if: { properties: { petType: { const: 'cat' } } },
+                  then: { $ref: '#/definitions/Cat' },
+                },
+                Cat: {
+                  allOf: [
+                    { $ref: '#/definitions/Pet' },
+                    { type: 'object', properties: { hunts: { type: 'boolean' } } },
+                  ],
+                },
+              },
+            };
+            const result = retrieveSchema(testValidator, { $ref: '#/definitions/Pet' } as RJSFSchema, rootSchema, {
+              petType: 'cat',
+            });
+            expect(result).toEqual({
+              type: 'object',
+              properties: { petType: { type: 'string' }, hunts: { type: 'boolean' } },
+              $ref: '#/definitions/Pet',
+              [RJSF_REF_KEY]: '#/definitions/Pet',
+            });
           });
           it('resolves a shared $ref in dependencies branches when the root is itself a $ref', () => {
             testValidator.setReturnValues({ isValid: [false, true] });
@@ -3091,7 +3191,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           [RJSF_REF_KEY]: '#/definitions/Y',
         });
       });
-      it('resolves references without the optional carry argument', () => {
+      it('resolves references without the optional expandedRefs argument', () => {
         const host: RJSFSchema = { type: 'string', title: 'Host' };
         const rootSchema: RJSFSchema = {
           definitions: { host },
@@ -3100,7 +3200,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             { properties: { y: { $ref: '#/definitions/host' } } },
           ],
         };
-        // Without the walk-local carry there is nothing to collapse later options against, so both expand.
+        // Without the walk-local expandedRefs list there is nothing to collapse later options against, so both expand.
         const result = resolveAllReferences(rootSchema, rootSchema, [], undefined, true);
         expect(result.anyOf).toEqual([
           { properties: { x: { type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' } } },
