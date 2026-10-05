@@ -30,8 +30,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed `retrieveSchema()` treating a `$ref` shared by several `dependencies` `oneOf` branches, `allOf` entries, `then`/`else` branches, `anyOf`/`oneOf` options or root properties as a recursion cycle, leaving it unresolved, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434). Reference resolution now tracks a path-scoped recursion stack, so a `$ref` is a cycle only when it is already being expanded on the current path, and previously expanded schemas keep their source ref on the path through `RJSF_REF_KEY`. Shared references resolve in every branch while recursive schemas still terminate
 - Upgraded `@x0k/json-schema-merge` to `^1.1.0`, which merges `if`/`then`/`else`, `properties`/`patternProperties`/`additionalProperties` and `items`/`additionalItems` as groups. `omitExtraData()` merges an object's `allOf` before evaluating its conditions, and the older merge could pair one entry's `else` with another entry's `if`, so data from an inactive branch was kept. The same merge in `retrieveSchema()` no longer lets an `additionalProperties` or `additionalItems` from one `allOf` entry act on another entry's `properties`/`patternProperties`/`items`
+- Fixed `retrieveSchema()` treating a `$ref` shared by several `dependencies` `oneOf` branches, `allOf` entries, `then`/`else` branches, `anyOf`/`oneOf` options or root properties as a recursion cycle, leaving it unresolved, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434). Reference resolution now tracks a path-scoped recursion stack, so a `$ref` is a cycle only when it is already being expanded on the current path, and previously expanded schemas keep their source ref on the path through `RJSF_REF_KEY`. Shared references resolve in every branch while recursive schemas still terminate
 
 ## @rjsf/validator-ata
 
