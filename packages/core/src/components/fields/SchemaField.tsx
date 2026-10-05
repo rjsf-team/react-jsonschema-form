@@ -50,7 +50,7 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import describeNonComponent from '../../describeNonComponent.ts';
+import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
@@ -160,38 +160,59 @@ function inferSelectWidget<
   return needsSelect ? 'select' : undefined;
 }
 
+/** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`
+ * itself. Looked up as an own property, so a name such as `constructor` or `toString` resolves to nothing rather than to
+ * something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a React child"
+ *
+ * @param field - The `field` from the UI options
+ * @param fields - The registered fields
+ * @returns - The value the `ui:field` refers to, which is not necessarily a component
+ */
+function lookUpUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): unknown {
+  if (typeof field === 'string') {
+    return Object.hasOwn(fields, field) ? fields[field] : undefined;
+  }
+  return field;
+}
+
 /** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
  * `getFieldComponent()` renders in place of the field for the schema's type. A component is either a function or one of
- * the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type admits.
+ * the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type admits. A registered value is
+ * checked the same way as one given directly, since `fields` can hold anything a caller passes in
  *
  * @param field - The `field` from the UI options
  * @param fields - The registered fields
  * @returns - The field the `ui:field` names, or `undefined` when it is neither a component nor the name of a registered
- *            field. Looked up as an own property, so a name such as `constructor` or `toString` resolves to nothing
- *            rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not
- *            valid as a React child"
+ *            one
  */
 function getUiFieldComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
-  if (typeof field === 'string') {
-    return Object.hasOwn(fields, field) ? fields[field] : undefined;
-  }
-  return isComponentType(field) ? field : undefined;
+  const resolved = lookUpUiField<T, S, F>(field, fields);
+  return isComponentType(resolved) ? resolved : undefined;
 }
+
+/** How a `ui:field` warning refers to the registered fields a name is looked up in */
+const UI_FIELD_LOOKUP = { none: 'no registered field', some: 'a registered field' };
 
 /** Describes a `ui:field` that `getUiFieldComponent()` resolved to nothing, for the warning that it was ignored
  *
- * @param field - The unresolved `field` from the UI options
- * @returns - What the `ui:field` was, phrased to follow "ui:field for <field>"
+ * @param field - The unresolved `field`, from the field's own UI options or from the global ones
+ * @param fields - The registered fields
+ * @returns - What the `ui:field` was, phrased to follow the option it was given through
  */
-function describeUnresolvedUiField(field: unknown): string {
-  if (typeof field === 'string') {
-    return `names no registered field ('${field}')`;
-  }
-  return describeNonComponent(field, 'MyField');
+function describeUnresolvedUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): string {
+  return describeUnresolvedComponent(field, lookUpUiField<T, S, F>(field, fields), UI_FIELD_LOOKUP, 'MyField');
 }
 
 const RenderNothing = () => null;
@@ -490,7 +511,28 @@ function SchemaFieldRender<
     uiOptions,
   );
 
-  const namedField = getUiFieldComponent<T, S, F>(uiOptions.field, fields);
+  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
+  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
+  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
+  const {
+    required: fieldUiRequired,
+    initialValue: fieldInitialValue,
+    emptyValue: fieldEmptyValue,
+    field: localField,
+  } = getUiOptions<T, S, F>(uiSchema);
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
+  const globalField = globalUiOptions?.field;
+  let namedField = getUiFieldComponent<T, S, F>(uiOptions.field, fields);
+  // A field's own `ui:field` that resolves to nothing is ignored, so the `ui:globalOptions.field` it would have shadowed
+  // applies as though it were never given. One that is `undefined` or `null` still shadows it, since those ask for no
+  // field: `undefined` is how `SchemaField` shadows it for a schema's options, and `null` is how a JSON uiSchema, which
+  // can't spell `undefined`, clears it for one field
+  const ignoresOwnField = localField != null && namedField === undefined;
+  if (ignoresOwnField) {
+    namedField = getUiFieldComponent<T, S, F>(globalField, fields);
+  }
+  const appliesGlobalField = ignoresOwnField || (localField === undefined && uiOptions.field === globalField);
   const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
     T,
     S,
@@ -501,16 +543,6 @@ function SchemaFieldRender<
 
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
-  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
-  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
-  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const {
-    required: fieldUiRequired,
-    initialValue: fieldInitialValue,
-    emptyValue: fieldEmptyValue,
-  } = getUiOptions<T, S, F>(uiSchema);
-  const uiRequired = uiBooleanOption(fieldUiRequired);
-  const effectiveRequired = uiRequired ?? required;
   if (
     uiRequired === false &&
     required &&
@@ -536,14 +568,22 @@ function SchemaFieldRender<
     return null;
   }
   // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
-  // otherwise have no sign it was dropped. A `null` asks for no field, since it is how a JSON uiSchema, which can't
-  // spell `undefined`, clears a `ui:globalOptions.field` for one field.
+  // otherwise have no sign it was dropped.
   // The message describes the intended fallback. Until #5389 is fixed, `getDisplayLabel()` still hides the label for
-  // any `ui:field` that is set, resolved or not, so the label is missing; that is #5389's to fix, not this message's
-  if (uiOptions.field != null && namedField === undefined) {
+  // any top-level `ui:field` that is set, resolved or not, so that field's label is missing; that is #5389's to fix,
+  // not this message's.
+  // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
+  // about once for the form rather than once per field
+  if (ignoresOwnField) {
     logOnce(
-      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${describeUnresolvedUiField(uiOptions.field)}, so it is ` +
-        'ignored and the field is rendered as though no ui:field were given.',
+      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${describeUnresolvedUiField(localField, fields)}, so it ` +
+        'is ignored and the field is rendered as though no ui:field were given.',
+    );
+  }
+  if (appliesGlobalField && globalField != null && namedField === undefined) {
+    logOnce(
+      `ui:globalOptions.field ${describeUnresolvedUiField(globalField, fields)}, so it is ignored and the fields it ` +
+        'applies to are rendered as though no ui:field were given.',
     );
   }
 

@@ -382,6 +382,61 @@ describe('SchemaField', () => {
         );
       });
 
+      it('warns that a name a React element is registered under is ignored, and renders the default field', () => {
+        const { node } = createFormComponent({
+          schema: stringSchema,
+          uiSchema: { val: { 'ui:field': 'geo' } },
+          fields: { geo: (<MyObject />) as unknown as Field },
+        });
+
+        expect(node.querySelector('#custom')).not.toBeInTheDocument();
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:field for "root_val" (val) names a registered field ('geo') that is a React element rather than a ` +
+            'component (pass MyField, not <MyField />), so it is ignored and the field is rendered as though no ' +
+            'ui:field were given.',
+        );
+      });
+
+      it('warns once for the form about an unusable ui:globalOptions.field, and per field about a local one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' } },
+        };
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { 'ui:globalOptions': { field: 'Stringfield' }, c: { 'ui:field': 'Cfield' } },
+        });
+
+        expect(node.querySelectorAll('input')).toHaveLength(3);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledTimes(2);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenNthCalledWith(
+          1,
+          `ui:globalOptions.field names no registered field ('Stringfield'), so it is ignored and the fields it ` +
+            'applies to are rendered as though no ui:field were given.',
+        );
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenNthCalledWith(
+          2,
+          `ui:field for "root_c" (c) names no registered field ('Cfield'), so it is ignored and the field is ` +
+            'rendered as though no ui:field were given.',
+        );
+      });
+
+      it('renders the ui:globalOptions.field in place of a local ui:field that is ignored', () => {
+        const uiSchema: UiSchema = JSON.parse(
+          '{ "ui:globalOptions": { "field": "myobject" }, "ui:field": null, "val": { "ui:field": "Nope" } }',
+        );
+
+        const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
+
+        expect(node.querySelector('#custom')).toBeInTheDocument();
+        expect(node.querySelector('input#root_val')).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:field for "root_val" (val) names no registered field ('Nope'), so it is ignored and the field is ` +
+            'rendered as though no ui:field were given.',
+        );
+      });
+
       it('warns that a value that is neither a name nor a component is ignored', () => {
         const { node } = createFormComponent({
           schema: stringSchema,

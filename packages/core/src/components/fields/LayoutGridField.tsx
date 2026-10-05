@@ -37,7 +37,8 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import describeNonComponent from '../../describeNonComponent.ts';
+import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -426,6 +427,12 @@ export function getSchemaDetailsForField<
   return { schema, isRequired, isReadonly, optionsInfo, fieldPath };
 }
 
+/** How a `render` warning refers to the lookup map a name is looked up in */
+const RENDER_LOOKUP = {
+  none: `no value in formContext.${LOOKUP_MAP_NAME}`,
+  some: `a value in formContext.${LOOKUP_MAP_NAME}`,
+};
+
 /** Gets the custom render component from the `render`, by either determining that it is already a component, which
  * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
  * used to look up the component in the registry. If no component can be found, null is returned, and a `render` that
@@ -433,13 +440,19 @@ export function getSchemaDetailsForField<
  *
  * @param render - The potential render component or lookup name to one, if the cell gives one
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
+ * @param [cellLabel] - How the warning names the cell, so that `logOnce()` doesn't take one cell's warning for
+ *          another's and the warning can be traced back to its cell
  * @returns - Either a render component if available, or null if not
  */
 export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(render: string | RenderComponent | undefined, registry: Registry<T, S, F>): RenderComponent | null {
+>(
+  render: string | RenderComponent | undefined,
+  registry: Registry<T, S, F>,
+  cellLabel?: string,
+): RenderComponent | null {
   let customRenderer: string | RenderComponent | undefined = render;
   if (typeof customRenderer === 'string') {
     customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
@@ -448,14 +461,8 @@ export function getCustomRenderComponent<
     return customRenderer;
   }
   if (render != null) {
-    let description = describeNonComponent(customRenderer, 'MyRenderer');
-    if (typeof render === 'string') {
-      const entry = `formContext.${LOOKUP_MAP_NAME} ('${render}')`;
-      // A value that was found is described like one given directly, so a looked-up element still gets the hint
-      description =
-        customRenderer == null ? `names nothing in ${entry}` : `names a value in ${entry} that ${description}`;
-    }
-    logOnce(`${LAYOUT_GRID_OPTION} render ${description}, so it is ignored.`);
+    const description = describeUnresolvedComponent(render, customRenderer, RENDER_LOOKUP, 'MyRenderer');
+    logOnce(`${LAYOUT_GRID_OPTION} render${cellLabel ? ` for ${cellLabel}` : ''} ${description}, so it is ignored.`);
   }
   return null;
 }
@@ -466,13 +473,14 @@ export function getCustomRenderComponent<
  *
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
  * @param gridSchema - The string or object that represents the configuration for the grid field
+ * @param [gridLabel] - How a warning about the cell's `render` names the field the grid belongs to
  * @returns - The UIComponentPropsType computed from the gridSchema
  */
 export function computeUIComponentPropsFromGridSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
+>(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject, gridLabel?: string): UIComponentPropsType {
   let name: string;
   let UIComponent: RenderComponent | null = null;
   let uiProps: ConfigObject = {};
@@ -493,7 +501,12 @@ export function computeUIComponentPropsFromGridSchema<
         }
       }
     });
-    UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
+    const cellName = innerName ? `cell '${innerName}'` : 'a cell';
+    UIComponent = getCustomRenderComponent<T, S, F>(
+      render,
+      registry,
+      gridLabel ? `${cellName} in ${gridLabel}` : innerName && cellName,
+    );
     if (!innerName && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
@@ -707,8 +720,8 @@ function LayoutGridFieldComponent<
   const { SchemaField, LayoutMultiSchemaField } = fields;
 
   const uiComponentProps = useMemo(
-    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
-    [registry, gridSchema],
+    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema, fieldLabelForLog(id, parentFieldPath)),
+    [registry, gridSchema, id, parentFieldPath],
   );
   const { name, UIComponent, uiProps } = uiComponentProps;
   const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = useMemo(

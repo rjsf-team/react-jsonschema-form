@@ -1255,7 +1255,14 @@ describe('LayoutGridField', () => {
     test('returns null and warns when render is a string without a lookup', () => {
       expect(getCustomRenderComponent('nonexistant', registry)).toBeNull();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render names nothing in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+        `ui:layoutGrid render names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+      );
+    });
+    test('names the cell in the warning when given a label for it', () => {
+      expect(getCustomRenderComponent('nonexistant', registry, "cell 'foo'")).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render for cell 'foo' names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it ` +
+          'is ignored.',
       );
     });
     test('returns null and warns when render is a string whose lookup is not a component', () => {
@@ -1408,6 +1415,24 @@ describe('LayoutGridField', () => {
     });
   });
   describe('computeUIComponentPropsFromGridSchema()', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    test.each([
+      ['a named cell in a labelled grid', { name: 'foo' }, '"root"', `cell 'foo' in "root"`],
+      ['an unnamed cell in a labelled grid', {}, '"root"', 'a cell in "root"'],
+      ['a named cell in an unlabelled grid', { name: 'foo' }, undefined, `cell 'foo'`],
+    ])('names %s in the warning about its render', (_, cell, gridLabel, cellLabel) => {
+      computeUIComponentPropsFromGridSchema(registry, { ...cell, render: 'nonexistant' }, gridLabel);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render for ${cellLabel} names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so ` +
+          'it is ignored.',
+      );
+    });
+    test('names no cell in the warning about the render of an unnamed cell in an unlabelled grid', () => {
+      computeUIComponentPropsFromGridSchema(registry, { render: 'nonexistant' });
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+      );
+    });
     test('gridSchema is undefined', () => {
       expect(computeUIComponentPropsFromGridSchema(registry)).toEqual({
         name: '',
@@ -1505,6 +1530,18 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(options));
+  });
+  describe('a render that resolves to nothing', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    test('renderField warns about it, naming the field the grid belongs to', () => {
+      const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: 'nonexistant' } } });
+      render(<LayoutGridField {...props} />);
+      expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render for a cell in "${props.id}" (${props.fieldPath}) names no value in ` +
+          `formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+      );
+    });
   });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {
     const options = { myProp: true };

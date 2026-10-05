@@ -20,8 +20,6 @@ const OBJECT_COMPONENT_TYPES = new Set<unknown>([
 export default function isComponentType(value: unknown): value is ComponentType<any> {
   return (
     typeof value === 'function' ||
-    (typeof value === 'object' &&
-      value !== null &&
-      OBJECT_COMPONENT_TYPES.has((value as { $$typeof?: unknown }).$$typeof))
+    (typeof value === 'object' && value !== null && '$$typeof' in value && OBJECT_COMPONENT_TYPES.has(value.$$typeof))
   );
 }

@@ -118,13 +118,15 @@ export default function getWidget<
     throw new Error(`Unsupported widget definition: ${typeof widget} in schema: ${JSON.stringify(schema)}`);
   }
 
-  if (widget in registeredWidgets) {
+  // Own keys only, so a name such as `constructor` or `toString` resolves to no widget rather than to a function off
+  // `Object.prototype`, which `isComponentType()` would accept and React would render as one
+  if (Object.hasOwn(registeredWidgets, widget)) {
     const registeredWidget = registeredWidgets[widget];
     return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
   }
 
   if (typeof type === 'string') {
-    if (!(type in widgetMap)) {
+    if (!Object.hasOwn(widgetMap, type)) {
       throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 
@@ -132,7 +134,7 @@ export default function getWidget<
       type === 'array' && isWholeValueSelect(schema)
         ? wholeValueSelectWidgetMap
         : widgetMap[type as keyof typeof widgetMap];
-    if (widget in widgetsForType) {
+    if (Object.hasOwn(widgetsForType, widget)) {
       const registeredWidget = registeredWidgets[widgetsForType[widget]];
       return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
     }

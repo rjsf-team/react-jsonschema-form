@@ -183,6 +183,10 @@ describe('getWidget()', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  it.each(['constructor', 'toString'])('should fail for %s, which no widget is registered under', (name) => {
+    expect(() => getWidget(schema, name, {})).toThrow(`No widget '${name}' for type 'object' in schema: ${schemaStr}`);
+  });
+
   it('should fail for a React element, which is not a component', () => {
     const element = <TestWidget {...widgetProps} />;
     expect(() => getWidget(schema, element as unknown as Widget)).toThrow(
