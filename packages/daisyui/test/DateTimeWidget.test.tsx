@@ -70,7 +70,8 @@ describe('DateTimeWidget', () => {
       if (action !== 'Escape') {
         expect(onChange).toHaveBeenCalledExactlyOnceWith(expect.stringMatching(/^2016-04-1[12]T/));
         if (mode === 'accept') {
-          [expected] = onChange.mock.calls[0];
+          const [[accepted]] = onChange.mock.calls;
+          expected = accepted;
         } else if (mode === 'transform') {
           expected = transformed;
         }
