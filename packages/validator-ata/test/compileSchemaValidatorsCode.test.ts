@@ -9,7 +9,14 @@ import {
   titleChoiceMergeAllOf as customMergeAllOf,
 } from '../../utils/test/testUtils/customMergeAllOfData.ts';
 import {
+  CONDITIONAL_UNMERGED_ALL_OF_FORM_DATA,
+  CONDITIONAL_UNMERGED_ALL_OF_OMITTED,
+  DEPENDENCY_ONE_OF_FORM_DATA,
+  DEPENDENCY_ONE_OF_OMITTED,
   identityMergeAllOf,
+  ONE_OF_ALL_OF_REF_OPTIONS,
+  SCHEMA_CONDITIONAL_UNMERGED_ALL_OF,
+  SCHEMA_DEPENDENCY_ONE_OF,
   NESTED_ALL_OF_FORM_DATA,
   SCHEMA_NESTED_ALL_OF,
   SCHEMA_ONE_OF_ALL_OF_REF,
@@ -227,10 +234,32 @@ describe('compileSchemaValidatorsCode() for the sub-schemas a form validates aga
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
     const schemaUtils = createSchemaUtils({ validator }, rootSchema);
     const formData = { meow: 'x' };
-    const options = (rootSchema.properties!.pet as RJSFSchema).oneOf as RJSFSchema[];
-    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, formData));
+    const retrieved = ONE_OF_ALL_OF_REF_OPTIONS.map((option) => schemaUtils.retrieveSchema(option, formData));
 
     expect(schemaUtils.getClosestMatchingOption(formData, retrieved, 0)).toBe(0);
+  });
+  it('covers the entries of an allOf only reached through a condition', () => {
+    const rootSchema = SCHEMA_CONDITIONAL_UNMERGED_ALL_OF;
+    const validator = createPrecompiledValidator(
+      loadModule(compileSchemaValidatorsCode(rootSchema, { customMergeAllOf: identityMergeAllOf })),
+      rootSchema,
+      { customMergeAllOf: identityMergeAllOf },
+    );
+    expect(
+      omitExtraData(
+        { validator, customMergeAllOf: identityMergeAllOf },
+        rootSchema,
+        rootSchema,
+        CONDITIONAL_UNMERGED_ALL_OF_FORM_DATA,
+      ),
+    ).toEqual(CONDITIONAL_UNMERGED_ALL_OF_OMITTED);
+  });
+  it("covers the options of a dependency's oneOf, as omitExtraData() scores them", () => {
+    const rootSchema = SCHEMA_DEPENDENCY_ONE_OF;
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(omitExtraData({ validator }, rootSchema, rootSchema, DEPENDENCY_ONE_OF_FORM_DATA)).toEqual(
+      DEPENDENCY_ONE_OF_OMITTED,
+    );
   });
   it('covers the merge of two patternProperties that match the same key', () => {
     const rootSchema = SCHEMA_TWO_MATCHING_PATTERNS;

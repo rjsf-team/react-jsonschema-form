@@ -51,6 +51,47 @@ export const UNMERGED_ALL_OF_FORM_DATA = { choice: { k: 'b', z: 1 }, q: 'x', ext
 /** What `omitExtraData()` keeps of `UNMERGED_ALL_OF_FORM_DATA` */
 export const UNMERGED_ALL_OF_OMITTED = { choice: { k: 'b' }, q: 'x' };
 
+/** The `oneOf` options of `SCHEMA_ONE_OF_ALL_OF_REF`, exported so a test can retrieve and score them the way
+ * `MultiSchemaField` does without digging them back out of the schema
+ */
+export const ONE_OF_ALL_OF_REF_OPTIONS: RJSFSchema[] = [{ $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }];
+
+/** A schema reaching `SCHEMA_UNMERGED_ALL_OF` through a condition, where resolution merges the `allOf` before the
+ * parse ever sees it, so the entries `omitExtraData()` walks are only on what resolution returns
+ */
+export const SCHEMA_CONDITIONAL_UNMERGED_ALL_OF: RJSFSchema = {
+  type: 'object',
+  properties: { u: { if: { required: ['zz'] }, then: SCHEMA_UNMERGED_ALL_OF, else: SCHEMA_UNMERGED_ALL_OF } },
+};
+
+/** Form data for `SCHEMA_CONDITIONAL_UNMERGED_ALL_OF`, which qualifies neither branch of the condition */
+export const CONDITIONAL_UNMERGED_ALL_OF_FORM_DATA = { u: UNMERGED_ALL_OF_FORM_DATA };
+
+/** What `omitExtraData()` keeps of `CONDITIONAL_UNMERGED_ALL_OF_FORM_DATA` */
+export const CONDITIONAL_UNMERGED_ALL_OF_OMITTED = { u: UNMERGED_ALL_OF_OMITTED };
+
+/** A schema whose dependency is a `oneOf`. `omitExtraData()` scores those options itself, where resolving the
+ * dependency only validates the conditions `withExactlyOneSubschema()` builds out of them
+ */
+export const SCHEMA_DEPENDENCY_ONE_OF: RJSFSchema = {
+  type: 'object',
+  properties: { pet: { type: 'string', enum: ['No', 'Yes'] } },
+  dependencies: {
+    pet: {
+      oneOf: [
+        { properties: { pet: { enum: ['No'] } } },
+        { properties: { pet: { enum: ['Yes'] }, age: { type: 'number' } }, required: ['age'] },
+      ],
+    },
+  },
+};
+
+/** Form data for `SCHEMA_DEPENDENCY_ONE_OF` picking its second option, with a key the schema does not describe */
+export const DEPENDENCY_ONE_OF_FORM_DATA = { pet: 'Yes', age: 3, extra: 1 };
+
+/** What `omitExtraData()` keeps of `DEPENDENCY_ONE_OF_FORM_DATA` */
+export const DEPENDENCY_ONE_OF_OMITTED = { pet: 'Yes', age: 3 };
+
 /** A schema whose `oneOf` options are `$ref`s to a definition that is an `allOf`. `MultiSchemaField` scores the
  * options it has retrieved, which for `Cat` is the merge of that `allOf` rather than the `$ref` the schema declares
  */
@@ -65,7 +106,7 @@ export const SCHEMA_ONE_OF_ALL_OF_REF: RJSFSchema = {
     Dog: { type: 'object', properties: { bark: { type: 'string' } } },
   },
   type: 'object',
-  properties: { pet: { oneOf: [{ $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }] } },
+  properties: { pet: { oneOf: ONE_OF_ALL_OF_REF_OPTIONS } },
 };
 
 /** A schema whose two `patternProperties` both match a key of `ab`, so a form renders that key with the merge of the

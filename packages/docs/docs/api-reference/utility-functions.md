@@ -1859,6 +1859,20 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
 
+### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the key a validator caches a schema's compiled validation function under, and the key [schemaParser()](#schemaparsersextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) maps it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise.
+An empty `$id` names nothing, so a schema carrying one is keyed by its hash rather than sharing the empty key with every other such schema.
+Two schemas sharing a key must validate the same way, so a schema derived from another in a way that changes its meaning carries an `$id` derived from its own content.
+
+#### Parameters
+
+- schema: S - The schema for which the validator cache key is desired
+
+#### Returns
+
+- string: The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema
+
 ### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the `$id` of the schema, or by its hash when it has none.
@@ -1867,6 +1881,7 @@ It stops at a schema it has already collected, so that a recursive `$ref` cannot
 A key a form's data brings is rendered with the merge of every `patternProperties` entry matching it, so each combination of them is parsed as the `allOf` that merge is made from, which a `customMergeAllOf` sees exactly as the form's does.
 A schema may have at most 16 `patternProperties` for this, since there are `2 ** n - 1` combinations of them; one with more is reported rather than parsed.
 An `allOf` is parsed both merged and as it stands, because a form reads it both ways: `getObjectDefaults()` reads a nested object's unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place.
+A schema `dependencies` is parsed in its own right as well as applied, because `omitExtraData()` scores the options of a `oneOf` it declares, and a dependency is parsed both applied and left out, because a form leaves it out until its key has a value.
 This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the key it maps them under is the one the validator looks them up by at runtime; see [validator-ajv8](./validator-ajv8.md).
 
 #### Parameters
@@ -1876,7 +1891,7 @@ This is what a validator package's `compileSchemaValidatorsCode()` uses to decid
 
 #### Returns
 
-- SchemaMap&lt;S>: The map of every schema that was parsed, keyed by its hash
+- SchemaMap&lt;S>: The map of every schema that was parsed, keyed by its [`schemaKey()`](#schemakeysextendsstrictrjsfschemarjsfschema): its `$id` when it has a non-empty one, and its hash otherwise
 
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

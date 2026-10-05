@@ -4,6 +4,11 @@ import hashForSchema from '../hashForSchema.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 
+/** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
+ * rather than stacking another one on
+ */
+const VARIANT_ID_SUFFIX = /\?rjsf=[^?]*$/;
+
 /** Returns the `schema` with any `$id` it carries replaced by one derived from it and from the schema's own content. A
  * schema derived from an option -- augmented for scoring, or relaxed -- is not the schema that the option's `$id`
  * names, and a validator caches the function it compiles for a schema under that `$id`, so an unchanged `$id` would
@@ -20,8 +25,23 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   }
   // Relative resolution replaces the last path segment and drops the query, so a `$ref` inside the schema resolves
   // against the same base the original `$id` gave it. The suffix goes in the query because an `$id` that already has
-  // one still parses, where a second fragment would not
-  return { ...schema, [ID_KEY]: `${id}?rjsf=${hashForSchema(withoutId as S)}` };
+  // one still parses, where a second fragment would not. A suffix this already added is replaced rather than appended
+  // to, so deriving twice -- relaxing an option and then scoring the relaxed one -- names the same schema both times
+  // An `$id` is typed as a string but an untyped JS caller can hand over anything, and a non-string one is reported as
+  // a validation error rather than thrown on, so it is converted rather than called into
+  // oxlint-disable-next-line typescript/no-unnecessary-type-conversion
+  const base = String(id).replace(VARIANT_ID_SUFFIX, '');
+  return { ...schema, [ID_KEY]: `${base}?rjsf=${hashForSchema(withoutId as S)}` };
+}
+
+/** Applies `withVariantId()` to a schema about to be scored, leaving the junk option alone: the precompiled validators
+ * recognise that one by its own `$id` and answer it without a compiled function at all.
+ *
+ * @param schema - The schema that is about to be passed to `isValid()` for scoring
+ * @returns - The schema to score, with an `$id` derived from its content unless it is the junk option
+ */
+function withScoringId<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  return schema[ID_KEY] === JUNK_OPTION_ID ? schema : withVariantId<S>(schema);
 }
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
@@ -111,16 +131,12 @@ export default function getFirstMatchingOption<
       // been filled in yet, which will mean that the schema is not valid
       delete augmentedSchema.required;
 
-      // The junk option is the exception to deriving an `$id`: the precompiled validators recognise it by its own
-      // `$id` and answer it without a compiled function at all
-      if (augmentedSchema[ID_KEY] !== JUNK_OPTION_ID) {
-        augmentedSchema = withVariantId(augmentedSchema);
-      }
-
-      if (context.validator.isValid(augmentedSchema, formData, rootSchema)) {
+      if (context.validator.isValid(withScoringId(augmentedSchema), formData, rootSchema)) {
         return i;
       }
-    } else if (context.validator.isValid(option, formData, rootSchema)) {
+    } else if (context.validator.isValid(withScoringId(option), formData, rootSchema)) {
+      // An option is scored as the caller hands it over, which for `MultiSchemaField` is the retrieved form rather
+      // than the one the schema declares, so this needs the derived `$id` as much as the augmented branch does
       return i;
     }
   }

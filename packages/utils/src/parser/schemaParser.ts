@@ -1,6 +1,7 @@
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
+  DEPENDENCIES_KEY,
   ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
@@ -62,6 +63,32 @@ function combinationsOf<V>(values: V[]): V[][] {
   );
 }
 
+/** Parses the entries of the `schema`'s `allOf`, and what it declares besides them, alongside the merged schema the
+ * caller parses. A form does not validate only against the merge: `getObjectDefaults()` reads a nested object's
+ * unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place.
+ *
+ * @param context - The `SchemaContext` holding the `ParserValidator` that captures `isValid()` calls during parsing
+ * @param state - The `ParseState` shared by every `parseSchema()` call of one `schemaParser()` call
+ * @param rootSchema - The root schema from which the schema parsing began
+ * @param schema - The schema whose `allOf`, if it has one, is parsed unmerged
+ */
+function parseUnmergedAllOf<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S) {
+  const { [ALL_OF_KEY]: allOf, ...withoutAllOf } = schema;
+  if (!allOf) {
+    return;
+  }
+  parseSchema<T, S, F>(context, state, rootSchema, withoutAllOf as S);
+  for (const subSchema of allOf) {
+    if (isSchemaObject<S>(subSchema)) {
+      parseSchema<T, S, F>(context, state, rootSchema, subSchema);
+    }
+  }
+}
+
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
  * used to capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the
  * `retrieveSchemaInternal()`, the sub-schemas the form renders its value with are parsed, as is each of its
@@ -83,16 +110,12 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     return;
   }
   state.parsed.add(parsedKey);
-  const { [ALL_OF_KEY]: allOf, ...withoutAllOf } = schema;
-  if (allOf) {
-    // A form does not validate only against the merge of an `allOf`: `getObjectDefaults()` reads a nested object's
-    // unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place. So the entries and what
-    // the schema declares besides them are parsed alongside the merged schema rather than being taken as covered by it
-    parseSchema<T, S, F>(context, state, rootSchema, withoutAllOf as S);
-    for (const subSchema of allOf) {
-      if (isSchemaObject<S>(subSchema)) {
-        parseSchema<T, S, F>(context, state, rootSchema, subSchema);
-      }
+  parseUnmergedAllOf<T, S, F>(context, state, rootSchema, schema);
+  // `omitExtraData()` applies a schema dependency by walking the dependency's own schema and scoring any `oneOf` it
+  // declares, where resolution only ever validates the conditions `withExactlyOneSubschema()` builds out of it
+  for (const dependencyValue of Object.values(schema[DEPENDENCIES_KEY] ?? {})) {
+    if (isSchemaObject<S>(dependencyValue)) {
+      parseSchema<T, S, F>(context, state, rootSchema, dependencyValue);
     }
   }
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
@@ -100,6 +123,10 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {
       state.resolved.add(resolvedKey);
+      // An `allOf` a merge leaves in place is read unmerged wherever it was reached from, and one that only appears
+      // after resolution -- in a `then` or a dependency -- is merged inside `retrieveSchemaInternal()`, so the entries
+      // are reached here rather than only on the schema the caller handed in
+      parseUnmergedAllOf<T, S, F>(context, state, rootSchema, localSchema);
       parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema);
       // An option can hold an `allOf`, conditions or dependencies of its own, which only parsing the option resolves.
       // The schema is parsed alongside its options rather than being taken as covered by them, since merging an option

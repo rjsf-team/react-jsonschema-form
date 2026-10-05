@@ -907,6 +907,13 @@ export function retrieveSchemaInternal<
     let withMergedProperties = [resolvedSchema];
     const { properties } = resolvedSchema;
     if (properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
+      // Merging a property with its matching patterns resolves the result, which for a key holding a `$ref` back to
+      // this schema never terminates, so the reference this schema was itself reached through seeds that resolution
+      // and stops it. That one alone, and a fresh copy of it per key: `resolveAllReferences()` merges the references
+      // each property resolved back into the list it was given, so both `recurseList` and a list shared between the
+      // keys hold what another key resolved, which reads as a cycle and leaves this one holding a literal `$ref`
+      const ownRef = (resolvedSchema as RJSFMarkedSchema)[RJSF_REF_KEY] as string | undefined;
+      const mergeRecurseList = ownRef ? [ownRef] : [];
       // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
       // are varied one property at a time rather than in every combination with the other properties': what reads a
       // branch reads one property, and the combinations grow as the product of the branch counts
@@ -921,7 +928,7 @@ export function retrieveSchemaInternal<
           rootSchema,
           getByPath<T>(rawFormData, key),
           expandAllBranches,
-          undefined,
+          [...mergeRecurseList],
           undefined,
           preserveDependencies,
         );
@@ -1007,7 +1014,10 @@ export function resolveAnyOrOneOfSchemas<
       const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
       getFirstMatchingOption<T, S, F>(context, formData, relaxed, rootSchema, discriminator);
       // `MultiSchemaField` scores the options it has retrieved rather than the ones the schema declares, so an option
-      // that resolves into something else -- one that is an `allOf`, say -- is scored in that resolved form too
+      // that resolves into something else -- one that is an `allOf`, say -- is scored in that resolved form too. It
+      // retrieves with the real form data, which this has none of, so an option whose retrieved form depends on the
+      // data is still reached only in the forms an empty retrieval produces: a key an option's `additionalProperties`
+      // describes is stubbed into its `properties` once the user adds one, and no parse can enumerate those
       const retrievedOptions = anyOrOneOf.flatMap((item) =>
         // Each option gets its own copy of the list, since a `$ref` one of them resolves is not one a sibling has
         // already been through, the same reason the `properties` loop of `resolveAllReferences()` copies it
@@ -1098,8 +1108,8 @@ export function resolveDependencies<
     formData,
     recurseList,
   );
-  return resolvedSchemas.flatMap((resolvedSchema) =>
-    processDependencies<T, S, F>(
+  return resolvedSchemas.flatMap((resolvedSchema) => {
+    const applied = processDependencies<T, S, F>(
       context,
       dependencies,
       resolvedSchema,
@@ -1108,8 +1118,15 @@ export function resolveDependencies<
       recurseList,
       formData,
       passCount,
-    ),
-  );
+    );
+    // A dependency whose key the form data does not have is left unapplied, so until the user fills one in a form
+    // renders -- and scores its options against -- the schema with none of them applied, which expanding otherwise
+    // never returns. Only that variant is added: the ones in between are the `2 ** k` subsets of the keys
+    if (!expandAllBranches || applied.some((appliedSchema) => deepEquals(appliedSchema, resolvedSchema))) {
+      return applied;
+    }
+    return [...applied, resolvedSchema];
+  });
 }
 
 /** Processes all the `dependencies` recursively into the list of `resolvedSchema`s as needed. Passes the

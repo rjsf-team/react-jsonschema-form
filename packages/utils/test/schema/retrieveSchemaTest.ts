@@ -2352,6 +2352,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
+      it('resolves a $ref in a patternProperties entry for every key it matches, not just the first', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: { type: 'string' }, ab: { type: 'string' } },
+          patternProperties: { '^a': { $ref: '#/definitions/constrained' } },
+        };
+        const rootSchema: RJSFSchema = { definitions: { constrained: { minLength: 3 } } };
+        // Each key resolves the shared entry in its own right: a `$ref` the key before it went through is not one
+        // this key has, so a list of resolved references shared between them would leave this one unresolved
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, {}).properties).toEqual({
+          aa: { type: 'string', minLength: 3, [RJSF_REF_KEY]: '#/definitions/constrained' },
+          ab: { type: 'string', minLength: 3, [RJSF_REF_KEY]: '#/definitions/constrained' },
+        });
+      });
+      it('resolves a $ref in a patternProperties entry that a sibling property resolved first', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: { $ref: '#/definitions/text' }, other: { $ref: '#/definitions/constrained' } },
+          patternProperties: { '^a': { $ref: '#/definitions/constrained' } },
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: { text: { type: 'string' }, constrained: { maxLength: 7 } },
+        };
+        // `resolveAllReferences()` merges every property's resolved references into the list it was given, so by the
+        // time `aa` is merged with its pattern that list holds the one `other` resolved. Seeding the merge with it
+        // would read `aa`'s pattern as a cycle and hand the renderer a literal `$ref` in place of its constraint
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, {}).properties).toEqual({
+          aa: { type: 'string', maxLength: 7, [RJSF_REF_KEY]: '#/definitions/text' },
+          other: { maxLength: 7, [RJSF_REF_KEY]: '#/definitions/constrained' },
+        });
+      });
     });
     describe('stubExistingAdditionalProperties()', () => {
       it('deals with undefined formData', () => {

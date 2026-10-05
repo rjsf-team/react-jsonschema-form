@@ -1,4 +1,4 @@
-import type { CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
@@ -30,17 +30,11 @@ export interface CustomValidatorOptionsType {
 }
 
 /** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
- * plus the form's `customMergeAllOf`, since the sub-schemas that get compiled are the ones that merge produces
+ * plus the `SchemaParserOptions` the schema is parsed for its sub-schemas with. Those options are shared with
+ * `schemaParser()` rather than restated, so an option added there needs no mirroring in the validators
  */
-export interface CompileValidatorOptionsType<
-  S extends StrictRJSFSchema = RJSFSchema,
-> extends CustomValidatorOptionsType {
-  /** The form's `customMergeAllOf`, used to parse the schema for the sub-schemas to compile. It must merge the same way
-   * as the one passed to the form, or the form can validate against sub-schemas that were never compiled. Pass the same
-   * one to `createPrecompiledValidator()`, which resolves the root schema with it
-   */
-  customMergeAllOf?: CustomMergeAllOf<S>;
-}
+export type CompileValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> = CustomValidatorOptionsType &
+  SchemaParserOptions<S>;
 
 /** The options a precompiled validator is constructed with, all optional */
 export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {

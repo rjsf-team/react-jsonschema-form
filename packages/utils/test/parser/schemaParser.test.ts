@@ -280,10 +280,12 @@ describe('schemaParser()', () => {
       properties: { pick: { oneOf: [{ $ref: '#/definitions/bare' }, { type: 'string' }] } },
     };
     const schemaMap = schemaParser(rootSchema);
-    // With no `properties` to augment, the option is validated as it stands, so its own `$id` does name it; the variant
-    // scored with `additionalProperties` relaxed is a schema of its own, keyed by an `$id` derived from that one so
-    // that a relative `$ref` inside it still resolves against the same base
-    expect(schemaMap.bare).toEqual(expect.objectContaining({ additionalProperties: false }));
+    // An option with no `properties` to augment is validated as it stands, which for `MultiSchemaField` is the
+    // retrieved form rather than the declared one, so it is keyed by an `$id` derived from its own content too. The
+    // derived `$id` keeps the declared one as its base so that a relative `$ref` inside it resolves the same way
+    expect(schemaMap.bare).toBeUndefined();
+    const strict = Object.entries(schemaMap).filter(([, schema]) => schema.additionalProperties === false);
+    expect(strict).toEqual([[expect.stringMatching(/^bare\?rjsf=.+/), expect.objectContaining({ type: 'object' })]]);
     const relaxed = Object.entries(schemaMap).filter(([, schema]) => schema.additionalProperties === true);
     expect(relaxed).toEqual([[expect.stringMatching(/^bare\?rjsf=.+/), expect.objectContaining({ type: 'object' })]]);
   });
@@ -414,6 +416,26 @@ describe('schemaParser()', () => {
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'a' }));
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
     });
+    it('parses the entries of an allOf only reached through a condition or a dependency', () => {
+      const identityMergeAllOf = (schema: RJSFSchema) => schema;
+      const unmerged: RJSFSchema = { type: 'object', allOf: [{ properties: { choice } }] };
+      // Resolution merges an `allOf` wherever it finds one, so the entries of a `then` branch's or a dependency's are
+      // reached on what it returns rather than on the schema the parse was handed
+      const viaCondition: RJSFSchema = {
+        type: 'object',
+        properties: { u: { if: { required: ['zz'] }, then: unmerged, else: unmerged } },
+      };
+      const viaDependency: RJSFSchema = {
+        type: 'object',
+        properties: { t: { type: 'string' } },
+        dependencies: { t: unmerged },
+      };
+      for (const rootSchema of [viaCondition, viaDependency]) {
+        const schemas = Object.values(schemaParser(rootSchema, { customMergeAllOf: identityMergeAllOf }));
+        expect(schemas).toContainEqual(expect.objectContaining({ const: 'a' }));
+        expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
+      }
+    });
     it('parses the allOf with it dropped when it throws, as the form does', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
@@ -429,5 +451,86 @@ describe('schemaParser()', () => {
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'k1' }));
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
     });
+  });
+  it('keys an $id option by its retrieved content, which is what MultiSchemaField scores', () => {
+    // An option with no `properties` to augment is scored as it stands. Retrieval changes these two -- one merges its
+    // `allOf`, the other picks an `if` branch -- so the declared and the retrieved form are different schemas that
+    // the option's own `$id` would name as one
+    const viaAllOf: RJSFSchema = {
+      type: 'object',
+      properties: { v: { oneOf: [{ $id: 'str', allOf: [{ type: 'string' }, { minLength: 1 }] }, { type: 'number' }] } },
+    };
+    const viaCondition: RJSFSchema = {
+      type: 'object',
+      properties: {
+        v: {
+          oneOf: [
+            { $id: 'str', type: 'string', if: { minLength: 3 }, then: { maxLength: 9 }, else: { pattern: 'a' } },
+            { type: 'number' },
+          ],
+        },
+      },
+    };
+    for (const rootSchema of [viaAllOf, viaCondition]) {
+      const keys = Object.keys(schemaParser(rootSchema)).filter((key) => key.startsWith('str'));
+      expect(keys.length).toBeGreaterThan(1);
+      expect(keys).not.toContain('str');
+    }
+  });
+  it('parses a recursive $ref under a key its patternProperties match', () => {
+    // `child` matches `^c`, so the merge of the two resolves the `$ref` back to `node`, which has both again
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        node: {
+          type: 'object',
+          properties: { child: { $ref: '#/definitions/node' } },
+          patternProperties: { '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }] } } } },
+        },
+      },
+      $ref: '#/definitions/node',
+    };
+    const schemas = Object.values(schemaParser(rootSchema));
+    expect(schemas).toContainEqual(expect.objectContaining({ const: 'p' }));
+  });
+  it('parses an option with its dependency left unapplied, as a form scores it before the key is filled in', () => {
+    const rootSchema: RJSFSchema = {
+      oneOf: [
+        {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          dependencies: { a: { properties: { c: { type: 'number' } } } },
+        },
+        { type: 'object', properties: { d: { type: 'string' } } },
+      ],
+    };
+    // `MultiSchemaField` retrieves each option with the real form data, so data without `a` scores the first option
+    // with its `dependencies` dropped and nothing merged in -- neither the declared option, which still carries the
+    // `dependencies`, nor the applied one, which carries `c`
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id, ...schema }) => schema);
+    expect(schemas).toContainEqual({
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      anyOf: [{ required: ['a'] }],
+    });
+  });
+  it("parses the options of a dependency's oneOf, which omitExtraData() scores", () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { pet: { type: 'string', enum: ['No', 'Yes'] } },
+      dependencies: {
+        pet: {
+          oneOf: [
+            { properties: { pet: { enum: ['No'] } } },
+            { properties: { pet: { enum: ['Yes'] }, age: { type: 'number' } }, required: ['age'] },
+          ],
+        },
+      },
+    };
+    // Resolving a dependency only validates the conditions `withExactlyOneSubschema()` builds out of its `oneOf`,
+    // where `omitExtraData()` scores the options themselves, augmented with an `anyOf` of their required keys
+    const schemas = Object.values(schemaParser(rootSchema));
+    expect(schemas).toContainEqual(
+      expect.objectContaining({ properties: { pet: { enum: ['No'] } }, anyOf: [{ required: ['pet'] }] }),
+    );
   });
 });

@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -136,9 +136,7 @@ export default class ATAValidator<
     let errors: ValidationError[] | undefined;
 
     try {
-      // An empty `$id` names nothing, so the schema is keyed by its hash instead, as in `isValid()`: the two share
-      // the cache `getOrBuild()` keeps, where schemas carrying one would take turns evicting each other
-      const id = schema[ID_KEY] || hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(ATAValidator.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -230,9 +228,7 @@ export default class ATAValidator<
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      // An empty `$id` names nothing, so the schema is keyed by its hash instead; two different schemas that both
-      // carry one would otherwise take turns evicting each other from the cache that `getOrBuild()` keeps
-      id = schemaWithIdRefPrefix[ID_KEY] || hashForSchema(schemaWithIdRefPrefix);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {

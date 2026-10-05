@@ -1,6 +1,6 @@
 import { ID_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import hashForSchema from '../hashForSchema.ts';
+import { schemaKey } from '../hashForSchema.ts';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -42,7 +42,7 @@ export default class ParserValidator<
    */
   constructor(rootSchema: S) {
     this.rootSchema = rootSchema;
-    this.addSchema(rootSchema, hashForSchema<S>(rootSchema));
+    this.addSchema(rootSchema);
   }
 
   /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
@@ -51,17 +51,13 @@ export default class ParserValidator<
     this.schemaMap = {};
   }
 
-  /** Adds the given `schema` to the `schemaMap` keyed by the `hash` or `ID_KEY` if present on the `schema`. If the
-   * schema does not have an `ID_KEY`, then the `hash` will be added as the `ID_KEY` to allow the schema to be
-   * associated with it's `hash` for future use (by a schema compiler).
+  /** Adds the given `schema` to the `schemaMap` under its `schemaKey()`, the same key a validator looks its compiled
+   * function up by, and carries that key on the schema as its `ID_KEY` so a schema compiler can associate the two.
    *
    * @param schema - The schema which is to be added to the map
-   * @param hash - The hash value at which to map the schema
    */
-  addSchema(schema: S, hash: string) {
-    // An empty `$id` names nothing, and a validator looks a schema up by `schema[ID_KEY] || hashForSchema(schema)`, so
-    // one is mapped under its hash here too or the lookup finds nothing compiled
-    const key = schema[ID_KEY] || hash;
+  addSchema(schema: S) {
+    const key = schemaKey<S>(schema);
     const identifiedSchema = { ...schema, [ID_KEY]: key };
     const existing = this.schemaMap[key];
     if (!existing) {
@@ -95,7 +91,7 @@ export default class ParserValidator<
     if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
-    this.addSchema(schema, hashForSchema<S>(schema));
+    this.addSchema(schema);
 
     return false;
   }

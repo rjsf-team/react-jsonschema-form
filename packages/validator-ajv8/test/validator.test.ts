@@ -248,6 +248,10 @@ describe('AJV8Validator', () => {
       });
     });
     describe('scoring an option whose $id is the base of a relative $ref', () => {
+      const pickOptions: RJSFSchema[] = [
+        { type: 'object', properties: { other: { type: 'number' } }, required: ['other'] },
+        { $ref: '#/definitions/a' },
+      ];
       const rootSchema: RJSFSchema = {
         definitions: {
           b: { $id: 'http://example.com/b.json', type: 'string', minLength: 3 },
@@ -258,19 +262,11 @@ describe('AJV8Validator', () => {
           },
         },
         type: 'object',
-        properties: {
-          pick: {
-            oneOf: [
-              { type: 'object', properties: { other: { type: 'number' } }, required: ['other'] },
-              { $ref: '#/definitions/a' },
-            ],
-          },
-        },
+        properties: { pick: { oneOf: pickOptions } },
       };
 
       it('resolves the $ref against the option it augments, which the derived $id keeps as its base', () => {
-        const options = (rootSchema.properties!.pick as RJSFSchema).oneOf as RJSFSchema[];
-        const retrieved = options.map((option) => retrieveSchema({ validator }, option, rootSchema, {}));
+        const retrieved = pickOptions.map((option) => retrieveSchema({ validator }, option, rootSchema, {}));
 
         expect(getFirstMatchingOption({ validator }, { x: 'ab' }, retrieved, rootSchema)).toBe(1);
       });

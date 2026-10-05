@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, JUNK_OPTION_ID, retrieveSchema } from '@rjsf/utils';
+import { deepEquals, ID_KEY, JUNK_OPTION_ID, retrieveSchema, schemaKey } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -92,7 +92,7 @@ export default class AJV8PrecompiledValidator<
    * @returns - The precompiled validator function associated with this schema
    */
   getValidator(schema: S) {
-    const key = schema[ID_KEY] || hashForSchema(schema);
+    const key = schemaKey(schema);
     const validator = this.validateFns[key];
     if (!validator) {
       throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);

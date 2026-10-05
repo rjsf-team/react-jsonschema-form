@@ -316,6 +316,58 @@ exports[`schemaParser() > parses schema dependencies with one of and refs proper
     },
     "type": "object",
   },
+  "12882445": {
+    "$id": "12882445",
+    "anyOf": [
+      {
+        "required": [
+          "a",
+        ],
+      },
+      {
+        "required": [
+          "b",
+        ],
+      },
+    ],
+    "properties": {
+      "a": {
+        "enum": [
+          "bool",
+        ],
+      },
+      "b": {
+        "type": "boolean",
+      },
+    },
+    Symbol(__rjsf_ref): "#/definitions/needsB",
+  },
+  "63cb0c42": {
+    "$id": "63cb0c42",
+    "anyOf": [
+      {
+        "required": [
+          "a",
+        ],
+      },
+      {
+        "required": [
+          "b",
+        ],
+      },
+    ],
+    "properties": {
+      "a": {
+        "enum": [
+          "int",
+        ],
+      },
+      "b": {
+        "type": "integer",
+      },
+    },
+    Symbol(__rjsf_ref): "#/definitions/needsA",
+  },
   "71dd1668": {
     "$id": "71dd1668",
     "properties": {
@@ -820,6 +872,30 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
     },
     "type": "object",
   },
+  "-45ced7c": {
+    "$id": "-45ced7c",
+    "anyOf": [
+      {
+        "required": [
+          "permitted_extension",
+        ],
+      },
+      {
+        "required": [
+          "update_absences",
+        ],
+      },
+    ],
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "NON_MEDICAL_ONLY",
+      },
+    },
+  },
   "-7a6dd81b": {
     "$id": "-7a6dd81b",
     "properties": {
@@ -834,6 +910,36 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
     "const": "BOTH",
     "title": "Both",
   },
+  "21f592dd": {
+    "$id": "21f592dd",
+    "anyOf": [
+      {
+        "required": [
+          "employee_accounts",
+        ],
+      },
+      {
+        "required": [
+          "update_absences",
+        ],
+      },
+    ],
+    "properties": {
+      "employee_accounts": {
+        "const": true,
+      },
+      "update_absences": {
+        "oneOf": [
+          {
+            "const": "BOTH",
+            "title": "Both",
+          },
+        ],
+        "title": "Update Absences",
+        "type": "string",
+      },
+    },
+  },
   "3a28e528": {
     "$id": "3a28e528",
     "properties": {
@@ -843,6 +949,30 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
     },
     "type": "object",
   },
+  "528691f9": {
+    "$id": "528691f9",
+    "anyOf": [
+      {
+        "required": [
+          "permitted_extension",
+        ],
+      },
+      {
+        "required": [
+          "update_absences",
+        ],
+      },
+    ],
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "BOTH",
+      },
+    },
+  },
   "934b22c": {
     "$id": "934b22c",
     "properties": {
@@ -851,6 +981,30 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
       },
     },
     "type": "object",
+  },
+  "ed1d5b2": {
+    "$id": "ed1d5b2",
+    "anyOf": [
+      {
+        "required": [
+          "permitted_extension",
+        ],
+      },
+      {
+        "required": [
+          "update_absences",
+        ],
+      },
+    ],
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "MEDICAL_ONLY",
+      },
+    },
   },
 }
 `;

@@ -64,7 +64,7 @@ import getWidget, { resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
-import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
+import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import {
@@ -280,6 +280,7 @@ export {
   resolveUiSchema,
   resolveWidget,
   schemaHasNestedConditional,
+  schemaKey,
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,
