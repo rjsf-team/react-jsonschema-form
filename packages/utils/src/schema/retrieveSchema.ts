@@ -90,7 +90,8 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
@@ -105,7 +106,12 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   formData?: T,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   preserveDependencies = false,
+  branchRecurseList?: string[],
 ): S[] {
+  // `recurseList` may carry refs expanded by the previous fixpoint pass; the raw then/else branches are resolved
+  // from the pre-carry list (a ref is only a cycle on the path expanding it), while the merged result is re-walked
+  // with the carried list so already-expanded refs keep their fixpoint depth.
+  const branchList = branchRecurseList ?? recurseList;
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
   const conditionValue = validator.isValid(expression as S, formData || ({} as T), rootSchema);
@@ -121,7 +127,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          [...recurseList],
+          branchList,
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -137,7 +143,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          [...recurseList],
+          branchList,
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -155,7 +161,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          [...recurseList],
+          branchList,
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
@@ -173,7 +179,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      [...recurseList],
+      recurseList,
       experimental_customMergeAllOf,
       undefined,
       preserveDependencies,
@@ -237,11 +243,14 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
+ * @param [branchRecurseList] - Optional pre-carry list used for dependency/allOf branch resolutions; defaults to
+ *          `recurseList`. Branches must not see the fixpoint carry: a ref is only a cycle on the path expanding it.
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
 export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -254,7 +263,9 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
+  branchRecurseList?: string[],
 ): S[] {
+  const branchList = branchRecurseList ?? recurseList;
   const updatedSchemas = resolveReference<T, S, F>(
     validator,
     schema,
@@ -277,10 +288,12 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       schema,
       rootSchema,
       expandAllBranches,
-      recurseList,
+      branchList,
       formData,
       experimental_customMergeAllOf,
     );
+    // The merged result is re-walked with the carried list so refs already expanded on this path keep their
+    // fixpoint depth instead of expanding one level deeper.
     return resolvedSchemas.flatMap((s) =>
       retrieveSchemaInternal<T, S, F>(
         validator,
@@ -301,7 +314,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         formData,
         expandAllBranches,
-        [...recurseList],
+        branchList,
         experimental_customMergeAllOf,
         undefined,
         preserveDependencies,
@@ -326,7 +339,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
@@ -344,7 +358,23 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
 ): S[] {
-  const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList, undefined, resolveAnyOfOrOneOfRefs);
+  // Refs expanded during this walk are carried into the follow-up pass so that re-walking an already-expanded
+  // schema reaches a fixpoint instead of expanding one level deeper on every pass. This carry is what guarantees
+  // termination of the resolveReference -> retrieveSchemaInternal loop on recursive schemas; removing it brings
+  // back the unbounded expansion (stack overflow) on schemas such as
+  // `{ properties: { tree: { $ref: '#/definitions/node' } } }` where `node.child` refs `node`.
+  const expansionCache = new Map<string, S>();
+  const expandedRefs: string[] = [];
+  const updatedSchema = resolveAllReferences<S>(
+    schema,
+    rootSchema,
+    recurseList,
+    undefined,
+    resolveAnyOfOrOneOfRefs,
+    false,
+    expansionCache,
+    expandedRefs,
+  );
   if (updatedSchema !== schema) {
     // Only call this if the schema was actually changed by the `resolveAllReferences()` function
     return retrieveSchemaInternal<T, S, F>(
@@ -353,10 +383,11 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList,
+      [...recurseList, ...expandedRefs],
       experimental_customMergeAllOf,
       resolveAnyOfOrOneOfRefs,
       preserveDependencies,
+      recurseList,
     );
   }
   return [schema];
@@ -366,7 +397,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
  *
  * @param schema - The schema for which resolving all references is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param recurseList - List of $refs already resolved to prevent recursion
+ * @param recurseList - List of $refs already expanded on the current resolution path, used to detect cycles
  * @param [baseURI] - The base URI to be used for resolving relative references
  * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
  * @param [markCycleOnDetection=false] - When true and a recursive $ref is detected, the returned schema is tagged
@@ -382,6 +413,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   baseURI?: string,
   resolveAnyOfOrOneOfRefs?: boolean,
   markCycleOnDetection = false,
+  expansionCache?: Map<string, S>,
+  expandedRefs?: string[],
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -399,6 +432,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     if (pathList.includes($ref!)) {
       return markCycleOnDetection ? ({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } as S) : resolvedSchema;
     }
+    // A ref already expanded elsewhere in this walk is reused as-is, so a DAG of shared refs expands once rather
+    // than once per use. The cached subtree is not walked again: its inner refs were already processed.
+    const cacheKey = `${baseURI ?? ''}|${$ref}`;
+    const cached = expansionCache?.get(cacheKey);
+    if (cached) {
+      return { ...cached, ...localSchema } as S;
+    }
     pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.
     const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
@@ -406,13 +446,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     if (ID_KEY in resolvedSchema) {
       currentBaseURI = resolvedSchema[ID_KEY];
     }
-  } else {
-    // This schema may be the result of a previous expansion. Keep its source ref on the path so that a nested $ref
-    // back to it is still detected as a cycle when the schema is walked again, without re-expanding it.
-    const sourceRef = (resolvedSchema as Record<PropertyKey, unknown>)[RJSF_REF_KEY];
-    if (typeof sourceRef === 'string') {
-      pathList = [...pathList, sourceRef];
-    }
+    expandedRefs?.push($ref!);
   }
 
   if (PROPERTIES_KEY in resolvedSchema) {
@@ -427,6 +461,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         currentBaseURI,
         resolveAnyOfOrOneOfRefs,
         !resolveAnyOfOrOneOfRefs,
+        expansionCache,
+        expandedRefs,
       );
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -446,6 +482,9 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         pathList,
         currentBaseURI,
         resolveAnyOfOrOneOfRefs,
+        false,
+        expansionCache,
+        expandedRefs,
       ),
     };
   }
@@ -461,15 +500,38 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       schemas = resolvedSchema[ONE_OF_KEY] as S[];
     }
     if (key && schemas) {
+      // Options are resolved in order, and refs expanded by one option stay on the path for the options after it:
+      // an option that reuses a ref an earlier option already expanded collapses to the unexpanded skeleton. This
+      // keeps the materialized result linear on DAGs of shared refs (two identical `$ref` options do not each
+      // materialize the whole subgraph) while the path scoping above still prevents the expansion from leaking
+      // into sibling subtrees. The expansion cache keeps the first expansion of each ref O(1) per use.
+      let optionsPath = pathList;
       resolvedSchema = {
         ...resolvedSchema,
-        [key]: schemas.map((s: S) =>
-          resolveAllReferences(s, rootSchema, pathList, currentBaseURI, resolveAnyOfOrOneOfRefs),
-        ),
+        [key]: schemas.map((s: S) => {
+          const expandedBefore = expandedRefs?.length ?? 0;
+          const option = resolveAllReferences(
+            s,
+            rootSchema,
+            optionsPath,
+            currentBaseURI,
+            resolveAnyOfOrOneOfRefs,
+            false,
+            expansionCache,
+            expandedRefs,
+          );
+          if (expandedRefs && expandedRefs.length > expandedBefore) {
+            optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];
+          }
+          return option;
+        }),
       };
     }
   }
 
+  if (REF_KEY in schema && expansionCache) {
+    expansionCache.set(`${baseURI ?? ''}|${String((schema as Record<string, unknown>)[REF_KEY])}`, resolvedSchema);
+  }
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
@@ -601,10 +663,15 @@ export function retrieveSchemaInternal<
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   resolveAnyOfOrOneOfRefs?: boolean,
   preserveDependencies = false,
+  branchRecurseList?: string[],
 ): S[] {
   if (!isObject(schema)) {
     return [{} as S];
   }
+  // `recurseList` may carry refs expanded by the previous pass of the resolveReference fixpoint loop so that the
+  // loop terminates. That carry must NOT flow into dependency/condition branch resolutions: a ref is only a cycle
+  // on the path that is actually expanding it, so branches start from the pre-carry list.
+  const branchList = branchRecurseList ?? recurseList;
   const resolvedSchemas = resolveSchema<T, S, F>(
     validator,
     schema,
@@ -615,6 +682,7 @@ export function retrieveSchemaInternal<
     experimental_customMergeAllOf,
     resolveAnyOfOrOneOfRefs,
     preserveDependencies,
+    branchList,
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -628,6 +696,7 @@ export function retrieveSchemaInternal<
         rawFormData as T,
         experimental_customMergeAllOf,
         preserveDependencies,
+        branchList,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
@@ -772,7 +841,8 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with their dependencies resolved
@@ -802,7 +872,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       resolvedSchema,
       rootSchema,
       expandAllBranches,
-      [...recurseList],
+      recurseList,
       formData,
       experimental_customMergeAllOf,
     ),
@@ -818,7 +888,8 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The schema with the `dependencies` resolved into it
@@ -854,7 +925,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           dependencyKey,
           dependencyValue as S,
           expandAllBranches,
-          [...recurseList],
+          recurseList,
           formData,
           experimental_customMergeAllOf,
         );
@@ -866,7 +937,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
           schema,
           rootSchema,
           expandAllBranches,
-          [...recurseList],
+          recurseList,
           formData,
           experimental_customMergeAllOf,
         ),
@@ -905,7 +976,8 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  * @param dependencyValue - The potentially dependent schema
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData]- The current formData to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The list of schemas with the dependent schema resolved into them
@@ -927,7 +999,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     rootSchema,
     formData,
     expandAllBranches,
-    [...recurseList],
+    recurseList,
     experimental_customMergeAllOf,
   );
   return dependentSchemas.flatMap((dependent) => {
@@ -942,15 +1014,9 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
       if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
         return [subschema as S];
       }
-      // Each oneOf branch gets its own copy so refs resolved in one branch are not treated as cycles in a sibling
-      return resolveReference<T, S, F>(
-        validator,
-        subschema as S,
-        rootSchema,
-        expandAllBranches,
-        [...recurseList],
-        formData,
-      );
+      // oneOf branches share the caller's path: nothing here mutates it, and refs expanded by a branch are recorded
+      // on the caller's carry, never on the path.
+      return resolveReference<T, S, F>(validator, subschema as S, rootSchema, expandAllBranches, recurseList, formData);
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
@@ -980,7 +1046,8 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param oneOf - The list of schemas representing the oneOf options
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of recursive references already processed
+ * @param recurseList - The list of refs already expanded on the current resolution path; callers of the
+ *          resolveReference fixpoint loop may also carry refs expanded by the previous pass
  * @param [formData] - The current formData to assist retrieving a schema
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
@@ -1032,7 +1099,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      [...recurseList],
+      recurseList,
       experimental_customMergeAllOf,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);

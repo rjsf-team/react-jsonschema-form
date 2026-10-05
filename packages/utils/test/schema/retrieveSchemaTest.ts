@@ -15,8 +15,10 @@ import {
   getAllPermutationsOfXxxOf,
   getMatchingPatternProperties,
   relaxOptionsForScoring,
+  resolveAllReferences,
   resolveAnyOrOneOfSchemas,
   resolveCondition,
+  resolveSchema,
   retrieveSchemaInternal,
   stubExistingAdditionalProperties,
   withDependentProperties,
@@ -792,7 +794,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             };
             const results = retrieveSchemaInternal(testValidator, schema, schema, { protocol: 'FTPS' }, true);
-            expect(results.length).toBeGreaterThan(0);
+            expect(results).toHaveLength(2);
             results.forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
           });
           it('terminates on a recursive definition under an allOf root', () => {
@@ -2921,7 +2923,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         });
       });
-      it('resolves a shared $ref in every anyOf option', () => {
+      it('resolves a shared $ref in the first anyOf option using it and keeps it as a ref in later options', () => {
+        // An option that reuses a ref an earlier option already expanded keeps the plain `$ref`, matching the
+        // behavior before the path-scoped cycle fix. Materializing the ref in every option makes the result grow
+        // exponentially on DAGs of shared refs; the chosen branch is resolved again when it renders, so the field
+        // still expands in the form.
         const host: RJSFSchema = { type: 'string', title: 'Host' };
         const schema: RJSFSchema = {
           definitions: { host },
@@ -2934,8 +2940,82 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const [result] = retrieveSchemaInternal(testValidator, schema, schema, {}, false, [], undefined, true);
         expect(result.anyOf).toEqual([
           { properties: { x: hostResolved } },
-          { properties: { y: hostResolved } },
+          { properties: { y: { $ref: '#/definitions/host' } } },
         ]);
+      });
+      it('reuses the walk-local expansion when sibling properties share a $ref', () => {
+        const host: RJSFSchema = { type: 'string', title: 'Host' };
+        const schema: RJSFSchema = {
+          definitions: { host },
+          type: 'object',
+          properties: { a: { $ref: '#/definitions/host' }, b: { $ref: '#/definitions/host' } },
+        };
+        const hostResolved = { type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' };
+        const result = retrieveSchema(testValidator, schema, schema);
+        expect(result.properties).toEqual({ a: hostResolved, b: hostResolved });
+      });
+      it('resolves references without the optional cache and carry arguments', () => {
+        const host: RJSFSchema = { type: 'string', title: 'Host' };
+        const rootSchema: RJSFSchema = {
+          definitions: { host },
+          anyOf: [
+            { properties: { x: { $ref: '#/definitions/host' } } },
+            { properties: { y: { $ref: '#/definitions/host' } } },
+          ],
+        };
+        // Without the walk-local carry there is nothing to collapse later options against, so both expand.
+        const result = resolveAllReferences(rootSchema, rootSchema, [], undefined, true);
+        expect(result.anyOf).toEqual([
+          { properties: { x: { type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' } } },
+          { properties: { y: { type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' } } },
+        ]);
+      });
+      it('resolveSchema resolves references without the optional branch list argument', () => {
+        const host: RJSFSchema = { type: 'string', title: 'Host' };
+        const schema: RJSFSchema = { $ref: '#/definitions/host' };
+        const rootSchema: RJSFSchema = { definitions: { host } };
+        const [result] = resolveSchema(testValidator, schema, rootSchema, false, []);
+        expect(result).toEqual({ type: 'string', title: 'Host', [RJSF_REF_KEY]: '#/definitions/host' });
+      });
+      it('fails fast rather than overflowing when a recursive schema stops terminating', () => {
+        const node: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+        };
+        const schema: RJSFSchema = {
+          definitions: { node },
+          type: 'object',
+          properties: { tree: { $ref: '#/definitions/node' } },
+        };
+        const result = retrieveSchema(testValidator, schema, schema);
+        expect(result.properties!.tree).toEqual({
+          type: 'object',
+          properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true } },
+          [RJSF_REF_KEY]: '#/definitions/node',
+        });
+      }, 500);
+      it('keeps the materialized schema linear on a DAG of shared anyOf refs', () => {
+        const definitions: Record<string, RJSFSchema> = {};
+        for (let i = 0; i < 14; i++) {
+          definitions[`L${i}`] = {
+            type: 'array',
+            items: { anyOf: [{ $ref: `#/definitions/L${i + 1}` }, { $ref: `#/definitions/L${i + 1}` }] },
+          };
+        }
+        definitions.L14 = { type: 'string' };
+        const rootSchema: RJSFSchema = { type: 'object', definitions };
+        const [result] = retrieveSchemaInternal(
+          testValidator,
+          { $ref: '#/definitions/L0' } as RJSFSchema,
+          rootSchema,
+          {},
+          false,
+          [],
+          undefined,
+          true,
+        );
+        // Expanding both identical options per level would produce ~2^14 copies of the leaf.
+        expect(JSON.stringify(result).length).toBeLessThan(20000);
       });
     });
   });
