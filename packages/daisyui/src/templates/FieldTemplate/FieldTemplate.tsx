@@ -6,7 +6,7 @@ import type {
   RegistryWidgetsType,
   Widget,
 } from '@rjsf/utils';
-import { fieldLabelId, getSchemaType, getTemplates, getUiOptions, getWidget } from '@rjsf/utils';
+import { fieldLabelId, getTemplates, getUiOptions, getWidget, getWidgetType } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -33,7 +33,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   registeredWidgets: RegistryWidgetsType<T, S, F>,
 ) {
   const isAlias = typeof widget === 'string' && !(widget in registeredWidgets);
-  if (!widget || (isAlias && getSchemaType(schema) !== 'boolean')) {
+  if (!widget || (isAlias && getWidgetType<S>(schema, widget) !== 'boolean')) {
     return false;
   }
   let resolved: Widget<T, S, F>;

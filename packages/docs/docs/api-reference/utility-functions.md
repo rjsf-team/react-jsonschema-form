@@ -989,7 +989,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
-- type is an array: Returns its first type other than 'null', since 'null' is the one type that holds no value to edit; an array listing only 'null' returns 'null'. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all
+- type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other than 'null', and 'null' for an array listing nothing else. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all, or [getSchemaTypeForValue()](#getschematypeforvalue) for the one a given value has
 
 #### Parameters
 
@@ -997,7 +997,23 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 
 #### Returns
 
-- string | string[] | undefined: The type of the schema
+- string | undefined: The type of the schema
+
+### getSchemaTypeForValue()
+
+Gets the type of a given `schema` that `value` has.
+A schema whose `type` is a list allows a value of any type it lists, not just the one `getSchemaType()` resolves it to, so a value of another listed type is read as its own type: a string held by a `['null', 'object', 'string']` is a string, not an object to look for properties in.
+A number held by a list naming `integer` but not `number` is that `integer`.
+Any other value, an `undefined` one included, and a schema naming a single type, gets what `getSchemaType()` returns.
+
+#### Parameters
+
+- schema: S - The schema describing `value`
+- [value]: unknown - The value whose type is wanted
+
+#### Returns
+
+- string | undefined: The listed type `value` has, otherwise the type of the schema
 
 ### getStaticItemsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1123,7 +1139,8 @@ Given a schema representing a field to render and either the name or actual `Wid
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
 schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
-object constants, or one whose `type` list starts with `null`, renders with. If no widget component can be found an `Error` is thrown.
+object constants, or one whose `type` is `null`, renders with. A schema whose `type` is a list looks the name up by the type
+[getWidgetType()](#getwidgettype) picks, so a `textarea` on a `['null', 'number', 'string']` is the `string` one. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
@@ -1138,6 +1155,19 @@ object constants, or one whose `type` list starts with `null`, renders with. If 
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since the form data `getDefaultFormState()` fills in for it is of that type. `getWidget()` looks a widget alias up by the type it returns, and `SchemaField` and `getDisplayLabel()` follow the field of that type.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- widget: string - The alias or registered name of the widget
+
+#### Returns
+
+- string | undefined: The type whose field renders the widget, or `undefined` when no type the schema allows has it
 
 ### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

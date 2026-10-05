@@ -14,7 +14,7 @@ import type {
 } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
@@ -142,7 +142,7 @@ describe('SchemaField', () => {
       });
 
       expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
-      await user.type(node.querySelector('#root_val')!, 'hi');
+      await user.type(screen.getByRole('textbox'), 'hi');
 
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 'hi' } }), 'root_val');
     });
@@ -156,10 +156,78 @@ describe('SchemaField', () => {
       });
 
       expect(node.querySelectorAll('input')).toHaveLength(1);
-      await user.selectOptions(node.querySelector('select')!, 'B');
+      await user.selectOptions(screen.getByRole('combobox'), 'B');
 
       expect(node.querySelectorAll('input')).toHaveLength(1);
       expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+    });
+
+    it('should keep the text typed into a widget only the string type has, rather than convert it', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+      });
+
+      await user.type(screen.getByRole('textbox'), '007');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+    });
+
+    it('should render the string field for a widget named by its registered name', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'TextareaWidget' } },
+      });
+      const textarea = screen.getByRole('textbox');
+      expect(textarea.tagName).toBe('TEXTAREA');
+
+      await user.type(textarea, '007');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+    });
+
+    it('should keep the text typed into the widget a string format picks by default', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'integer', 'string'], format: 'email' } } },
+      });
+      const input = screen.getByRole('textbox');
+      expect(input).toHaveAttribute('type', 'email');
+
+      await user.type(input, '007');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+    });
+
+    it('should still convert what is typed into a number for a number-first list with no string widget', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'], format: 'uuid' } } },
+      });
+
+      await user.type(screen.getByRole('textbox'), '7');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7 } }), 'root_val');
+    });
+
+    it('should save a number from a widget only the number type has on a string-first list', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
+        uiSchema: { val: { 'ui:widget': 'updown' } },
+      });
+
+      await user.type(screen.getByRole('spinbutton'), '7');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7 } }), 'root_val');
+    });
+
+    it('should save a boolean from a widget only the boolean type has on a number-first list', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'boolean'] } } },
+        uiSchema: { val: { 'ui:widget': 'checkbox' } },
+      });
+
+      await user.click(screen.getByRole('checkbox'));
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: true } }), 'root_val');
     });
   });
 

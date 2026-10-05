@@ -233,6 +233,13 @@ describe('getInputProps', () => {
       pattern: NUMBER_PATTERN,
     });
   });
+  it('treats a number listed beside a type name JSON Schema does not define like a number', () => {
+    expect(getInputProps({ type: ['foo', 'number'] } as RJSFSchema)).toEqual({
+      type: 'text',
+      inputMode: 'decimal',
+      pattern: NUMBER_PATTERN,
+    });
+  });
   it('treats a nullable integer like an integer, since it renders through the same NumberField', () => {
     const schema: RJSFSchema = {
       type: ['integer', 'null'],

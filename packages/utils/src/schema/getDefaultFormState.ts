@@ -21,6 +21,7 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
+import { getFieldTypeForWidget } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
@@ -889,7 +890,11 @@ export function getDefaultBasedOnSchemaType<
     }
     return computeDefaultsProps.rawFormData;
   }
-  switch (getSchemaType<S>(rawSchema)) {
+  // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
+  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
+  const { uiSchema } = computeDefaultsProps;
+  const widget = uiSchema ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+  switch (getFieldTypeForWidget<S>(rawSchema, widget)) {
     // We need to recurse for object schema inner default values.
     case 'object': {
       return getObjectDefaults(context, rawSchema, computeDefaultsProps, defaults);

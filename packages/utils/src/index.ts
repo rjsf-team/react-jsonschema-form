@@ -50,6 +50,7 @@ import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
+import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
@@ -60,7 +61,7 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { resolveWidget } from './getWidget.tsx';
+import getWidget, { getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
@@ -222,6 +223,7 @@ export {
   getOptionValueFormat,
   getSchemaOwnTypes,
   getSchemaType,
+  getSchemaTypeForValue,
   getByPath,
   getKnownTypes,
   getStaticItemsUiSchema,
@@ -233,6 +235,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getWidgetType,
   getXxxOfKey,
   groupEnumOptions,
   guessType,

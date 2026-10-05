@@ -575,6 +575,50 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual({ agree: false });
         });
+
+        it('sets no false for a type list resolving to boolean whose widget renders another listed type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean', 'string'] } },
+            required: ['agree'],
+          };
+          const uiSchema: UiSchema = { agree: { 'ui:widget': 'textarea' } };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual(
+            {},
+          );
+        });
+
+        it('sets no false for a select over a type list naming boolean first among several non-null types', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] } },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
+        });
+
+        it('sets false for a select over a nullable boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean'], enum: [null, true, false] } },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+            agree: false,
+          });
+        });
+
+        it('sets false for a type list whose checkbox widget renders its boolean type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['number', 'boolean'] } },
+            required: ['agree'],
+          };
+          const uiSchema: UiSchema = { agree: { 'ui:widget': 'checkbox' } };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+            agree: false,
+          });
+        });
       });
 
       describe('required boolean properties and the requiredBooleanDefault flag', () => {

@@ -1,5 +1,6 @@
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getSchemaType from './getSchemaType.ts';
+import getUnionTypes from './getUnionTypes.ts';
 import rangeSpec from './rangeSpec.ts';
 import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types.ts';
 
@@ -62,11 +63,10 @@ export default function getInputProps<
 ): InputPropsType {
   // Resolved rather than read off `schema.type` so that a nullable schema, which `SchemaField` renders through
   // `NumberField` just like a plain one, is treated as the number or integer it is. A union of more than one non-null
-  // type resolves to its first non-null entry, which says nothing about what the others accept, so it keeps the plain
-  // text input it had before
+  // type resolves to just one of them, which says nothing about what the others accept, so such a union gets a
+  // plain text input. A name JSON Schema doesn't define is left out, as `getSchemaType()` passes over it
   const schemaType = getSchemaType(schema);
-  const nonNullTypes = Array.isArray(schema.type) ? schema.type.filter((type) => type !== 'null') : undefined;
-  const isSingleOrNullableType = !nonNullTypes || nonNullTypes.length === 1;
+  const isSingleOrNullableType = getUnionTypes(schema) === undefined;
   const isNumericSchema = isSingleOrNullableType && (schemaType === 'number' || schemaType === 'integer');
   const isNumericText = !options.inputType && !defaultType && plainNativeInput && isNumericSchema;
 

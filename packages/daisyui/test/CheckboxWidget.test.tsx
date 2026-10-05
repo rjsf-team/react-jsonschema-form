@@ -63,6 +63,25 @@ describe('CheckboxWidget', () => {
     });
   });
 
+  // A required boolean starts at `false`, an answer the schema accepts, and so does a type list naming `boolean` whose
+  // checkbox `BooleanField` renders, so neither is marked as still to be filled in
+  test('marks no required checkbox on a type list naming boolean', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: ['number', 'boolean'], title: 'Agree' } },
+        }}
+        uiSchema={{ agree: { 'ui:widget': 'checkbox' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'Agree' })).toBeInTheDocument();
+    expect(screen.queryByText('*')).not.toBeInTheDocument();
+  });
+
   // The description sits above the input rather than inside its label, and the errors below it, so nothing associates
   // either with the control unless the input points at them
   test('is described by its own description, errors and help', () => {

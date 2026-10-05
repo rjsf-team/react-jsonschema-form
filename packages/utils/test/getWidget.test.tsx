@@ -4,7 +4,7 @@ import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getWidget, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import { getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -96,6 +96,54 @@ describe('getWidget()', () => {
   it('should return `SelectWidget` for a null type', () => {
     const registry = { SelectWidget: TestWidget };
     expect(getWidget({ type: 'null', enum: [null] }, 'select', registry)).toBe(TestWidget);
+  });
+
+  it('should return a widget for another type a type list names when the resolved type has no such widget', () => {
+    const registry = { TextareaWidget: TestWidget, UpDownWidget: TestWidget };
+    expect(getWidget({ type: ['null', 'number', 'string'] }, 'textarea', registry)).toBe(TestWidget);
+    expect(getWidget({ type: ['null', 'string', 'number'] }, 'updown', registry)).toBe(TestWidget);
+  });
+
+  it.each(['checkboxes', 'files'])(
+    'should fail for the array widget %s on a type list that resolves to another type',
+    (widget) => {
+      const union: RJSFSchema = { type: ['null', 'string', 'array'], items: { type: 'string' } };
+      expect(() => getWidget(union, widget, { CheckboxesWidget: TestWidget, FileWidget: TestWidget })).toThrow(
+        `No widget '${widget}' for type 'string' in schema: ${JSON.stringify(union)}`,
+      );
+    },
+  );
+
+  it('should fail for a null widget on a type list that resolves to array, which would replace the list', () => {
+    const union: RJSFSchema = { type: ['array', 'null'], items: { enum: ['a', 'b'] }, uniqueItems: true };
+    expect(() => getWidget(union, 'radio', { RadioWidget: TestWidget })).toThrow(
+      `No widget 'radio' for type 'array' in schema: ${JSON.stringify(union)}`,
+    );
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['array', { type: ['array', 'string'], items: { type: 'string' } }],
+    ['object', { type: ['null', 'object', 'string'] }],
+  ])('should fail for the widget of another listed type on a type list that resolves to %s', (type, union) => {
+    expect(() => getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toThrow(
+      `No widget 'textarea' for type '${type}' in schema: ${JSON.stringify(union)}`,
+    );
+  });
+
+  it('should return an array widget for a type list that resolves to array', () => {
+    const union: RJSFSchema = { type: ['null', 'array', 'string'], items: { type: 'string' } };
+    expect(getWidget(union, 'checkboxes', { CheckboxesWidget: TestWidget })).toBe(TestWidget);
+  });
+
+  it.each(['toString', 'constructor'])('should find no type for the widget name %s, which no type registers', (widget) => {
+    expect(getWidgetType({ type: ['null', 'number', 'string'] }, widget)).toBeUndefined();
+  });
+
+  it('should fail if no type a type list names has such a widget', () => {
+    const union: RJSFSchema = { type: ['null', 'number', 'boolean'] };
+    expect(() => getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toThrow(
+      `No widget 'textarea' for type 'number' in schema: ${JSON.stringify(union)}`,
+    );
   });
 
   it('should fail if the object type has no such widget', () => {
@@ -200,6 +248,44 @@ describe('getWidget()', () => {
     expect(() => getWidget(schema, createContext(null).Provider as unknown as Widget)).toThrow(
       `Unsupported widget definition: object in schema: ${schemaStr}`,
     );
+  });
+});
+
+describe('getWidgetType()', () => {
+  it('should return the resolved type when it has the widget', () => {
+    expect(getWidgetType({ type: ['null', 'string', 'number'] }, 'radio')).toBe('string');
+  });
+
+  it.each([
+    ['textarea', ['null', 'number', 'string'], 'string'],
+    ['TextareaWidget', ['null', 'number', 'string'], 'string'],
+    ['updown', ['string', 'number'], 'number'],
+    ['checkbox', ['number', 'boolean'], 'boolean'],
+    ['CheckboxWidget', ['integer', 'boolean'], 'boolean'],
+  ])('should return the listed type that has the widget %s on %j', (widget, type, expected) => {
+    expect(getWidgetType({ type } as RJSFSchema, widget)).toBe(expected);
+  });
+
+  it.each([
+    ['textarea', { type: ['null', 'object', 'array'] }],
+    ['textarea', { type: ['null', 'object', 'string'] }],
+    ['textarea', { type: ['null', 'array', 'string'], items: { type: 'string' } }],
+    ['checkboxes', { type: ['null', 'string', 'array'], items: { type: 'string' } }],
+    ['radio', { type: ['array', 'null'], items: { enum: ['a', 'b'] }, uniqueItems: true }],
+    ['textarea', { type: ['null', 'number', 'boolean'] }],
+    ['MyWidget', { type: ['null', 'number', 'string'] }],
+    ['text', { type: 'foo' }],
+    ['text', {}],
+  ] as [string, RJSFSchema][])(
+    'should return undefined when no type the schema allows has the widget %s: %j',
+    (widget, schema) => {
+      expect(getWidgetType(schema, widget)).toBeUndefined();
+    },
+  );
+
+  it('should treat an array select over whole array constants as a whole-value select', () => {
+    expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'radio')).toBe('array');
+    expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'checkboxes')).toBeUndefined();
   });
 });
 

@@ -14,6 +14,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getSchemaOwnTypes,
+  getSchemaType,
+  getSchemaTypeForValue,
   getTemplates,
   getUiOptions,
   GUESSED_TYPE_FLAG,
@@ -51,7 +53,10 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
  * @param types - The types the selection offers.
  */
 function getDefaultType(types: JSONSchema7TypeName[]): JSONSchema7TypeName {
-  return types.find((aType) => aType !== 'null') ?? types[0];
+  // The rule every other reader of a type list resolves it by, so the selection starts on the field `SchemaField`
+  // renders when no `ui:widget` picks another listed type
+  const type = getSchemaType({ type: types });
+  return types.find((aType) => aType === type) ?? types[0];
 }
 
 /**
@@ -84,23 +89,13 @@ function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeN
 /**
  * Determines which of the `types` the selection starts on, preferring the type the `formData` already has so that
  * existing data is shown by the field that matches it. An integer-only schema takes a number, and data of a type the
- * schema does not allow falls back to the first type offered, as does having no data to go on at all.
+ * schema does not allow falls back to the type the selection defaults to, as does having no data to go on at all.
  * @param formData - The form data being rendered.
  * @param types - The types the selection offers.
  */
 function getInitialType(formData: unknown, types: JSONSchema7TypeName[]): JSONSchema7TypeName {
-  if (formData === undefined) {
-    // Nothing to match, so the schema's own first type wins, which is what the selection defaults to
-    return getDefaultType(types);
-  }
-  const dataType = guessType(formData);
-  if (types.includes(dataType)) {
-    return dataType;
-  }
-  if (dataType === 'number' && types.includes('integer')) {
-    return 'integer';
-  }
-  return getDefaultType(types);
+  const type = getSchemaTypeForValue({ type: types }, formData);
+  return types.find((aType) => aType === type) ?? getDefaultType(types);
 }
 
 /**

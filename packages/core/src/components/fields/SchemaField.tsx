@@ -27,6 +27,7 @@ import {
   getTemplates,
   getUiOptions,
   getUnionTypes,
+  getWidgetType,
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
@@ -78,6 +79,35 @@ const COMPONENT_TYPES: Record<string, string> = {
 function selectTypeForConstants(types: string[]): string {
   const nonNullTypes = types.filter((type) => type !== 'null');
   return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
+}
+
+/** The types whose field renders through `StringField`, which falls back to the widget a `format` names */
+const FORMAT_FIELD_TYPES = ['string', 'number', 'integer'];
+
+/** Picks the field type for a `type` list whose resolved type has no widget by the name the field renders with, when
+ * another type the list names does: a `textarea` on a `['null', 'number', 'string']` is rendered by `StringField`, an
+ * `updown` on a `['string', 'number']` by `NumberField`, and a `checkbox` on a `['number', 'boolean']` by
+ * `BooleanField`. The resolved type's field would otherwise cast what the widget emits to its own type, saving the
+ * `'007'` typed into a `textarea` as `7`. A list resolving to `object` or `array` keeps its own field, as
+ * `getWidgetType()` decides.
+ *
+ * @param schema - The schema being rendered
+ * @param type - The type `getSchemaType()` resolves the schema to
+ * @param widget - The `ui:widget` for the field, if any
+ * @param isUnion - Whether `getUnionTypes()` finds several non-null types in the schema's `type` list
+ * @returns - The type whose field renders the widget, otherwise `type`
+ */
+function typeForWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  type: string,
+  widget: UIOptionsType<T, S, F>['widget'],
+  isUnion: boolean,
+): string {
+  if (!isUnion) {
+    return type;
+  }
+  const widgetName = widget ?? (FORMAT_FIELD_TYPES.includes(type) ? schema.format : undefined);
+  return (typeof widgetName === 'string' ? getWidgetType<S>(schema, widgetName) : undefined) ?? type;
 }
 
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
@@ -281,14 +311,16 @@ function getFieldComponent<
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
 
-  const schemaType = getSchemaType(schema);
-  let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
+  const isUnion = getUnionTypes<S>(schema) !== undefined;
+  let type = getSchemaType(schema) ?? '';
   // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
   // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
   // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
   // the way NumberField turns `true` into `1`
   if (isSelectSchema && Array.isArray(schema.type)) {
     type = selectTypeForConstants(schema.type);
+  } else {
+    type = typeForWidget<T, S, F>(schema, type, widget, isUnion);
   }
 
   const schemaId = schema.$id;
@@ -306,7 +338,8 @@ function getFieldComponent<
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
-  // Without it the first type the schema lists other than `null` is the one rendered.
+  // Without it the type `getSchemaType()` resolves the list to is the one rendered, unless `typeForWidget()` picks
+  // another listed type for the widget.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
   // of the union stays reachable from inside an option.
@@ -327,7 +360,7 @@ function getFieldComponent<
     !isSelectSchema &&
     !schema.enum &&
     !isConstant<S>(schema) &&
-    (getUnionTypes<S>(schema) !== undefined || hasGuessedType);
+    (isUnion || hasGuessedType);
   if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }

@@ -59,7 +59,7 @@ function getDefaultValue<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(translateString: Registry<T, S, F>['translateString'], type?: string | string[]) {
+>(translateString: Registry<T, S, F>['translateString'], type?: string) {
   switch (type) {
     case 'array':
       return [];
