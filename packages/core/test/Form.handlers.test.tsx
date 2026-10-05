@@ -12,6 +12,7 @@ import {
   describeRepeated,
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
   submitForm,
 } from './testUtils.tsx';
 
@@ -645,11 +646,13 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         ref.current!.validateForm();
       });
       expect(errorListMessages(node)).toHaveLength(1);
+      expect(fieldErrorsById(node)).toEqual({ root_name: ["must have required property 'name'"] });
 
       // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       rerender({ schema, ref, noValidate: true });
 
       expect(errorListMessages(node)).toHaveLength(0);
+      expect(fieldErrorsById(node)).toEqual({});
     });
     describe('should keep a switch to a null oneOf option when a recreated prop rebuilds the schema utilities', () => {
       const schema: RJSFSchema = {

@@ -827,6 +827,7 @@ describe('Error state consistency when deriving from new props', () => {
 
     // The field still shows the validator's error: a phantom `{ addr: { street: {} } }` would render nothing there
     expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
   });
 
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {

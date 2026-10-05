@@ -1,19 +1,21 @@
 import { createRef } from 'react';
-import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import {
-  AcceptingParent,
-  createParentLog,
-  describeRepeated,
-  expectToHaveBeenCalledWithFormData,
-  submitForm,
-} from './testUtils.tsx';
+import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
+
+function ErrorSchemaOutput({ errorSchema }: ErrorListProps) {
+  return <output data-testid='error-schema'>{JSON.stringify(errorSchema)}</output>;
+}
+
+function renderedErrorSchema(): ErrorSchema {
+  return JSON.parse(screen.getByTestId('error-schema').textContent);
+}
 
 describeRepeated('Form common: error contextualization', (createFormComponent) => {
   describe('Error contextualization', () => {
@@ -129,10 +131,8 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
         });
 
-        // The two tests below watch an entry that never reaches the DOM, because a field named with a dot looks its
-        // errors up by name while `toErrorSchema` nests them by path. The witness is the `errorSchema` the change
-        // events carry: the first edit's event still holds the submit's errors, and the next edit's event holds what
-        // the parent's echo left after the changed-fields pass cleared the edited field.
+        // Dot-name errors do not reach the default field markup. A public ErrorListTemplate
+        // exposes the complete errorSchema before and after editing, without relying on change-event ordering.
         it('should clear the error of a field whose name contains a dot', async () => {
           const altSchema: RJSFSchema = {
             type: 'object',
@@ -142,25 +142,29 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
             required: ['foo.bar', 'baz'],
           };
-          const log = createParentLog<Record<string, unknown>>();
 
           const { container } = render(
-            <AcceptingParent<Record<string, unknown>> schema={altSchema} initialValue={{}} noHtml5Validate log={log} />,
+            <AcceptingParent<Record<string, unknown>>
+              schema={altSchema}
+              initialValue={{}}
+              noHtml5Validate
+              templates={{ ErrorListTemplate: ErrorSchemaOutput }}
+            />,
           );
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
-          await user.type(screen.getByLabelText(/^foo\.bar/), 'ab');
           // `toErrorSchema` runs the property name through `toPath`, so the error of a name holding a dot lands at
           // the path that name spells out, not under the name itself
-          expect(log.events[0].errorSchema).toEqual({
+          expect(renderedErrorSchema()).toEqual({
             foo: { bar: { __errors: ["must have required property 'foo.bar'"] } },
             baz: { __errors: ["must have required property 'baz'"] },
           });
 
+          await user.type(screen.getByLabelText(/^foo\.bar/), 'a');
           // Clearing has to reach the same place, and leave the field that was not touched alone
-          expect(log.events.at(-1)?.errorSchema).toEqual({
-            foo: { bar: undefined },
+          expect(renderedErrorSchema()).toEqual({
+            foo: {},
             baz: { __errors: ["must have required property 'baz'"] },
           });
         });
@@ -179,23 +183,21 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
               },
             },
           };
-          const log = createParentLog<Record<string, unknown>>();
 
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
               schema={altSchema}
               initialValue={{ 'has.dot': {} }}
               noHtml5Validate
-              log={log}
+              templates={{ ErrorListTemplate: ErrorSchemaOutput }}
             />,
           );
           const node = container.firstElementChild!;
 
           await submitForm(node, user);
-          await user.type(screen.getByLabelText(/^inner/), 'ab');
           // The name is spelled out as a path here too, so the errors of the two fields it holds sit side by side
           // under it and clearing one has to leave the other where it is
-          expect(log.events[0].errorSchema).toEqual({
+          expect(renderedErrorSchema()).toEqual({
             has: {
               dot: {
                 inner: { __errors: ["must have required property 'inner'"] },
@@ -204,10 +206,10 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
           });
 
-          expect(log.events.at(-1)?.errorSchema).toEqual({
+          await user.type(screen.getByLabelText(/^inner/), 'a');
+          expect(renderedErrorSchema()).toEqual({
             has: {
               dot: {
-                inner: undefined,
                 other: { __errors: ["must have required property 'other'"] },
               },
             },
