@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -26,6 +27,74 @@ async function pickTheSeventeenth(year = 2020) {
 }
 
 describe('DateWidget', () => {
+  test.each(['pointercancel', 'window blur'] as const)(
+    'finishes an outside press interrupted by %s once',
+    async (kind) => {
+      const onBlur = vi.fn();
+      const props = makeWidgetMockProps({ value: '2020-05-03', onBlur, schema });
+      const { container, rerender } = render(
+        <>
+          <DateWidget {...props} />
+          <input aria-label='Elsewhere' />
+        </>,
+      );
+      await openPicker(container);
+      await pickTheSeventeenth();
+      await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+      rerender(
+        <>
+          <DateWidget {...props} value='2020-05-17' />
+          <input aria-label='Elsewhere' />
+        </>,
+      );
+      expect(onBlur).not.toHaveBeenCalled();
+      if (kind === 'pointercancel') {
+        fireEvent.pointerCancel(document);
+      } else {
+        fireEvent(window, new Event('blur'));
+      }
+      expect(onBlur).toHaveBeenCalledExactlyOnceWith(props.id, '2020-05-17');
+      await user.pointer({ keys: '[/MouseLeft]' });
+      expect(onBlur).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test.each(['accept', 'transform', 'reject'] as const)(
+    'reports the %s parent value on outside release without an Effect notification',
+    async (mode) => {
+      const onBlur = vi.fn();
+      function Parent() {
+        const [value, setValue] = useState('2020-05-03');
+        return (
+          <>
+            <DateWidget
+              {...makeWidgetMockProps({
+                value,
+                schema,
+                onBlur,
+                onChange: (next: string) => {
+                  if (mode !== 'reject') {
+                    setValue(mode === 'transform' ? '2020-05-20' : next);
+                  }
+                },
+              })}
+            />
+            <input aria-label='Elsewhere' />
+          </>
+        );
+      }
+      const { container } = render(<Parent />);
+      await openPicker(container);
+      await pickTheSeventeenth();
+      await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+      expect(onBlur).not.toHaveBeenCalled();
+      await user.pointer({ keys: '[/MouseLeft]' });
+      const acceptedValues = { accept: '2020-05-17', transform: '2020-05-20', reject: '2020-05-03' };
+      const expected = acceptedValues[mode];
+      expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
+    },
+  );
+
   test.each([
     { name: 'Done', close: async () => user.click(screen.getByText('Done')), accepted: '2020-05-17' },
     { name: 'Escape', close: async () => user.keyboard('{Escape}'), accepted: '2020-05-03' },
