@@ -198,7 +198,7 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
-  const pendingCloseBlur = useRef(false);
+  const pendingCloseBlur = useRef<{ notifyOnUnmount: () => void; returnFocus: boolean } | null>(null);
   // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
   // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
@@ -250,31 +250,48 @@ export function useDatePicker<V>({
 
   /** Close the popup, storing the date it holds, which every way out of it but Escape does
    */
-  const closePicker = useCallback(() => {
-    pendingCloseBlur.current = true;
-    setIsOpen(false);
-    commitDate();
-  }, [commitDate]);
+  const closePicker = useCallback(
+    (returnFocus = false) => {
+      pendingCloseBlur.current = { notifyOnUnmount: () => onBlur?.(id, value), returnFocus };
+      setIsOpen(false);
+      commitDate();
+    },
+    [commitDate, id, onBlur, value],
+  );
 
   /** Close the popup without storing anything, which Escape does: a date the user was trying out in the calendar is
    * not one they asked to store
    */
   const cancelPicker = useCallback(() => {
-    returnFocusFromPopup();
     setIsOpen(false);
     if (onBlur) {
       onBlur(id, value);
     }
+    returnFocusFromPopup();
   }, [id, onBlur, returnFocusFromPopup, value]);
 
-  // Preserve blur-on-close, but wait for the parent to render its accepted value before reporting it.
-  // Consume the request first: changed callback identities or reentrant consumer code must not repeat it.
+  // The close commit includes ordinary parent updates, but cannot await a later transition or async response.
   useEffect(() => {
-    if (!isOpen && pendingCloseBlur.current) {
-      pendingCloseBlur.current = false;
+    const pending = pendingCloseBlur.current;
+    if (!isOpen && pending) {
+      pendingCloseBlur.current = null;
       onBlur?.(id, value);
+      if (pending.returnFocus) {
+        triggerRef.current?.focus();
+      }
     }
   }, [isOpen, id, value, onBlur]);
+
+  // A save can replace this widget before the close Effect runs. There is no new
+  // value to read in that case, so preserve the notification with its previous value.
+  useEffect(
+    () => () => {
+      const pending = pendingCloseBlur.current;
+      pendingCloseBlur.current = null;
+      pending?.notifyOnUnmount();
+    },
+    [],
+  );
 
   const latestCancel = useLatest(cancelPicker);
   const latestClose = useLatest(closePicker);
@@ -372,8 +389,7 @@ export function useDatePicker<V>({
    * leaves this press with no focus inside the popup to return from
    */
   const handleDone = useCallback(() => {
-    closePicker();
-    triggerRef.current?.focus();
+    closePicker(true);
   }, [closePicker]);
 
   // What the trigger displays and the calendar selects: the date the user is choosing while the popup is open, and
