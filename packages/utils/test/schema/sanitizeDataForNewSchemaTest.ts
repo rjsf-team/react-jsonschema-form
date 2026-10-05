@@ -614,6 +614,22 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { x: 'b' })).toEqual({ x: 'b' });
     });
+    it('keeps data when a direct enum offers no value at all', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { x: { type: 'string', enum: [] } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { x: 'b' })).toEqual({ x: 'b' });
+    });
+    it('leaves an empty enum beside a list of constant options to that list', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { x: { type: 'string', enum: [], oneOf: [{ const: 'a' }] } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { x: 'b' })).toEqual({ x: 'a' });
+    });
     it('keeps data that a multi-value enum option beside a const allows', () => {
       const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
       const newSchema: RJSFSchema = {
@@ -963,6 +979,103 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         items: { type: 'string' },
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toEqual(['a', 'b']);
+    });
+    it('filters out object items a narrowed items enum rejects, like scalar items (#5346)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [{ id: 'a' }, { id: 'b' }], properties: { id: { type: 'string' } } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [{ id: 'a' }], properties: { id: { type: 'string' } } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('filters out object items a narrowed items oneOf of constants rejects (#5346)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', oneOf: [{ const: { id: 'a' } }, { const: { id: 'b' } }] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', oneOf: [{ const: { id: 'a' } }] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('sanitizes object items per property when they are not picked as a whole', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { id: { type: 'string' }, extra: { type: 'string' } } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { id: { type: 'string' } } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a', extra: 'x' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('trims object items picked as a whole to maxItems (#5346)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [{ id: 'a' }, { id: 'b' }] },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        maxItems: 1,
+        items: { type: 'object', enum: [{ id: 'a' }, { id: 'b' }] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }, { id: 'b' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('allows no item at all for maxItems of 0, whether or not the items are picked as a whole (#5346)', () => {
+      const scalarItems: RJSFSchema = { type: 'array', maxItems: 0, items: { type: 'string' } };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(scalarItems, { type: 'array', items: { type: 'string' } }, ['a']),
+      ).toEqual([]);
+      const selectItems: RJSFSchema = { type: 'array', maxItems: 0, items: { type: 'object', enum: [{ id: 'a' }] } };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          selectItems,
+          { type: 'array', items: { type: 'object', enum: [{ id: 'a' }] } },
+          [{ id: 'a' }],
+        ),
+      ).toEqual([]);
+      const containerItems: RJSFSchema = {
+        type: 'array',
+        maxItems: 0,
+        items: { type: 'object', properties: { id: { type: 'string' } } },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          containerItems,
+          { type: 'array', items: { type: 'object', properties: { id: { type: 'string' } } } },
+          [{ id: 'a' }],
+        ),
+      ).toEqual([]);
+    });
+    it('offers no constraint for an empty items enum, like an empty oneOf (#5346)', () => {
+      const emptyEnum: RJSFSchema = { type: 'array', items: { type: 'string', enum: [] } };
+      expect(schemaUtils.sanitizeDataForNewSchema(emptyEnum, emptyEnum, ['a'])).toEqual(['a']);
+      const emptyOneOf: RJSFSchema = { type: 'array', items: { type: 'string', oneOf: [] } };
+      expect(schemaUtils.sanitizeDataForNewSchema(emptyOneOf, emptyOneOf, ['a'])).toEqual(['a']);
+      const emptyEnumObject: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', enum: [], properties: { id: { type: 'string' } } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(emptyEnumObject, emptyEnumObject, [{ id: 'a' }])).toEqual([
+        { id: 'a' },
+      ]);
+    });
+    it('leaves an empty items enum beside a list of object constants to that list (#5346)', () => {
+      const items: RJSFSchema = { type: 'object', enum: [], oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] };
+      const schema: RJSFSchema = { type: 'array', items };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [{ a: 1 }, { c: 3 }])).toEqual([{ a: 1 }]);
     });
     it('returns whole array when the new schema does not have maxItems for simple type', () => {
       const rootSchema: RJSFSchema = {
