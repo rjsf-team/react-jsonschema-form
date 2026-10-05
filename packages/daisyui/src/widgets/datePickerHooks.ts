@@ -276,10 +276,18 @@ export function useDatePicker<V>({
       }
     }
   }, [id, onBlur, value]);
-  const latestFinishOutsidePress = useLatest(finishOutsidePress);
-
-  const latestCancel = useLatest(cancelPicker);
-  const latestClose = useLatest(closePicker);
+  const latestDismiss = useLatest((action: 'press' | 'release' | 'escape') => {
+    if (action === 'release') {
+      finishOutsidePress();
+    } else if (action === 'escape') {
+      finishOutsidePress();
+      cancelPicker();
+    } else if (isOpen && !outsidePressPending.current) {
+      outsidePressPending.current = true;
+      setAwaitingOutsideRelease(true);
+      closePicker();
+    }
+  });
 
   // Keep the document listeners until an outside press is released. The subscription does not report blur.
   const listenForDismissal = isOpen || awaitingOutsideRelease;
@@ -289,19 +297,16 @@ export function useDatePicker<V>({
     }
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        latestFinishOutsidePress.current();
-        latestCancel.current();
+        latestDismiss.current('escape');
       }
     };
     const handlePressOutside = (e: MouseEvent | globalThis.MouseEvent) => {
       if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
         return;
       }
-      outsidePressPending.current = true;
-      setAwaitingOutsideRelease(true);
-      latestClose.current();
+      latestDismiss.current('press');
     };
-    const handleReleaseOutside = () => latestFinishOutsidePress.current();
+    const handleReleaseOutside = () => latestDismiss.current('release');
     // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
     // ours, which would leave Done and the trigger as the only ways out of the popup
     const doc = documentOf(triggerRef.current);
@@ -318,7 +323,7 @@ export function useDatePicker<V>({
       doc.removeEventListener('pointercancel', handleReleaseOutside);
       win?.removeEventListener('blur', handleReleaseOutside);
     };
-  }, [listenForDismissal, latestCancel, latestClose, latestFinishOutsidePress]);
+  }, [listenForDismissal, latestDismiss]);
 
   /** Take a date the user chose in the popup, which is what makes closing it store one
    *
