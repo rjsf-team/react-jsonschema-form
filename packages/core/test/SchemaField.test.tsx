@@ -1,4 +1,6 @@
+import { Suspense, forwardRef, lazy, memo } from 'react';
 import type {
+  Field,
   FieldProps,
   GenericObjectType,
   RJSFSchema,
@@ -12,12 +14,13 @@ import type {
 } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import { generateTheme } from '../src/index.ts';
+import Form, { generateTheme } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -318,6 +321,97 @@ describe('SchemaField', () => {
 
       expect(node.querySelectorAll('.foo')).toHaveLength(1);
       expect(node.querySelectorAll("[style*='red']")).toHaveLength(1);
+    });
+
+    describe('a ui:field that is not a function component', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+      const stringSchema: RJSFSchema = { type: 'object', properties: { val: { type: 'string' } } };
+      const ForwardedField = forwardRef<HTMLDivElement>((_props, ref) => <div id='custom' ref={ref} />);
+
+      it.each([
+        ['memo()', memo(MyObject)],
+        ['forwardRef()', ForwardedField],
+      ])('renders a %s component in place of the default field', (_, component) => {
+        const { node } = createFormComponent({
+          schema: stringSchema,
+          uiSchema: { val: { 'ui:field': component as Field } },
+        });
+
+        expect(node.querySelector('#custom')).toBeInTheDocument();
+        expect(node.querySelector('#root_val')).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('renders a lazy() component in place of the default field', async () => {
+        const LazyField = lazy(async () => ({ default: MyObject }));
+        const { container } = render(
+          <Suspense fallback={null}>
+            <Form schema={stringSchema} uiSchema={{ val: { 'ui:field': LazyField } }} validator={validator} />
+          </Suspense>,
+        );
+
+        await waitFor(() => expect(container.querySelector('#custom')).toBeInTheDocument());
+        expect(container.querySelector('#root_val')).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('warns that a name no field is registered under is ignored, and renders the default field', () => {
+        const { node } = createFormComponent({
+          schema: stringSchema,
+          uiSchema: { val: { 'ui:field': 'Stringfield' } },
+        });
+
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:field for "root_val" (val) names no registered field ('Stringfield'), so it is ignored and the field is ` +
+            'rendered as though no ui:field were given.',
+        );
+      });
+
+      it('warns that a React element is ignored, since it is not a component', () => {
+        const { node } = createFormComponent({
+          schema: stringSchema,
+          uiSchema: { val: { 'ui:field': (<MyObject />) as unknown as Field } },
+        });
+
+        expect(node.querySelector('#custom')).not.toBeInTheDocument();
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'ui:field for "root_val" (val) is a React element rather than a component (pass MyField, not <MyField />), ' +
+            'so it is ignored and the field is rendered as though no ui:field were given.',
+        );
+      });
+
+      it('warns that a value that is neither a name nor a component is ignored', () => {
+        const { node } = createFormComponent({
+          schema: stringSchema,
+          uiSchema: { val: { 'ui:field': 42 as unknown as Field } },
+        });
+
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'ui:field for "root_val" (val) is not a component (got number), so it is ignored and the field is rendered ' +
+            'as though no ui:field were given.',
+        );
+      });
+
+      it('does not warn when a ui:field is shadowed with undefined', () => {
+        createFormComponent({ schema: stringSchema, uiSchema: { val: { 'ui:field': undefined } } });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('does not warn when a JSON uiSchema clears a global ui:field with null', () => {
+        const uiSchema: UiSchema = JSON.parse(
+          '{ "ui:globalOptions": { "field": "myobject" }, "ui:field": null, "val": { "ui:field": null } }',
+        );
+
+        const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
+
+        expect(node.querySelector('#custom')).not.toBeInTheDocument();
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
     });
   });
 

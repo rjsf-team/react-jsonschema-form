@@ -21,9 +21,12 @@ import {
   getUiOptions,
   getXxxOfKey,
   hashObject,
+  isComponentType,
   isObject,
   isPlainObject,
+  logOnce,
   lookupFromFormContext,
+  LOOKUP_MAP_NAME,
   PROPERTIES_KEY,
   READONLY_KEY,
   toFieldPath,
@@ -33,6 +36,8 @@ import {
   ITEMS_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
+
+import describeNonComponent from '../../describeNonComponent.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -421,25 +426,36 @@ export function getSchemaDetailsForField<
   return { schema, isRequired, isReadonly, optionsInfo, fieldPath };
 }
 
-/** Gets the custom render component from the `render`, by either determining that it is either already a function or
- * it is a non-function value that can be used to look up the function in the registry. If no function can be found,
- * null is returned.
+/** Gets the custom render component from the `render`, by either determining that it is already a component, which
+ * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
+ * used to look up the component in the registry. If no component can be found, null is returned, and a `render` that
+ * was given is warned about, since the cell it was meant to render would otherwise disappear without a sign of why.
  *
- * @param render - The potential render function or lookup name to one
+ * @param render - The potential render component or lookup name to one, if the cell gives one
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
- * @returns - Either a render function if available, or null if not
+ * @returns - Either a render component if available, or null if not
  */
 export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
+>(render: string | RenderComponent | undefined, registry: Registry<T, S, F>): RenderComponent | null {
   let customRenderer: string | RenderComponent | undefined = render;
   if (typeof customRenderer === 'string') {
     customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
   }
-  if (typeof customRenderer === 'function') {
+  if (isComponentType(customRenderer)) {
     return customRenderer;
+  }
+  if (render != null) {
+    let description = describeNonComponent(customRenderer, 'MyRenderer');
+    if (typeof render === 'string') {
+      const entry = `formContext.${LOOKUP_MAP_NAME} ('${render}')`;
+      // A value that was found is described like one given directly, so a looked-up element still gets the hint
+      description =
+        customRenderer == null ? `names nothing in ${entry}` : `names a value in ${entry} that ${description}`;
+    }
+    logOnce(`${LAYOUT_GRID_OPTION} render ${description}, so it is ignored.`);
   }
   return null;
 }

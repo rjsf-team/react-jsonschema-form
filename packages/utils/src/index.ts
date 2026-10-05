@@ -82,6 +82,7 @@ import {
   titleId,
   triggerValueId,
 } from './idGenerators.ts';
+import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
 import isConstantSelect from './isConstantSelect.ts';
@@ -242,6 +243,7 @@ export {
   hashObject,
   hashString,
   helpId,
+  isComponentType,
   isConstant,
   isConstantOptionList,
   isConstantSelect,

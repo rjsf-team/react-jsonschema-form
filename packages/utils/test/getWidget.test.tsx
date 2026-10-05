@@ -178,9 +178,19 @@ describe('getWidget()', () => {
   });
 
   it('should not fail on memo component', () => {
-    const TheWidget = memo(TestWidget);
+    const TheWidget = getWidget(schema, memo(TestWidget));
     const { asFragment } = render(<TheWidget {...widgetProps} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should fail for a React element, which is not a component', () => {
+    const element = <TestWidget {...widgetProps} />;
+    expect(() => getWidget(schema, element as unknown as Widget)).toThrow(
+      `Unsupported widget definition: object in schema: ${schemaStr}`,
+    );
+    expect(() => getWidget(schema, 'blabla', { blabla: element as unknown as Widget })).toThrow(
+      `Unsupported widget definition: object in schema: ${schemaStr}`,
+    );
   });
 });
 

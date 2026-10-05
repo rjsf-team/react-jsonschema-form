@@ -1,4 +1,5 @@
-import type { ChangeEvent, FocusEvent, ReactElement } from 'react';
+import type { ChangeEvent, ComponentType, FocusEvent, ReactElement } from 'react';
+import { forwardRef, memo } from 'react';
 import type {
   ErrorSchema,
   FieldPath,
@@ -50,6 +51,7 @@ import LayoutGridField, {
 } from '../src/components/fields/LayoutGridField.tsx';
 import { getTestRegistry } from '../src/testing.ts';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
+import { setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';
@@ -1239,17 +1241,62 @@ describe('LayoutGridField', () => {
     });
   });
   describe('getCustomRenderComponent()', () => {
-    test('returns null when render is not a string or function', () => {
-      expect(getCustomRenderComponent({} as string, registry)).toBeNull();
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    test('returns null when render is not given, without warning', () => {
+      expect(getCustomRenderComponent(undefined, registry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
-    test('returns null when render is a string without a lookup', () => {
+    test('returns null and warns when render is not a string or component', () => {
+      expect(getCustomRenderComponent({} as ComponentType, registry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:layoutGrid render is not a component (got object), so it is ignored.',
+      );
+    });
+    test('returns null and warns when render is a string without a lookup', () => {
       expect(getCustomRenderComponent('nonexistant', registry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render names nothing in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+      );
+    });
+    test('returns null and warns when render is a string whose lookup is not a component', () => {
+      expect(getCustomRenderComponent('FooClass', registry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render names a value in formContext.${LOOKUP_MAP_NAME} ('FooClass') that is not a component ` +
+          '(got string), so it is ignored.',
+      );
     });
     test('returns the render function when render is a string with a lookup', () => {
       expect(getCustomRenderComponent('TestRenderer', registry)).toBe(TestRenderer);
     });
     test('returns the given function when render is a function', () => {
       expect(getCustomRenderComponent(TestRenderer, registry)).toBe(TestRenderer);
+    });
+    test.each([
+      ['memo()', memo(TestRenderer)],
+      ['forwardRef()', forwardRef<HTMLDivElement>((_props, ref) => <div ref={ref} />)],
+    ])('returns a %s component, given directly or looked up', (_, component) => {
+      const lookupRegistry = getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { WrappedRenderer: component } });
+      expect(getCustomRenderComponent(component, registry)).toBe(component);
+      expect(getCustomRenderComponent('WrappedRenderer', lookupRegistry)).toBe(component);
+    });
+    test('returns null and warns with the element hint when render looks up a React element', () => {
+      // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+      const element = <TestRenderer />;
+      const lookupRegistry = getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: element } });
+      expect(getCustomRenderComponent('Nav', lookupRegistry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render names a value in formContext.${LOOKUP_MAP_NAME} ('Nav') that is a React element rather ` +
+          'than a component (pass MyRenderer, not <MyRenderer />), so it is ignored.',
+      );
+    });
+    test('returns null and warns when render is a React element rather than a component', () => {
+      // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+      const element = <TestRenderer />;
+      expect(getCustomRenderComponent(element as unknown as ComponentType, registry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:layoutGrid render is a React element rather than a component (pass MyRenderer, not <MyRenderer />), so ' +
+          'it is ignored.',
+      );
     });
   });
   describe('computeFieldUiSchema()', () => {
@@ -1447,6 +1494,17 @@ describe('LayoutGridField', () => {
     // Renders the uiComponent with the props and options forwarded
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
+  });
+  test('renderField with a memo() render via LAYOUT_GRID_OPTION and name is not provided', () => {
+    const options = { myProp: true };
+    const props = getProps({
+      uiSchema: {
+        [LAYOUT_GRID_OPTION]: { ...options, render: memo(TestRenderer) },
+      },
+    });
+    render(<LayoutGridField {...props} />);
+    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    expect(uiComponent).toHaveTextContent(stringifyProps(options));
   });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {
     const options = { myProp: true };

@@ -30,6 +30,7 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasVisibleErrors,
+  isComponentType,
   isConstant,
   isConstantOptionList,
   isConstantSelect,
@@ -49,6 +50,7 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import describeNonComponent from '../../describeNonComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
@@ -159,23 +161,37 @@ function inferSelectWidget<
 }
 
 /** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
- * `getFieldComponent()` renders in place of the field for the schema's type.
+ * `getFieldComponent()` renders in place of the field for the schema's type. A component is either a function or one of
+ * the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type admits.
  *
  * @param field - The `field` from the UI options
  * @param fields - The registered fields
- * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered. Looked up as an own
- *            property, so a name such as `constructor` or `toString` resolves to nothing rather than to something off
- *            `Object.prototype`, which rendered as a component threw "Objects are not valid as a React child"
+ * @returns - The field the `ui:field` names, or `undefined` when it is neither a component nor the name of a registered
+ *            field. Looked up as an own property, so a name such as `constructor` or `toString` resolves to nothing
+ *            rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not
+ *            valid as a React child"
  */
 function getUiFieldComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
-  if (typeof field === 'function') {
-    return field;
+  if (typeof field === 'string') {
+    return Object.hasOwn(fields, field) ? fields[field] : undefined;
   }
-  return typeof field === 'string' && Object.hasOwn(fields, field) ? fields[field] : undefined;
+  return isComponentType(field) ? field : undefined;
+}
+
+/** Describes a `ui:field` that `getUiFieldComponent()` resolved to nothing, for the warning that it was ignored
+ *
+ * @param field - The unresolved `field` from the UI options
+ * @returns - What the `ui:field` was, phrased to follow "ui:field for <field>"
+ */
+function describeUnresolvedUiField(field: unknown): string {
+  if (typeof field === 'string') {
+    return `names no registered field ('${field}')`;
+  }
+  return describeNonComponent(field, 'MyField');
 }
 
 const RenderNothing = () => null;
@@ -186,6 +202,7 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
+ * @param namedField - The field the `ui:field` resolved to through `getUiFieldComponent()`, if it resolved to one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
@@ -204,6 +221,7 @@ function getFieldComponent<
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
+  namedField: Field<T, S, F> | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
@@ -214,10 +232,8 @@ function getFieldComponent<
   rendersOptionSelector: boolean;
   optionsReplaceNamedField: boolean;
 } {
-  const { field, widget } = uiOptions;
+  const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
-  /** The field a `ui:field` names, or `undefined` for a name no field is registered under, which resolves to nothing */
-  const namedField = getUiFieldComponent<T, S, F>(field, fields);
 
   const schemaType = getSchemaType(schema);
   let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
@@ -474,11 +490,12 @@ function SchemaFieldRender<
     uiOptions,
   );
 
+  const namedField = getUiFieldComponent<T, S, F>(uiOptions.field, fields);
   const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
     T,
     S,
     F
-  >(schema, uiOptions, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
+  >(schema, uiOptions, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 
@@ -517,6 +534,17 @@ function SchemaFieldRender<
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
+  }
+  // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
+  // otherwise have no sign it was dropped. A `null` asks for no field, since it is how a JSON uiSchema, which can't
+  // spell `undefined`, clears a `ui:globalOptions.field` for one field.
+  // The message describes the intended fallback. Until #5389 is fixed, `getDisplayLabel()` still hides the label for
+  // any `ui:field` that is set, resolved or not, so the label is missing; that is #5389's to fix, not this message's
+  if (uiOptions.field != null && namedField === undefined) {
+    logOnce(
+      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${describeUnresolvedUiField(uiOptions.field)}, so it is ` +
+        'ignored and the field is rendered as though no ui:field were given.',
+    );
   }
 
   let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);

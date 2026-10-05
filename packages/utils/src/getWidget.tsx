@@ -1,4 +1,5 @@
 import getSchemaType from './getSchemaType.ts';
+import isComponentType from './isComponentType.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
 
@@ -109,7 +110,7 @@ export default function getWidget<
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (widget && typeof widget !== 'string') {
+  if (isComponentType(widget)) {
     return widget;
   }
 
