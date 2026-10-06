@@ -957,6 +957,16 @@ describe('LayoutMultiSchemaField', () => {
       expect(widgetProps?.disabled).toBe(true);
     });
     // `ui:disabled` overrides in both directions, the way `SchemaField` resolves it with `??`
+    test('keeps an inherited disabled selector disabled for ui:disabled null', () => {
+      const { templateProps, widgetProps } = renderRecording({
+        disabled: true,
+        uiSchema: JSON.parse('{"ui:disabled": null}'),
+      });
+      expect(templateProps?.disabled).toBe(true);
+      expect(widgetProps?.disabled).toBe(true);
+      screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
+    });
+
     test('re-enables a disabled field for a ui:disabled of false', () => {
       const { templateProps, widgetProps } = renderRecording({
         disabled: true,

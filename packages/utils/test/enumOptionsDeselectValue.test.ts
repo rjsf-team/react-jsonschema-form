@@ -1,10 +1,11 @@
+import type { EnumOptionsType } from '../src/index.ts';
 import { enumOptionsDeselectValue } from '../src/index.ts';
 import { ALL_OPTIONS } from './testUtils/testData.ts';
 
 const ALL_VALUES = ALL_OPTIONS.map((opt) => opt.value);
 
 describe('enumOptionsDeselectValue()', () => {
-  let selected: unknown;
+  let selected: EnumOptionsType['value'][];
   it('returns same selection when no options', () => {
     selected = enumOptionsDeselectValue('0', ALL_VALUES);
     expect(selected).toEqual(ALL_VALUES);

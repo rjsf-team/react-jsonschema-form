@@ -16,9 +16,9 @@ import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function enumOptionsDeselectValue<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number,
-  selected?: unknown,
+  selected?: EnumOptionsType<S>['value'],
   allEnumOptions: EnumOptionsType<S>[] = [],
-): unknown {
+): EnumOptionsType<S>['value'] {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (Array.isArray(selected)) {
     return selected.filter((v) => !deepEquals(v, value));
