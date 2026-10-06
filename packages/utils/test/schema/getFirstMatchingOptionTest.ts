@@ -91,6 +91,29 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       expect(validated[0]).not.toHaveProperty('allOf.0.required');
       expect(validated[1]).not.toHaveProperty('required');
     });
+    it('scores an option describing a map as it stands, since it declares no keys to assert', () => {
+      const validated: RJSFSchema[] = [];
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      // `stubExistingAdditionalProperties()` gives an option describing a map an empty `properties` before it is
+      // scored, and an `anyOf` over no keys asserts nothing that can be satisfied, which a validator rejects outright
+      const options: RJSFSchema[] = [
+        { type: 'object', additionalProperties: { type: 'string' }, properties: {} },
+        { $id: 'mapWithAnId', type: 'object', additionalProperties: { type: 'string' }, properties: {} },
+      ];
+      getFirstMatchingOption({ validator: recordingValidator }, { anyKey: 'x' }, options, rootSchema);
+      expect(validated).toHaveLength(2);
+      for (const scored of validated) {
+        expect(scored).not.toHaveProperty('anyOf');
+        expect(scored).not.toHaveProperty('allOf');
+      }
+    });
     it('derives the schema an option is scored by once, so re-scoring it does not hash it again', () => {
       const validated: RJSFSchema[] = [];
       const recordingValidator: ValidatorType = {

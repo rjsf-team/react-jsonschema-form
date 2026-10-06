@@ -44,6 +44,26 @@ describe('scoring an option that references itself', () => {
     expect(getFirstMatchingOption({ validator }, {}, OPTIONS, SCHEMA)).toBe(0);
   });
 
+  it('compiles and matches an option describing a map, which declares no keys to assert', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { oneOf: [{ type: 'object', additionalProperties: { type: 'string' } }, { type: 'number' }] } },
+    };
+    const options = (schema.properties!.v as RJSFSchema).oneOf as RJSFSchema[];
+    // Scoring reaches the map option after `stubExistingAdditionalProperties()` has given it an empty `properties`,
+    // and an `anyOf` over no keys failed the whole compile with `data/anyOf must NOT have fewer than 1 items`
+    expect(() => compileSchemaValidatorsCode(schema)).not.toThrow();
+    // The runtime validator failed the same way but quietly, warning and answering `false`, so a map never matched
+    const warnings: string[] = [];
+    const spy = vi.spyOn(console, 'warn').mockImplementation((...args: unknown[]) => {
+      warnings.push(String(args[0]));
+    });
+    const matched = getFirstMatchingOption({ validator }, { anyKey: 'x' }, options, schema);
+    spy.mockRestore();
+    expect(matched).toBe(0);
+    expect(warnings).toEqual([]);
+  });
+
   it('scores an option that carries an $id through a precompiled validator', () => {
     const schema: RJSFSchema = {
       oneOf: [

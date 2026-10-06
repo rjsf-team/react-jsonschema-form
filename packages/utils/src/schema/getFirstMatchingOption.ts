@@ -100,11 +100,16 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
  * @returns - The schema asserting the option and the keys scoring it needs
  */
 function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
-  const properties = option[PROPERTIES_KEY];
-  if (!properties) {
+  // What the option declares is counted rather than tested for, since an option describing a map carries an empty
+  // `properties` by the time it is scored -- `stubExistingAdditionalProperties()` puts one there for the keys the data
+  // holds. An `anyOf` over no names is not a stricter schema but an unsatisfiable one, which a validator rejects as
+  // invalid: AJV fails the whole compile with `data/anyOf must NOT have fewer than 1 items`, and at runtime it warns
+  // and answers `false`, so a map option would never match
+  const propertyNames = Object.keys(option[PROPERTIES_KEY] ?? {});
+  if (propertyNames.length === 0) {
     return withVariantId<S>(option);
   }
-  const requiresAnyOf = { anyOf: Object.keys(properties).map((key) => ({ required: [key] })) };
+  const requiresAnyOf = { anyOf: propertyNames.map((key) => ({ required: [key] })) };
   const { [ID_KEY]: id, [REQUIRED_KEY]: _required, ...content } = option;
   // The junk option is left to the path below, which keeps the `$id` at the top of the schema: the precompiled
   // validators recognise that one by its `$id` and answer it without a compiled function at all
