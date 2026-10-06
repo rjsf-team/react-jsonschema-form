@@ -25,10 +25,13 @@ import formDataForNewOption from './formDataForNewOption.ts';
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
- * @param props - The `FieldProps` for this template
+ * @param props - The `FieldProps` for this template. `options` is not a declared `FieldProps` key, so it would be read
+ *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it as `S[]` here names what
+ *   `SchemaField` passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only
+ *   knows `FieldProps`
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F>,
+  props: FieldProps<T, S, F> & { options: S[] },
 ) {
   const {
     name,
@@ -57,7 +60,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // retrievedOptions is purely derived from options — useMemo handles re-derivation automatically
   // when options, schemaUtils, or formData's value changes, with no render-phase dispatch needed.
   const retrievedOptions = useMemo(
-    () => options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData)),
+    () => options.map((opt) => schemaUtils.retrieveSchema(opt, formData)),
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- formDataHash is the value-stable proxy for formData
     [options, schemaUtils, formDataHash],
   );
@@ -241,7 +244,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ? TranslatableString.TitleOptionPrefix
     : TranslatableString.OptionPrefix;
   const translateParams = title ? [title] : [];
-  const enumOptions = retrievedOptions.map((opt: { title?: string }, index: number) => {
+  const enumOptions = retrievedOptions.map((opt, index) => {
     const { title: uiTitle = opt.title } = getUiOptions<T, S, F>(optionsUiSchema[index]);
     return {
       label: uiTitle || translateString(translateEnum, translateParams.concat(String(index + 1))),

@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 
 import type Form from '../src/index.ts';
@@ -35,7 +35,7 @@ describe('state derivation', () => {
       schema,
       initialFormData: { b: 'y' },
       liveValidate: 'onChange',
-      customValidate: (_data, errors) => {
+      customValidate: (_data, errors: FormValidation<{ b?: string }>) => {
         errors.b?.addError('custom');
         return errors;
       },

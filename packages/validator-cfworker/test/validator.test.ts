@@ -1,5 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import type { CustomValidator, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
@@ -87,8 +87,8 @@ describe('CFWorkerValidator', () => {
     const transform = vi.fn((errors: RJSFValidationError[]) =>
       errors.map((error) => ({ ...error, message: 'transformed' })),
     );
-    const custom = vi.fn((_data, errors) => {
-      errors.value.addError('custom');
+    const custom = vi.fn((_data: unknown, errors: FormValidation<{ value?: string }>) => {
+      errors.value?.addError('custom');
       return errors;
     });
     const result = validator.validateFormData<{ value?: string }>({}, schema, custom, transform, {});
@@ -102,7 +102,7 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
     const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
-    const custom = vi.fn((_data, errors) => errors);
+    const custom = vi.fn<CustomValidator>((_data, errors) => errors);
     validator.validateFormData({}, schema, custom, undefined, uiSchema);
     expect(custom).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
   });
@@ -253,7 +253,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
   it('hands customValidate the formData whose defaults the caller computed', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
     // `defaultFormStateBehavior` it was given, which a validator has no way to know
     validator.validateFormData({}, schema, customValidate, undefined, undefined, () => ({ a: 'fromTheForm' }));
@@ -265,7 +265,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
     // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
     // could not say that, and the validator would recompute `[]` here with neither of the form's settings
     const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     validator.validateFormData(undefined, schema, customValidate, undefined, undefined, () => undefined);
     expect(customValidate.mock.calls[0][0]).toBeUndefined();
   });
@@ -276,7 +276,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
       type: 'object',
       allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
     };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     validator.validateFormData({}, schema, customValidate);
     expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
   });

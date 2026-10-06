@@ -220,7 +220,8 @@ function asObject(value: unknown): GenericObjectType | undefined {
 }
 
 function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined): string {
-  return ownSuccessProps?.id || `${id}-success`;
+  const ownId: unknown = ownSuccessProps?.id;
+  return typeof ownId === 'string' && ownId ? ownId : `${id}-success`;
 }
 
 /** Whether `Input.Wrapper` renders the element with `id`, which it lists in its context's `describedBy` when it does */
@@ -361,7 +362,7 @@ const rootSlotKeys = ['classNames', 'styles', 'attributes'];
 
 function withoutRootSlot(value: unknown): unknown {
   if (typeof value === 'function') {
-    return (...args: unknown[]) => withoutRootSlot(value(...args));
+    return (...args: unknown[]) => withoutRootSlot(Reflect.apply(value, undefined, args));
   }
   if (!isObject(value)) {
     return value;
@@ -569,7 +570,8 @@ export function useAriaDescribedByProps(
   );
   // As in Mantine's `useInputProps`, a key present in `wrapperProps` wins even when `undefined`, which `Input.Wrapper`
   // then resolves from `InputWrapper`'s theme `defaultProps`
-  const fromWrapper = (name: string) => (wrapperObject && name in wrapperObject ? wrapperObject[name] : props[name]);
+  const fromWrapper = (name: string): unknown =>
+    wrapperObject && name in wrapperObject ? wrapperObject[name] : props[name];
   const resolved = useProps<GenericObjectType>(
     'InputWrapper',
     {},

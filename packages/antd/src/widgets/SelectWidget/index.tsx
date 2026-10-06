@@ -84,7 +84,7 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -154,6 +154,9 @@ export default function SelectWidget<
 
 /** Give the playground a place to hook into the `getPopupContainer` callback generation function so that it can be
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
- * "generator" function.
+ * "generator" function. The default never returns `undefined`; the return type allows it because that is how the
+ * playground's replacement turns the callback off. A trigger without a parent element gets `document.body`, antd's own
+ * default container.
  */
-SelectWidget.getPopupContainerCallback = () => (node: any) => node.parentElement;
+SelectWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentElement ?? document.body;

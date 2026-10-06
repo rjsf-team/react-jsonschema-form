@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -13,6 +14,31 @@ describe('SelectWidget', () => {
     { label: 'Baz', value: 'baz' },
     { label: 'Qux', value: 'qux' },
   ];
+
+  test.each([
+    ['nested BigInt', { count: 10n }, '{"count":"10"}'],
+    [
+      'circular object',
+      (() => {
+        const value: Record<string, unknown> = {};
+        value.self = value;
+        return value;
+      })(),
+      '[object Object]',
+    ],
+  ])('renders an example containing a %s without throwing', (_, example, label) => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          // Non-JSON examples are supplied by JavaScript consumers, bypassing the schema type.
+          schema: { examples: [example] } as unknown as RJSFSchema,
+          value: undefined,
+          options: {},
+        })}
+      />,
+    );
+    expect(screen.getByRole('option', { name: label })).toBeInTheDocument();
+  });
 
   test('renders a header row and its options for each optgroups entry', () => {
     render(

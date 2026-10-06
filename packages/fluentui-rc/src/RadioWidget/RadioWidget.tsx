@@ -47,7 +47,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
-  const selectedValue: string | undefined = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat);
+  const selectedValue: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
 
   return (
     <>
@@ -69,7 +69,8 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled =
+              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
             return (
               <Radio
                 id={optionId(id, index)}

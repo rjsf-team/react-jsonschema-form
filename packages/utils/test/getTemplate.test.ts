@@ -111,6 +111,12 @@ describe('getTemplate', () => {
       ).toBe(FakeTemplate);
     });
   });
+  it('returns the registry template when uiOptions names a template that is not registered', () => {
+    KEYS.forEach((key) => {
+      const name = key;
+      expect(getTemplate<typeof name>(name, registry, { [name]: 'NotRegistered' })).toBe(FakeTemplate);
+    });
+  });
   it('returns the custom template name from the registry', () => {
     const customTemplateKey = 'CustomTemplate';
     const newRegistry = { ...registry, templates: { ...registry.templates } };

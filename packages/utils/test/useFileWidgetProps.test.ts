@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { renderHook, waitFor } from '@testing-library/react';
-import type { Mock } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import type { FileInfoType } from '../src/index.ts';
 import { useFileWidgetProps } from '../src/index.ts';
@@ -55,7 +55,7 @@ function toFileList(list: File[]) {
 
 describe('useFileWidgetProps()', () => {
   let onChange: Mock;
-  let windowFileReaderSpy: ReturnType<typeof vi.spyOn>;
+  let windowFileReaderSpy: MockInstance<typeof window.FileReader>;
   let FN_RESULT: any;
   beforeAll(() => {
     onChange = vi.fn();

@@ -10,7 +10,7 @@ import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
-function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): any[] | undefined {
+function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
   // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
   // both read one, so it offers no constraint rather than rejecting everything
   if (Array.isArray(schema.enum) && schema.enum.length > 0) {
@@ -239,7 +239,7 @@ export default function sanitizeDataForNewSchema<
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
         if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
-          newFormData = data.reduce((newValue, aValue) => {
+          newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
             const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);

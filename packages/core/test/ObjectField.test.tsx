@@ -111,16 +111,19 @@ describe('ObjectField', () => {
       'lets an ObjectFieldTemplate listing the errors of its properties honor ui:hideError: %s',
       async (hidden, expectedErrors) => {
         function ErrorListingObjectFieldTemplate({ properties, errorSchema, hideError }: ObjectFieldTemplateProps) {
+          const barErrors: unknown = errorSchema?.bar?.__errors;
           return (
             <div>
               {properties.map((property) => property.content)}
               <ul className='object-template-errors'>
-                {!hideError && errorSchema?.bar?.__errors?.map((error: string) => <li key={error}>{error}</li>)}
+                {!hideError &&
+                  Array.isArray(barErrors) &&
+                  barErrors.map((error: unknown) => <li key={String(error)}>{String(error)}</li>)}
               </ul>
             </div>
           );
         }
-        function addPropertyError(_: any | undefined, errors: FormValidation) {
+        function addPropertyError(_: unknown, errors: FormValidation<{ foo?: { bar?: string } }>) {
           errors.foo?.bar?.addError('property error');
           return errors;
         }

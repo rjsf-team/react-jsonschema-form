@@ -110,7 +110,7 @@ export default function SelectWidget<
         id={id}
         name={htmlName || id}
         label={labelValue(label || undefined, hideLabel, undefined)}
-        value={enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
+        value={enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}

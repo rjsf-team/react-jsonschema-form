@@ -245,7 +245,7 @@ If `start` and `stop` are negative numbers (or zero), then they will be treated 
 
 #### Returns
 
-- EnumOptionsType&lt;S>[]: The list of EnumOptionsType for the date range between `start` and `stop`
+- (EnumOptionsType&lt;S> & \{ value: number })[]: The list of EnumOptionsType for the date range between `start` and `stop`
 
 #### Throws
 
@@ -313,12 +313,12 @@ If it is a single value, then if the enum option value with the `valueIndex` in 
 #### Parameters
 
 - valueIndex: string | number - The index of the value to be removed from the selected list or single value
-- [selected]: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined - The current (list of) selected value(s)
+- [selected]: unknown - The current (list of) selected value(s)
 - [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 
 #### Returns
 
-- EnumOptionsType&lt;S>["value"][]: The updated `selected` list with the `value` removed from it
+- unknown: The updated list, or the unchanged single selection. A matching single selection becomes `undefined`. Narrow the result before using it as a specific type.
 
 ### enumOptionsDomValues&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -342,7 +342,7 @@ An `undefined` option is encoded as the empty string.
 
 - string[]: The DOM value attribute of each option, in the order of `enumOptions`
 
-### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### enumOptionSelectedValue&lt;S extends StrictRJSFSchema = RJSFSchema, E = undefined>()
 
 Computes the value to pass to a select element's `value` attribute.
 When `format` is `'realValue'`, encodes form data values as `enumOptionsDomValues()` encodes the options' values.
@@ -352,15 +352,15 @@ Returns `emptyValue` when the current value is empty.
 
 #### Parameters
 
-- value: any - The current form data value
+- value: unknown - The current form data value
 - enumOptions: EnumOptionsType&lt;S>[] | undefined - The available enum options
 - multiple: boolean - Whether the select allows multiple selections
 - [format='indexed']: OptionValueFormat - How option values are encoded on the DOM
-- emptyValue: any - The value to return when the selection is empty
+- [emptyValue]: E - The value to return when the selection is empty
 
 #### Returns
 
-- any: The value to use for the select element's `value` attribute
+- string | string[] | E: The value to use for the select element's `value` attribute, a `string[]` when `multiple` and a `string` otherwise, or `emptyValue` (`undefined` when it is omitted)
 
 ### enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -371,7 +371,7 @@ Otherwise the index of an option whose value is the whole `value` is returned, s
 
 #### Parameters
 
-- value: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The single value or list of values for which indexes are desired
+- value: unknown - The single value or list of values for which indexes are desired
 - [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 - [multiple=false]: boolean - Optional flag, if true will return a list of index, otherwise a single one
 
@@ -386,8 +386,8 @@ An array `selected` is read as a list of selections unless `multiple` is `false`
 
 #### Parameters
 
-- value: EnumOptionsType&lt;S>["value"] - The value being checked to see if it is selected
-- selected: EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] - The current selected value or list of values
+- value: unknown - The value being checked to see if it is selected
+- selected: unknown - The current selected value or list of values
 - [multiple]: boolean | undefined - Whether `selected` is a list of selections; when omitted, an array `selected` is one
 
 #### Returns
@@ -403,12 +403,12 @@ A value already selected isn't added again, and a selected value that matches no
 #### Parameters
 
 - valueIndex: string | number - The index of the value that should be selected
-- selected: EnumOptionsType&lt;S>["value"][] - The current list of selected values
+- selected: unknown[] - The current list of selected values
 - [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 
 #### Returns
 
-- EnumOptionsType&lt;S>["value"][]: The updated list of selected enum values with `value` added to it in the proper location
+- unknown[]: The updated list of selected enum values with `value` added to it in the proper location
 
 ### enumOptionsValueForIndex&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -420,11 +420,11 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 
 - valueIndex: string | number | Array&lt;string | number> - The index(es) of the value(s) that should be returned
 - [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
-- [emptyValue]: EnumOptionsType&lt;S>["value"] | undefined - The value to return when the non-array `valueIndex` does not refer to a real option
+- [emptyValue]: unknown - The value to return when the non-array `valueIndex` does not refer to a real option
 
 #### Returns
 
-- EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined: The single or list of values specified by the single or list of indexes if they are valid. Otherwise, `emptyValue` or an empty list.
+- unknown: The selected option value, a list of selected values for an array of indexes, or `emptyValue` for an invalid single index. Narrow the result before using it as a specific type.
 
 ### enumOptionValueDecoder&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1673,7 +1673,7 @@ An option is labelled with the first of its names. One with no name is labelled 
 
 #### Returns
 
-- \{ schema?: S, label: string, value: any }[] | undefined: The list of options from the schema, or `undefined` when it has none
+- \{ schema?: S, label: string, value: unknown }[] | undefined: The list of options from the schema, or `undefined` when it has none
 
 ### orderProperties()
 

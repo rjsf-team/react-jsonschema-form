@@ -18,20 +18,20 @@ export default function getTemplate<
   if (name === 'ButtonTemplates') {
     return templates[name];
   }
-  // Allow templates to be customized per-field by using string keys from the registry
-  if (
-    Object.hasOwn(uiOptions, name) &&
-    typeof uiOptions[name] === 'string' &&
-    Object.hasOwn(templates, uiOptions[name])
-  ) {
-    const key = uiOptions[name];
-    // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent
-    // To avoid that, we cast templates to `any` before accessing the key field
-    return (templates as any)[key];
+  const customTemplates: Record<string, unknown> = templates;
+  const uiOverrides: Record<string, unknown> = uiOptions;
+  const override = uiOverrides[name];
+  // Allow templates to be customized per-field by using string keys from the registry; a string naming no registered
+  // template is not a component, so the registry's own template is used instead
+  let template = override;
+  if (typeof override === 'string') {
+    template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
   }
-  return (
-    // Evaluating uiOptions[name] results in TS2590: Expression produces a union type that is too complex to represent
-    // To avoid that, we cast uiOptions to `any` before accessing the name field
-    ((uiOptions as any)[name] as TemplatesType<T, S, F>[Name]) || templates[name]
-  );
+  if (!template) {
+    return templates[name];
+  }
+  // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
+  // complex to represent, so both are read through string-keyed views. Nothing checks the props a `ui:options` or
+  // registry entry accepts, so this is the one place the found component is asserted to be the template type
+  return template as TemplatesType<T, S, F>[Name];
 }

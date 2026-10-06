@@ -35,7 +35,7 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options?.inline);
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '');
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
 
   return (
     <div className='mb-0'>
@@ -54,7 +54,8 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled =
+              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
                 <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={itemDisabled} />

@@ -575,10 +575,11 @@
     "typescript/no-unnecessary-type-assertion": "error",
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unnecessary-type-conversion": "error",
+    "typescript/no-unsafe-call": "error",
     "typescript/no-unsafe-declaration-merging": "error",
     "typescript/no-unsafe-enum-comparison": "error",
     "typescript/no-unsafe-function-type": "error",
-    "typescript/no-unsafe-return": "off", // Consider turning this back on
+    "typescript/no-unsafe-return": "error",
     "typescript/no-unsafe-unary-minus": "error",
     "typescript/no-unused-vars": "off", // Consider turning this back on
     "typescript/no-useless-default-assignment": "error",
@@ -1188,7 +1189,7 @@
     },
     {
       // Node tooling scripts: module-scope functions are correct there, and printing is their output
-      "files": [".github/**", "scripts/**", "**/tailwind.config.js"],
+      "files": [".github/**", "scripts/**"],
       "rules": {
         "no-console": "off",
         "no-implicit-globals": "off"

@@ -29,7 +29,7 @@ export default function CheckboxesWidget<
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const chakraProps = getChakra({ uiSchema });
   const hasError = hasVisibleErrors(props);
@@ -49,7 +49,8 @@ export default function CheckboxesWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+              const itemDisabled =
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
               return (
                 <Checkbox
                   // oxlint-disable-next-line react/no-array-index-key

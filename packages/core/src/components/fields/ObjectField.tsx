@@ -112,7 +112,22 @@ interface ObjectFieldPropertyProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> extends Omit<FieldProps<T, S, F>, 'name'> {
+> extends Pick<
+  FieldProps<T, S, F>,
+  | 'fieldPath'
+  | 'schema'
+  | 'registry'
+  | 'uiSchema'
+  | 'errorSchema'
+  | 'formData'
+  | 'onChange'
+  | 'onBlur'
+  | 'onFocus'
+  | 'disabled'
+  | 'readonly'
+  | 'required'
+  | 'hideError'
+> {
   /** The name of the property within the parent object */
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */

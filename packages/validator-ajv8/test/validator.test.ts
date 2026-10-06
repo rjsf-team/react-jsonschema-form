@@ -1,4 +1,5 @@
 import type {
+  CustomValidator,
   ErrorSchema,
   FormValidation,
   RJSFSchema,
@@ -602,12 +603,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -666,9 +669,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -703,7 +711,7 @@ describe('AJV8Validator', () => {
         });
         describe('uiSchema declares ui:initialValue', () => {
           it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
-            const validate = vi.fn((_formData: any, errors: FormValidation) => errors);
+            const validate = vi.fn((_formData: unknown, errors: FormValidation) => errors);
             const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
             const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
             validator.validateFormData({}, schema, validate, undefined, uiSchema);
@@ -1092,12 +1100,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -1156,9 +1166,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -2225,12 +2240,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -2289,9 +2306,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -3162,7 +3184,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
   it('hands customValidate the formData whose defaults the caller computed', () => {
     const validator = new AJV8Validator({});
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
     // `defaultFormStateBehavior` it was given, which a validator has no way to know
     validator.validateFormData({}, schema, customValidate, undefined, undefined, () => ({ a: 'fromTheForm' }));
@@ -3174,7 +3196,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
     // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
     // could not say that, and the validator would recompute `[]` here with neither of the form's settings
     const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     validator.validateFormData(undefined, schema, customValidate, undefined, undefined, () => undefined);
     expect(customValidate.mock.calls[0][0]).toBeUndefined();
   });
@@ -3185,7 +3207,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
       type: 'object',
       allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
     };
-    const customValidate = vi.fn((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     validator.validateFormData({}, schema, customValidate);
     expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
   });

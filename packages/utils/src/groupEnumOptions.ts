@@ -48,7 +48,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
     index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.includes(option.value),
+    disabled: Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value),
   }));
   if (!optgroups || typeof optgroups !== 'object') {
     return indexed;

@@ -18,12 +18,51 @@ const NO_MATCH = Symbol('no match');
  * @returns The value to use for the select element's `value` attribute
  */
 export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
-  value: any,
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: true,
+  format?: OptionValueFormat,
+): string[] | undefined;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: true,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
+): string[] | E;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: false,
+  format?: OptionValueFormat,
+): string | undefined;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: false,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
+): string | E;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: boolean,
+  format?: OptionValueFormat,
+): string | string[] | undefined;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
+  enumOptions: EnumOptionsType<S>[] | undefined,
+  multiple: boolean,
+  format: OptionValueFormat | undefined,
+  emptyValue: E,
+): string | string[] | E;
+export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJSFSchema, E = undefined>(
+  value: unknown,
   enumOptions: EnumOptionsType<S>[] | undefined,
   multiple: boolean,
   format: OptionValueFormat = 'indexed',
-  emptyValue?: any,
-): any {
+  emptyValue?: E,
+): string | string[] | E | undefined {
   // A single value that equals `emptyValue` still counts as a selection when an option carries it, since widgets pick
   // sentinels like `null` or `''` that a `oneOf`/`anyOf` of constants can legitimately offer as an option of its own
   const isEmpty =
@@ -38,7 +77,7 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
   if (format === 'realValue') {
     // Encoded the same way as the options' values so they match, e.g. `null` is its option's index on both sides
     const encodeValue = realValueEncoder<S>(enumOptions);
-    const encode = (item: any, noMatch: any) => {
+    const encode = <N>(item: unknown, noMatch: N): string | N => {
       const encoded = encodeValue(item);
       // Only a value encoded as its index needs the scan that searches for one
       if (encoded !== undefined) {
@@ -54,8 +93,8 @@ export default function enumOptionSelectedValue<S extends StrictRJSFSchema = RJS
     // value is matched as a one-item selection, as the `indexed` format does. An entry that is encoded as its index but
     // matches no option is left out, since any value standing in for it could be one an option encodes as
     return (Array.isArray(value) ? value : [value])
-      .map((item: any) => encode(item, NO_MATCH))
-      .filter((encoded: any) => encoded !== NO_MATCH);
+      .map((item) => encode(item, NO_MATCH))
+      .filter((encoded): encoded is string => encoded !== NO_MATCH);
   }
 
   const indexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

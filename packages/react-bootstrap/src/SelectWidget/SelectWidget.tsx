@@ -54,7 +54,7 @@ export default function SelectWidget<
    */
   function getValue(event: FocusEvent<HTMLSelectElement> | ChangeEvent<HTMLSelectElement>, isMultiple?: boolean) {
     if (isMultiple) {
-      return Array.from<HTMLOptionElement>(event.target.options)
+      return Array.from(event.target.options)
         .map((option, position) => ({ option, position }))
         .filter(({ option }) => option.selected)
         .sort((a, b) => enumIndexByPosition[a.position] - enumIndexByPosition[b.position])
@@ -62,7 +62,7 @@ export default function SelectWidget<
     }
     return event.target.value;
   }
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
