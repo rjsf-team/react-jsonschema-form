@@ -2,12 +2,16 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
+  ELSE_KEY,
+  IF_KEY,
   ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
+  THEN_KEY,
 } from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
-import isObject from '../isObject.ts';
+import { isSchemaObject } from '../isObject.ts';
+import logOnce from '../logOnce.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
@@ -25,37 +29,35 @@ interface ParseState {
   readonly parsed: Set<string>;
   /** The schemas `retrieveSchemaInternal()` has already returned, preventing infinite recursion */
   readonly resolved: Set<string>;
+  /** The `patternProperties` whose combinations have been enumerated. An option merged into its parent carries the
+   * parent's `patternProperties`, so the same set arrives once per option, and enumerating it again rebuilds and
+   * stringifies the same `2^n - 1` combinations for `parsed` to discard
+   */
+  readonly patterns: Set<string>;
 }
 
-/** Narrows a value read out of a schema -- which the JSON Schema types also allow to be a boolean, and which can be
- * absent -- to the schema `parseSchema()` walks. A boolean or missing sub-schema describes no value of its own.
- *
- * @param valueSchema - The value read out of a schema keyword
- * @returns - True when the value is a schema with content to parse
- */
-function isSchemaObject<S extends StrictRJSFSchema = RJSFSchema>(valueSchema: unknown): valueSchema is S {
-  return isObject(valueSchema);
-}
-
-/** The most `patternProperties` one schema may have for the combinations of them to be enumerated. There are
- * `2^n - 1` of those, so the work doubles with each pattern past this and a schema that exceeds it is reported rather
- * than parsed for minutes
+/** The most `patternProperties` one schema may have for every combination of them to be enumerated. There are
+ * `2^n - 1` of those, so each pattern up to here doubles the work and the ones past it would take minutes
  */
 const MAX_COMBINED_PATTERN_PROPERTIES = 16;
 
-/** Returns every non-empty combination of the given `values`, each keeping the order they were given in. There are
- * `2^n - 1` of them: a form reads only the combination of `patternProperties` that a form data key actually matches,
- * which a parse that has no form data cannot know, so every one of them has to be covered.
+/** Returns the combinations of the given `values` to parse, each keeping the order they were given in. A form reads
+ * only the combination of `patternProperties` that a form data key actually matches, which a parse that has no form
+ * data cannot know, so every one of the `2^n - 1` of them has to be covered. Past
+ * `MAX_COMBINED_PATTERN_PROPERTIES` that is more work than a compile can do, so only each value on its own and all of
+ * them together are returned: a schema with that many patterns is still compiled, and a key matching some other
+ * subset of them is the case a precompiled validator will not have a function for.
  *
  * @param values - The values to combine
- * @returns - The list of every non-empty combination of the `values`
- * @throws - Error when there are more than `MAX_COMBINED_PATTERN_PROPERTIES` values to combine
+ * @returns - The list of the combinations of the `values` to parse
  */
 function combinationsOf<V>(values: V[]): V[][] {
   if (values.length > MAX_COMBINED_PATTERN_PROPERTIES) {
-    throw new Error(
-      `A schema has ${values.length} patternProperties, more than the ${MAX_COMBINED_PATTERN_PROPERTIES} whose combinations can be enumerated. A key can match any subset of them, and a form renders it with the merge of the subset it matches, so every subset has to be compiled. Give the object fewer patternProperties, nesting the values they describe if need be.`,
+    logOnce(
+      `A schema has ${values.length} patternProperties, more than the ${MAX_COMBINED_PATTERN_PROPERTIES} whose combinations can all be enumerated, so only each pattern alone and all of them together were parsed. A key can match any subset of them, and a form renders it with the merge of the subset it matches, so a key matching some other subset has no compiled validator. Give the object fewer patternProperties, nesting the values they describe if need be.`,
+      'warn',
     );
+    return [...values.map((value) => [value]), values];
   }
   return values.reduce<V[][]>(
     (combinations, value) => [...combinations, [value], ...combinations.map((combination) => [...combination, value])],
@@ -118,6 +120,15 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       parseSchema<T, S, F>(context, state, rootSchema, dependencyValue);
     }
   }
+  // `omitExtraData()` applies the branch an `if` selects by walking the branch's own schema, so a `dependencies` or an
+  // `allOf` the branch declares is read there, where resolution only merges the branch into the schema it conditions
+  if (IF_KEY in schema) {
+    for (const branch of [schema[THEN_KEY], schema[ELSE_KEY]]) {
+      if (isSchemaObject<S>(branch)) {
+        parseSchema<T, S, F>(context, state, rootSchema, branch);
+      }
+    }
+  }
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
@@ -161,8 +172,15 @@ function parseValueSchemas<
   // A form renders a key its `patternProperties` match with the merge of every pattern matching it, down to the one
   // pattern a lone match makes, so each combination is parsed as the `allOf` that `stubExistingAdditionalProperties()`
   // hands to `retrieveSchema()` rather than as the patterns themselves, which a form resolves nothing from
-  for (const patterns of combinationsOf(Object.values(schema[PATTERN_PROPERTIES_KEY] ?? {}))) {
-    valueSchemas.push({ allOf: patterns });
+  const patternProperties = schema[PATTERN_PROPERTIES_KEY];
+  if (patternProperties) {
+    const patternsKey = sortedJSONStringify(patternProperties);
+    if (!state.patterns.has(patternsKey)) {
+      state.patterns.add(patternsKey);
+      for (const patterns of combinationsOf(Object.values(patternProperties))) {
+        valueSchemas.push({ allOf: patterns });
+      }
+    }
   }
   if (Array.isArray(schema.items)) {
     // `additionalItems` only describes the rows a tuple `items` doesn't, and a form renders nothing from it otherwise
@@ -191,7 +209,12 @@ export default function schemaParser<
 >(rootSchema: S, options: SchemaParserOptions<S> = {}): SchemaMap<S> {
   const validator = new ParserValidator<S, F>(rootSchema);
 
-  parseSchema({ ...options, validator }, { parsed: new Set(), resolved: new Set() }, rootSchema, rootSchema);
+  parseSchema(
+    { ...options, validator },
+    { parsed: new Set(), resolved: new Set(), patterns: new Set() },
+    rootSchema,
+    rootSchema,
+  );
 
   return validator.getSchemaMap();
 }

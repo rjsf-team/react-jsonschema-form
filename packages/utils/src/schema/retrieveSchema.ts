@@ -909,11 +909,13 @@ export function retrieveSchemaInternal<
     if (properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
       // Merging a property with its matching patterns resolves the result, which for a key holding a `$ref` back to
       // this schema never terminates, so the reference this schema was itself reached through seeds that resolution
-      // and stops it. That one alone, and a fresh copy of it per key: `resolveAllReferences()` merges the references
-      // each property resolved back into the list it was given, so both `recurseList` and a list shared between the
-      // keys hold what another key resolved, which reads as a cycle and leaves this one holding a literal `$ref`
-      const ownRef = (resolvedSchema as RJSFMarkedSchema)[RJSF_REF_KEY] as string | undefined;
-      const mergeRecurseList = ownRef ? [ownRef] : [];
+      // and stops it. It is read off the schema before the merge first, since `mergeAllOf` drops the Symbol keys and
+      // the re-apply above recovers only the `allOf` entries'. That reference alone, and a fresh copy of it per key:
+      // `resolveAllReferences()` merges the references each property resolved back into the list it was given, so both
+      // `recurseList` and a list shared between the keys hold what another key resolved, which reads as a cycle and
+      // leaves this one holding a literal `$ref`
+      const ownRef = refOf<S>(s) ?? refOf<S>(resolvedSchema);
+      const mergeRecurseList = ownRef === undefined ? [] : [ownRef];
       // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
       // are varied one property at a time rather than in every combination with the other properties': what reads a
       // branch reads one property, and the combinations grow as the product of the branch counts
@@ -957,6 +959,16 @@ export function retrieveSchemaInternal<
       return schemaWithProperties;
     });
   });
+}
+
+/** Returns the `$ref` the given schema holds or was resolved from, if any. A resolved schema no longer holds the
+ * reference as a key, so the one `resolveAllReferences()` marked it with is what names it.
+ *
+ * @param schema - The schema to read the reference off
+ * @returns - The `$ref` the schema holds or was resolved from, or undefined when it has neither
+ */
+function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string | undefined {
+  return (schema[REF_KEY] ?? (schema as RJSFMarkedSchema)[RJSF_REF_KEY]) as string | undefined;
 }
 
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from
@@ -1024,6 +1036,11 @@ export function resolveAnyOrOneOfSchemas<
         retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, [...recurseList]),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
+      // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
+      // declines the switch to another option, the data still fitting the chosen one is what keeps it. That asks for
+      // the option under the derived `$id` scoring gives it, since the retrieved form is not what the option's own
+      // `$id` names, so the derivation is applied to the option here too
+      retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
       getFirstMatchingOption<T, S, F>(
         context,
         formData,

@@ -316,6 +316,20 @@ exports[`schemaParser() > parses schema dependencies with one of and refs proper
     },
     "type": "object",
   },
+  "-505ec9e6": {
+    "$id": "-505ec9e6",
+    "properties": {
+      "a": {
+        "enum": [
+          "int",
+        ],
+      },
+      "b": {
+        "type": "integer",
+      },
+    },
+    Symbol(__rjsf_ref): "#/definitions/needsA",
+  },
   "12882445": {
     "$id": "12882445",
     "anyOf": [
@@ -330,6 +344,20 @@ exports[`schemaParser() > parses schema dependencies with one of and refs proper
         ],
       },
     ],
+    "properties": {
+      "a": {
+        "enum": [
+          "bool",
+        ],
+      },
+      "b": {
+        "type": "boolean",
+      },
+    },
+    Symbol(__rjsf_ref): "#/definitions/needsB",
+  },
+  "4177356d": {
+    "$id": "4177356d",
     "properties": {
       "a": {
         "enum": [
@@ -793,6 +821,36 @@ exports[`schemaParser() > parses schema with nested conditions 1`] = `
 
 exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] = `
 {
+  "-1d49bf87": {
+    "$id": "-1d49bf87",
+    "properties": {
+      "employee_accounts": {
+        "const": true,
+      },
+      "update_absences": {
+        "oneOf": [
+          {
+            "const": "BOTH",
+            "title": "Both",
+          },
+        ],
+        "title": "Update Absences",
+        "type": "string",
+      },
+    },
+  },
+  "-34afb4c9": {
+    "$id": "-34afb4c9",
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "MEDICAL_ONLY",
+      },
+    },
+  },
   "-37c29d49": {
     "$id": "-37c29d49",
     "properties": {
@@ -801,6 +859,18 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
       },
     },
     "type": "object",
+  },
+  "-3ecec277": {
+    "$id": "-3ecec277",
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "NON_MEDICAL_ONLY",
+      },
+    },
   },
   "-406a5a54": {
     "$id": "-406a5a54",
@@ -909,6 +979,18 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
     "$id": "-7c3c9229",
     "const": "BOTH",
     "title": "Both",
+  },
+  "1e15c7e": {
+    "$id": "1e15c7e",
+    "properties": {
+      "permitted_extension": {
+        "title": "Permitted Extension",
+        "type": "integer",
+      },
+      "update_absences": {
+        "const": "BOTH",
+      },
+    },
   },
   "21f592dd": {
     "$id": "21f592dd",
@@ -1054,6 +1136,40 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/choice2",
   },
+  "-365ff3a7": {
+    "$id": "-365ff3a7",
+    "properties": {
+      "choice": {
+        "const": "two",
+        "type": "string",
+      },
+      "more": {
+        "type": "string",
+      },
+    },
+    "type": "object",
+    Symbol(__rjsf_ref): "#/definitions/choice2",
+  },
+  "-3c1db7d0": {
+    "$id": "-3c1db7d0",
+    "properties": {
+      "name": {
+        "type": "string",
+      },
+    },
+    "type": "object",
+    Symbol(__rjsf_ref): "#/definitions/foo",
+  },
+  "-40dd246a": {
+    "$id": "-40dd246a",
+    "properties": {
+      "idCode": {
+        "type": "string",
+        Symbol(__rjsf_ref): "#/definitions/test",
+      },
+    },
+    "title": "Second method of identification",
+  },
   "-42566fe2": {
     "$id": "-42566fe2",
     "anyOf": [
@@ -1080,6 +1196,20 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/choice1",
   },
+  "-4887b48c": {
+    "$id": "-4887b48c",
+    "properties": {
+      "firstName": {
+        "title": "First name",
+        "type": "string",
+      },
+      "lastName": {
+        "type": "string",
+        Symbol(__rjsf_ref): "#/definitions/test",
+      },
+    },
+    "title": "First method of identification",
+  },
   "-7df52035": {
     "$id": "-7df52035",
     "anyOf": [
@@ -1105,6 +1235,23 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "title": "First method of identification",
+  },
+  "32b62378": {
+    "$id": "32b62378",
+    "properties": {
+      "choice": {
+        "const": "one",
+        "type": "string",
+      },
+      "other": {
+        "type": "number",
+      },
+    },
+    "required": [
+      "more",
+    ],
+    "type": "object",
+    Symbol(__rjsf_ref): "#/definitions/choice1",
   },
   "587c7f18": {
     "$id": "587c7f18",

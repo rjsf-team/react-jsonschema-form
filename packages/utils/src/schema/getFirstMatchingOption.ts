@@ -31,17 +31,61 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   // a validation error rather than thrown on, so it is converted rather than called into
   // oxlint-disable-next-line typescript/no-unnecessary-type-conversion
   const base = String(id).replace(VARIANT_ID_SUFFIX, '');
-  return { ...schema, [ID_KEY]: `${base}?rjsf=${hashForSchema(withoutId as S)}` };
+  return { ...schema, [ID_KEY]: `${base}?rjsf=${hashForSchema(withoutId)}` };
 }
 
-/** Applies `withVariantId()` to a schema about to be scored, leaving the junk option alone: the precompiled validators
- * recognise that one by its own `$id` and answer it without a compiled function at all.
- *
- * @param schema - The schema that is about to be passed to `isValid()` for scoring
- * @returns - The schema to score, with an `$id` derived from its content unless it is the junk option
+/** The schema each option is scored by, memoized by the option it was derived from. Deriving it hashes the option, and
+ * an option is scored again on every change to the form data -- `MultiSchemaField` re-matches its options as the data
+ * changes, and `omitExtraData()` scores them per call -- so without this a large option is serialized on every
+ * keystroke. The options a caller hands over are the same objects between renders, and a schema is read rather than
+ * written everywhere it is scored, so an entry stays the derivation of what it is keyed by
  */
-function withScoringId<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  return schema[ID_KEY] === JUNK_OPTION_ID ? schema : withVariantId<S>(schema);
+const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
+
+/** Returns the schema the given `option` is scored by. An object option is matched more strictly than it describes
+ * itself: unless it uses `required`, an object validates against it as long as it has no key of a conflicting type, so
+ * an `anyOf` of the keys it declares is added, asserting that the data holds at least one of them, and the `required`
+ * it does declare is dropped, since the keys a user has yet to fill in would fail it.
+ *
+ * The result carries an `$id` derived from its own content rather than the option's, since it is not the schema that
+ * `$id` names and a validator caches the function it compiles under it. The junk option is left alone: the precompiled
+ * validators recognise that one by its own `$id` and answer it without a compiled function at all.
+ *
+ * @param option - The option that is about to be passed to `isValid()` for scoring
+ * @returns - The schema to score the option by
+ */
+function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
+  const memoized = scoringSchemas.get(option);
+  if (memoized) {
+    return memoized as S;
+  }
+  const augmented = augmentedForScoring<S>(option);
+  const scored = option[ID_KEY] === JUNK_OPTION_ID ? augmented : withVariantId<S>(augmented);
+  scoringSchemas.set(option, scored);
+  return scored;
+}
+
+/** Returns the `option` with the `anyOf` of its own property names that scoring an object option needs, or the option
+ * itself when it declares no `properties` to build one from.
+ *
+ * @param option - The option to augment for scoring
+ * @returns - The option, augmented when it describes an object
+ */
+function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
+  if (!option[PROPERTIES_KEY]) {
+    return option;
+  }
+  const requiresAnyOf = {
+    anyOf: Object.keys(option[PROPERTIES_KEY]).map((key) => ({
+      required: [key],
+    })),
+  };
+  // An `anyOf` the option already declares is left as it is, with the augmentation wrapped in an `allOf` so both apply
+  const augmentedSchema = option.anyOf
+    ? ({ ...option, allOf: [...(option.allOf ?? []), requiresAnyOf] } as S)
+    : ({ ...option, ...requiresAnyOf } as S);
+  delete augmentedSchema.required;
+  return augmentedSchema;
 }
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
@@ -89,54 +133,7 @@ export default function getFirstMatchingOption<
       if (context.validator.isValid(discriminator, value, rootSchema)) {
         return i;
       }
-    } else if (option[PROPERTIES_KEY]) {
-      // If the schema describes an object then we need to add slightly more
-      // strict matching to the schema, because unless the schema uses the
-      // "requires" keyword, an object will match the schema as long as it
-      // doesn't have matching keys with a conflicting type. To do this we use an
-      // "anyOf" with an array of requires. This augmentation expresses that the
-      // schema should match if any of the keys in the schema are present on the
-      // object and pass validation.
-      //
-      // Create an "anyOf" schema that requires at least one of the keys in the
-      // "properties" object
-      const requiresAnyOf = {
-        anyOf: Object.keys(option[PROPERTIES_KEY]).map((key) => ({
-          required: [key],
-        })),
-      };
-
-      let augmentedSchema;
-
-      // If the "anyOf" keyword already exists, wrap the augmentation in an "allOf"
-      if (option.anyOf) {
-        // Create a shallow clone of the option
-        const { ...shallowClone } = option;
-
-        if (!shallowClone.allOf) {
-          shallowClone.allOf = [];
-        } else {
-          // If "allOf" already exists, shallow clone the array
-          shallowClone.allOf = shallowClone.allOf.slice();
-        }
-
-        shallowClone.allOf.push(requiresAnyOf);
-
-        augmentedSchema = shallowClone;
-      } else {
-        augmentedSchema = { ...option, ...requiresAnyOf };
-      }
-
-      // Remove the "required" field as it's likely that not all fields have
-      // been filled in yet, which will mean that the schema is not valid
-      delete augmentedSchema.required;
-
-      if (context.validator.isValid(withScoringId(augmentedSchema), formData, rootSchema)) {
-        return i;
-      }
-    } else if (context.validator.isValid(withScoringId(option), formData, rootSchema)) {
-      // An option is scored as the caller hands it over, which for `MultiSchemaField` is the retrieved form rather
-      // than the one the schema declares, so this needs the derived `$id` as much as the augmented branch does
+    } else if (context.validator.isValid(scoringSchema<S>(option), formData, rootSchema)) {
       return i;
     }
   }

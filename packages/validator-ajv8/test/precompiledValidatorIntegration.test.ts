@@ -10,7 +10,14 @@
  */
 
 import type { RJSFSchema } from '@rjsf/utils';
-import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, relaxOptionsForScoring } from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  getClosestMatchingOption,
+  getFirstMatchingOption,
+  omitExtraData,
+  relaxOptionsForScoring,
+  withVariantId,
+} from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -232,6 +239,42 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
           }),
         ).toEqual({ kind: 'b', bar: 'world' });
       });
+    });
+  });
+  describe('a retrieved option validated as it stands', () => {
+    /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
+     * validated under it would be answered by the function compiled for the option as declared
+     */
+    const ID_ONEOF_SCHEMA: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { $id: 'http://e.com/a.json', type: 'object', properties: { a: { type: 'string' } } },
+        { $id: 'http://e.com/b.json', type: 'object', properties: { b: { type: 'number' } } },
+      ],
+    };
+
+    it('is compiled under the derived $id that MultiSchemaField validates it under', () => {
+      const validator = buildPrecompiledValidator(ID_ONEOF_SCHEMA);
+      const schemaUtils = createSchemaUtils({ validator }, ID_ONEOF_SCHEMA);
+      // `MultiSchemaField` keeps the chosen option while the data still fits it, which asks the validator for the
+      // option it retrieved rather than for a scoring form of it
+      const retrieved = schemaUtils.retrieveSchema(ID_ONEOF_SCHEMA.oneOf![0] as RJSFSchema, { a: 'x' });
+      expect(validator.isValid(withVariantId(retrieved), { a: 'x' }, ID_ONEOF_SCHEMA)).toBe(true);
+      expect(validator.isValid(withVariantId(retrieved), { a: 5 }, ID_ONEOF_SCHEMA)).toBe(false);
+    });
+
+    it('is compiled for an option that carries no $id of its own', () => {
+      const anonymous: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', properties: { b: { type: 'number' } } },
+        ],
+      };
+      const validator = buildPrecompiledValidator(anonymous);
+      const schemaUtils = createSchemaUtils({ validator }, anonymous);
+      const retrieved = schemaUtils.retrieveSchema(anonymous.oneOf![1] as RJSFSchema, { b: 1 });
+      expect(validator.isValid(withVariantId(retrieved), { b: 1 }, anonymous)).toBe(true);
     });
   });
 });

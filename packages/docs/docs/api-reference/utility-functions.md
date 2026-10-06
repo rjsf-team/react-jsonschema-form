@@ -1877,11 +1877,12 @@ Two schemas sharing a key must validate the same way, so a schema derived from a
 
 Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the `$id` of the schema, or by its hash when it has none.
 It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through the sub-schemas a form renders a value with: `properties`, the `patternProperties` and `additionalProperties` a form renders the keys they describe with, and `items`, including every position of a tuple `items` and the `additionalItems` beyond it.
-It stops at a schema it has already collected, so that a recursive `$ref` cannot loop.
+It stops at a schema it has already collected, so that a `$ref` back to a schema already being resolved cannot loop; two schemas referencing each other through a key their own `patternProperties` match still can, and overflow the stack.
 A key a form's data brings is rendered with the merge of every `patternProperties` entry matching it, so each combination of them is parsed as the `allOf` that merge is made from, which a `customMergeAllOf` sees exactly as the form's does.
-A schema may have at most 16 `patternProperties` for this, since there are `2 ** n - 1` combinations of them; one with more is reported rather than parsed.
+A schema may have at most 16 `patternProperties` for every combination to be parsed, since there are `2 ** n - 1` of them; for one with more, each pattern alone and all of them together are parsed and a warning says so, leaving a key that matches some other subset of them without a compiled validator.
 An `allOf` is parsed both merged and as it stands, because a form reads it both ways: `getObjectDefaults()` reads a nested object's unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place.
 A schema `dependencies` is parsed in its own right as well as applied, because `omitExtraData()` scores the options of a `oneOf` it declares, and a dependency is parsed both applied and left out, because a form leaves it out until its key has a value.
+The `then` and `else` branches of an `if` are parsed in their own right too, for the same reason: `omitExtraData()` applies the branch it selects by walking the branch's own schema, so a `dependencies` the branch declares is read there, where resolution only merges the branch into the schema it conditions.
 This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the key it maps them under is the one the validator looks them up by at runtime; see [validator-ajv8](./validator-ajv8.md).
 
 #### Parameters
@@ -2294,6 +2295,22 @@ This is used in isValid to make references to the rootSchema
 #### Returns
 
 - S: A copy of the `schemaNode` with updated `$ref`s
+
+### withVariantId&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a schema derived from one that carries an `$id` with an `$id` of its own, of `<the original's>?rjsf=<the derived schema's hash>`, and returns a schema with no `$id` as it stands.
+A validator caches the function it compiles for a schema under its `$id`, so a derived schema keeping the original's would be validated against the original's function.
+The original `$id` is kept as the base of the derived one, since a relative `$ref` the schema left for the validator to resolve resolves against it.
+This is what the option scoring applies to the forms of an option it validates — the augmented one, the one with `additionalProperties` relaxed — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the option it retrieved before validating it, so each is compiled in its own right.
+A suffix already present is replaced rather than appended to, so deriving from a derived schema names the same schema either way.
+
+#### Parameters
+
+- schema: S - The schema derived from one that may carry an `$id`
+
+#### Returns
+
+- S: The schema, carrying an `$id` that names it rather than the one it was derived from
 
 ## Validator-based utility functions
 

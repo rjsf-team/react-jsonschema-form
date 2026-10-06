@@ -4,7 +4,7 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
-import isObject from '../isObject.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
@@ -57,17 +57,6 @@ export default function omitExtraData<
     return isObject(value);
   }
 
-  /** Type predicate that narrows a `S | boolean` schema definition to `S` — true when `schemaDef` is
-   * a schema object rather than a JSON Schema boolean shorthand (`true` meaning allow-all, `false`
-   * meaning deny-all).
-   *
-   * @param schemaDef - The schema definition to check
-   * @returns - True if `schemaDef` is a schema object
-   */
-  function isSchemaObj(schemaDef: S | boolean): schemaDef is S {
-    return isObject(schemaDef);
-  }
-
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
    * each value. Handles `properties`, `patternProperties`, and `additionalProperties`.
    * Optional object-valued properties are pruned when every key in the filtered result is both
@@ -103,7 +92,7 @@ export default function omitExtraData<
       const v = omit(schemaDef, value, target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
-        let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
+        let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
           sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
         }
@@ -230,9 +219,7 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(condition as S, source, rootSchema)
-      : condition;
+    const isThenBranch = isSchemaObject<S>(condition) ? validator.isValid(condition, source, rootSchema) : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }

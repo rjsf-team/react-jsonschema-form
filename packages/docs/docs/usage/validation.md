@@ -67,7 +67,8 @@ Each function is looked up by the `$id` of the schema it validates, or by a hash
 If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
 Give two sub-schemas that differ distinct `$id`s, or none, since the lookup cannot tell two schemas with the same `$id` apart and the compile fails rather than leave one of them out.
 An `$id` of the empty string names nothing, so a schema carrying one is looked up by its hash instead.
-An object may have at most 16 `patternProperties` for the compile, since a key can match any subset of them and a form renders it with the merge of the subset it matches, so every subset has to be compiled.
+A key can match any subset of an object's `patternProperties` and a form renders it with the merge of the subset it matches, so every subset has to be compiled; an object may have at most 16 of them for the compile to cover every subset.
+An object with more is still compiled, with each pattern alone and all of them together, and the compile warns that a key matching some other subset of them has no compiled validator.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';

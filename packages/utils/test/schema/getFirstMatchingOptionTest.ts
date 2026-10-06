@@ -66,6 +66,23 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } }, anyOf: [{ required: ['id'] }] },
       ]);
     });
+    it('derives the schema an option is scored by once, so re-scoring it does not hash it again', () => {
+      const validated: RJSFSchema[] = [];
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      const options: RJSFSchema[] = [{ $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } }];
+      getFirstMatchingOption({ validator: recordingValidator }, { id: 'a' }, options, rootSchema);
+      getFirstMatchingOption({ validator: recordingValidator }, { id: 'b' }, options, rootSchema);
+      // Deriving the `$id` serializes the whole option, and an option is re-scored on every change to the form data,
+      // so the derivation is memoized by the option it came from: the same object back is what proves it
+      expect(validated[1]).toBe(validated[0]);
+    });
     it('should handle undefined formData when a discriminator field is present in an option', () => {
       const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];
       expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema, 'id')).toEqual(0);

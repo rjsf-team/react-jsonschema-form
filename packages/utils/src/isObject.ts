@@ -1,4 +1,4 @@
-import type { GenericObjectType } from './types.ts';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Determines whether a `thing` is an object for the purposes of RJSF. In this case, `thing` is an object if it has
  * the type `object` but is NOT null, an array or a File.
@@ -31,4 +31,15 @@ export default function isObject(thing: unknown): thing is GenericObjectType {
     return false;
   }
   return !Array.isArray(thing);
+}
+
+/** Narrows a schema definition -- which the JSON Schema types also allow to be a boolean, and which can be absent --
+ * to the schema type the callers walk. A boolean or missing subschema describes no value of its own, so it has nothing
+ * to walk into: `true` allows anything and `false` allows nothing.
+ *
+ * @param schemaDef - The schema definition to check
+ * @returns - True when the definition is a schema object rather than a boolean shorthand or absent
+ */
+export function isSchemaObject<S extends StrictRJSFSchema = RJSFSchema>(schemaDef: unknown): schemaDef is S {
+  return isObject(schemaDef);
 }
