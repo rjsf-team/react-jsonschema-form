@@ -53,4 +53,19 @@ describe('validationDataMerge()', () => {
     };
     expect(validationDataMerge(validationData, errorSchema, true)).toEqual(expected);
   });
+  it('Skips additional errors already in the errors list when preventing duplicates', () => {
+    const message = 'must be at least 3 characters';
+    const existing = { property: '.street', message, stack: `.street ${message}` };
+    const validationData: ValidationData<any> = {
+      errorSchema: { street: { [ERRORS_KEY]: [message] } },
+      errors: [existing],
+    };
+    const errorSchema: ErrorSchema = { street: { [ERRORS_KEY]: [message] }, city: { [ERRORS_KEY]: [message] } };
+    const expected = {
+      errorSchema: { street: { [ERRORS_KEY]: [message] }, city: { [ERRORS_KEY]: [message] } },
+      errors: [existing, { property: '.city', message, stack: `.city ${message}` }],
+    };
+    expect(validationDataMerge(validationData, errorSchema, true)).toEqual(expected);
+    expect(validationDataMerge(validationData, errorSchema).errors).toHaveLength(3);
+  });
 });
