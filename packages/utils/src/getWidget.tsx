@@ -1,7 +1,17 @@
+import { isValidElement } from 'react';
+
+import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import getSchemaType from './getSchemaType.ts';
 import isComponentType from './isComponentType.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
-import type { FormContextType, RJSFSchema, Widget, RegistryWidgetsType, StrictRJSFSchema } from './types.ts';
+import type {
+  FormContextType,
+  RJSFSchema,
+  Widget,
+  WidgetProps,
+  RegistryWidgetsType,
+  StrictRJSFSchema,
+} from './types.ts';
 
 /** The aliases of a select that picks one value as a whole: every select an `object` or `null` schema can be, and the
  * aliases an `array` schema accepts in place of `widgetMap.array` when it is a select over whole array constants. A
@@ -110,12 +120,15 @@ export default function getWidget<
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 
-  if (isComponentType(widget)) {
+  if (isComponentType<WidgetProps<T, S, F>>(widget)) {
     return widget;
   }
 
   if (typeof widget !== 'string') {
-    throw new Error(`Unsupported widget definition: ${typeof widget} in schema: ${JSON.stringify(schema)}`);
+    const description = isValidElement(widget)
+      ? `the widget ${describeElementGivenAsComponent('MyWidget')}`
+      : typeof widget;
+    throw new Error(`Unsupported widget definition: ${description} in schema: ${JSON.stringify(schema)}`);
   }
 
   // Own keys only, so a name such as `constructor` or `toString` resolves to no widget rather than to a function off

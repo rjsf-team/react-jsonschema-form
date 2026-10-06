@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import type { ForwardedRef } from 'react';
-import { forwardRef, memo } from 'react';
+import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
@@ -187,12 +187,17 @@ describe('getWidget()', () => {
     expect(() => getWidget(schema, name, {})).toThrow(`No widget '${name}' for type 'object' in schema: ${schemaStr}`);
   });
 
-  it('should fail for a React element, which is not a component', () => {
+  it('should fail for a React element, naming what to pass instead', () => {
     const element = <TestWidget {...widgetProps} />;
-    expect(() => getWidget(schema, element as unknown as Widget)).toThrow(
-      `Unsupported widget definition: object in schema: ${schemaStr}`,
-    );
-    expect(() => getWidget(schema, 'blabla', { blabla: element as unknown as Widget })).toThrow(
+    const message =
+      'Unsupported widget definition: the widget is a React element rather than a component (pass MyWidget, not <MyWidget />) ' +
+      `in schema: ${schemaStr}`;
+    expect(() => getWidget(schema, element as unknown as Widget)).toThrow(message);
+    expect(() => getWidget(schema, 'blabla', { blabla: element as unknown as Widget })).toThrow(message);
+  });
+
+  it('should fail for an object that is not a component, such as a context Provider', () => {
+    expect(() => getWidget(schema, createContext(null).Provider as unknown as Widget)).toThrow(
       `Unsupported widget definition: object in schema: ${schemaStr}`,
     );
   });

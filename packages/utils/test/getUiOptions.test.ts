@@ -98,8 +98,10 @@ describe('getUiOptions()', () => {
     ['memo(forwardRef())', memo(ForwardedWidget)],
     ['lazy()', lazy(async () => ({ default: MyWidget }))],
   ])('returns a widget given as a %s component as the widget', (_name, widget) => {
+    // The spy counts every call in the file, so it is cleared to see only what this call logs
+    consoleErrorSpy.mockClear();
     expect(getUiOptions({ 'ui:widget': widget })).toEqual({ widget });
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
   it('drops a widget given as a React element, as it does any object that is not a component', () => {
     expect(getUiOptions({ 'ui:widget': createElement(MyWidget) as unknown as string })).toEqual({});

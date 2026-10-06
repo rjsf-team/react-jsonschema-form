@@ -14,7 +14,8 @@ export interface ComponentLookupWording {
  * resolve to anything `isComponentType()` accepts, for a warning that it was ignored. Every option that takes a
  * component or a name describes it here, so the warnings for each read alike. A React element is called out on its
  * own, whether given directly or found under a name, since passing `<MyField />` for `MyField` is the likely mistake
- * and "got object" wouldn't say what to change.
+ * and "got object" wouldn't say what to change. `@rjsf/utils` words the same case for `ui:widget` through its own
+ * internal `describeElementGivenAsComponent()`, which this package can't import, so keep the two in step.
  *
  * Internal to `@rjsf/core`: `package.json` excludes `./lib/describeUnresolvedComponent.js` from the `./lib/*.js`
  * exports wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next

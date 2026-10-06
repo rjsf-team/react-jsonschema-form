@@ -1,6 +1,7 @@
 import { isValidElement } from 'react';
 
 import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants.ts';
+import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import isComponentType from './isComponentType.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
@@ -42,7 +43,7 @@ export default function getUiOptions<
     if (key === UI_WIDGET_KEY && isObject(value) && !isComponentType(value)) {
       logOnce(
         isValidElement(value)
-          ? 'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored.'
+          ? `ui:widget ${describeElementGivenAsComponent('MyWidget')}, so it is ignored.`
           : 'Setting options via ui:widget object is no longer supported, use ui:options instead',
         'error',
       );

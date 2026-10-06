@@ -12,12 +12,14 @@ const OBJECT_COMPONENT_TYPES = new Set<unknown>([
 
 /** Determines whether a value given in place of a component, such as a `ui:field`, a `ui:widget` or a
  * `LayoutGridField` cell's `render`, is one React can render as a component: a function, or one of the objects
- * `memo()`, `forwardRef()` and `lazy()` return, all of which `ComponentType` admits.
+ * `memo()`, `forwardRef()` and `lazy()` return, all of which `ComponentType` admits. A component's props can't be
+ * checked at runtime, so `P` is whatever props the caller expects the component to take; it defaults to `never` so that
+ * a caller assigning the result somewhere typed has to say what those are.
  *
  * @param value - The value to check
  * @returns - True when the value is a component, false for anything else, a React element included
  */
-export default function isComponentType(value: unknown): value is ComponentType<any> {
+export default function isComponentType<P = never>(value: unknown): value is ComponentType<P> {
   return (
     typeof value === 'function' ||
     (typeof value === 'object' && value !== null && '$$typeof' in value && OBJECT_COMPONENT_TYPES.has(value.$$typeof))

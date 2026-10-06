@@ -1242,35 +1242,21 @@ describe('LayoutGridField', () => {
   });
   describe('getCustomRenderComponent()', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
-    test('returns null when render is not given, without warning', () => {
-      expect(getCustomRenderComponent(undefined, registry)).toBeNull();
+    // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+    const element = <TestRenderer />;
+    test.each<[string, string | ComponentType, Registry]>([
+      ['a value that is not a string or component', {} as ComponentType, registry],
+      ['a name without a lookup', 'nonexistant', registry],
+      ['a name whose lookup is not a component', 'FooClass', registry],
+      [
+        'a name whose lookup is a React element',
+        'Nav',
+        getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: element } }),
+      ],
+      ['a React element', element as unknown as ComponentType, registry],
+    ])('returns null, without warning, for %s', (_, render, lookupRegistry) => {
+      expect(getCustomRenderComponent(render, lookupRegistry)).toBeNull();
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
-    });
-    test('returns null and warns when render is not a string or component', () => {
-      expect(getCustomRenderComponent({} as ComponentType, registry)).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        'ui:layoutGrid render is not a component (got object), so it is ignored.',
-      );
-    });
-    test('returns null and warns when render is a string without a lookup', () => {
-      expect(getCustomRenderComponent('nonexistant', registry)).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
-      );
-    });
-    test('names the cell in the warning when given a label for it', () => {
-      expect(getCustomRenderComponent('nonexistant', registry, "cell 'foo'")).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render for cell 'foo' names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it ` +
-          'is ignored.',
-      );
-    });
-    test('returns null and warns when render is a string whose lookup is not a component', () => {
-      expect(getCustomRenderComponent('FooClass', registry)).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render names a value in formContext.${LOOKUP_MAP_NAME} ('FooClass') that is not a component ` +
-          '(got string), so it is ignored.',
-      );
     });
     test('returns the render function when render is a string with a lookup', () => {
       expect(getCustomRenderComponent('TestRenderer', registry)).toBe(TestRenderer);
@@ -1285,25 +1271,6 @@ describe('LayoutGridField', () => {
       const lookupRegistry = getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { WrappedRenderer: component } });
       expect(getCustomRenderComponent(component, registry)).toBe(component);
       expect(getCustomRenderComponent('WrappedRenderer', lookupRegistry)).toBe(component);
-    });
-    test('returns null and warns with the element hint when render looks up a React element', () => {
-      // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-      const element = <TestRenderer />;
-      const lookupRegistry = getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: element } });
-      expect(getCustomRenderComponent('Nav', lookupRegistry)).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render names a value in formContext.${LOOKUP_MAP_NAME} ('Nav') that is a React element rather ` +
-          'than a component (pass MyRenderer, not <MyRenderer />), so it is ignored.',
-      );
-    });
-    test('returns null and warns when render is a React element rather than a component', () => {
-      // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-      const element = <TestRenderer />;
-      expect(getCustomRenderComponent(element as unknown as ComponentType, registry)).toBeNull();
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        'ui:layoutGrid render is a React element rather than a component (pass MyRenderer, not <MyRenderer />), so ' +
-          'it is ignored.',
-      );
     });
   });
   describe('computeFieldUiSchema()', () => {
@@ -1415,24 +1382,6 @@ describe('LayoutGridField', () => {
     });
   });
   describe('computeUIComponentPropsFromGridSchema()', () => {
-    const consoleWarnSuppression = setupConsoleWarnSuppression();
-    test.each([
-      ['a named cell in a labelled grid', { name: 'foo' }, '"root"', `cell 'foo' in "root"`],
-      ['an unnamed cell in a labelled grid', {}, '"root"', 'a cell in "root"'],
-      ['a named cell in an unlabelled grid', { name: 'foo' }, undefined, `cell 'foo'`],
-    ])('names %s in the warning about its render', (_, cell, gridLabel, cellLabel) => {
-      computeUIComponentPropsFromGridSchema(registry, { ...cell, render: 'nonexistant' }, gridLabel);
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render for ${cellLabel} names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so ` +
-          'it is ignored.',
-      );
-    });
-    test('names no cell in the warning about the render of an unnamed cell in an unlabelled grid', () => {
-      computeUIComponentPropsFromGridSchema(registry, { render: 'nonexistant' });
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
-      );
-    });
     test('gridSchema is undefined', () => {
       expect(computeUIComponentPropsFromGridSchema(registry)).toEqual({
         name: '',
@@ -1533,14 +1482,63 @@ describe('LayoutGridField', () => {
   });
   describe('a render that resolves to nothing', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
-    test('renderField warns about it, naming the field the grid belongs to', () => {
-      const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: 'nonexistant' } } });
+    // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+    const element = <TestRenderer />;
+    test.each<[string, unknown, Record<string, unknown>, string]>([
+      ['is not a string or component', {}, {}, 'is not a component (got object)'],
+      ['names nothing', 'nonexistant', {}, `names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant')`],
+      [
+        'names a value that is not a component',
+        'FooClass',
+        { FooClass: 'Foo' },
+        `names a value in formContext.${LOOKUP_MAP_NAME} ('FooClass') that is not a component (got string)`,
+      ],
+      [
+        'names a React element',
+        'Nav',
+        { Nav: element },
+        `names a value in formContext.${LOOKUP_MAP_NAME} ('Nav') that is a React element rather than a component ` +
+          '(pass MyRenderer, not <MyRenderer />)',
+      ],
+      [
+        'is a React element',
+        element,
+        {},
+        'is a React element rather than a component (pass MyRenderer, not <MyRenderer />)',
+      ],
+    ])(
+      'renderField warns about a render that %s, naming the field the grid belongs to',
+      (_, cellRender, lookup, why) => {
+        const registry = getTestRegistry({}, REGISTRY_FIELDS, {}, {}, { [LOOKUP_MAP_NAME]: lookup });
+        const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: cellRender } }, registry });
+        render(<LayoutGridField {...props} />);
+        expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:layoutGrid render for a cell in "${props.id}" (${props.fieldPath}) ${why}, so it is ignored.`,
+        );
+      },
+    );
+    test('renderField names a cell whose name resolves to no schema in the warning', () => {
+      const props = getProps({
+        schema: SAMPLE_SCHEMA,
+        uiSchema: { [LAYOUT_GRID_OPTION]: { name: 'notInSchema', render: 'nonexistant' } },
+        registry: sampleSchemaRegistry,
+      });
       render(<LayoutGridField {...props} />);
-      expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:layoutGrid render for a cell in "${props.id}" (${props.fieldPath}) names no value in ` +
+        `ui:layoutGrid render for cell 'notInSchema' in "${props.id}" (${props.fieldPath}) names no value in ` +
           `formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
       );
+    });
+    test('renderField does not warn about the render of a cell whose name resolves to a schema, which never uses it', () => {
+      const props = getProps({
+        schema: SAMPLE_SCHEMA,
+        uiSchema: { [LAYOUT_GRID_OPTION]: { name: 'simpleString', render: 'nonexistant' } },
+        registry: sampleSchemaRegistry,
+      });
+      render(<LayoutGridField {...props} />);
+      expect(screen.getByTestId(LayoutGridField.TEST_IDS.field)).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
   });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {

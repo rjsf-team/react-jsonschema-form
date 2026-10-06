@@ -1294,10 +1294,11 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
-### isComponentType()
+### isComponentType&lt;P = never>()
 
 Determines whether a `value` given in place of a component, such as a `ui:field`, a `ui:widget` or a `LayoutGridField` cell's `render`, is one React can render as a component.
 That is a function, or one of the objects `memo()`, `forwardRef()` and `lazy()` return. A React element, such as `<MyField />`, is not a component.
+A component's props can't be checked at runtime, so `P` names the props the caller expects it to take, e.g. `isComponentType<WidgetProps>(value)` narrows `value` to `ComponentType<WidgetProps>`.
 
 #### Parameters
 

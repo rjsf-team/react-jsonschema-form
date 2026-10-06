@@ -456,17 +456,20 @@ describe('SchemaField', () => {
         expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
       });
 
-      it('does not warn when a JSON uiSchema clears a global ui:field with null', () => {
-        const uiSchema: UiSchema = JSON.parse(
-          '{ "ui:globalOptions": { "field": "myobject" }, "ui:field": null, "val": { "ui:field": null } }',
-        );
+      it.each(['null', 'false', '""', '0'])(
+        'does not warn when a JSON uiSchema clears a global ui:field with %s',
+        (empty) => {
+          const uiSchema: UiSchema = JSON.parse(
+            `{ "ui:globalOptions": { "field": "myobject" }, "ui:field": ${empty}, "val": { "ui:field": ${empty} } }`,
+          );
 
-        const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
+          const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
 
-        expect(node.querySelector('#custom')).not.toBeInTheDocument();
-        expect(node.querySelector('input#root_val')).toBeInTheDocument();
-        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
-      });
+          expect(node.querySelector('#custom')).not.toBeInTheDocument();
+          expect(node.querySelector('input#root_val')).toBeInTheDocument();
+          expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+        },
+      );
     });
   });
 

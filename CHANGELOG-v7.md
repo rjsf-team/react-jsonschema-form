@@ -165,7 +165,7 @@ should change the heading of the (upcoming) version to include a major version b
 - A non-boolean falsy `ui:label`, such as `0` or `null` from an untyped JSON uiSchema, hides an object field's title and description and the fallback UI's type selector label, as it already hid a scalar field's label ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - The warning about a schema-required field that `ui:required` makes optional is also logged for a non-boolean falsy `ui:required`, such as `0` or `null`, which removes the required marker just as `false` does ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - `MultiSchemaField` validates a retrieved option under an `$id` derived from its content, so a precompiled form no longer throws when it keeps an option a parent declined to switch away from ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
-- A `ui:field` or `LayoutGridField` cell `render` given as a `memo()`, `forwardRef()` or `lazy()` component now renders. One that isn't a usable component logs a warning naming its field or cell instead of being silently ignored, and an ignored `ui:field` falls back to `ui:globalOptions.field` ([#5363](https://github.com/rjsf-team/react-jsonschema-form/issues/5363))
+- A `ui:field` or `LayoutGridField` cell `render` given as a `memo()`, `forwardRef()` or `lazy()` component now renders. One that isn't a usable component logs a warning naming its field or cell instead of being silently ignored, and an ignored `ui:field` falls back to `ui:globalOptions.field`, while an empty one such as `null` or `false` still opts its field out ([#5363](https://github.com/rjsf-team/react-jsonschema-form/issues/5363))
 
 ## @rjsf/daisyui
 

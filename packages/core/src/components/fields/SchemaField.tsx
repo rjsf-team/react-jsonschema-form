@@ -178,40 +178,67 @@ function lookUpUiField<
   return typeof field === 'string' ? getByPath(fields, field) : field;
 }
 
-/** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
- * `getFieldComponent()` renders in place of the field for the schema's type. A component is either a function or one of
- * the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type admits. A registered value is
- * checked the same way as one given directly, since `fields` can hold anything a caller passes in
- *
- * @param field - The `field` from the UI options
- * @param fields - The registered fields
- * @returns - The field the `ui:field` names, or `undefined` when it is neither a component nor the name of a registered
- *            one
- */
-function getUiFieldComponent<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
-  const resolved = lookUpUiField<T, S, F>(field, fields);
-  return isComponentType(resolved) ? resolved : undefined;
-}
-
 /** How a `ui:field` warning refers to the registered fields a name is looked up in */
 const UI_FIELD_LOOKUP = { none: 'no registered field', some: 'a registered field' };
 
-/** Describes a `ui:field` that `getUiFieldComponent()` resolved to nothing, for the warning that it was ignored
- *
- * @param field - The unresolved `field`, from the field's own UI options or from the global ones
- * @param fields - The registered fields
- * @returns - What the `ui:field` was, phrased to follow the option it was given through
- */
-function describeUnresolvedUiField<
+/** The field a `ui:field` names, and what was ignored on the way to it */
+interface UiFieldResolution<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): string {
-  return describeUnresolvedComponent(field, lookUpUiField<T, S, F>(field, fields), UI_FIELD_LOOKUP, 'MyField');
+> {
+  /** The field `getFieldComponent()` renders in place of the one for the schema's type, if a `ui:field` names one */
+  namedField?: Field<T, S, F>;
+  /** What the field's own `ui:field` was, when it was given but names no field, for the warning that it was ignored */
+  ignoredOwnField?: string;
+  /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
+  ignoredGlobalField?: string;
+}
+
+/** Resolves the field a `ui:field` names, given as a component or as the name of a registered field. A component is
+ * either a function or one of the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type
+ * admits, and a registered value is checked the same way as one given directly, since `fields` can hold anything a
+ * caller passes in.
+ *
+ * A field's own `ui:field` that names nothing is ignored, so the `ui:globalOptions.field` it would have shadowed applies
+ * as though it were never given. An empty one — `undefined`, `null`, `false`, `''` or `0` — still shadows it, since it
+ * asks for no field: `undefined` is how `SchemaField` shadows it for a schema's options, and a JSON uiSchema, which can't
+ * spell `undefined`, clears it for one field with `null` or `false`.
+ *
+ * @param ownUiOptions - The field's own UI options, without the global ones
+ * @param globalField - The `field` from `ui:globalOptions`
+ * @param fields - The registered fields
+ * @returns - The field to render, if any, and a description of each `ui:field` that was ignored
+ */
+function resolveUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  ownUiOptions: UIOptionsType<T, S, F>,
+  globalField: UIOptionsType<T, S, F>['field'],
+  fields: Registry<T, S, F>['fields'],
+): UiFieldResolution<T, S, F> {
+  const describe = (field: UIOptionsType<T, S, F>['field'], resolved: unknown) =>
+    describeUnresolvedComponent(field, resolved, UI_FIELD_LOOKUP, 'MyField');
+
+  const ownField = ownUiOptions.field;
+  const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
+  if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
+    return { namedField: ownResolved };
+  }
+  const ignoredOwnField = ownField ? describe(ownField, ownResolved) : undefined;
+  if (ignoredOwnField === undefined && Object.hasOwn(ownUiOptions, 'field')) {
+    return {};
+  }
+  const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
+  if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
+    return { namedField: globalResolved, ignoredOwnField };
+  }
+  return {
+    ignoredOwnField,
+    ignoredGlobalField: globalField != null ? describe(globalField, globalResolved) : undefined,
+  };
 }
 
 const RenderNothing = () => null;
@@ -222,7 +249,7 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
- * @param namedField - The field the `ui:field` resolved to through `getUiFieldComponent()`, if it resolved to one
+ * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
@@ -267,7 +294,7 @@ function getFieldComponent<
 
   const schemaId = schema.$id;
 
-  // Looked up as an own property, for the reason `getUiFieldComponent()` looks the `ui:field` up that way: a `type` such
+  // Looked up as an own property, for the reason `resolveUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
   let componentName = Object.hasOwn(COMPONENT_TYPES, type) ? COMPONENT_TYPES[type] : '';
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
@@ -458,11 +485,13 @@ function SchemaFieldRender<
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
-    const uiFieldComponent = getUiFieldComponent<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    const uiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
     // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
     // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
-    // following `BooleanField`'s lead would otherwise render in place of its own default
-    if (uiFieldComponent && uiFieldComponent !== fields.BooleanField) {
+    // following `BooleanField`'s lead would otherwise render in place of its own default. A field named through
+    // `ui:options.field` or `ui:globalOptions.field` still gets the widget, so one that wraps `BooleanField` keeps its
+    // select, as does whichever field renders in place of a `ui:field` that names nothing, as though none were given
+    if (isComponentType(uiField) && uiField !== fields.BooleanField) {
       return resolvedUiSchema;
     }
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
@@ -510,28 +539,12 @@ function SchemaFieldRender<
     uiOptions,
   );
 
-  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
-  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
-  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const {
-    required: fieldUiRequired,
-    initialValue: fieldInitialValue,
-    emptyValue: fieldEmptyValue,
-    field: localField,
-  } = getUiOptions<T, S, F>(uiSchema);
-  const uiRequired = uiBooleanOption(fieldUiRequired);
-  const effectiveRequired = uiRequired ?? required;
-  const globalField = globalUiOptions?.field;
-  let namedField = getUiFieldComponent<T, S, F>(uiOptions.field, fields);
-  // A field's own `ui:field` that resolves to nothing is ignored, so the `ui:globalOptions.field` it would have shadowed
-  // applies as though it were never given. One that is `undefined` or `null` still shadows it, since those ask for no
-  // field: `undefined` is how `SchemaField` shadows it for a schema's options, and `null` is how a JSON uiSchema, which
-  // can't spell `undefined`, clears it for one field
-  const ignoresOwnField = localField != null && namedField === undefined;
-  if (ignoresOwnField) {
-    namedField = getUiFieldComponent<T, S, F>(globalField, fields);
-  }
-  const appliesGlobalField = ignoresOwnField || (localField === undefined && uiOptions.field === globalField);
+  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
+  const { namedField, ignoredOwnField, ignoredGlobalField } = resolveUiField<T, S, F>(
+    ownUiOptions,
+    globalUiOptions?.field,
+    fields,
+  );
   const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
     T,
     S,
@@ -542,6 +555,12 @@ function SchemaFieldRender<
 
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
+  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
+  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
+  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
   if (
     uiRequired === false &&
     required &&
@@ -573,16 +592,16 @@ function SchemaFieldRender<
   // not this message's.
   // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
   // about once for the form rather than once per field
-  if (ignoresOwnField) {
+  if (ignoredOwnField) {
     logOnce(
-      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${describeUnresolvedUiField(localField, fields)}, so it ` +
-        'is ignored and the field is rendered as though no ui:field were given.',
+      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${ignoredOwnField}, so it is ignored and the field is ` +
+        'rendered as though no ui:field were given.',
     );
   }
-  if (appliesGlobalField && globalField != null && namedField === undefined) {
+  if (ignoredGlobalField) {
     logOnce(
-      `ui:globalOptions.field ${describeUnresolvedUiField(globalField, fields)}, so it is ignored and the fields it ` +
-        'applies to are rendered as though no ui:field were given.',
+      `ui:globalOptions.field ${ignoredGlobalField}, so it is ignored and the fields it applies to are rendered as ` +
+        'though no ui:field were given.',
     );
   }
 

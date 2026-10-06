@@ -1,4 +1,5 @@
-import { Component, forwardRef, lazy, memo } from 'react';
+import type { ComponentType } from 'react';
+import { Component, createContext, forwardRef, lazy, memo } from 'react';
 
 import { isComponentType } from '../src/index.ts';
 
@@ -11,6 +12,8 @@ class ClassComponent extends Component {
     return <div />;
   }
 }
+
+const Context = createContext(null);
 
 describe('isComponentType()', () => {
   it.each([
@@ -26,11 +29,21 @@ describe('isComponentType()', () => {
   it.each([
     ['a React element', <FunctionComponent key='element' />],
     ['a plain object', {}],
+    ['a context Provider', Context.Provider],
+    ['a context Consumer', Context.Consumer],
     ['null', null],
     ['undefined', undefined],
     ['a string', 'FunctionComponent'],
     ['a number', 42],
   ])('returns false for %s', (_, value) => {
     expect(isComponentType(value)).toBe(false);
+  });
+
+  it('narrows to a component taking the props the caller names', () => {
+    expectTypeOf(isComponentType<{ label: string }>).guards.toEqualTypeOf<ComponentType<{ label: string }>>();
+    const value: unknown = FunctionComponent;
+    if (isComponentType(value)) {
+      expectTypeOf(value).toEqualTypeOf<ComponentType<never>>();
+    }
   });
 });

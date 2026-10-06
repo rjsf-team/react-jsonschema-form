@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentProps, ComponentType, ReactNode } from 'react';
 import { useMemo } from 'react';
 import type {
   FieldProps,
@@ -435,36 +435,34 @@ const RENDER_LOOKUP = {
 
 /** Gets the custom render component from the `render`, by either determining that it is already a component, which
  * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
- * used to look up the component in the registry. If no component can be found, null is returned, and a `render` that
- * was given is warned about, since the cell it was meant to render would otherwise disappear without a sign of why.
+ * used to look up the component in the registry. If no component can be found, null is returned.
  *
- * @param render - The potential render component or lookup name to one, if the cell gives one
+ * @param render - The potential render component or lookup name to one
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
- * @param [cellLabel] - How the warning names the cell, so that `logOnce()` doesn't take one cell's warning for
- *          another's and the warning can be traced back to its cell
  * @returns - Either a render component if available, or null if not
  */
 export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  render: string | RenderComponent | undefined,
-  registry: Registry<T, S, F>,
-  cellLabel?: string,
-): RenderComponent | null {
-  let customRenderer: string | RenderComponent | undefined = render;
-  if (typeof customRenderer === 'string') {
-    customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
-  }
-  if (isComponentType(customRenderer)) {
-    return customRenderer;
-  }
-  if (render != null) {
-    const description = describeUnresolvedComponent(render, customRenderer, RENDER_LOOKUP, 'MyRenderer');
-    logOnce(`${LAYOUT_GRID_OPTION} render${cellLabel ? ` for ${cellLabel}` : ''} ${description}, so it is ignored.`);
-  }
-  return null;
+>(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
+  const customRenderer = lookUpRender<T, S, F>(render, registry);
+  return isComponentType<ComponentProps<RenderComponent>>(customRenderer) ? customRenderer : null;
+}
+
+/** Looks up what a cell's `render` refers to: the value in the lookup map when it is a name, otherwise the `render`
+ * itself
+ *
+ * @param render - The `render` the cell gives
+ * @param registry - The `@rjsf` Registry whose `formContext` holds the lookup map
+ * @returns - The value the `render` refers to, which is not necessarily a component
+ */
+function lookUpRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(render: unknown, registry: Registry<T, S, F>): unknown {
+  return typeof render === 'string' ? lookupFromFormContext<T, S, F>(registry, render) : render;
 }
 
 /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
@@ -473,14 +471,13 @@ export function getCustomRenderComponent<
  *
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
  * @param gridSchema - The string or object that represents the configuration for the grid field
- * @param [gridLabel] - How a warning about the cell's `render` names the field the grid belongs to
  * @returns - The UIComponentPropsType computed from the gridSchema
  */
 export function computeUIComponentPropsFromGridSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject, gridLabel?: string): UIComponentPropsType {
+>(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
   let name: string;
   let UIComponent: RenderComponent | null = null;
   let uiProps: ConfigObject = {};
@@ -501,12 +498,7 @@ export function computeUIComponentPropsFromGridSchema<
         }
       }
     });
-    const cellName = innerName ? `cell '${innerName}'` : 'a cell';
-    UIComponent = getCustomRenderComponent<T, S, F>(
-      render,
-      registry,
-      gridLabel ? `${cellName} in ${gridLabel}` : innerName && cellName,
-    );
+    UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
     if (!innerName && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
@@ -720,8 +712,8 @@ function LayoutGridFieldComponent<
   const { SchemaField, LayoutMultiSchemaField } = fields;
 
   const uiComponentProps = useMemo(
-    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema, fieldLabelForLog(id, parentFieldPath)),
-    [registry, gridSchema, id, parentFieldPath],
+    () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
+    [registry, gridSchema],
   );
   const { name, UIComponent, uiProps } = uiComponentProps;
   const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = useMemo(
@@ -798,6 +790,22 @@ function LayoutGridFieldComponent<
         registry={registry}
         {...uiProps}
       />
+    );
+  }
+  // Warned about here, where the cell has nothing else to render, rather than wherever the `render` is looked up: a cell
+  // whose `name` resolves to a schema renders that field and never uses its `render`, good or bad
+  const render: unknown = isObject(gridSchema) ? gridSchema.render : undefined;
+  if (render != null) {
+    const cellName = name ? `cell '${name}'` : 'a cell';
+    const description = describeUnresolvedComponent(
+      render,
+      lookUpRender(render, registry),
+      RENDER_LOOKUP,
+      'MyRenderer',
+    );
+    logOnce(
+      `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
+        'is ignored.',
     );
   }
   return null;
