@@ -10,7 +10,8 @@ import type { ErrorSchema, ValidationData } from './types.ts';
  *
  * @param validationData - The current `ValidationData` into which to merge the additional errors
  * @param [additionalErrorSchema] - The optional additional set of errors in an `ErrorSchema`
- * @param [preventDuplicates=false] - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
+ * @param [preventDuplicates=false] - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates` and
+ * skip additional errors already in the existing errors list (same `property` and `message`)
  * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
  */
 export default function validationDataMerge<T = unknown>(
@@ -22,7 +23,7 @@ export default function validationDataMerge<T = unknown>(
     return validationData;
   }
   const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
-  const errors = toErrorList(additionalErrorSchema);
+  let errors = toErrorList(additionalErrorSchema);
   let errorSchema = additionalErrorSchema;
   if (oldErrorSchema && Object.keys(oldErrorSchema).length > 0) {
     errorSchema = mergeObjects(
@@ -30,6 +31,11 @@ export default function validationDataMerge<T = unknown>(
       additionalErrorSchema,
       preventDuplicates ? 'preventDuplicates' : true,
     ) as ErrorSchema<T>;
+    if (preventDuplicates) {
+      errors = errors.filter(
+        ({ property, message }) => !oldErrors.some((old) => old.property === property && old.message === message),
+      );
+    }
   }
   return { errorSchema, errors: [...oldErrors, ...errors] };
 }
