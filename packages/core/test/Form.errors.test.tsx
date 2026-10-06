@@ -13,7 +13,7 @@ function ErrorSchemaOutput({ errorSchema }: ErrorListProps) {
   return <output data-testid='error-schema'>{JSON.stringify(errorSchema)}</output>;
 }
 
-function renderedErrorSchema(): ErrorSchema {
+function renderedErrorSchema(): unknown {
   return JSON.parse(screen.getByTestId('error-schema').textContent);
 }
 
