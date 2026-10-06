@@ -997,6 +997,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
+          // With the pass counter kept local to one fixpoint loop, no finite schema reaches the backstop through
+          // the public retrieveSchema path: nesting depth no longer counts as passes. The backstop now only fires
+          // when passCount is injected directly, as below, or if a regression breaks structural termination.
           it('returns the schema resolved so far, flagged as a cycle, when the pass-count backstop is exceeded', () => {
             const schema: RJSFSchema = { definitions: { x: { type: 'string' } }, $ref: '#/definitions/x' };
             const [result] = retrieveSchemaInternal(
@@ -1012,6 +1015,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               101,
             );
             expect(result).toEqual({ ...schema, [RJSF_REF_CYCLE_KEY]: true });
+          });
+
+          // A finite, non-cyclic chain of refs through allOf, dependencies or if/then branches must resolve
+          // fully at any depth: branch resolutions count their own fixpoint passes, not the nesting depth.
+          const mkChain = (kind: 'allOf' | 'deps' | 'then', n: number): RJSFSchema => {
+            const definitions: Record<string, RJSFSchema> = {};
+            for (let i = 0; i < n; i++) {
+              const next =
+                i + 1 < n ? { $ref: `#/definitions/d${i + 1}` } : { properties: { leaf: { type: 'string' } } };
+              const props = { k: { type: 'string' }, [`v${i}`]: { type: 'string' } };
+              if (kind === 'allOf') {
+                definitions[`d${i}`] = { allOf: [{ properties: { [`v${i}`]: { type: 'string' } } }, next] };
+              } else if (kind === 'deps') {
+                definitions[`d${i}`] = { type: 'object', properties: props, dependencies: { k: next } };
+              } else {
+                definitions[`d${i}`] = {
+                  type: 'object',
+                  properties: props,
+                  if: { properties: { k: { const: 'x' } } },
+                  then: next,
+                };
+              }
+            }
+            return { definitions, $ref: '#/definitions/d0' } as RJSFSchema;
+          };
+          it.each([
+            ['allOf', 102, 103],
+            ['deps', 100, 102],
+            ['then', 100, 102],
+          ] as const)('resolves a %s chain %i levels deep fully, not as a cycle', (kind, n, propertyCount) => {
+            const schema = mkChain(kind, n);
+            const result = retrieveSchema(testValidator, schema, schema, { k: 'x' });
+            expect(result[RJSF_REF_CYCLE_KEY]).toBeUndefined();
+            expect(result.properties!.leaf).toEqual({ type: 'string' });
+            expect(Object.keys(result.properties!)).toHaveLength(propertyCount);
           });
           it('collapses a definition that reaches itself through allOf', () => {
             const rootSchema: RJSFSchema = { definitions: { a: { allOf: [{ $ref: '#/definitions/a' }] } } };

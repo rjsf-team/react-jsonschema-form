@@ -35,8 +35,9 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 // Backstop for the resolveReference <-> retrieveSchemaInternal loop: with the path reconstructed from RJSF_REF_KEY
 // markers a pass over an already-resolved schema is a no-op, so a resolution that still changes after this many
-// passes is not terminating; it collapses to the schema resolved so far, flagged as a cycle, instead of
-// overflowing the stack.
+// passes over a single schema is not terminating; it collapses to the schema resolved so far, flagged as a cycle,
+// instead of overflowing the stack. The count is local to one fixpoint loop: nested allOf, then/else and
+// dependencies branches receive only the caller's re-walk status, so nesting depth alone cannot reach this limit.
 const MAX_RESOLUTION_PASSES = 100;
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
@@ -134,7 +135,9 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          passCount,
+          // Keep the counter local to this fixpoint loop: a nested branch only needs to
+          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
+          passCount > 0 ? 1 : 0,
         ),
       );
     }
@@ -151,7 +154,9 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          passCount,
+          // Keep the counter local to this fixpoint loop: a nested branch only needs to
+          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
+          passCount > 0 ? 1 : 0,
         ),
       );
     }
@@ -170,7 +175,9 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          passCount,
+          // Keep the counter local to this fixpoint loop: a nested branch only needs to
+          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
+          passCount > 0 ? 1 : 0,
         ),
       );
     }
@@ -332,7 +339,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         experimental_customMergeAllOf,
         undefined,
         preserveDependencies,
-        passCount,
+        // Branch-local counter: re-walk status only, not the caller's depth.
+        passCount > 0 ? 1 : 0,
       ),
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
@@ -1076,7 +1084,8 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     experimental_customMergeAllOf,
     undefined,
     undefined,
-    passCount,
+    // Branch-local counter: re-walk status only, not the caller's depth.
+    passCount > 0 ? 1 : 0,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -1098,10 +1107,11 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         enclosingRefPath(schema, recurseList, passCount),
         formData,
+        experimental_customMergeAllOf,
         undefined,
         undefined,
-        undefined,
-        passCount,
+        // Branch-local counter: re-walk status only, not the caller's depth.
+        passCount > 0 ? 1 : 0,
       );
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
@@ -1192,7 +1202,8 @@ export function withExactlyOneSubschema<
       experimental_customMergeAllOf,
       undefined,
       undefined,
-      passCount,
+      // Branch-local counter: re-walk status only, not the caller's depth.
+      passCount > 0 ? 1 : 0,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });
