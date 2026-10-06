@@ -3050,6 +3050,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { type: 'object', additionalProperties: true },
         ]);
       });
+      it('builds the relaxed form of an option once, so re-scoring it does not hash it again', () => {
+        const option: RJSFSchema = {
+          $id: 'strict',
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+        };
+        // Relaxing derives an `$id`, which serializes the option, and `omitExtraData()` relaxes the options of a
+        // `oneOf` on every call: the same object back is what keeps the scoring memo keyed by it hitting too
+        expect(relaxOptionsForScoring([option])[0]).toBe(relaxOptionsForScoring([option])[0]);
+      });
       describe('resolveRefs=true', () => {
         it('resolves a $ref and widens additionalProperties:false to true', () => {
           const rootSchema: RJSFSchema = {

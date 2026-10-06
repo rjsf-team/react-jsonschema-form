@@ -1055,6 +1055,14 @@ export function resolveAnyOrOneOfSchemas<
   return [schema];
 }
 
+/** The relaxed form of each option that had to be relaxed, memoized by the option it was relaxed from. Relaxing
+ * derives an `$id`, which hashes the option, and `omitExtraData()` relaxes the options of a `oneOf` on every call, so
+ * without this a large option is serialized on every change to the form data -- and twice over, since the schema it is
+ * then scored by derives an `$id` of its own. The relaxed form depends on nothing but the option, and an option is
+ * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by
+ */
+const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
+
 /** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
  * When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences`
@@ -1082,9 +1090,15 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
     if (schema.additionalProperties !== false) {
       return schema;
     }
+    const memoized = relaxedOptions.get(schema);
+    if (memoized) {
+      return memoized as S;
+    }
     // Relaxing makes a schema the option's `$id` does not name, so it is derived for the same reason
     // `getFirstMatchingOption()` derives one for the schema it augments
-    return withVariantId<S>({ ...schema, additionalProperties: true });
+    const relaxed = withVariantId<S>({ ...schema, additionalProperties: true });
+    relaxedOptions.set(schema, relaxed);
+    return relaxed;
   });
 }
 

@@ -83,6 +83,21 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       // so the derivation is memoized by the option it came from: the same object back is what proves it
       expect(validated[1]).toBe(validated[0]);
     });
+    it('scores a boolean option as it stands, since it declares nothing to augment', () => {
+      const validated: unknown[] = [];
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      // JSON Schema allows a boolean subschema anywhere a schema goes, an `anyOf`/`oneOf` entry included
+      const options = [true, false] as unknown as RJSFSchema[];
+      expect(getFirstMatchingOption({ validator: recordingValidator }, { id: 'a' }, options, rootSchema)).toEqual(0);
+      expect(validated).toEqual([true, false]);
+    });
     it('should handle undefined formData when a discriminator field is present in an option', () => {
       const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];
       expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema, 'id')).toEqual(0);

@@ -1,6 +1,7 @@
 import { ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
+import isObject from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 
@@ -37,8 +38,9 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
 /** The schema each option is scored by, memoized by the option it was derived from. Deriving it hashes the option, and
  * an option is scored again on every change to the form data -- `MultiSchemaField` re-matches its options as the data
  * changes, and `omitExtraData()` scores them per call -- so without this a large option is serialized on every
- * keystroke. The options a caller hands over are the same objects between renders, and a schema is read rather than
- * written everywhere it is scored, so an entry stays the derivation of what it is keyed by
+ * keystroke. What a caller hands over is the same object each time for this to key by: `retrieveSchema()` answers from
+ * its own cache while what it resolves is unchanged, and `relaxOptionsForScoring()` memoizes the one option it has to
+ * build. A schema is read rather than written wherever it is scored, so an entry stays the derivation of its key
  */
 const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
@@ -55,6 +57,11 @@ const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
  * @returns - The schema to score the option by
  */
 function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
+  // An `anyOf`/`oneOf` entry may be a boolean schema, which declares nothing to augment or to name, and a primitive
+  // cannot key the memo either -- `WeakMap.set()` throws on one
+  if (!isObject(option)) {
+    return option;
+  }
   const memoized = scoringSchemas.get(option);
   if (memoized) {
     return memoized as S;
