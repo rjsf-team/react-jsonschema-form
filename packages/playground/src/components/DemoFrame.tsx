@@ -204,13 +204,11 @@ export default function DemoFrame(props: DemoFrameProps) {
   if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
-        <ThemeProvider theme={previewTheme}>
-          <CssBaseline />
-          {cloneElement(children, {
-            container,
-            window,
-          })}
-        </ThemeProvider>
+        <CssBaseline />
+        {cloneElement(children, {
+          container,
+          window,
+        })}
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluentui-rc') {
@@ -260,9 +258,11 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
-      <div id={DEMO_FRAME_JSS} />
-      {body}
-    </Frame>
+    <ThemeProvider theme={previewTheme}>
+      <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+        <div id={DEMO_FRAME_JSS} />
+        {body}
+      </Frame>
+    </ThemeProvider>
   );
 }

@@ -59,6 +59,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Documented the `requiredBooleanDefault` option in `form-props.md` and `internals.md`, and added a selector for it to the playground
+- Added a persistent System / Light / Dark appearance selector to the Playground and JSON editors while keeping the form preview theme independent ([#5409](https://github.com/rjsf-team/react-jsonschema-form/pull/5409))
 
 # 6.10.1
 

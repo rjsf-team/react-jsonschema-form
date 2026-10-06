@@ -1,7 +1,19 @@
 .playground-shell {
+  --playground-white: #fff;
+  --playground-light-text: #333;
+  --playground-dark-surface: #161b22;
+  --playground-dark-text: #e6edf3;
+  --playground-dark-link: #82b5ff;
+  --playground-dark-raised: #212833;
+  --playground-dark-border: #485463;
+  --playground-dark-input-border: #687586;
+  --playground-dark-hover: #364151;
+  --playground-dark-hover-border: #93a4b8;
+  --playground-dark-placeholder: #b3c0ce;
+  --playground-dark-muted: #aab7c5;
   min-height: 100vh;
-  background: #fff;
-  color: #333;
+  background: var(--playground-white);
+  color: var(--playground-light-text);
 }
 
 .playground-appearance {
@@ -16,52 +28,52 @@
 }
 
 .playground-shell--dark {
-  background: #161b22;
-  color: #e6edf3;
+  background: var(--playground-dark-surface);
+  color: var(--playground-dark-text);
 }
 
 .playground-shell--dark a {
-  color: #82b5ff;
+  color: var(--playground-dark-link);
 }
 
 .playground-shell--dark .panel,
 .playground-shell--dark .panel-default,
 .playground-shell--dark .panel-default > .panel-heading,
 .playground-shell--dark .well {
-  background: #212833;
-  border-color: #485463;
-  color: #e6edf3;
+  background: var(--playground-dark-raised);
+  border-color: var(--playground-dark-border);
+  color: var(--playground-dark-text);
 }
 
 .playground-shell--dark .btn-default,
 .playground-shell--dark .form-control,
 .playground-shell--dark select {
-  background: #212833;
-  border-color: #687586;
-  color: #e6edf3;
+  background: var(--playground-dark-raised);
+  border-color: var(--playground-dark-input-border);
+  color: var(--playground-dark-text);
 }
 
 .playground-shell--dark .btn-default:hover,
 .playground-shell--dark .btn-default:focus {
-  background: #364151;
-  border-color: #93a4b8;
-  color: #fff;
+  background: var(--playground-dark-hover);
+  border-color: var(--playground-dark-hover-border);
+  color: var(--playground-white);
 }
 
 .playground-shell--dark .form-control::placeholder {
-  color: #b3c0ce;
+  color: var(--playground-dark-placeholder);
 }
 
 .playground-shell--dark .text-muted {
-  color: #aab7c5;
+  color: var(--playground-dark-muted);
 }
 
 .playground-shell--dark legend,
 .playground-shell--dark .help-block {
-  color: #e6edf3;
+  color: var(--playground-dark-text);
 }
 
 .playground-shell--dark legend,
 .playground-shell--dark hr {
-  border-color: #485463;
+  border-color: var(--playground-dark-border);
 }

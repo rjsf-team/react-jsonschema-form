@@ -1,28 +1,26 @@
-import { useContext } from 'react';
 import { FormControl, MenuItem, Select } from '@mui/material';
 
-import type { Appearance } from '../layout/AppearanceContext.ts';
-import { APPEARANCE_STORAGE_KEY, AppearanceContext } from '../layout/AppearanceContext.ts';
+import { useAppearanceContext } from '../layout/AppearanceContext.ts';
 
 export default function AppearanceControl() {
-  const appearanceContext = useContext(AppearanceContext);
-  if (!appearanceContext) {
-    return null;
-  }
+  const { appearance, setAppearance } = useAppearanceContext();
 
   return (
     <div className='playground-appearance'>
-      <label htmlFor='playground-appearance'>Appearance</label>
+      <label id='playground-appearance-label' htmlFor='playground-appearance'>
+        Appearance
+      </label>
       <FormControl size='small' fullWidth>
         <Select
           id='playground-appearance'
-          value={appearanceContext.appearance}
+          labelId='playground-appearance-label'
+          value={appearance}
           onChange={(event) => {
-            const next = event.target.value as Appearance;
-            appearanceContext.setAppearance(next);
-            window.localStorage.setItem(APPEARANCE_STORAGE_KEY, next);
+            const next = event.target.value;
+            if (next === 'system' || next === 'light' || next === 'dark') {
+              setAppearance(next);
+            }
           }}
-          inputProps={{ 'aria-label': 'Appearance' }}
           MenuProps={{ disableScrollLock: true }}
         >
           <MenuItem value='system'>System</MenuItem>

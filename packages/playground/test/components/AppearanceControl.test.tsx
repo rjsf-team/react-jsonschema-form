@@ -1,52 +1,43 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import AppearanceControl from '../../src/components/AppearanceControl.tsx';
-import { APPEARANCE_STORAGE_KEY } from '../../src/layout/AppearanceContext.ts';
-import { Layout } from '../../src/layout/Layout.tsx';
+import { AppearanceContext } from '../../src/layout/AppearanceContext.ts';
+
+const user = userEvent.setup();
+const setAppearance = vi.fn();
+const systemAppearance = { appearance: 'system' as const, setAppearance };
+const lightAppearance = { appearance: 'light' as const, setAppearance };
 
 describe('AppearanceControl', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.stubGlobal(
-      'matchMedia',
-      vi.fn().mockReturnValue({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }),
-    );
-  });
-
   afterEach(() => {
     cleanup();
-    vi.unstubAllGlobals();
+    vi.clearAllMocks();
   });
 
-  it('persists the dark appearance across mounts', () => {
-    const view = render(
-      <Layout>
+  it('offers all three appearances and updates the context preference', async () => {
+    render(
+      <AppearanceContext.Provider value={systemAppearance}>
         <AppearanceControl />
-      </Layout>,
+      </AppearanceContext.Provider>,
     );
-    fireEvent.mouseDown(screen.getByRole('combobox', { name: 'Appearance' }));
+    await user.click(screen.getByRole('combobox', { name: 'Appearance' }));
+    expect(screen.getByRole('option', { name: 'System' })).not.toBeNull();
+    expect(screen.getByRole('option', { name: 'Light' })).not.toBeNull();
+    await user.click(screen.getByRole('option', { name: 'Dark' }));
+
+    expect(setAppearance).toHaveBeenCalledWith('dark');
+  });
+
+  it('keeps page scrolling enabled while the Appearance menu is open', async () => {
+    render(
+      <AppearanceContext.Provider value={lightAppearance}>
+        <AppearanceControl />
+      </AppearanceContext.Provider>,
+    );
+    const { overflow } = document.body.style;
+    await user.click(screen.getByRole('combobox', { name: 'Appearance' }));
+    expect(document.body.style.overflow).toBe(overflow);
     expect(document.body.style.overflow).not.toBe('hidden');
-    fireEvent.click(screen.getByRole('option', { name: 'Dark' }));
-
-    expect(view.container.querySelector('.playground-shell--dark')).not.toBeNull();
-    expect(localStorage.getItem(APPEARANCE_STORAGE_KEY)).toBe('dark');
-
-    view.unmount();
-    const restored = render(
-      <Layout>
-        <AppearanceControl />
-      </Layout>,
-    );
-    expect(restored.container.querySelector('.playground-shell--dark')).not.toBeNull();
-  });
-
-  it('restores a previously saved appearance', () => {
-    localStorage.setItem('rjsf-playground-color-preference', 'dark');
-    const view = render(
-      <Layout>
-        <AppearanceControl />
-      </Layout>,
-    );
-    expect(view.container.querySelector('.playground-shell--dark')).not.toBeNull();
   });
 });
