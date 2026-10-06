@@ -177,7 +177,8 @@ interface UseDatePickerProps<V> {
 
 /** Reports blur from a commit, where a throw would unmount the form up to the nearest error boundary. Rethrown from a
  * timer instead, so a throwing `onBlur` reaches the page the way it did from the DOM event handler, as `@rjsf/core`
- * does for `onChange` and `onSubmit`
+ * does for `onChange` and `onSubmit`. Being inside the commit, a `flushSync` the consumer calls from `onBlur`, or from
+ * the `onFocus` the focus return then fires, is deferred to the next render rather than flushed
  */
 function reportBlurOutsideCommit(onBlur: UseDatePickerProps<unknown>['onBlur'], id: string, value: unknown) {
   try {
@@ -237,15 +238,6 @@ export function useDatePicker<V>({
     setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
   }, [basis]);
 
-  /** Whether focus is inside the popup, from where closing it returns focus to the trigger: the element focus was on
-   * is about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the
-   * form. A press outside moved focus itself, so that one is left where the user put it
-   */
-  const focusIsInPopup = useCallback(() => {
-    const popup = containerRef.current;
-    return Boolean(popup?.contains(documentOf(popup).activeElement));
-  }, []);
-
   /** Store what the popup is holding, which closing it does whenever the user chose a date. A field holding a `''`
    * left over from a cleared one commits its empty value instead, since `''` is no more a date than it is a date-time
    * and fails the format the field declares. That `''` is the only value dismissing the picker rewrites: a field
@@ -278,16 +270,26 @@ export function useDatePicker<V>({
    * not one they asked to store
    */
   const cancelPicker = useCallback(() => {
-    // Read before `onBlur`, which may flush a render that unmounts the popup
-    const hadFocus = focusIsInPopup();
+    // Closing from inside the popup returns focus to the trigger: the element focus was on is about to be unmounted,
+    // and focus would fall to the document body, losing a keyboard user their place in the form. Read before
+    // `onBlur`, which may flush a render that unmounts the popup
+    const popup = containerRef.current;
+    const hadFocus = Boolean(popup?.contains(documentOf(popup).activeElement));
     setIsOpen(false);
-    if (onBlur) {
-      onBlur(id, value);
+    const returnFocus = () => {
+      if (hadFocus) {
+        triggerRef.current?.focus();
+      }
+    };
+    // Not `finally`, which the React Compiler cannot compile
+    try {
+      onBlur?.(id, value);
+    } catch (error) {
+      returnFocus();
+      throw error;
     }
-    if (hadFocus) {
-      triggerRef.current?.focus();
-    }
-  }, [focusIsInPopup, id, onBlur, value]);
+    returnFocus();
+  }, [id, onBlur, value]);
 
   // The close commit includes ordinary parent updates, but cannot await a later transition or async response.
   useEffect(() => {

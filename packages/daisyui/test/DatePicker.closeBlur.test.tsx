@@ -162,6 +162,36 @@ describe.each([
     expect(trigger).toHaveFocus();
   });
 
+  test('Escape returns focus even when onBlur throws', async () => {
+    const boom = new Error('boom');
+    const { container } = render(
+      <Widget
+        {...makeWidgetMockProps({
+          id: 'date',
+          value: initial,
+          autofocus: false,
+          schema: { type: 'string', format },
+          onBlur: () => {
+            throw boom;
+          },
+        })}
+      />,
+    );
+    const trigger = triggerIn(container);
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+    // Escape is handled by a document listener, so jsdom reports the throw to the window, not to user-event
+    const onWindowError = vi.fn((event: ErrorEvent) => event.preventDefault());
+    window.addEventListener('error', onWindowError);
+    try {
+      await user.keyboard('{Escape}');
+    } finally {
+      window.removeEventListener('error', onWindowError);
+    }
+    expect(onWindowError.mock.calls.map(([event]): unknown => event.error)).toEqual([boom]);
+    expect(trigger).toHaveFocus();
+  });
+
   test.each(['close', 'hide'] as const)(
     'a throwing onBlur on Done (%s) is rethrown outside the commit instead of unmounting the form',
     async (replacement) => {
