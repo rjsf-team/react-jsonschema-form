@@ -239,7 +239,7 @@ export default function sanitizeDataForNewSchema<
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
         if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
-          newFormData = data.reduce((newValue, aValue) => {
+          newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
             const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);

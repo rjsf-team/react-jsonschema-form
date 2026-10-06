@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -29,7 +30,8 @@ describe('SelectWidget', () => {
     render(
       <SelectWidget
         {...makeWidgetMockProps({
-          schema: { examples: [example] },
+          // Non-JSON examples are supplied by JavaScript consumers, bypassing the schema type.
+          schema: { examples: [example] } as unknown as RJSFSchema,
           value: undefined,
           options: {},
         })}
