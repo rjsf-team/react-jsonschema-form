@@ -1,12 +1,37 @@
-import { StrictMode, startTransition, useState } from 'react';
+import type { ReactNode } from 'react';
+import { Component, StrictMode, startTransition, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { flushSync } from 'react-dom';
 
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
+
+function triggerIn(container: HTMLElement) {
+  const trigger = container.querySelector('button[aria-haspopup]');
+  if (!(trigger instanceof HTMLButtonElement)) {
+    throw new Error('No picker trigger rendered');
+  }
+  return trigger;
+}
+
+class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { failed: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  override render() {
+    return this.state.failed ? <p>Fallback</p> : this.props.children;
+  }
+}
 
 describe.each([
   ['date', DateWidget, 'date', '2020-05-03', '2020-05-17'],
@@ -112,6 +137,95 @@ describe.each([
     unmount();
     expect(events.filter((event) => event === 'blur')).toHaveLength(1);
   });
+
+  test('Escape returns focus when onBlur flushes a render synchronously', async () => {
+    function Parent() {
+      const [, setTick] = useState(0);
+      return (
+        <Widget
+          {...makeWidgetMockProps({
+            id: 'date',
+            value: initial,
+            autofocus: false,
+            schema: { type: 'string', format },
+            onBlur: () => flushSync(() => setTick((tick) => tick + 1)),
+          })}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+    const trigger = triggerIn(container);
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+    await user.keyboard('{Escape}');
+    expect(screen.queryByText('Done')).toBeNull();
+    expect(trigger).toHaveFocus();
+  });
+
+  test.each(['close', 'hide'] as const)(
+    'a throwing onBlur on Done (%s) is rethrown outside the commit instead of unmounting the form',
+    async (replacement) => {
+      const boom = new Error('boom');
+      function Parent() {
+        const [value, setValue] = useState<string>(initial);
+        const [visible, setVisible] = useState(true);
+        return (
+          <>
+            {visible && (
+              <Widget
+                {...makeWidgetMockProps({
+                  id: 'date',
+                  value,
+                  autofocus: false,
+                  schema: { type: 'string', format },
+                  onBlur: () => {
+                    throw boom;
+                  },
+                  onChange: (next: string) => {
+                    setValue(next);
+                    if (replacement === 'hide') {
+                      setVisible(false);
+                    }
+                  },
+                })}
+              />
+            )}
+            <p>Sibling</p>
+          </>
+        );
+      }
+      // The widget rethrows from a timer, which Node, not jsdom, runs: catch it there rather than failing the run
+      const rethrown: unknown[] = [];
+      const realSetTimeout = setTimeout;
+      vi.stubGlobal('setTimeout', (callback: () => void, delay?: number) =>
+        realSetTimeout(() => {
+          try {
+            callback();
+          } catch (error) {
+            rethrown.push(error);
+          }
+        }, delay),
+      );
+      try {
+        const { container } = render(
+          <Boundary>
+            <Parent />
+          </Boundary>,
+        );
+        await user.click(triggerIn(container));
+        await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+        await user.click(screen.getByText('Done'));
+        await new Promise((resolve) => {
+          realSetTimeout(resolve);
+        });
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      expect(screen.queryByText('Fallback')).toBeNull();
+      expect(screen.getByText('Sibling')).toBeInTheDocument();
+      expect(rethrown).toEqual([boom]);
+    },
+  );
 
   test('does not wait for a parent transition', async () => {
     const onBlur = vi.fn();

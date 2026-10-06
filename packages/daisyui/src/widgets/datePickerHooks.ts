@@ -175,6 +175,20 @@ interface UseDatePickerProps<V> {
   onBlur?: (id: string, value: unknown) => void;
 }
 
+/** Reports blur from a commit, where a throw would unmount the form up to the nearest error boundary. Rethrown from a
+ * timer instead, so a throwing `onBlur` reaches the page the way it did from the DOM event handler, as `@rjsf/core`
+ * does for `onChange` and `onSubmit`
+ */
+function reportBlurOutsideCommit(onBlur: UseDatePickerProps<unknown>['onBlur'], id: string, value: unknown) {
+  try {
+    onBlur?.(id, value);
+  } catch (error) {
+    setTimeout(() => {
+      throw error;
+    });
+  }
+}
+
 /** Runs the popup behind both picker widgets: the state it holds while it is open, every way out of it, and which of
  * those ways stores what it holds. Shared so the one that gains a behavior does not leave the other behind — the two
  * differ only in what their popup renders and how they format what it holds.
@@ -223,15 +237,13 @@ export function useDatePicker<V>({
     setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
   }, [basis]);
 
-  /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
-   * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
-   * A press outside moved focus itself, so that one is left where the user put it
+  /** Whether focus is inside the popup, from where closing it returns focus to the trigger: the element focus was on
+   * is about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the
+   * form. A press outside moved focus itself, so that one is left where the user put it
    */
-  const returnFocusFromPopup = useCallback(() => {
+  const focusIsInPopup = useCallback(() => {
     const popup = containerRef.current;
-    if (popup?.contains(documentOf(popup).activeElement)) {
-      triggerRef.current?.focus();
-    }
+    return Boolean(popup?.contains(documentOf(popup).activeElement));
   }, []);
 
   /** Store what the popup is holding, which closing it does whenever the user chose a date. A field holding a `''`
@@ -248,11 +260,14 @@ export function useDatePicker<V>({
     }
   }, [draft, emptyValue, formatDate, onChange, value]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does. Blur is reported from the
+   * close Effect rather than here, so the parent's update to `value` is in hand before the consumer hears about it.
+   *
+   * @param [returnFocus=false] - Whether that Effect returns focus to the trigger once it has reported the blur
    */
   const closePicker = useCallback(
     (returnFocus = false) => {
-      pendingCloseBlur.current = { notifyOnUnmount: () => onBlur?.(id, value), returnFocus };
+      pendingCloseBlur.current = { notifyOnUnmount: () => reportBlurOutsideCommit(onBlur, id, value), returnFocus };
       setIsOpen(false);
       commitDate();
     },
@@ -263,19 +278,23 @@ export function useDatePicker<V>({
    * not one they asked to store
    */
   const cancelPicker = useCallback(() => {
+    // Read before `onBlur`, which may flush a render that unmounts the popup
+    const hadFocus = focusIsInPopup();
     setIsOpen(false);
     if (onBlur) {
       onBlur(id, value);
     }
-    returnFocusFromPopup();
-  }, [id, onBlur, returnFocusFromPopup, value]);
+    if (hadFocus) {
+      triggerRef.current?.focus();
+    }
+  }, [focusIsInPopup, id, onBlur, value]);
 
   // The close commit includes ordinary parent updates, but cannot await a later transition or async response.
   useEffect(() => {
     const pending = pendingCloseBlur.current;
     if (!isOpen && pending) {
       pendingCloseBlur.current = null;
-      onBlur?.(id, value);
+      reportBlurOutsideCommit(onBlur, id, value);
       if (pending.returnFocus) {
         triggerRef.current?.focus();
       }
