@@ -287,14 +287,30 @@ describe('schemaParser()', () => {
     // switch. None of the three is the schema the `$id` names, so each is keyed by its own content: holding the `$id`
     // would compile only the first and answer the rest with its function
     expect(schemaMap.identified).toBeUndefined();
-    const variants = Object.values(schemaMap).filter((schema) => schema.properties?.name);
+    // The two scored forms hold the option inside an `allOf`, so that the assertion scoring adds cannot reach a child
+    // the option describes through a `$ref` back to itself, and it is the held option that carries the derived `$id`
+    const optionOf = (schema: RJSFSchema) => (schema.allOf?.[0] as RJSFSchema | undefined) ?? schema;
+    const variants = Object.values(schemaMap).filter((schema) => optionOf(schema).properties?.name);
     expect(variants).toEqual([
-      expect.objectContaining({ additionalProperties: false, anyOf: [{ required: ['name'] }] }),
-      expect.objectContaining({ additionalProperties: true, anyOf: [{ required: ['name'] }] }),
+      // The map keys each of these by its own hash, which the parser carries back on the schema as its `$id`
+      expect.objectContaining({
+        allOf: [expect.objectContaining({ additionalProperties: false })],
+        anyOf: [{ required: ['name'] }],
+      }),
+      expect.objectContaining({
+        allOf: [expect.objectContaining({ additionalProperties: true })],
+        anyOf: [{ required: ['name'] }],
+      }),
       expect.objectContaining({ additionalProperties: false }),
     ]);
     expect(variants[2].anyOf).toBeUndefined();
-    expect(new Set(variants.map((schema) => schema.$id)).size).toBe(3);
+    const derivedIds = variants.map((schema) => optionOf(schema).$id);
+    expect(derivedIds).toEqual([
+      expect.stringMatching(/^identified\?rjsf=/),
+      expect.stringMatching(/^identified\?rjsf=/),
+      expect.stringMatching(/^identified\?rjsf=/),
+    ]);
+    expect(new Set(derivedIds).size).toBe(3);
   });
   it('parses the relaxed variant of an $id option that has no properties under a key of its own', () => {
     const rootSchema: RJSFSchema = {

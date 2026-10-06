@@ -36,7 +36,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       ];
       expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema)).toEqual(0);
     });
-    it("calls isValid() with an $id derived from the option it augments, keeping only the junk option's", () => {
+    it("holds the augmentation outside an option that has an $id, keeping only the junk option's", () => {
       const validated: RJSFSchema[] = [];
       // What the augmentation is handed to validate is what a validator keys the function it compiles by, so it is read
       // from a validator that records it rather than from whichever one this suite is running against. Failing every
@@ -55,16 +55,41 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       ];
       expect(getFirstMatchingOption({ validator: recordingValidator }, { id: 'a' }, options, rootSchema)).toEqual(0);
       expect(validated).toEqual([
-        // The derived `$id` keeps the option's as its base so a relative `$ref` left inside it still resolves
+        // The option stays whole inside the `allOf`, under a derived `$id` that keeps its own as the base, so that a
+        // relative `$ref` left inside it still resolves and resolves to the option rather than to what wraps it
         {
-          $id: expect.stringMatching(/^anOption\?rjsf=.+/),
-          type: 'object',
-          properties: { id: { enum: ['a'] } },
+          allOf: [
+            {
+              $id: expect.stringMatching(/^anOption\?rjsf=.+/),
+              type: 'object',
+              properties: { id: { enum: ['a'] } },
+            },
+          ],
           anyOf: [{ required: ['id'] }],
         },
         // The precompiled validators recognise the junk option by its `$id` and answer it without a compiled function
         { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } }, anyOf: [{ required: ['id'] }] },
       ]);
+    });
+    it('drops the required of an option that has an $id along with the one that has none', () => {
+      const validated: RJSFSchema[] = [];
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      const options: RJSFSchema[] = [
+        { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } }, required: ['id'] },
+        { type: 'object', properties: { id: { enum: ['b'] } }, required: ['id'] },
+      ];
+      getFirstMatchingOption({ validator: recordingValidator }, { id: 'a' }, options, rootSchema);
+      // A key the user has yet to fill in would fail the option's own `required`, so scoring asserts the `anyOf` of its
+      // property names in its place, wherever that assertion ends up living
+      expect(validated[0]).not.toHaveProperty('allOf.0.required');
+      expect(validated[1]).not.toHaveProperty('required');
     });
     it('derives the schema an option is scored by once, so re-scoring it does not hash it again', () => {
       const validated: RJSFSchema[] = [];

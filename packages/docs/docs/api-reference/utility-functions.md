@@ -2301,7 +2301,7 @@ This is used in isValid to make references to the rootSchema
 Returns a schema derived from one that carries an `$id` with an `$id` of its own, of `<the original's>?rjsf=<the derived schema's hash>`, and returns a schema with no `$id` as it stands.
 A validator caches the function it compiles for a schema under its `$id`, so a derived schema keeping the original's would be validated against the original's function.
 The original `$id` is kept as the base of the derived one, since a relative `$ref` the schema left for the validator to resolve resolves against it.
-This is what the option scoring applies to the forms of an option it validates — the augmented one, the one with `additionalProperties` relaxed — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the option it retrieved before validating it, so each is compiled in its own right.
+This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the option it retrieved before validating it, so each is compiled in its own right.
 A suffix already present is replaced rather than appended to, so deriving from a derived schema names the same schema either way.
 
 #### Parameters
@@ -2451,7 +2451,10 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.
-An object option is validated as an augmented copy of itself, which is not the schema its `$id` names, so that copy is given an `$id` of `<the option's>?rjsf=<the copy's hash>` the same way [`relaxOptionsForScoring()`](#relaxoptionsforscoringsextendsstrictrjsfschemarjsfschema) does.
+An object option is matched more strictly than it describes itself: an `anyOf` of the property names it declares asserts that the data holds at least one of them, and the `required` it declares is dropped, since a key the user has yet to fill in would fail it.
+The schema that assertion is made in is not the schema the option's `$id` names, so it is given an `$id` of `<the option's>?rjsf=<its own hash>` the same way [`relaxOptionsForScoring()`](#relaxoptionsforscoringsextendsstrictrjsfschemarjsfschema) does, through [`withVariantId()`](#withvariantidsextendsstrictrjsfschemarjsfschema).
+For an option that carries an `$id`, the assertion is held in an `allOf` around the option rather than merged into it, and the option it holds is what carries the derived `$id`.
+An `$id` names a document that a `$ref` inside the option can resolve back to — `$ref: ''` names that document — and merged in, the assertion would reach every child the option describes that way and reject data the option itself accepts.
 
 #### Parameters
 
