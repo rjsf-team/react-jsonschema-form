@@ -11,6 +11,8 @@ export default defineConfig({
     conditions: ['@rjsf/source'],
   },
   test: {
+    // utils and validator tests fail when this is set to true
+    clearMocks: false,
     globals: true,
     environment: 'jsdom',
     // resolved against this file, so it works regardless of where a consuming config lives

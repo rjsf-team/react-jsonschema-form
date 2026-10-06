@@ -23,13 +23,13 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.1.2",
-    "@ant-design/icons": "^6.2.5",
-    "@chakra-ui/react": "^3.35.0",
+    "@ant-design/icons": "^6.3.4",
+    "@chakra-ui/react": "^3.37.0",
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^9.6.3",
     "@mantine/dates": "^9.6.3",
     "@mantine/hooks": "^9.6.3",
-    "@mui/material": "^9.1.2",
+    "@mui/material": "^9.4.0",
     "@rjsf/antd": "workspace:^",
     "@rjsf/chakra-ui": "workspace:^",
     "@rjsf/core": "workspace:^",
@@ -45,25 +45,25 @@
     "@rjsf/validator-cfworker": "workspace:^",
     "ajv": "^8.20.0",
     "ajv-i18n": "^4.2.0",
-    "antd": "^6.4.3",
-    "dayjs": "^1.11.21",
-    "monaco-editor": "^0.55.1",
+    "antd": "^6.6.5",
+    "dayjs": "^1.11.23",
+    "monaco-editor": "^0.57.0",
     "react": "^19.3.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.3.0",
     "react-frame-component": "^5.3.2",
-    "react-resizable-panels": "^4.11.2"
+    "react-resizable-panels": "^4.14.1"
   },
   "devDependencies": {
     "@emotion/cache": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@monaco-editor/react": "^4.7.0",
-    "@mui/icons-material": "^9.1.1",
+    "@mui/icons-material": "^9.4.0",
     "@tailwindcss/vite": "^4.3.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.1.1",
     "gh-pages": "^6.3.0",
-    "tailwindcss": "^4.3.1",
-    "vite": "8.0.16"
+    "tailwindcss": "^4.3.3",
+    "vite": "8.3.2"
   },
   "directories": {
     "test": "test"

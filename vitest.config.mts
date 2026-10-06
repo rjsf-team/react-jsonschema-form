@@ -5,6 +5,6 @@ import { defineConfig } from 'vitest/config';
 // unaffected and remain the canonical way CI runs tests.
 export default defineConfig({
   test: {
-    projects: ['packages/*/vitest.config.ts'],
+    projects: ['packages/*/vitest.config.mts'],
   },
 });

@@ -5687,12 +5687,34 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
   background-color: #fff;
 }
 
+.emotion-7~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-7 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-7:focus {
   border-radius: 4px;
 }
 
 .emotion-7.emotion-7.emotion-7 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-7.MuiSelect-select {
@@ -11211,12 +11233,34 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
   background-color: #fff;
 }
 
+.emotion-7~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-7 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-7:focus {
   border-radius: 4px;
 }
 
 .emotion-7.emotion-7.emotion-7 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-7.MuiSelect-select {
@@ -13136,12 +13180,34 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
   background-color: #fff;
 }
 
+.emotion-9~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-9) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-9) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-9 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-9:focus {
   border-radius: 4px;
 }
 
 .emotion-9.emotion-9.emotion-9 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-9.MuiSelect-select {
@@ -13741,12 +13807,34 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -14233,12 +14321,34 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -14726,12 +14836,34 @@ exports[`select widget from oneOf boolean constants with a null option without a
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -15218,12 +15350,34 @@ exports[`select widget from oneOf constants without a type 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -15711,12 +15865,34 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -16203,12 +16379,34 @@ exports[`select widget with options sharing a String() in the realValue format (
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -26838,12 +27036,34 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   background-color: #fff;
 }
 
+.emotion-128~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-128) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-128) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-128 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-128:focus {
   border-radius: 4px;
 }
 
 .emotion-128.emotion-128.emotion-128 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-128.MuiSelect-select {
@@ -28721,12 +28941,34 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   background-color: #fff;
 }
 
+.emotion-128~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-128) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-128) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-128 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-128:focus {
   border-radius: 4px;
 }
 
 .emotion-128.emotion-128.emotion-128 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-128.MuiSelect-select {
@@ -39225,12 +39467,34 @@ exports[`single fields > select field 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -39723,12 +39987,34 @@ exports[`single fields > select field multiple choice 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -40220,12 +40506,34 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -41200,12 +41508,34 @@ exports[`single fields > select field multiple choice formData 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -41692,12 +42022,34 @@ exports[`single fields > select field multiple choice with labels 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -42189,12 +42541,34 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -43707,12 +44081,34 @@ exports[`single fields > select field single choice formData 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -44200,12 +44596,34 @@ exports[`single fields > select field single choice optgroups 1`] = `
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -44698,12 +45116,34 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -45715,12 +46155,34 @@ exports[`single fields > select widget with description in schema and FieldTempl
   background-color: #fff;
 }
 
+.emotion-4~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-4) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-4 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-4:focus {
   border-radius: 4px;
 }
 
 .emotion-4.emotion-4.emotion-4 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-4.MuiSelect-select {
@@ -46260,12 +46722,34 @@ exports[`single fields > select widget with selected oneOf option description 1`
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -46769,12 +47253,34 @@ exports[`single fields > select widget with selected oneOf option description an
   background-color: #fff;
 }
 
+.emotion-3~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-3) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-3 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-3:focus {
   border-radius: 4px;
 }
 
 .emotion-3.emotion-3.emotion-3 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-3.MuiSelect-select {
@@ -47308,13 +47814,21 @@ exports[`single fields > slider field 1`] = `
   box-shadow: none;
 }
 
-.emotion-5:hover,
+.emotion-5:hover {
+  box-shadow: 0px 0px 0px 8px rgba(25, 118, 210, 0.16);
+}
+
+@media (hover: none) {
+  .emotion-5:hover {
+    box-shadow: none;
+  }
+}
+
 .emotion-5.Mui-focusVisible {
   box-shadow: 0px 0px 0px 8px rgba(25, 118, 210, 0.16);
 }
 
 @media (hover: none) {
-  .emotion-5:hover,
   .emotion-5.Mui-focusVisible {
     box-shadow: none;
   }
@@ -47544,7 +48058,7 @@ exports[`single fields > slider field 1`] = `
               min="42"
               name="root"
               step="1"
-              style="border: 0px; clip: rect(0px); height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
+              style="border: 0px; clip-path: inset(50%); height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
               value="75"
             />
@@ -51719,7 +52233,8 @@ exports[`single fields > string field > string field with allowClearTextInputs a
   align-items: center;
   position: relative;
   border-radius: 4px;
-  padding-right: 14px;
+  --_trailingPad: 14px;
+  padding-right: var(--_trailingPad);
 }
 
 .emotion-2.Mui-disabled {
@@ -51751,6 +52266,10 @@ exports[`single fields > string field > string field with allowClearTextInputs a
 
 .emotion-2.Mui-disabled .MuiOutlinedInput-notchedOutline {
   border-color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-2.MuiSelect-root {
+  --_trailingPad: 0px;
 }
 
 .emotion-3 {
@@ -55148,12 +55667,34 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
   background-color: #fff;
 }
 
+.emotion-7~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-7) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-7 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-7:focus {
   border-radius: 4px;
 }
 
 .emotion-7.emotion-7.emotion-7 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-7.MuiSelect-select {

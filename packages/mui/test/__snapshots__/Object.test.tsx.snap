@@ -8030,12 +8030,34 @@ exports[`object fields > additionalProperties with a description, propertyNames 
   background-color: #fff;
 }
 
+.emotion-8~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-8 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-8:focus {
   border-radius: 4px;
 }
 
 .emotion-8.emotion-8.emotion-8 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-8.MuiSelect-select {
@@ -13331,12 +13353,34 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
   background-color: #fff;
 }
 
+.emotion-8~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-8 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-8:focus {
   border-radius: 4px;
 }
 
 .emotion-8.emotion-8.emotion-8 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-8.MuiSelect-select {
@@ -14457,12 +14501,34 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
   background-color: #fff;
 }
 
+.emotion-8~.MuiInputAdornment-root {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  right: calc(var(--_caret, 24px) + (var(--_endAdornment, 28px) - 1.5rem)/2);
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_endAdornment: 0px;
+}
+
+.MuiInputBase-root:has(> .emotion-8) {
+  --_caret: 32px;
+}
+
+.MuiInputBase-root:has(> .emotion-8 ~ .MuiInputAdornment-root) {
+  --_endAdornment: 28px;
+}
+
 .emotion-8:focus {
   border-radius: 4px;
 }
 
 .emotion-8.emotion-8.emotion-8 {
-  padding-right: 32px;
+  padding-right: calc(var(--_caret, 32px) + var(--_endAdornment, 0px));
 }
 
 .emotion-8.MuiSelect-select {

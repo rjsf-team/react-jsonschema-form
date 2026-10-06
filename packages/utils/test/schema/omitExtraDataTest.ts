@@ -1343,6 +1343,40 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ foo: 'hello' });
       });
+
+      it('does not apply the else branch of one allOf condition to the if of another', () => {
+        // Broke with @x0k/json-schema-merge 1.0.6: the merge paired the second entry's `else` with the
+        // first entry's `if`, so the result also contained `iban: 'DE89370400440532013000'` from the
+        // inactive branch. Fixed in 1.1.0.
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            country: { type: 'string' },
+            payment: { enum: ['card', 'bank'] },
+          },
+          allOf: [
+            {
+              if: { properties: { country: { const: 'US' } }, required: ['country'] },
+              then: { properties: { zip: { type: 'string' } }, required: ['zip'] },
+            },
+            {
+              if: { properties: { payment: { const: 'card' } }, required: ['payment'] },
+              then: { properties: { cardNumber: { type: 'string' } }, required: ['cardNumber'] },
+              else: { properties: { iban: { type: 'string' } }, required: ['iban'] },
+            },
+          ],
+        };
+        const formData = {
+          country: 'DE',
+          payment: 'card',
+          cardNumber: '4111111111111111',
+          iban: 'DE89370400440532013000',
+        };
+        // the payment condition (left in allOf) is met, the country condition (at the root) is not
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
+        expect(result).toEqual({ country: 'DE', payment: 'card', cardNumber: '4111111111111111' });
+      });
     });
 
     describe('anyOf support', () => {

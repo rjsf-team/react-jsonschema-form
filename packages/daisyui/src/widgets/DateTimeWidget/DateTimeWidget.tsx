@@ -77,13 +77,9 @@ export default function DateTimeWidget<
   // consumer (the calendar's month caption, the time input, the commit) would otherwise have to guard
   // against individually.
   //
-  // A value that is not text has no offset for `getDateTimeLocalValue()` to strip and nothing for it to return, so it
-  // reaches the readers as it was stored: an epoch number or a `Date` a consumer left in the form data is a value the
-  // date picker displays, and not one this picker should leave blank.
-  const initialDate = useMemo(() => {
-    const stored = localValue ?? value;
-    return readDateOnly(stored) ?? readInstant(stored);
-  }, [localValue, value]);
+  // `getDateTimeLocalValue()` returns a string for text and for a finite epoch number or valid `Date`, and `undefined`
+  // for a value the picker cannot read. A `format: 'date'` value that is a UTC midnight comes back as the day it names.
+  const initialDate = useMemo(() => readDateOnly(localValue) ?? readInstant(localValue), [localValue]);
   const {
     isOpen,
     month,

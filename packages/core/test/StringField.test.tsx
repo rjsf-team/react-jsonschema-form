@@ -1006,7 +1006,8 @@ describe('StringField', () => {
       // The original test's use of Simulate to pass the UTC version to the underlying callback worked fine. Switching
       // to @testing-library/react results in the event handler not being fired due to the `datetime-local` input type
       // not accepting the trailing Z in the string, thus we remove it via utcToLocal
-      const newDatetime = utcToLocal(new Date().toJSON());
+      // jsdom drops trailing zeros from fractional seconds, so the milliseconds must not end in 0
+      const newDatetime = utcToLocal('2016-04-05T14:01:30.123Z');
       const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
       await user.click(dateNode);
       await user.paste(newDatetime);
@@ -1116,7 +1117,7 @@ describe('StringField', () => {
           initialFormData: '2016-04-05T14:01:30.000Z',
         });
 
-        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30.000');
+        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30');
       });
 
       it('should pad seconds without adding a timezone offset when changed', async () => {

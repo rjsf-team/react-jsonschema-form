@@ -3651,6 +3651,9 @@ describe('clearing a field with a schema default does not re-apply the default (
   });
 });
 
+// NOTE: Some v6 tests labeled `a parent dropping data the form reported as absent` have been deleted
+//       This comment left as a marker for them so that a future merge commit will cause a conflict
+
 describe('dependency defaults in controlled forms', () => {
   const triggersSchema: RJSFSchema = {
     type: 'array',

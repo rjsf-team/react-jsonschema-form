@@ -65,6 +65,16 @@ describe('DateTimeWidget', () => {
     });
   });
 
+  test('shows an epoch at UTC midnight as its day for a field with a custom valueFormat', () => {
+    const { container } = renderWidget({
+      value: Date.UTC(2020, 4, 3),
+      schema: { type: 'string', format: 'date' },
+      options: { valueFormat: 'DD.MM.YYYY', displayFormat: 'DD.MM.YYYY' },
+    });
+
+    expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('03.05.2020');
+  });
+
   test('renders a blank input instead of an Invalid Date when the stored value is unparsable', () => {
     expect(() => {
       const { container } = renderWidget({ value: 'not-a-date' });
