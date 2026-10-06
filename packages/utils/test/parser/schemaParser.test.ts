@@ -1,5 +1,5 @@
 import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
-import { ELSE_KEY, isObject, mergeSchemas, noop, schemaParser, THEN_KEY } from '../../src/index.ts';
+import { ELSE_KEY, isObject, mergeSchemas, noop, resetLogOnce, schemaParser, THEN_KEY } from '../../src/index.ts';
 import {
   CHOICE as choice,
   SCHEMA_MERGED_FOR_PATTERN_KEY,
@@ -368,6 +368,29 @@ describe('schemaParser()', () => {
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       expect.stringMatching(/A schema has 17 patternProperties, more than the 16 whose combinations can all be/),
     );
+    consoleWarnSpy.mockRestore();
+  });
+  it('reports every object with more patternProperties than can be combined, not just the first', () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    resetLogOnce();
+    const overLimit = (prefix: string): RJSFSchema['patternProperties'] =>
+      Object.fromEntries(
+        Array.from({ length: 17 }, (_, i) => [
+          `^${prefix}${i}`,
+          { properties: { [`${prefix}${i}`]: { type: 'string' } } },
+        ]),
+      );
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { first: { type: 'object', patternProperties: overLimit('a') } },
+      additionalProperties: { type: 'object', patternProperties: overLimit('b') },
+    };
+    schemaParser(rootSchema);
+    // `logOnce()` keys by the message, so one naming only the count would report the first object and drop the second,
+    // leaving that object's compiled set quietly incomplete
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('^a0, ^a1'));
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('^b0, ^b1'));
     consoleWarnSpy.mockRestore();
   });
   it('parses the combinations of patternProperties once for a schema its options are merged into', () => {
