@@ -4,6 +4,7 @@ import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { flushSync } from 'react-dom';
 
+import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
@@ -78,7 +79,7 @@ describe.each([
         <Parent />
       </StrictMode>,
     );
-    await user.click(container.querySelector('button[aria-haspopup]')!);
+    await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     expect(onChange).not.toHaveBeenCalled();
     if (action === 'Done') {
@@ -123,7 +124,7 @@ describe.each([
         <Parent />
       </StrictMode>,
     );
-    const trigger = container.querySelector('button[aria-haspopup]')!;
+    const trigger = triggerIn(container);
     await user.click(trigger);
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     events.length = 0;
@@ -224,18 +225,7 @@ describe.each([
           </>
         );
       }
-      // The widget rethrows from a timer, which Node, not jsdom, runs: catch it there rather than failing the run
-      const rethrown: unknown[] = [];
-      const realSetTimeout = setTimeout;
-      vi.stubGlobal('setTimeout', (callback: () => void, delay?: number) =>
-        realSetTimeout(() => {
-          try {
-            callback();
-          } catch (error) {
-            rethrown.push(error);
-          }
-        }, delay),
-      );
+      const deferred = collectDeferredThrows();
       try {
         const { container } = render(
           <Boundary>
@@ -245,15 +235,12 @@ describe.each([
         await user.click(triggerIn(container));
         await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
         await user.click(screen.getByText('Done'));
-        await new Promise((resolve) => {
-          realSetTimeout(resolve);
-        });
       } finally {
-        vi.unstubAllGlobals();
+        await deferred.settle();
       }
       expect(screen.queryByText('Fallback')).toBeNull();
       expect(screen.getByText('Sibling')).toBeInTheDocument();
-      expect(rethrown).toEqual([boom]);
+      expect(deferred.thrown).toEqual([boom]);
     },
   );
 
@@ -275,7 +262,7 @@ describe.each([
       );
     }
     const { container } = render(<Parent />);
-    await user.click(container.querySelector('button[aria-haspopup]')!);
+    await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     await user.click(screen.getByText('Done'));
     expect(onBlur.mock.calls).toEqual([['date', initial]]);
@@ -308,7 +295,7 @@ describe.each([
         <Parent />
       </StrictMode>,
     );
-    await user.click(container.querySelector('button[aria-haspopup]')!);
+    await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     await user.click(screen.getByText('Done'));
     expect(onBlur.mock.calls).toEqual([['date', initial]]);

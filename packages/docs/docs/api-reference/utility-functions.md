@@ -170,6 +170,15 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
+### callWithDeferredThrow()
+
+Calls `callback`, and rethrows anything it throws from a `setTimeout()` instead of to the caller.
+Use it for a consumer's callback that a widget or field calls from an Effect or its cleanup: a throw there happens inside React's commit phase and unmounts everything up to the nearest error boundary, while from a timer it reaches the page the way a throw from a DOM event handler does.
+
+#### Parameters
+
+- callback: () => void - The consumer's callback to call
+
 ### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.

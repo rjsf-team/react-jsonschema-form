@@ -2,6 +2,7 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
@@ -179,6 +180,7 @@ export {
   ariaDescribedByIds,
   asNumber,
   buttonId,
+  callWithDeferredThrow,
   canExpand,
   createErrorHandler,
   createSchemaUtils,

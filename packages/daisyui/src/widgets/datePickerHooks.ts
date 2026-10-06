@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { callWithDeferredThrow } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
@@ -175,21 +176,6 @@ interface UseDatePickerProps<V> {
   onBlur?: (id: string, value: unknown) => void;
 }
 
-/** Reports blur from a commit, where a throw would unmount the form up to the nearest error boundary. Rethrown from a
- * timer instead, so a throwing `onBlur` reaches the page the way it did from the DOM event handler, as `@rjsf/core`
- * does for `onChange` and `onSubmit`. Being inside the commit, a `flushSync` the consumer calls from `onBlur`, or from
- * the `onFocus` the focus return then fires, is deferred to the next render rather than flushed
- */
-function reportBlurOutsideCommit(onBlur: UseDatePickerProps<unknown>['onBlur'], id: string, value: unknown) {
-  try {
-    onBlur?.(id, value);
-  } catch (error) {
-    setTimeout(() => {
-      throw error;
-    });
-  }
-}
-
 /** Runs the popup behind both picker widgets: the state it holds while it is open, every way out of it, and which of
  * those ways stores what it holds. Shared so the one that gains a behavior does not leave the other behind — the two
  * differ only in what their popup renders and how they format what it holds.
@@ -259,7 +245,10 @@ export function useDatePicker<V>({
    */
   const closePicker = useCallback(
     (returnFocus = false) => {
-      pendingCloseBlur.current = { notifyOnUnmount: () => reportBlurOutsideCommit(onBlur, id, value), returnFocus };
+      pendingCloseBlur.current = {
+        notifyOnUnmount: () => callWithDeferredThrow(() => onBlur?.(id, value)),
+        returnFocus,
+      };
       setIsOpen(false);
       commitDate();
     },
@@ -291,12 +280,14 @@ export function useDatePicker<V>({
     returnFocus();
   }, [id, onBlur, value]);
 
-  // The close commit includes ordinary parent updates, but cannot await a later transition or async response.
+  // The close commit includes ordinary parent updates, but cannot await a later transition or async response. Being
+  // inside the commit, a `flushSync` the consumer calls from `onBlur`, or from the `onFocus` the focus return then
+  // fires, is deferred to the next render rather than flushed
   useEffect(() => {
     const pending = pendingCloseBlur.current;
     if (!isOpen && pending) {
       pendingCloseBlur.current = null;
-      reportBlurOutsideCommit(onBlur, id, value);
+      callWithDeferredThrow(() => onBlur?.(id, value));
       if (pending.returnFocus) {
         triggerRef.current?.focus();
       }
