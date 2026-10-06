@@ -36,7 +36,7 @@ function getDisplayValue(val: unknown) {
     if ('label' in val && val.label) {
       return enumOptionValueLabel(val.label);
     }
-    return JSON.stringify(val);
+    return enumOptionValueLabel(val);
   }
   return enumOptionValueLabel(val);
 }

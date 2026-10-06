@@ -22,3 +22,6 @@ packageExtensions:
       react-dom: '*'
 
 virtualStoreType: global
+
+minimumReleaseAgeExclude:
+  - vite@8.3.2

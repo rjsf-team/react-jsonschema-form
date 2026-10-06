@@ -35,7 +35,7 @@ exports[`array fields > array 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -239,7 +239,7 @@ exports[`array fields > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -408,7 +408,7 @@ exports[`array fields > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -454,7 +454,7 @@ exports[`array fields > array icons 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -777,7 +777,7 @@ exports[`array fields > has errors 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="lucide lucide-circle-alert h-4 w-4"
+        class="lucide lucide-circle-alert lucide-alert-circle h-4 w-4"
         fill="none"
         height="24"
         stroke="currentColor"
@@ -1141,7 +1141,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -1335,7 +1335,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -1381,7 +1381,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -1552,7 +1552,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -1688,7 +1688,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -1734,7 +1734,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -2206,7 +2206,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           >
                                             <svg
                                               aria-hidden="true"
-                                              class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                              class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                               fill="none"
                                               height="24"
                                               stroke="currentColor"
@@ -2342,7 +2342,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           >
                                             <svg
                                               aria-hidden="true"
-                                              class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                              class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                               fill="none"
                                               height="24"
                                               stroke="currentColor"
@@ -2388,7 +2388,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <svg
                                           aria-hidden="true"
-                                          class="lucide lucide-circle-plus"
+                                          class="lucide lucide-circle-plus lucide-plus-circle"
                                           fill="none"
                                           height="16"
                                           stroke="currentColor"
@@ -2489,7 +2489,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -2648,7 +2648,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           >
                                             <svg
                                               aria-hidden="true"
-                                              class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                              class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                               fill="none"
                                               height="24"
                                               stroke="currentColor"
@@ -2784,7 +2784,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           >
                                             <svg
                                               aria-hidden="true"
-                                              class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                              class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                                               fill="none"
                                               height="24"
                                               stroke="currentColor"
@@ -2830,7 +2830,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <svg
                                           aria-hidden="true"
-                                          class="lucide lucide-circle-plus"
+                                          class="lucide lucide-circle-plus lucide-plus-circle"
                                           fill="none"
                                           height="16"
                                           stroke="currentColor"
@@ -2931,7 +2931,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -2977,7 +2977,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -3206,7 +3206,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -3400,7 +3400,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -3446,7 +3446,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -3617,7 +3617,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -3753,7 +3753,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -3799,7 +3799,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -3904,7 +3904,7 @@ exports[`with title and description > array 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -4144,7 +4144,7 @@ exports[`with title and description > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -4325,7 +4325,7 @@ exports[`with title and description > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -4371,7 +4371,7 @@ exports[`with title and description > array icons 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -4737,7 +4737,7 @@ exports[`with title and description from both > array 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -4977,7 +4977,7 @@ exports[`with title and description from both > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -5158,7 +5158,7 @@ exports[`with title and description from both > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -5204,7 +5204,7 @@ exports[`with title and description from both > array icons 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -5570,7 +5570,7 @@ exports[`with title and description from uiSchema > array 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -5810,7 +5810,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -5991,7 +5991,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -6037,7 +6037,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -6379,7 +6379,7 @@ exports[`with title and description with global label off > array 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"
@@ -6577,7 +6577,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -6740,7 +6740,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         >
                           <svg
                             aria-hidden="true"
-                            class="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                            class="lucide lucide-trash lucide-trash-2 h-4 w-4 stroke-destructive"
                             fill="none"
                             height="24"
                             stroke="currentColor"
@@ -6786,7 +6786,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                     >
                       <svg
                         aria-hidden="true"
-                        class="lucide lucide-circle-plus"
+                        class="lucide lucide-circle-plus lucide-plus-circle"
                         fill="none"
                         height="16"
                         stroke="currentColor"

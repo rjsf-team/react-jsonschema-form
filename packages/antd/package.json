@@ -39,13 +39,13 @@
     "classnames": "^2.5.1"
   },
   "devDependencies": {
-    "@ant-design/icons": "^6.2.5",
+    "@ant-design/icons": "^6.3.4",
     "@rjsf/core": "workspace:^",
     "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
-    "antd": "^6.4.3",
-    "dayjs": "^1.11.21"
+    "antd": "^6.6.5",
+    "dayjs": "^1.11.23"
   },
   "repository": {
     "type": "git",

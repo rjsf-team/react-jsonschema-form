@@ -11,7 +11,9 @@ import retrieveSchema from './retrieveSchema.ts';
 const NO_VALUE = Symbol('no Value');
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
-  if (Array.isArray(schema.enum)) {
+  // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
+  // both read one, so it offers no constraint rather than rejecting everything
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
     return schema.enum;
   }
 
@@ -222,8 +224,10 @@ export default function sanitizeDataForNewSchema<
       // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
       // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
       oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
-      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case
-      newSchemaItems = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case.
+      // Neither changes per element, so compare them once rather than inside the per-element loop below
+      const sameItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
+      newSchemaItems = sameItemsSchema
         ? oldSchemaItems
         : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
       // Now get types and see if they are the same
@@ -235,11 +239,11 @@ export default function sanitizeDataForNewSchema<
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
         if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
-          newFormData = data.reduce<unknown[]>((newValue, aValue) => {
+          newFormData = data.reduce((newValue, aValue) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
             const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-            const newItemSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+            const newItemSchema = sameItemsSchema
               ? oldItemSchema
               : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
             const itemValue = sanitizeDataForNewSchema<T, S, F>(
@@ -260,7 +264,9 @@ export default function sanitizeDataForNewSchema<
           const filteredData = newItemEnumValues
             ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
             : data;
-          newFormData = maxItems > 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
+          // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too
+          newFormData =
+            maxItems >= 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
         }
       }
     } else if (

@@ -761,6 +761,8 @@ Given date & time information with optional yearRange & format, returns props fo
 
 Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. To be used by theme specific `DateTimeWidget` implementations.
 
+A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and the instant is a UTC midnight, and to local wall-clock time for any other format. A local year outside 0-9999 has no text a picker can parse, so it gives `undefined`.
+
 #### Parameters
 
 - schema: S - The schema for the date-time field

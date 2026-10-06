@@ -147,6 +147,36 @@ describe('getInputProps', () => {
       pattern: `[+\\-]?([0-9]+[.,][0-9]+${INTEGER_EXPONENT}|[0-9]+(${INTEGER_EXPONENT}|[.,]0*)?|[.,])`,
     });
   });
+  it('returns type=text, no step when schema has number type and the locale decimal separator is not "."', () => {
+    vi.stubGlobal('navigator', { languages: ['pl'] });
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    expect(getInputProps(schema)).toEqual({
+      inputMode: 'decimal',
+      pattern: '[+\\-]?(([0-9]+[.,]?[0-9]*|[.,][0-9]+)([eE][+\\-]?[0-9]+)?|[.,])',
+      type: 'text',
+    });
+  });
+  it('returns type=number when schema has number type and an explicit inputType overrides the locale', () => {
+    vi.stubGlobal('navigator', { languages: ['pl'] });
+    const schema: RJSFSchema = {
+      type: 'number',
+    };
+    const options: UIOptionsType = { inputType: 'number' };
+    expect(getInputProps(schema, undefined, options)).toEqual({ type: 'number', step: 'any' });
+  });
+  it('returns type=number, step=1 for integer schemas regardless of the locale decimal separator', () => {
+    vi.stubGlobal('navigator', { languages: ['pl'] });
+    const schema: RJSFSchema = {
+      type: 'integer',
+    };
+    expect(getInputProps(schema)).toEqual({
+      inputMode: 'numeric',
+      pattern: '[+\\-]?([0-9]+[.,][0-9]+[eE]\\+?[0-9]+|[0-9]+([eE]\\+?[0-9]+|[.,]0*)?|[.,])',
+      type: 'text',
+    });
+  });
   it('returns type=number when schema has number type and we are not auto-defaulting', () => {
     const schema: RJSFSchema = {
       type: 'number',

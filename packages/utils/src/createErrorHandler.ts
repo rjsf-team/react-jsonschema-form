@@ -14,7 +14,7 @@ function buildErrorHandler(formData: unknown): FieldValidation {
   };
   const children: [string, unknown][] =
     Array.isArray(formData) || isPlainObject(formData) ? Object.entries<unknown>(formData) : [];
-  return Object.assign(handler, Object.fromEntries(children.map(([key, value]) => [key, buildErrorHandler(value)])));
+  return { ...handler, ...Object.fromEntries(children.map(([key, value]) => [key, buildErrorHandler(value)])) };
 }
 
 /** Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
