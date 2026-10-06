@@ -733,6 +733,27 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   return schema as S;
 }
 
+/** Builds the stub for an additional property described by `subSchema`, whose `$ref`s are expected to be resolved
+ * already. A schema naming a `type` says what field renders the property on its own. One offering an `anyOf`/`oneOf`
+ * of options without naming a type is stubbed as an `object` so the property renders as the field that picks between
+ * them, since that is the only shape those options are presented in. A schema naming neither takes the type of the
+ * data the property holds, keeping what it does say about the value, so the property renders as a field for that data
+ * rather than one no type can render.
+ *
+ * @param subSchema - The schema describing the additional property, from `additionalProperties` or a matching pattern
+ * @param formData - The form data held by the additional property
+ * @returns - The stub schema for the additional property
+ */
+function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, formData: unknown): S {
+  if ('type' in subSchema) {
+    return { ...subSchema };
+  }
+  if (ANY_OF_KEY in subSchema || ONE_OF_KEY in subSchema) {
+    return { type: 'object', ...subSchema };
+  }
+  return guessedTypeSchema<S>(formData, subSchema);
+}
+
 /** Creates new 'properties' items for each key in the `formData`
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -761,7 +782,10 @@ export function stubExistingAdditionalProperties<
     }
     const patternSchema = getPatternPropertySchema<S>(schema, key);
     if (patternSchema) {
-      schema.properties[key] = retrieveSchema<T, S, F>(context, patternSchema, rootSchema, formData[key]);
+      schema.properties[key] = stubSchemaForSubSchema<S>(
+        retrieveSchema<T, S, F>(context, patternSchema, rootSchema, formData[key]),
+        formData[key],
+      );
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
       return;
     }
@@ -775,15 +799,8 @@ export function stubExistingAdditionalProperties<
             rootSchema,
             formData[key],
           );
-        } else if ('type' in schema.additionalProperties) {
-          additionalProperties = { ...schema.additionalProperties };
-        } else if (ANY_OF_KEY in schema.additionalProperties || ONE_OF_KEY in schema.additionalProperties) {
-          additionalProperties = {
-            type: 'object',
-            ...schema.additionalProperties,
-          };
         } else {
-          additionalProperties = guessedTypeSchema<S>(formData[key], schema.additionalProperties as S);
+          additionalProperties = stubSchemaForSubSchema<S>(schema.additionalProperties as S, formData[key]);
         }
       } else {
         // `additionalProperties: false` is excluded above, so what is left is `true` or no `additionalProperties` at

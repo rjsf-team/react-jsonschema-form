@@ -1144,6 +1144,26 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_num')).toHaveDisplayValue('5');
     });
 
+    it('should render an editable field for a key whose matching pattern names no type', async () => {
+      // A pattern that constrains the value without naming a type leaves `retrieveSchema()` the data to take the type
+      // from, the same way an `additionalProperties` schema naming no type does, so the value stays editable instead
+      // of landing in a field no type can render
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { minLength: 2 } },
+        },
+        initialFormData: { abc: 'hello' },
+      });
+
+      expect(node.querySelector('.rjsf-field-undefined')).toBeNull();
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+
+      await user.type(node.querySelector('#root_abc')!, '!');
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'hello!' }, 'root_abc');
+    });
+
     it('should not duplicate an additional property that becomes schema-defined after rerender', () => {
       const initialSchema: RJSFSchema = {
         type: 'object',

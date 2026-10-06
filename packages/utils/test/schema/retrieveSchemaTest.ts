@@ -2916,6 +2916,48 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
+      it('has a property key matching a patternProperties subschema that names no type', () => {
+        // The matching pattern says what the value has to be without saying what it is, so the stub takes the type
+        // from the data the key holds and keeps the constraint, leaving a field that renders and validates the value
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^ba': {
+              minLength: 2,
+            },
+          },
+        };
+        const formData = { bar: 'hello' };
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'string',
+              minLength: 2,
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has a property key matching a patternProperties subschema that constrains nothing', () => {
+        // A pattern that constrains the value not at all leaves the key free to hold any type, which is what the
+        // guessed marker tells the fallback UI, so the type the data gives the stub is not one it locks in
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^ba': {},
+          },
+        };
+        const formData = { bar: 'hello' };
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              [GUESSED_TYPE_FLAG]: true,
+            },
+          },
+        });
+      });
     });
     describe('getAllPermutationsOfXxxOf()', () => {
       it('returns a single permutation when there are only one version of each row', () => {

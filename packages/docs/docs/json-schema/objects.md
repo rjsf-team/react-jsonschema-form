@@ -143,6 +143,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Also in this case, an add button for new properties is shown by default.
 A property added under a name one of the patterns matches is seeded from that pattern, so its field starts out holding the pattern's `const` or `default`, falling back to the starting value its type calls for — `{}`, `[]`, `0`, `false`, `null`, or the `New Value` string.
+A pattern that constrains the value without naming a `type`, such as one that is only an `enum`, a `format` or a length, leaves the key to take its type from the value it holds, the way `additionalProperties` does, so the property renders as a field for that value with the pattern's constraint kept.
 
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.
