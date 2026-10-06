@@ -825,9 +825,17 @@ describe('Error state consistency when deriving from new props', () => {
     expect(street).toEqual({ __errors: [minLengthError] });
     act(() => rootField().onChange('a', streetPath, street));
 
-    // The field still shows the validator's error: a phantom `{ addr: { street: {} } }` would render nothing there
     expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
+    // Listed twice, the raise's copy and the validator's own: what the form does today, not a guarantee
     expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
+
+    // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
+    // raise at `addr` would read as the validator's error still being there
+    act(() => rootField().onChange('a', streetPath, {}));
+    act(() => rootField().onChange({ street: 'a' }, toFieldPath('addr'), {}));
+
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
   });
 
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
