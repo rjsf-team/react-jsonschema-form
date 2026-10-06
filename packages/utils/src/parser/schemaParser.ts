@@ -37,7 +37,9 @@ interface ParseState {
 }
 
 /** The most `patternProperties` one schema may have for every combination of them to be enumerated. There are
- * `2^n - 1` of those, so each pattern up to here doubles the work and the ones past it would take minutes
+ * `2^n - 1` of those, so each pattern doubles the work: enumerating this many takes seconds for the smallest
+ * sub-schemas a pattern can hold, and longer in proportion to their size, with a few patterns more than this running
+ * into minutes. The limit is where the doubling is cut off rather than a point where the work is still cheap
  */
 const MAX_COMBINED_PATTERN_PROPERTIES = 16;
 

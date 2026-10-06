@@ -20,10 +20,11 @@ const VARIANT_ID_SUFFIX = /\?rjsf=[^?]*$/;
  * @returns - The schema, carrying an `$id` that names it rather than the one it was derived from
  */
 export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  const { [ID_KEY]: id, ...withoutId } = schema;
+  const id = schema[ID_KEY];
   if (!id) {
     return schema;
   }
+  const { [ID_KEY]: _id, ...withoutId } = schema;
   return { ...schema, [ID_KEY]: variantId(id, withoutId) };
 }
 
@@ -48,9 +49,14 @@ function variantId(id: unknown, content: object): string {
 /** The schema each option is scored by, memoized by the option it was derived from. Deriving it hashes the option, and
  * an option is scored again on every change to the form data -- `MultiSchemaField` re-matches its options as the data
  * changes, and `omitExtraData()` scores them per call -- so without this a large option is serialized on every
- * keystroke. What a caller hands over is the same object each time for this to key by: `retrieveSchema()` answers from
- * its own cache while what it resolves is unchanged, and `relaxOptionsForScoring()` memoizes the one option it has to
- * build. A schema is read rather than written wherever it is scored, so an entry stays the derivation of its key
+ * keystroke.
+ *
+ * This keys by the object the caller hands over, so it hits only where that object is stable across calls, which is
+ * where an option is scored as `MultiSchemaField` has it: `retrieveSchema()` answers from its own cache while what it
+ * resolves is unchanged. It misses where a caller rebuilds the option per call, which is what
+ * `getClosestMatchingOption()` and `omitExtraData()` do for an option holding a `$ref` -- `resolveAllReferences()`
+ * returns a new object whenever it resolves anything -- so such an option is still derived once per call. A schema is
+ * read rather than written wherever it is scored, so an entry stays the derivation of its key
  */
 const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 

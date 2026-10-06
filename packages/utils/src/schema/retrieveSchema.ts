@@ -1059,7 +1059,12 @@ export function resolveAnyOrOneOfSchemas<
  * derives an `$id`, which hashes the option, and `omitExtraData()` relaxes the options of a `oneOf` on every call, so
  * without this a large option is serialized on every change to the form data -- and twice over, since the schema it is
  * then scored by derives an `$id` of its own. The relaxed form depends on nothing but the option, and an option is
- * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by
+ * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by.
+ *
+ * It is keyed by the option as resolution leaves it rather than as the caller declared it, since that is what the
+ * relaxation is of, so a call that resolves a `$ref` hands over a new object and misses: an option that is a `$ref`
+ * is relaxed once per call. Keying by the declared option instead would hit, but the relaxation of a `$ref` depends
+ * on the `rootSchema` it resolves against, which the key would not carry
  */
 const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
