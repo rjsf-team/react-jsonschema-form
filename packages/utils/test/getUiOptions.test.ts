@@ -103,5 +103,8 @@ describe('getUiOptions()', () => {
   });
   it('drops a widget given as a React element, as it does any object that is not a component', () => {
     expect(getUiOptions({ 'ui:widget': createElement(MyWidget) as unknown as string })).toEqual({});
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(
+      'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored.',
+    );
   });
 });

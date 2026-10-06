@@ -19,6 +19,7 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  getByPath,
   getDeprecatedHandling,
   getFieldClassNames,
   getSchemaOwnTypes,
@@ -161,8 +162,9 @@ function inferSelectWidget<
 }
 
 /** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`
- * itself. Looked up as an own property, so a name such as `constructor` or `toString` resolves to nothing rather than to
- * something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a React child"
+ * itself. `getByPath()` reads own properties only, so a name such as `constructor` or `toString` resolves to nothing
+ * rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a
+ * React child"
  *
  * @param field - The `field` from the UI options
  * @param fields - The registered fields
@@ -173,10 +175,7 @@ function lookUpUiField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): unknown {
-  if (typeof field === 'string') {
-    return Object.hasOwn(fields, field) ? fields[field] : undefined;
-  }
-  return field;
+  return typeof field === 'string' ? getByPath(fields, field) : field;
 }
 
 /** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
