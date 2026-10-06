@@ -943,7 +943,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
           });
           it('marks the closing edge of mutually recursive definitions as a cycle on both entry points', () => {
-            const definitions = {
+            const definitions: Record<string, RJSFSchema> = {
               A: { type: 'object', properties: { child: { $ref: '#/definitions/B' } } },
               B: { type: 'object', properties: { child: { $ref: '#/definitions/A' } } },
             };
@@ -1022,9 +1022,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           const mkChain = (kind: 'allOf' | 'deps' | 'then', n: number): RJSFSchema => {
             const definitions: Record<string, RJSFSchema> = {};
             for (let i = 0; i < n; i++) {
-              const next =
+              const next: RJSFSchema =
                 i + 1 < n ? { $ref: `#/definitions/d${i + 1}` } : { properties: { leaf: { type: 'string' } } };
-              const props = { k: { type: 'string' }, [`v${i}`]: { type: 'string' } };
+              const props: RJSFSchema = { k: { type: 'string' }, [`v${i}`]: { type: 'string' } };
               if (kind === 'allOf') {
                 definitions[`d${i}`] = { allOf: [{ properties: { [`v${i}`]: { type: 'string' } } }, next] };
               } else if (kind === 'deps') {
@@ -1047,7 +1047,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ] as const)('resolves a %s chain %i levels deep fully, not as a cycle', (kind, n, propertyCount) => {
             const schema = mkChain(kind, n);
             const result = retrieveSchema(testValidator, schema, schema, { k: 'x' });
-            expect(result[RJSF_REF_CYCLE_KEY]).toBeUndefined();
+            expect(RJSF_REF_CYCLE_KEY in result).toBe(false);
             expect(result.properties!.leaf).toEqual({ type: 'string' });
             expect(Object.keys(result.properties!)).toHaveLength(propertyCount);
           });
@@ -3197,7 +3197,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
       it('still expands a $ref in a sibling subtree that an earlier anyOf option already expanded', () => {
-        const definitions = {
+        const definitions: Record<string, RJSFSchema> = {
           X: { type: 'object', properties: { name: { type: 'string' } } },
           Y: { type: 'object', properties: { x: { $ref: '#/definitions/X' } } },
         };
@@ -3215,7 +3215,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           [RJSF_REF_KEY]: '#/definitions/X',
         };
         const [result] = retrieveSchemaInternal(testValidator, schema, schema, {}, false, [], undefined, true);
-        expect(result.properties!.u.anyOf).toEqual([
+        expect((result.properties!.u as RJSFSchema).anyOf).toEqual([
           xMaterialized,
           {
             type: 'object',
@@ -3277,4 +3277,4 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
   });
-}
+              }
