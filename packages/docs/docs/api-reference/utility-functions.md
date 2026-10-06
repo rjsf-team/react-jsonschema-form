@@ -2104,13 +2104,15 @@ triggerValueId('root_birthday'); // 'root_birthday__value'
 Reads a boolean `ui:` option, such as `ui:required`, `ui:hideError` or `ui:label`, the way JavaScript reads a condition.
 uiSchemas are often untyped JSON, so an option typed `boolean` may hold `0`, `1`, `null` or a string at runtime.
 
+`null` becomes `false`. For options where `null` means unset, such as `ui:disabled`, `ui:readonly` and `ui:autofocus`, apply the inherited fallback before calling this helper: `uiBooleanOption(option ?? inheritedValue)`.
+
 #### Parameters
 
 - value: unknown - The option's value, as read from the uiSchema
 
 #### Returns
 
-- boolean | undefined: `undefined` when the option is not set, so callers can fall back with `??`, otherwise `Boolean(value)`
+- boolean | undefined: `undefined` when the value is `undefined`, so callers can fall back with `??`, otherwise `Boolean(value)`
 
 #### Example
 
