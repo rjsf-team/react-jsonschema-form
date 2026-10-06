@@ -122,7 +122,7 @@ const oneOfSchema = {
       title: 'second option',
     },
   ],
-};
+} satisfies RJSFSchema;
 
 const oneOfData = {
   name: 'second_option',
@@ -332,7 +332,7 @@ describe('LayoutMultiSchemaField', () => {
     const selectorField = 'name';
     const props = getProps({
       options: oneOfSchema[ONE_OF_KEY],
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       formData: oneOfData,
       uiSchema: {
         [UI_OPTIONS_KEY]: {
@@ -419,7 +419,7 @@ describe('LayoutMultiSchemaField', () => {
     };
     const props = getProps({
       options: oneOfSchema[ONE_OF_KEY],
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
@@ -473,7 +473,7 @@ describe('LayoutMultiSchemaField', () => {
     };
     const baseProps = getProps({
       options: oneOfSchema[ONE_OF_KEY],
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
@@ -514,7 +514,7 @@ describe('LayoutMultiSchemaField', () => {
     };
     const props = getProps({
       options: oneOfSchema[ONE_OF_KEY],
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
@@ -543,7 +543,7 @@ describe('LayoutMultiSchemaField', () => {
     };
     const props = getProps({
       options: oneOfSchema[ONE_OF_KEY],
-      schema: { ...oneOfSchema, [ANY_OF_KEY]: oneOfSchema[ONE_OF_KEY] } as RJSFSchema,
+      schema: { ...oneOfSchema, [ANY_OF_KEY]: oneOfSchema[ONE_OF_KEY] },
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
@@ -566,7 +566,7 @@ describe('LayoutMultiSchemaField', () => {
       autofocus: true,
       required: true,
       options: oneOfSchema[ONE_OF_KEY],
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       formData: oneOfData,
       errorSchema: NESTED_ERROR_SCHEMA,
       uiSchema: {
@@ -621,6 +621,25 @@ describe('LayoutMultiSchemaField', () => {
 
     // OnChange was called with the correct event
     expect(props.onChange).toHaveBeenCalledWith(undefined, props.fieldPath, undefined, DEFAULT_ID);
+  });
+  test('ui:hideError null reads as false, showing errors despite props.hideError true', () => {
+    const uiSchemaFromJson: GenericObjectType = {
+      [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'name' },
+      'ui:hideError': null,
+    };
+    const props = getProps({
+      options: oneOfSchema[ONE_OF_KEY],
+      schema: oneOfSchema,
+      formData: oneOfData,
+      errorSchema: NESTED_ERROR_SCHEMA,
+      uiSchema: uiSchemaFromJson,
+      hideError: true,
+    });
+    render(<LayoutMultiSchemaField {...props} />);
+
+    const fakeFieldErrorTemplate = screen.queryByTestId(FIELD_ERROR_TEST_ID);
+    expect(fakeFieldErrorTemplate).toBeInTheDocument();
+    expect(fakeFieldErrorTemplate).toHaveTextContent(getByPath<string[]>(props.errorSchema, [ERRORS_KEY]).join(''));
   });
   test("replaces the old option's defaults when switching options", async () => {
     // This field picks `oldOption` out of `formData` by its selector value rather than from a selected index, and
@@ -727,7 +746,7 @@ describe('LayoutMultiSchemaField', () => {
   test('implicitly disabled due to no options for select widget, ui:hideError true, props.hideError false, no errors to hide', () => {
     const selectorField = 'name';
     const props = getProps({
-      schema: oneOfSchema as RJSFSchema,
+      schema: oneOfSchema,
       options: [],
       uiSchema: {
         [UI_OPTIONS_KEY]: {
@@ -978,6 +997,16 @@ describe('LayoutMultiSchemaField', () => {
       expect(widgetProps?.disabled).toBe(true);
     });
     // `ui:disabled` overrides in both directions, the way `SchemaField` resolves it with `??`
+    test('keeps an inherited disabled selector disabled for ui:disabled null', () => {
+      const { templateProps, widgetProps } = renderRecording({
+        disabled: true,
+        uiSchema: JSON.parse('{"ui:disabled": null}'),
+      });
+      expect(templateProps?.disabled).toBe(true);
+      expect(widgetProps?.disabled).toBe(true);
+      screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
+    });
+
     test('re-enables a disabled field for a ui:disabled of false', () => {
       const { templateProps, widgetProps } = renderRecording({
         disabled: true,

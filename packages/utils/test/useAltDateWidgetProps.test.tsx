@@ -109,6 +109,16 @@ describe('useAltDateWidgetProps()', () => {
     vi.useRealTimers();
     vi.mocked(PROPS.onChange).mockClear();
   });
+  test.each(['month', 'day'] as const)('clearing %s with an empty string leaves the date incomplete', (part) => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
+    act(() => result.current.handleChange(part, ''));
+    expect(PROPS.onChange).not.toHaveBeenCalled();
+    const expectedDate = { ...parseDateString(DATE_STR), [part]: -1 };
+    expect(result.current.elements).toEqual(getDateElementProps(expectedDate, false, PROPS.options.yearsRange));
+    act(() => result.current.handleChange(part, part === 'month' ? '11' : '28'));
+    expect(PROPS.onChange).toHaveBeenCalledExactlyOnceWith(part === 'month' ? '2023-11-27' : '2023-10-28');
+  });
+
   test('time is false, value undefined', () => {
     const { result } = renderHook(() => useAltDateWidgetProps(PROPS));
     const { elements, handleChange, handleClear, handleSetNow } = result.current;
@@ -152,7 +162,7 @@ describe('useAltDateWidgetProps()', () => {
     });
     act(() => result.current.handleChange('year', '2020'));
     expect(PROPS.onChange).not.toHaveBeenCalled();
-    expect(result.current.elements[0].value).toBe('2020');
+    expect(result.current.elements[0].value).toBe(2020);
     rerender({ ...PROPS, value: DATE_STR });
     expect(result.current.elements).toEqual(
       getDateElementProps(parseDateString(DATE_STR), false, PROPS.options.yearsRange),

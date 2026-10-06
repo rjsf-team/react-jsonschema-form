@@ -2099,6 +2099,29 @@ A trigger that is a `button` is named by the label pointing at it, which replace
 triggerValueId('root_birthday'); // 'root_birthday__value'
 ```
 
+### uiBooleanOption()
+
+Reads a boolean `ui:` option, such as `ui:required`, `ui:hideError` or `ui:label`, the way JavaScript reads a condition.
+uiSchemas are often untyped JSON, so an option typed `boolean` may hold `0`, `1`, `null` or a string at runtime.
+
+`null` becomes `false`. For options where `null` means unset, such as `ui:disabled`, `ui:readonly` and `ui:autofocus`, apply the inherited fallback before calling this helper: `uiBooleanOption(option ?? inheritedValue)`.
+
+#### Parameters
+
+- value: unknown - The option's value, as read from the uiSchema
+
+#### Returns
+
+- boolean | undefined: `undefined` when the value is `undefined`, so callers can fall back with `??`, otherwise `Boolean(value)`
+
+#### Example
+
+```typescript
+uiBooleanOption(getUiOptions(uiSchema).required) ?? schemaRequired; // schemaRequired when unset
+uiBooleanOption(0); // false
+uiBooleanOption('false'); // true, a non-empty string is truthy
+```
+
 ### unsetByPath()
 
 Removes the own property at `path` of `obj`, mutating `obj`.

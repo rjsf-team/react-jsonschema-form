@@ -2,6 +2,8 @@ import type { ReactElement } from 'react';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 
+import { EMPTY_UI_SCHEMA } from './constants.ts';
+
 export interface RichTextProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -26,7 +28,7 @@ export default function RichText<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ text, enabledBy, registry, uiSchema = {} }: RichTextProps<T, S, F>) {
+>({ text, enabledBy, registry, uiSchema = EMPTY_UI_SCHEMA }: RichTextProps<T, S, F>) {
   if (typeof text !== 'string') {
     return text;
   }

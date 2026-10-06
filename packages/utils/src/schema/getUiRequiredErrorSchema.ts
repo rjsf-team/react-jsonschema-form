@@ -36,6 +36,7 @@ import type {
   UiSchema,
   UiSchemaDefinitions,
 } from '../types.ts';
+import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
 import retrieveSchema from './retrieveSchema.ts';
@@ -125,7 +126,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return;
   }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
-  const { required: fieldUiRequired } = getUiOptions<T, S, F>(uiSchema);
+  const fieldUiRequired = uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required);
   if (path.length > 0 && fieldUiRequired === true && formData === undefined && !(required && parentPresent)) {
     // Worded exactly as AJV words its own `required` failures, so a ui:required error is indistinguishable from a
     // schema-required one in the error list and in any `ui:help`/ErrorList rendering built around that text. Skipped
@@ -156,7 +157,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isWholeValueSelect<S>(resolvedSchema)) {
     return;
   }
-  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  const effectiveRequired = fieldUiRequired ?? required;
   // An Optional Data Control hides what it holds until the user opts in, so a `ui:required` field beneath it isn't
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
   // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null` and `{}`. MultiSchemaField renders
@@ -168,8 +169,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
-  const { required: branchUiRequired } = getUiOptions<T, S, F>(branchUiSchema);
-  const branchRequired = branchUiRequired !== undefined ? Boolean(branchUiRequired) : effectiveRequired;
+  const branchRequired = uiBooleanOption(getUiOptions<T, S, F>(branchUiSchema).required) ?? effectiveRequired;
   if (
     path.length > 0 &&
     !isFormDataAvailable(formData) &&

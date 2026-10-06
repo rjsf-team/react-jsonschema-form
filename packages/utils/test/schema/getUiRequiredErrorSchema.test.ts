@@ -1,4 +1,4 @@
-import type { GlobalUISchemaOptions, RJSFSchema, UiSchema } from '../../src/index.ts';
+import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema } from '../../src/index.ts';
 import { getUiRequiredErrorSchema, toErrorList } from '../../src/index.ts';
 import getTestValidator from '../testUtils/getTestValidator.ts';
 
@@ -33,6 +33,13 @@ describe('getUiRequiredErrorSchema()', () => {
     const uiSchema: UiSchema = { nick: { 'ui:required': true } };
     const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { nick: 'Chuck' });
     expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it.each([1, 'true'])('reports a missing field whose untyped JSON ui:required is the truthy %j', (value) => {
+    const schema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
+    const uiSchema: GenericObjectType = { nick: { 'ui:required': value } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.nick']);
   });
 
   it('ignores ui:required: false', () => {
@@ -317,7 +324,7 @@ describe('getUiRequiredErrorSchema()', () => {
     };
     const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, [{}, {}]);
     const errors = toErrorList(errorSchema)
-      .map((e) => e.property)
+      .map((e) => e.property ?? '')
       .sort();
     expect(errors).toEqual(['.0.first', '.1.second']);
   });

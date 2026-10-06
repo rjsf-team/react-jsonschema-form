@@ -13,6 +13,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
 } from '../types.ts';
+import uiBooleanOption from '../uiBooleanOption.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 
@@ -38,8 +39,7 @@ export default function getDisplayLabel<
   globalOptions?: GlobalUISchemaOptions,
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
-  const { label = true } = uiOptions;
-  let displayLabel = Boolean(label);
+  let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
     const schemaType = getSchemaType<S>(schema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
