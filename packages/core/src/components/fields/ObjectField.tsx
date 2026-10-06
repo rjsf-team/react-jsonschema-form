@@ -21,6 +21,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   deepEquals,
+  forbidsAdditionalProperties,
   getFreePropertyNames,
   getPatternPropertySchema,
   getFieldTypeForWidget,
@@ -98,11 +99,12 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
 /** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. A name one
  * of the `patternProperties` patterns matches is described by that pattern, which is what the new property takes its
  * seed and its field from, while a name they don't match is left to `additionalProperties`: an
- * `additionalProperties: false` forbids it, and an `additionalProperties` that is `true`, or absent and so read as
- * `true`, describes it no better than the data it comes to hold — and, where it is absent, `omitExtraData` prunes it,
- * since patterns describe no key they don't match. So a matching name is worth more to the user than the first one
- * the `enum` happens to list, unless an `additionalProperties` schema describes the unmatched name as fully as a
- * pattern would, leaving nothing to prefer.
+ * `additionalProperties: false` forbids it, an `unevaluatedProperties: false` forbids it where no
+ * `additionalProperties` evaluates it, and an `additionalProperties` that is `true`, or absent and so read as `true`,
+ * describes it no better than the data it comes to hold — and, where it is absent, `omitExtraData` prunes it, since
+ * patterns describe no key they don't match. So a matching name is worth more to the user than the first one the
+ * `enum` happens to list, unless an `additionalProperties` schema describes the unmatched name as fully as a pattern
+ * would, leaving nothing to prefer.
  *
  * It stays a preference rather than a restriction: `propertyNames` enumerates the other names all the same, and a
  * property the user can still rename beats no new property at all.
@@ -412,9 +414,9 @@ export default function ObjectField<
     // disagree about the key: the `patternProperties` patterns it matches, when it matches any, and
     // `additionalProperties` otherwise
     const patternSchema = getPatternPropertySchema<S>(schema, newKey);
-    if (!patternSchema && schema.additionalProperties === false) {
-      // `additionalProperties: false` forbids a key the patterns don't match, leaving `retrieveSchema()` nothing but
-      // the `{ type: 'null' }` stub to render it with, so any other seed would be a value no field can show
+    if (!patternSchema && forbidsAdditionalProperties<S>(schema)) {
+      // A schema that forbids a key the patterns don't match leaves `retrieveSchema()` nothing but the
+      // `{ type: 'null' }` stub to render it with, so any other seed would be a value no field can show
       setByPath(newFormData, newKey, null);
     } else {
       let type: ReturnType<typeof getFieldTypeForWidget> = undefined;

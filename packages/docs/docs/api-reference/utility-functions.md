@@ -637,6 +637,21 @@ This is the order a widget's UI library needs when it manages its own selection 
 
 - IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
 
+### forbidsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Determines whether `schema` forbids a property that neither its `properties` nor its `patternProperties` describe.
+An `additionalProperties: false` says so directly, and an `unevaluatedProperties: false` says the same thing for a schema that names no `additionalProperties` at all, since every key the `properties` and `patternProperties` leave over goes unevaluated and that keyword rejects exactly those.
+Any `additionalProperties`, `true` and a schema alike, evaluates those keys itself, which leaves `unevaluatedProperties` nothing to reject and so no say here.
+Only a literal `false` forbids: an `unevaluatedProperties` schema describes what such a key may hold rather than ruling it out.
+
+#### Parameters
+
+- schema: S - The object schema whose additional properties are in question
+
+#### Returns
+
+- boolean: True when a key the schema does not otherwise describe is one it forbids
+
 ### getByPath&lt;R = unknown>() {#getbypath}
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.

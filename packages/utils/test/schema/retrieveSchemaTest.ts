@@ -2800,6 +2800,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
+      it('has property keys that does not match patternProperties, unevaluatedProperties is false', () => {
+        // `unevaluatedProperties: false` rejects exactly the keys the patterns leave over, so a key none of them
+        // match is as forbidden as it is under `additionalProperties: false` and gets the same stub
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+          },
+          unevaluatedProperties: false,
+        };
+        const formData = { baz: 1 };
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            baz: {
+              type: 'null',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that does not match patternProperties, unevaluatedProperties is false beside an additionalProperties schema', () => {
+        // The `additionalProperties` schema evaluates the key, which leaves `unevaluatedProperties` nothing to reject
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+          },
+          additionalProperties: {
+            type: 'number',
+          },
+          unevaluatedProperties: false,
+        };
+        const formData = { baz: 1 };
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            baz: {
+              type: 'number',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
       it('has property keys that match patternProperties', () => {
         const schema: RJSFSchema = {
           patternProperties: {

@@ -148,6 +148,7 @@ A pattern that constrains the value without naming a `type`, such as one that is
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.
 Where `additionalProperties: false` does forbid it, the key has no subschema to render with and the property renders as the empty field a validation error accompanies.
+An `unevaluatedProperties: false` forbids the same keys where the object names no `additionalProperties` to evaluate them, so it renders them the same way; beside any `additionalProperties`, `true` and a schema alike, it has nothing left to reject and no say in how the key renders.
 Where the object names no `additionalProperties` at all, a form that sets `omitExtraData` drops a pattern-unmatched key all the same: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
 An `additionalProperties` that is spelled out, `true` included, describes those keys, so `omitExtraData` keeps them.
 

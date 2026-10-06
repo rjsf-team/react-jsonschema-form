@@ -18,6 +18,7 @@ import {
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import forbidsAdditionalProperties from '../forbidsAdditionalProperties.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
@@ -789,7 +790,7 @@ export function stubExistingAdditionalProperties<
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
       return;
     }
-    if (schema.additionalProperties !== false) {
+    if (!forbidsAdditionalProperties<S>(schema)) {
       let additionalProperties: S['additionalProperties'];
       if (isObject(schema.additionalProperties)) {
         if (REF_KEY in schema.additionalProperties) {
@@ -803,9 +804,10 @@ export function stubExistingAdditionalProperties<
           additionalProperties = stubSchemaForSubSchema<S>(schema.additionalProperties as S, formData[key]);
         }
       } else {
-        // `additionalProperties: false` is excluded above, so what is left is `true` or no `additionalProperties` at
-        // all, which JSON Schema reads as `true`: anything goes, including a key none of the `patternProperties`
-        // patterns match, which the schema allows all the same and so gets a field for the data it holds
+        // What is left is `additionalProperties: true`, or no `additionalProperties` at all with nothing forbidding
+        // the key either, which JSON Schema reads as `true`: anything goes, including a key none of the
+        // `patternProperties` patterns match, which the schema allows all the same and so gets a field for the data
+        // it holds
         additionalProperties = guessedTypeSchema<S>(formData[key]);
       }
 
@@ -814,8 +816,8 @@ export function stubExistingAdditionalProperties<
       // Set our additional property flag so we know it was dynamically added
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     } else {
-      // `additionalProperties: false` forbids every key its `patternProperties` don't match, so the property has no
-      // subschema of its own to render it with and the schema allows no value for it
+      // The schema forbids every key its `patternProperties` don't match, so the property has no subschema of its own
+      // to render it with and the schema allows no value for it
       schema.properties[key] = { type: 'null' };
       // Set our additional property flag so we know it was dynamically added
       (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;

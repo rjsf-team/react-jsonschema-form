@@ -1107,6 +1107,24 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-field-null')).toBeNull();
     });
 
+    it('should render no field for a key whose name unevaluatedProperties forbids', async () => {
+      // `unevaluatedProperties: false` rejects exactly the keys the patterns leave over, so a key none of them match
+      // is forbidden as surely as it is under `additionalProperties: false` and gets no field of its own, however
+      // permissive the absent `additionalProperties` would otherwise read
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: false,
+        },
+        initialFormData: { abc: 'hello', xyz: 'stranded' },
+      });
+
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+      expect(node.querySelector<HTMLInputElement>('#root_xyz-key')).toHaveValue('xyz');
+      expect(node.querySelector('#root_xyz')).toBeNull();
+    });
+
     it('should keep a property added under a pattern-matching name editable when renamed before it is typed in', async () => {
       // The add button seeds the new property from the pattern its name matches, so the value a rename then carries to
       // a name no pattern matches is one `retrieveSchema()` can stub a field from. A `null` seed would be stubbed as
@@ -2473,6 +2491,24 @@ describe('ObjectField', () => {
           type: 'object',
           patternProperties: { '^a': { type: 'string' } },
           additionalProperties: false,
+          propertyNames: { enum: ['xyz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should seed a null when unevaluatedProperties forbids the only name left to add under', async () => {
+      // The forbidding keyword differs, but the name is as undescribed as it is under `additionalProperties: false`,
+      // so the seed has to be the one `retrieveSchema()`'s `{ type: 'null' }` stub can show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: false,
           propertyNames: { enum: ['xyz'] },
         },
         formData: {},
