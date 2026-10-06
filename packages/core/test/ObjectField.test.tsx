@@ -1107,6 +1107,43 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-field-null')).toBeNull();
     });
 
+    it('should keep a property added under a pattern-matching name editable when renamed before it is typed in', async () => {
+      // The add button seeds the new property from the pattern its name matches, so the value a rename then carries to
+      // a name no pattern matches is one `retrieveSchema()` can stub a field from. A `null` seed would be stubbed as
+      // `{ type: 'null' }` there and leave the property with no input, which is the rename this fixes
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['abc', 'xyz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.selectOptions(node.querySelector('select#root_abc-key')!, 'xyz');
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
+      expect(node.querySelector('#root_xyz')).toHaveValue('New Value');
+      expect(node.querySelector('.rjsf-field-null')).toBeNull();
+    });
+
+    it('should seed a property added under a pattern-matching name from that pattern', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^n': { type: 'number', default: 5 } },
+          propertyNames: { enum: ['num'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 5 }, 'root');
+      expect(node.querySelector('#root_num')).toHaveDisplayValue('5');
+    });
+
     it('should not duplicate an additional property that becomes schema-defined after rerender', () => {
       const initialSchema: RJSFSchema = {
         type: 'object',
@@ -2348,13 +2385,13 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      // The only free name matches a pattern, which the seeding leaves to the field the pattern's type renders
-      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: null }, 'root');
+      // The only free name matches a pattern, so the new property is seeded from that pattern's schema
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: 'New Value' }, 'root');
     });
 
-    it('should add under the first allowed name even when it matches no pattern of a patternProperties object', async () => {
-      // The object names no `additionalProperties`, which allows every name the patterns don't match rather than
-      // forbidding it, so the new property is seeded the way an unconstrained one is and renders as a field for it
+    it('should prefer a name matching a pattern when the object names no additionalProperties', async () => {
+      // Nothing but the patterns describes a name here, so the matching one is preferred over the first the `enum`
+      // lists — it is the only one with a schema to seed from, and the only one `omitExtraData` keeps
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -2366,8 +2403,28 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
-      expect(node.querySelector('#root_xyz')).toHaveValue('New Value');
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('New Value');
+    });
+
+    it('should add a property that survives omitExtraData when only the patterns describe a name', async () => {
+      // `omitExtraData` keeps only the data a schema describes, and patterns describe no name they don't match, so a
+      // new property added under an unmatched name would be pruned the moment it was added
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        initialFormData: {},
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('New Value');
     });
 
     it('should prefer a name matching a pattern when additionalProperties forbids every other name', async () => {
@@ -2383,7 +2440,8 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expectToHaveBeenCalledWithFormData(onChange, { abc: null }, 'root');
+      // `abc` is the only free name a pattern matches, and so the only one with a schema to seed from
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
     });
 
     it('should seed a null when additionalProperties forbids the only name left to add under', async () => {

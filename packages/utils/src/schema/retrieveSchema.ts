@@ -252,6 +252,25 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
   ) as Required<S['patternProperties']>;
 }
 
+/** Returns the schema a `key` the object's own `properties` don't name takes from its `patternProperties`: an `allOf`
+ * of every subschema whose pattern matches the key, for the caller to resolve into the one schema that describes it. A
+ * key no pattern matches takes its schema from `additionalProperties` instead, so there is nothing to return for it.
+ *
+ * @param schema - The schema whose `patternProperties` the `key` is matched against
+ * @param key - The property name to match
+ * @returns - The `allOf` of the subschemas whose patterns match the `key`, or undefined when none of them do
+ */
+export function getPatternPropertySchema<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  key: string,
+): S | undefined {
+  const matchingProperties = getMatchingPatternProperties<S>(schema, key);
+  if (Object.keys(matchingProperties).length === 0) {
+    return undefined;
+  }
+  return { [ALL_OF_KEY]: Object.values(matchingProperties) } as S;
+}
+
 /** Resolves references and dependencies within a schema and its 'allOf' children. Passes the `expandAllBranches` flag
  * down to the `retrieveSchemaInternal()`, `resolveReference()` and `resolveDependencies()` helper calls. If
  * `expandAllBranches` is true, then all possible dependencies and/or allOf branches are returned.
@@ -740,18 +759,11 @@ export function stubExistingAdditionalProperties<
       // No need to stub, our schema already has the property
       return;
     }
-    if (PATTERN_PROPERTIES_KEY in schema) {
-      const matchingProperties = getMatchingPatternProperties(schema, key);
-      if (Object.keys(matchingProperties).length > 0) {
-        schema.properties[key] = retrieveSchema<T, S, F>(
-          context,
-          { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
-          rootSchema,
-          formData[key],
-        );
-        (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-        return;
-      }
+    const patternSchema = getPatternPropertySchema<S>(schema, key);
+    if (patternSchema) {
+      schema.properties[key] = retrieveSchema<T, S, F>(context, patternSchema, rootSchema, formData[key]);
+      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+      return;
     }
     if (schema.additionalProperties !== false) {
       let additionalProperties: S['additionalProperties'];

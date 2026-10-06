@@ -16,6 +16,7 @@ import {
 import {
   getAllPermutationsOfXxxOf,
   getMatchingPatternProperties,
+  getPatternPropertySchema,
   relaxOptionsForScoring,
   resolveAllReferences,
   resolveAnyOrOneOfSchemas,
@@ -45,6 +46,22 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
   describe('getMatchingPatternProperties()', () => {
     it('returns an empty object when the schema has no patternProperties', () => {
       expect(getMatchingPatternProperties({ type: 'object' }, 'key')).toEqual({});
+    });
+  });
+  describe('getPatternPropertySchema()', () => {
+    it('returns undefined when no pattern matches the key', () => {
+      expect(
+        getPatternPropertySchema({ type: 'object', patternProperties: { '^a': { type: 'string' } } }, 'xyz'),
+      ).toBeUndefined();
+    });
+    it('returns an allOf of every matching pattern subschema', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        patternProperties: { '^a': { type: 'string' }, c$: { minLength: 2 } },
+      };
+      expect(getPatternPropertySchema(schema, 'abc')).toEqual({
+        allOf: [{ type: 'string' }, { minLength: 2 }],
+      });
     });
   });
   describe('retrieveSchema()', () => {

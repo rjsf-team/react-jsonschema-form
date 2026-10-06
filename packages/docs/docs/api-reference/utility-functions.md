@@ -2545,6 +2545,20 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 
 - Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
 
+### getPatternPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema a `key` the object's own `properties` don't name takes from its `patternProperties`: an `allOf` of every subschema whose pattern matches the key, for the caller to resolve into the one schema that describes it.
+A key no pattern matches takes its schema from `additionalProperties` instead, so there is nothing to return for it.
+
+#### Parameters
+
+- schema: S - The schema whose `patternProperties` the `key` is matched against
+- key: string - The property name to match
+
+#### Returns
+
+- S | undefined: The `allOf` of the subschemas whose patterns match the `key`, or undefined when none of them do
+
 ### getFirstMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
