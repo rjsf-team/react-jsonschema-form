@@ -5,7 +5,7 @@ import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, isInputElement } from '../utils.ts';
 
 export default function UpDownWidget<
   T = unknown,
@@ -15,8 +15,10 @@ export default function UpDownWidget<
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target?.value);
+  // The handlers sit on the root, so the target may be an increment/decrement trigger rather than the input
+  const inputValue = (target: HTMLElement) => (isInputElement(target) ? target.value : undefined);
+  const handleBlur = ({ target }: FocusEvent<HTMLElement>) => onBlur(id, inputValue(target));
+  const handleFocus = ({ target }: FocusEvent<HTMLElement>) => onFocus(id, inputValue(target));
 
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 

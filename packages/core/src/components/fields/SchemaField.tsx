@@ -46,6 +46,7 @@ import {
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -491,9 +492,10 @@ function SchemaFieldRender<
     initialValue: fieldInitialValue,
     emptyValue: fieldEmptyValue,
   } = getUiOptions<T, S, F>(uiSchema);
-  const effectiveRequired = fieldUiRequired !== undefined ? Boolean(fieldUiRequired) : required;
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
   if (
-    fieldUiRequired === false &&
+    uiRequired === false &&
     required &&
     // Checked field-only (no globalUiOptions), matching computeDefaults()'s own resolution of these options: a
     // global ui:emptyValue/ui:initialValue wouldn't actually be applied to this field's default, so it must not
@@ -505,14 +507,13 @@ function SchemaFieldRender<
     schema.default === undefined
   ) {
     logOnce(
-      `ui:required is false for schema-required field ${fieldLabelForLog(fieldId, fieldPath)} but neither ` +
+      `ui:required turns off required for schema-required field ${fieldLabelForLog(fieldId, fieldPath)} but neither ` +
         'ui:initialValue nor ui:emptyValue is set. The UI will show this field as optional, but schema validation ' +
         'will still fail if it is left empty.',
     );
   }
-  const uiSchemaHideError = uiOptions.hideError;
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiSchemaHideError === undefined ? props.hideError : Boolean(uiSchemaHideError);
+  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;

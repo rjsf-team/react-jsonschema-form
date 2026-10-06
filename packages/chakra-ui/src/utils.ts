@@ -27,3 +27,10 @@ export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps 
     Object.entries(chakraProps).filter(([key]) => defaultSystem.isValidProperty(key) && !shouldForwardProp(key)),
   );
 }
+
+/** Duck-typed on `valueAsNumber`, which only inputs have, rather than `instanceof HTMLInputElement`, which is false for
+ * an input rendered inside an iframe.
+ */
+export function isInputElement(target: EventTarget): target is HTMLInputElement {
+  return 'valueAsNumber' in target;
+}

@@ -2818,7 +2818,57 @@ describe('uiSchema', () => {
     });
   });
 
+  // `0` and `null` stand in for an untyped JSON uiSchema, where a flag typed `boolean` can hold any value
+  describe('ui:label', () => {
+    it('reads a ui:label of 0 as false, rendering no stray 0', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+      const uiSchema: GenericObjectType = { foo: { 'ui:label': 0 } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('.rjsf-field-string')?.textContent).not.toContain('0');
+    });
+
+    it.each([false, 0, null])("hides an object field's title and description for a ui:label of %s", (label) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'object', title: 'Foo title', description: 'Foo description', properties: {} },
+        },
+      };
+      const uiSchema: GenericObjectType = { foo: { 'ui:label': label } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.textContent).not.toContain('Foo title');
+      expect(container.textContent).not.toContain('Foo description');
+    });
+
+    it("shows an object field's title and description when ui:label is unset", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'object', title: 'Foo title', description: 'Foo description', properties: {} },
+        },
+      };
+
+      const { container } = render(<Form schema={schema} validator={validator} />);
+
+      expect(container.textContent).toContain('Foo title');
+      expect(container.textContent).toContain('Foo description');
+    });
+  });
+
   describe('ui:required', () => {
+    it('reads a ui:required of 0 as false, rendering no stray 0', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+      const uiSchema: GenericObjectType = { foo: { 'ui:required': 0 } };
+
+      const { container } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+
+      expect(container.querySelector('.rjsf-field-string')?.textContent).not.toContain('0');
+    });
+
     it('shows the required indicator on a non-required field when ui:required is true', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -2861,6 +2911,19 @@ describe('uiSchema', () => {
       const uiSchema: UiSchema = {
         foo: { 'ui:required': false, 'ui:initialValue': 'fallback' },
       };
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+    });
+
+    it('reads a ui:required of null as false on a schema-required field, not as unset', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['foo'],
+        properties: {
+          foo: { type: 'string' },
+        },
+      };
+      const uiSchema: GenericObjectType = { foo: { 'ui:required': null } };
       const { node } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
     });
@@ -2925,9 +2988,27 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field "root_foo"'),
+        expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
       );
     });
+
+    it.each([0, null])(
+      'warns when ui:required is %s on a schema-required field, since it hides the marker as false does',
+      (value) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['foo'],
+          properties: {
+            foo: { type: 'string' },
+          },
+        };
+        const uiSchema: GenericObjectType = { foo: { 'ui:required': value } };
+        createFormComponent({ schema, uiSchema });
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('ui:required turns off required for schema-required field "root_foo"'),
+        );
+      },
+    );
 
     it('warns only once, not on every re-render', async () => {
       const schema: RJSFSchema = {
@@ -3176,7 +3257,7 @@ describe('uiSchema', () => {
       };
       createFormComponent({ schema, uiSchema });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('ui:required is false for schema-required field'),
+        expect.stringContaining('ui:required turns off required for schema-required field'),
       );
     });
 

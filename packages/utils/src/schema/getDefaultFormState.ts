@@ -72,7 +72,7 @@ function shouldPopulateAllOfDefaults<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   defaultFormStateBehavior?: DefaultFormStateBehavior,
 ): boolean {
-  return Boolean(defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema);
+  return defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema;
 }
 
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the

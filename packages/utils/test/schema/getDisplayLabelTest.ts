@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../../src/index.ts';
+import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -21,6 +21,12 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     });
     it('with local uiSchema "label" set to false', () => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'string' }, { 'ui:label': false })).toEqual(false);
+    });
+    it('coerces a non-boolean "ui:label" from untyped JSON to a boolean', () => {
+      const uiSchemaFromJson = (label: unknown): GenericObjectType => ({ 'ui:label': label });
+      expect(getDisplayLabel({ validator: testValidator }, { type: 'string' }, uiSchemaFromJson(0))).toBe(false);
+      expect(getDisplayLabel({ validator: testValidator }, { type: 'string' }, uiSchemaFromJson(null))).toBe(false);
+      expect(getDisplayLabel({ validator: testValidator }, { type: 'string' }, uiSchemaFromJson('yes'))).toBe(true);
     });
     it('object type', () => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'object' })).toEqual(false);

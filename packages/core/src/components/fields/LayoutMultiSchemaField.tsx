@@ -34,6 +34,7 @@ import {
   omitConsumedStyling,
   TranslatableString,
   resolveWidget,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -174,7 +175,7 @@ export default function LayoutMultiSchemaField<
   // a discriminated cell behaves like the same schema rendered outside a layout grid. A selector with nothing to
   // select from is this field's own reason to be disabled, which no other field has
   const isDisabled =
-    Boolean(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
+    uiBooleanOption(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
   const widgetLabel = (title || schema.title) ?? '';
   // Only the template's label carries the deprecation marker, as in `SchemaField`: the widget's own label names its
   // control, and decorating it would make a group pointing at it announce the decoration twice.
@@ -205,7 +206,7 @@ export default function LayoutMultiSchemaField<
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
+  const hideFieldError = uiBooleanOption(uiSchemaHideError) ?? hideError;
 
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;

@@ -21,6 +21,7 @@ import {
   ANY_OF_KEY,
   getFreePropertyNames,
   getMatchingPatternProperties,
+  getSchemaType,
   getTemplates,
   getPropertySchema,
   getUiOptions,
@@ -33,6 +34,7 @@ import {
   REF_KEY,
   isObject,
   TranslatableString,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
@@ -57,7 +59,7 @@ function getDefaultValue<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(translateString: Registry<T, S, F>['translateString'], type?: RJSFSchema['type']) {
+>(translateString: Registry<T, S, F>['translateString'], type?: string | string[]) {
   switch (type) {
     case 'array':
       return [];
@@ -65,6 +67,7 @@ function getDefaultValue<
       return false;
     case 'null':
       return null;
+    case 'integer':
     case 'number':
       return 0;
     case 'object':
@@ -395,20 +398,19 @@ export default function ObjectField<
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
-      let type: RJSFSchema['type'] = undefined;
+      let type: ReturnType<typeof getSchemaType> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
       if (isObject(schema.additionalProperties)) {
-        type = schema.additionalProperties.type;
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
         const wasRef = REF_KEY in apSchema;
         if (wasRef) {
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
-          type = apSchema.type;
           constValue = apSchema.const;
         }
+        type = getSchemaType(apSchema);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -426,8 +428,12 @@ export default function ObjectField<
         ) as RJSFSchema['default'];
       }
 
-      const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
-      setByPath(newFormData, newKey, newValue);
+      const newValue = constValue !== undefined ? constValue : defaultValue;
+      setByPath(
+        newFormData,
+        newKey,
+        newValue === undefined ? getDefaultValue<T, S, F>(translateString, type) : newValue,
+      );
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {
@@ -548,10 +554,11 @@ export default function ObjectField<
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
+  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+  const showLabel = uiBooleanOption(uiOptions.label) ?? true;
   const templateProps = {
-    // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
-    title: uiOptions.label === false ? '' : templateTitle,
-    description: uiOptions.label === false ? undefined : description,
+    title: showLabel ? templateTitle : '',
+    description: showLabel ? description : undefined,
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
       const fieldUiSchema = getByPath<UiSchema<T, S, F> | undefined>(

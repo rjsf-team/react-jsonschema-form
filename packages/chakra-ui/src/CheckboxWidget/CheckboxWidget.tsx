@@ -6,7 +6,7 @@ import { ariaDescribedByIds, descriptionId, getTemplates, getUiOptions, schemaRe
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Field } from '../components/ui/field.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, isInputElement } from '../utils.ts';
 
 export default function CheckboxWidget<
   T = unknown,
@@ -37,8 +37,10 @@ export default function CheckboxWidget<
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.checked);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target?.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
+    onBlur(id, isInputElement(target) ? target.checked : undefined);
+  const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
+    onFocus(id, isInputElement(target) ? target.checked : undefined);
 
   const chakraProps = getChakra({ uiSchema });
 

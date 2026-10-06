@@ -11,7 +11,7 @@ import {
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import type { Localizer } from '../src/index.ts';
+import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
 import {
   SUPER_SCHEMA_OPTIONS,
@@ -26,6 +26,14 @@ const validateOptionsFns = compileSuperSchema(SUPER_SCHEMA_OPTIONS);
 const rootSchema = superSchema;
 
 describe('AJV8PrecompiledValidator', () => {
+  it('accepts a hand-written validator with a specific data parameter', () => {
+    const schema: RJSFSchema = { $id: 'typed', type: 'object', properties: { name: { type: 'string' } } };
+    const functions: ValidatorFunctions = { typed: (data: { name: string }) => data.name === 'valid' };
+    const validator = new AJV8PrecompiledValidator(functions, schema);
+    expect(validator.isValid(schema, { name: 'valid' }, schema)).toBe(true);
+    expect(validator.isValid(schema, { name: 'invalid' }, schema)).toBe(false);
+  });
+
   let builder: ErrorSchemaBuilder;
   beforeAll(() => {
     builder = new ErrorSchemaBuilder();

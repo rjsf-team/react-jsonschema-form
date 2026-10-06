@@ -30,6 +30,7 @@ import {
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
+  uiBooleanOption,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
@@ -382,8 +383,8 @@ function FallbackUiField<
         .filter((key) => !Object.hasOwn(templates, key))
         .map((key) => [key, undefined]),
     ) as UIOptionsType<T, S, F>;
-    if (label === false) {
-      options.label = label;
+    if (uiBooleanOption(label) === false) {
+      options.label = false;
     }
     return { [UI_OPTIONS_KEY]: options };
   }, [uiSchema, globalUiOptions, templates]);
