@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { forwardRef, lazy, memo, Suspense } from 'react';
 import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -130,6 +131,50 @@ describe('uiSchema', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
         expect(node.querySelectorAll('.custom')).toHaveLength(1);
+      });
+    });
+
+    describe('wrapped component widget', () => {
+      const schema: RJSFSchema = { type: 'string' };
+
+      const CustomWidget = (props: WidgetProps) => (
+        <input type='text' className='custom' value={props.value ?? ''} onChange={noop} />
+      );
+      const ForwardedWidget = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
+        <input ref={ref} type='text' className='custom' value={props.value ?? ''} onChange={noop} />
+      ));
+
+      const wrappedWidgets: [string, Widget][] = [
+        ['memo()', memo(CustomWidget)],
+        ['forwardRef()', ForwardedWidget],
+        ['memo(forwardRef())', memo(ForwardedWidget)],
+        ['lazy()', lazy(async () => ({ default: CustomWidget }))],
+      ];
+
+      // Rendered within a `Suspense` boundary for the `lazy()` widget, and awaited so it can resolve
+      it.each(wrappedWidgets)('should render a %s widget given as ui:widget', async (_name, widget) => {
+        const { findByRole } = render(
+          <Suspense>
+            <Form schema={schema} uiSchema={{ 'ui:widget': widget }} validator={validator} />
+          </Suspense>,
+        );
+
+        expect(await findByRole('textbox')).toHaveClass('custom');
+      });
+
+      it.each(wrappedWidgets)('should render a %s widget registered by name', async (_name, widget) => {
+        const { findByRole } = render(
+          <Suspense>
+            <Form
+              schema={schema}
+              uiSchema={{ 'ui:widget': 'wrapped' }}
+              widgets={{ wrapped: widget }}
+              validator={validator}
+            />
+          </Suspense>,
+        );
+
+        expect(await findByRole('textbox')).toHaveClass('custom');
       });
     });
 
