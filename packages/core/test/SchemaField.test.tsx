@@ -470,6 +470,15 @@ describe('SchemaField', () => {
           expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
         },
       );
+
+      it.each(['null', 'false', '""', '0'])('does not warn about a JSON ui:globalOptions.field of %s', (empty) => {
+        const uiSchema: UiSchema = JSON.parse(`{ "ui:globalOptions": { "field": ${empty} } }`);
+
+        const { node } = createFormComponent({ schema: stringSchema, uiSchema });
+
+        expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
     });
   });
 

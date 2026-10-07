@@ -181,6 +181,17 @@ function lookUpUiField<
 /** How a `ui:field` warning refers to the registered fields a name is looked up in */
 const UI_FIELD_LOOKUP = { none: 'no registered field', some: 'a registered field' };
 
+/** Describes a field's own `ui:field`, or the `ui:globalOptions.field`, that names no field, for the warning that it
+ * was ignored
+ */
+function describeUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(field: UIOptionsType<T, S, F>['field'], resolved: unknown): string {
+  return describeUnresolvedComponent(field, resolved, UI_FIELD_LOOKUP, 'MyField');
+}
+
 /** The field a `ui:field` names, and what was ignored on the way to it */
 interface UiFieldResolution<
   T = unknown,
@@ -203,7 +214,8 @@ interface UiFieldResolution<
  * A field's own `ui:field` that names nothing is ignored, so the `ui:globalOptions.field` it would have shadowed applies
  * as though it were never given. An empty one — `undefined`, `null`, `false`, `''` or `0` — still shadows it, since it
  * asks for no field: `undefined` is how `SchemaField` shadows it for a schema's options, and a JSON uiSchema, which can't
- * spell `undefined`, clears it for one field with `null` or `false`.
+ * spell `undefined`, clears it for one field with `null` or `false`. An empty `ui:globalOptions.field` asks for no field
+ * the same way, so it isn't warned about either.
  *
  * @param ownUiOptions - The field's own UI options, without the global ones
  * @param globalField - The `field` from `ui:globalOptions`
@@ -219,25 +231,22 @@ function resolveUiField<
   globalField: UIOptionsType<T, S, F>['field'],
   fields: Registry<T, S, F>['fields'],
 ): UiFieldResolution<T, S, F> {
-  const describe = (field: UIOptionsType<T, S, F>['field'], resolved: unknown) =>
-    describeUnresolvedComponent(field, resolved, UI_FIELD_LOOKUP, 'MyField');
-
   const ownField = ownUiOptions.field;
   const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
   if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
     return { namedField: ownResolved };
   }
-  const ignoredOwnField = ownField ? describe(ownField, ownResolved) : undefined;
-  if (ignoredOwnField === undefined && Object.hasOwn(ownUiOptions, 'field')) {
+  if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
     return {};
   }
+  const ignoredOwnField = ownField ? describeUiField<T, S, F>(ownField, ownResolved) : undefined;
   const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
   if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
     return { namedField: globalResolved, ignoredOwnField };
   }
   return {
     ignoredOwnField,
-    ignoredGlobalField: globalField != null ? describe(globalField, globalResolved) : undefined,
+    ignoredGlobalField: globalField ? describeUiField<T, S, F>(globalField, globalResolved) : undefined,
   };
 }
 
@@ -294,7 +303,7 @@ function getFieldComponent<
 
   const schemaId = schema.$id;
 
-  // Looked up as an own property, for the reason `resolveUiField()` looks the `ui:field` up that way: a `type` such
+  // Looked up as an own property, for the reason `lookUpUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
   let componentName = Object.hasOwn(COMPONENT_TYPES, type) ? COMPONENT_TYPES[type] : '';
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or

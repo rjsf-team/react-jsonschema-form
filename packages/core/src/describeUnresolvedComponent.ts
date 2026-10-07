@@ -3,7 +3,7 @@ import { isValidElement } from 'react';
 /** How a warning refers to the place a name given in place of a component is looked up, once for a name found there
  * and once for one that isn't
  */
-export interface ComponentLookupWording {
+interface ComponentLookupWording {
   /** Follows "names" when nothing is found under the name, e.g. `no registered field` */
   none: string;
   /** Follows "names" when something is found under the name, e.g. `a registered field` */

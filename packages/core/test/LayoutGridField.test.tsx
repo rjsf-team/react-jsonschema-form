@@ -667,6 +667,10 @@ function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps>)
   return <strong data-testid={testId}>{stringifyProps(props)}</strong>;
 }
 
+// An element where a component was expected, given as a `render` or found under a `render`'s lookup name
+// @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+const testRendererElement = <TestRenderer />;
+
 // Render a div with the props stringified in a span, also render an input to test the onXXXX callbacks
 function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
   const { fieldPath, id, formData, onChange, onBlur, onFocus, uiSchema } = props;
@@ -1242,8 +1246,6 @@ describe('LayoutGridField', () => {
   });
   describe('getCustomRenderComponent()', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
-    // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-    const element = <TestRenderer />;
     test.each<[string, string | ComponentType, Registry]>([
       ['a value that is not a string or component', {} as ComponentType, registry],
       ['a name without a lookup', 'nonexistant', registry],
@@ -1251,9 +1253,9 @@ describe('LayoutGridField', () => {
       [
         'a name whose lookup is a React element',
         'Nav',
-        getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: element } }),
+        getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: testRendererElement } }),
       ],
-      ['a React element', element as unknown as ComponentType, registry],
+      ['a React element', testRendererElement as unknown as ComponentType, registry],
     ])('returns null, without warning, for %s', (_, render, lookupRegistry) => {
       expect(getCustomRenderComponent(render, lookupRegistry)).toBeNull();
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
@@ -1482,8 +1484,6 @@ describe('LayoutGridField', () => {
   });
   describe('a render that resolves to nothing', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
-    // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-    const element = <TestRenderer />;
     test.each<[string, unknown, Record<string, unknown>, string]>([
       ['is not a string or component', {}, {}, 'is not a component (got object)'],
       ['names nothing', 'nonexistant', {}, `names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant')`],
@@ -1496,13 +1496,13 @@ describe('LayoutGridField', () => {
       [
         'names a React element',
         'Nav',
-        { Nav: element },
+        { Nav: testRendererElement },
         `names a value in formContext.${LOOKUP_MAP_NAME} ('Nav') that is a React element rather than a component ` +
           '(pass MyRenderer, not <MyRenderer />)',
       ],
       [
         'is a React element',
-        element,
+        testRendererElement,
         {},
         'is a React element rather than a component (pass MyRenderer, not <MyRenderer />)',
       ],
