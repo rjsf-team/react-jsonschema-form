@@ -1168,6 +1168,11 @@ export function resolveDependencies<
     formData,
     recurseList,
   );
+  // `resolveAllReferences()` merges what applying a dependency resolved back into the list it was given, so each
+  // schema below is expanded from the list as it stands before any dependency has been applied. Sharing one list
+  // would have a schema -- or a subset of one schema's dependencies -- read what another already resolved as a
+  // cycle, and keep the dependency as a literal `$ref` instead of the schema it names
+  const beforeDependencies = [...recurseList];
   return resolvedSchemas.flatMap((resolvedSchema) => {
     const applied = processDependencies<T, S, F>(
       context,
@@ -1175,7 +1180,7 @@ export function resolveDependencies<
       resolvedSchema,
       rootSchema,
       expandAllBranches,
-      recurseList,
+      [...beforeDependencies],
       formData,
       passCount,
     );
@@ -1187,7 +1192,7 @@ export function resolveDependencies<
     }
     return [
       ...applied,
-      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList),
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, beforeDependencies),
       resolvedSchema,
     ];
   });
@@ -1253,14 +1258,9 @@ function partiallyApplied<
           delete partial[key];
         }
       }
-      return processDependencies<T, S, F>(
-        context,
-        partial as S['dependencies'],
-        resolvedSchema,
-        rootSchema,
-        true,
-        recurseList,
-      );
+      return processDependencies<T, S, F>(context, partial as S['dependencies'], resolvedSchema, rootSchema, true, [
+        ...recurseList,
+      ]);
     });
 }
 

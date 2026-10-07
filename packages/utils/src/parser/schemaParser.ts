@@ -100,6 +100,8 @@ function parseUnmergedAllOf<
  * @param state - The `ParseState` shared by every `parseSchema()` call of one `schemaParser()` call
  * @param rootSchema - The root schema from which the schema parsing began
  * @param schema - The current schema element being parsed
+ * @param [recurseList=[]] - The references resolved on the way to this schema, so that one already on the path stays a
+ *        literal rather than being resolved a level further
  */
 function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
@@ -168,12 +170,13 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
  * @param state - The `ParseState` shared by every `parseSchema()` call of one `schemaParser()` call
  * @param rootSchema - The root schema from which the schema parsing began
  * @param schema - The schema whose value sub-schemas are being parsed
+ * @param recurseList - The references resolved on the way to `schema`, which each of its values is reached through
  */
 function parseValueSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S, recurseList: string[] = []) {
+>(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S, recurseList: string[]) {
   const valueSchemas: unknown[] = Object.values(schema[PROPERTIES_KEY] ?? {});
   // An additional key is only stubbed into `properties` once the form data has one, which a parse does not, so the
   // schema a form renders such a key with is reached here instead

@@ -443,6 +443,66 @@ describe('schemaParser()', () => {
     // it with only some of them applied, and expanding returned only the none- and all-applied forms
     expect(names).toEqual(expect.arrayContaining(['a,a2,b', 'a,b,b2', 'a,a2,b,b2', 'a,b']));
   });
+  it('resolves the $ref of each schema dependency in every subset it is applied in', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string' } },
+      dependencies: { a: { $ref: '#/definitions/DepA' }, b: { $ref: '#/definitions/DepB' } },
+    };
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+      definitions: {
+        DepA: { properties: { a2: { type: 'string' } } },
+        DepB: { properties: { b2: { type: 'string' } } },
+      },
+    };
+    const names = Object.values(schemaParser(rootSchema)).map((schema) =>
+      Object.keys(schema.properties ?? {})
+        .sort()
+        .join(','),
+    );
+    // `resolveAllReferences()` merges what applying a dependency resolved back into the list it was given, so each
+    // subset is expanded from the list as it stood before any of them were applied: sharing it would have a subset
+    // read what the all-applied form resolved as a cycle and keep the dependency as a literal `$ref`
+    expect(names).toEqual(expect.arrayContaining(['a,a2,b', 'a,b,b2', 'a,a2,b,b2', 'a,b']));
+  });
+  it('resolves the $ref of a schema dependency for every branch the option itself expands into', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string' } },
+      oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+      dependencies: { a: { $ref: '#/definitions/DepA' }, b: { $ref: '#/definitions/DepB' } },
+    };
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+      definitions: {
+        DepA: { properties: { a2: { type: 'string' } } },
+        DepB: { properties: { b2: { type: 'string' } } },
+      },
+    };
+    const names = Object.values(schemaParser(rootSchema)).map((schema) =>
+      Object.keys(schema.properties ?? {})
+        .sort()
+        .join(','),
+    );
+    // The option expands into one schema per branch of its own `oneOf`, and each applies the same dependencies, so a
+    // list shared between them leaves the second branch reading what the first resolved as a cycle. Both branches
+    // get every subset
+    expect(names).toEqual(
+      expect.arrayContaining([
+        'a,b,x',
+        'a,a2,b,x',
+        'a,b,b2,x',
+        'a,a2,b,b2,x',
+        'a,b,y',
+        'a,a2,b,y',
+        'a,b,b2,y',
+        'a,a2,b,b2,y',
+      ]),
+    );
+  });
   it('reports a schema with more schema dependencies than can be expanded', () => {
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     resetLogOnce();
