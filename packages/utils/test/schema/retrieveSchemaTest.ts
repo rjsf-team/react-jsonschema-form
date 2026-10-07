@@ -1023,9 +1023,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             expect(results[0].properties!.t).toEqual({ type: 'string' });
             expect(results[1].properties!.e).toEqual({ type: 'string' });
           });
-          // With the pass counter kept local to one fixpoint loop, no finite schema reaches the backstop through
-          // the public retrieveSchema path: nesting depth no longer counts as passes. The backstop now only fires
-          // when passCount is injected directly, as below, or if a regression breaks structural termination.
+          // Nesting depth doesn't count as passes, so no finite schema reaches the backstop through the public
+          // retrieveSchema path; it fires only when passCount is injected directly, as below, or if a regression
+          // breaks structural termination.
           it('returns the schema resolved so far, flagged as a cycle, when the pass-count backstop is exceeded', () => {
             const schema: RJSFSchema = { definitions: { x: { type: 'string' } }, $ref: '#/definitions/x' };
             const [result] = retrieveSchemaInternal(
@@ -3303,4 +3303,4 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
   });
-            }
+}
