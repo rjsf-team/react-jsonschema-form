@@ -19,7 +19,8 @@ export function collectDeferredThrows() {
     await new Promise((resolve) => {
       realSetTimeout(resolve);
     });
-    vi.unstubAllGlobals();
+    // Only this stub is undone, so a test can combine this helper with stubs of its own
+    vi.stubGlobal('setTimeout', realSetTimeout);
   };
   return { thrown, settle };
 }

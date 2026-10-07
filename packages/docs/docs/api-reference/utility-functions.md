@@ -173,7 +173,11 @@ Return a consistent `id` for the `btn` button element
 ### callWithDeferredThrow()
 
 Calls `callback`, and rethrows anything it throws from a `setTimeout()` instead of to the caller.
-Use it for a consumer's callback that a widget or field calls from an Effect or its cleanup: a throw there happens inside React's commit phase and unmounts everything up to the nearest error boundary, while from a timer it reaches the page the way a throw from a DOM event handler does.
+Use it for a consumer's callback that a widget or field calls from an Effect or its cleanup: a throw there happens inside React's commit phase and unmounts everything up to the nearest error boundary.
+From a timer the throw escapes error boundaries instead.
+A browser reports it as an uncaught error, the way it reports a throw from a DOM event handler.
+A test runner reports it as an unhandled error that belongs to no test, and Node, as in server rendering, raises an `uncaughtException`.
+Tests that expect such a throw need to catch the timer's error themselves; this repository's `testing/deferredThrows.ts` is an example for Vitest.
 
 #### Parameters
 

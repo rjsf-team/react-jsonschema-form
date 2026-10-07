@@ -270,7 +270,8 @@ export function useDatePicker<V>({
         triggerRef.current?.focus();
       }
     };
-    // Not `finally`, which the React Compiler cannot compile
+    // Not `finally`: the React Compiler analysis behind the `react/*` lint rules does not model it, and reports this
+    // callback's dependencies as unused
     try {
       onBlur?.(id, value);
     } catch (error) {
@@ -282,7 +283,7 @@ export function useDatePicker<V>({
 
   // The close commit includes ordinary parent updates, but cannot await a later transition or async response. Being
   // inside the commit, a `flushSync` the consumer calls from `onBlur`, or from the `onFocus` the focus return then
-  // fires, is deferred to the next render rather than flushed
+  // fires, is deferred to the next render rather than flushed, and React logs an error saying so
   useEffect(() => {
     const pending = pendingCloseBlur.current;
     if (!isOpen && pending) {

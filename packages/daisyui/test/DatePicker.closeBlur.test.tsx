@@ -163,6 +163,42 @@ describe.each([
     expect(trigger).toHaveFocus();
   });
 
+  test('Done defers a flushSync from onBlur, and React reports the deferral', async () => {
+    function Parent() {
+      const [, setTick] = useState(0);
+      return (
+        <Widget
+          {...makeWidgetMockProps({
+            id: 'date',
+            value: initial,
+            autofocus: false,
+            schema: { type: 'string', format },
+            onBlur: () => flushSync(() => setTick((tick) => tick + 1)),
+          })}
+        />
+      );
+    }
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const { container } = render(<Parent />);
+      const trigger = triggerIn(container);
+      await user.click(trigger);
+      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+      await user.click(screen.getByText('Done'));
+
+      expect(screen.queryByText('Done')).toBeNull();
+      expect(trigger).toHaveFocus();
+      // Done reports blur from the close commit's passive Effect, where React defers a `flushSync` and logs that it did;
+      // Escape, above, reports it from the key handler, where the `flushSync` runs at once
+      const flushSyncErrors = consoleError.mock.calls.filter(([message]) =>
+        String(message).includes('flushSync was called from inside a lifecycle method'),
+      );
+      expect(flushSyncErrors).toHaveLength(1);
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
+
   test('Escape returns focus even when onBlur throws', async () => {
     const boom = new Error('boom');
     const { container } = render(
