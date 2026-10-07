@@ -2,7 +2,7 @@ import { isValidElement } from 'react';
 
 import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import getSchemaType from './getSchemaType.ts';
-import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
+import { getKnownTypes } from './getUnionTypes.ts';
 import isComponentType from './isComponentType.ts';
 import isConstantSelect from './isConstantSelect.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -117,16 +117,19 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   if (type === undefined || !Object.hasOwn(widgetMap, type)) {
     return undefined;
   }
-  const otherTypes = WIDGET_FIELD_TYPES.includes(type)
-    ? getKnownTypes<S>(schema).filter((aType) => aType !== type && WIDGET_FIELD_TYPES.includes(aType))
-    : [];
-  for (const aType of [type, ...otherTypes]) {
-    const widgets = getWidgetsForType(schema, aType);
-    if (Object.hasOwn(widgets, widget) || Object.values(widgets).includes(widget)) {
-      return { type: aType, widgets };
-    }
+  const hasWidget = (widgets: Record<string, string>) =>
+    Object.hasOwn(widgets, widget) || Object.values(widgets).includes(widget);
+  const widgets = getWidgetsForType(schema, type);
+  if (hasWidget(widgets)) {
+    return { type, widgets };
   }
-  return undefined;
+  // The other types are all scalars, whose aliases don't depend on the schema
+  const otherType = WIDGET_FIELD_TYPES.includes(type)
+    ? getKnownTypes<S>(schema).find(
+        (aType) => aType !== type && WIDGET_FIELD_TYPES.includes(aType) && hasWidget(widgetMap[aType]),
+      )
+    : undefined;
+  return otherType && { type: otherType, widgets: widgetMap[otherType] };
 }
 
 /** Gets the type whose field renders `widget` for `schema`, matching the widget's alias or the registered name an alias
@@ -167,11 +170,7 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
     return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
   }
   const type = getSchemaType<S>(schema);
-  const widgetType =
-    typeof widget === 'string' && getUnionTypes<S>(schema) !== undefined
-      ? findWidgetType<S>(schema, widget, type)?.type
-      : undefined;
-  return widgetType ?? type;
+  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type)?.type : undefined) ?? type;
 }
 
 /** The registry key a `boolean` resolves to when nothing names a widget for it, which is the widget that renders the

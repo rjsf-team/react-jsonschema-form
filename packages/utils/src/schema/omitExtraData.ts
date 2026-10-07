@@ -392,7 +392,9 @@ export default function omitExtraData<
     // another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list resolves to
     const schemaType = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
     const type =
-      schemaType !== undefined && getSchemaTypeForValue<S>(localSchema, source) === schemaType ? schemaType : undefined;
+      Array.isArray(localSchema.type) && getSchemaTypeForValue<S>(localSchema, source) !== schemaType
+        ? undefined
+        : schemaType;
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;

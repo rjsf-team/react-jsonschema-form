@@ -32,7 +32,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   widget: Widget<T, S, F> | string | undefined,
   registeredWidgets: RegistryWidgetsType<T, S, F>,
 ) {
-  const isAlias = typeof widget === 'string' && !(widget in registeredWidgets);
+  const isAlias = typeof widget === 'string' && !Object.hasOwn(registeredWidgets, widget);
   if (!widget || (isAlias && getWidgetType<S>(schema, widget) !== 'boolean')) {
     return false;
   }

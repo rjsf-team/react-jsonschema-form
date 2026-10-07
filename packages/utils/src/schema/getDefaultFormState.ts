@@ -893,7 +893,7 @@ export function getDefaultBasedOnSchemaType<
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
   const { uiSchema } = computeDefaultsProps;
-  const widget = uiSchema ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+  const widget = uiSchema && Array.isArray(rawSchema.type) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
   switch (getFieldTypeForWidget<S>(rawSchema, widget)) {
     // We need to recurse for object schema inner default values.
     case 'object': {
