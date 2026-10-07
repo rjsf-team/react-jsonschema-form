@@ -57,6 +57,39 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       expect(onSubmit).not.toHaveBeenCalled();
       expect(onError).toHaveBeenCalled();
     });
+
+    it.each([
+      ['boolean', false],
+      ['boolean', true],
+      ['number', 0],
+      ['integer', 0],
+      ['string', ''],
+    ] as const)('should submit a root %s schema with falsy-or-simple value %j (#5404)', async (type, formData) => {
+      const { node, onSubmit, onError } = createFormComponent({
+        ref: createRef(),
+        schema: { type },
+        formData,
+      });
+
+      await submitForm(node, user);
+
+      expect(onError).not.toHaveBeenCalled();
+      expect(onSubmit).toHaveBeenCalled();
+      expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
+    });
+
+    it('should still report an error for a root value of the wrong type', async () => {
+      const { node, onSubmit, onError } = createFormComponent({
+        ref: createRef(),
+        schema: { type: 'boolean' },
+        formData: 0,
+      });
+
+      await submitForm(node, user);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalled();
+    });
   });
 
   describe('Change handler', () => {
