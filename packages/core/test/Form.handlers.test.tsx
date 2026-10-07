@@ -2,7 +2,7 @@ import { createRef, useEffect } from 'react';
 import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
@@ -556,30 +556,39 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('x');
       });
       it('keeping the errors the option it switched to earned', async () => {
+        // The option sits under a required property so the switch leaves data to validate under either owner: at the
+        // root it leaves `undefined`, which a parent-owned form does not validate, so there would be no errors to keep
         const invalidDefaultSchema: RJSFSchema = {
-          ...schema,
-          oneOf: [
-            {
-              type: 'object',
-              properties: { types: { const: 'advanced' }, content: { type: 'string', minLength: 50 } },
-              required: ['types'],
+          type: 'object',
+          properties: {
+            cfg: {
+              ...schema,
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: { types: { const: 'advanced' }, content: { type: 'string', minLength: 50 } },
+                  required: ['types'],
+                },
+                { title: 'No Configuration', type: 'null' },
+              ],
             },
-            { title: 'No Configuration', type: 'null' },
-          ],
+          },
+          required: ['cfg'],
         };
         const props = {
           schema: invalidDefaultSchema,
           defaultFormStateBehavior,
           liveValidate: 'onChange',
         } as const;
+        const errorsTheSwitchEarned = ["must have required property 'cfg'"];
         const { node, rerender } = createFormComponent(props);
 
-        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
-        const errorsBeforeTheChange = errorListMessages(node);
+        await user.selectOptions(screen.getByRole('combobox'), '1');
+        expect(errorListMessages(node)).toEqual(errorsTheSwitchEarned);
         rerender({ ...props, uiSchema: { 'ui:disabled': true } });
 
-        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
-        expect(errorListMessages(node)).toEqual(errorsBeforeTheChange);
+        expect(screen.getByRole('combobox')).toHaveValue('1');
+        expect(errorListMessages(node)).toEqual(errorsTheSwitchEarned);
       });
     });
     it('should keep a form value set in the same render as an unrelated prop change', async () => {
