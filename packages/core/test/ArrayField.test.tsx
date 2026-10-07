@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
@@ -14,16 +15,36 @@ import type {
   FormValidation,
 } from '@rjsf/utils';
 import { getVisibleErrors, noop } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { flushSync } from 'react-dom';
 
 import ArrayField from '../src/components/fields/ArrayField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import type { IChangeEvent } from '../src/index.ts';
+import Form from '../src/index.ts';
+import {
+  AcceptingParent,
+  RejectingParent,
+  aMicrotaskApart,
+  createFormComponent,
+  createFormRef,
+  createParentLog,
+  expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
+  handleOf,
+  outsideAct,
+  reportedBy,
+  submitForm,
+} from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const user = userEvent.setup();
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
+const rowKeys = (node: Element) =>
+  Array.from(node.querySelectorAll(`[${ArrayKeyDataAttr}]`)).map((row) => row.getAttribute(ArrayKeyDataAttr));
 const ExposedArrayKeyItemTemplate = function ExposedArrayKeyItemTemplate(props: ArrayFieldItemTemplateProps) {
   return (
     <div className='rjsf-array-item' data-rjsf-itemkey={props.itemKey}>
@@ -3906,8 +3927,6 @@ describe('ArrayField', () => {
       ArrayFieldTemplate: ExposedArrayKeyTemplate,
       ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
     };
-    const rowKeys = (node: Element) =>
-      Array.from(node.querySelectorAll('.rjsf-array-item')).map((row) => row.getAttribute(ArrayKeyDataAttr));
 
     it('should keep the row keys and render the new items when the length is unchanged', () => {
       const { node, rerender } = createFormComponent({ schema, formData: ['foo', 'bar'], templates });
@@ -3941,6 +3960,406 @@ describe('ArrayField', () => {
       const endKeys = rowKeys(node);
       expect(endKeys).toHaveLength(2);
       expect(endKeys).not.toContain(startKeys[0]);
+    });
+  });
+  describe('Several edits in one event', () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+    function AddThreeTemplate(props: ArrayFieldTemplateProps) {
+      return (
+        <div className='array'>
+          {props.items}
+          <button
+            type='button'
+            className='add-three'
+            onClick={(event) => {
+              props.onAddClick(event);
+              props.onAddClick(event);
+              props.onAddClick(event);
+            }}
+          >
+            Add three
+          </button>
+        </div>
+      );
+    }
+    function AddTwoTemplate(props: ArrayFieldTemplateProps) {
+      return (
+        <div className='array'>
+          {props.items}
+          <button
+            type='button'
+            onClick={(event) => {
+              props.onAddClick(event);
+              props.onAddClick(event);
+            }}
+          >
+            Add two
+          </button>
+        </div>
+      );
+    }
+    function RemoveThenMoveUpItemTemplate(props: ArrayFieldItemTemplateProps) {
+      const { onRemoveItem, onMoveUpItem } = props.buttonsProps;
+      return (
+        <div className='rjsf-array-item'>
+          {props.children}
+          <button
+            type='button'
+            className='remove-then-move-up'
+            onClick={(event) => {
+              onRemoveItem(event);
+              onMoveUpItem(event);
+            }}
+          >
+            Remove, then move up
+          </button>
+        </div>
+      );
+    }
+
+    it('should apply every add when one click adds several items', async () => {
+      const { node, onChange, getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b'],
+        templates: { ArrayFieldTemplate: AddThreeTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add three' }));
+
+      // Each add reads the current model data through private event access, so none of them is lost
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'b', undefined, undefined, undefined], 'root');
+      expect(getFormData()).toEqual(['a', 'b', undefined, undefined, undefined]);
+      expect(new Set(rowKeys(node)).size).toBe(5);
+    });
+
+    it('should report each chained edit with the errors of its own data', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'array', items: { type: 'string', default: 'x' }, minItems: 3 },
+        initialFormData: ['a'],
+        liveValidate: 'onChange',
+        templates: { ArrayFieldTemplate: AddTwoTemplate },
+      });
+      onChange.mockClear();
+
+      await user.click(screen.getByRole('button', { name: 'Add two' }));
+
+      // Live validation runs per edit, so no event carries errors that describe a different value
+      const events = onChange.mock.calls.map(([event]: IChangeEvent[]) => event);
+      expect(events.map((event) => event.formData)).toEqual([
+        ['a', 'x'],
+        ['a', 'x', 'x'],
+      ]);
+      expect(events[0].errors.map(({ name }) => name)).toEqual(['minItems']);
+      expect(events[1].errors).toEqual([]);
+    });
+
+    it.each([
+      { adds: 'two', template: AddTwoTemplate, expected: ['a', undefined, undefined] },
+      { adds: 'three', template: AddThreeTemplate, expected: ['a', undefined, undefined, undefined] },
+    ])(
+      'should chain $adds adds in one click under a custom parent that flushes a render first',
+      async ({ adds, template, expected }) => {
+        // The custom parent commits its own state synchronously before passing each change on, so the array field
+        // commits between the adds, and from the second add on the form does too
+        function FlushingField(props: FieldProps<string[]>) {
+          const [, setChanges] = useState(0);
+          const { ArrayField: InnerArrayField } = props.registry.fields;
+          return (
+            <InnerArrayField
+              {...props}
+              onChange={(value, fieldPath, errorSchema, id) => {
+                flushSync(() => setChanges((changes) => changes + 1));
+                props.onChange(value, fieldPath, errorSchema, id);
+              }}
+            />
+          );
+        }
+        const { getFormData } = createFormComponent({
+          schema,
+          initialFormData: ['a'],
+          uiSchema: { 'ui:field': FlushingField },
+          templates: { ArrayFieldTemplate: template },
+        });
+
+        await user.click(screen.getByRole('button', { name: `Add ${adds}` }));
+
+        expect(getFormData()).toEqual(expected);
+      },
+    );
+
+    it('should chain two adds a microtask apart, outside an event, under a custom parent that keeps a draft', async () => {
+      // The custom parent keeps the array in its own state and tells the form nothing
+      function DraftField(props: FieldProps<string[]>) {
+        const [draft, setDraft] = useState(props.formData);
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return (
+          <InnerArrayField
+            {...props}
+            formData={draft}
+            onChange={(value, fieldPath) => {
+              if (fieldPath === props.fieldPath) {
+                setDraft(value);
+              }
+            }}
+          />
+        );
+      }
+      let onAddClick: ArrayFieldTemplateProps['onAddClick'] | undefined;
+      function RetainingTemplate(props: ArrayFieldTemplateProps) {
+        useEffect(() => {
+          onAddClick = props.onAddClick;
+        }, [props.onAddClick]);
+        return <div className='array'>{props.items}</div>;
+      }
+      const add = () => {
+        if (!onAddClick) {
+          throw new Error('The array template did not render');
+        }
+        onAddClick();
+      };
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: ['a'],
+        uiSchema: { 'ui:field': DraftField },
+        templates: { ArrayFieldTemplate: RetainingTemplate },
+      });
+      // React schedules the custom parent's update as it would in a browser
+      await outsideAct(async () => {
+        // Two adds from a timer, as a toolbar outside React's event handling makes them: no event ends between them
+        await aMicrotaskApart(add, add);
+        await waitFor(() => expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(3));
+      });
+    });
+
+    it('should drop an add a custom parent refused from the rows a later event starts from', async () => {
+      // A custom field that keeps the array to one item, refusing an add without the form committing anything
+      function OneItemField(props: FieldProps<string[]>) {
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return (
+          <InnerArrayField
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) => {
+              if (!Array.isArray(value) || value.length <= 1) {
+                props.onChange(value, fieldPath, errorSchema, id);
+              }
+            }}
+          />
+        );
+      }
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: ['a'],
+        uiSchema: { 'ui:field': OneItemField },
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+      await user.click(node.querySelectorAll('.rjsf-array-item-remove')[0]);
+
+      // The removal starts from the rendered ['a'], not from the refused ['a', undefined]
+      expectToHaveBeenCalledWithFormData(onChange, [], 'root');
+    });
+
+    it('should start a later event from the rendered rows when a controlled parent refused the earlier one', async () => {
+      const log = createParentLog<string[]>();
+      const { container } = render(
+        <RejectingParent<string[]>
+          schema={{ type: 'array', items: { type: 'string', minLength: 2 } }}
+          initialValue={['aa', 'bb', 'c']}
+          log={log}
+          onError={noop}
+        />,
+      );
+      await submitForm(container, user);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
+
+      // The refused removal is gone once React renders, so the second one starts again from ['aa', 'bb', 'c'], and
+      // moves the error on 'c' from the rendered errors, not from the refused proposal's
+      expect(log.proposals).toEqual([
+        ['bb', 'c'],
+        ['bb', 'c'],
+      ]);
+      const error = { __errors: ['must NOT have fewer than 2 characters'] };
+      expect(log.events.map((event) => event.errorSchema)).toEqual([{ 1: error }, { 1: error }]);
+    });
+
+    it('should key the rows of an accepted edit from the rendered rows after a refused one', async () => {
+      let refuse = true;
+      function RefuseOnceParent() {
+        const [data, setData] = useState(['a', 'b', 'c']);
+        return (
+          <Form
+            schema={schema}
+            validator={validator}
+            formData={data}
+            templates={{ ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate }}
+            onChange={(event) => {
+              if (refuse) {
+                refuse = false;
+                return;
+              }
+              setData(event.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<RefuseOnceParent />);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
+      const afterRefusal = rowKeys(container);
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[2]);
+
+      // The refused removal's keys are dropped with its proposal, so the accepted one removes from the rendered rows
+      expect(afterRefusal).toHaveLength(3);
+      expect(rowKeys(container)).toEqual(afterRefusal.slice(0, 2));
+    });
+
+    it.each([
+      { depth: 'root', path: [0], schema, initialFormData: ['a', 'b'], expected: ['x', 'b', undefined] },
+      {
+        depth: 'nested',
+        path: ['list', 0, 0],
+        schema: { type: 'object', properties: { list: { type: 'array', items: schema } } } satisfies RJSFSchema,
+        initialFormData: { list: [['a', 'b']] },
+        expected: { list: [['x', 'b', undefined]] },
+      },
+      {
+        depth: 'oneOf option',
+        path: [0],
+        schema: { oneOf: [schema, { type: 'string' }] } satisfies RJSFSchema,
+        initialFormData: ['a', 'b'],
+        expected: ['x', 'b', undefined],
+      },
+    ])(
+      'should build a $depth array edit on a value set earlier in the same event',
+      async ({ path, schema: formSchema, initialFormData, expected }) => {
+        const formRef = createFormRef();
+        function SetThenAddTemplate(props: ArrayFieldTemplateProps) {
+          return (
+            <div className='array'>
+              {props.items}
+              <button
+                type='button'
+                onClick={(event) => {
+                  handleOf(formRef).setFieldValue(path, 'x');
+                  props.onAddClick(event);
+                }}
+              >
+                Set, then add
+              </button>
+            </div>
+          );
+        }
+        const { getFormData } = createFormComponent({
+          ref: formRef,
+          schema: formSchema,
+          initialFormData,
+          templates: { ArrayFieldTemplate: SetThenAddTemplate },
+        });
+
+        // A nested array's button comes before the one of the array holding it
+        await user.click(screen.getAllByRole('button', { name: 'Set, then add' })[0]);
+
+        expect(getFormData()).toEqual(expected);
+      },
+    );
+
+    it('should add no item when a move after a remove names an index the remove took away', async () => {
+      const { node, onChange, getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        templates: { ArrayFieldItemTemplate: RemoveThenMoveUpItemTemplate },
+      });
+
+      await user.click(node.querySelectorAll('.remove-then-move-up')[2]);
+
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'b'], 'root');
+      expect(getFormData()).toEqual(['a', 'b']);
+      expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(2);
+    });
+
+    it('should add no item when a copy after a remove names an index the remove took away', async () => {
+      function RemoveThenCopyItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onRemoveItem, onCopyItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button
+              type='button'
+              className='remove-then-copy'
+              onClick={(event) => {
+                onRemoveItem(event);
+                onCopyItem(event);
+              }}
+            >
+              Remove, then copy
+            </button>
+          </div>
+        );
+      }
+      const { node, onChange, getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        templates: { ArrayFieldItemTemplate: RemoveThenCopyItemTemplate },
+      });
+
+      const reported = await reportedBy(() => user.click(node.querySelectorAll('.remove-then-copy')[2]));
+
+      expect(reported).toEqual([]);
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'b'], 'root');
+      expect(getFormData()).toEqual(['a', 'b']);
+      expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(2);
+    });
+
+    it('should keep the errors in place when a move after a remove names an index the remove took away', async () => {
+      const { node, onChange, getFormData } = createFormComponent({
+        schema: { type: 'array', items: { type: 'string', minLength: 2 } },
+        initialFormData: ['aa', 'b', 'cc'],
+        templates: { ArrayFieldItemTemplate: RemoveThenMoveUpItemTemplate },
+      });
+      await submitForm(node, user);
+
+      await user.click(node.querySelectorAll('.remove-then-move-up')[2]);
+
+      const event = onChange.mock.lastCall?.[0];
+      expect(event?.formData).toEqual(['aa', 'b']);
+      expect(event?.errorSchema).toEqual({ 1: { __errors: ['must NOT have fewer than 2 characters'] } });
+      expect(getFormData()).toEqual(['aa', 'b']);
+      expect(fieldErrorsById(node)).toEqual({ root_1: ['must NOT have fewer than 2 characters'] });
+    });
+    it('should chain every command on the previous proposal when a controlled parent owns the array', async () => {
+      function KeyedRemoveThenMoveUpItemTemplate(props: ArrayFieldItemTemplateProps) {
+        return (
+          <div data-rjsf-itemkey={props.itemKey}>
+            <RemoveThenMoveUpItemTemplate {...props} />
+          </div>
+        );
+      }
+      const log = createParentLog<string[]>();
+      const { container } = render(
+        <AcceptingParent<string[]>
+          schema={{ type: 'array', items: { type: 'string', minLength: 2 } }}
+          initialValue={['aa', 'bb', 'c']}
+          log={log}
+          onError={noop}
+          templates={{ ArrayFieldItemTemplate: KeyedRemoveThenMoveUpItemTemplate }}
+        />,
+      );
+      await submitForm(container, user);
+      const keysBefore = rowKeys(container);
+
+      await user.click(container.querySelectorAll('.remove-then-move-up')[1]);
+
+      // The move builds on the removal's proposal, which React has not rendered yet, as in a self-owned form
+      expect(log.proposals.slice(-2)).toEqual([
+        ['aa', 'c'],
+        ['c', 'aa'],
+      ]);
+      expect(log.value).toEqual(['c', 'aa']);
+      // Each row keeps its key and its error: rows, keys and errors all come from the same proposal
+      expect(rowKeys(container)).toEqual([keysBefore[2], keysBefore[0]]);
+      expect(log.events.at(-1)?.errorSchema).toEqual({ 0: { __errors: ['must NOT have fewer than 2 characters'] } });
     });
   });
 });

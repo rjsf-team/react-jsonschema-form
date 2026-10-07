@@ -1,26 +1,117 @@
-import type { ComponentType, RefObject } from 'react';
-import { createRef, useState } from 'react';
-import type { GenericObjectType, ValidatorType } from '@rjsf/utils';
+import type { ComponentType, ReactNode, RefObject } from 'react';
+import { Activity, createRef, useEffect, useState } from 'react';
+import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
 import { createSchemaUtils, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import type { Mock, MockInstance } from 'vitest';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormRef, FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 
-/** A ref for a `Form`, typed the way TSX requires for a class element. The one place the tests name that type, so the
- * function-component `Form` changes it to `RefObject<FormHandle>` here and nowhere else.
- */
-export function createFormRef() {
-  return createRef<Form>();
+/** A ref for a `Form`, which hands back its `FormRef` */
+export function createFormRef<T = unknown>() {
+  return createRef<FormRef<T>>();
+}
+
+/** The handle a mounted form installed on `ref`, failing the test when the form never installed one */
+export function handleOf<T>(ref: RefObject<FormRef<T> | null>): FormRef<T> {
+  if (!ref.current) {
+    throw new Error('The form has not installed its handle on the ref');
+  }
+  return ref.current;
 }
 
 export function input(container: HTMLElement, id: string) {
-  return container.querySelector<HTMLInputElement>(`#${id}`)!;
+  const element = container.querySelector(`#${id}`);
+  if (!(element instanceof HTMLInputElement)) {
+    throw new Error(`There is no input #${id}`);
+  }
+  return element;
+}
+
+/** Collects what React reports to `window` while `run` runs: an error thrown from an event handler goes there instead
+ * of to the dispatcher
+ */
+export async function reportedBy(run: () => Promise<void>) {
+  const reported: unknown[] = [];
+  const report = (event: ErrorEvent) => {
+    event.preventDefault();
+    reported.push(event.error);
+  };
+  window.addEventListener('error', report);
+  try {
+    await run();
+  } finally {
+    window.removeEventListener('error', report);
+  }
+  return reported;
+}
+
+/** A widget that keeps the `onChange` of each field it renders, and `change()` to call the one of the field with the
+ * given id, for a change made outside React's event handling, the way a debounced widget, an autosave timer or a
+ * `FileReader` callback makes one
+ */
+export function createRetainingWidget() {
+  const changes = new Map<string, WidgetProps['onChange']>();
+  function RetainingWidget({ id, onChange, value }: WidgetProps) {
+    useEffect(() => {
+      changes.set(id, onChange);
+    }, [id, onChange]);
+    return <span>{String(value ?? '')}</span>;
+  }
+  const change = (id: string, value: unknown) => {
+    const onChange = changes.get(id);
+    if (!onChange) {
+      throw new Error(`No retaining widget rendered #${id}`);
+    }
+    onChange(value, undefined, id);
+  };
+  return { RetainingWidget, change };
+}
+
+/** Runs `run` outside React's `act()` environment, where React schedules an update as it would in a browser instead of
+ * flushing it on the spot
+ */
+export async function outsideAct(run: () => Promise<void>) {
+  const actEnvironment: unknown = Reflect.get(globalThis, 'IS_REACT_ACT_ENVIRONMENT');
+  Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', false);
+  try {
+    await run();
+  } finally {
+    Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', actEnvironment);
+  }
+}
+
+/** Calls `first` from a timer and `second` a microtask later, the way two reports from outside React's event handling
+ * follow each other: no event ends between them, and React has flushed only its synchronous work
+ */
+export function aMicrotaskApart(first: () => void, second: () => void) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      first();
+      queueMicrotask(() => {
+        second();
+        resolve();
+      });
+    });
+  });
+}
+
+/** Renders what `element` returns inside an `<Activity>`. `hide()` and `show()` render it again in that mode, passing
+ * their arguments on to `element`, which is called anew each time, as a parent's render calls it
+ */
+export function renderInActivity<Args extends unknown[]>(element: (...args: Args) => ReactNode, ...initial: Args) {
+  const inActivity = (mode: 'visible' | 'hidden', args: Args) => <Activity mode={mode}>{element(...args)}</Activity>;
+  const { container, rerender } = render(inActivity('visible', initial));
+  return {
+    container,
+    hide: (...args: Args) => rerender(inActivity('hidden', args)),
+    show: (...args: Args) => rerender(inActivity('visible', args)),
+  };
 }
 
 export type RerenderType = (newProps: NoValFormProps, v?: ValidatorType) => void;
@@ -47,10 +138,12 @@ export interface ConsoleSuppressionResult {
 export interface ControlledParentLog<T> {
   value: T | undefined;
   proposals: (T | undefined)[];
+  /** Every event the form sent, for the errors a proposal carried */
+  events: IChangeEvent<T>[];
 }
 
 export function createParentLog<T>(): ControlledParentLog<T> {
-  return { value: undefined, proposals: [] };
+  return { value: undefined, proposals: [], events: [] };
 }
 
 export type ControlledParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
@@ -69,6 +162,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);
+        log?.events.push(event);
         setValue(event.formData);
       }}
     />
@@ -83,7 +177,10 @@ export function RejectingParent<T>({ initialValue, log, ...formProps }: Controll
       {...formProps}
       validator={validator}
       formData={initialValue}
-      onChange={(event) => log?.proposals.push(event.formData)}
+      onChange={(event) => {
+        log?.proposals.push(event.formData);
+        log?.events.push(event);
+      }}
     />
   );
 }
@@ -104,6 +201,7 @@ export function TransformingParent<T>({
       formData={value}
       onChange={(event) => {
         log?.proposals.push(event.formData);
+        log?.events.push(event);
         setValue(transform(event.formData));
       }}
     />
@@ -136,7 +234,8 @@ export function createComponent(Component: ComponentType<FormProps>, theProps: F
   if (!node) {
     throw new Error('node is not defined');
   }
-  const getFormData = () => (ref as RefObject<Form | null>).current?.getFormData();
+  // A callback ref passed in keeps the handle to itself
+  const getFormData = () => (typeof ref === 'function' || ref === null ? undefined : ref.current?.getFormData());
 
   return { container, node, onChange, onError, onSubmit, rerender: rerenderFunction, unmount, getFormData };
 }
@@ -197,9 +296,12 @@ interface FormExtraProps {
 /** Runs a group of tests once with the form owning its data and once with an accepting parent owning it, for the
  * behavior ownership must not change: validation, errors, submit and the events that report them
  */
-export function describeOwnerships(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
-  describe(`${title} (self-owned)`, () => fn(createFormComponent));
-  describe(`${title} (parent-owned)`, () => fn(createAcceptingFormComponent));
+export function describeOwnerships(
+  title: string,
+  fn: (creatorFn: typeof createFormComponent, isControlled: boolean) => void,
+) {
+  describe(`${title} (self-owned)`, () => fn(createFormComponent, false));
+  describe(`${title} (parent-owned)`, () => fn(createAcceptingFormComponent, true));
 }
 
 /* Run a group of tests with each combination of omitExtraData and liveOmit as form props, under both owners.

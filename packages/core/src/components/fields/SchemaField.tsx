@@ -56,6 +56,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** The map of component type to FieldName */
@@ -435,6 +436,7 @@ function SchemaFieldRender<
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
+  const readsFormData = useReadsFormData(SchemaField);
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
@@ -520,7 +522,11 @@ function SchemaFieldRender<
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
   // The check must come after all hook calls to satisfy React's rules of hooks.
   if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
-    return <CyclicSchemaField {...props} />;
+    return (
+      <RawFormDataContext value={undefined}>
+        <CyclicSchemaField {...props} />
+      </RawFormDataContext>
+    );
   }
 
   const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -655,7 +661,9 @@ function SchemaFieldRender<
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
-    <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>{fieldComponent}</WithheldErrorsContext>
+    <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>
+      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    </WithheldErrorsContext>
   );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -741,32 +749,38 @@ function SchemaFieldRender<
     registry,
   };
 
+  // The field component and the option field are each vouched for directly: a custom template may pass on a view of
+  // the data
   return (
-    <FieldTemplate {...fieldProps}>
-      <>
-        {field}
-        {XxxOfField && (
-          <XxxOfField
-            name={name}
-            disabled={disabled}
-            readonly={readonly}
-            hideError={hideError}
-            errorSchema={errorSchema}
-            formData={formData}
-            fieldPath={fieldPath}
-            id={fieldId}
-            onBlur={props.onBlur}
-            onChange={props.onChange}
-            onFocus={props.onFocus}
-            options={XxxOfOptions}
-            registry={registry}
-            required={effectiveRequired}
-            schema={schema}
-            uiSchema={XxxOfUiSchema}
-          />
-        )}
-      </>
-    </FieldTemplate>
+    <RawFormDataContext value={undefined}>
+      <FieldTemplate {...fieldProps}>
+        <>
+          {field}
+          {XxxOfField && (
+            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+              <XxxOfField
+                name={name}
+                disabled={disabled}
+                readonly={readonly}
+                hideError={hideError}
+                errorSchema={errorSchema}
+                formData={formData}
+                fieldPath={fieldPath}
+                id={fieldId}
+                onBlur={props.onBlur}
+                onChange={props.onChange}
+                onFocus={props.onFocus}
+                options={XxxOfOptions}
+                registry={registry}
+                required={effectiveRequired}
+                schema={schema}
+                uiSchema={XxxOfUiSchema}
+              />
+            </RawFormDataContext>
+          )}
+        </>
+      </FieldTemplate>
+    </RawFormDataContext>
   );
 }
 

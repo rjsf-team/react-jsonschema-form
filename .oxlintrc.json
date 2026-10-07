@@ -480,7 +480,7 @@
     "react/preserve-manual-memoization": "error",
     "react/purity": "error",
     "react/react-in-jsx-scope": "off",
-    "react/refs": "off", // TODO: React Compiler rule, off until its violations are fixed in a follow-up PR
+    "react/refs": "error",
     "react/require-render-return": "error",
     "react/rules-of-hooks": "error",
     "react/self-closing-comp": ["error", { "component": true, "html": true }],

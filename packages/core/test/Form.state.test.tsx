@@ -5,10 +5,16 @@ import validator from '@rjsf/validator-ajv8';
 import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormRef, FormProps } from '../src/index.ts';
 import Form from '../src/index.ts';
 import type { NoValFormProps, RerenderType } from './testUtils.tsx';
-import { expectToHaveBeenCalledWithFormData, renderNode, submitForm, describeRepeated } from './testUtils.tsx';
+import {
+  expectToHaveBeenCalledWithFormData,
+  renderNode,
+  submitForm,
+  describeRepeated,
+  createFormRef,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -159,10 +165,10 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     let rerender: RerenderType;
     let onChangeProp: Mock;
     let formProps: NoValFormProps;
-    let ref: RefObject<Form | null>;
+    let ref: RefObject<FormRef | null>;
 
     beforeEach(() => {
-      ref = createRef<Form>();
+      ref = createFormRef();
       formProps = {
         ref,
         schema: {
