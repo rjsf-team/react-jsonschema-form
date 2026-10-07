@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Component, StrictMode, startTransition, useState } from 'react';
+import { Component, StrictMode, startTransition, useLayoutEffect, useRef, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { flushSync } from 'react-dom';
@@ -17,6 +17,15 @@ function triggerIn(container: HTMLElement) {
     throw new Error('No picker trigger rendered');
   }
   return trigger;
+}
+
+/** A field that takes focus in the commit that mounts it, as a dialog or an `autoFocus` input does */
+function SelfFocusing() {
+  const ref = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => {
+    ref.current?.focus();
+  }, []);
+  return <input ref={ref} aria-label='Revealed' />;
 }
 
 class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -38,7 +47,7 @@ describe.each([
   ['date', DateWidget, 'date', '2020-05-03', '2020-05-17'],
   ['date-time', DateTimeWidget, 'iso-date-time', '2020-05-03T10:30:00', '2020-05-17T10:30:00'],
 ] as const)('%s close-path blur', (_, Widget, format, initial, proposal) => {
-  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
+  describe.each(['Done', 'Escape', 'outside', 'trigger'] as const)('closing with %s', (action) => {
     test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
       const transformed = proposal.replace('-17', '-20');
       const onBlur = vi.fn();
@@ -88,7 +97,11 @@ describe.each([
         }
         expect(onBlur).toHaveBeenCalledTimes(1);
       } else {
-        await (action === 'Done' ? user.click(screen.getByText('Done')) : user.keyboard('{Escape}'));
+        if (action === 'Escape') {
+          await user.keyboard('{Escape}');
+        } else {
+          await user.click(action === 'Done' ? screen.getByText('Done') : trigger);
+        }
         expect(onBlur).toHaveBeenCalledExactlyOnceWith('date', expected);
         expect(trigger).toHaveFocus();
         await user.tab();
@@ -165,34 +178,88 @@ describe.each([
     expect(onBlur).toHaveBeenCalledTimes(1);
   });
 
-  test.each(['Done', 'Escape'] as const)('%s reports blur before returning focus', async (action) => {
+  test.each(['Done', 'Escape'] as const)(
+    '%s reports blur before the focus it returned to the trigger',
+    async (action) => {
+      const events: string[] = [];
+      const focusedAtBlur: (Element | null)[] = [];
+      function Parent() {
+        const [value, setValue] = useState<string>(initial);
+        return (
+          <Widget
+            {...makeWidgetMockProps({
+              id: 'date',
+              value,
+              autofocus: false,
+              schema: { type: 'string', format },
+              onChange: (next: string) => {
+                events.push('change');
+                setValue(next);
+              },
+              onBlur: () => {
+                events.push('blur');
+                focusedAtBlur.push(document.activeElement);
+              },
+              onFocus: () => events.push('focus'),
+            })}
+          />
+        );
+      }
+      const { container, unmount } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
+      const trigger = triggerIn(container);
+      await user.click(trigger);
+      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+      events.length = 0;
+      if (action === 'Done') {
+        await user.click(screen.getByText('Done'));
+      } else {
+        await user.keyboard('{Escape}');
+      }
+      expect(events).toEqual(action === 'Done' ? ['change', 'blur', 'focus'] : ['blur', 'focus']);
+      // Focus never falls to the body the unmounted popup would leave it on: it is on the trigger by the time the
+      // consumer hears the blur, so a check for focus still being inside the field answers yes
+      expect(focusedAtBlur).toHaveLength(1);
+      expect(focusedAtBlur[0]).toBe(trigger);
+      expect(trigger).toHaveFocus();
+      unmount();
+      expect(events.filter((event) => event === 'blur')).toHaveLength(1);
+    },
+  );
+
+  test.each(['Done', 'Escape'] as const)('%s leaves focus where onBlur moved it', async (action) => {
     const events: string[] = [];
     function Parent() {
       const [value, setValue] = useState<string>(initial);
       return (
-        <Widget
-          {...makeWidgetMockProps({
-            id: 'date',
-            value,
-            autofocus: false,
-            schema: { type: 'string', format },
-            onChange: (next: string) => {
-              events.push('change');
-              setValue(next);
-            },
-            onBlur: () => events.push('blur'),
-            onFocus: () => events.push('focus'),
-          })}
-        />
+        <>
+          <Widget
+            {...makeWidgetMockProps({
+              id: 'date',
+              value,
+              autofocus: false,
+              schema: { type: 'string', format },
+              onChange: (next: string) => setValue(next),
+              onBlur: () => {
+                events.push('blur');
+                screen.getByLabelText('Next').focus();
+              },
+              onFocus: () => events.push('focus'),
+            })}
+          />
+          <input aria-label='Next' />
+        </>
       );
     }
-    const { container, unmount } = render(
+    const { container } = render(
       <StrictMode>
         <Parent />
       </StrictMode>,
     );
-    const trigger = triggerIn(container);
-    await user.click(trigger);
+    await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     events.length = 0;
     if (action === 'Done') {
@@ -200,10 +267,44 @@ describe.each([
     } else {
       await user.keyboard('{Escape}');
     }
-    expect(events).toEqual(action === 'Done' ? ['change', 'blur', 'focus'] : ['blur', 'focus']);
-    expect(trigger).toHaveFocus();
-    unmount();
-    expect(events.filter((event) => event === 'blur')).toHaveLength(1);
+    expect(screen.getByLabelText('Next')).toHaveFocus();
+    // The trigger lost the focus the close returned to it before the consumer heard of it, so neither that focus nor
+    // its loss is reported
+    expect(events).toEqual(['blur']);
+  });
+
+  test('Done leaves focus on a field that takes it as the save reveals it', async () => {
+    const events: string[] = [];
+    function Parent() {
+      const [value, setValue] = useState<string>(initial);
+      return (
+        <>
+          <Widget
+            {...makeWidgetMockProps({
+              id: 'date',
+              value,
+              autofocus: false,
+              schema: { type: 'string', format },
+              onChange: (next: string) => setValue(next),
+              onBlur: (_: string, reported: unknown) => events.push(`blur ${String(reported)}`),
+              onFocus: () => events.push('focus'),
+            })}
+          />
+          {value !== initial && <SelfFocusing />}
+        </>
+      );
+    }
+    const { container } = render(
+      <StrictMode>
+        <Parent />
+      </StrictMode>,
+    );
+    await user.click(triggerIn(container));
+    await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+    events.length = 0;
+    await user.click(screen.getByText('Done'));
+    expect(screen.getByLabelText('Revealed')).toHaveFocus();
+    expect(events).toEqual([`blur ${proposal}`]);
   });
 
   test('Escape returns focus when onBlur flushes a render synchronously', async () => {
