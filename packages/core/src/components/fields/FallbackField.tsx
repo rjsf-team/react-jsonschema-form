@@ -356,7 +356,7 @@ function FallbackUiField<
   const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
   // Whether the value field keeps its widget, the field's own or a `ui:globalOptions` one, on a given type. Checked
   // against the schema with its type pinned, which is all of the value schema `getWidget()` reads
-  const { widget: valueWidget } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const { widget: valueWidget, label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const keepsWidget = useCallback(
     (aType: JSONSchema7TypeName) =>
       !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets),
@@ -412,7 +412,6 @@ function FallbackUiField<
   // one naming a template: a template says how any field renders rather than what this one holds, so a form-wide
   // `FieldTemplate` lays the selector out as it lays out every other field
   const typeSelectorUiSchema = useMemo(() => {
-    const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const options = Object.fromEntries(
       Object.keys(globalUiOptions ?? {})
         .filter((key) => !Object.hasOwn(templates, key))
@@ -422,7 +421,7 @@ function FallbackUiField<
       options.label = false;
     }
     return { [UI_OPTIONS_KEY]: options };
-  }, [uiSchema, globalUiOptions, templates]);
+  }, [label, globalUiOptions, templates]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so
   // that exactly one of the two fields renders them: the outer one when it labels the value, the value field otherwise

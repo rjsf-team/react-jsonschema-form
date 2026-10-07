@@ -98,13 +98,6 @@ function isWidgetMapType(type: string): type is keyof typeof widgetMap {
   return Object.hasOwn(widgetMap, type);
 }
 
-/** Returns the widget aliases of `type` for `schema`, which for a select over whole array constants are those of a
- * whole-value select rather than of a list
- */
-function getWidgetsForType(schema: RJSFSchema, type: keyof typeof widgetMap): Record<string, string> {
-  return type === 'array' && isWholeValueSelect(schema) ? wholeValueSelectWidgetMap : widgetMap[type];
-}
-
 /** Finds the type whose field renders `widget` for `schema`, along with that type's widget aliases, so `getWidget()`
  * reads the aliases it matched rather than rebuilding them, which for an `array` scans its options again
  *
@@ -123,7 +116,8 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   }
   const hasWidget = (widgets: Record<string, string>) =>
     Object.hasOwn(widgets, widget) || Object.values(widgets).includes(widget);
-  const widgets = getWidgetsForType(schema, type);
+  // A select over whole array constants takes a whole-value select's aliases rather than a list's
+  const widgets = type === 'array' && isWholeValueSelect(schema) ? wholeValueSelectWidgetMap : widgetMap[type];
   if (hasWidget(widgets)) {
     return { type, widgets };
   }
