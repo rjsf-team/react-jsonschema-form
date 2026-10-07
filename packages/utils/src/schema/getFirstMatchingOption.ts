@@ -104,14 +104,18 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
 const MATCHES_NOTHING: StrictRJSFSchema = { not: {} };
 
 /** Whether the given option describes keys somewhere other than its `properties`, which is what an option describing a
- * map does. A missing `additionalProperties` is read as `false` here, as it is wherever else RJSF asks this question.
+ * map does. The patterns are counted rather than tested for, as the property names are: an empty `patternProperties`
+ * describes no key, so an option carrying one has nothing for scoring to match on either. A missing
+ * `additionalProperties` is read as `false` here, as it is wherever else RJSF asks this question, while an empty
+ * schema there describes every key the `properties` does not name.
  *
  * @param option - The option to test
  * @returns - True when the option describes keys its `properties` does not name
  */
 function describesKeysOutsideProperties<S extends StrictRJSFSchema = RJSFSchema>(option: S): boolean {
   return (
-    PATTERN_PROPERTIES_KEY in option || (ADDITIONAL_PROPERTIES_KEY in option && option.additionalProperties !== false)
+    Object.keys(option[PATTERN_PROPERTIES_KEY] ?? {}).length > 0 ||
+    (ADDITIONAL_PROPERTIES_KEY in option && option.additionalProperties !== false)
   );
 }
 

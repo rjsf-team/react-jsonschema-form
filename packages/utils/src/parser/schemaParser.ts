@@ -107,9 +107,7 @@ function parseUnmergedAllOf<
  */
 function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recurseList: string[]): string[] {
   const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
-  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef)
-    ? [...recurseList, sourceRef]
-    : [...recurseList];
+  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
 }
 
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
@@ -171,11 +169,16 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // An option can hold an `allOf`, conditions or dependencies of its own, which only parsing the option resolves.
       // The schema is parsed alongside its options rather than being taken as covered by them, since merging an option
       // into the schema can replace one of the schema's own subschemas (a property's `oneOf`, say)
-      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(context, localSchema, rootSchema, true, undefined, [
-        ...resolvedRefs,
-      ])) {
+      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(
+        context,
+        localSchema,
+        rootSchema,
+        true,
+        undefined,
+        resolvedRefs,
+      )) {
         if (option !== localSchema) {
-          parseSchema<T, S, F>(context, state, rootSchema, option, [...resolvedRefs]);
+          parseSchema<T, S, F>(context, state, rootSchema, option, resolvedRefs);
         }
       }
     }
@@ -223,9 +226,9 @@ function parseValueSchemas<
   for (const valueSchema of valueSchemas) {
     if (isSchemaObject<S>(valueSchema)) {
       // A value is reached through the schema that holds it, so it carries the references resolved on the way to that
-      // schema -- a recursion through an `items` grows the same way one through a `properties` does. Each value gets
-      // its own copy, since resolution appends to the path it is given
-      parseSchema<T, S, F>(context, state, rootSchema, valueSchema, [...recurseList]);
+      // schema -- a recursion through an `items` grows the same way one through a `properties` does. The list is
+      // shared, since resolution extends the path it is given into a new list rather than appending to that one
+      parseSchema<T, S, F>(context, state, rootSchema, valueSchema, recurseList);
     }
   }
 }

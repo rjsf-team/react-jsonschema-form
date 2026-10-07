@@ -214,6 +214,14 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       getFirstMatchingOption({ validator }, { k: 'v' }, [option], rootSchema);
       expect(validated[0]).toEqual(option);
     });
+    it('does not match an option whose patternProperties name no pattern either', () => {
+      // An empty `patternProperties` describes no key, so it leaves the option with nothing to match on, the same way
+      // an empty `properties` does
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'object', properties: {}, patternProperties: {} };
+      getFirstMatchingOption({ validator }, { a: 'x' }, [option], rootSchema);
+      expect(validated[0]).toEqual({ not: {} });
+    });
     it('scores an option that declares no properties at all as it stands', () => {
       // An option without a `properties` key describes something other than an object, so there are no keys to assert
       const { validated, validator } = recordingValidator();

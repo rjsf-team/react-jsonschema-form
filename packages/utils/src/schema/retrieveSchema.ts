@@ -1075,9 +1075,10 @@ export function resolveAnyOrOneOfSchemas<
       // data is still reached only in the forms an empty retrieval produces: a key an option's `additionalProperties`
       // describes is stubbed into its `properties` once the user adds one, and no parse can enumerate those
       const retrievedOptions = anyOrOneOf.flatMap((item) =>
-        // Each option gets its own copy of the list, since a `$ref` one of them resolves is not one a sibling has
-        // already been through, the same reason the `properties` loop of `resolveAllReferences()` copies it
-        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, [...recurseList]),
+        // The options share the list, since a `$ref` one of them resolves is not one a sibling has already been
+        // through: resolution extends the path it is given into a new list rather than appending to that one, which is
+        // also why the `properties` loop of `resolveAllReferences()` hands each property the same one
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
       // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
