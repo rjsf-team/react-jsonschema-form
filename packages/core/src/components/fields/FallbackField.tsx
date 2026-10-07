@@ -350,8 +350,7 @@ function FallbackUiField<
     rawErrors,
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
-  // With the globals layered in, as `SchemaField` reads them, so a `widget` in `ui:globalOptions` picks the type too
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>

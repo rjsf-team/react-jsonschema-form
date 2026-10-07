@@ -421,9 +421,10 @@ export default function ObjectField<
         const apUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
         // The type of the field that renders the new value, which for a `type` list follows its widget, so a
         // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
-        // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in
+        // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
+        // without `ui:globalOptions`
         const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, registry);
-        const { widget } = getUiOptions<T, S, F>(resolvedApUiSchema, globalUiOptions);
+        const { widget } = getUiOptions<T, S, F>(resolvedApUiSchema);
         // A select over a `type` list renders through the field of a `string` when it names several types, whose
         // `'New Value'` none of its options is, and the zero value of any one type need not be an option either, so
         // it starts on the option it shows first
@@ -473,7 +474,6 @@ export default function ObjectField<
     resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
-    globalUiOptions,
     registry,
   ]);
 

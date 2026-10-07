@@ -838,8 +838,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
     });
 
-    // `SchemaField` layers the globals in when it picks the field, so the selection starts on that field's type
-    it('starts a union with no data on the type the widget in ui:globalOptions renders', () => {
+    // Only a field's own `ui:widget` picks a type list's field, as the defaults never see `ui:globalOptions`, and the
+    // global widget the selected type has none of is dropped from the value field rather than throwing `No widget`
+    it('starts a union with no data on its first type whatever widget ui:globalOptions names', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
         uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
@@ -847,8 +848,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
-      expect(node.querySelector('#root_val')!.closest('.rjsf-field')).toHaveClass('rjsf-field-string');
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'checkbox');
     });
 
     // `getWidget()` throws for a widget the selected type has none of, which would take the whole form down

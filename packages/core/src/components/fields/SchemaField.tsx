@@ -237,6 +237,7 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
+ * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
  * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
@@ -256,6 +257,7 @@ function getFieldComponent<
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
+  ownWidget: UIOptionsType<T, S, F>['widget'],
   namedField: Field<T, S, F> | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
@@ -276,8 +278,9 @@ function getFieldComponent<
   // the way NumberField turns `true` into `1`. Any other type list renders the field of another type it names when only
   // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
   // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
-  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field
-  const type = getFieldTypeForWidget<S>(schema, widget) ?? '';
+  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field. Only
+  // the field's own `ui:widget` picks it, as the defaults, which never see `ui:globalOptions`, can only follow that one
+  const type = getFieldTypeForWidget<S>(schema, ownWidget) ?? '';
 
   const schemaId = schema.$id;
 
@@ -539,7 +542,7 @@ function SchemaFieldRender<
     T,
     S,
     F
-  >(schema, uiOptions, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
+  >(schema, uiOptions, ownUiOptions.widget, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 

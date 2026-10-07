@@ -40,8 +40,10 @@ export default function getDisplayLabel<
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
-    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's
-    const schemaType = getFieldTypeForWidget<S>(schema, uiOptions.widget);
+    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
+    // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
+    const ownWidget = Array.isArray(schema.type) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+    const schemaType = getFieldTypeForWidget<S>(schema, ownWidget);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 
     // An `enum` or a constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is
