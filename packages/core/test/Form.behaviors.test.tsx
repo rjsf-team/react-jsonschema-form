@@ -832,6 +832,9 @@ describe('Error state consistency when deriving from new props', () => {
     // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
     // raise at `addr` would read as the validator's error still being there
     act(() => rootField().onChange('a', streetPath, {}));
+    // The validator's own copy is gone; the raise's is cleared by the empty raise at `addr` below
+    expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
     act(() => rootField().onChange({ street: 'a' }, toFieldPath('addr'), {}));
 
     expect(fieldErrorsById(container)).toEqual({});
