@@ -421,6 +421,44 @@ describe('schemaParser()', () => {
     // and the descent runs until the stack does
     expect(() => schemaParser(rootSchema)).not.toThrow();
   });
+  it('parses each subset of the schema dependencies a form can have applied', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string' } },
+      dependencies: {
+        a: { properties: { a2: { type: 'string' } } },
+        b: { properties: { b2: { type: 'string' } } },
+      },
+    };
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+    };
+    const names = Object.values(schemaParser(rootSchema)).map((schema) =>
+      Object.keys(schema.properties ?? {})
+        .sort()
+        .join(','),
+    );
+    // A form applies a dependency once its key has a value, so a user part-way through filling the option in scores
+    // it with only some of them applied, and expanding returned only the none- and all-applied forms
+    expect(names).toEqual(expect.arrayContaining(['a,a2,b', 'a,b,b2', 'a,a2,b,b2', 'a,b']));
+  });
+  it('reports a schema with more schema dependencies than can be expanded', () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    resetLogOnce();
+    const keys = Array.from({ length: 9 }, (_, i) => `k${i}`);
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: Object.fromEntries(keys.map((key) => [key, { type: 'string' }])),
+      dependencies: Object.fromEntries(keys.map((key) => [key, { properties: { [`${key}v`]: { type: 'string' } } }])),
+    };
+    schemaParser(rootSchema);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/A schema has 9 schema dependencies, more than the 8 whose subsets can all be expanded/),
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('k0, k1'));
+    consoleWarnSpy.mockRestore();
+  });
   it('parses the combinations of patternProperties once for a schema its options are merged into', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',

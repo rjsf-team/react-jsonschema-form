@@ -241,6 +241,39 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       });
     });
   });
+  describe('an option whose schema dependencies the user fills in one at a time', () => {
+    /** A form applies a dependency once its key has a value, so the option is scored with whichever subset of them
+     * the data has filled in, not only with none or all of them applied
+     */
+    const DEPENDENCY_ONEOF_SCHEMA: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          dependencies: {
+            a: { properties: { a2: { type: 'string' } } },
+            b: { properties: { b2: { type: 'string' } } },
+          },
+        },
+        { type: 'object', properties: { z: { type: 'number' } } },
+      ],
+    };
+
+    it.each([[{}], [{ a: 'q' }], [{ b: 'r' }], [{ a: 'q', b: 'r' }]])(
+      'scores the option it retrieved for %s',
+      (formData) => {
+        const validator = buildPrecompiledValidator(DEPENDENCY_ONEOF_SCHEMA);
+        const schemaUtils = createSchemaUtils({ validator }, DEPENDENCY_ONEOF_SCHEMA);
+        const options = DEPENDENCY_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        // `MultiSchemaField` scores the option it retrieved and then validates it as it stands, which asked for a
+        // schema no parse had reached for a partly filled-in option and threw rather than rendering
+        const chosen = getClosestMatchingOption({ validator }, DEPENDENCY_ONEOF_SCHEMA, formData, options, 0);
+        const retrieved = schemaUtils.retrieveSchema(options[chosen], formData);
+        expect(validator.isValid(withVariantId(retrieved), formData, DEPENDENCY_ONEOF_SCHEMA)).toBe(true);
+      },
+    );
+  });
   describe('a retrieved option validated as it stands', () => {
     /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
      * validated under it would be answered by the function compiled for the option as declared

@@ -1,3 +1,4 @@
+import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
@@ -43,18 +44,6 @@ interface ParseState {
  */
 const MAX_COMBINED_PATTERN_PROPERTIES = 16;
 
-/** Returns the combinations of the given `values` to parse, each keeping the order they were given in.
- *
- * @param values - The values to combine
- * @returns - The list of every non-empty combination of the `values`
- */
-function combinationsOf<V>(values: V[]): V[][] {
-  return values.reduce<V[][]>(
-    (combinations, value) => [...combinations, [value], ...combinations.map((combination) => [...combination, value])],
-    [],
-  );
-}
-
 /** Returns the combinations of the given `patternProperties` to parse. A form reads only the combination that a form
  * data key actually matches, which a parse that has no form data cannot know, so every one of the `2^n - 1` of them
  * has to be covered. Past `MAX_COMBINED_PATTERN_PROPERTIES` that is more work than a compile can do, so only each
@@ -66,17 +55,14 @@ function combinationsOf<V>(values: V[]): V[][] {
  */
 function patternCombinationsOf<V>(patternProperties: Record<string, V>): V[][] {
   const patterns = Object.keys(patternProperties);
-  const values = Object.values(patternProperties);
-  if (patterns.length > MAX_COMBINED_PATTERN_PROPERTIES) {
+  return combinationsUpTo(Object.values(patternProperties), MAX_COMBINED_PATTERN_PROPERTIES, () =>
     // The patterns are named so that a second object over the limit is reported rather than deduped into the first
     // object's warning, which says nothing that tells the two apart
     logOnce(
       `A schema has ${patterns.length} patternProperties, more than the ${MAX_COMBINED_PATTERN_PROPERTIES} whose combinations can all be enumerated, so only each pattern alone and all of them together were parsed. A key can match any subset of them, and a form renders it with the merge of the subset it matches, so a key matching some other subset has no compiled validator. Give the object fewer patternProperties, nesting the values they describe if need be. The patterns are: ${patterns.join(', ')}`,
       'warn',
-    );
-    return [...values.map((value) => [value]), values];
-  }
-  return combinationsOf(values);
+    ),
+  );
 }
 
 /** Parses the entries of the `schema`'s `allOf`, and what it declares besides them, alongside the merged schema the

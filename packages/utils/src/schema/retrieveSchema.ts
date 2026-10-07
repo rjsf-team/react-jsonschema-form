@@ -1,3 +1,4 @@
+import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -1174,14 +1175,89 @@ export function resolveDependencies<
       formData,
       passCount,
     );
-    // A dependency whose key the form data does not have is left unapplied, so until the user fills one in a form
-    // renders -- and scores its options against -- the schema with none of them applied, which expanding otherwise
-    // never returns. Only that variant is added: the ones in between are the `2 ** k` subsets of the keys
+    // A dependency whose key the form data does not have is left unapplied, so a form renders -- and scores its
+    // options against -- the schema with whichever subset of them the data has filled in, where expanding returns
+    // only the one with all of them applied. The subsets in between are expanded here, and the empty one below
     if (!expandAllBranches || applied.some((appliedSchema) => deepEquals(appliedSchema, resolvedSchema))) {
       return applied;
     }
-    return [...applied, resolvedSchema];
+    return [
+      ...applied,
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList),
+      resolvedSchema,
+    ];
   });
+}
+
+/** The most schema `dependencies` one schema may have for every subset of them to be expanded. There are `2 ** k`
+ * of those and each one resolves the schema afresh, so the count doubles with every key added
+ */
+const MAX_COMBINED_SCHEMA_DEPENDENCIES = 8;
+
+/** Returns the `resolvedSchema` with each proper, non-empty subset of its schema `dependencies` applied. A form
+ * applies a dependency once its key has a value, so a user part-way through filling an object in renders it with some
+ * of them applied, and that is the schema its options are scored against -- a precompiled validator with only the
+ * none- and all-applied forms throws `No precompiled validator function was found for the given schema` on the
+ * keystroke that fills the first one in.
+ *
+ * Only the dependencies holding a schema are varied. A dependency holding a list of names adds them to `required`,
+ * which scoring drops, so it describes nothing a validator has to have compiled.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param dependencies - The `dependencies` of the schema being resolved
+ * @param resolvedSchema - The schema the dependencies are applied to, with none of them applied
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param recurseList - The list of recursive references already processed
+ * @returns - The schema with each proper, non-empty subset of its schema dependencies applied
+ */
+function partiallyApplied<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  dependencies: S['dependencies'],
+  resolvedSchema: S,
+  rootSchema: S,
+  recurseList: string[],
+): S[] {
+  // Iterated rather than read through a default, since this is only reached for a schema that has `dependencies` and
+  // a default for the one it cannot have would be a branch no test can take
+  const schemaKeys: string[] = [];
+  for (const key in dependencies) {
+    if (isObject(dependencies[key])) {
+      schemaKeys.push(key);
+    }
+  }
+  if (schemaKeys.length < 2) {
+    return [];
+  }
+  const subsets = combinationsUpTo(schemaKeys, MAX_COMBINED_SCHEMA_DEPENDENCIES, () =>
+    // The keys are named so that a second schema over the limit is reported rather than deduped into the first one's
+    // warning, which says nothing that tells the two apart
+    logOnce(
+      `A schema has ${schemaKeys.length} schema dependencies, more than the ${MAX_COMBINED_SCHEMA_DEPENDENCIES} whose subsets can all be expanded, so only each dependency alone and all of them together were expanded. A form applies the subset whose keys the data has filled in, so a form part-way between those has no compiled validator. Give the object fewer schema dependencies, nesting what they describe if need be. The keys are: ${schemaKeys.join(', ')}`,
+      'warn',
+    ),
+  );
+  return subsets
+    .filter((subset) => subset.length < schemaKeys.length)
+    .flatMap((subset) => {
+      const partial = { ...dependencies } as Record<string, unknown>;
+      for (const key of schemaKeys) {
+        if (!subset.includes(key)) {
+          delete partial[key];
+        }
+      }
+      return processDependencies<T, S, F>(
+        context,
+        partial as S['dependencies'],
+        resolvedSchema,
+        rootSchema,
+        true,
+        recurseList,
+      );
+    });
 }
 
 /** Processes all the `dependencies` recursively into the list of `resolvedSchema`s as needed. Passes the
