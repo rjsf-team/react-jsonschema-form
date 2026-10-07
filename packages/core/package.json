@@ -24,6 +24,7 @@
       "default": "./lib/markdown.js"
     },
     "./lib": "./lib/index.js",
+    "./lib/describeUnresolvedComponent.js": null,
     "./lib/fieldLabelForLog.js": null,
     "./lib/hasOptionLabels.js": null,
     "./lib/*.js": "./lib/*.js",

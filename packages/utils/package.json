@@ -12,6 +12,7 @@
       "default": "./lib/index.js"
     },
     "./lib": "./lib/index.js",
+    "./lib/describeElementGivenAsComponent.js": null,
     "./lib/*.js": "./lib/*.js"
   },
   "files": [

@@ -180,8 +180,9 @@ const HELP_UI_OPTION = 'help';
  * the value straight back here, and each of those renders another one, without end. Shadowed rather than deleted,
  * because a global one reaches every field in the form and so survives the caller's own entry being removed. There is
  * nothing to lose either way, since a `ui:field` that resolves to any other field is rendered by `getFieldComponent()`
- * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or a name
- * no field is registered under, which resolves to nothing wherever it is read.
+ * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or one
+ * naming no field, which reaches here only when the `ui:globalOptions.field` it falls back to doesn't resolve to
+ * another field either, so the value field would have nothing to render for it.
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param valueSchema - The schema the value field renders, with its type pinned.
  * @param widgets - The widgets registered with the form.

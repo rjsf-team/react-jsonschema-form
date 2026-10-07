@@ -1294,6 +1294,20 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### isComponentType&lt;P = never>()
+
+Determines whether a `value` given in place of a component, such as a `ui:field`, a `ui:widget` or a `LayoutGridField` cell's `render`, is one React can render as a component.
+That is a function, or one of the objects `memo()`, `forwardRef()` and `lazy()` return. A React element, such as `<MyField />`, is not a component.
+A component's props can't be checked at runtime, so `P` names the props the caller expects it to take, e.g. `isComponentType<WidgetProps>(value)` narrows `value` to `ComponentType<WidgetProps>`.
+
+#### Parameters
+
+- value: unknown - The value to check
+
+#### Returns
+
+- boolean: True when the value is a component, false for anything else, a React element included
+
 ### isConstant&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 This function checks if the given `schema` matches a single constant value.
