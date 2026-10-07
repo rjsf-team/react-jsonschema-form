@@ -838,6 +838,33 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
     });
 
+    // `SchemaField` layers the globals in when it picks the field, so the selection starts on that field's type
+    it('starts a union with no data on the type the widget in ui:globalOptions renders', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')!.closest('.rjsf-field')).toHaveClass('rjsf-field-string');
+    });
+
+    // `getWidget()` throws for a widget the selected type has none of, which would take the whole form down
+    it('drops a widget in ui:globalOptions that the type the data selects has none of', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
+        formData: { val: true },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
+      expect(node.querySelector('#root_val')).toBeChecked();
+    });
+
     it('starts a union holding data of a type it does not list on the type its ui:widget renders', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },

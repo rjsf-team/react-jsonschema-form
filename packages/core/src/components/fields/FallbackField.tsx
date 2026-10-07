@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
   FormContextType,
+  GlobalUISchemaOptions,
   RegistryWidgetsType,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -188,7 +189,8 @@ const HELP_UI_OPTION = 'help';
 /**
  * Get the `uiSchema` the value field renders with: the caller's, without what the field around the value has already
  * rendered — the help among it, shadowed wherever it was written so that a `ui:globalOptions` one does not show through
- * — and with a `ui:widget` dropped when no widget implements it for the type the selector is on. A widget
+ * — and with a `ui:widget`, its own or a `ui:globalOptions` one, shadowed when no widget implements it for the type
+ * the selector is on. A widget
  * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
  * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
  * selected. A widget registered under its own name is left alone since it is expected to handle whatever it is given.
@@ -204,6 +206,7 @@ const HELP_UI_OPTION = 'help';
  * @param valueSchema - The schema the value field renders, with its type pinned.
  * @param widgets - The widgets registered with the form.
  * @param isLabelled - Whether the field around the value renders the schema's title and description.
+ * @param [globalUiOptions] - The form's `ui:globalOptions`, whose `widget` reaches the value field too.
  */
 function getValueUiSchema<
   T = unknown,
@@ -214,8 +217,9 @@ function getValueUiSchema<
   valueSchema: S,
   widgets: RegistryWidgetsType<T, S, F>,
   isLabelled: boolean,
+  globalUiOptions?: GlobalUISchemaOptions,
 ): UiSchema<T, S, F> {
-  const { widget } = getUiOptions<T, S, F>(uiSchema);
+  const { widget } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
   const noUiSchema: UiSchema<T, S, F> = {};
   const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
@@ -232,8 +236,9 @@ function getValueUiSchema<
   // options over the global ones, so deleting the key alone would let a global one naming this field through and
   // route the value straight back here
   uiOptions.field = undefined;
+  // Set rather than deleted, for the reason `field` is: a global `widget` would otherwise show through
   if (!keepsWidget) {
-    delete uiOptions.widget;
+    uiOptions.widget = undefined;
   }
   // A field around the value that labels it labels the very same control, since the value field renders for the same
   // `id`, so a label here would be a second one pointing at it — read out as one run-on name, and both focusing the
@@ -345,7 +350,8 @@ function FallbackUiField<
     rawErrors,
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  // With the globals layered in, as `SchemaField` reads them, so a `widget` in `ui:globalOptions` picks the type too
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
@@ -421,8 +427,8 @@ function FallbackUiField<
     [schema, type, translateString, isLabelled],
   );
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets, isLabelled),
-    [uiSchema, valueSchema, widgets, isLabelled],
+    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets, isLabelled, globalUiOptions),
+    [uiSchema, valueSchema, widgets, isLabelled, globalUiOptions],
   );
 
   const { SchemaField } = fields;

@@ -894,12 +894,17 @@ export function getDefaultBasedOnSchemaType<
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
   const { uiSchema, rawFormData } = computeDefaultsProps;
-  const widget = uiSchema && Array.isArray(rawSchema.type) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+  const isTypeList = Array.isArray(rawSchema.type);
+  const widget = uiSchema && isTypeList ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
   const type = getFieldTypeForWidget<S>(rawSchema, widget);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
   // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
   // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults
-  if ((type === 'object' || type === 'array') && getSchemaTypeForValue<S>(rawSchema, rawFormData) !== type) {
+  if (
+    isTypeList &&
+    (type === 'object' || type === 'array') &&
+    getSchemaTypeForValue<S>(rawSchema, rawFormData) !== type
+  ) {
     return undefined;
   }
   switch (type) {
