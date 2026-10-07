@@ -997,6 +997,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
+          it('expands all branches of a conditional reached through a $ref follow-up pass', () => {
+            testValidator.setReturnValues({ isValid: [true] });
+            const rootSchema: RJSFSchema = {
+              definitions: {
+                cond: {
+                  type: 'object',
+                  properties: { k: { type: 'string' } },
+                  if: { properties: { k: { const: 'x' } } },
+                  then: { properties: { t: { type: 'string' } } },
+                  else: { properties: { e: { type: 'string' } } },
+                },
+              },
+            };
+            // Expanding the $ref changes the schema, so the conditional is resolved on a follow-up fixpoint
+            // pass; both branches then resolve with the branch-local counter already past the first pass.
+            const results = retrieveSchemaInternal(
+              testValidator,
+              { $ref: '#/definitions/cond' },
+              rootSchema,
+              { k: 'x' },
+              true,
+            );
+            expect(results).toHaveLength(2);
+            expect(results[0].properties!.t).toEqual({ type: 'string' });
+            expect(results[1].properties!.e).toEqual({ type: 'string' });
+          });
           // With the pass counter kept local to one fixpoint loop, no finite schema reaches the backstop through
           // the public retrieveSchema path: nesting depth no longer counts as passes. The backstop now only fires
           // when passCount is injected directly, as below, or if a regression breaks structural termination.
@@ -3277,4 +3303,4 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
   });
-              }
+            }
