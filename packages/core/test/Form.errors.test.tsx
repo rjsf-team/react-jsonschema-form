@@ -131,8 +131,9 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           expect(shownErrors()).toEqual(["must have required property 'bar'", "must have required property 'corge'"]);
         });
 
-        // Dot-name errors do not reach the default field markup. A public ErrorListTemplate
-        // exposes the complete errorSchema before and after editing, without relying on change-event ordering.
+        // A field named with a dot looks its errors up by name while `toErrorSchema` nests them by path, so they never
+        // reach the field's own markup; the `ErrorListTemplate` is what gets handed the whole `errorSchema`. The form
+        // renders it only while it has errors, which is why each test leaves one field's error standing.
         it('should clear the error of a field whose name contains a dot', async () => {
           const altSchema: RJSFSchema = {
             type: 'object',
