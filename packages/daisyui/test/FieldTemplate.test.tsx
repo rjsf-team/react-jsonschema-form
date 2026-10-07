@@ -1,9 +1,16 @@
+import { getWidget } from '@rjsf/utils';
+import type * as RJSFUtils from '@rjsf/utils';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
+
+vi.mock('@rjsf/utils', async (importOriginal) => {
+  const actual = await importOriginal<typeof RJSFUtils>();
+  return { ...actual, getWidget: vi.fn(actual.getWidget) };
+});
 
 /** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
  * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
@@ -153,6 +160,19 @@ describe('FieldTemplate', () => {
 
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
+    // `getWidget()` only resolves the registry's own keys, so a name inherited from `Object.prototype` is an alias too,
+    // and on a schema that is not a boolean it is answered without resolving it
+    test('does not resolve a widget name inherited from Object.prototype on a schema that is not a boolean', () => {
+      function OwnField() {
+        return <div />;
+      }
+      vi.mocked(getWidget).mockClear();
+
+      renderForm({ agree: { 'ui:field': OwnField, 'ui:widget': 'toString' } }, { type: 'string', title: 'Agree' });
+
+      expect(getWidget).not.toHaveBeenCalledWith(expect.anything(), 'toString', expect.anything());
     });
   });
 
