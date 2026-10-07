@@ -1,5 +1,6 @@
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getUiOptions from './getUiOptions.ts';
+import { allowsAdditionalProperties } from './schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
@@ -18,7 +19,7 @@ export default function canExpand<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schema: RJSFSchema, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
-  if (!(schema.additionalProperties || schema.patternProperties)) {
+  if (!allowsAdditionalProperties(schema)) {
     return false;
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);

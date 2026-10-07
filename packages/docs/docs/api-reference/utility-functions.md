@@ -1224,6 +1224,19 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 
 - `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
 
+### getXxxOfOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the `anyOf`/`oneOf` options that are rendered for the `schema`, along with the keyword they are read from, as [`getXxxOfKey()`](#getxxxofkeys-extends-strictrjsfschema--rjsfschema) picks it.
+An empty list offers no option to render, pick defaults from or take a type from, so a schema carrying one is handled through its own type instead, the same as one carrying neither keyword — which is what reading the two keywords through this function, rather than as `anyOf ?? oneOf`, keeps every reader of the options agreeing about.
+
+#### Parameters
+
+- schema: S - The schema that may carry an `anyOf` or a `oneOf`
+
+#### Returns
+
+- `{ key: 'anyOf' | 'oneOf'; options: S[] } | undefined`: The keyword and its non-empty list of options, or `undefined` when there is no such list
+
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Groups `enumOptions` according to the [ui:options.optgroups](./uiSchema.md#optgroups) mapping of group label to the enum values it contains, tagging every option along the way with its original array `index` (where a widget reads the option's DOM value in [enumOptionsDomValues()](#enumoptionsdomvaluess-extends-strictrjsfschema--rjsfschema)) and its `disabled` status (from `ui:enumDisabled`).
@@ -2423,6 +2436,21 @@ const defaults = getDefaultFormState(context, { schema, formData, rootSchema });
 ```
 
 `getDefaultFormState()` takes the rest of its parameters as a props object, since so many of them are optional; the others keep theirs positional.
+
+### allowsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns whether an object takes keys its own `properties` don't name, which is what makes asking [`getAdditionalPropertySchema()`](#getadditionalpropertyschemas-extends-strictrjsfschema--rjsfschema) about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField` adds a property only to one.
+
+Any `patternProperties` says the object takes them, whatever an `additionalProperties: false` beside it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
+Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema to render one with and no name to add one under, so it offers none.
+
+#### Parameters
+
+- schema: S - The object schema to check
+
+#### Returns
+
+- boolean: True when the object takes keys beyond the ones its `properties` name
 
 ### findFieldInSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

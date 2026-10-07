@@ -11,6 +11,7 @@ import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
 import retrieveSchema, {
+  allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
   getMatchingPatternProperties,
@@ -19,6 +20,7 @@ import retrieveSchema, {
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
 export {
+  allowsAdditionalProperties,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getAdditionalPropertySchema,

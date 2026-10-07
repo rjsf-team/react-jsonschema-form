@@ -1107,6 +1107,44 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-field-null')).toBeNull();
     });
 
+    it('should render the keys an unevaluatedProperties describes for an object naming no other keyword', async () => {
+      // The keyword describes the keys the `properties` leave over, so an object naming it takes extra keys as much as
+      // one naming `additionalProperties` does: the key it describes renders as the field that description calls for,
+      // and the add button offers another of the same
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        },
+        initialFormData: { a: 'q', b: 2 },
+      });
+
+      expect(node.querySelector('#root_b')).toHaveValue('2');
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { a: 'q', b: 2, newKey: 0 }, 'root');
+    });
+
+    it('should render a key a oneOf option declares only where that option renders it', async () => {
+      // The option selector chooses between the options rather than merging the chosen one into the object, so a key
+      // an option declares is missing from the object's own properties and would otherwise take a field of its own
+      // beside the one the option renders for it, leaving the one value two fields to be written from
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^x_': { type: 'string' } },
+          oneOf: [{ properties: { kind: { const: 'a' }, a: { type: 'string' } } }],
+        },
+        initialFormData: { kind: 'a', a: 'v' },
+      });
+
+      expect(node.querySelectorAll('#root_a')).toHaveLength(1);
+      expect(node.querySelector('#root_a')).toHaveValue('v');
+      expect(node.querySelector('#root_a-key')).toBeNull();
+    });
+
     it('should render no field for a key whose name unevaluatedProperties forbids', async () => {
       // `unevaluatedProperties: false` rejects exactly the keys the patterns leave over, so a key none of them match
       // is forbidden as surely as it is under `additionalProperties: false` and gets no field of its own, however
@@ -1128,7 +1166,7 @@ describe('ObjectField', () => {
     it('should keep a property added under a pattern-matching name editable when renamed before it is typed in', async () => {
       // The add button seeds the new property from the pattern its name matches, so the value a rename then carries to
       // a name no pattern matches is one `retrieveSchema()` can stub a field from. A `null` seed would be stubbed as
-      // `{ type: 'null' }` there and leave the property with no input, which is the rename this fixes
+      // `{ type: 'null' }` there, leaving the renamed property with no input at all
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -2101,6 +2139,59 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: { name: 'unnamed', active: true } }, 'root');
+    });
+
+    it('should seed a property whose options disagree about the type with a value the first option holds', async () => {
+      // The stub names no type where the options disagree, since choosing one is what settles it, and the selector
+      // opens on the first option until a value matches another, so a seed of any other type than that option's is one
+      // the field the user is handed cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: { anyOf: [{ type: 'number' }, { type: 'boolean' }] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+      expect(node.querySelector('#root_newKey')).toHaveValue('0');
+    });
+
+    it('should seed a property whose first option is a $ref with a value of the type that $ref names', async () => {
+      // `retrieveSchema()` leaves the options unresolved, so the first one's own `$ref` has to be resolved before its
+      // type is read: a reference names none of its own, where the field the selector opens on takes the type of what
+      // it refers to, and the `New Value` string is a value that numeric field cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          definitions: { aNumber: { type: 'number' } },
+          additionalProperties: { anyOf: [{ $ref: '#/definitions/aNumber' }, { type: 'boolean' }] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+      expect(node.querySelector('#root_newKey')).toHaveValue('0');
+    });
+
+    it('should apply the ui:definitions of a $ref additionalProperties that names no type', async () => {
+      // The stub keeps the marker naming the definition the property was described through, which is what
+      // `resolveUiSchema()` reads to find the definition's own uiSchema
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          definitions: { email: { format: 'email' } },
+          additionalProperties: { $ref: '#/definitions/email' },
+        },
+        uiSchema: { 'ui:definitions': { '#/definitions/email': { 'ui:placeholder': 'name@example.com' } } },
+        initialFormData: { contact: 'someone@example.com' },
+      });
+
+      expect(node.querySelector('#root_contact')).toHaveAttribute('placeholder', 'name@example.com');
     });
 
     it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {

@@ -1255,6 +1255,59 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
     });
 
+    describe('unevaluatedProperties support', () => {
+      it('keeps the keys an unevaluatedProperties describes where no additionalProperties evaluates them', () => {
+        // `retrieveSchema()` renders those keys and `canExpand()` offers the add button for another, so pruning them
+        // would leave the form showing a field whose value the next change deletes
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        };
+        const formData = { a: 'q', b: 2 };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ a: 'q', b: 2 });
+      });
+
+      it('delegates the rest keys of a patternProperties to an unevaluatedProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^str_': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        };
+        const formData = { str_a: 'hello', num_b: 99 };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          str_a: 'hello',
+          num_b: 99,
+        });
+      });
+
+      it('drops the keys an unevaluatedProperties forbids, and the ones any additionalProperties evaluates', () => {
+        const forbiddenSchema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: false,
+        };
+        expect(omitExtraData({ validator: testValidator }, forbiddenSchema, forbiddenSchema, { a: 'q', b: 2 })).toEqual(
+          {
+            a: 'q',
+          },
+        );
+        // An `additionalProperties: false` evaluates the key itself, which leaves the `unevaluatedProperties` nothing
+        // to say about it, the same precedence `getAdditionalPropertySchema()` reads the two keywords with
+        const evaluatedSchema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+          unevaluatedProperties: { type: 'number' },
+        };
+        expect(omitExtraData({ validator: testValidator }, evaluatedSchema, evaluatedSchema, { a: 'q', b: 2 })).toEqual(
+          {
+            a: 'q',
+          },
+        );
+      });
+    });
+
     describe('propertyNames support', () => {
       it('returns empty object when propertyNames is defined but no properties are declared', () => {
         // propertyNames only constrains key names — it does not declare which properties are allowed.

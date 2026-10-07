@@ -150,11 +150,15 @@ Where several patterns match a key, they describe it together, and a `false` amo
 
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.
+A key an `anyOf`/`oneOf` option declares as a property of its own is that option's to render rather than an additional property, so it takes no second field beside the one the chosen option renders for it.
+That holds for every option, not only the one on screen, so a key only an option the user has not chosen declares waits for them to choose that option rather than taking a field of its own.
 Where `additionalProperties: false` does forbid it, the key has no subschema to render with and the property renders as the empty field a validation error accompanies.
 An `unevaluatedProperties` answers for the same keys where the object names no `additionalProperties` to evaluate them: a `false` forbids them, so it renders them the same way, and a schema describes what they may hold, so they render as the field it calls for, exactly as an `additionalProperties` schema's keys do.
 Beside any `additionalProperties`, `true` and a schema alike, it has nothing left to say and no say in how the key renders.
-Where the object names no `additionalProperties` at all, a form that sets `omitExtraData` drops a pattern-unmatched key all the same: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
-An `additionalProperties` that is spelled out, `true` included, describes those keys, so `omitExtraData` keeps them.
+An object whose only such keyword is an `unevaluatedProperties` takes extra keys as much as one naming `additionalProperties` or `patternProperties` does, so the keys its form data holds render and its add button is shown.
+The form reads the keyword whatever JSON Schema draft the validator is configured for, while the default `@rjsf/validator-ajv8` instance is a draft-07 AJV, which ignores it: a schema that relies on it should be validated by an AJV that reads it too, through the [`AjvClass`](../usage/validation.md#ajvclass) option, so that the names the form forbids are the ones validation rejects.
+Where the object names neither `additionalProperties` nor `unevaluatedProperties`, a form that sets `omitExtraData` drops a pattern-unmatched key all the same: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
+Either keyword spelled out, `true` included, describes those keys, so `omitExtraData` keeps them; it reads the two with the same precedence the rest of the form does, so a key an `unevaluatedProperties` describes is kept only where no `additionalProperties` evaluates it.
 
 ### Constraining key names with `propertyNames`
 

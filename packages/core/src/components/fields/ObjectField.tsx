@@ -19,6 +19,7 @@ import {
   setByPath,
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
+  allowsAdditionalProperties,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -28,6 +29,7 @@ import {
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  getXxxOfOptions,
   isConstantSelect,
   isFormDataAvailable,
   isSchemaObject,
@@ -84,6 +86,37 @@ function getDefaultValue<
   }
 }
 
+/** Returns the type a new additional property described by `subSchema` is seeded with: the type
+ * `getAdditionalPropertyType()` reads out of it, or, where the `anyOf`/`oneOf` options it leaves the type to disagree
+ * about one, the type of the first of those options. The stub `retrieveSchema()` builds for such a subschema names no
+ * type, since choosing an option is what settles it, and `MultiSchemaField` opens on the first option until a value
+ * matches another one, so that option's type is the one the field the user is handed renders and a seed of any other
+ * type is a value that field cannot show.
+ *
+ * `retrieveSchema()` leaves the options themselves unresolved, so the first option is resolved before its type is
+ * read: an option spelled as a `$ref` names no type of its own, where the field `MultiSchemaField` renders for it
+ * takes the type of what it refers to. The resolved option answers through `getAdditionalPropertyType()`, which reads
+ * options of its own that agree on a type, and an option that leaves the type to options that disagree again leaves
+ * the seed to the `New Value` a property no schema names a type for starts at. A `$ref` naming no definition is not
+ * caught here: `getDefaultFormState()` resolves the same options before this is reached, so such a schema has already
+ * thrown by then.
+ *
+ * @param schemaUtils - The schema utils from the registry, to resolve the option with
+ * @param subSchema - The schema describing the additional property, with its own `$ref`s resolved
+ * @returns - The type to seed the new property with, or undefined when no option names one either
+ */
+function getSeedType<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  schemaUtils: Registry<T, S, F>['schemaUtils'],
+  subSchema: S,
+): string | undefined {
+  const type = getAdditionalPropertyType<S>(subSchema);
+  if (type !== undefined) {
+    return type;
+  }
+  const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
+  return isObject(firstOption) ? getAdditionalPropertyType<S>(schemaUtils.retrieveSchema(firstOption)) : undefined;
+}
+
 function isAdditionalPropertySchema(schema: unknown) {
   return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
 }
@@ -126,13 +159,19 @@ function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(sche
   if (!schema.patternProperties) {
     return undefined;
   }
-  const isAllowed = (freeName: string) => getAdditionalPropertySchema<S>(schema, freeName) !== false;
-  if (isObject(schema.additionalProperties)) {
-    return freeNames.find(isAllowed);
+  const preferMatched = !isObject(schema.additionalProperties);
+  let firstAllowed: string | undefined;
+  // One pass, asking each name no more than the two questions its answer needs, since every question compiles the
+  // patterns again and a `propertyNames.enum` can name as many of them as it likes
+  for (const freeName of freeNames) {
+    if (getAdditionalPropertySchema<S>(schema, freeName) !== false) {
+      if (!preferMatched || Object.keys(getMatchingPatternProperties<S>(schema, freeName)).length > 0) {
+        return freeName;
+      }
+      firstAllowed ??= freeName;
+    }
   }
-  const isPatternDescribed = (freeName: string) =>
-    Object.keys(getMatchingPatternProperties<S>(schema, freeName)).length > 0 && isAllowed(freeName);
-  return freeNames.find(isPatternDescribed) ?? freeNames.find(isAllowed);
+  return firstAllowed;
 }
 
 /** Props for the `ObjectFieldProperty` component */
@@ -409,7 +448,7 @@ export default function ObjectField<
    * default data for that field has been added to the formData.
    */
   const onAddProperty = useCallback(() => {
-    if (!(schema.additionalProperties || schema.patternProperties)) {
+    if (!allowsAdditionalProperties<S>(schema)) {
       return;
     }
     // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
@@ -448,11 +487,11 @@ export default function ObjectField<
       const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedKeyUiSchema);
       // A schema naming a `type` list is stubbed with that list, so the field rendering the new value is the one the
       // widget picks out of it: a `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a
-      // `0` in the textarea. One that names no list is seeded as the stub types it, which reads a typeless `enum` of
-      // numbers as the number its values hold where a field's own type would call it a string
+      // `0` in the textarea. One that names no list is seeded as the field it is stubbed into renders it, which reads
+      // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getAdditionalPropertyType<S>(resolvedKeySchema);
+        : getSeedType<T, S, F>(schemaUtils, resolvedKeySchema);
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
       // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
@@ -467,10 +506,11 @@ export default function ObjectField<
           ? undefined
           : enabledOptions[0];
       }
-      // Route through the normal default pipeline (the same one an existing additionalProperties entry already
-      // goes through) for every subschema shape — not just object/$ref — so nested schema defaults and
-      // ui:initialValue/ui:emptyValue on uiSchema.additionalProperties apply the same way they do when Form first
-      // mounts with that key already present in formData.
+      // The pipeline an additional property the form mounted with goes through, so that a `default` nested in the
+      // subschema and a `ui:initialValue`/`ui:emptyValue` under `uiSchema.additionalProperties` seed the new property
+      // the way they would have seeded it had the key been in the form data all along. The subschema's own `default`
+      // is handed to the pipeline as the property's data, which is what merges an object `default` beside a `$ref`
+      // with the defaults the referenced schema's own properties carry (#4266)
       const defaultValue = schemaUtils.getDefaultFormState(
         resolvedKeySchema,
         resolvedKeySchema.default as T,

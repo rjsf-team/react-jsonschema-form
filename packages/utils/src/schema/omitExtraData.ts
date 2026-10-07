@@ -9,7 +9,12 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
+import {
+  additionalPropertiesKeyword,
+  mergeAllOf,
+  relaxOptionsForScoring,
+  resolveAllReferences,
+} from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -59,7 +64,8 @@ export default function omitExtraData<
   }
 
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
-   * each value. Handles `properties`, `patternProperties`, and `additionalProperties`.
+   * each value. Handles `properties`, `patternProperties`, and `additionalProperties` — or the
+   * `unevaluatedProperties` that answers for the leftover keys where no `additionalProperties` does.
    * Optional object-valued properties are pruned when every key in the filtered result is both
    * optional (per the inner schema's `required`) and empty (per `isValueEmpty`). This preserves
    * optional objects whose required children have empty values, while still dropping objects whose
@@ -73,7 +79,11 @@ export default function omitExtraData<
    * @returns - `target` after all schema-defined properties have been processed
    */
   function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
-    const { properties, additionalProperties, patternProperties } = childSchema;
+    const { properties, patternProperties } = childSchema;
+    // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
+    // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
+    // out from under it
+    const additionalProperties = additionalPropertiesKeyword<S>(childSchema);
     const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
