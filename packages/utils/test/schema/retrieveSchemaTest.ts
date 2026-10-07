@@ -2399,6 +2399,20 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           bb: false,
         });
       });
+      it('merges a pattern into a key whose own allOf already declares what the pattern does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { allOf: [{ minLength: 2 }] }, bar: { type: 'string' } },
+          patternProperties: { '^f': { minLength: 2 } },
+        };
+        // The patterns standing in a key's `allOf` are how a merge an inner recursion level left undone is recognised,
+        // which is the key followed by them. A key that declares one of its own is not that, and is merged as any
+        // other matching key is rather than being left with its `allOf` unresolved
+        expect(retrieveSchema({ validator: testValidator }, schema, { definitions: {} }, {}).properties).toEqual({
+          foo: { minLength: 2 },
+          bar: { type: 'string' },
+        });
+      });
       it('keeps the properties of a schema a key refers back to when a pattern also matches that key', () => {
         const rootSchema: RJSFSchema = {
           definitions: {

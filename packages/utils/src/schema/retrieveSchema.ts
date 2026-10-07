@@ -938,10 +938,16 @@ export function retrieveSchemaInternal<
           return [{ key, branches: [{ allOf: [property, ...patternSchemas] } as S] }];
         }
         // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
-        // undone is recognised by the patterns already standing in its `allOf` and left alone, rather than having
-        // them added a second time
+        // undone is recognised by the shape that level left -- the property followed by the patterns -- and left
+        // alone, rather than having them added a second time. The patterns are matched as that trailing run rather
+        // than anywhere in the `allOf`, so a property whose own `allOf` happens to declare what a pattern declares is
+        // still merged with it
         const allOfEntries = propertySchema?.allOf ?? [];
-        if (patternSchemas.every((pattern) => allOfEntries.some((entry) => deepEquals(entry, pattern)))) {
+        const patternTailStart = allOfEntries.length - patternSchemas.length;
+        if (
+          patternTailStart > 0 &&
+          patternSchemas.every((pattern, index) => deepEquals(allOfEntries[patternTailStart + index], pattern))
+        ) {
           return [];
         }
         const branches = retrieveSchemaInternal<T, S, F>(
@@ -1187,7 +1193,7 @@ export function resolveDependencies<
     }
     return [
       ...applied,
-      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList),
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList, formData, passCount),
       resolvedSchema,
     ];
   });
@@ -1212,6 +1218,8 @@ const MAX_COMBINED_SCHEMA_DEPENDENCIES = 8;
  * @param resolvedSchema - The schema the dependencies are applied to, with none of them applied
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param recurseList - The list of recursive references already processed
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - The schema with each proper, non-empty subset of its schema dependencies applied
  */
 function partiallyApplied<
@@ -1224,6 +1232,8 @@ function partiallyApplied<
   resolvedSchema: S,
   rootSchema: S,
   recurseList: string[],
+  formData?: T,
+  passCount = 0,
 ): S[] {
   // Iterated rather than read through a default, since this is only reached for a schema that has `dependencies` and
   // a default for the one it cannot have would be a branch no test can take
@@ -1260,6 +1270,8 @@ function partiallyApplied<
         rootSchema,
         true,
         recurseList,
+        formData,
+        passCount,
       );
     });
 }
