@@ -291,6 +291,21 @@ describe('ArrayField', () => {
       expect(node.querySelector('#root_foo')).toHaveClass('rjsf-field-array-fixed-items');
       expect(node.querySelector('#root_foo_0')).not.toBeInTheDocument();
     });
+
+    it('should select only the checked option of a multi-select holding null', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            foo: { type: ['null', 'array'], uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+          },
+        },
+        uiSchema: { foo: { 'ui:widget': 'checkboxes' } },
+        initialFormData: { foo: null },
+      });
+      await user.click(node.querySelectorAll('#root_foo input[type=checkbox]')[0]);
+      expectToHaveBeenCalledWithFormData(onChange, { foo: ['a'] }, 'root_foo');
+    });
   });
 
   describe('List of inputs', () => {

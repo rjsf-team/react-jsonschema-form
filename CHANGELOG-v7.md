@@ -171,6 +171,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a fixed-items `ArrayField` throwing `Cannot read properties of null` for a `null` held by a `type` list naming `array`, such as `['null', 'array']` ([#5331](https://github.com/rjsf-team/react-jsonschema-form/issues/5331))
 - Fixed adding a property to an `ObjectField` holding a string, which a `type` list naming `object` such as `['null', 'object', 'string']` can, spreading the string's characters into the new object ([#5331](https://github.com/rjsf-team/react-jsonschema-form/issues/5331))
 - A new `additionalProperties` entry under an `enum` or a constant `anyOf`/`oneOf` starts on its type's default only when that is one of the options and not in `ui:enumDisabled`, and otherwise on the first option that isn't, so a `type: 'string', enum: ['a', 'b']` starts at `'a'` rather than `New Value`, and an `enum` of `[null, true, 'a']` on a `['null', 'boolean', 'string']` at `null` ([#5331](https://github.com/rjsf-team/react-jsonschema-form/issues/5331))
+- Fixed checking an option of a multi-select `ArrayField` holding a `null`, which a `type` list such as `['null', 'array']` can, writing the `null` into the array beside the checked option ([#5331](https://github.com/rjsf-team/react-jsonschema-form/issues/5331))
 
 ## @rjsf/daisyui
 
