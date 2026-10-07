@@ -135,8 +135,6 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          // Keep the counter local to this fixpoint loop: a nested branch only needs to
-          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
           passCount > 0 ? 1 : 0,
         ),
       );
@@ -154,8 +152,6 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          // Keep the counter local to this fixpoint loop: a nested branch only needs to
-          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
           passCount > 0 ? 1 : 0,
         ),
       );
@@ -175,8 +171,6 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           experimental_customMergeAllOf,
           undefined,
           preserveDependencies,
-          // Keep the counter local to this fixpoint loop: a nested branch only needs to
-          // know whether the caller is on a re-walk, not how deep the re-walking has gone.
           passCount > 0 ? 1 : 0,
         ),
       );
@@ -339,7 +333,6 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         experimental_customMergeAllOf,
         undefined,
         preserveDependencies,
-        // Branch-local counter: re-walk status only, not the caller's depth.
         passCount > 0 ? 1 : 0,
       ),
     );
@@ -1084,7 +1077,6 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     experimental_customMergeAllOf,
     undefined,
     undefined,
-    // Branch-local counter: re-walk status only, not the caller's depth.
     passCount > 0 ? 1 : 0,
   );
   return dependentSchemas.flatMap((dependent) => {
@@ -1110,7 +1102,6 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         experimental_customMergeAllOf,
         undefined,
         undefined,
-        // Branch-local counter: re-walk status only, not the caller's depth.
         passCount > 0 ? 1 : 0,
       );
     });
@@ -1202,9 +1193,8 @@ export function withExactlyOneSubschema<
       experimental_customMergeAllOf,
       undefined,
       undefined,
-      // Branch-local counter: re-walk status only, not the caller's depth.
       passCount > 0 ? 1 : 0,
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });
-}
+        }
