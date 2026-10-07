@@ -58,9 +58,10 @@ function variantId(id: unknown, content: object): string {
  * This keys by the object the caller hands over, so it hits only where that object is stable across calls, which is
  * where an option is scored as `MultiSchemaField` has it: `retrieveSchema()` answers from its own cache while what it
  * resolves is unchanged. It misses where a caller rebuilds the option per call, which is what
- * `getClosestMatchingOption()` and `omitExtraData()` do for an option holding a `$ref` -- `resolveAllReferences()`
- * returns a new object whenever it resolves anything -- so such an option is still derived once per call. A schema is
- * read rather than written wherever it is scored, so an entry stays the derivation of its key
+ * `getClosestMatchingOption()` and `omitExtraData()` do for an option with a `$ref` anywhere inside it --
+ * `resolveAllReferences()` returns a new object whenever it resolves anything -- so such an option is still derived
+ * once per call. A schema is read rather than written wherever it is scored, so an entry stays the derivation of
+ * its key
  */
 const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
@@ -126,12 +127,13 @@ function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S)
     const wrapped: StrictRJSFSchema = { allOf: [{ ...content, [ID_KEY]: scoringId }], ...requiresAnyOf };
     return wrapped as S;
   }
+  // `content` is already the option without the `required` that scoring drops. The `$id` goes back on because this
+  // path is the one that keeps it at the top of the schema, where the junk option is recognised by it
+  const base = ID_KEY in option ? { [ID_KEY]: id, ...content } : content;
   // An `anyOf` the option already declares is left as it is, with the augmentation wrapped in an `allOf` so both apply
-  const augmentedSchema = option.anyOf
-    ? ({ ...option, allOf: [...(option.allOf ?? []), requiresAnyOf] } as S)
-    : ({ ...option, ...requiresAnyOf } as S);
-  delete augmentedSchema.required;
-  return augmentedSchema;
+  return (
+    option.anyOf ? { ...base, allOf: [...(content.allOf ?? []), requiresAnyOf] } : { ...base, ...requiresAnyOf }
+  ) as S;
 }
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.

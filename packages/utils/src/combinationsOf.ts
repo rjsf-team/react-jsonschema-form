@@ -4,7 +4,7 @@
  * @param values - The values to combine
  * @returns - The list of every non-empty combination of the `values`
  */
-export default function combinationsOf<V>(values: V[]): V[][] {
+function combinationsOf<V>(values: V[]): V[][] {
   return values.reduce<V[][]>(
     (combinations, value) => [...combinations, [value], ...combinations.map((combination) => [...combination, value])],
     [],

@@ -1,12 +1,14 @@
-import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
-import { ELSE_KEY, isObject, mergeSchemas, noop, resetLogOnce, schemaParser, THEN_KEY } from '../../src/index.ts';
+import type { RJSFSchema } from '../../src/index.ts';
+import { ELSE_KEY, isObject, noop, resetLogOnce, schemaParser, THEN_KEY } from '../../src/index.ts';
 import {
   CHOICE as choice,
+  mergeAllOfEntries,
   SCHEMA_MERGED_FOR_PATTERN_KEY,
   SCHEMA_MERGED_FOR_PATTERN_PROPERTY,
   TITLED_CHOICE_OPTION,
   titleChoiceMergeAllOf as customMergeAllOf,
 } from '../testUtils/customMergeAllOfData.ts';
+import { identityMergeAllOf } from '../testUtils/parsedSchemaData.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -23,21 +25,18 @@ import {
   SUPER_SCHEMA,
 } from '../testUtils/testData.ts';
 
-/** Returns a `customMergeAllOf` that merges as the default does while recording the property names of each `allOf` it
- * is given, which for a schema whose only `allOf` is the one a `patternProperties` combination is parsed as names the
- * combinations that were enumerated.
+/** Returns a `customMergeAllOf` that merges its `allOf` entries while recording their property names, which for a
+ * schema whose only `allOf` is the one a `patternProperties` combination is parsed as names the combinations that
+ * were enumerated.
  *
  * @param mergedLists - The list each merged `allOf`'s property names are pushed onto
  * @returns - The recording `customMergeAllOf`
  */
 function recordMergedProperties(mergedLists: string[][]) {
   return (schema: RJSFSchema) => {
-    const { allOf = [], ...rest } = schema;
+    const { allOf = [] } = schema;
     mergedLists.push(allOf.filter(isObject).flatMap((subSchema) => Object.keys(subSchema.properties ?? {})));
-    return allOf.reduce<GenericObjectType>(
-      (acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc),
-      rest,
-    );
+    return mergeAllOfEntries(schema);
   };
 }
 
@@ -558,8 +557,7 @@ describe('schemaParser()', () => {
     let merges = 0;
     const customMergeAllOf = (schema: RJSFSchema) => {
       merges += 1;
-      const { allOf = [], ...rest } = schema;
-      return allOf.reduce<GenericObjectType>((acc, s) => (isObject(s) ? mergeSchemas(acc, s) : acc), rest);
+      return mergeAllOfEntries(schema);
     };
     schemaParser(rootSchema, { customMergeAllOf });
     // Two merges per nested `allOf` -- one reached through the root's merge and one parsing the entry in its own
@@ -615,7 +613,6 @@ describe('schemaParser()', () => {
         type: 'object',
         allOf: [{ properties: { choice } }, { properties: { q: { type: 'string' } } }],
       };
-      const identityMergeAllOf = (schema: RJSFSchema) => schema;
       // A merge that returns its input leaves the `allOf` for `omitExtraData()` to walk, scoring the options of each
       // entry it finds there
       const schemas = Object.values(schemaParser(rootSchema, { customMergeAllOf: identityMergeAllOf }));
@@ -624,7 +621,6 @@ describe('schemaParser()', () => {
       expect(schemas).toContainEqual(expect.objectContaining({ const: 'b' }));
     });
     it('parses the entries of an allOf only reached through a condition or a dependency', () => {
-      const identityMergeAllOf = (schema: RJSFSchema) => schema;
       const unmerged: RJSFSchema = { type: 'object', allOf: [{ properties: { choice } }] };
       // Resolution merges an `allOf` wherever it finds one, so the entries of a `then` branch's or a dependency's are
       // reached on what it returns rather than on the schema the parse was handed

@@ -934,14 +934,15 @@ export function retrieveSchemaInternal<
         // `properties` the patterns contribute replaces the target's own rather than joining it. The merge is left
         // undone instead, for the level that renders this key to resolve with the `allOf` semantics it asks for. The
         // recursion still ends, because that is one level resolved at a time rather than all of them at once
-        const propertyRef = isObject(property) ? refOf<S>(property as S) : undefined;
+        const propertySchema = isObject(property) ? (property as S) : undefined;
+        const propertyRef = refOf<S>(propertySchema);
         if (propertyRef !== undefined && mergeRecurseList.includes(propertyRef)) {
           return [{ key, branches: [{ allOf: [property, ...patternSchemas] } as S] }];
         }
         // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
         // undone is recognised by the patterns already standing in its `allOf` and left alone, rather than having
         // them added a second time
-        const allOfEntries = isObject(property) ? ((property as S).allOf ?? []) : [];
+        const allOfEntries = propertySchema?.allOf ?? [];
         if (patternSchemas.every((pattern) => allOfEntries.some((entry) => deepEquals(entry, pattern)))) {
           return [];
         }
@@ -969,26 +970,27 @@ export function retrieveSchemaInternal<
         ),
       ];
     }
-    return withMergedProperties.flatMap((schemaWithProperties) => {
-      const hasAdditionalProperties =
-        PATTERN_PROPERTIES_KEY in schemaWithProperties ||
-        (ADDITIONAL_PROPERTIES_KEY in schemaWithProperties && schemaWithProperties.additionalProperties !== false);
-      if (hasAdditionalProperties) {
-        return stubExistingAdditionalProperties<T, S, F>(context, schemaWithProperties, rootSchema, rawFormData);
-      }
-
-      return schemaWithProperties;
-    });
+    // Every entry of `withMergedProperties` is `resolvedSchema` under different `properties`, so what it says about
+    // `patternProperties` and `additionalProperties` is the same for all of them
+    const hasAdditionalProperties =
+      PATTERN_PROPERTIES_KEY in resolvedSchema ||
+      (ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false);
+    if (!hasAdditionalProperties) {
+      return withMergedProperties;
+    }
+    return withMergedProperties.map((schemaWithProperties) =>
+      stubExistingAdditionalProperties<T, S, F>(context, schemaWithProperties, rootSchema, rawFormData),
+    );
   });
 }
 
 /** Returns the `$ref` the given schema holds or was resolved from, if any. A resolved schema no longer holds the
  * reference as a key, so the one `resolveAllReferences()` marked it with is what names it.
  *
- * @param schema - The schema to read the reference off
+ * @param schema - The schema to read the reference off, if there is one to read it off at all
  * @returns - The `$ref` the schema holds or was resolved from, or undefined when it has neither
  */
-function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string | undefined {
+function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): string | undefined {
   // A reference the schema still holds comes first, since that is the one about to be resolved and so the one a
   // merge of this schema would follow round again. `resolveUiSchema()` reads the same two the other way about, for
   // the opposite reason: it is naming where a resolved schema came from, not what it is about to resolve

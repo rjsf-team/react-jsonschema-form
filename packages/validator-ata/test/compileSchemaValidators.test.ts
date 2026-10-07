@@ -3,6 +3,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { writeFileSync } from 'fs';
 import type { MockInstance } from 'vitest';
 
+import { identityMergeAllOf } from '../../utils/test/testUtils/parsedSchemaData.ts';
 import compileSchemaValidators, { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 
 vi.mock('fs', () => {
@@ -77,11 +78,10 @@ describe('compileSchemaValidators()', () => {
     });
   });
   describe('compiling WITH a customMergeAllOf', () => {
-    const customMergeAllOf = (schema: RJSFSchema) => schema;
     beforeAll(() => {
       expectedCode = 'expected code 3';
       vi.mocked(compileSchemaValidatorsCode).mockImplementation(() => expectedCode);
-      compileSchemaValidators(testSchema, OUTPUT_FILE, { customMergeAllOf });
+      compileSchemaValidators(testSchema, OUTPUT_FILE, { customMergeAllOf: identityMergeAllOf });
     });
     afterAll(() => {
       consoleLogSpy.mockClear();
@@ -89,7 +89,7 @@ describe('compileSchemaValidators()', () => {
       vi.mocked(writeFileSync).mockClear();
     });
     it('compileSchemaValidatorsCode was called with the customMergeAllOf in its options', () => {
-      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, { customMergeAllOf });
+      expect(compileSchemaValidatorsCode).toHaveBeenCalledWith(testSchema, { customMergeAllOf: identityMergeAllOf });
     });
     it('wrote the expected output', () => {
       expect(writeFileSync).toHaveBeenCalledWith(OUTPUT_FILE, expectedCode);

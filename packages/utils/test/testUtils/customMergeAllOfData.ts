@@ -1,6 +1,22 @@
 import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import { isObject, mergeSchemas } from '../../src/index.ts';
 
+/** Merges a schema's `allOf` entries into it, which is what a `customMergeAllOf` that merges at all has to do before
+ * it does anything of its own. This is RJSF's deep object merge rather than `shallowAllOfMerge`, the merge the default
+ * `mergeAllOf()` falls back to, so it stands in for a merging user hook rather than reproducing the default.
+ *
+ * @param schema - The schema whose `allOf` entries are to be merged into it
+ * @returns - The schema with its `allOf` merged in and the keyword dropped
+ */
+export function mergeAllOfEntries(schema: RJSFSchema): GenericObjectType {
+  const { allOf = [], ...rest } = schema;
+  // A boolean subschema constrains nothing this merge has to carry over
+  return allOf.reduce<GenericObjectType>(
+    (acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc),
+    rest,
+  );
+}
+
 /** The `oneOf` options that `titleChoiceMergeAllOf()` rewrites, as a schema parsed with the default merge leaves them */
 export const CHOICE: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
 
@@ -32,12 +48,7 @@ export const MERGED_PATTERN_KEY_FORM_DATA = { x1: { choice: 'b' } };
  * against differ from the ones the default merge produces, and hash differently
  */
 export function titleChoiceMergeAllOf(schema: RJSFSchema): RJSFSchema {
-  const { allOf = [], ...rest } = schema;
-  const merged: GenericObjectType = allOf.reduce<GenericObjectType>(
-    // A boolean subschema constrains nothing this merge has to carry over
-    (acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc),
-    rest,
-  );
+  const merged = mergeAllOfEntries(schema);
   const choice = merged.properties?.choice;
   if (!isObject(choice) || !Array.isArray(choice.oneOf)) {
     return merged;

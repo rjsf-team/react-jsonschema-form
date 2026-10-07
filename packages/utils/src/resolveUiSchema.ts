@@ -1,18 +1,10 @@
-import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
+import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
 import { declaredRef, resolvedFromRef } from './refOf.ts';
-import type {
-  FormContextType,
-  GenericObjectType,
-  Registry,
-  RJSFMarkedSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-} from './types.ts';
+import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
  * by unknown data, since TypeScript can't follow a `$ref` to the fields it lands on, so the merge is where it is taken
@@ -79,7 +71,7 @@ export default function resolveUiSchema<
   // can read dropdown option titles at the parent level.
   if (definitions) {
     let resolvedSchema: S = schema;
-    if (ref && schema[REF_KEY] && !(schema as RJSFMarkedSchema)[RJSF_REF_KEY]) {
+    if (ref && declaredRef<S>(schema) && !resolvedFromRef<S>(schema)) {
       try {
         resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
       } catch (e) {
@@ -96,8 +88,8 @@ export default function resolveUiSchema<
 
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
-          const option = schemaOptions[i] as GenericObjectType | undefined;
-          const optionRef = resolvedFromRef<S>(option as S | undefined) ?? declaredRef<S>(option as S | undefined);
+          const option = schemaOptions[i] as S | undefined;
+          const optionRef = resolvedFromRef<S>(option) ?? declaredRef<S>(option);
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;
