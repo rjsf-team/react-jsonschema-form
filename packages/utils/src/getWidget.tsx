@@ -142,8 +142,8 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
  * `TextareaWidget` on a `['null', 'number', 'string']` is the `string` one. No `null`, `object` or `array` type is
  * looked to, since `SchemaField` only switches to a scalar type's field, so the field of the type the list resolves to
  * would be left rendering the widget: a radio of the `null` type would replace the list an `ArrayField` multi-select
- * edits with one value. A list resolving to `object` or `array` takes only its own widgets, since the form data
- * `getDefaultFormState()` fills in for it is of that type, which a scalar widget would be handed.
+ * edits with one value. A list resolving to `object` or `array` takes only its own widgets, since form data of that
+ * type, which the list is written to hold, would otherwise be handed to a scalar widget.
  *
  * @param schema - The schema for the field
  * @param widget - The alias or registered name of the widget

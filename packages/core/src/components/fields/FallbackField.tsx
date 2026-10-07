@@ -110,7 +110,8 @@ function getInitialType(
     return defaultType;
   }
   // Not `getSchemaTypeForValue()`, which answers data of a type the list doesn't name with the list's own resolved type
-  // rather than leaving it to the widget, so a textarea's selection would start on a checkbox for an object it was handed
+  // rather than leaving it to the widget, so a textarea's selection would start on a checkbox for an object it was
+  // handed
   const dataType = guessType(formData);
   if (types.includes(dataType)) {
     return dataType;
@@ -190,10 +191,10 @@ const HELP_UI_OPTION = 'help';
  * Get the `uiSchema` the value field renders with: the caller's, without what the field around the value has already
  * rendered — the help among it, shadowed wherever it was written so that a `ui:globalOptions` one does not show through
  * — and with a `ui:widget`, its own or a `ui:globalOptions` one, shadowed when no widget implements it for the type
- * the selector is on. A widget
- * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
- * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
- * selected. A widget registered under its own name is left alone since it is expected to handle whatever it is given.
+ * the selector is on. A widget named for one member of a union — `textarea` for its `string` — has no implementation
+ * for the others, and `getWidget()` throws rather than falling back, which would take the whole form down as soon as
+ * another type was selected. A widget registered under its own name is left alone since it is expected to handle
+ * whatever it is given.
  * The `ui:field` is shadowed whatever it names and wherever it was written — `ui:field`, `ui:options.field` or
  * `ui:globalOptions.field` — for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming this field routes
  * the value straight back here, and each of those renders another one, without end. Shadowed rather than deleted,
