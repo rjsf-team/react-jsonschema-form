@@ -425,14 +425,19 @@ export default function ObjectField<
         // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
         // without `ui:globalOptions`
         const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, registry);
-        const { widget } = getUiOptions<T, S, F>(resolvedApUiSchema);
+        const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedApUiSchema);
         type = getFieldTypeForWidget(apSchema, widget);
-        // A select starts on its type's zero value only when that is one of its options: neither a string's
-        // `'New Value'` nor a number's `0` need be, so otherwise it starts on the option it shows first
+        // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
+        // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
+        // `ui:enumDisabled` values match strictly, as the widgets match them
         if (isConstantSelect<S>(apSchema)) {
-          const options = optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? [];
+          const enabledOptions = (optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? []).filter(
+            (option) => !enumDisabled?.some((disabledValue) => disabledValue === option.value),
+          );
           const zeroValue = getDefaultValue<T, S, F>(translateString, type);
-          firstOption = options.some((option) => deepEquals(option.value, zeroValue)) ? undefined : options[0];
+          firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))
+            ? undefined
+            : enabledOptions[0];
         }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';

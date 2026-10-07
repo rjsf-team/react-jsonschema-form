@@ -878,18 +878,38 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
     });
 
-    // The `range` would render the object as its value, which React throws for
-    it("starts a union holding data its ui:widget's type can't show on its first type", () => {
+    // The `range` would render the object as its value, which React throws for, wherever its type is in the list
+    it.each<[string, RJSFSchema['type']]>([
+      ['after', ['string', 'number']],
+      ['before', ['number', 'string']],
+    ])(
+      "starts a union holding data its ui:widget's type can't show on a type without the widget, listed %s it",
+      (_, type) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { val: { type } } },
+          uiSchema: { val: { 'ui:widget': 'range' } },
+          formData: { val: {} },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+        expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+      },
+    );
+
+    // A `null` is shown as no value by every widget, so it keeps the widget the union was given
+    it('starts a union holding a null it does not name on the type of its ui:widget', () => {
       const { node } = createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
-        uiSchema: { val: { 'ui:widget': 'range' } },
-        formData: { val: {} },
+        schema: { type: 'object', properties: { val: { type: ['number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        formData: { val: null },
         useFallbackUiForUnsupportedType: true,
       });
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
-      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+      expect(node.querySelector('#root_val')?.tagName).toBe('TEXTAREA');
     });
 
     // `ArrayField` renders a custom widget for a `uiSchema` naming one, so the widget the value field drops has to

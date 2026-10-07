@@ -163,13 +163,12 @@ export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S
  * @param [type] - The type `getSchemaType()` resolves the `schema` to, when already known
  * @returns - True if the field's `ui:widget` or options can pick its type, false otherwise
  */
-export function canPickFieldType<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  type = getSchemaType<S>(schema),
-): boolean {
-  return (
-    Array.isArray(schema.type) && (type === 'null' || schema.type.some((aType) => aType !== type && aType !== 'null'))
-  );
+export function canPickFieldType<S extends StrictRJSFSchema = RJSFSchema>(schema: S, type?: string): boolean {
+  if (!Array.isArray(schema.type)) {
+    return false;
+  }
+  const resolvedType = type ?? getSchemaType<S>(schema);
+  return resolvedType === 'null' || schema.type.some((aType) => aType !== resolvedType && aType !== 'null');
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several

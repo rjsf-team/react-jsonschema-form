@@ -1,4 +1,5 @@
 import type {
+  EnumValue,
   RJSFSchema,
   FieldProps,
   FieldPath,
@@ -1702,6 +1703,25 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
+
+    // An option the user can't pick is no value to start on, whether it is the first one or the type's zero value
+    it.each<[RJSFSchema, EnumValue[], unknown]>([
+      [{ type: 'string', enum: ['a', 'b'] }, ['a'], 'b'],
+      [{ type: ['integer', 'null'], enum: [0, 5] }, [0], 5],
+    ])(
+      'should add the first enabled option of a select over %j disabling %j',
+      async (apSchema, enumDisabled, expected) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties: apSchema },
+          uiSchema: { additionalProperties: { 'ui:enumDisabled': enumDisabled } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+      },
+    );
 
     it('should start a new object rather than spread a string held by a type list naming object', async () => {
       const { onChange } = createFormComponent({

@@ -80,6 +80,9 @@ function getFallbackTypeSelectionSchema(
   };
 }
 
+/** The types whose field renders its value with a widget of its own choosing once the caller's one is dropped */
+const SCALAR_TYPES: JSONSchema7TypeName[] = ['string', 'number', 'integer', 'boolean'];
+
 /**
  * Determines whether the field for `type` can show data of `dataType` as the value it is. The textual types stand in
  * for one another while a value is being edited — a `number` field holds the string `'3.'` until the user types the
@@ -96,18 +99,21 @@ function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeN
 /**
  * Determines which of the `types` the selection starts on, preferring the type the `formData` already has so that
  * existing data is shown by the field that matches it. An integer-only schema takes a number. Having no data to go on
- * starts on the type the selection defaults to, which follows the widget, as does data of a type the schema does not
- * allow that the field of that type can show. Other data starts on the schema's own first type instead: the widget's
- * type keeps the widget, which would be handed a value it can't render, and a `range` handed an object takes the form
- * down.
+ * starts on the type the selection defaults to, which follows the widget, as does a `null`, which every widget shows
+ * as no value, and data of a type the schema does not allow that the field of that type can show. Other data starts on
+ * a scalar type whose field drops the widget, whatever its place in the list: the widget's type keeps the widget, which
+ * would be handed a value it can't render, and a `range` handed an object takes the form down. When every type keeps
+ * the widget, the selection starts on its default type all the same.
  * @param formData - The form data being rendered.
  * @param types - The types the selection offers.
  * @param defaultType - The type the selection starts on when there is no form data.
+ * @param keepsWidget - Whether the value field keeps the widget when the selection is on a given type.
  */
 function getInitialType(
   formData: unknown,
   types: JSONSchema7TypeName[],
   defaultType: JSONSchema7TypeName,
+  keepsWidget: (type: JSONSchema7TypeName) => boolean,
 ): JSONSchema7TypeName {
   if (formData === undefined) {
     return defaultType;
@@ -121,7 +127,10 @@ function getInitialType(
   if (dataType === 'number' && types.includes('integer')) {
     return 'integer';
   }
-  return canShowDataAsType(defaultType, dataType) ? defaultType : getDefaultType(types);
+  if (dataType === 'null' || canShowDataAsType(defaultType, dataType)) {
+    return defaultType;
+  }
+  return types.find((aType) => SCALAR_TYPES.includes(aType) && !keepsWidget(aType)) ?? defaultType;
 }
 
 /**
@@ -356,8 +365,12 @@ function FallbackUiField<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
+  // The widget `getValueUiSchema()` keeps or drops for the type the selection is on
+  const { widget: valueWidget } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const keepsWidget = (aType: JSONSchema7TypeName) =>
+    !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
-    getInitialType(formData, types, defaultType),
+    getInitialType(formData, types, defaultType, keepsWidget),
   );
   // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
   // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
@@ -384,7 +397,7 @@ function FallbackUiField<
   const isSelectionUsable =
     types.includes(selectedType) &&
     (isEmptyValue || isClearedInput || canShowDataAsType(selectedType, guessType(formData)));
-  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType);
+  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType, keepsWidget);
   if (type !== selectedType) {
     // Storing the type the selector is showing keeps a selection the user can no longer see from coming back: with the
     // old one still in state, clearing the value would swap the field out for the type the data used to have. React
