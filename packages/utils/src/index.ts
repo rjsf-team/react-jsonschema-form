@@ -51,6 +51,7 @@ import getPropertySchema from './getPropertySchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
+import getSelectFieldType from './getSelectFieldType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
@@ -91,7 +92,7 @@ import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
-import isObject from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -225,6 +226,7 @@ export {
   getSchemaOwnTypes,
   getSchemaType,
   getSchemaTypeForValue,
+  getSelectFieldType,
   getByPath,
   getKnownTypes,
   getStaticItemsUiSchema,
@@ -258,6 +260,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isSchemaObject,
   isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,

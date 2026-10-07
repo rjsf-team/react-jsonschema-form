@@ -275,6 +275,22 @@ describe('ArrayField', () => {
       });
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
+
+    // A list naming `array` among several non-null types resolves to it, so the fixed items field is handed the `null`
+    it.each<[string, unknown]>([
+      ['a null', null],
+      ['a string', 'abc'],
+    ])('should render a fixed items list with no items for a type list holding %s', (_, foo) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { foo: { type: ['null', 'array', 'string'], items: [{ type: 'string' }, { type: 'number' }] } },
+        },
+        initialFormData: { foo },
+      });
+      expect(node.querySelector('#root_foo')).toHaveClass('rjsf-field-array-fixed-items');
+      expect(node.querySelector('#root_foo_0')).not.toBeInTheDocument();
+    });
   });
 
   describe('List of inputs', () => {

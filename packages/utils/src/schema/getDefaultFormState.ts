@@ -19,6 +19,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForWidget } from '../getWidget.tsx';
@@ -892,9 +893,16 @@ export function getDefaultBasedOnSchemaType<
   }
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
-  const { uiSchema } = computeDefaultsProps;
+  const { uiSchema, rawFormData } = computeDefaultsProps;
   const widget = uiSchema && Array.isArray(rawSchema.type) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
-  switch (getFieldTypeForWidget<S>(rawSchema, widget)) {
+  const type = getFieldTypeForWidget<S>(rawSchema, widget);
+  // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
+  // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
+  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults
+  if ((type === 'object' || type === 'array') && getSchemaTypeForValue<S>(rawSchema, rawFormData) !== type) {
+    return undefined;
+  }
+  switch (type) {
     // We need to recurse for object schema inner default values.
     case 'object': {
       return getObjectDefaults(context, rawSchema, computeDefaultsProps, defaults);

@@ -806,7 +806,7 @@ That spelling is this function's to change, in one place for every field that ca
 
 ### getFieldTypeForWidget&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Gets the type of the field `SchemaField` renders a schema with its `ui:widget` by. For a `type` list naming several non-null types, that is the type [getWidgetType()](#getwidgettype) picks for a named widget, or for the widget its `format` names when it has no `ui:widget`, so a `textarea` on a `['null', 'boolean', 'string']` is the `string` one. A select over such a list is the type of its one non-null type, or a `string` when it names several, as `SchemaField` renders it through `StringField` whatever the widget. Otherwise it is the type `getSchemaType()` resolves. `SchemaField` renders the field of that type, and `getDisplayLabel()`, `getDefaultFormState()` and `FallbackField`'s type selector follow it, so the label, the defaults and the selected type of a field are those of the field on screen.
+Gets the type of the field `SchemaField` renders a schema with its `ui:widget` by. For a `type` list naming several non-null types, that is the type [getWidgetType()](#getwidgettype) picks for a named widget, so a `textarea` on a `['null', 'boolean', 'string']` is the `string` one. A `format` picks no other type's field, as it constrains only the list's string member, so an `email` on a `['number', 'string']` stays a `number`. A select over such a list is the type [getSelectFieldType()](#getselectfieldtype) gives its `type` list, as `SchemaField` renders it through that field whatever the widget. Otherwise it is the type `getSchemaType()` resolves. `SchemaField` renders the field of that type, and `getDisplayLabel()`, `getDefaultFormState()` and `FallbackField`'s type selector follow it, so the label, the defaults and the selected type of a field are those of the field on screen.
 
 #### Parameters
 
@@ -1027,6 +1027,21 @@ Any other value, an `undefined` one included, and a schema naming a single type,
 #### Returns
 
 - string | undefined: The listed type `value` has, otherwise the type of the schema
+
+### getSelectFieldType()
+
+Gets the type of the field that renders a select over values of the given `types`: the one non-null type JSON Schema defines that it names, or a `string` when it names several or none.
+A repeated or unrecognized name is no second type, so a select over an `['integer', 'foo']` is the `integer` that `getSchemaType()` resolves it to.
+Mixed types can't share a typed field (`NumberField` would cast a string option to a number), and an all-`null` select would reach `NullField`, which renders nothing, while `StringField`'s select maps each option back to its original constant, so a `string` can represent any of them.
+`SchemaField` and [getFieldTypeForWidget()](#getfieldtypeforwidget) read a select's type with it.
+
+#### Parameters
+
+- types: readonly string[] - The `type` list of a select, or the distinct `guessType()` results of its constants
+
+#### Returns
+
+- string: The type of the field that renders the select
 
 ### getStaticItemsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1474,6 +1489,19 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 
 - boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
 
+### isSchemaObject&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Narrows a schema definition, which the JSON Schema types also allow to be a boolean, and which can be absent, to the schema type the callers walk.
+A boolean or missing subschema describes no value of its own, so it has nothing to walk into: `true` allows anything and `false` allows nothing.
+
+#### Parameters
+
+- schemaDef: unknown - The schema definition to check
+
+#### Returns
+
+- boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
+
 ### isRootSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
@@ -1845,7 +1873,7 @@ An app that swaps schemas at runtime needs it for the same reason the playground
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
-The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it, or `text` otherwise.
+The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it under that name or as an alias of the type the schema resolves to, or `text` otherwise.
 
 #### Parameters
 

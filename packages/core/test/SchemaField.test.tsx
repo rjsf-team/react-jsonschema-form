@@ -186,16 +186,29 @@ describe('SchemaField', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
     });
 
-    it('should keep the text typed into the widget a string format picks by default', async () => {
-      const { onChange } = createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['null', 'integer', 'string'], format: 'email' } } },
+    // A `format` constrains only the list's string member, so unlike a `ui:widget` it doesn't make the number the list
+    // resolves to unreachable
+    it.each<[RJSFSchema['type']]>([[['null', 'integer', 'string']], [['number', 'string']]])(
+      'should keep the number field of a %j list whose format names a widget only its string type has',
+      async (type) => {
+        const { onChange } = createFormComponent({
+          schema: { type: 'object', properties: { val: { type, format: 'email' } } },
+        });
+        const input = screen.getByRole('textbox');
+        expect(input).toHaveAttribute('type', 'text');
+
+        await user.type(input, '42');
+
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 42 } }), 'root_val');
+      },
+    );
+
+    it('should render the widget a format names for a list resolving to string', () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'string', 'number'], format: 'email' } } },
       });
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('type', 'email');
 
-      await user.type(input, '007');
-
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+      expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email');
     });
 
     it('should still convert what is typed into a number for a number-first list with no string widget', async () => {

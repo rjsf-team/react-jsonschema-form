@@ -621,6 +621,43 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      // The list resolves to its container type, but the value it holds is of another type it names, which the
+      // container's defaults would be spread into or put in place of
+      describe('a type list holding a value of another listed type', () => {
+        it('spreads no array defaults into an object held by a list resolving to array', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              v: { type: ['null', 'array', 'object'], items: { type: 'string', default: 'q' }, minItems: 2 },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, rootSchema: schema, formData: { v: { a: 'x' } } },
+            ),
+          ).toEqual({ v: { a: 'x' } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['object', { type: ['null', 'object', 'string'], properties: { a: { type: 'string', default: 'x' } } }],
+          ['object', { type: ['null', 'object'], properties: { a: { type: 'string', default: 'x' } } }],
+          ['array', { type: ['null', 'array', 'string'], items: { type: 'string' }, minItems: 1 }],
+        ])('keeps a null held by a list resolving to %s', (_, schema) => {
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: null }),
+          ).toBe(null);
+        });
+
+        it('fills in the defaults when the list holds no value yet', () => {
+          const schema: RJSFSchema = {
+            type: ['null', 'object', 'string'],
+            properties: { a: { type: 'string', default: 'x' } },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ a: 'x' });
+        });
+      });
+
       describe('required boolean properties and the requiredBooleanDefault flag', () => {
         const defaultFormStateBehavior: DefaultFormStateBehavior = {
           requiredBooleanDefault: 'skip',

@@ -850,15 +850,16 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
     });
 
-    it('starts a union with no data on the type the widget its format names renders', () => {
+    // A `format` constrains only the list's string member, so it moves neither the selection nor the field to it
+    it('starts a union with no data on its first type whatever widget its format names', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['number', 'string'], format: 'email' } } },
         useFallbackUiForUnsupportedType: true,
       });
 
       const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
-      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'email');
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('number');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
     });
 
     it('renders the option content of a union listing null first alongside a oneOf', () => {

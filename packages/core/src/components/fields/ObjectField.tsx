@@ -1,6 +1,7 @@
 import type { FocusEvent } from 'react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type {
+  EnumOptionsType,
   ErrorSchema,
   FieldPath,
   FieldProps,
@@ -25,7 +26,10 @@ import {
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  isConstantSelect,
   isFormDataAvailable,
+  isSchemaObject,
+  optionsList,
   orderProperties,
   shouldRenderOptionalField,
   toFieldPath,
@@ -385,7 +389,9 @@ export default function ObjectField<
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const newFormData = { ...formData } as T;
+    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
+    // to keep, and a string spread into an object would turn each of its characters into one
+    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
     // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
     // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
     // with none left means a custom template is offering it anyway, and adding no property beats adding one the
@@ -402,7 +408,8 @@ export default function ObjectField<
       let type: ReturnType<typeof getFieldTypeForWidget> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
-      if (isObject(schema.additionalProperties)) {
+      let firstOption: EnumOptionsType<S> | undefined;
+      if (isSchemaObject<S>(schema.additionalProperties)) {
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
@@ -415,10 +422,15 @@ export default function ObjectField<
         // The type of the field that renders the new value, which for a `type` list follows its widget, so a
         // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
         // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in
-        const { widget } = getUiOptions<T, S, F>(
-          resolveUiSchema<T, S, F>(schema.additionalProperties as S, apUiSchema, registry),
-          globalUiOptions,
-        );
+        const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, registry);
+        const { widget } = getUiOptions<T, S, F>(resolvedApUiSchema, globalUiOptions);
+        // A select over a `type` list renders through the field of a `string` when it names several types, whose
+        // `'New Value'` none of its options is, and the zero value of any one type need not be an option either, so
+        // it starts on the option it shows first
+        firstOption =
+          Array.isArray(apSchema.type) && isConstantSelect<S>(apSchema)
+            ? optionsList<T, S, F>(apSchema, resolvedApUiSchema)?.[0]
+            : undefined;
         type = getFieldTypeForWidget(apSchema, widget);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
@@ -428,7 +440,7 @@ export default function ObjectField<
         // ui:initialValue/ui:emptyValue on uiSchema.additionalProperties apply the same way they do when Form first
         // mounts with that key already present in formData.
         defaultValue = schemaUtils.getDefaultFormState(
-          apSchema as S,
+          apSchema,
           defaultValue as T,
           undefined,
           undefined,
@@ -437,12 +449,11 @@ export default function ObjectField<
         ) as RJSFSchema['default'];
       }
 
-      const newValue = constValue !== undefined ? constValue : defaultValue;
-      setByPath(
-        newFormData,
-        newKey,
-        newValue === undefined ? getDefaultValue<T, S, F>(translateString, type) : newValue,
-      );
+      let newValue: unknown = constValue !== undefined ? constValue : defaultValue;
+      if (newValue === undefined) {
+        newValue = firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
+      }
+      setByPath(newFormData, newKey, newValue);
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {

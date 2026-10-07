@@ -45,19 +45,18 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
 }
 
 /**
- * Get the type the selection starts on when the form data gives nothing to match: the type of the field its widget, or
- * the widget its `format` names, renders, and otherwise the first type the schema lists that can hold a value. Starting
- * on `null` would have `NullField` write a `null` into the form data for a field the user has not touched. A schema
- * that offers nothing but `null` starts there all the same, since it is the only value that schema allows.
+ * Get the type the selection starts on when the form data gives nothing to match: the type of the field its widget
+ * renders, and otherwise the first type the schema lists that can hold a value. Starting on `null` would have
+ * `NullField` write a `null` into the form data for a field the user has not touched. A schema that offers nothing but
+ * `null` starts there all the same, since it is the only value that schema allows.
  * @param types - The types the selection offers.
  * @param [widget] - The `ui:widget` for the field, if any
- * @param [format] - The `format` of the schema, which picks the widget when there is no `ui:widget`
  */
-function getDefaultType(types: JSONSchema7TypeName[], widget?: unknown, format?: string): JSONSchema7TypeName {
+function getDefaultType(types: JSONSchema7TypeName[], widget?: unknown): JSONSchema7TypeName {
   // The rule every other reader of a type list resolves it by, so the selection starts on the field `SchemaField`
   // renders, and on the type `getDefaultFormState()` fills the value in as: a `textarea` on a
   // `['null', 'boolean', 'string']` starts on `string` rather than on a checkbox nothing seeded with `false`
-  const type = getFieldTypeForWidget({ type: types, format }, widget);
+  const type = getFieldTypeForWidget({ type: types }, widget);
   return types.find((aType) => aType === type) ?? types[0];
 }
 
@@ -65,19 +64,17 @@ function getDefaultType(types: JSONSchema7TypeName[], widget?: unknown, format?:
  * Get the schema for the type selection component.
  * @param types - The types the selection offers.
  * @param title - The translated title for the type selection schema.
- * @param widget - The `ui:widget` for the field, if any
- * @param [format] - The `format` of the schema, which picks the widget when there is no `ui:widget`
+ * @param defaultType - The type the selection starts on when the form data gives nothing to match.
  */
 function getFallbackTypeSelectionSchema(
   types: JSONSchema7TypeName[],
   title: string,
-  widget: unknown,
-  format?: string,
+  defaultType: JSONSchema7TypeName,
 ): RJSFSchema {
   return {
     type: 'string',
     enum: types,
-    default: getDefaultType(types, widget, format),
+    default: defaultType,
     title,
   };
 }
@@ -101,17 +98,15 @@ function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeN
  * schema does not allow falls back to the type the selection defaults to, as does having no data to go on at all.
  * @param formData - The form data being rendered.
  * @param types - The types the selection offers.
- * @param [widget] - The `ui:widget` for the field, if any
- * @param [format] - The `format` of the schema, which picks the widget when there is no `ui:widget`
+ * @param defaultType - The type the selection starts on when the form data gives nothing to match.
  */
 function getInitialType(
   formData: unknown,
   types: JSONSchema7TypeName[],
-  widget?: unknown,
-  format?: string,
+  defaultType: JSONSchema7TypeName,
 ): JSONSchema7TypeName {
   if (formData === undefined) {
-    return getDefaultType(types, widget, format);
+    return defaultType;
   }
   // Not `getSchemaTypeForValue()`, which answers data of a type the list doesn't name with the list's own resolved type
   // rather than leaving it to the widget, so a textarea's selection would start on a checkbox for an object it was handed
@@ -122,7 +117,7 @@ function getInitialType(
   if (dataType === 'number' && types.includes('integer')) {
     return 'integer';
   }
-  return getDefaultType(types, widget, format);
+  return defaultType;
 }
 
 /**
@@ -352,8 +347,9 @@ function FallbackUiField<
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
+  const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
-    getInitialType(formData, types, uiOptions.widget, schema.format),
+    getInitialType(formData, types, defaultType),
   );
   // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
   // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
@@ -380,7 +376,7 @@ function FallbackUiField<
   const isSelectionUsable =
     types.includes(selectedType) &&
     (isEmptyValue || isClearedInput || canShowDataAsType(selectedType, guessType(formData)));
-  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, uiOptions.widget, schema.format);
+  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType);
   if (type !== selectedType) {
     // Storing the type the selector is showing keeps a selection the user can no longer see from coming back: with the
     // old one still in state, clearing the value would swap the field out for the type the data used to have. React
@@ -389,9 +385,8 @@ function FallbackUiField<
   }
 
   const typesOptionSchema = useMemo(
-    () =>
-      getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type), uiOptions.widget, schema.format),
-    [types, translateString, uiOptions.widget, schema.format],
+    () => getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type), defaultType),
+    [types, translateString, defaultType],
   );
   // The selector is a control of its own within the field, so the `ui:options.label` that turns the field's own label
   // off turns the selector's off with it. Nothing else in the caller's `uiSchema` describes the selector — the rest of

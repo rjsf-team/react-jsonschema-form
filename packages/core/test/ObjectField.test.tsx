@@ -1666,10 +1666,43 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
 
-    it('should add a string for the date widget a format names on a number-first additionalProperties type list', async () => {
+    // A `format` constrains only the list's string member, so it leaves the value to the number field
+    it('should add a number for a number-first additionalProperties type list whose format names a date', async () => {
       const { onChange } = createFormComponent({
         schema: { ...schema, additionalProperties: { type: ['number', 'string'], format: 'date' } },
         initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+    });
+
+    // `StringField` renders a select over several types, but neither its `'New Value'` nor the zero value of a type
+    // need be one of the options
+    it.each<[RJSFSchema, unknown]>([
+      [{ type: ['boolean', 'string'], enum: [false, true, 'auto'] }, false],
+      [{ type: ['number', 'string'], enum: [0, 1, 'auto'] }, 0],
+      [{ type: ['null'], enum: [null] }, null],
+      [{ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, null],
+      [{ type: ['number', 'string'], enum: ['auto', 1] }, 'auto'],
+      [{ type: ['number', 'string'], enum: [5, 'auto'] }, 5],
+      [{ type: ['integer', 'null'], enum: [3, null] }, 3],
+    ])('should add the first option of a select over %j', async (apSchema, expected) => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: apSchema },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+    });
+
+    it('should start a new object rather than spread a string held by a type list naming object', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: ['null', 'object', 'string'], additionalProperties: { type: 'string' } },
+        formData: 'abc',
       });
 
       await user.click(screen.getByRole('button', { name: 'Add' }));

@@ -25,6 +25,7 @@ import {
   getFieldTypeForWidget,
   getSchemaOwnTypes,
   getSchemaType,
+  getSelectFieldType,
   getTemplates,
   getUiOptions,
   getUnionTypes,
@@ -68,19 +69,6 @@ const COMPONENT_TYPES: Record<string, string> = {
   null: 'NullField',
 };
 
-/** Reduces the `guessType()` results of a constant option list to the single `type` that describes all of them.
- * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
- * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
- * `string` can represent any of them.
- *
- * @param types - The distinct `guessType()` results of the constants in one option list
- * @returns - The `type` to give a select over those constants
- */
-function selectTypeForConstants(types: string[]): string {
-  const nonNullTypes = types.filter((type) => type !== 'null');
-  return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
-}
-
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
 interface SelectSchemaInfo<S extends StrictRJSFSchema> {
   /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
@@ -113,7 +101,7 @@ function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedS
   if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
     // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
     const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
-    schema = { ...retrievedSchema, type: selectTypeForConstants(types) };
+    schema = { ...retrievedSchema, type: getSelectFieldType(types) };
   }
   return {
     schema,
@@ -158,7 +146,7 @@ function inferSelectWidget<
     (options.length > 1 &&
       (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
         options.some((option) => toConstant<S>(option) === null) ||
-        (Array.isArray(schema.type) && selectTypeForConstants(schema.type) !== 'boolean')));
+        (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
   return needsSelect ? 'select' : undefined;
 }
 

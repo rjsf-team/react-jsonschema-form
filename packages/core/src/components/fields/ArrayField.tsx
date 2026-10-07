@@ -720,7 +720,8 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     handleRemoveItem,
     handleReorderItems,
   } = props;
-  let { formData: items = [] } = props;
+  // A `type` list naming `array` alongside another type can hold a `null` or a value of that other type here
+  let items: T[] = Array.isArray(props.formData) ? props.formData : [];
   const fieldTitle = schema.title || title || name;
   const { fields, formContext, globalUiOptions } = registry;
   const uiOptions = useMemo(() => getUiOptions<T[], S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);

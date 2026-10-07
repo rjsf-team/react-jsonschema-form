@@ -299,9 +299,14 @@ describe('getFieldTypeForWidget()', () => {
     [{ type: ['number', 'boolean'] }, TestWidget, 'number'],
     [{ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, 'checkbox', 'string'],
     [{ type: ['null', 'boolean'], enum: [null, true] }, undefined, 'boolean'],
-    [{ type: ['number', 'string'], format: 'date' }, undefined, 'string'],
-    [{ type: ['number', 'string'], format: 'date' }, 'updown', 'number'],
-    [{ type: ['boolean', 'string'], format: 'date' }, undefined, 'boolean'],
+    [{ type: ['number', 'string'], format: 'date' }, undefined, 'number'],
+    [{ type: ['number', 'string'], format: 'date' }, 'date', 'string'],
+    [{ type: ['string', 'null'] }, 'updown', 'string'],
+    [{ type: ['null', 'string'], enum: [null, 'a'] }, undefined, 'string'],
+    [{ type: ['null'], enum: [null] }, undefined, 'string'],
+    [{ type: ['null'] }, 'textarea', 'null'],
+    [{ type: ['object', 'array'], enum: [{}, []] }, undefined, 'string'],
+    [{ type: ['integer', 'foo'], enum: [1, 2] } as unknown as RJSFSchema, undefined, 'integer'],
     [{}, 'text', undefined],
   ])('should return the type of the field rendering %j with the widget %s', (schema, widget, expected) => {
     expect(getFieldTypeForWidget(schema, widget)).toBe(expected);
