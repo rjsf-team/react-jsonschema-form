@@ -114,6 +114,25 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         expect(scored).not.toHaveProperty('allOf');
       }
     });
+    it('derives an $id for an option whose own ends in an empty fragment', () => {
+      const validated: RJSFSchema[] = [];
+      const recordingValidator: ValidatorType = {
+        isValid: (schema: RJSFSchema) => {
+          validated.push(schema);
+          return false;
+        },
+        rawValidation: () => ({}),
+        validateFormData: () => ({ errors: [], errorSchema: {} }),
+      };
+      const options: RJSFSchema[] = [{ $id: 'http://e.com/a.json#', type: 'object', properties: { a: {} } }];
+      getFirstMatchingOption({ validator: recordingValidator }, { a: 'x' }, options, rootSchema);
+      // Appending to the fragment would put the query inside it, and the 2019-09 and 2020-12 meta-schemas require an
+      // `$id` to match `^[^#]*#?$`, so every variant of such an option failed to compile
+      const [wrappedOption] = validated[0].allOf as RJSFSchema[];
+      const derived = wrappedOption.$id;
+      expect(derived).toMatch(/^http:\/\/e\.com\/a\.json\?rjsf=/);
+      expect(derived).not.toContain('#');
+    });
     it('derives the schema an option is scored by once, so re-scoring it does not hash it again', () => {
       const validated: RJSFSchema[] = [];
       const recordingValidator: ValidatorType = {

@@ -12,9 +12,11 @@
 
 import type { RJSFSchema } from '@rjsf/utils';
 import { getFirstMatchingOption } from '@rjsf/utils';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import validator, { createPrecompiledValidator } from '../src/index.ts';
+import validator, { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 import { evalValidatorCode } from './harness/compileSuperSchema.ts';
 
 const RECURSIVE_OPTION: RJSFSchema = {
@@ -61,6 +63,27 @@ describe('scoring an option that references itself', () => {
     const matched = getFirstMatchingOption({ validator }, { anyKey: 'x' }, options, schema);
     spy.mockRestore();
     expect(matched).toBe(0);
+    expect(warnings).toEqual([]);
+  });
+
+  it.each([
+    ['the 2020-12 dialect', Ajv2020],
+    ['the 2019-09 dialect', Ajv2019],
+  ])('matches an option whose $id ends in an empty fragment under %s', (_dialect, AjvClass) => {
+    const options: RJSFSchema[] = [
+      { $id: 'http://e.com/a.json#', type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+      { $id: 'http://e.com/b.json#', type: 'object', properties: { b: { type: 'number' } }, required: ['b'] },
+    ];
+    const schema: RJSFSchema = { type: 'object', oneOf: options };
+    // Both drafts allow an empty trailing fragment and require an `$id` to match `^[^#]*#?$`, so a suffix appended
+    // inside the fragment made ajv refuse to compile every variant and the match fell back to the first option
+    const warnings: string[] = [];
+    const spy = vi.spyOn(console, 'warn').mockImplementation((...args: unknown[]) => {
+      warnings.push(String(args[0]));
+    });
+    const matched = getFirstMatchingOption({ validator: customizeValidator({ AjvClass }) }, { b: 1 }, options, schema);
+    spy.mockRestore();
+    expect(matched).toBe(1);
     expect(warnings).toEqual([]);
   });
 

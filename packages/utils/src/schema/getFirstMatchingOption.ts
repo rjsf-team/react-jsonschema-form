@@ -41,8 +41,12 @@ function variantId(id: unknown, content: object): string {
   // to, so deriving from a schema that is itself derived -- scoring an option whose `additionalProperties` was relaxed
   // -- stays based on the `$id` the original carried rather than stacking a suffix per derivation
   // An `$id` is typed as a string but an untyped JS caller can hand over anything, and a non-string one is reported
-  // as a validation error rather than thrown on, so it is converted rather than called into
-  const base = String(id).replace(VARIANT_ID_SUFFIX, '');
+  // as a validation error rather than thrown on, so it is converted rather than called into. An empty trailing
+  // fragment goes with the suffix it would otherwise swallow: `a.json#` would become `a.json#?rjsf=...`, putting the
+  // query inside the fragment, and the 2019-09 and 2020-12 meta-schemas require an `$id` to match `^[^#]*#?$`, so
+  // every variant of such an option failed to compile. Both drafts allow the empty fragment, and it is common in
+  // schemas carried over from draft-04
+  const base = String(id).replace(VARIANT_ID_SUFFIX, '').replace(/#$/, '');
   return `${base}?rjsf=${hashForSchema(content as RJSFSchema)}`;
 }
 
