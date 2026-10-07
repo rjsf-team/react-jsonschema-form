@@ -1,9 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
   FormContextType,
-  GlobalUISchemaOptions,
-  RegistryWidgetsType,
   RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -215,24 +213,15 @@ const HELP_UI_OPTION = 'help';
  * naming no field, which reaches here only when the `ui:globalOptions.field` it falls back to doesn't resolve to
  * another field either, so the value field would have nothing to render for it.
  * @param uiSchema - The uiSchema for the field being rendered.
- * @param valueSchema - The schema the value field renders, with its type pinned.
- * @param widgets - The widgets registered with the form.
+ * @param keepsWidget - Whether a widget implements the `ui:widget`, its own or a `ui:globalOptions` one, for the type
+ * the selector is on.
  * @param isLabelled - Whether the field around the value renders the schema's title and description.
- * @param [globalUiOptions] - The form's `ui:globalOptions`, whose `widget` reaches the value field too.
  */
 function getValueUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  uiSchema: UiSchema<T, S, F> | undefined,
-  valueSchema: S,
-  widgets: RegistryWidgetsType<T, S, F>,
-  isLabelled: boolean,
-  globalUiOptions?: GlobalUISchemaOptions,
-): UiSchema<T, S, F> {
-  const { widget } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
+>(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean, isLabelled: boolean): UiSchema<T, S, F> {
   const noUiSchema: UiSchema<T, S, F> = {};
   const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
   delete valueUiSchema[HELP_UI_KEY];
@@ -365,10 +354,14 @@ function FallbackUiField<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
-  // The widget `getValueUiSchema()` keeps or drops for the type the selection is on
+  // Whether the value field keeps its widget, the field's own or a `ui:globalOptions` one, on a given type. Checked
+  // against the schema with its type pinned, which is all of the value schema `getWidget()` reads
   const { widget: valueWidget } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const keepsWidget = (aType: JSONSchema7TypeName) =>
-    !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets);
+  const keepsWidget = useCallback(
+    (aType: JSONSchema7TypeName) =>
+      !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets),
+    [valueWidget, schema, widgets],
+  );
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
     getInitialType(formData, types, defaultType, keepsWidget),
   );
@@ -441,9 +434,10 @@ function FallbackUiField<
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),
     [schema, type, translateString, isLabelled],
   );
+  const valueKeepsWidget = useMemo(() => keepsWidget(type), [keepsWidget, type]);
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets, isLabelled, globalUiOptions),
-    [uiSchema, valueSchema, widgets, isLabelled, globalUiOptions],
+    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget, isLabelled),
+    [uiSchema, valueKeepsWidget, isLabelled],
   );
 
   const { SchemaField } = fields;
