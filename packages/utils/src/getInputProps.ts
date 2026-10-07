@@ -1,6 +1,7 @@
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUnionTypes from './getUnionTypes.ts';
+import { getWidgetType } from './getWidget.tsx';
 import rangeSpec from './rangeSpec.ts';
 import type { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types.ts';
 
@@ -107,9 +108,15 @@ export default function getInputProps<
     }
   }
 
-  // Without a `step`, a native number input treats a decimal as a step mismatch and blocks submit. Checking the resolved
-  // type covers every way of getting one: `ui:options.inputType`, a widget's `defaultType` (`updown`), or the fallback
-  if (plainNativeInput && inputProps.type === 'number' && schemaType === 'number' && inputProps.step === undefined) {
+  // Without a `step`, a native number input treats a decimal as a step mismatch and blocks submit. That covers every way
+  // of getting one: `ui:options.inputType`, a widget's `defaultType` (`updown`), or the fallback. The type is that of the
+  // field rendering a numeric widget, which for a `['string', 'number']` is `NumberField` rather than its resolved type
+  if (
+    plainNativeInput &&
+    inputProps.type === 'number' &&
+    getWidgetType(schema, 'updown') === 'number' &&
+    inputProps.step === undefined
+  ) {
     inputProps.step = 'any';
   }
 

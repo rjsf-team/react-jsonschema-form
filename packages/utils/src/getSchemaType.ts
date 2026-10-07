@@ -1,4 +1,4 @@
-import { getKnownTypes } from './getUnionTypes.ts';
+import { JSON_SCHEMA_TYPES } from './constants.ts';
 import guessType from './guessType.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -32,7 +32,9 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(s
   }
 
   if (Array.isArray(type)) {
-    return getKnownTypes<S>(schema).find((t) => t !== 'null') ?? type.find((t) => t !== 'null') ?? type[0];
+    // Searched in place rather than through `getKnownTypes()`, which builds a deduplicated copy of the list on every call
+    // of a function every field calls on every render
+    return type.find((t) => t !== 'null' && JSON_SCHEMA_TYPES.includes(t)) ?? type.find((t) => t !== 'null') ?? type[0];
   }
 
   return type;

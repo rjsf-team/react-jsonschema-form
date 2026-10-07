@@ -214,9 +214,12 @@ describe('SchemaField', () => {
         uiSchema: { val: { 'ui:widget': 'updown' } },
       });
 
-      await user.type(screen.getByRole('spinbutton'), '7');
+      const input = screen.getByRole('spinbutton');
+      await user.type(input, '7.5');
 
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7 } }), 'root_val');
+      // Without a `step="any"`, the browser would treat the decimal as a step mismatch and block the submit
+      expect(input).toHaveAttribute('step', 'any');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7.5 } }), 'root_val');
     });
 
     it('should save a boolean from a widget only the boolean type has on a number-first list', async () => {

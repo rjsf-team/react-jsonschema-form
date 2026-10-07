@@ -1666,6 +1666,35 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
     });
 
+    it('should add a string for the date widget a format names on a number-first additionalProperties type list', async () => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: ['number', 'string'], format: 'date' } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+    });
+
+    it.each<[string, RJSFSchema['type'], unknown]>([
+      ['textarea', ['null', 'number', 'string'], 'New Value'],
+      ['checkbox', ['number', 'boolean'], false],
+    ])(
+      'should add the default of the field rendering a %s on a %j additionalProperties schema',
+      async (widget, type, expected) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties: { type } },
+          uiSchema: { additionalProperties: { 'ui:widget': widget } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+      },
+    );
+
     it.each<[string, RJSFSchema]>([
       ['default', { type: ['integer', 'null'], default: null }],
       ['const', { type: ['integer', 'null'], const: null }],

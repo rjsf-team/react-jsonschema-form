@@ -4,7 +4,7 @@ import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import { getFieldTypeForWidget, getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -135,9 +135,12 @@ describe('getWidget()', () => {
     expect(getWidget(union, 'checkboxes', { CheckboxesWidget: TestWidget })).toBe(TestWidget);
   });
 
-  it.each(['toString', 'constructor'])('should find no type for the widget name %s, which no type registers', (widget) => {
-    expect(getWidgetType({ type: ['null', 'number', 'string'] }, widget)).toBeUndefined();
-  });
+  it.each(['toString', 'constructor'])(
+    'should find no type for the widget name %s, which no type registers',
+    (widget) => {
+      expect(getWidgetType({ type: ['null', 'number', 'string'] }, widget)).toBeUndefined();
+    },
+  );
 
   it('should fail if no type a type list names has such a widget', () => {
     const union: RJSFSchema = { type: ['null', 'number', 'boolean'] };
@@ -256,17 +259,17 @@ describe('getWidgetType()', () => {
     expect(getWidgetType({ type: ['null', 'string', 'number'] }, 'radio')).toBe('string');
   });
 
-  it.each([
+  it.each<[string, RJSFSchema['type'], string]>([
     ['textarea', ['null', 'number', 'string'], 'string'],
     ['TextareaWidget', ['null', 'number', 'string'], 'string'],
     ['updown', ['string', 'number'], 'number'],
     ['checkbox', ['number', 'boolean'], 'boolean'],
     ['CheckboxWidget', ['integer', 'boolean'], 'boolean'],
   ])('should return the listed type that has the widget %s on %j', (widget, type, expected) => {
-    expect(getWidgetType({ type } as RJSFSchema, widget)).toBe(expected);
+    expect(getWidgetType({ type }, widget)).toBe(expected);
   });
 
-  it.each([
+  it.each<[string, RJSFSchema]>([
     ['textarea', { type: ['null', 'object', 'array'] }],
     ['textarea', { type: ['null', 'object', 'string'] }],
     ['textarea', { type: ['null', 'array', 'string'], items: { type: 'string' } }],
@@ -274,18 +277,34 @@ describe('getWidgetType()', () => {
     ['radio', { type: ['array', 'null'], items: { enum: ['a', 'b'] }, uniqueItems: true }],
     ['textarea', { type: ['null', 'number', 'boolean'] }],
     ['MyWidget', { type: ['null', 'number', 'string'] }],
-    ['text', { type: 'foo' }],
+    ['text', { type: 'foo' } as unknown as RJSFSchema],
     ['text', {}],
-  ] as [string, RJSFSchema][])(
-    'should return undefined when no type the schema allows has the widget %s: %j',
-    (widget, schema) => {
-      expect(getWidgetType(schema, widget)).toBeUndefined();
-    },
-  );
+  ])('should return undefined when no type the schema allows has the widget %s: %j', (widget, schema) => {
+    expect(getWidgetType(schema, widget)).toBeUndefined();
+  });
 
   it('should treat an array select over whole array constants as a whole-value select', () => {
     expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'radio')).toBe('array');
     expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'checkboxes')).toBeUndefined();
+  });
+});
+
+describe('getFieldTypeForWidget()', () => {
+  it.each<[RJSFSchema, unknown, string | undefined]>([
+    [{ type: 'number' }, 'textarea', 'number'],
+    [{ type: ['null', 'number', 'string'] }, 'textarea', 'string'],
+    [{ type: ['null', 'number', 'string'] }, undefined, 'number'],
+    [{ type: ['string', 'boolean'] }, 'toggle', 'string'],
+    [{ type: ['number', 'boolean'] }, 'checkbox', 'boolean'],
+    [{ type: ['number', 'boolean'] }, TestWidget, 'number'],
+    [{ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, 'checkbox', 'string'],
+    [{ type: ['null', 'boolean'], enum: [null, true] }, undefined, 'boolean'],
+    [{ type: ['number', 'string'], format: 'date' }, undefined, 'string'],
+    [{ type: ['number', 'string'], format: 'date' }, 'updown', 'number'],
+    [{ type: ['boolean', 'string'], format: 'date' }, undefined, 'boolean'],
+    [{}, 'text', undefined],
+  ])('should return the type of the field rendering %j with the widget %s', (schema, widget, expected) => {
+    expect(getFieldTypeForWidget(schema, widget)).toBe(expected);
   });
 });
 

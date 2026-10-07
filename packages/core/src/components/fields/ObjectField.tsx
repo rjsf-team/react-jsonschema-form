@@ -21,7 +21,7 @@ import {
   ANY_OF_KEY,
   getFreePropertyNames,
   getMatchingPatternProperties,
-  getSchemaType,
+  getFieldTypeForWidget,
   getTemplates,
   getPropertySchema,
   getUiOptions,
@@ -398,7 +398,7 @@ export default function ObjectField<
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
-      let type: ReturnType<typeof getSchemaType> = undefined;
+      let type: ReturnType<typeof getFieldTypeForWidget> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
       if (isObject(schema.additionalProperties)) {
@@ -410,7 +410,10 @@ export default function ObjectField<
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           constValue = apSchema.const;
         }
-        type = getSchemaType(apSchema);
+        const apUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
+        // The type of the field that renders the new value, which for a `type` list follows its widget, so a
+        // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea
+        type = getFieldTypeForWidget(apSchema, getUiOptions<T, S, F>(apUiSchema, globalUiOptions).widget);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -423,7 +426,7 @@ export default function ObjectField<
           defaultValue as T,
           undefined,
           undefined,
-          getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+          apUiSchema,
           uiSchemaDefinitions,
         ) as RJSFSchema['default'];
       }
@@ -453,6 +456,7 @@ export default function ObjectField<
     resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
+    globalUiOptions,
   ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That

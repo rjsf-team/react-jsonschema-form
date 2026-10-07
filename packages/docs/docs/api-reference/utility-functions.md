@@ -804,6 +804,19 @@ That spelling is this function's to change, in one place for every field that ca
 
 - string: The space-separated class list for the field
 
+### getFieldTypeForWidget&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Gets the type of the field `SchemaField` renders a schema with its `ui:widget` by. For a `type` list naming several non-null types, that is the type [getWidgetType()](#getwidgettype) picks for a named widget, or for the widget its `format` names when it has no `ui:widget`, so a `textarea` on a `['null', 'boolean', 'string']` is the `string` one. A select over such a list is the type of its one non-null type, or a `string` when it names several, as `SchemaField` renders it through `StringField` whatever the widget. Otherwise it is the type `getSchemaType()` resolves. `SchemaField` renders the field of that type, and `getDisplayLabel()`, `getDefaultFormState()` and `FallbackField`'s type selector follow it, so the label, the defaults and the selected type of a field are those of the field on screen.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- widget: unknown - The `ui:widget` for the field, if any
+
+#### Returns
+
+- string | undefined: The type of the field that renders the widget
+
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
@@ -1158,7 +1171,7 @@ object constants, or one whose `type` is `null`, renders with. A schema whose `t
 
 ### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since the form data `getDefaultFormState()` fills in for it is of that type. `getWidget()` looks a widget alias up by the type it returns, and `SchemaField` and `getDisplayLabel()` follow the field of that type.
+Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since the form data `getDefaultFormState()` fills in for it is of that type. `getWidget()` looks a widget alias up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
 
 #### Parameters
 

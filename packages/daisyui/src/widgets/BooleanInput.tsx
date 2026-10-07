@@ -4,9 +4,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   descriptionId,
-  getKnownTypes,
-  getSchemaType,
+  getFieldTypeForWidget,
   getTemplates,
+  getUiOptions,
   schemaRequiresTrueValue,
 } from '@rjsf/utils';
 
@@ -57,11 +57,12 @@ export default function BooleanInput<
   const description = options.description || schema.description;
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
-  // than a field the user has already filled in, as is a `type` list naming `boolean`, which `BooleanField` renders a
-  // checkbox for and seeds with the same `false`. On any other schema an unchecked box answers nothing, and this
-  // widget's own label is the only one rendered, so the marker has nowhere else to come from
-  const acceptsFalse = getSchemaType(schema) === 'boolean' || getKnownTypes(schema).includes('boolean');
-  const marksRequired = required && (trueValueRequired || !acceptsFalse);
+  // than a field the user has already filled in. That is any field `BooleanField` renders, which seeds it with that
+  // `false`, including a `type` list whose widget it renders. On any other field an unchecked box answers nothing, and
+  // this widget's own label is the only one rendered, so the marker has nowhere else to come from
+  const { widget } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const isBooleanField = getFieldTypeForWidget<S>(schema, widget) === 'boolean';
+  const marksRequired = required && (trueValueRequired || !isBooleanField);
 
   /** Handle change events
    *

@@ -92,13 +92,19 @@ const widgetMap = {
  * type it resolves to has none by that name */
 const WIDGET_FIELD_TYPES = ['string', 'number', 'integer', 'boolean'];
 
+/** The types whose field renders through `StringField`, which falls back to the widget a `format` names */
+const FORMAT_FIELD_TYPES = ['string', 'number', 'integer'];
+
+/** Whether `type` is a type `widgetMap` has aliases for */
+function isWidgetMapType(type: string): type is keyof typeof widgetMap {
+  return Object.hasOwn(widgetMap, type);
+}
+
 /** Returns the widget aliases of `type` for `schema`, which for a select over whole array constants are those of a
  * whole-value select rather than of a list
  */
-function getWidgetsForType(schema: RJSFSchema, type: string): Record<string, string> {
-  return type === 'array' && isWholeValueSelect(schema)
-    ? wholeValueSelectWidgetMap
-    : widgetMap[type as keyof typeof widgetMap];
+function getWidgetsForType(schema: RJSFSchema, type: keyof typeof widgetMap): Record<string, string> {
+  return type === 'array' && isWholeValueSelect(schema) ? wholeValueSelectWidgetMap : widgetMap[type];
 }
 
 /** Finds the type whose field renders `widget` for `schema`, along with that type's widget aliases, so `getWidget()`
@@ -114,7 +120,7 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   widget: string,
   type: string | undefined,
 ): { type: string; widgets: Record<string, string> } | undefined {
-  if (type === undefined || !Object.hasOwn(widgetMap, type)) {
+  if (type === undefined || !isWidgetMapType(type)) {
     return undefined;
   }
   const hasWidget = (widgets: Record<string, string>) =>
@@ -150,12 +156,13 @@ export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several
- * non-null types is the one `getWidgetType()` picks for a named widget, and otherwise the type `getSchemaType()`
- * resolves. Readers of a field's type that are handed its `ui:widget` follow it, so the label and the defaults of a
- * `textarea` on a `['null', 'boolean', 'string']` are a string's rather than a boolean's. A select over such a list is
- * the type of its one non-null type, or a `string` when it names several, as `SchemaField` renders it through
- * `StringField` whatever the widget, so an `enum` of `[null, true, 'a']` on a `['null', 'boolean', 'string']` keeps its
- * label and isn't seeded with a `false` it doesn't offer.
+ * non-null types is the one `getWidgetType()` picks for a named widget, or for the widget its `format` names when it
+ * has no `ui:widget`, and otherwise the type `getSchemaType()` resolves. Readers of a field's type that are handed its
+ * `ui:widget` follow it, so the label and the defaults of a `textarea` on a `['null', 'boolean', 'string']` are a
+ * string's rather than a boolean's. A select over such a list is the type of its one non-null type, or a `string` when
+ * it names several, as `SchemaField` renders it through `StringField` whatever the widget, so an `enum` of
+ * `[null, true, 'a']` on a `['null', 'boolean', 'string']` keeps its label and isn't seeded with a `false` it doesn't
+ * offer.
  *
  * @param schema - The schema for the field
  * @param widget - The `ui:widget` for the field, if any
@@ -165,12 +172,19 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   widget: unknown,
 ): string | undefined {
-  if (Array.isArray(schema.type) && isConstantSelect<S>(schema, true)) {
+  // Only a `type` list names another type whose field could render the widget
+  if (!Array.isArray(schema.type)) {
+    return getSchemaType<S>(schema);
+  }
+  if (isConstantSelect<S>(schema, true)) {
     const nonNullTypes = schema.type.filter((aType) => aType !== 'null');
     return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
   }
   const type = getSchemaType<S>(schema);
-  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type)?.type : undefined) ?? type;
+  // With no `ui:widget`, `StringField` falls back to the widget a `format` names, so a `date` on a
+  // `['number', 'string']` renders `StringField` just as a `ui:widget` of `date` would
+  const widgetName = widget ?? (type !== undefined && FORMAT_FIELD_TYPES.includes(type) ? schema.format : undefined);
+  return (typeof widgetName === 'string' ? findWidgetType<S>(schema, widgetName, type)?.type : undefined) ?? type;
 }
 
 /** The registry key a `boolean` resolves to when nothing names a widget for it, which is the widget that renders the
@@ -226,7 +240,7 @@ export default function getWidget<
   }
 
   if (type !== undefined) {
-    if (!Object.hasOwn(widgetMap, type)) {
+    if (!isWidgetMapType(type)) {
       throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 

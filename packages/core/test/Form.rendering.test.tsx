@@ -820,6 +820,47 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       }
     });
 
+    it('starts a union with no data on the type its ui:widget renders', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['val'],
+          properties: { val: { type: ['null', 'boolean', 'string'] } },
+        },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The defaults follow the `textarea` to the `string` type and seed no `false`, so a `boolean` selection would show
+      // an unchecked box holding no value
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
+    });
+
+    it('starts a union holding data of a type it does not list on the type its ui:widget renders', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        formData: { val: 5 },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+    });
+
+    it('starts a union with no data on the type the widget its format names renders', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'string'], format: 'email' } } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'email');
+    });
+
     it('renders the option content of a union listing null first alongside a oneOf', () => {
       const { node } = createFormComponent({
         schema: {

@@ -82,6 +82,30 @@ describe('CheckboxWidget', () => {
     expect(screen.queryByText('*')).not.toBeInTheDocument();
   });
 
+  // `toggle` is a registered name rather than an alias of the `boolean` type, so `StringField` renders it and nothing
+  // seeds the value with `false`: submitting it untouched fails the `required` check, which the marker has to announce
+  test('marks a required toggle on a type list whose string field renders it', async () => {
+    const onError = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: ['string', 'boolean'], title: 'Agree' } },
+        }}
+        uiSchema={{ agree: { 'ui:widget': 'toggle' } }}
+        validator={validator}
+        onError={onError}
+      />,
+    );
+
+    expect(screen.getByText('*')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).toHaveBeenCalled();
+  });
+
   // The description sits above the input rather than inside its label, and the errors below it, so nothing associates
   // either with the control unless the input points at them
   test('is described by its own description, errors and help', () => {

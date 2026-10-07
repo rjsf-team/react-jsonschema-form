@@ -61,7 +61,7 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { getWidgetType, resolveWidget } from './getWidget.tsx';
+import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
@@ -212,6 +212,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
+  getFieldTypeForWidget,
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
