@@ -2383,6 +2383,45 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           other: { maxLength: 7, [RJSF_REF_KEY]: '#/definitions/constrained' },
         });
       });
+      it('merges a pattern into a boolean property, which carries no reference of its own', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: true, bb: false },
+          patternProperties: { '^a': { minLength: 3 } },
+        };
+        // JSON Schema allows a boolean wherever a schema goes, so the key a pattern matches may hold one: `true`
+        // constrains nothing and leaves the pattern's constraint, and the unmatched `false` is left as it stands
+        expect(retrieveSchema({ validator: testValidator }, schema, { definitions: {} }, {}).properties).toEqual({
+          aa: { minLength: 3 },
+          bb: false,
+        });
+      });
+      it('keeps the properties of a schema a key refers back to when a pattern also matches that key', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+              patternProperties: { '^child$': { properties: { extra: { type: 'string' } } } },
+            },
+          },
+          $ref: '#/definitions/node',
+        };
+        const root = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {});
+        // The merge of the recursive key is left undone rather than resolved, since resolving it would stop at the
+        // literal `$ref` and a later shallow spread would let the pattern's `properties` replace the node's own
+        const child = root.properties!.child as RJSFSchema;
+        const resolvedChild = retrieveSchema({ validator: testValidator }, child, rootSchema, {});
+        expect(Object.keys(resolvedChild.properties!).sort()).toEqual(['child', 'extra', 'name']);
+        // and the level below it resolves the same way rather than terminating by losing the recursion
+        const grandchild = retrieveSchema(
+          { validator: testValidator },
+          resolvedChild.properties!.child as RJSFSchema,
+          rootSchema,
+          {},
+        );
+        expect(Object.keys(grandchild.properties!).sort()).toEqual(['child', 'extra', 'name']);
+      });
     });
     describe('stubExistingAdditionalProperties()', () => {
       it('deals with undefined formData', () => {

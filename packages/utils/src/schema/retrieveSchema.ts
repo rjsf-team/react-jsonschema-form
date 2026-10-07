@@ -924,9 +924,28 @@ export function retrieveSchemaInternal<
         if (Object.keys(matchingProperties).length === 0) {
           return [];
         }
+        const property = properties[key];
+        const patternSchemas = Object.values(matchingProperties);
+        // Resolving the merge of a property that refers back to this schema is what the seed above stops, but
+        // stopping it leaves the `$ref` a literal, and a merge of a literal `$ref` with the patterns' keywords is
+        // read later by `resolveAllReferences()` as `{ ...target, ...merged }` -- a shallow spread, where a
+        // `properties` the patterns contribute replaces the target's own rather than joining it. The merge is left
+        // undone instead, for the level that renders this key to resolve with the `allOf` semantics it asks for. The
+        // recursion still ends, because that is one level resolved at a time rather than all of them at once
+        const propertyRef = isObject(property) ? refOf<S>(property as S) : undefined;
+        if (propertyRef !== undefined && mergeRecurseList.includes(propertyRef)) {
+          return [{ key, branches: [{ allOf: [property, ...patternSchemas] } as S] }];
+        }
+        // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
+        // undone is recognised by the patterns already standing in its `allOf` and left alone, rather than having
+        // them added a second time
+        const allOfEntries = isObject(property) ? ((property as S).allOf ?? []) : [];
+        if (patternSchemas.every((pattern) => allOfEntries.some((entry) => deepEquals(entry, pattern)))) {
+          return [];
+        }
         const branches = retrieveSchemaInternal<T, S, F>(
           context,
-          { allOf: [properties[key], ...Object.values(matchingProperties)] } as S,
+          { allOf: [property, ...patternSchemas] } as S,
           rootSchema,
           getByPath<T>(rawFormData, key),
           expandAllBranches,
