@@ -171,7 +171,7 @@ formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France'
 
 A self-owned form stores the edit immediately. A controlled form proposes it through `onChange`; your handler decides what value to pass back through `formData`.
 
-In a controlled form, several calls in one event build on each other: each proposal includes the edits proposed before it, until React renders the value your handler passed back. A handler that refuses a proposal still sees the refused edit in later proposals of the same event. You can also update parent state directly; that does not call Form's `onChange`.
+In a controlled form, several calls in one event build on each other: each proposal includes the edits proposed before it, until React renders the value your handler passed back. A handler that refuses a proposal still sees the refused edit in later proposals of the same event, and one that transforms proposals has to transform every one, since a later proposal builds on the earlier edit as proposed. You can also update parent state directly; that does not call Form's `onChange`.
 
 ## Command timing
 
@@ -189,4 +189,8 @@ A command issued from a layout Effect, a callback ref or a class commit lifecycl
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render.
 
-Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#function-form-and-synchronous-model-timing-breaking-change) for examples of timing-dependent code to update.
+Under `liveValidate: 'onBlur'`, a blur in the same event as a controlled edit builds on that edit's proposal, so its `onChange` carries the errors for the edited value. The errors the form shows come from validating whatever value your component then renders: the edit, a value you transformed it into, or the previous one if you refused it.
+
+Inside `<Activity mode="hidden">`, `setFieldValue()`, `reset()` and a field's change still update the form, but the `onChange`, `onBlur` or `onFocus` they cause is called when the form is shown again, in the order they happened. A `submit()` waits for the form to be shown too, as do the `onSubmit` or `onError` of a submit event the hidden form receives, and `validateForm()` returns its answer without calling `onError`. An `onSubmit` held this way is handed its event after React has dispatched it, so `event.currentTarget` is `null` by then; `event.target` is still the form. An unmounted form never calls them.
+
+Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change) for examples of timing-dependent code to update.

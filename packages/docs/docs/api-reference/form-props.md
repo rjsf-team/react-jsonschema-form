@@ -636,7 +636,7 @@ In the case of adding/removing of new fields in arrays or objects with `addition
 
 With `initialFormData`, each event includes earlier edits already stored by Form. With `formData`, each event proposes a complete value: the last value React rendered plus the edits proposed earlier in the same event. Your handler must pass the accepted value back to Form.
 
-A `setFieldValue()` call from inside `onChange` builds on the proposal being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#function-form-and-synchronous-model-timing-breaking-change).
+A `setFieldValue()` call from inside `onChange` builds on the proposal being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change).
 
 ## onError
 
