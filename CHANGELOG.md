@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.11.1
 
+## @rjsf/antd
+
+- Fixed `ObjectFieldTemplate` rendering a property with an undefined column span when the `colSpan` map in `formContext` has no entry for its widget or field name. The lookup now falls through to the schema type, and then to the default column span, fixing [#5447](https://github.com/rjsf-team/react-jsonschema-form/issues/5447)
+
 ## @rjsf/core
 
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))

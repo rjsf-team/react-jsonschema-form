@@ -72,14 +72,11 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      if (typeof widget === 'string') {
-        return colSpan[widget];
-      }
-      if (typeof field === 'string') {
-        return colSpan[field];
-      }
-      if (typeof type === 'string') {
-        return colSpan[type];
+      const colSpanMap = colSpan as Record<string, number | undefined>;
+      for (const key of [widget, field, type]) {
+        if (typeof key === 'string' && colSpanMap[key] !== undefined) {
+          return colSpanMap[key];
+        }
       }
     }
     if (typeof colSpan === 'number') {
