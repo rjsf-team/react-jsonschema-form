@@ -1197,4 +1197,4 @@ export function withExactlyOneSubschema<
     );
     return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
   });
-        }
+}
