@@ -6,10 +6,10 @@
 export function collectDeferredThrows() {
   const thrown: unknown[] = [];
   const realSetTimeout = setTimeout;
-  vi.stubGlobal('setTimeout', (callback: () => void, delay?: number) =>
+  vi.stubGlobal('setTimeout', (callback: (...args: unknown[]) => void, delay?: number, ...args: unknown[]) =>
     realSetTimeout(() => {
       try {
-        callback();
+        callback(...args);
       } catch (error) {
         thrown.push(error);
       }

@@ -1,4 +1,3 @@
-import { StrictMode, useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -23,71 +22,6 @@ async function pickTheTwelfth(year = 2016) {
 }
 
 describe('DateTimeWidget', () => {
-  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
-    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
-      const stored = '2016-04-05T14:01:30.000Z';
-      const transformed = '2016-04-20T14:01:30.000Z';
-      const onChange = vi.fn<(next: string) => void>();
-      const onBlur = vi.fn();
-      function Parent() {
-        const [value, setValue] = useState(stored);
-        return (
-          <>
-            <DateTimeWidget
-              {...makeWidgetMockProps({
-                value,
-                schema: { type: 'string', format: 'date-time' },
-                onBlur,
-                onChange: (next: string) => {
-                  onChange(next);
-                  if (mode !== 'reject') {
-                    setValue(mode === 'transform' ? transformed : next);
-                  }
-                },
-              })}
-            />
-            <input aria-label='Elsewhere' />
-          </>
-        );
-      }
-      const { container } = render(
-        <StrictMode>
-          <Parent />
-        </StrictMode>,
-      );
-      await openPicker(container);
-      await pickTheTwelfth();
-      expect(onChange).not.toHaveBeenCalled();
-      expect(onBlur).not.toHaveBeenCalled();
-      if (action === 'Done') {
-        await user.click(screen.getByText('Done'));
-      } else if (action === 'Escape') {
-        await user.keyboard('{Escape}');
-      } else {
-        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
-      }
-      let expected = stored;
-      if (action !== 'Escape') {
-        expect(onChange).toHaveBeenCalledExactlyOnceWith(expect.stringMatching(/^2016-04-1[12]T/));
-        if (mode === 'accept') {
-          const [[accepted]] = onChange.mock.calls;
-          expected = accepted;
-        } else if (mode === 'transform') {
-          expected = transformed;
-        }
-      } else {
-        expect(onChange).not.toHaveBeenCalled();
-      }
-      expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
-      if (action === 'outside') {
-        await user.pointer({ keys: '[/MouseLeft]' });
-        expect(onBlur).toHaveBeenCalledTimes(1);
-      } else {
-        expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
-      }
-    });
-  });
-
   describe('with schema.format = iso-date-time', () => {
     const schema = { type: 'string' as const, format: 'iso-date-time' };
 
@@ -134,26 +68,6 @@ describe('DateTimeWidget', () => {
 
       // The instant the picked day and the kept time land on depends on the zone the test runs in; the shape does not
       expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
-    });
-
-    test('reports the blur after the pick when a press outside closes the picker', async () => {
-      const onChange = vi.fn();
-      const onBlur = vi.fn();
-      const { container } = render(
-        <>
-          <DateTimeWidget {...makeWidgetMockProps({ value: '2016-04-05T14:01:30.000Z', onChange, onBlur, schema })} />
-          <p>elsewhere</p>
-        </>,
-      );
-
-      await openPicker(container);
-      // Picking a day moves focus into the popup, so the trigger's own blur has already fired, suppressed
-      await pickTheTwelfth();
-      await user.click(screen.getByText('elsewhere'));
-
-      expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T\d{2}:\d{2}:30\.000Z$/));
-      expect(onBlur).toHaveBeenCalledTimes(1);
-      expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
     });
 
     // A day the user never picked is a day they never asked to store, and the value they arrived with may be one this

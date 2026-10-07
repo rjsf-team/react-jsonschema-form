@@ -1,4 +1,3 @@
-import { StrictMode, useState } from 'react';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -27,69 +26,6 @@ async function pickTheSeventeenth(year = 2020) {
 }
 
 describe('DateWidget', () => {
-  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
-    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
-      const onBlur = vi.fn();
-      const onChange = vi.fn();
-      function Parent() {
-        const [value, setValue] = useState('2020-05-03');
-        return (
-          <>
-            <DateWidget
-              {...makeWidgetMockProps({
-                value,
-                schema,
-                onBlur,
-                onChange: (next: string) => {
-                  onChange(next);
-                  if (mode !== 'reject') {
-                    setValue(mode === 'transform' ? '2020-05-20' : next);
-                  }
-                },
-              })}
-            />
-            <input aria-label='Elsewhere' />
-          </>
-        );
-      }
-      const { container } = render(
-        <StrictMode>
-          <Parent />
-        </StrictMode>,
-      );
-      await openPicker(container);
-      await pickTheSeventeenth();
-      expect(onChange).not.toHaveBeenCalled();
-      expect(onBlur).not.toHaveBeenCalled();
-      if (action === 'Done') {
-        await user.click(screen.getByText('Done'));
-      } else if (action === 'Escape') {
-        await user.keyboard('{Escape}');
-      } else {
-        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
-      }
-      const acceptedValues = { accept: '2020-05-17', transform: '2020-05-20', reject: '2020-05-03' };
-      const expected = action === 'Escape' ? '2020-05-03' : acceptedValues[mode];
-      expect(onBlur).toHaveBeenCalledExactlyOnceWith('test-id', expected);
-      if (action === 'Escape') {
-        expect(onChange).not.toHaveBeenCalled();
-      } else {
-        expect(onChange).toHaveBeenCalledExactlyOnceWith('2020-05-17');
-        expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
-      }
-      if (action === 'outside') {
-        await user.pointer({ keys: '[/MouseLeft]' });
-        expect(onBlur).toHaveBeenCalledTimes(1);
-      } else {
-        expect(container.querySelector('button[aria-haspopup]')).toHaveFocus();
-        await user.tab();
-        // As on v7, closing reports blur and a later native blur remains a separate notification.
-        expect(onBlur).toHaveBeenCalledTimes(2);
-        expect(onBlur).toHaveBeenLastCalledWith('test-id', expected);
-      }
-    });
-  });
-
   // These assertions are the timezone-robust half: `toISOString()` never produces a `YYYY-MM-DD` string, so they
   // fail in every zone, where the display assertions below only failed in a zone behind UTC
   describe('the value it commits', () => {

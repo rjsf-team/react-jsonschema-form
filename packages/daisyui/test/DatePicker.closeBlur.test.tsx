@@ -38,6 +38,73 @@ describe.each([
   ['date', DateWidget, 'date', '2020-05-03', '2020-05-17'],
   ['date-time', DateTimeWidget, 'iso-date-time', '2020-05-03T10:30:00', '2020-05-17T10:30:00'],
 ] as const)('%s close-path blur', (_, Widget, format, initial, proposal) => {
+  describe.each(['Done', 'Escape', 'outside'] as const)('closing with %s', (action) => {
+    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
+      const transformed = proposal.replace('-17', '-20');
+      const onBlur = vi.fn();
+      const onChange = vi.fn();
+      function Parent() {
+        const [value, setValue] = useState<string>(initial);
+        return (
+          <>
+            <Widget
+              {...makeWidgetMockProps({
+                id: 'date',
+                value,
+                autofocus: false,
+                schema: { type: 'string', format },
+                onBlur,
+                onChange: (next: string) => {
+                  onChange(next);
+                  if (mode !== 'reject') {
+                    setValue(mode === 'transform' ? transformed : next);
+                  }
+                },
+              })}
+            />
+            <input aria-label='Elsewhere' />
+          </>
+        );
+      }
+      const { container } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
+      const trigger = triggerIn(container);
+      await user.click(trigger);
+      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onBlur).not.toHaveBeenCalled();
+      const saved = { accept: proposal, transform: transformed, reject: initial }[mode];
+      const expected = action === 'Escape' ? initial : saved;
+      if (action === 'outside') {
+        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+        // Released even when the assertion fails: `user` is shared, and a held button would leak into the next test
+        try {
+          expect(onBlur).toHaveBeenCalledExactlyOnceWith('date', expected);
+        } finally {
+          await user.pointer({ keys: '[/MouseLeft]' });
+        }
+        expect(onBlur).toHaveBeenCalledTimes(1);
+      } else {
+        await (action === 'Done' ? user.click(screen.getByText('Done')) : user.keyboard('{Escape}'));
+        expect(onBlur).toHaveBeenCalledExactlyOnceWith('date', expected);
+        expect(trigger).toHaveFocus();
+        await user.tab();
+        // Closing reports blur, and the trigger's own blur afterwards is a separate notification
+        expect(onBlur).toHaveBeenCalledTimes(2);
+        expect(onBlur).toHaveBeenLastCalledWith('date', expected);
+      }
+      if (action === 'Escape') {
+        expect(onChange).not.toHaveBeenCalled();
+      } else {
+        expect(onChange).toHaveBeenCalledExactlyOnceWith(proposal);
+        expect(onBlur.mock.invocationCallOrder[0]).toBeGreaterThan(onChange.mock.invocationCallOrder[0]);
+      }
+    });
+  });
+
   test.each([
     ['hide', 'Done'],
     ['hide', 'outside'],
