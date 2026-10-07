@@ -26,7 +26,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `requiredBooleanDefault` option, and updated `getDefaultFormState()` to honor it: `skip` turns off the `false` populated for a required boolean with no `default` (introduced in 6.9.0 by [#5170](https://github.com/rjsf-team/react-jsonschema-form/pull/5170)), so a form that models an unanswered boolean as its own state can keep it `undefined` and let `required` report it. The default, `populateFalse`, keeps the 6.9.0+ behavior
-- Fixed `validationDataMerge()` with `preventDuplicates` leaving an error in the `errors` list twice when the same `property` and `message` was already there, so a widget-raised error that matches a validator error is now listed once in the top `ErrorList` after submit, fixing [#5442](https://github.com/rjsf-team/react-jsonschema-form/issues/5442)
 
 ## @rjsf/validator-ata
 

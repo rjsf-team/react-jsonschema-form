@@ -68,4 +68,56 @@ describe('validationDataMerge()', () => {
     expect(validationDataMerge(validationData, errorSchema, true)).toEqual(expected);
     expect(validationDataMerge(validationData, errorSchema).errors).toHaveLength(3);
   });
+  describe('prevent duplicates matches errors by path, not by the spelling of `property`', () => {
+    const message = 'must have required property';
+    const additional = (path: string[]): ErrorSchema => {
+      const schema: ErrorSchema = {};
+      let node: any = schema;
+      path.forEach((key) => {
+        node[key] = {};
+        node = node[key];
+      });
+      node[ERRORS_KEY] = [message];
+      return schema;
+    };
+    const existingAt = (property: string | undefined) => ({ property, message, stack: `${property} ${message}` });
+
+    it.each([
+      ['a validator root required error without the leading dot', 'foo', ['foo']],
+      ['a root scalar error spelled as an empty string', '', []],
+      ['a bracketed array index', '.arr[0]', ['arr', '0']],
+      ['a bracketed array index in a nested path', '.arr[0].name', ['arr', '0', 'name']],
+      ['a missing property', undefined, []],
+    ])('skips %s', (_name, property, path) => {
+      const validationData: ValidationData<any> = {
+        errorSchema: additional(path),
+        errors: [existingAt(property)],
+      };
+      const result = validationDataMerge(validationData, additional(path), true);
+      expect(result.errors).toEqual(validationData.errors);
+      expect(result.errorSchema).toEqual(additional(path));
+    });
+
+    it('keeps an error at another path with the same message', () => {
+      const validationData: ValidationData<any> = {
+        errorSchema: additional(['foo']),
+        errors: [existingAt('foo')],
+      };
+      const result = validationDataMerge(validationData, additional(['bar']), true);
+      expect(result.errors).toEqual([existingAt('foo'), { property: '.bar', message, stack: `.bar ${message}` }]);
+    });
+
+    it('keeps an error at the same path with another message', () => {
+      const validationData: ValidationData<any> = {
+        errorSchema: additional(['foo']),
+        errors: [existingAt('foo')],
+      };
+      const other: ErrorSchema = { foo: { [ERRORS_KEY]: ['another message'] } };
+      const result = validationDataMerge(validationData, other, true);
+      expect(result.errors).toEqual([
+        existingAt('foo'),
+        { property: '.foo', message: 'another message', stack: '.foo another message' },
+      ]);
+    });
+  });
 });
