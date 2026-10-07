@@ -25,6 +25,7 @@ import isObject from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
+import { declaredRef, resolvedFromRef } from '../refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -988,7 +989,10 @@ export function retrieveSchemaInternal<
  * @returns - The `$ref` the schema holds or was resolved from, or undefined when it has neither
  */
 function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string | undefined {
-  return (schema[REF_KEY] ?? (schema as RJSFMarkedSchema)[RJSF_REF_KEY]) as string | undefined;
+  // A reference the schema still holds comes first, since that is the one about to be resolved and so the one a
+  // merge of this schema would follow round again. `resolveUiSchema()` reads the same two the other way about, for
+  // the opposite reason: it is naming where a resolved schema came from, not what it is about to resolve
+  return declaredRef<S>(schema) ?? resolvedFromRef<S>(schema);
 }
 
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from

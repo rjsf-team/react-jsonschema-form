@@ -3,6 +3,7 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
+import { declaredRef, resolvedFromRef } from './refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -50,7 +51,10 @@ export default function resolveUiSchema<
   rawLocalUiSchema: UiSchema<T, S, F> | undefined,
   registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
 ): UiSchema<T, S, F> {
-  const ref = ((schema as RJSFMarkedSchema)[RJSF_REF_KEY] ?? schema[REF_KEY]) as string | undefined;
+  // The marker comes first: a schema resolved from a definition is named by the definition it came from, which is
+  // the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing has followed yet.
+  // `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite reason
+  const ref = resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
@@ -93,7 +97,7 @@ export default function resolveUiSchema<
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as GenericObjectType | undefined;
-          const optionRef = ((option as RJSFMarkedSchema)?.[RJSF_REF_KEY] ?? option?.[REF_KEY]) as string | undefined;
+          const optionRef = resolvedFromRef<S>(option as S | undefined) ?? declaredRef<S>(option as S | undefined);
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;
