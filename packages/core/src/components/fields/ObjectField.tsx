@@ -292,7 +292,7 @@ export default function ObjectField<
     title,
   } = props;
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
-  const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
@@ -424,7 +424,10 @@ export default function ObjectField<
         // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
         // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
         // without `ui:globalOptions`
-        const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, registry);
+        const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, {
+          rootSchema,
+          uiSchemaDefinitions,
+        });
         const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedApUiSchema);
         type = getFieldTypeForWidget(apSchema, widget);
         // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
@@ -480,7 +483,7 @@ export default function ObjectField<
     resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
-    registry,
+    rootSchema,
   ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That

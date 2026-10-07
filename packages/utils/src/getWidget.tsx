@@ -3,6 +3,7 @@ import { isValidElement } from 'react';
 import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSelectFieldType from './getSelectFieldType.ts';
+import getUiOptions from './getUiOptions.ts';
 import { getKnownTypes } from './getUnionTypes.ts';
 import isComponentType from './isComponentType.ts';
 import isConstantSelect from './isConstantSelect.ts';
@@ -14,6 +15,7 @@ import type {
   WidgetProps,
   RegistryWidgetsType,
   StrictRJSFSchema,
+  UiSchema,
 } from './types.ts';
 
 /** The aliases of a select that picks one value as a whole: every select an `object` or `null` schema can be, and the
@@ -147,22 +149,39 @@ export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   return findWidgetType<S>(schema, widget, getSchemaType<S>(schema))?.type;
 }
 
-/** Determines whether `getFieldTypeForWidget()` can give a `schema` another type than the one `getSchemaType()`
- * resolves. Only a `type` list naming a non-null type besides the one it resolves to has another field that could render
- * the value, so a nullable `['string', 'null']` can't, and its readers can skip reducing the `uiSchema` for a widget that
- * won't be read. A list resolving to `null` names nothing else, but can, as the select rule renders it through
- * `StringField`
+/** Determines whether a `type` list can render through another field than the one for the type it resolves to. Only a
+ * list naming a non-null type besides that one has another field that could render the value, so a nullable
+ * `['string', 'null']` can't. A list resolving to `null` names nothing else, but can, as the select rule renders it
+ * through `StringField`
  *
- * @param schema - The schema for the field
- * @param [type] - The type `getSchemaType()` resolves the `schema` to, when already known
+ * @param types - The `type` list of the schema for the field
+ * @param type - The type `getSchemaType()` resolves the schema to
  * @returns - True if the field's `ui:widget` or options can pick its type, false otherwise
  */
-export function canPickFieldType<S extends StrictRJSFSchema = RJSFSchema>(schema: S, type?: string): boolean {
-  if (!Array.isArray(schema.type)) {
-    return false;
+function canPickFieldType(types: readonly string[], type: string | undefined): boolean {
+  return type === 'null' || types.some((aType) => aType !== type && aType !== 'null');
+}
+
+/** Gets the type whose field `SchemaField` renders a `schema` by, calling `readWidget` for its `ui:widget` only when a
+ * widget can pick that type, so a caller holding a `uiSchema` doesn't reduce it for a widget that won't be read
+ *
+ * @param schema - The schema for the field
+ * @param readWidget - Returns the `ui:widget` for the field, if any
+ * @returns - The type of the field that renders the widget
+ */
+function resolveFieldType<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  readWidget: () => unknown,
+): string | undefined {
+  const type = getSchemaType<S>(schema);
+  if (!Array.isArray(schema.type) || !canPickFieldType(schema.type, type)) {
+    return type;
   }
-  const resolvedType = type ?? getSchemaType<S>(schema);
-  return resolvedType === 'null' || schema.type.some((aType) => aType !== resolvedType && aType !== 'null');
+  if (isConstantSelect<S>(schema, true)) {
+    return getSelectFieldType(schema.type);
+  }
+  const widget = readWidget();
+  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type)?.type : undefined) ?? type;
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several
@@ -182,15 +201,22 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   widget: unknown,
 ): string | undefined {
-  const type = getSchemaType<S>(schema);
-  // The `Array.isArray()` that `canPickFieldType()` makes is repeated to narrow the `type` list for the select rule
-  if (!Array.isArray(schema.type) || !canPickFieldType<S>(schema, type)) {
-    return type;
-  }
-  if (isConstantSelect<S>(schema, true)) {
-    return getSelectFieldType(schema.type);
-  }
-  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type)?.type : undefined) ?? type;
+  return resolveFieldType<S>(schema, () => widget);
+}
+
+/** Gets the type of the field `SchemaField` renders a `schema` by, as `getFieldTypeForWidget()` does for the field's
+ * own `ui:widget` in `uiSchema`. Only that one picks the field, so `ui:globalOptions` is not read
+ *
+ * @param schema - The schema for the field
+ * @param [uiSchema] - The uiSchema for the field
+ * @returns - The type of the field that renders the field's own widget
+ */
+export function getFieldTypeForUiSchema<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema?: UiSchema<T, S, F>): string | undefined {
+  return resolveFieldType<S>(schema, () => uiSchema && getUiOptions<T, S, F>(uiSchema).widget);
 }
 
 /** The registry key a `boolean` resolves to when nothing names a widget for it, which is the widget that renders the

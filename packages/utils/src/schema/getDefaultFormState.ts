@@ -22,7 +22,7 @@ import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { canPickFieldType, getFieldTypeForWidget } from '../getWidget.tsx';
+import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
@@ -890,8 +890,7 @@ export function getDefaultBasedOnSchemaType<
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
   const { uiSchema, rawFormData } = computeDefaultsProps;
   const isTypeList = Array.isArray(rawSchema.type);
-  const widget = uiSchema && canPickFieldType<S>(rawSchema) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
-  const type = getFieldTypeForWidget<S>(rawSchema, widget);
+  const type = getFieldTypeForUiSchema<T, S, F>(rawSchema, uiSchema);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
   // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
   // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults
