@@ -185,7 +185,7 @@ useEffect(() => {
 }, [formRef, schema, data]);
 ```
 
-Avoid issuing prop-dependent commands from a descendant layout Effect, callback ref or class commit lifecycle. Those run early enough to see Form's previous configuration: Form installs new props into its store in a layout Effect, which can run after the descendant's layout Effect or ref callback. A passive Effect runs afterward.
+A command issued from a layout Effect, a callback ref or a class commit lifecycle of the commit that renders new props sees those props too: Form installs them into its store in an insertion Effect, which React runs before any of those, and also while an `<Activity>` hides the form. Only the cleanup of a layout Effect and a ref being detached run earlier, and still see Form's previous configuration.
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render.
 

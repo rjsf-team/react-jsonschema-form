@@ -171,26 +171,51 @@ describe('controlled parent harnesses', () => {
   });
 });
 
-it('an edit made after a proposal from outside React, before the parent renders it, builds on it', async () => {
-  const { RetainingWidget, change } = createRetainingWidget();
-  const log = createParentLog<Data>();
-  render(
-    <AcceptingParent<Data>
-      schema={schema}
-      uiSchema={{ name: { 'ui:widget': RetainingWidget }, other: { 'ui:widget': RetainingWidget } }}
-      initialValue={{ name: 'a', other: 'b' }}
-      log={log}
-    />,
-  );
-  // React schedules the parent's update as it would in a browser
-  await outsideAct(async () => {
-    // A widget reporting from a timer or a FileReader callback: the parent renders its update in a later task, and the
-    // second edit arrives before that, after React has flushed its synchronous work
-    await aMicrotaskApart(
-      () => change('root_name', 'a2'),
-      () => change('root_other', 'b2'),
+describe('edits from outside React, the way a widget reports from a timer or a FileReader callback', () => {
+  function renderRetaining() {
+    const { RetainingWidget, change } = createRetainingWidget();
+    const log = createParentLog<Data>();
+    render(
+      <AcceptingParent<Data>
+        schema={schema}
+        uiSchema={{ name: { 'ui:widget': RetainingWidget }, other: { 'ui:widget': RetainingWidget } }}
+        initialValue={{ name: 'a', other: 'b' }}
+        log={log}
+      />,
     );
-    await waitFor(() => expect(log.value).toEqual({ name: 'a2', other: 'b2' }));
+    return { change, log };
+  }
+
+  it('a second edit in the same task builds on the first, which the parent has yet to render', async () => {
+    const { change, log } = renderRetaining();
+    // React schedules the parent's update as it would in a browser
+    await outsideAct(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve);
+      });
+      // Nothing renders between the two: the parent's answer to the first is still to come
+      change('root_name', 'a2');
+      change('root_other', 'b2');
+      await waitFor(() => expect(log.value).toEqual({ name: 'a2', other: 'b2' }));
+    });
+
+    expect(log.proposals).toEqual([
+      { name: 'a2', other: 'b' },
+      { name: 'a2', other: 'b2' },
+    ]);
+  });
+
+  it('a second edit a microtask later starts from the answer the parent has rendered by then', async () => {
+    const { change, log } = renderRetaining();
+    await outsideAct(async () => {
+      // React flushes the form's render of the first proposal in the microtask between the two, and the parent's
+      // update with it, so the second edit needs no proposal to build on
+      await aMicrotaskApart(
+        () => change('root_name', 'a2'),
+        () => change('root_other', 'b2'),
+      );
+      await waitFor(() => expect(log.value).toEqual({ name: 'a2', other: 'b2' }));
+    });
   });
 });
 

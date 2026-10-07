@@ -1,5 +1,14 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
-import { memo, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import {
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useInsertionEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -1678,12 +1687,13 @@ function getAt(data: unknown, segments: FieldPathList): unknown {
 }
 
 /** Reports to the consumer for the model, and knows whether the form is attached. Its layout Effects are disconnected
- * while an `<Activity>` hides it as well as once it has unmounted. Operations still apply then, but what they would
- * tell the consumer waits until the Effects reconnect, as React asks of a hidden component; an unmounted form never
+ * while an `<Activity>` hides it as well as once it has unmounted, and have yet to connect when it is first rendered,
+ * which inside a hidden `<Activity>` they do only once it is shown. Operations still apply then, but what they would
+ * tell the consumer waits until the Effects connect, as React asks of a hidden component; an unmounted form never
  * reconnects, so it never reports them.
  */
 function createReporter<Props>(getLatestProps: () => Props) {
-  let detached = false;
+  let detached = true;
   let held: ((latest: Props) => void)[] = [];
   /** A report that is held while the form is detached, and otherwise made through `call` */
   const whenAttached =
@@ -1752,12 +1762,12 @@ function createFormModel<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { isDetached, reportToCaller, reportIfAttached, reportFromField, attach, detach } = createReporter(
     () => committedProps,
   );
-  // A parent-owned form's last proposal, until React commits a render of the form that could answer it (see
-  // `rendered()`). Edits made before then (two fields setting a value from mount Effects, several `setFieldValue()`
-  // calls in one event) build on it, as they would if the parent had already accepted it; that commit returns to the
-  // value the parent chose. Every proposal makes a new `snapshot`, so a parent that refuses one, and does not render,
-  // still has the form render and drop it. `epoch` counts those returns, so a field's own record of a proposal it made
-  // is dropped with it.
+  // A parent-owned form's last proposal, until React next commits a render of the form with the consumer told of it
+  // (see `committed()`). Edits made before then (two fields setting a value from mount Effects, several
+  // `setFieldValue()` calls in one event) build on it, as they would if the parent had already accepted it; that commit
+  // returns to the value the parent chose. Every proposal makes a new `snapshot`, so a parent that refuses one, and does
+  // not render, still has the form render and drop it. `epoch` counts those returns, so a field's own record of a
+  // proposal it made is dropped with it.
   let pending: FormState<T, S, F> | undefined;
   let epoch = 0;
   const propose = (next: FormState<T, S, F>) => {
@@ -2098,13 +2108,11 @@ function createFormModel<T, S extends StrictRJSFSchema, F extends FormContextTyp
         listeners.delete(listener);
       };
     },
-    /** Called from a layout Effect of every commit of the form, with what React rendered. The order is the point: the
-     * model takes the commit's props and state, then reports what it held while the form was hidden, then drops the
-     * proposal the commit answered, and only then lets a queued `submit()` through.
+    /** Called from an insertion Effect of every commit of the form, with what React rendered. React runs those before
+     * any layout Effect, and whether or not an `<Activity>` hides the form, so an Effect of the same commit that issues
+     * a command, and a handle retained from a hidden form, find the props and the state of this commit.
      */
-    rendered: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
-      const isProposalBaseShown = state.formData === derived.formData;
-      const wasDetached = isDetached();
+    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
       committedProps = nextProps;
       shown = derived;
       // An operation that committed after this render began is not in `derived`. A render for it is already scheduled;
@@ -2113,23 +2121,26 @@ function createFormModel<T, S extends StrictRJSFSchema, F extends FormContextTyp
         snapshot.operations === renderedSnapshot.operations
           ? derived
           : replaceEqualDeep(derived, deriveState(nextProps, state));
-      attach();
-      // The consumer has only now heard of a proposal made while the form was hidden, so it takes another render to
-      // answer it
-      if (wasDetached && pending) {
-        notify();
-      }
-      // A proposal made since this render read the store, on the data the render shows, is one no render has answered:
-      // a field's layout Effect made it during this commit, or the form was hidden. The render it scheduled drops it
-      // instead, so that an edit from a passive Effect of this commit still builds on it
-      if (!(isProposalBaseShown && snapshot !== renderedSnapshot)) {
+      // The commit answers the proposal the consumer was told of. A detached form has yet to tell it
+      if (!isDetached()) {
         pending = undefined;
         epoch += 1;
       }
-      submitWhenRendered();
     },
-    /** The cleanup of a layout Effect, which React runs when an `<Activity>` hides the form as well as when it unmounts */
+    /** The setup of a layout Effect, which React runs when the form mounts and when an `<Activity>` shows it again:
+     * reports what was held meanwhile.
+     */
+    attach: () => {
+      const isProposalHeld = pending !== undefined;
+      attach();
+      // The consumer has only now heard of the proposal, so it takes another render to answer it
+      if (isProposalHeld) {
+        notify();
+      }
+    },
+    /** The cleanup of that Effect, which React runs when an `<Activity>` hides the form as well as when it unmounts */
     detach,
+    submitWhenRendered,
     handle,
     handleSubmit,
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
@@ -2210,14 +2221,22 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     setCache({ model, snapshot, props, state });
   }
   useDevWarning(isDevelopment && ownershipWarning(state, props));
-  // Installed first, so a callback the model calls as the form is shown again finds the handle on the consumer's ref
-  useImperativeHandle(ref, () => model.handle, [model]);
-  // Hands every commit to the model before consumer passive Effects can issue commands. Descendant layout Effects
-  // and callback refs can still run before it.
-  useLayoutEffect(() => {
-    model.rendered(props, state, snapshot);
+  // Hands every commit to the model in the phase in which React switches its own event handlers to the new props:
+  // before any layout Effect, a callback ref or a passive Effect can issue a command, and while an `<Activity>` hides
+  // the form too. Only the cleanup of a descendant's layout Effect and a ref being detached run earlier.
+  useInsertionEffect(() => {
+    model.committed(props, state, snapshot);
   });
-  useLayoutEffect(() => model.detach, [model]);
+  // Installed before the form attaches, so a callback the model calls as it does finds the handle on the consumer's ref
+  useImperativeHandle(ref, () => model.handle, [model]);
+  useLayoutEffect(() => {
+    model.attach();
+    return model.detach;
+  }, [model]);
+  // After every commit of a shown form, which may be the one a queued `submit()` waits for
+  useLayoutEffect(() => {
+    model.submitWhenRendered();
+  });
 
   const {
     children,

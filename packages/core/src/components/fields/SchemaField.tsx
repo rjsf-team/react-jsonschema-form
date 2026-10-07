@@ -523,7 +523,7 @@ function SchemaFieldRender<
   // The check must come after all hook calls to satisfy React's rules of hooks.
   if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
     return (
-      <RawFormDataContext value={undefined}>
+      <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
       </RawFormDataContext>
     );

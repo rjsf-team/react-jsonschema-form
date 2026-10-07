@@ -15,7 +15,6 @@ import {
   createFormComponent,
   createParentLog,
   describeOwnerships,
-  expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
   handleOf,
   input,
@@ -507,6 +506,60 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ a: '', b: 'third' });
     });
 
+    it('a proposal made while hidden by Activity lasts through a render of the hidden form', async () => {
+      const ref = createFormRef<Data>();
+      const log = createParentLog<Data>();
+      const { hide, show } = renderInActivity(() => <PolicyParent ref={ref} log={log} />);
+      const handle = handleOf(ref);
+      hide();
+
+      await act(async () => {
+        handle.setFieldValue('a', 'first');
+      });
+      // The parent renders the hidden form again, having heard nothing of the proposal yet
+      hide();
+      await act(async () => {
+        handle.setFieldValue('b', 'second');
+      });
+      show();
+
+      expect(log.value).toEqual({ a: 'first', b: 'second' });
+    });
+
+    it('a proposal made while hidden by Activity is dropped once a parent that was told of it keeps to its value', async () => {
+      const ref = createFormRef<Data>();
+      const log = createParentLog<Data>();
+      const parent = (idPrefix: string) => (
+        <RejectingParent<Data>
+          ref={ref}
+          idPrefix={idPrefix}
+          schema={schema}
+          initialValue={{ a: '', b: '' }}
+          log={log}
+        />
+      );
+      const { hide, show } = renderInActivity((element: ReactNode) => element, parent('mounted'));
+      // Rendered once more, as most forms have been by the time they are hidden. The same element from then on, so
+      // neither showing the form nor the refusal renders it
+      const rendered = parent('rendered');
+      show(rendered);
+      const handle = handleOf(ref);
+      hide(rendered);
+
+      await act(async () => {
+        handle.setFieldValue('a', 'first');
+      });
+      show(rendered);
+      await act(async () => {
+        handle.setFieldValue('b', 'second');
+      });
+
+      expect(log.proposals).toEqual([
+        { a: 'first', b: '' },
+        { a: '', b: 'second' },
+      ]);
+    });
+
     /** A widget that sets its field to `to` from `useCommitEffect` */
     function settingWidget(useCommitEffect: typeof useEffect, to: string) {
       return function SettingWidget({ onChange, value }: WidgetProps) {
@@ -542,16 +595,19 @@ describe('form data ownership', () => {
       },
     );
 
-    it('an edit from a passive Effect builds on the data a commit rendered, not on a proposal for the data it replaced', () => {
+    it('edits from the Effects of the commit that renders another record are made on that record', () => {
       const onChange = vi.fn();
       const props = { schema, validator, uiSchema: settingUiSchema, onChange };
       const { rerender } = render(<Form<Data> {...props} formData={{ a: 'layout', b: 'passive' }} />);
+      onChange.mockClear();
 
       // The parent loads another record, in which both widgets set their field again
       rerender(<Form<Data> {...props} formData={{ a: 'x', b: 'y' }} />);
 
-      // The layout Effect proposed before the form had taken the commit, so on the record the commit replaced
-      expectToHaveBeenCalledWithFormData(onChange, { a: 'x', b: 'passive' }, 'root_b');
+      expect(onChange.mock.calls.map(([event]: IChangeEvent<Data>[]) => event.formData)).toEqual([
+        { a: 'layout', b: 'y' },
+        { a: 'layout', b: 'passive' },
+      ]);
     });
 
     it('an edit made as a hidden form is shown builds on a proposal made while it was hidden', () => {

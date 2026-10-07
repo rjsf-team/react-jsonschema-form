@@ -1,8 +1,10 @@
-import { Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Activity, Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type {
   ArrayFieldItemButtonsTemplateProps,
   ArrayFieldItemTemplateProps,
   ArrayFieldTemplateProps,
+  FieldPathList,
   ObjectFieldTemplateProps,
   FieldProps,
   RJSFSchema,
@@ -17,6 +19,7 @@ import { renderToString } from 'react-dom/server';
 import ArrayField from '../src/components/fields/ArrayField.tsx';
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import {
   AcceptingParent,
   createFormComponent,
@@ -142,7 +145,7 @@ it('renders seeded data on the server without a browser or effect publishing a s
   expect(markup).toContain('value="server"');
 });
 
-it('new controlled props are available to passive Effects after the descendant layout phase', () => {
+it('new controlled props are available to the Effects of the commit that renders them', () => {
   const ref = createFormRef<{ name: string }>();
   const phases: [string, unknown, unknown][] = [];
   function ObservingWidget({ value }: WidgetProps) {
@@ -159,7 +162,7 @@ it('new controlled props are available to passive Effects after the descendant l
   phases.length = 0;
   rerender(<Form {...props} formData={{ name: 'after' }} />);
   expect(phases).toEqual([
-    ['layout', 'after', { name: 'before' }],
+    ['layout', 'after', { name: 'after' }],
     ['passive', 'after', { name: 'after' }],
   ]);
 });
@@ -188,6 +191,72 @@ it('several additional-property adds in one event use current self-owned data', 
   await user.click(screen.getByRole('button', { name: 'Add twice' }));
   expect(getFormData()).toEqual({ newKey: 'value', 'newKey-1': 'value' });
   expectToHaveBeenCalledWithFormData(onChange, getFormData(), 'root');
+});
+
+describe('an item set through the handle and an add in one event, on an array a core field renders below itself', () => {
+  const list: RJSFSchema = { type: 'array', items: { type: 'string', default: 'new' } };
+  const node: RJSFSchema = { type: 'object', properties: { list, next: { $ref: '#/definitions/node' } } };
+
+  it.each<{ field: string; props: NoValFormProps; arrayId: string; itemPath: FieldPathList; expected: object }>([
+    {
+      field: 'LayoutGridField',
+      props: {
+        schema: { type: 'object', properties: { list } },
+        uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': { children: ['list'] } } },
+        initialFormData: { list: ['a'] },
+      },
+      arrayId: 'root_list',
+      itemPath: ['list', 0],
+      expected: { list: ['edited', 'new'] },
+    },
+    {
+      field: 'FallbackField',
+      props: {
+        schema: { ...list, type: ['array', 'string'] },
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: ['a'],
+      },
+      arrayId: 'root',
+      itemPath: [0],
+      expected: ['edited', 'new'],
+    },
+    {
+      field: 'CyclicSchemaField',
+      props: {
+        schema: { definitions: { node }, type: 'object', properties: { tree: { $ref: '#/definitions/node' } } },
+        initialFormData: { tree: { list: [], next: { list: ['a'] } } },
+      },
+      arrayId: 'root_tree_next_list',
+      itemPath: ['tree', 'next', 'list', 0],
+      expected: { tree: { list: [], next: { list: ['edited', 'new'] } } },
+    },
+  ])('below $field, the add builds on the item set', async ({ field, props, arrayId, itemPath, expected }) => {
+    const ref = createFormRef();
+    function SetThenAdd({ id, items, onAddClick }: ArrayFieldTemplateProps) {
+      return (
+        <div>
+          {items}
+          <button
+            type='button'
+            onClick={(event) => {
+              handleOf(ref).setFieldValue(itemPath, 'edited');
+              onAddClick(event);
+            }}
+          >
+            Set then add {id}
+          </button>
+        </div>
+      );
+    }
+    const { getFormData } = createFormComponent({ ...props, ref, templates: { ArrayFieldTemplate: SetThenAdd } });
+    if (field === 'CyclicSchemaField') {
+      await user.click(screen.getAllByRole('button', { name: 'Expand Cycle' })[0]);
+    }
+
+    await user.click(screen.getByRole('button', { name: `Set then add ${arrayId}` }));
+
+    expect(getFormData()).toMatchObject(expected);
+  });
 });
 
 it.each([false, true])(
@@ -447,6 +516,81 @@ it('a form hidden by Activity has its handle back on the ref when it reports wha
 
   // A handler that validates or reads through the ref would otherwise find it empty
   expect(onRef).toEqual([handle]);
+});
+
+it('a form hidden by Activity shows an edit made while it was hidden, with no render of its own to show it', () => {
+  const ref = createFormRef<{ name?: string }>();
+  const form = (className: string) => (
+    <Form ref={ref} className={className} schema={schema} validator={validator} initialFormData={{ name: 'a' }} />
+  );
+  const { container, hide, show } = renderInActivity((element: ReactNode) => element, form('mounted'));
+  // Rendered once more, as most forms have been by the time they are hidden. The same element from then on, so
+  // neither hiding nor showing the form renders it
+  const rendered = form('rendered');
+  show(rendered);
+  const handle = handleOf(ref);
+  hide(rendered);
+
+  act(() => handle.setFieldValue('name', 'later'));
+  show(rendered);
+
+  expect(input(container, 'root_name')).toHaveValue('later');
+});
+
+it('a form hidden by Activity takes the data its parent passes while it is hidden', () => {
+  interface Record {
+    name?: string;
+    other?: string;
+  }
+  const ref = createFormRef<Record>();
+  const onChange = vi.fn();
+  const { hide, show } = renderInActivity(
+    (formData: Record) => (
+      <Form
+        ref={ref}
+        schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
+        validator={validator}
+        formData={formData}
+        onChange={onChange}
+      />
+    ),
+    { name: 'a', other: 'x' },
+  );
+  const handle = handleOf(ref);
+  hide({ name: 'a', other: 'x' });
+
+  // The parent loads another record while the form is hidden
+  hide({ name: 'b', other: 'y' });
+
+  expect(handle.getFormData()).toEqual({ name: 'b', other: 'y' });
+
+  act(() => handle.setFieldValue('name', 'edited'));
+  show({ name: 'b', other: 'y' });
+
+  expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
+});
+
+it('a form first rendered hidden by Activity holds a submit until it is shown', () => {
+  const onSubmit = vi.fn();
+  const inActivity = (mode: 'visible' | 'hidden') => (
+    <Activity mode={mode}>
+      <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit} />
+    </Activity>
+  );
+  const { container, rerender } = render(inActivity('hidden'));
+  const form = container.querySelector('form');
+  if (!form) {
+    throw new Error('The form did not render');
+  }
+
+  // No user can reach a hidden form, but a script or a button elsewhere with a `form` attribute can submit it
+  act(() => form.requestSubmit());
+
+  expect(onSubmit).not.toHaveBeenCalled();
+
+  rerender(inActivity('visible'));
+
+  expect(onSubmit).toHaveBeenCalledTimes(1);
 });
 
 it('a submit on a form hidden by Activity waits until it is shown, after the change it reports', () => {
