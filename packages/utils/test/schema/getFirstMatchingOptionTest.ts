@@ -197,6 +197,30 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       testValidator.setReturnValues({ isValid: [false, true] });
       expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
     });
+    it('does not match an option that declares no keys at all, so a "none" option leaves the data alone', () => {
+      // Scored as it stands, an option with an empty `properties` matches every object, so a "none of these" option in
+      // front of the real ones takes the data away from them -- the selector snaps back to it as a field is cleared
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [
+        { title: 'None', type: 'object', properties: {} },
+        { title: 'Some', type: 'object', properties: { a: { type: 'string' } } },
+      ];
+      getFirstMatchingOption({ validator }, { a: 'x' }, options, rootSchema);
+      expect(validated[0]).toEqual({ not: {} });
+    });
+    it('scores an option describing a map as it stands, since it declares its keys elsewhere', () => {
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'object', properties: {}, additionalProperties: { type: 'string' } };
+      getFirstMatchingOption({ validator }, { k: 'v' }, [option], rootSchema);
+      expect(validated[0]).toEqual(option);
+    });
+    it('scores an option that declares no properties at all as it stands', () => {
+      // An option without a `properties` key describes something other than an object, so there are no keys to assert
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'string', minLength: 1 };
+      getFirstMatchingOption({ validator }, 'x', [option], rootSchema);
+      expect(validated[0]).toEqual(option);
+    });
     it('should return 0 when schema has discriminator but no matching data', () => {
       // Mock isValid to fail both values
       testValidator.setReturnValues({ isValid: [false, false] });

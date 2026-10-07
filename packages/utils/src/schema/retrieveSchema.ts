@@ -44,6 +44,13 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
 // dependencies branches receive only the caller's re-walk status, so nesting depth alone cannot reach this limit.
 const MAX_RESOLUTION_PASSES = 100;
 
+// Marks the `allOf` that a key's `patternProperties` merge is left undone in, so the level that resolves its way back
+// here recognises its own work. `RJSF_REF_CYCLE_KEY` cannot say it: `resolveAllReferences()` sets that one on any
+// property whose `$ref` closes a cycle, and such a property travels with the marker through the expansion of that
+// `$ref`, so reading it here as a merge already made drops the patterns a key of a mutually recursive schema matches.
+// It stays private to this module, since the merge it describes is left and taken up in this one function.
+const PATTERN_MERGE_LEFT_UNDONE = Symbol('__rjsf_pattern_merge_left_undone');
+
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
  * potentially recursive resolution.
@@ -930,24 +937,31 @@ export function retrieveSchemaInternal<
         // stopping it leaves the `$ref` a literal, and a merge of a literal `$ref` with the patterns' keywords is
         // read later by `resolveAllReferences()` as `{ ...target, ...merged }` -- a shallow spread, where a
         // `properties` the patterns contribute replaces the target's own rather than joining it. The merge is left
-        // undone instead, for the level that renders this key to resolve with the `allOf` semantics it asks for. The
-        // recursion still ends, because that is one level resolved at a time rather than all of them at once
+        // undone instead, flagged as the cycle it is: the key refers back to the schema that holds it, which only the
+        // `allOf` around it hides from `resolveAllReferences()`, and the flag is what tells `SchemaField` to render a
+        // cycle indicator rather than nesting the key's fields until the heap runs out. The marker alongside it is
+        // what an outer level reads, since the cycle flag is one resolution sets on keys this merge still applies to
         const propertySchema = isObject(property) ? (property as S) : undefined;
         const propertyRef = refOf<S>(propertySchema);
         if (propertyRef !== undefined && mergeRecurseList.includes(propertyRef)) {
-          return [{ key, branches: [{ allOf: [property, ...patternSchemas] } as S] }];
+          return [
+            {
+              key,
+              branches: [
+                {
+                  allOf: [property, ...patternSchemas],
+                  [RJSF_REF_CYCLE_KEY]: true,
+                  [PATTERN_MERGE_LEFT_UNDONE]: true,
+                } as unknown as S,
+              ],
+            },
+          ];
         }
         // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
-        // undone is recognised by the shape that level left -- the property followed by the patterns -- and left
-        // alone, rather than having them added a second time. The patterns are matched as that trailing run rather
-        // than anywhere in the `allOf`, so a property whose own `allOf` happens to declare what a pattern declares is
-        // still merged with it
-        const allOfEntries = propertySchema?.allOf ?? [];
-        const patternTailStart = allOfEntries.length - patternSchemas.length;
-        if (
-          patternTailStart > 0 &&
-          patternSchemas.every((pattern, index) => deepEquals(allOfEntries[patternTailStart + index], pattern))
-        ) {
+        // undone is recognised by the marker that level set and left alone, rather than having the patterns added a
+        // second time. The marker says so rather than the shape doing: an `allOf` holding the patterns is one a schema
+        // may also declare itself, and reading that as a merge already made leaves the key unresolved
+        if (propertySchema !== undefined && (propertySchema as RJSFMarkedSchema)[PATTERN_MERGE_LEFT_UNDONE]) {
           return [];
         }
         const branches = retrieveSchemaInternal<T, S, F>(

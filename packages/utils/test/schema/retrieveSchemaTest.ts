@@ -2405,12 +2405,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: { foo: { allOf: [{ minLength: 2 }] }, bar: { type: 'string' } },
           patternProperties: { '^f': { minLength: 2 } },
         };
-        // The patterns standing in a key's `allOf` are how a merge an inner recursion level left undone is recognised,
-        // which is the key followed by them. A key that declares one of its own is not that, and is merged as any
-        // other matching key is rather than being left with its `allOf` unresolved
+        // A merge an inner recursion level left undone is recognised by the marker that level set, not by the `allOf`
+        // holding the patterns, which a schema may also declare itself. Read by shape, this key would be taken as
+        // already merged and left with its `allOf` unresolved
         expect(retrieveSchema({ validator: testValidator }, schema, { definitions: {} }, {}).properties).toEqual({
           foo: { minLength: 2 },
           bar: { type: 'string' },
+        });
+      });
+      it('merges a pattern into a key whose own allOf holds a $ref alongside what the pattern declares', () => {
+        const rootSchema: RJSFSchema = {
+          type: 'object',
+          definitions: { Base: { type: 'string', title: 'Base' } },
+          properties: { p: { allOf: [{ $ref: '#/definitions/Base' }, { maxLength: 5 }] } },
+          patternProperties: { '^p': { maxLength: 5 } },
+        };
+        // No recursion is involved, so the `$ref` resolves and the patterns merge in. Reading the trailing entries of
+        // the `allOf` as a merge already made would hand `SchemaField` the unresolved `allOf` instead
+        expect(retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {}).properties!.p).toEqual({
+          type: 'string',
+          title: 'Base',
+          maxLength: 5,
+          [RJSF_REF_KEY]: '#/definitions/Base',
         });
       });
       it('keeps the properties of a schema a key refers back to when a pattern also matches that key', () => {
@@ -2438,6 +2454,27 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           {},
         );
         expect(Object.keys(grandchild.properties!).sort()).toEqual(['child', 'extra', 'name']);
+      });
+      it('merges a pattern into a key referring back to a schema other than the one that holds it', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            A: { type: 'object', properties: { b: { $ref: '#/definitions/B' } } },
+            B: {
+              type: 'object',
+              properties: { a: { $ref: '#/definitions/A' }, s: { type: 'string' } },
+              patternProperties: { '^a$': { title: 'Pattern' } },
+            },
+          },
+          $ref: '#/definitions/A',
+        };
+        const root = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {});
+        const b = retrieveSchema({ validator: testValidator }, root.properties!.b as RJSFSchema, rootSchema, {});
+        // `resolveAllReferences()` has flagged the key as a `$ref` cycle, since the path it was reached by holds the
+        // reference it names, and the key carries that flag on through the expansion of it. That is not the merge
+        // this schema's own recursive key leaves undone, so the pattern applies here as it does to any other key
+        expect(b.properties!.a).toEqual(
+          expect.objectContaining({ title: 'Pattern', properties: expect.objectContaining({ b: expect.anything() }) }),
+        );
       });
     });
     describe('stubExistingAdditionalProperties()', () => {

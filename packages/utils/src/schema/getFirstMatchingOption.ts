@@ -1,4 +1,12 @@
-import { ALL_OF_KEY, ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ID_KEY,
+  JUNK_OPTION_ID,
+  PATTERN_PROPERTIES_KEY,
+  PROPERTIES_KEY,
+  REQUIRED_KEY,
+} from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
@@ -43,9 +51,8 @@ function variantId(id: unknown, content: object): string {
   // An `$id` is typed as a string but an untyped JS caller can hand over anything, and a non-string one is reported
   // as a validation error rather than thrown on, so it is converted rather than called into. An empty trailing
   // fragment goes with the suffix it would otherwise swallow: `a.json#` would become `a.json#?rjsf=...`, putting the
-  // query inside the fragment, and the 2019-09 and 2020-12 meta-schemas require an `$id` to match `^[^#]*#?$`, so
-  // every variant of such an option failed to compile. Both drafts allow the empty fragment, and it is common in
-  // schemas carried over from draft-04
+  // query inside the fragment, where the 2019-09 and 2020-12 meta-schemas require an `$id` to match `^[^#]*#?$`. Both
+  // drafts allow the empty fragment, and it is common in schemas carried over from draft-04
   const base = String(id).replace(VARIANT_ID_SUFFIX, '').replace(/#$/, '');
   return `${base}?rjsf=${hashForSchema(content as RJSFSchema)}`;
 }
@@ -91,6 +98,23 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
   return scored;
 }
 
+/** The scoring schema for an option that describes no keys at all. `normalizeBooleanSchema()` reads a `false`
+ * subschema as this, which is the same statement: nothing validates against it.
+ */
+const MATCHES_NOTHING: StrictRJSFSchema = { not: {} };
+
+/** Whether the given option describes keys somewhere other than its `properties`, which is what an option describing a
+ * map does. A missing `additionalProperties` is read as `false` here, as it is wherever else RJSF asks this question.
+ *
+ * @param option - The option to test
+ * @returns - True when the option describes keys its `properties` does not name
+ */
+function describesKeysOutsideProperties<S extends StrictRJSFSchema = RJSFSchema>(option: S): boolean {
+  return (
+    PATTERN_PROPERTIES_KEY in option || (ADDITIONAL_PROPERTIES_KEY in option && option.additionalProperties !== false)
+  );
+}
+
 /** Returns the `option` with the `anyOf` of its own property names that scoring an object option needs, or the option
  * itself, under a derived `$id`, when it declares no `properties` to build one from.
  *
@@ -105,14 +129,23 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
  * @returns - The schema asserting the option and the keys scoring it needs
  */
 function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
-  // What the option declares is counted rather than tested for, since an option describing a map carries an empty
-  // `properties` by the time it is scored -- `stubExistingAdditionalProperties()` puts one there for the keys the data
-  // holds. An `anyOf` over no names is not a stricter schema but an unsatisfiable one, which a validator rejects as
-  // invalid: AJV fails the whole compile with `data/anyOf must NOT have fewer than 1 items`, and at runtime it warns
-  // and answers `false`, so a map option would never match
-  const propertyNames = Object.keys(option[PROPERTIES_KEY] ?? {});
-  if (propertyNames.length === 0) {
+  // Only an option that declares `properties` describes an object whose keys scoring can assert. One that declares
+  // none describes something else -- a string, a number, a map -- and is scored as it stands
+  if (!option[PROPERTIES_KEY]) {
     return withVariantId<S>(option);
+  }
+  const propertyNames = Object.keys(option[PROPERTIES_KEY]);
+  if (propertyNames.length === 0) {
+    // An option describing a map declares an empty `properties` by the time it is scored, since
+    // `stubExistingAdditionalProperties()` puts one there for the keys the data holds, and it is scored as it stands:
+    // an `anyOf` over no names is not a stricter schema but an unsatisfiable one, which AJV rejects as invalid,
+    // failing a whole precompile with `data/anyOf must NOT have fewer than 1 items`.
+    //
+    // An option that describes no keys at all has nothing for scoring to match on either way, and scored as it stands
+    // it matches every object, so a "none of these" option in front of the real ones takes the data away from them. It
+    // is scored by a schema that matches nothing, which is what the unsatisfiable `anyOf` said and what a `false`
+    // subschema says, while being a schema a validator accepts rather than one that fails the compile
+    return describesKeysOutsideProperties<S>(option) ? withVariantId<S>(option) : (MATCHES_NOTHING as S);
   }
   const requiresAnyOf = { anyOf: propertyNames.map((key) => ({ required: [key] })) };
   const { [ID_KEY]: id, [REQUIRED_KEY]: _required, ...content } = option;

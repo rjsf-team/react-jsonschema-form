@@ -12,7 +12,7 @@ import {
   THEN_KEY,
 } from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
-import isObject, { isSchemaObject } from '../isObject.ts';
+import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
@@ -92,32 +92,24 @@ function parseUnmergedAllOf<
   }
 }
 
-/** Collects the references that resolution materialized into `schema`, which it marks every subtree it expanded with.
- * Resolution keeps its own path stack and never hands it back, so a caller that resolves a schema and then resolves
- * something derived from it reads the markers to learn what the first resolution had already expanded.
+/** Returns the `recurseList` for the sub-schemas of `schema`, which is the path `schema` was reached by plus the
+ * reference it was itself resolved from. Resolution marks each subtree it materializes with its source reference and
+ * keeps its own path stack, which it never hands back, so the marker is what a caller resolving something derived from
+ * the schema reads to learn the reference it must not follow round again.
  *
- * @param schema - The resolved schema whose materialized references are wanted
- * @param [refs=[]] - The references collected so far, which the walk adds to
- * @returns - The references materialized anywhere within `schema`, without duplicates
+ * Only the schema's own marker joins the path. The markers further down belong to the paths of the subtrees that carry
+ * them, and `resolveAllReferences()` scopes its path to each subtree for that reason: a reference a sibling resolved is
+ * not on this one's path, and passing it as though it were leaves this one's own `$ref` a literal.
+ *
+ * @param schema - The resolved schema whose sub-schemas are about to be parsed
+ * @param recurseList - The references resolved on the way to `schema`
+ * @returns - The references resolved on the way to `schema`'s sub-schemas
  */
-function materializedRefs(schema: unknown, refs: string[] = []): string[] {
-  if (Array.isArray(schema)) {
-    for (const entry of schema) {
-      materializedRefs(entry, refs);
-    }
-    return refs;
-  }
-  if (!isObject(schema)) {
-    return refs;
-  }
+function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recurseList: string[]): string[] {
   const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
-  if (typeof sourceRef === 'string' && !refs.includes(sourceRef)) {
-    refs.push(sourceRef);
-  }
-  for (const value of Object.values(schema)) {
-    materializedRefs(value, refs);
-  }
-  return refs;
+  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef)
+    ? [...recurseList, sourceRef]
+    : [...recurseList];
 }
 
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
@@ -170,10 +162,7 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {
       state.resolved.add(resolvedKey);
-      // Resolution's own path stack is scoped to the one walk it belongs to, so what it expanded is read back off the
-      // markers it left on the schema instead. Each list below is a copy: resolution appends to the path it is given
-      // for the subtree it is walking, and a shared one would carry a sibling's references into this walk
-      const resolvedRefs = materializedRefs(localSchema, [...recurseList]);
+      const resolvedRefs = pathForValues<S>(localSchema, recurseList);
       // An `allOf` a merge leaves in place is read unmerged wherever it was reached from, and one that only appears
       // after resolution -- in a `then` or a dependency -- is merged inside `retrieveSchemaInternal()`, so the entries
       // are reached here rather than only on the schema the caller handed in
