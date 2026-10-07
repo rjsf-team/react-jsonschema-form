@@ -38,6 +38,14 @@ describe('validationDataMerge()', () => {
     };
     expect(validationDataMerge(validationData, errorSchema)).toEqual(expected);
   });
+  it('Keeps the existing errors when their errorSchema is empty, as when a transformErrors cleared their messages', () => {
+    const oldErrors = [{ property: '.foo', message: '', stack: '.foo' }];
+    const validationData: ValidationData<any> = { errorSchema: {}, errors: oldErrors };
+    const errorSchema: ErrorSchema = { [ERRORS_KEY]: ['custom error'] };
+    const result = validationDataMerge(validationData, errorSchema);
+    expect(result.errorSchema).toEqual(errorSchema);
+    expect(result.errors).toEqual([...oldErrors, { property: '.', message: 'custom error', stack: '. custom error' }]);
+  });
   it('Returns merged data when additionalErrorSchema is passed, prevent duplicates', () => {
     const oldError = 'ajv error';
     const validationData: ValidationData<any> = {

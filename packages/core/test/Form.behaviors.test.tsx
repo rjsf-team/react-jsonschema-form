@@ -760,7 +760,9 @@ describe('Error state consistency when deriving from new props', () => {
       const { container, rerender } = render(<Parent extraErrors={addrServerErrors} />);
 
       await submitForm(container.querySelector('form')!, user);
-      expect(errorListMessages(container)).toEqual([...expected, `.addr.street ${server}`]);
+      // A server message the validator reports at the same path is listed once, not twice
+      const serverListed = (expected as string[]).includes(`.addr.street ${server}`) ? [] : [`.addr.street ${server}`];
+      expect(errorListMessages(container)).toEqual([...expected, ...serverListed]);
 
       // Remove hands back the displayed `errorSchema`, `server` included, which must not outlive the prop supplying it
       await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);

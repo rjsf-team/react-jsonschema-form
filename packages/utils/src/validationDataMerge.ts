@@ -38,7 +38,7 @@ export default function validationDataMerge<T = unknown>(
   const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
   let errors = toErrorList(additionalErrorSchema);
   let errorSchema = additionalErrorSchema;
-  if (oldErrorSchema && Object.keys(oldErrorSchema).length > 0) {
+  if ((oldErrorSchema && Object.keys(oldErrorSchema).length > 0) || oldErrors.length > 0) {
     errorSchema = mergeObjects(
       oldErrorSchema,
       additionalErrorSchema,

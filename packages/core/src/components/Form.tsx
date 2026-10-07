@@ -530,7 +530,7 @@ function mergeErrors<T>(
 ): ValidationData<T> {
   let { errorSchema, errors } = schemaValidation;
   if (extraErrors) {
-    const merged = validationDataMerge(schemaValidation, extraErrors);
+    const merged = validationDataMerge(schemaValidation, extraErrors, true);
     errorSchema = merged.errorSchema;
     errors = merged.errors;
   }
@@ -600,10 +600,8 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
     formContext ?? ({} as F),
   );
   if (Object.keys(uiRequiredErrorSchema).length === 0) {
-    // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
-    // has message-less errors (e.g. from a `transformErrors` that clears `message`), its own `errorSchema` can have
-    // fewer keys than its `errors` list (`toErrorSchema()` only adds entries with a truthy message), so merging in
-    // `{}` would silently drop those entries from `errors` instead of returning `schemaValidation` unchanged.
+    // Nothing to merge in: return `schemaValidation` as it is, rather than going through validationDataMerge(), which
+    // rebuilds both its `errorSchema` and its `errors` list for an empty-but-truthy additional errorSchema.
     return schemaValidation;
   }
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);

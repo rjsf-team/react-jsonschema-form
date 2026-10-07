@@ -1428,5 +1428,26 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
       });
     });
+
+    describe('extraErrors identical to a validator error', () => {
+      const message = 'must NOT have fewer than 3 characters';
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } },
+        },
+      };
+      const extraErrors: ErrorSchema = { addr: { street: { __errors: [message] } } };
+
+      it('lists the message once in the top ErrorList and on the field after submit', async () => {
+        const { node } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings: false });
+
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+        await submitForm(node, user);
+
+        expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+      });
+    });
   });
 });
