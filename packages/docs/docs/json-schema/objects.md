@@ -143,6 +143,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Also in this case, an add button for new properties is shown by default.
 A property added under a name one of the patterns matches is seeded from that pattern, so its field starts out holding the pattern's `const` or `default`, falling back to the starting value its type calls for — `{}`, `[]`, `0`, `false`, `null`, or the `New Value` string.
+The add button has to pick that seed before the user has picked the name, so renaming a property that still holds its seed onto a name another subschema describes seeds it again from that one, and a value the user has entered is kept whatever the rename does to it.
 A pattern that constrains the value without naming a `type`, such as one that is only a `format` or a length, leaves the key to take its type from the value it holds, the way `additionalProperties` does, so the property renders as a field for that value with the pattern's constraint kept.
 A pattern that is only an `enum` takes the type its values have, so an `enum` of numbers renders as a numeric select rather than a textual one.
 A pattern of `false` rejects every value a key could hold, so a key it matches renders the way a forbidden key does below.
@@ -151,7 +152,9 @@ Where several patterns match a key, they describe it together, and a `false` amo
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.
 A key an `anyOf`/`oneOf` option declares as a property of its own is that option's to render rather than an additional property, so it takes no second field beside the one the chosen option renders for it.
-That holds for every option, not only the one on screen, so a key only an option the user has not chosen declares waits for them to choose that option rather than taking a field of its own.
+An option declares a key through its own `properties`, through a `$ref` or an `allOf` it is composed of, through the `then`/`else` branch its condition takes for the data in hand, or by taking keys of its own, in which case every extra key the data holds is one it renders.
+Only a key every option renders is left to them: the option on screen is the user's to choose, so a key some other option would leave undeclared keeps a field of its own, with the dropdown and the remove button an additional property has, rather than becoming a value nothing in the form can reach.
+A property added or renamed to a name only some options declare therefore renders twice while the option declaring it is on screen.
 Where `additionalProperties: false` does forbid it, the key has no subschema to render with and the property renders as the empty field a validation error accompanies.
 An `unevaluatedProperties` answers for the same keys where the object names no `additionalProperties` to evaluate them: a `false` forbids them, so it renders them the same way, and a schema describes what they may hold, so they render as the field it calls for, exactly as an `additionalProperties` schema's keys do.
 Beside any `additionalProperties`, `true` and a schema alike, it has nothing left to say and no say in how the key renders.

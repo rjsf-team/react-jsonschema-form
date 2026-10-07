@@ -1,6 +1,5 @@
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
-  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
   ELSE_KEY,
@@ -14,7 +13,11 @@ import {
 import { sortedJSONStringify } from '../hashForSchema.ts';
 import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
-import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
+import {
+  additionalPropertiesKeyword,
+  resolveAnyOrOneOfSchemas,
+  retrieveSchemaInternal,
+} from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
@@ -202,8 +205,9 @@ function parseValueSchemas<
 >(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S, recurseList: string[]) {
   const valueSchemas: unknown[] = Object.values(schema[PROPERTIES_KEY] ?? {});
   // An additional key is only stubbed into `properties` once the form data has one, which a parse does not, so the
-  // schema a form renders such a key with is reached here instead
-  valueSchemas.push(schema[ADDITIONAL_PROPERTIES_KEY]);
+  // schema a form renders such a key with is reached here instead -- read through the same function the form reads it
+  // with, so that a key described by `unevaluatedProperties` has its sub-schemas compiled too
+  valueSchemas.push(additionalPropertiesKeyword<S>(schema));
   // A form renders a key its `patternProperties` match with the merge of every pattern matching it, down to the one
   // pattern a lone match makes, so each combination is parsed as the `allOf` that `stubExistingAdditionalProperties()`
   // hands to `retrieveSchema()` rather than as the patterns themselves, which a form resolves nothing from

@@ -93,28 +93,22 @@ function getDefaultValue<
  * matches another one, so that option's type is the one the field the user is handed renders and a seed of any other
  * type is a value that field cannot show.
  *
- * `retrieveSchema()` leaves the options themselves unresolved, so the first option is resolved before its type is
- * read: an option spelled as a `$ref` names no type of its own, where the field `MultiSchemaField` renders for it
- * takes the type of what it refers to. The resolved option answers through `getAdditionalPropertyType()`, which reads
- * options of its own that agree on a type, and an option that leaves the type to options that disagree again leaves
- * the seed to the `New Value` a property no schema names a type for starts at. A `$ref` naming no definition is not
- * caught here: `getDefaultFormState()` resolves the same options before this is reached, so such a schema has already
- * thrown by then.
+ * Both reads are given the `rootSchema`, so an option spelled as a `$ref` -- which names no type of its own, where the
+ * field `MultiSchemaField` renders for it takes the type of what it refers to -- is read through the definition it
+ * names, as `retrieveSchema()` reads the very same options when it stubs the property. An option that leaves the type
+ * to options that disagree again leaves the seed to the `New Value` a property no schema names a type for starts at.
  *
- * @param schemaUtils - The schema utils from the registry, to resolve the option with
  * @param subSchema - The schema describing the additional property, with its own `$ref`s resolved
+ * @param rootSchema - The root schema an option's `$ref` names a definition of
  * @returns - The type to seed the new property with, or undefined when no option names one either
  */
-function getSeedType<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  schemaUtils: Registry<T, S, F>['schemaUtils'],
-  subSchema: S,
-): string | undefined {
-  const type = getAdditionalPropertyType<S>(subSchema);
+function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, rootSchema: S): string | undefined {
+  const type = getAdditionalPropertyType<S>(subSchema, rootSchema);
   if (type !== undefined) {
     return type;
   }
   const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
-  return isObject(firstOption) ? getAdditionalPropertyType<S>(schemaUtils.retrieveSchema(firstOption)) : undefined;
+  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption, rootSchema) : undefined;
 }
 
 function isAdditionalPropertySchema(schema: unknown) {
@@ -146,7 +140,8 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * What makes a name described is read from the patterns rather than from `getAdditionalPropertySchema()` alone, which
  * answers for an `unevaluatedProperties` schema too: that keyword describes the value a pattern-unmatched name may hold
- * without describing the name, so `omitExtraData` prunes it all the same and there is nothing to prefer in it.
+ * without describing the name itself, where a pattern describes both, so a pattern-matched name is the one the schema
+ * has the most to say about.
  *
  * It stays a preference rather than a restriction: `propertyNames` enumerates the other names all the same, and a
  * property the user can still rename beats no new property at all.
@@ -444,38 +439,54 @@ export default function ObjectField<
     [uiOptions],
   );
 
-  /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
-   * default data for that field has been added to the formData.
+  /** Returns the schema the object says describes `key`: the one it declares under that name, where it declares one,
+   * and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The key input is
+   * free text, so a property can be renamed onto a declared name, and the field that name then renders is the declared
+   * property's -- reading the keywords for the undeclared names instead would seed a value that field cannot show.
+   *
+   * `retrieveSchema()` stubs every additional key the form data holds in among the `properties` too, so a stub is told
+   * from a declared property by the flag it carries and left to the keyword that described it. The names are read as
+   * own properties, since a key called `constructor` or `toString` would otherwise be answered for by
+   * `Object.prototype`.
    */
-  const onAddProperty = useCallback(() => {
-    if (!allowsAdditionalProperties<S>(schema)) {
-      return;
-    }
-    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
-    // to keep, and a string spread into an object would turn each of its characters into one
-    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
-    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
-    // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
-    // with none left means a custom template is offering it anyway, and adding no property beats adding one the
-    // schema forbids
-    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
-    if (freeNames?.length === 0) {
-      return;
-    }
-    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
-    const newKey = getAvailableKey(preferredKey, newFormData);
-    // The new property is seeded from the very schema the object says describes its name, which is the one
-    // `retrieveSchema()` stubs the field from, so the seed and the field can't disagree about the key
-    const keySchema = getAdditionalPropertySchema<S>(schema, newKey);
-    if (keySchema === false) {
-      // A schema that forbids the name leaves `retrieveSchema()` nothing but the `{ type: 'null' }` stub to render it
-      // with, so any other seed would be a value no field can show
-      setByPath(newFormData, newKey, null);
-    } else if (isSchemaObject<S>(keySchema)) {
+  const schemaForKey = useCallback(
+    (key: string): S | boolean => {
+      const properties = schema.properties ?? {};
+      if (Object.hasOwn(properties, key) && !isAdditionalPropertySchema(properties[key])) {
+        return properties[key] as S | boolean;
+      }
+      return getAdditionalPropertySchema<S>(schema, key);
+    },
+    [schema],
+  );
+
+  /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
+   * says describes that name, which is the one `retrieveSchema()` stubs the field from, so the seed and the field can't
+   * disagree about the key.
+   */
+  const seedForKey = useCallback(
+    (key: string) => {
+      const keySchema = schemaForKey(key);
+      if (keySchema === false) {
+        // A schema that forbids the name leaves `retrieveSchema()` nothing but the `{ type: 'null' }` stub to render it
+        // with, so any other seed would be a value no field can show
+        return null;
+      }
+      if (!isSchemaObject<S>(keySchema)) {
+        // A `true`, which is what an `additionalProperties` the schema leaves out reads as, describes no schema to seed
+        // from, so the new property starts at the value a field with no type to render offers
+        return getDefaultValue<T, S, F>(translateString);
+      }
       // Resolved the way `retrieveSchema()` resolves it before stubbing, so a `$ref` and an `allOf` of matching
-      // patterns are seeded from what they describe. The new property holds no data yet, so there is none to resolve
-      // the schema against
-      const resolvedKeySchema = schemaUtils.retrieveSchema(keySchema);
+      // patterns are seeded from what they describe. A resolution against no data at all would answer an `if` inside
+      // the subschema with an empty object, which satisfies any condition vacuously, so the schema is resolved again
+      // against the `default` it turns out to carry: that default is the data the property is about to hold, and it is
+      // the branch that default takes whose own defaults belong in the seed
+      const describedKeySchema = schemaUtils.retrieveSchema(keySchema);
+      const resolvedKeySchema =
+        describedKeySchema.default === undefined
+          ? describedKeySchema
+          : schemaUtils.retrieveSchema(keySchema, describedKeySchema.default as T);
       const keyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
       // The widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
       // without `ui:globalOptions`, so it is read off the schema the key is described by before that `$ref` is
@@ -491,7 +502,7 @@ export default function ObjectField<
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getSeedType<T, S, F>(schemaUtils, resolvedKeySchema);
+        : getSeedType<S>(resolvedKeySchema, rootSchema);
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
       // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
@@ -519,16 +530,36 @@ export default function ObjectField<
         keyUiSchema,
         uiSchemaDefinitions,
       ) as RJSFSchema['default'];
-      let newValue: unknown = resolvedKeySchema.const !== undefined ? resolvedKeySchema.const : defaultValue;
-      if (newValue === undefined) {
-        newValue = firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
+      const newValue = resolvedKeySchema.const !== undefined ? resolvedKeySchema.const : defaultValue;
+      if (newValue !== undefined) {
+        return newValue;
       }
-      setByPath(newFormData, newKey, newValue);
-    } else {
-      // A `true`, which is what an `additionalProperties` the schema leaves out reads as, describes no schema to seed
-      // from, so the new property starts at the value a field with no type to render offers
-      setByPath(newFormData, newKey, getDefaultValue<T, S, F>(translateString));
+      return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
+    },
+    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchema, uiSchemaDefinitions],
+  );
+
+  /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
+   * default data for that field has been added to the formData.
+   */
+  const onAddProperty = useCallback(() => {
+    if (!allowsAdditionalProperties<S>(schema)) {
+      return;
     }
+    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
+    // to keep, and a string spread into an object would turn each of its characters into one
+    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
+    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
+    // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
+    // with none left means a custom template is offering it anyway, and adding no property beats adding one the
+    // schema forbids
+    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
+    if (freeNames?.length === 0) {
+      return;
+    }
+    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
+    const newKey = getAvailableKey(preferredKey, newFormData);
+    setByPath(newFormData, newKey, seedForKey(newKey));
 
     if (lastRenamedProperty.current.previousKey === newKey) {
       lastRenamedProperty.current.currentKey = newKey;
@@ -536,19 +567,7 @@ export default function ObjectField<
     }
     setAdditionalPropertyOrder((order) => [...order, newKey]);
     onChange(newFormData, fieldPath);
-  }, [
-    formData,
-    onChange,
-    translateString,
-    schemaUtils,
-    fieldPath,
-    getAvailableKey,
-    schema,
-    resolvedSchema,
-    uiSchema,
-    uiSchemaDefinitions,
-    rootSchema,
-  ]);
+  }, [formData, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -566,10 +585,16 @@ export default function ObjectField<
           ...(currentFormData as GenericObjectType),
         };
         const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
+        // The seed was picked for a name the user had not picked yet, so a property still holding the one its old name
+        // took takes the one the schema describing its new name seeds instead: a `New Value` string left under a name a
+        // numeric pattern describes is a value that pattern's field cannot show. A value the user did go on to enter is
+        // theirs to keep whatever the rename does to it, and so is one whose new name the same schema describes
+        const describedTheSameWay = deepEquals(schemaForKey(oldKey), schemaForKey(actualNewKey));
+        const reseedsTheValue = !describedTheSameWay && deepEquals(newFormData[oldKey], seedForKey(oldKey));
         const keyValues = Object.keys(newFormData).map((key) => {
           // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
           const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
-          return { [mappedKey]: newFormData[key] };
+          return { [mappedKey]: reseedsTheValue && key === oldKey ? seedForKey(actualNewKey) : newFormData[key] };
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
@@ -582,7 +607,7 @@ export default function ObjectField<
         onChange(renamedObj, fieldPath);
       }
     },
-    [onChange, fieldPath, getAvailableKey],
+    [onChange, fieldPath, getAvailableKey, schemaForKey, seedForKey],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE

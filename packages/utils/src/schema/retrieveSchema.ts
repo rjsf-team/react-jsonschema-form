@@ -4,6 +4,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  ELSE_KEY,
   GUESSED_TYPE_FLAG,
   ID_KEY,
   IF_KEY,
@@ -14,6 +15,7 @@ import {
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
+  THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
@@ -283,17 +285,18 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
  * data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField`
  * adds a property only to one.
  *
- * Any `patternProperties` says the object takes them, whatever an `additionalProperties: false` beside it says about
- * the names no pattern matches, since the names a pattern matches are the object's to take all the same. Otherwise the
- * keyword that describes those names answers, as long as it neither rejects them nor is missing: an object naming none
- * of the three keywords takes any key as far as a validator is concerned, but the form has no schema to render one
- * with and no name to add one under, so it offers none.
+ * A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside
+ * it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
+ * Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an
+ * object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema
+ * to render one with and no name to add one under, so it offers none. An empty `patternProperties` names no pattern, so
+ * it matches no name and describes no key the object could take, the way an empty `properties` declares none.
  *
  * @param schema - The object schema to check
  * @returns - True when the object takes keys beyond the ones its `properties` name
  */
 export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  if (schema.patternProperties !== undefined) {
+  if (Object.keys(schema.patternProperties ?? {}).length > 0) {
     return true;
   }
   const keyword = additionalPropertiesKeyword<S>(schema);
@@ -341,26 +344,89 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
  * the value, since choosing one is what settles it, and a type of its own would render a field for that type beside the
  * options.
  *
+ * A schema that says nothing about the type itself is followed through the `$ref` it is spelled as, given a
+ * `rootSchema` to look the definition up in, since a reference is how an option usually names the object or the enum it
+ * is. The definition is looked up rather than the schema resolved: the type is all that is wanted here, where resolving
+ * every option of every additional property would cost each render the merges `MultiSchemaField` already pays for the
+ * one option on screen. A reference followed once on a walk is not followed again, since a recursive option refers back
+ * to itself without end, and one naming no definition says nothing, as the option holding it does until it is resolved.
+ *
  * @param subSchema - The schema describing the additional property, from `additionalProperties`, a matching pattern or
  *          `unevaluatedProperties`
+ * @param [rootSchema] - The root schema a `$ref` names a definition of, when there is one to look it up in
  * @returns - The type the `subSchema` says the property holds, or undefined when only its value can say
  */
-export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): string | undefined {
+export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
+  subSchema: S,
+  rootSchema?: S,
+): string | undefined {
+  return additionalPropertyType<S>(subSchema, rootSchema, new Set<string>());
+}
+
+/** Returns the definition a `schema` is spelled as a `$ref` to, as far as one can be named without resolving the
+ * schema. It is how a subschema says what it is without saying it in keywords of its own, and the lookup is what lets a
+ * reader that only asks a question about the subschema -- what type it holds, what names it declares -- ask it of the
+ * schema the reference names.
+ *
+ * @param schema - The schema whose reference is to be looked up
+ * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
+ * @param followedRefs - The references already followed on this walk, which this one is added to
+ * @returns - The definition the reference names, or undefined where there is none to name or it was followed already
+ */
+function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S | undefined,
+  followedRefs: Set<string>,
+): S | undefined {
+  const $ref = schema[REF_KEY];
+  if (rootSchema === undefined || typeof $ref !== 'string' || followedRefs.has($ref)) {
+    return undefined;
+  }
+  followedRefs.add($ref);
+  try {
+    const definition = findSchemaDefinition<S>($ref, rootSchema);
+    return isObject(definition) ? definition : undefined;
+  } catch {
+    // A reference that names no definition says nothing about the property, as the subschema holding it does until it
+    // is resolved: whatever resolves that subschema to render it reports the broken reference on its own
+    return undefined;
+  }
+}
+
+/** Reads the type for `getAdditionalPropertyType()`, carrying the references followed so far across the options and the
+ * definitions the walk reaches.
+ *
+ * @param subSchema - The schema describing the additional property
+ * @param rootSchema - The root schema a `$ref` names a definition of, when there is one to look it up in
+ * @param followedRefs - The references already followed on this walk
+ * @returns - The type the `subSchema` says the property holds, or undefined when only its value can say
+ */
+function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
+  subSchema: S,
+  rootSchema: S | undefined,
+  followedRefs: Set<string>,
+): string | undefined {
   const ownTypes = getSchemaOwnTypes<S>(subSchema);
   if (ownTypes) {
     return ownTypes.find((ownType) => ownType !== 'null') ?? ownTypes[0];
   }
   const xxxOf = getXxxOfOptions<S>(subSchema);
   if (xxxOf) {
+    // Each option follows the references this walk has followed without adding to the others' lists, so two options
+    // naming the same definition both read it rather than the second one reading a reference already followed
     const optionTypes = new Set(
-      xxxOf.options.map((option) => (isObject(option) ? getAdditionalPropertyType<S>(option) : undefined)),
+      xxxOf.options.map((option) =>
+        isObject(option) ? additionalPropertyType<S>(option, rootSchema, new Set(followedRefs)) : undefined,
+      ),
     );
     if (optionTypes.size === 1) {
       const [onlyType] = optionTypes;
       return onlyType;
     }
+    return undefined;
   }
-  return undefined;
+  const definition = referencedDefinition<S>(subSchema, rootSchema, followedRefs);
+  return definition === undefined ? undefined : additionalPropertyType<S>(definition, rootSchema, followedRefs);
 }
 
 /** Resolves references and dependencies within a schema and its 'allOf' children. Passes the `expandAllBranches` flag
@@ -793,11 +859,16 @@ const UNSTUBBABLE_KEYWORDS = new Set<string>([...IDENTIFIER_KEYWORDS, ...CONTAIN
  */
 const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUBBABLE_KEYWORDS]);
 
-/** Returns the copy of `subSchema` that a stub is built from, without the keywords that identify the subschema or
- * hold others rather than describe the value. The copy is spread rather than rebuilt key by key so that the symbol
- * markers a resolved schema carries survive, `RJSF_REF_KEY` above all: `resolveUiSchema()` reads that marker off the
- * stub to apply the `ui:definitions` entry of the `$ref` the property was described through, which `Object.entries()`
- * would cost the property by not enumerating it.
+/** Returns the copy of `subSchema` that a stub stands for one property with, without the keywords that identify the
+ * subschema or hold others rather than describe the value. It is for the stub whose type the subschema only implies,
+ * which is the form's own reading of what that one property holds rather than the subschema as it was written: a field
+ * registered under an `$id` is for the schema that carries it, and routing every sibling property to such a field for a
+ * type the schema never named would be the form's doing, not the schema's.
+ *
+ * The copy is spread rather than rebuilt key by key so that the symbol markers a resolved schema carries survive,
+ * `RJSF_REF_KEY` above all: `resolveUiSchema()` reads that marker off the stub to apply the `ui:definitions` entry of
+ * the `$ref` the property was described through, which `Object.entries()` would cost the property by not enumerating
+ * it.
  *
  * @param subSchema - The schema describing the additional property
  * @returns - The copy to build the stub from
@@ -827,7 +898,7 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const schema = stubbableSchema<S>(subSchema) as GenericObjectType;
+  const schema = { ...subSchema } as GenericObjectType;
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (CONSTRAINING_KEYWORDS.has(key)) {
@@ -847,70 +918,198 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
 
 /** Builds the stub for an additional property described by `subSchema`, whose `$ref`s are expected to be resolved
  * already. A schema naming its `type` is stubbed as it stands, so a nullable `['integer', 'null']` keeps both names for
- * the field that offers a choice between them. One that names no type is given the type
- * `getAdditionalPropertyType()` reads out of it, which is the type `ObjectField` seeds a new property of this very
- * schema with. A schema that leaves the type to the value keeps its `anyOf`/`oneOf` options untouched, since the option
- * the value matches is what renders it, and otherwise takes the type of the data the property holds, keeping what it
- * does say about the value, so the property renders as a field for that data rather than one no type can render.
+ * the field that offers a choice between them, and so is one offering `anyOf`/`oneOf` options, since the option the
+ * value matches is what renders it; options that agree on a type are given it, the way `ObjectField` seeds a new
+ * property of this very schema with that type. A schema that neither names a type nor offers options is given the type
+ * `getAdditionalPropertyType()` reads out of the keywords that imply one, and otherwise the type of the data the
+ * property holds, keeping what it does say about the value, so the property renders as a field for that data rather
+ * than one no type can render.
+ *
+ * The stub built from a type the subschema only implies is the one `stubbableSchema()` strips the identifiers off, for
+ * the reason given there, as `guessedTypeSchema()` strips them off the one whose type is guessed from the data. The
+ * branches above it hand on the subschema the schema author wrote, identifiers and all, as every other reader of it
+ * does, so a field registered under its `$id` renders the properties it describes.
  *
  * @param subSchema - The schema describing the additional property, from `additionalProperties`, a matching pattern or
  *          `unevaluatedProperties`
  * @param formData - The form data held by the additional property
+ * @param [rootSchema] - The root schema a `$ref` among the subschema's options names a definition of
  * @returns - The stub schema for the additional property
  */
-function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, formData: unknown): S {
+function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
+  subSchema: S,
+  formData: unknown,
+  rootSchema?: S,
+): S {
   if (subSchema.type !== undefined) {
-    return stubbableSchema<S>(subSchema);
+    return { ...subSchema };
   }
-  const type = getAdditionalPropertyType<S>(subSchema);
+  const type = getAdditionalPropertyType<S>(subSchema, rootSchema);
+  if (getXxxOfOptions<S>(subSchema)) {
+    return type !== undefined ? { ...subSchema, type } : { ...subSchema };
+  }
   if (type !== undefined) {
     return { ...stubbableSchema<S>(subSchema), type };
-  }
-  if (getXxxOfOptions<S>(subSchema)) {
-    return stubbableSchema<S>(subSchema);
   }
   return guessedTypeSchema<S>(formData, subSchema);
 }
 
-/** Returns the property names a `schema` declares, including the ones it declares through the `anyOf`/`oneOf` options
- * it offers, the `allOf` entries it is composed of and the `$ref` it is spelled as — the way an option usually
- * declares them — so that a key any of them names is left to the option that renders it.
+/** Returns the property names a `schema` declares, including the ones it declares through the `allOf` entries it is
+ * composed of, the `$ref` it is spelled as and the branch its `if` settles for the `formData` — every subschema that is
+ * merged into it before it renders, so that each of them declares its names as the schema's own.
  *
- * A reference is looked up rather than the schema resolved: the names are all that is wanted here, where resolving
- * every option of every expandable object would cost each render the merge `MultiSchemaField` already pays for the one
- * option on screen. A reference followed once on a walk is not followed again, since a recursive option refers back to
- * itself without end, and one naming no definition, or naming itself, declares nothing: whatever resolves that option
- * to render it reports the broken reference on its own.
+ * The condition is put to the validator, which is the question `resolveCondition()` answers to merge that branch in, so
+ * the branch read here is the branch whose properties the form renders; without a `rootSchema` to resolve the condition
+ * against, neither branch is read and the names it declares are left to be stubbed instead. A reference is looked up
+ * rather than the schema resolved: the names are all that is wanted here, where resolving every option of every
+ * expandable object would cost each render the merge `MultiSchemaField` already pays for the one option on screen.
  *
+ * A merged subschema that takes keys its own `properties` don't name declares no name in particular: the merge gives
+ * the schema that keyword, so `retrieveSchema()` stubs every key the data holds for it and it renders whatever key it
+ * is asked about. There is no list of names to answer with then, which is `undefined` — the same answer
+ * `namesOptionRenders()` gives for an option that takes keys of its own, so an option spelled as a `$ref` to a map is
+ * read as the map it is rather than as the names its definition happens to declare. The schema's own keyword is left
+ * out of the question, since the object `stubExistingAdditionalProperties()` is stubbing has one by definition.
+ *
+ * @param context - The `SchemaContext` whose `validator` settles a condition
  * @param schema - The schema whose declared names are desired
  * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
+ * @param formData - The form data the object holds, which its conditions are evaluated against
  * @param followedRefs - The references already followed on this walk
- * @returns - The names the schema and its subschemas declare between them
+ * @returns - The names the schema and the subschemas merged into it declare between them, or undefined when one of
+ *          those subschemas takes every key the data holds
  */
-function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema>(
+function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
   schema: S,
   rootSchema: S | undefined,
+  formData: GenericObjectType,
   followedRefs: Set<string>,
-): string[] {
-  const subSchemas: (S | boolean)[] = [
-    ...(getXxxOfOptions<S>(schema)?.options ?? []),
-    ...(Array.isArray(schema[ALL_OF_KEY]) ? (schema[ALL_OF_KEY] as (S | boolean)[]) : []),
-  ];
-  const $ref = schema[REF_KEY];
-  if (rootSchema !== undefined && typeof $ref === 'string' && !followedRefs.has($ref)) {
-    followedRefs.add($ref);
-    try {
-      subSchemas.push(findSchemaDefinition<S>($ref, rootSchema));
-    } catch {
-      // A reference that names no definition declares nothing, as the option holding it does until it is resolved
-    }
+): string[] | undefined {
+  const merged: (S | boolean | undefined)[] = Array.isArray(schema[ALL_OF_KEY])
+    ? [...(schema[ALL_OF_KEY] as (S | boolean)[])]
+    : [];
+  merged.push(referencedDefinition<S>(schema, rootSchema, followedRefs));
+  if (IF_KEY in schema && rootSchema !== undefined) {
+    const holds = context.validator.isValid(schema[IF_KEY] as S, formData, rootSchema);
+    merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);
   }
-  return [
-    ...Object.keys(schema[PROPERTIES_KEY] ?? {}),
-    ...subSchemas.flatMap((subSchema) =>
-      isObject(subSchema) ? declaredPropertyNames<S>(subSchema, rootSchema, followedRefs) : [],
-    ),
-  ];
+  const names = Object.keys(schema[PROPERTIES_KEY] ?? {});
+  for (const subSchema of merged.filter((entry) => isObject(entry))) {
+    if (allowsAdditionalProperties<S>(subSchema)) {
+      return undefined;
+    }
+    const subNames = declaredPropertyNames<S, F>(context, subSchema, rootSchema, formData, followedRefs);
+    if (subNames === undefined) {
+      return undefined;
+    }
+    names.push(...subNames);
+  }
+  return names;
+}
+
+/** Returns the names an `anyOf`/`oneOf` option renders as properties of its own once it is selected, which are the
+ * names it declares and the ones every one of its own options does. An option that takes keys of its own names none of
+ * them in particular: `retrieveSchema()` stubs every key the form data holds outside its `properties` for it, the way
+ * it does for the object around it, so it renders whatever key it is asked about and this says so with `undefined`.
+ * The option is read for that keyword through the subschemas merged into it as much as through its own, since a `$ref`
+ * is how an option usually names the map it is.
+ *
+ * @param context - The `SchemaContext` whose `validator` settles a condition
+ * @param option - The option whose rendered names are desired
+ * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
+ * @param formData - The form data the object holds, which the option's conditions are evaluated against
+ * @param followedRefs - The references already followed on this walk
+ * @returns - The names the option renders, or undefined for an option that renders every key the data holds
+ */
+function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  option: S,
+  rootSchema: S | undefined,
+  formData: GenericObjectType,
+  followedRefs: Set<string>,
+): Set<string> | undefined {
+  if (allowsAdditionalProperties<S>(option)) {
+    return undefined;
+  }
+  const nestedNames = namesEveryOptionRenders<S, F>(context, option, rootSchema, formData, followedRefs);
+  if (nestedNames === undefined) {
+    return undefined;
+  }
+  const declaredNames = declaredPropertyNames<S, F>(context, option, rootSchema, formData, followedRefs);
+  return declaredNames === undefined ? undefined : new Set([...declaredNames, ...nestedNames]);
+}
+
+/** Returns the names every one of a `schema`'s `anyOf`/`oneOf` options renders, which are the names that have a field
+ * whichever option the user is shown. A name only some options render is none of them: the option on screen is the
+ * user's to choose and `retrieveSchema()` leaves the options for `MultiSchemaField` to choose between rather than
+ * merging the chosen one in, so a name the other options don't render would have no field at all under them and the
+ * value it holds nothing to edit or remove it with.
+ *
+ * A schema offering no options renders no name this way, and one whose every option takes keys of its own renders every
+ * key the data holds, which is `undefined` as it is for a single option.
+ *
+ * @param context - The `SchemaContext` whose `validator` settles a condition
+ * @param schema - The schema whose options are to be read
+ * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
+ * @param formData - The form data the object holds, which an option's conditions are evaluated against
+ * @param followedRefs - The references already followed on this walk
+ * @returns - The names every option renders, or undefined when every one of them renders every key the data holds
+ */
+function namesEveryOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S | undefined,
+  formData: GenericObjectType,
+  followedRefs: Set<string>,
+): Set<string> | undefined {
+  const options = getXxxOfOptions<S>(schema)?.options ?? [];
+  if (options.length === 0) {
+    return new Set<string>();
+  }
+  // Each option follows the references this walk has followed without adding to the others' lists, so two options
+  // naming the same definition both read it rather than the second one reading a reference already followed
+  const namesPerOption = options.map((option) =>
+    isObject(option)
+      ? namesOptionRenders<S, F>(context, option, rootSchema, formData, new Set(followedRefs))
+      : new Set<string>(),
+  );
+  const naming = namesPerOption.filter((names): names is Set<string> => names !== undefined);
+  if (naming.length === 0) {
+    return undefined;
+  }
+  return naming.reduce((shared, names) => new Set([...shared].filter((name) => names.has(name))));
+}
+
+/** Returns the names another schema renders as properties of its own for an object that `retrieveSchema()` is stubbing
+ * the extra keys of, so that a key one of them names is no more stubbed here than one the object's own `properties`
+ * name: it would otherwise be given a field beside the one that schema renders for it, giving the one value two fields
+ * to be written from, under one pair of ids.
+ *
+ * Those schemas are the ones merged into the object and the `anyOf`/`oneOf` options rendered beside it, which the
+ * object's own `properties` are missing the names of for opposite reasons: a merge may be left undone, where an option
+ * is left to `MultiSchemaField` to choose between on purpose.
+ *
+ * @param context - The `SchemaContext` whose `validator` settles a condition
+ * @param schema - The object schema whose extra keys are being stubbed
+ * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
+ * @param formData - The form data the object holds, which the conditions it reaches are evaluated against
+ * @returns - The names rendered elsewhere, or undefined when every key the data holds is
+ */
+function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S | undefined,
+  formData: GenericObjectType,
+): Set<string> | undefined {
+  const optionNames = namesEveryOptionRenders<S, F>(context, schema, rootSchema, formData, new Set<string>());
+  if (optionNames === undefined) {
+    return undefined;
+  }
+  // A subschema merged into this object that takes keys of its own is this object taking them, which is the case the
+  // stub is for rather than one to leave to another schema, so the walk saying so names nothing rendered elsewhere
+  const declaredNames = declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<string>()) ?? [];
+  return new Set([...declaredNames, ...optionNames]);
 }
 
 /** Creates new 'properties' items for each key in the `formData`
@@ -934,24 +1133,28 @@ export function stubExistingAdditionalProperties<
 
   // make sure formData is an object
   const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
-  // A key an `anyOf`/`oneOf` option declares as a property of its own is that option's to render once it is selected,
-  // so it is no more an additional property than one the object's own `properties` name. `retrieveSchema()` leaves the
-  // options for `MultiSchemaField` to choose between rather than merging the chosen one in, so such a key is missing
-  // from the `properties` here and would otherwise be stubbed beside the field the option renders for it, giving the
-  // one value two fields to be written from. The names every option declares are passed over, not just the ones the
-  // option on screen declares, since which option that is takes scoring the data against all of them, which is work
-  // every render of the object would pay for a name the user can reach by choosing the option that declares it
-  const declaredNames = new Set(declaredPropertyNames<S>(schema, rootSchema, new Set<string>()));
+  // Read on the first key that is not a declared property and not before: the walk of every option and the lookup of
+  // every `$ref` among them is work an object whose data holds no such key never has a question to answer with
+  let renderedElsewhere: { names: Set<string> | undefined } | undefined;
   Object.keys(formData).forEach((key) => {
-    if (key in schema.properties || declaredNames.has(key)) {
-      // No need to stub, our schema already has the property or a subschema of it declares one
+    // `Object.hasOwn`, since `in` answers for the names on `Object.prototype` too, and a property called `constructor`
+    // or `toString` left unstubbed is a value with no field to edit or remove it with
+    if (Object.hasOwn(schema.properties, key)) {
+      // No need to stub, our schema already has the property
+      return;
+    }
+    renderedElsewhere ??= { names: namesRenderedElsewhere<S, F>(context, schema, rootSchema, formData) };
+    if (renderedElsewhere.names === undefined || renderedElsewhere.names.has(key)) {
+      // No need to stub either: a schema merged into this one, or an option rendered beside it, renders the key as a
+      // property of its own
       return;
     }
     const keySchema = getAdditionalPropertySchema<S>(schema, key);
+    let stub: S;
     if (keySchema === false) {
       // The schema forbids the key, so the property has no subschema of its own to render it with and no value the
       // schema allows
-      schema.properties[key] = { type: 'null' };
+      stub = { type: 'null' } as S;
     } else if (isObject(keySchema)) {
       // A `$ref` and the `allOf` of the matching patterns describe the property through another schema, so they are
       // resolved into the one schema they describe before it is stubbed. Nothing else is: a subschema that describes the
@@ -961,15 +1164,23 @@ export function stubExistingAdditionalProperties<
         REF_KEY in keySchema || Array.isArray(keySchema[ALL_OF_KEY])
           ? retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key])
           : keySchema;
-      schema.properties[key] = stubSchemaForSubSchema<S>(described, formData[key]);
+      stub = stubSchemaForSubSchema<S>(described, formData[key], rootSchema);
     } else {
       // What is left is a `true`, or a keyword the schema leaves out, which JSON Schema reads as `true`: anything goes,
       // including a key none of the `patternProperties` patterns match, which the schema allows all the same and so
       // gets a field for the data it holds
-      schema.properties[key] = guessedTypeSchema<S>(formData[key]);
+      stub = guessedTypeSchema<S>(formData[key]);
     }
     // Set our additional property flag so we know it was dynamically added
-    (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+    (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
+    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
+    Object.defineProperty(schema.properties, key, {
+      value: stub,
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    });
   });
 
   return schema;

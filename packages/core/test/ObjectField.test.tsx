@@ -1107,6 +1107,173 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-field-null')).toBeNull();
     });
 
+    it('should re-seed an untouched new property when it is renamed onto a pattern of another type', async () => {
+      // The add button has to seed the property before the user has picked its name, and the generic `newKey` matches
+      // no pattern, so the seed is the `New Value` an undescribed name takes. Renaming it onto a name the numeric
+      // pattern describes is the next thing anyone filling in a patterns-only object does, and that string is a value
+      // the number field the rename brings up cannot show
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('0');
+    });
+
+    it('should keep a value the user entered when the renamed key is described by another schema', async () => {
+      // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even
+      // where the schema describing the new name would have seeded something else
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const valueInput = node.querySelector('#root_newKey')!;
+      await user.clear(valueInput);
+      await user.type(valueInput, 'typed');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'typed', newKey: undefined }, 'root');
+    });
+
+    it('should re-seed an untouched new property from the declared schema when it is renamed onto a declared name', async () => {
+      // The key input is free text, so a property can be renamed onto a name the object's own `properties` declare,
+      // and the field that name then renders is the declared property's. Reading `additionalProperties` for that name
+      // instead would leave the `New Value` string in the declared number field
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          additionalProperties: { type: 'string' },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'count');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { count: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_count')).toHaveValue('0');
+    });
+
+    it('should keep the stubbed schema identifier so a field registered under it renders the property', async () => {
+      // A custom field by `$id` applies to any sub-schema carrying that `$id`, an `additionalProperties` schema
+      // included, so every property it describes is rendered by that field
+      function IdField() {
+        return <div id='by-id'>by id</div>;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { $id: '/schemas/my-id', type: 'string' } },
+        fields: { '/schemas/my-id': IdField },
+        initialFormData: { a: 'x', b: 'y' },
+      });
+
+      expect(node.querySelectorAll('#by-id')).toHaveLength(2);
+    });
+
+    it('should render a key only an unselected oneOf option declares as a removable property', async () => {
+      // The option on screen declares no `b`, so nothing in the option renders one, and leaving it unstubbed would
+      // leave its value in the form data with no field to edit or remove it with
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            { title: 'A', properties: { kind: { const: 'a' }, a: { type: 'string' } } },
+            { title: 'B', properties: { kind: { const: 'b' }, b: { type: 'string' } } },
+          ],
+        },
+        initialFormData: { kind: 'a', b: 'keep me' },
+      });
+
+      expect(node.querySelector('#root_b')).toHaveValue('keep me');
+      expect(node.querySelector('#root_b-key')).toHaveValue('b');
+      // The discriminator both options declare is the option's to render, so it takes no second field
+      expect(node.querySelectorAll('#root_kind')).toHaveLength(1);
+      expect(node.querySelector('#root_kind-key')).toBeNull();
+    });
+
+    it('should render a key an option takes through patterns of its own just once', async () => {
+      // An option that takes keys of its own has the key stubbed into it, so a second stub in the object around it
+      // would give the one value two fields to be written from, under one pair of ids
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          unevaluatedProperties: { type: 'number' },
+          oneOf: [{ patternProperties: { '^s_': { type: 'string' } } }],
+        },
+        initialFormData: { s_a: 'hello' },
+      });
+
+      expect(node.querySelectorAll('#root_s_a')).toHaveLength(1);
+      expect(node.querySelector('#root_s_a')).toHaveValue('hello');
+    });
+
+    it('should render a key an option declares in the branch its condition takes just once', async () => {
+      // The option's `then` is merged into it for this data, so the option renders `extra` itself
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string' } },
+              if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
+              then: { properties: { extra: { type: 'number' } } },
+            },
+          ],
+        },
+        initialFormData: { kind: 'a', extra: 5 },
+      });
+
+      expect(node.querySelectorAll('#root_extra')).toHaveLength(1);
+      expect(node.querySelector('#root_extra')).toHaveValue('5');
+    });
+
+    it('should render the keys of a subschema that describes them only through unevaluatedProperties', async () => {
+      // The keyword says the property holds an object as much as `additionalProperties` does, so the stub keeps it and
+      // the keys it describes render inside the property
+      const { node } = createFormComponent({
+        schema: { type: 'object', unevaluatedProperties: { unevaluatedProperties: { type: 'number' } } },
+        initialFormData: { a: { b: 1 } },
+      });
+
+      expect(node.querySelector('#root_a_b')).toHaveValue('1');
+    });
+
+    it('should select the option that describes a map only through unevaluatedProperties', async () => {
+      // Whether an option describes keys its `properties` don't name is what tells an option describing a map from one
+      // that matches nothing, and the keyword describes them as much as `additionalProperties` does
+      // `unevaluatedProperties` is a 2019-09 keyword `JSONSchema7` does not declare, so the options are typed as the
+      // `RJSFSchema`s they are rather than as the strict definitions a nested list is typed with
+      const thingOptions: RJSFSchema[] = [
+        { type: 'string' },
+        { type: 'object', unevaluatedProperties: { type: 'number' } },
+      ];
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { thing: { oneOf: thingOptions } } },
+        initialFormData: { thing: {} },
+      });
+
+      expect(node.querySelector<HTMLSelectElement>('#root_thing__oneof_select')).toHaveValue('1');
+    });
+
     it('should render the keys an unevaluatedProperties describes for an object naming no other keyword', async () => {
       // The keyword describes the keys the `properties` leave over, so an object naming it takes extra keys as much as
       // one naming `additionalProperties` does: the key it describes renders as the field that description calls for,
@@ -2717,6 +2884,28 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
     });
 
+    it('should seed the defaults of the branch the subschema default takes', async () => {
+      // Resolving the subschema against no data at all answers its `if` with an empty object, which satisfies any
+      // condition vacuously, so the seed would carry the `then` defaults for a `default` the `else` branch describes
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            default: { kind: 'b' },
+            properties: { kind: { type: 'string' } },
+            if: { properties: { kind: { const: 'a' } } },
+            then: { properties: { x: { type: 'string', default: 'ax' } } },
+            else: { properties: { y: { type: 'string', default: 'by' } } },
+          },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: { kind: 'b', y: 'by' } }, 'root');
+    });
+
     it('should prefer a name no pattern matches over one a pattern forbids', async () => {
       // Nothing describes `zzz`, but nothing forbids it either, so it renders a field for whatever it comes to hold —
       // where `abc`, which the `false` pattern rejects, can only be stubbed as `{ type: 'null' }`
@@ -2754,9 +2943,9 @@ describe('ObjectField', () => {
     });
 
     it('should prefer a name a pattern matches over one only unevaluatedProperties describes', async () => {
-      // `omitExtraData` keeps only the data a schema describes and reads an absent `additionalProperties` as
-      // describing nothing, so a name only `unevaluatedProperties` answers for is pruned where a pattern-matched one
-      // survives, however renderable the field it is given
+      // `unevaluatedProperties` describes the value a pattern-unmatched name may hold without describing the name
+      // itself, where a pattern describes both, so the pattern-matched name is the one the schema has the most to say
+      // about
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
