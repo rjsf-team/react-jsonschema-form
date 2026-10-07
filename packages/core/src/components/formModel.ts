@@ -128,19 +128,21 @@ function getAt(data: unknown, segments: FieldPathList): unknown {
  * while an `<Activity>` hides it as well as once it has unmounted, and have yet to connect when it is first rendered,
  * which inside a hidden `<Activity>` they do only once it is shown. Operations still apply then, but what they would
  * tell the consumer waits until the Effects connect, as React asks of a hidden component; an unmounted form never
- * reconnects, so it never reports them.
+ * reconnects, so what it would report is dropped instead: held, each report would keep the state it describes alive
+ * for as long as the consumer keeps the handle.
  */
 function createReporter<Props>(getLatestProps: () => Props) {
   let detached = true;
+  let unmounted = false;
   let held: ((latest: Props) => void)[] = [];
   /** A report that is held while the form is detached, and otherwise made through `call` */
   const whenAttached =
     (call: (deliver: () => void) => void): Report<Props> =>
     (callback) => {
-      if (detached) {
-        held.push(callback);
-      } else {
+      if (!detached) {
         call(() => callback(getLatestProps()));
+      } else if (!unmounted) {
+        held.push(callback);
       }
     };
   /** For a report whose caller already holds the answer, which is dropped rather than held while detached */
@@ -165,6 +167,17 @@ function createReporter<Props>(getLatestProps: () => Props) {
     },
     detach: () => {
       detached = true;
+    },
+    /** The setup of an insertion Effect, which, unlike a layout Effect, React leaves connected while an `<Activity>`
+     * hides the form. Its cleanup is therefore the form unmounting, which releases what was held for a show that
+     * will not come
+     */
+    mount: () => {
+      unmounted = false;
+      return () => {
+        unmounted = true;
+        held = [];
+      };
     },
   };
 }
@@ -195,12 +208,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let state = initial;
   let operations = 0;
   let snapshot = { state, operations };
+  // The record of the last committed render: while `snapshot` is a newer one, a render of the form is on its way
+  let committedSnapshot = snapshot;
   const listeners = new Set<() => void>();
   const notify = () => {
     snapshot = { state, operations };
     listeners.forEach((listener) => listener());
   };
-  const { isDetached, reportToCaller, reportIfAttached, reportFromField, attach, detach } = createReporter(
+  const { isDetached, reportToCaller, reportIfAttached, reportFromField, attach, detach, mount } = createReporter(
     () => committedProps,
   );
   // A parent-owned form's last proposal, until React next commits a render of the form with the consumer told of it
@@ -539,7 +554,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       formElement = element;
     },
     epoch: () => epoch,
-    proposed: notify,
+    /** Has the form render for a field's record of a proposal, see `FormDataAccess.proposed()`, unless an operation
+     * or a proposal the form itself heard of has a render on its way already
+     */
+    proposed: () => {
+      if (snapshot === committedSnapshot) {
+        notify();
+      }
+    },
     readField: <D>(path: FieldPath) => readLatest<D>('formData', path),
     readErrors: <E>(path: FieldPath) => readLatest<E>('errorSchema', path),
     getSnapshot: () => snapshot,
@@ -556,6 +578,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
       committedProps = nextProps;
       shown = derived;
+      committedSnapshot = renderedSnapshot;
       // An operation that committed after this render began is not in `derived`. A render for it is already scheduled;
       // until it runs, operations start from that commit derived under the new props
       state =
@@ -581,6 +604,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     },
     /** The cleanup of that Effect, which React runs when an `<Activity>` hides the form as well as when it unmounts */
     detach,
+    mount,
     submitWhenRendered,
     handle,
     handleSubmit,

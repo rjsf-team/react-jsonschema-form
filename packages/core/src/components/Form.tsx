@@ -368,6 +368,8 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   useInsertionEffect(() => {
     model.committed(props, state, snapshot);
   });
+  // Kept for the life of the form, which an `<Activity>` hiding it does not end: the cleanup is the unmount
+  useInsertionEffect(() => model.mount(), [model]);
   // Installed before the form attaches, so a callback the model calls as it does finds the handle on the consumer's ref
   useImperativeHandle(ref, () => model.handle, [model]);
   useLayoutEffect(() => {
