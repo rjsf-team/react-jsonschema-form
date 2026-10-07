@@ -143,12 +143,16 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Also in this case, an add button for new properties is shown by default.
 A property added under a name one of the patterns matches is seeded from that pattern, so its field starts out holding the pattern's `const` or `default`, falling back to the starting value its type calls for — `{}`, `[]`, `0`, `false`, `null`, or the `New Value` string.
-A pattern that constrains the value without naming a `type`, such as one that is only an `enum`, a `format` or a length, leaves the key to take its type from the value it holds, the way `additionalProperties` does, so the property renders as a field for that value with the pattern's constraint kept.
+A pattern that constrains the value without naming a `type`, such as one that is only a `format` or a length, leaves the key to take its type from the value it holds, the way `additionalProperties` does, so the property renders as a field for that value with the pattern's constraint kept.
+A pattern that is only an `enum` takes the type its values have, so an `enum` of numbers renders as a numeric select rather than a textual one.
+A pattern of `false` rejects every value a key could hold, so a key it matches renders the way a forbidden key does below.
+Where several patterns match a key, they describe it together, and a `false` among them forbids it however permissive the others are.
 
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.
 Where `additionalProperties: false` does forbid it, the key has no subschema to render with and the property renders as the empty field a validation error accompanies.
-An `unevaluatedProperties: false` forbids the same keys where the object names no `additionalProperties` to evaluate them, so it renders them the same way; beside any `additionalProperties`, `true` and a schema alike, it has nothing left to reject and no say in how the key renders.
+An `unevaluatedProperties` answers for the same keys where the object names no `additionalProperties` to evaluate them: a `false` forbids them, so it renders them the same way, and a schema describes what they may hold, so they render as the field it calls for, exactly as an `additionalProperties` schema's keys do.
+Beside any `additionalProperties`, `true` and a schema alike, it has nothing left to say and no say in how the key renders.
 Where the object names no `additionalProperties` at all, a form that sets `omitExtraData` drops a pattern-unmatched key all the same: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
 An `additionalProperties` that is spelled out, `true` included, describes those keys, so `omitExtraData` keeps them.
 
@@ -176,7 +180,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 ```
 
 A name another key already holds is left out of the dropdown, since two properties cannot share a name, and the add button creates the new property under the first allowed name that is still free.
-The exception is an object whose `patternProperties` have no `additionalProperties` schema beside them, where the add button prefers the first free name one of the patterns matches, since a name they don't match is one nothing in the schema describes — or, under `additionalProperties: false`, one it forbids.
+The exception is an object whose `patternProperties` have no `additionalProperties` schema beside them, where the add button prefers the first free name the schema describes, since a name no pattern matches is one nothing in the schema describes — or, under `additionalProperties: false`, one it forbids — and a name matched only by a pattern of `false` is one it forbids too.
 Once every allowed name is taken the add button is hidden, the way it is at the `maxProperties` limit, since any further property could only be added under a name the schema rejects.
 The `propertyNames` schema may be a `$ref` or an `allOf`; it is resolved before its `enum` is read.
 Any other `propertyNames` schema, such as one constraining names by `pattern` or `maxLength`, leaves the free-text key input in place and is enforced by validation alone.

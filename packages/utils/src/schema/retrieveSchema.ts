@@ -15,11 +15,13 @@ import {
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
-import forbidsAdditionalProperties from '../forbidsAdditionalProperties.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
+import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
+import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
@@ -253,23 +255,72 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
   ) as Required<S['patternProperties']>;
 }
 
-/** Returns the schema a `key` the object's own `properties` don't name takes from its `patternProperties`: an `allOf`
- * of every subschema whose pattern matches the key, for the caller to resolve into the one schema that describes it. A
- * key no pattern matches takes its schema from `additionalProperties` instead, so there is nothing to return for it.
+/** Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that
+ * renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own. A key
+ * one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the
+ * caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others
+ * allow, since no value satisfies it. A key no pattern matches is `additionalProperties`' to describe, `false` and
+ * `true` included.
  *
- * @param schema - The schema whose `patternProperties` the `key` is matched against
- * @param key - The property name to match
- * @returns - The `allOf` of the subschemas whose patterns match the `key`, or undefined when none of them do
+ * An `unevaluatedProperties` answers for the key only where the object names no `additionalProperties` at all: the keys
+ * the `properties` and the `patternProperties` leave over are exactly the ones that go unevaluated, so that keyword is
+ * what then describes or rejects them. Any `additionalProperties`, `true` and a schema alike, evaluates those keys
+ * itself, which leaves `unevaluatedProperties` nothing to say about them. Either keyword spelled `undefined`, as a
+ * schema built by spreading tends to spell one, reads as absent the way a validator reads it, so neither hides what the
+ * other says.
+ *
+ * @param schema - The object schema the `key` is a property of
+ * @param key - The property name whose schema is desired
+ * @returns - `false` for a key the object forbids, `true` for one it allows without describing, and otherwise the
+ *          subschema describing it, whose `$ref`s are left for the caller to resolve
  */
-export function getPatternPropertySchema<S extends StrictRJSFSchema = RJSFSchema>(
+export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   key: string,
-): S | undefined {
-  const matchingProperties = getMatchingPatternProperties<S>(schema, key);
-  if (Object.keys(matchingProperties).length === 0) {
-    return undefined;
+): S | boolean {
+  const matchingPatterns = Object.values(getMatchingPatternProperties<S>(schema, key)) as (S | boolean)[];
+  if (matchingPatterns.length > 0) {
+    return matchingPatterns.includes(false) ? false : ({ [ALL_OF_KEY]: matchingPatterns } as S);
   }
-  return { [ALL_OF_KEY]: Object.values(matchingProperties) } as S;
+  if (schema.additionalProperties !== undefined) {
+    return schema.additionalProperties as S | boolean;
+  }
+  return ((schema as GenericObjectType)[UNEVALUATED_PROPERTIES_KEY] as S | boolean | undefined) ?? true;
+}
+
+/** Returns the type an additional property described by `subSchema` holds, or `undefined` for a schema that leaves the
+ * type to the value the property comes to hold. It is what `retrieveSchema()` stubs such a property with and what
+ * `ObjectField` seeds a new one from, so the value the add button writes is one the field it renders can show.
+ *
+ * The types come from `getSchemaOwnTypes()`, so a schema that names its type says that one, a nullable `['integer',
+ * 'null']` resolves to the type a value of it can have, a typeless `enum` takes the type of its values — where
+ * `getSchemaType()` answers `string` for any of them, giving an `enum` of numbers a string it rejects — and a schema
+ * that only implies its type, `properties` implying `object`, says what every other reader of it renders it as. The
+ * non-`null` type comes first, as it does for a nullable type: a value of it is one the field can show, where `null`
+ * leaves the user nothing to enter.
+ *
+ * An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen. Options that disagree
+ * leave the type to the value, since choosing one is what settles it, and a type of its own would render a field for
+ * that type beside the options.
+ *
+ * @param subSchema - The schema describing the additional property, from `additionalProperties`, a matching pattern or
+ *          `unevaluatedProperties`
+ * @returns - The type the `subSchema` says the property holds, or undefined when only its value can say
+ */
+export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): string | undefined {
+  const ownTypes = getSchemaOwnTypes<S>(subSchema);
+  if (ownTypes) {
+    return ownTypes.find((ownType) => ownType !== 'null') ?? ownTypes[0];
+  }
+  const options = (subSchema[ANY_OF_KEY] ?? subSchema[ONE_OF_KEY]) as (S | boolean)[] | undefined;
+  if (Array.isArray(options)) {
+    const optionTypes = new Set(options.map((option) => (isObject(option) ? getSchemaType<S>(option) : undefined)));
+    const [onlyType] = optionTypes;
+    if (optionTypes.size === 1 && typeof onlyType === 'string') {
+      return onlyType;
+    }
+  }
+  return undefined;
 }
 
 /** Resolves references and dependencies within a schema and its 'allOf' children. Passes the `expandAllBranches` flag
@@ -735,22 +786,28 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
 }
 
 /** Builds the stub for an additional property described by `subSchema`, whose `$ref`s are expected to be resolved
- * already. A schema naming a `type` says what field renders the property on its own. One offering an `anyOf`/`oneOf`
- * of options without naming a type is stubbed as an `object` so the property renders as the field that picks between
- * them, since that is the only shape those options are presented in. A schema naming neither takes the type of the
- * data the property holds, keeping what it does say about the value, so the property renders as a field for that data
- * rather than one no type can render.
+ * already. A schema naming its `type` is stubbed as it stands, so a nullable `['integer', 'null']` keeps both names for
+ * the field that offers a choice between them. One that names no type is given the type
+ * `getAdditionalPropertyType()` reads out of it, which is the type `ObjectField` seeds a new property of this very
+ * schema with. A schema that leaves the type to the value keeps its `anyOf`/`oneOf` options untouched, since the option
+ * the value matches is what renders it, and otherwise takes the type of the data the property holds, keeping what it
+ * does say about the value, so the property renders as a field for that data rather than one no type can render.
  *
- * @param subSchema - The schema describing the additional property, from `additionalProperties` or a matching pattern
+ * @param subSchema - The schema describing the additional property, from `additionalProperties`, a matching pattern or
+ *          `unevaluatedProperties`
  * @param formData - The form data held by the additional property
  * @returns - The stub schema for the additional property
  */
 function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, formData: unknown): S {
-  if ('type' in subSchema) {
+  if (subSchema.type !== undefined) {
     return { ...subSchema };
   }
+  const type = getAdditionalPropertyType<S>(subSchema);
+  if (type !== undefined) {
+    return { ...subSchema, type };
+  }
   if (ANY_OF_KEY in subSchema || ONE_OF_KEY in subSchema) {
-    return { type: 'object', ...subSchema };
+    return { ...subSchema };
   }
   return guessedTypeSchema<S>(formData, subSchema);
 }
@@ -781,47 +838,26 @@ export function stubExistingAdditionalProperties<
       // No need to stub, our schema already has the property
       return;
     }
-    const patternSchema = getPatternPropertySchema<S>(schema, key);
-    if (patternSchema) {
+    const keySchema = getAdditionalPropertySchema<S>(schema, key);
+    if (keySchema === false) {
+      // The schema forbids the key, so the property has no subschema of its own to render it with and no value the
+      // schema allows
+      schema.properties[key] = { type: 'null' };
+    } else if (isObject(keySchema)) {
+      // Resolved before it is stubbed, so a `$ref` or an `allOf` of matching patterns is stubbed from what it describes
+      // rather than from the keyword that reaches it
       schema.properties[key] = stubSchemaForSubSchema<S>(
-        retrieveSchema<T, S, F>(context, patternSchema, rootSchema, formData[key]),
+        retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key]),
         formData[key],
       );
-      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-      return;
-    }
-    if (!forbidsAdditionalProperties<S>(schema)) {
-      let additionalProperties: S['additionalProperties'];
-      if (isObject(schema.additionalProperties)) {
-        if (REF_KEY in schema.additionalProperties) {
-          additionalProperties = retrieveSchema<T, S, F>(
-            context,
-            { [REF_KEY]: (schema.additionalProperties as S)[REF_KEY] } as S,
-            rootSchema,
-            formData[key],
-          );
-        } else {
-          additionalProperties = stubSchemaForSubSchema<S>(schema.additionalProperties as S, formData[key]);
-        }
-      } else {
-        // What is left is `additionalProperties: true`, or no `additionalProperties` at all with nothing forbidding
-        // the key either, which JSON Schema reads as `true`: anything goes, including a key none of the
-        // `patternProperties` patterns match, which the schema allows all the same and so gets a field for the data
-        // it holds
-        additionalProperties = guessedTypeSchema<S>(formData[key]);
-      }
-
-      // The type of our new key should match the additionalProperties value;
-      schema.properties[key] = additionalProperties;
-      // Set our additional property flag so we know it was dynamically added
-      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
     } else {
-      // The schema forbids every key its `patternProperties` don't match, so the property has no subschema of its own
-      // to render it with and the schema allows no value for it
-      schema.properties[key] = { type: 'null' };
-      // Set our additional property flag so we know it was dynamically added
-      (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+      // What is left is a `true`, or a keyword the schema leaves out, which JSON Schema reads as `true`: anything goes,
+      // including a key none of the `patternProperties` patterns match, which the schema allows all the same and so
+      // gets a field for the data it holds
+      schema.properties[key] = guessedTypeSchema<S>(formData[key]);
     }
+    // Set our additional property flag so we know it was dynamically added
+    (schema.properties[key] as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
   });
 
   return schema;

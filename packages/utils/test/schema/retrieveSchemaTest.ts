@@ -14,9 +14,10 @@ import {
   noop,
 } from '../../src/index.ts';
 import {
+  getAdditionalPropertySchema,
+  getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,
   getMatchingPatternProperties,
-  getPatternPropertySchema,
   relaxOptionsForScoring,
   resolveAllReferences,
   resolveAnyOrOneOfSchemas,
@@ -48,20 +49,83 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(getMatchingPatternProperties({ type: 'object' }, 'key')).toEqual({});
     });
   });
-  describe('getPatternPropertySchema()', () => {
-    it('returns undefined when no pattern matches the key', () => {
-      expect(
-        getPatternPropertySchema({ type: 'object', patternProperties: { '^a': { type: 'string' } } }, 'xyz'),
-      ).toBeUndefined();
-    });
+  describe('getAdditionalPropertySchema()', () => {
     it('returns an allOf of every matching pattern subschema', () => {
       const schema: RJSFSchema = {
         type: 'object',
         patternProperties: { '^a': { type: 'string' }, c$: { minLength: 2 } },
       };
-      expect(getPatternPropertySchema(schema, 'abc')).toEqual({
+      expect(getAdditionalPropertySchema(schema, 'abc')).toEqual({
         allOf: [{ type: 'string' }, { minLength: 2 }],
       });
+    });
+    it('returns false for a key a matching pattern forbids, whatever the other matching patterns allow', () => {
+      const schema: RJSFSchema = { type: 'object', patternProperties: { '^a': { type: 'string' }, c$: false } };
+      expect(getAdditionalPropertySchema(schema, 'abc')).toBe(false);
+      expect(getAdditionalPropertySchema(schema, 'ab')).toEqual({ allOf: [{ type: 'string' }] });
+    });
+    it('returns the additionalProperties for a key no pattern matches', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        patternProperties: { '^a': { type: 'string' } },
+        additionalProperties: { type: 'number' },
+      };
+      expect(getAdditionalPropertySchema(schema, 'xyz')).toEqual({ type: 'number' });
+      expect(getAdditionalPropertySchema({ additionalProperties: false }, 'xyz')).toBe(false);
+      expect(getAdditionalPropertySchema({ additionalProperties: true }, 'xyz')).toBe(true);
+    });
+    it('returns true for a schema that describes the key with neither keyword', () => {
+      expect(getAdditionalPropertySchema({ type: 'object' }, 'xyz')).toBe(true);
+    });
+    it('reads the unevaluatedProperties of a schema that names no additionalProperties', () => {
+      const describedSchema: RJSFSchema = { unevaluatedProperties: { type: 'number' } };
+      const forbiddenSchema: RJSFSchema = { unevaluatedProperties: false };
+      expect(getAdditionalPropertySchema(describedSchema, 'xyz')).toEqual({ type: 'number' });
+      expect(getAdditionalPropertySchema(forbiddenSchema, 'xyz')).toBe(false);
+    });
+    it('reads an additionalProperties or unevaluatedProperties of undefined as the keyword being absent', () => {
+      // A schema built by spreading spells an absent keyword this way, and reading it as present would hide what the
+      // other keyword says about the key
+      expect(getAdditionalPropertySchema({ additionalProperties: undefined, unevaluatedProperties: false }, 'x')).toBe(
+        false,
+      );
+      expect(
+        getAdditionalPropertySchema({ additionalProperties: undefined, unevaluatedProperties: undefined }, 'x'),
+      ).toBe(true);
+    });
+    it('lets any additionalProperties leave the unevaluatedProperties nothing to say', () => {
+      expect(getAdditionalPropertySchema({ additionalProperties: true, unevaluatedProperties: false }, 'x')).toBe(true);
+    });
+  });
+  describe('getAdditionalPropertyType()', () => {
+    it('returns the type the schema names, resolving a nullable one', () => {
+      expect(getAdditionalPropertyType({ type: 'string' })).toBe('string');
+      expect(getAdditionalPropertyType({ type: ['integer', 'null'] })).toBe('integer');
+      expect(getAdditionalPropertyType({ type: ['null'] })).toBe('null');
+    });
+    it('returns the type the schema implies', () => {
+      expect(getAdditionalPropertyType({ properties: { foo: { type: 'string' } } })).toBe('object');
+    });
+    it('returns the type the values of a typeless enum have', () => {
+      // `getSchemaType()` answers `string` for any typeless `enum`, which would seed one of numbers with a string it
+      // rejects
+      expect(getAdditionalPropertyType({ enum: [1, 2] })).toBe('number');
+      expect(getAdditionalPropertyType({ enum: [null, 1] })).toBe('number');
+      expect(getAdditionalPropertyType({ enum: [null] })).toBe('null');
+      expect(getAdditionalPropertyType({ type: 'string', enum: ['a'] })).toBe('string');
+    });
+    it('returns the type anyOf or oneOf options agree on', () => {
+      expect(getAdditionalPropertyType({ anyOf: [{ properties: {} }, { type: 'object' }] })).toBe('object');
+      expect(getAdditionalPropertyType({ oneOf: [{ type: 'number', minimum: 0 }, { type: 'number' }] })).toBe('number');
+    });
+    it('returns undefined for anyOf or oneOf options that disagree about the type', () => {
+      expect(getAdditionalPropertyType({ anyOf: [{ type: 'string' }, { type: 'number' }] })).toBeUndefined();
+      expect(getAdditionalPropertyType({ oneOf: [{ type: 'string' }, true] })).toBeUndefined();
+      expect(getAdditionalPropertyType({ anyOf: [{ minLength: 2 }] })).toBeUndefined();
+    });
+    it('returns undefined for a schema that says nothing about the type', () => {
+      expect(getAdditionalPropertyType({})).toBeUndefined();
+      expect(getAdditionalPropertyType({ minLength: 2 })).toBeUndefined();
     });
   });
   describe('retrieveSchema()', () => {
@@ -289,10 +353,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('should `resolve` and stub out a schema which contains an `additionalProperties` with oneOf', () => {
       const oneOf: RJSFSchema[] = [
         {
-          type: 'string',
+          type: 'object',
+          properties: { foo: { type: 'string' } },
         },
         {
-          type: 'number',
+          type: 'object',
+          properties: { bar: { type: 'number' } },
         },
       ];
       const schema: RJSFSchema = {
@@ -303,6 +369,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = { newKey: {} };
+      // The options agree the property is an object, so the stub names that type and the field for it renders the
+      // shared properties beside the option selector
       expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
         ...schema,
         properties: {
@@ -331,11 +399,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
 
       const formData = { newKey: {} };
+      // The options disagree about the type, so the stub names none: choosing an option is what settles it, and a type
+      // of its own would render a field for that type beside the options
       expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
         ...schema,
         properties: {
           newKey: {
-            type: 'object',
             anyOf,
             [ADDITIONAL_PROPERTY_FLAG]: true,
           },
@@ -2724,12 +2793,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       it('has additionalProperties constrained through subschemas', () => {
         const schema: RJSFSchema = { additionalProperties: { allOf: [{ type: 'number' }], not: { const: 0 } } };
         const formData = { foo: 'a' };
-        // The subschemas still constrain the property, so it is not marked as guessed, but an `allOf` naming another
-        // type than the data cannot be merged with the guessed one, so neither is copied into the stub
+        // The subschema is resolved before it is stubbed, so the `allOf` names the property's type rather than leaving
+        // it to data the schema rejects, and the property renders as the field that type calls for
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {
-            foo: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+            foo: { type: 'number', not: { const: 0 }, [ADDITIONAL_PROPERTY_FLAG]: true },
           },
         });
       });

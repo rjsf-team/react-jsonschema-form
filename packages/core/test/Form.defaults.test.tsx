@@ -238,9 +238,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('newKey');
     });
 
-    it('should propagate referenced definition defaults in objects with additionalProperties that have a type present', async () => {
-      // Though `additionalProperties` has a `type` present here, it also has a `$ref` so that
-      // referenced schema should override it.
+    it('should let a keyword beside a $ref in additionalProperties win, as it does beside any other $ref', async () => {
+      // `resolveAllReferences()` layers a schema's own keywords over the referenced ones wherever a `$ref` appears, and
+      // the add button seeds the new property from the same resolved schema the field renders it with, so the sibling
+      // `type` is the one both of them read
       const schema: RJSFSchema = {
         definitions: {
           testdef: { type: 'number' },
@@ -256,7 +257,8 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       await user.click(node.querySelector('.btn-add')!);
 
-      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveValue('0');
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toBeNull();
+      expect(node.querySelectorAll<HTMLInputElement>('input[type=text]')[1]).toHaveValue('New Value');
     });
 
     it('should recursively handle referenced definitions', async () => {

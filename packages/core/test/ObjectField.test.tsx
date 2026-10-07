@@ -1182,6 +1182,113 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'hello!' }, 'root_abc');
     });
 
+    it('should render no field for a key a matching pattern forbids', () => {
+      // A `false` pattern rejects every value a key could hold, so a key it matches has no more to render it with than
+      // one `additionalProperties: false` forbids
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+        },
+        initialFormData: { abc: 'stranded' },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_abc-key')).toHaveValue('abc');
+      expect(node.querySelector('#root_abc')).toBeNull();
+    });
+
+    it('should prefer a free name a pattern describes over one a pattern forbids', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false, '^z': { type: 'number' } },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+    });
+
+    it('should seed a property whose matching pattern is a typeless enum with a value of the enum type', async () => {
+      // `getSchemaType()` answers `string` for any typeless `enum`, which would seed the `New Value` string and leave
+      // the stub a string select over numeric options. The seed is the first option the select offers, the number
+      // type's `0` not being one of them
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^n': { enum: [1, 2] } },
+          propertyNames: { enum: ['num'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 1 }, 'root');
+      expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
+    });
+
+    it('should render only the option selector for a key whose matching pattern options disagree about the type', async () => {
+      // Naming the property an `object` would render the field for that type beside the options, and seed it with the
+      // `{}` none of them accepts; the option the value matches is what renders it
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+          propertyNames: { enum: ['abc'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelectorAll('.rjsf-field-object')).toHaveLength(1);
+    });
+
+    it('should render a key no pattern matches from the unevaluatedProperties schema that describes it', async () => {
+      // An `unevaluatedProperties` schema describes exactly the keys the patterns leave over where no
+      // `additionalProperties` evaluates them, so it is what such a key renders from and is seeded with, rather than
+      // the data it holds and the `New Value` string a key nothing describes gets
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+          propertyNames: { enum: ['zzz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+      expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
+    });
+
+    it('should render an editable field for a $ref additionalProperties that names no type', async () => {
+      // The `$ref` is resolved before the key is stubbed, the same way a matching pattern's is, so what it describes
+      // takes the type of the data rather than rendering as the field no type can draw
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { constrained: { minLength: 2 } },
+          additionalProperties: { $ref: '#/$defs/constrained' },
+        },
+        initialFormData: { abc: 'hello' },
+      });
+
+      expect(node.querySelector('.rjsf-field-undefined')).toBeNull();
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+
+      await user.type(node.querySelector('#root_abc')!, '!');
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'hello!' }, 'root_abc');
+    });
+
     it('should not duplicate an additional property that becomes schema-defined after rerender', () => {
       const initialSchema: RJSFSchema = {
         type: 'object',
@@ -2517,6 +2624,42 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should prefer a name no pattern matches over one a pattern forbids', async () => {
+      // Nothing describes `zzz`, but nothing forbids it either, so it renders a field for whatever it comes to hold —
+      // where `abc`, which the `false` pattern rejects, can only be stubbed as `{ type: 'null' }`
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 'New Value' }, 'root');
+    });
+
+    it('should prefer a name a pattern matches over one only unevaluatedProperties describes', async () => {
+      // `omitExtraData` keeps only the data a schema describes and reads an absent `additionalProperties` as
+      // describing nothing, so a name only `unevaluatedProperties` answers for is pruned where a pattern-matched one
+      // survives, however renderable the field it is given
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+          propertyNames: { enum: ['zzz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
     });
 
     it('should seed a name matching no pattern from additionalProperties when it gives every name a schema', async () => {
