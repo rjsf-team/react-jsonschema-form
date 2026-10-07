@@ -22,7 +22,7 @@ import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { getFieldTypeForWidget } from '../getWidget.tsx';
+import { canPickFieldType, getFieldTypeForWidget } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
@@ -294,7 +294,7 @@ export function computeDefaults<
     ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
-  let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
+  const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: T | T[] | null | undefined = parentDefaults;
@@ -352,13 +352,6 @@ export function computeDefaults<
     // Check for undefined OR empty object - rawFormData may be coerced to {} when not an object.
     if (schemaToCompute && !defaults && isEmptyFormData(rawFormData)) {
       defaults = schema.default as T | undefined;
-    }
-
-    // If shouldMergeDefaultsIntoFormData is true
-    // And the schemaToCompute is set and the rawFormData is not an object
-    // Then set the formData to the rawFormData
-    if (shouldMergeDefaultsIntoFormData && schemaToCompute && !isObject(rawFormData)) {
-      formData = rawFormData as T;
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
@@ -452,7 +445,9 @@ export function computeDefaults<
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
       parentDefaults: defaults as T | undefined,
-      rawFormData: rawFormData ?? formData,
+      // The value as it was passed in, not the `{}` that stands in for no value above: a `type` list naming `object`
+      // would read that `{}` as an object it holds, and skip the defaults of the type the list resolves to
+      rawFormData,
       required,
       shouldMergeDefaultsIntoFormData,
       initialDefaultsGenerated,
@@ -895,7 +890,7 @@ export function getDefaultBasedOnSchemaType<
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
   const { uiSchema, rawFormData } = computeDefaultsProps;
   const isTypeList = Array.isArray(rawSchema.type);
-  const widget = uiSchema && isTypeList ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+  const widget = uiSchema && canPickFieldType<S>(rawSchema) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
   const type = getFieldTypeForWidget<S>(rawSchema, widget);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
   // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread

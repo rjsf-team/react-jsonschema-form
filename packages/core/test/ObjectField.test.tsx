@@ -1678,9 +1678,13 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
     });
 
-    // `StringField` renders a select over several types, but neither its `'New Value'` nor the zero value of a type
-    // need be one of the options
+    // A select starts on its type's zero value when that is an option, and otherwise on its first option, since neither
+    // the `'New Value'` of the `StringField` a select over several types renders through nor a type's zero value need
+    // be one
     it.each<[RJSFSchema, unknown]>([
+      [{ type: ['boolean', 'null'], enum: [true, false, null] }, false],
+      [{ type: ['integer', 'null'], enum: [5, 0] }, 0],
+      [{ type: 'string', enum: ['a', 'b'] }, 'a'],
       [{ type: ['boolean', 'string'], enum: [false, true, 'auto'] }, false],
       [{ type: ['number', 'string'], enum: [0, 1, 'auto'] }, 0],
       [{ type: ['null'], enum: [null] }, null],
@@ -1688,7 +1692,7 @@ describe('ObjectField', () => {
       [{ type: ['number', 'string'], enum: ['auto', 1] }, 'auto'],
       [{ type: ['number', 'string'], enum: [5, 'auto'] }, 5],
       [{ type: ['integer', 'null'], enum: [3, null] }, 3],
-    ])('should add the first option of a select over %j', async (apSchema, expected) => {
+    ])('should add the zero value or first option of a select over %j', async (apSchema, expected) => {
       const { onChange } = createFormComponent({
         schema: { ...schema, additionalProperties: apSchema },
         initialFormData: {},

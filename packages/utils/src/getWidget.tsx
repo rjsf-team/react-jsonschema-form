@@ -153,6 +153,25 @@ export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   return findWidgetType<S>(schema, widget, getSchemaType<S>(schema))?.type;
 }
 
+/** Determines whether `getFieldTypeForWidget()` can give a `schema` another type than the one `getSchemaType()`
+ * resolves. Only a `type` list naming a non-null type besides the one it resolves to has another field that could render
+ * the value, so a nullable `['string', 'null']` can't, and its readers can skip reducing the `uiSchema` for a widget that
+ * won't be read. A list resolving to `null` names nothing else, but can, as the select rule renders it through
+ * `StringField`
+ *
+ * @param schema - The schema for the field
+ * @param [type] - The type `getSchemaType()` resolves the `schema` to, when already known
+ * @returns - True if the field's `ui:widget` or options can pick its type, false otherwise
+ */
+export function canPickFieldType<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  type = getSchemaType<S>(schema),
+): boolean {
+  return (
+    Array.isArray(schema.type) && (type === 'null' || schema.type.some((aType) => aType !== type && aType !== 'null'))
+  );
+}
+
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several
  * non-null types is the one `getWidgetType()` picks for a named widget, and otherwise the type `getSchemaType()`
  * resolves. Readers of a field's type that are handed its `ui:widget` follow it, so the label and the defaults of a
@@ -171,13 +190,8 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
   widget: unknown,
 ): string | undefined {
   const type = getSchemaType<S>(schema);
-  // Only a `type` list naming a non-null type besides the one it resolves to has another field that could render the
-  // value, so a nullable `['string', 'null']` returns here without scanning its options or the widget aliases. A list
-  // resolving to `null` names nothing else, and goes on for the select rule to render it through `StringField`
-  if (
-    !Array.isArray(schema.type) ||
-    (type !== 'null' && !schema.type.some((aType) => aType !== type && aType !== 'null'))
-  ) {
+  // The `Array.isArray()` that `canPickFieldType()` makes is repeated to narrow the `type` list for the select rule
+  if (!Array.isArray(schema.type) || !canPickFieldType<S>(schema, type)) {
     return type;
   }
   if (isConstantSelect<S>(schema, true)) {

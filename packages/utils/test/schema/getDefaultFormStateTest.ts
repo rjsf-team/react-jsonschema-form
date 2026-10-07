@@ -656,6 +656,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ a: 'x' });
         });
+
+        it('fills in the array defaults of a list naming object behind a oneOf', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              list: { oneOf: [{ type: ['array', 'object'], items: { type: 'string', default: 'x' }, minItems: 2 }] },
+            },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+            list: ['x', 'x'],
+          });
+        });
+
+        it('fills in the array defaults of a list naming object with dependencies', () => {
+          const schema: RJSFSchema = {
+            type: ['array', 'object'],
+            items: { type: 'string', default: 'x' },
+            minItems: 2,
+            dependencies: {},
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['x', 'x']);
+        });
       });
 
       describe('required boolean properties and the requiredBooleanDefault flag', () => {

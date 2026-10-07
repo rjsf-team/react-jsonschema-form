@@ -878,6 +878,56 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
     });
 
+    // The `range` would render the object as its value, which React throws for
+    it("starts a union holding data its ui:widget's type can't show on its first type", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
+        uiSchema: { val: { 'ui:widget': 'range' } },
+        formData: { val: {} },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+    });
+
+    // `ArrayField` renders a custom widget for a `uiSchema` naming one, so the widget the value field drops has to
+    // name none rather than an `undefined` one, whether it was the field's own or the one in `ui:globalOptions`
+    it.each<[string, UiSchema]>([
+      ['its own', { val: { 'ui:widget': 'textarea' } }],
+      ['a ui:globalOptions', { 'ui:globalOptions': { widget: 'textarea' } }],
+    ])('renders the array field for a union whose array type has none of %s widget', async (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'array'], items: { type: 'string' } } },
+        },
+        uiSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      await user.selectOptions(node.querySelector('#root_val___internal_type_selector')!, 'array');
+
+      expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
+    });
+
+    it('renders the array field for a union holding an array whose array type has none of its widget', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
+        },
+        uiSchema: { val: { 'ui:widget': 'text' } },
+        formData: { val: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('array');
+      expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
+    });
+
     // A `format` constrains only the list's string member, so it moves neither the selection nor the field to it
     it('starts a union with no data on its first type whatever widget its format names', () => {
       const { node } = createFormComponent({

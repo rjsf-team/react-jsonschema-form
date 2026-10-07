@@ -95,11 +95,14 @@ function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeN
 
 /**
  * Determines which of the `types` the selection starts on, preferring the type the `formData` already has so that
- * existing data is shown by the field that matches it. An integer-only schema takes a number, and data of a type the
- * schema does not allow falls back to the type the selection defaults to, as does having no data to go on at all.
+ * existing data is shown by the field that matches it. An integer-only schema takes a number. Having no data to go on
+ * starts on the type the selection defaults to, which follows the widget, as does data of a type the schema does not
+ * allow that the field of that type can show. Other data starts on the schema's own first type instead: the widget's
+ * type keeps the widget, which would be handed a value it can't render, and a `range` handed an object takes the form
+ * down.
  * @param formData - The form data being rendered.
  * @param types - The types the selection offers.
- * @param defaultType - The type the selection starts on when the form data gives nothing to match.
+ * @param defaultType - The type the selection starts on when there is no form data.
  */
 function getInitialType(
   formData: unknown,
@@ -109,9 +112,8 @@ function getInitialType(
   if (formData === undefined) {
     return defaultType;
   }
-  // Not `getSchemaTypeForValue()`, which answers data of a type the list doesn't name with the list's own resolved type
-  // rather than leaving it to the widget, so a textarea's selection would start on a checkbox for an object it was
-  // handed
+  // Not `getSchemaTypeForValue()`, which answers data of a type the list doesn't name with the list's own resolved
+  // type, which can be `null` rather than the first type that can hold a value
   const dataType = guessType(formData);
   if (types.includes(dataType)) {
     return dataType;
@@ -119,7 +121,7 @@ function getInitialType(
   if (dataType === 'number' && types.includes('integer')) {
     return 'integer';
   }
-  return defaultType;
+  return canShowDataAsType(defaultType, dataType) ? defaultType : getDefaultType(types);
 }
 
 /**

@@ -1414,7 +1414,8 @@ otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
+Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`.
+A `widget` set to `undefined` names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
 
 #### Parameters
 

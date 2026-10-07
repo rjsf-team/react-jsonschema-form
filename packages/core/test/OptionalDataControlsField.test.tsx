@@ -34,9 +34,9 @@ describe('OptionalDataControlsField', () => {
     };
   }
 
-  async function clickAdd(schema: RJSFSchema) {
+  async function clickAdd(schema: RJSFSchema, formData?: unknown) {
     const onChange = vi.fn();
-    render(<OptionalDataControlsField {...getProps(schema, onChange)} />);
+    render(<OptionalDataControlsField {...getProps(schema, onChange)} formData={formData} />);
     await user.click(screen.getByTitle(englishStringTranslator(TranslatableString.OptionalObjectAdd)));
     return onChange;
   }
@@ -49,5 +49,13 @@ describe('OptionalDataControlsField', () => {
   ])('adding data to %s whose options are all arrays stores an empty array', async (_, schema) => {
     const onChange = await clickAdd(schema);
     expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'), {});
+  });
+
+  test.each<[string, RJSFSchema, unknown]>([
+    ['object', { type: ['object', 'null'], properties: { a: { type: 'string', default: 'x' } } }, { a: 'x' }],
+    ['array', { type: ['array', 'null'], items: { type: 'string' } }, []],
+  ])('adding data to a nullable %s holding null stores the container', async (_, schema, expected) => {
+    const onChange = await clickAdd(schema, null);
+    expect(onChange).toHaveBeenCalledWith(expected, toFieldPath('optional'), {});
   });
 });

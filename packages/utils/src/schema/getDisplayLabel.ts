@@ -1,6 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget } from '../getWidget.tsx';
+import { canPickFieldType, DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget } from '../getWidget.tsx';
 import isCustomWidget from '../isCustomWidget.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
@@ -42,7 +42,7 @@ export default function getDisplayLabel<
   if (displayLabel) {
     // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
     // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
-    const ownWidget = Array.isArray(schema.type) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
+    const ownWidget = canPickFieldType<S>(schema) ? getUiOptions<T, S, F>(uiSchema).widget : undefined;
     const schemaType = getFieldTypeForWidget<S>(schema, ownWidget);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 

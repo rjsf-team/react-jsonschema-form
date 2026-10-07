@@ -20,6 +20,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  deepEquals,
   getFreePropertyNames,
   getMatchingPatternProperties,
   getFieldTypeForWidget,
@@ -425,14 +426,14 @@ export default function ObjectField<
         // without `ui:globalOptions`
         const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, registry);
         const { widget } = getUiOptions<T, S, F>(resolvedApUiSchema);
-        // A select over a `type` list renders through the field of a `string` when it names several types, whose
-        // `'New Value'` none of its options is, and the zero value of any one type need not be an option either, so
-        // it starts on the option it shows first
-        firstOption =
-          Array.isArray(apSchema.type) && isConstantSelect<S>(apSchema)
-            ? optionsList<T, S, F>(apSchema, resolvedApUiSchema)?.[0]
-            : undefined;
         type = getFieldTypeForWidget(apSchema, widget);
+        // A select starts on its type's zero value only when that is one of its options: neither a string's
+        // `'New Value'` nor a number's `0` need be, so otherwise it starts on the option it shows first
+        if (isConstantSelect<S>(apSchema)) {
+          const options = optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? [];
+          const zeroValue = getDefaultValue<T, S, F>(translateString, type);
+          firstOption = options.some((option) => deepEquals(option.value, zeroValue)) ? undefined : options[0];
+        }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
