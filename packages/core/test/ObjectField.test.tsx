@@ -797,6 +797,27 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_properties_inner_properties')).not.toBeNull();
     });
 
+    it('stops at the cycle for a recursive key that the patternProperties match', () => {
+      const recursiveSchema: RJSFSchema = {
+        $ref: '#/definitions/node',
+        definitions: {
+          node: {
+            type: 'object',
+            properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
+            patternProperties: { '^child': { title: 'Child' } },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema: recursiveSchema });
+
+      // Merging `child` with the pattern that matches it is left undone, so the `$ref` stays inside an `allOf` where
+      // `SchemaField` cannot see it. Without the cycle flag on that `allOf` the key nests until the heap is gone
+      const expandButton = node.querySelector<HTMLButtonElement>('#root_child-button')!;
+      expect(expandButton).not.toBeNull();
+      expect(expandButton).toHaveTextContent('Expand Cycle');
+      expect(node.querySelector('#root_name')).not.toBeNull();
+    });
+
     it('uiSchema title should not affect additionalProperties', () => {
       const { node } = createFormComponent({
         schema,

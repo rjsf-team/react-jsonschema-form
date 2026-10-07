@@ -3,7 +3,7 @@ import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import getDefaultFormState from './getDefaultFormState.ts';
 import getDisplayLabel from './getDisplayLabel.ts';
-import getFirstMatchingOption from './getFirstMatchingOption.ts';
+import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
 import getFromSchema from './getFromSchema.ts';
 import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
 import isFilesArray from './isFilesArray.ts';
@@ -31,4 +31,5 @@ export {
   relaxOptionsForScoring,
   retrieveSchema,
   sanitizeDataForNewSchema,
+  withVariantId,
 };

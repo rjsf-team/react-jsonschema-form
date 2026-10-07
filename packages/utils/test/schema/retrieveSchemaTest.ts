@@ -6,6 +6,7 @@ import {
   GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
+  isObject,
   PROPERTIES_KEY,
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
@@ -803,8 +804,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               { protocol: 'FTPS' },
               true,
             );
-            expect(results).toHaveLength(2);
-            results.forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
+            // Expanding every branch also returns the schema with the `protocol` dependency unapplied, which is what
+            // a form renders until the user picks a protocol. The shared `$ref` has to resolve in both branches
+            expect(results).toHaveLength(3);
+            results.slice(0, 2).forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
+            expect(results[2].properties).not.toHaveProperty('host');
           });
           it('terminates on a recursive definition under an allOf root', () => {
             const node: RJSFSchema = {
@@ -1603,7 +1607,74 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.any(Error),
         );
       });
-      it('should return allOf and top level schemas when expand all', () => {
+      it('should merge the allOf when expanding all branches, as a form does', () => {
+        const schema: RJSFSchema = {
+          properties: { test: { type: 'string' } },
+          allOf: [{ minLength: 2 }, { maxLength: 5 }],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
+          { properties: { test: { type: 'string' } }, minLength: 2, maxLength: 5 },
+        ]);
+      });
+      it('should expand the branches of a property merged with the patternProperties that match it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              type: 'object',
+              properties: { t: { type: 'string' } },
+              if: { properties: { t: { const: 'yes' } } },
+              then: { properties: { c: { type: 'number' } } },
+              else: { properties: { c: { type: 'boolean' } } },
+            },
+          },
+          patternProperties: { '^p$': { properties: { extra: { type: 'string' } } } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const properties = ({ properties: expanded }: RJSFSchema) => isObject(expanded?.p) && expanded.p.properties;
+        // Merging `p` with its matching pattern resolves it, so the branches of that resolution are expanded too
+        expect(
+          retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true).map(properties),
+        ).toEqual([
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'number' } },
+          { t: { type: 'string' }, extra: { type: 'string' }, c: { type: 'boolean' } },
+        ]);
+      });
+      it('should ignore a dependency oneOf that qualifies no option when expanding all branches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          dependencies: { a: { oneOf: [{ required: ['b'] }] } },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // No option names `a`, so expanding qualifies none of them and the `oneOf` is ignored, as it is when the form
+        // data picks no single valid one
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toEqual([
+          { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        ]);
+      });
+      it('should vary the branches of pattern-matched properties one at a time, not in every combination', () => {
+        const conditional: RJSFSchema = {
+          type: 'object',
+          if: { properties: { a: { const: 'x' } } },
+          then: { properties: { c: { type: 'number' } } },
+          else: { properties: { c: { type: 'boolean' } } },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p0: { type: 'object' }, p1: { type: 'object' }, p2: { type: 'object' } },
+          patternProperties: { '^p': conditional },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        // Each property contributes its own extra branch rather than multiplying the ones before it, so three
+        // two-branch properties make `1 + 3` variants and not `2 ** 3`
+        expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true)).toHaveLength(
+          4,
+        );
+      });
+      it('should drop an allOf it cannot merge when expanding all branches, as a form does', () => {
         const schema: RJSFSchema = {
           properties: { test: { type: 'string' } },
           allOf: [{ type: 'string' }, { type: 'boolean' }],
@@ -1612,9 +1683,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const formData = {};
         const { allOf, ...restOfSchema } = schema;
         expect(retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, formData, true)).toEqual([
-          ...allOf!,
           restOfSchema,
         ]);
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/could not merge subschemas in allOf/),
+          expect.any(Error),
+        );
       });
       it('should merge types with $ref in them', () => {
         const schema: RJSFSchema = {
@@ -2280,6 +2354,127 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         });
+      });
+      it('resolves a $ref in a patternProperties entry for every key it matches, not just the first', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: { type: 'string' }, ab: { type: 'string' } },
+          patternProperties: { '^a': { $ref: '#/definitions/constrained' } },
+        };
+        const rootSchema: RJSFSchema = { definitions: { constrained: { minLength: 3 } } };
+        // Each key resolves the shared entry in its own right: a `$ref` the key before it went through is not one
+        // this key has, so a list of resolved references shared between them would leave this one unresolved
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, {}).properties).toEqual({
+          aa: { type: 'string', minLength: 3, [RJSF_REF_KEY]: '#/definitions/constrained' },
+          ab: { type: 'string', minLength: 3, [RJSF_REF_KEY]: '#/definitions/constrained' },
+        });
+      });
+      it('resolves a $ref in a patternProperties entry that a sibling property resolved first', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: { $ref: '#/definitions/text' }, other: { $ref: '#/definitions/constrained' } },
+          patternProperties: { '^a': { $ref: '#/definitions/constrained' } },
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: { text: { type: 'string' }, constrained: { maxLength: 7 } },
+        };
+        // `resolveAllReferences()` merges every property's resolved references into the list it was given, so by the
+        // time `aa` is merged with its pattern that list holds the one `other` resolved. Seeding the merge with it
+        // would read `aa`'s pattern as a cycle and hand the renderer a literal `$ref` in place of its constraint
+        expect(retrieveSchema({ validator: testValidator }, schema, rootSchema, {}).properties).toEqual({
+          aa: { type: 'string', maxLength: 7, [RJSF_REF_KEY]: '#/definitions/text' },
+          other: { maxLength: 7, [RJSF_REF_KEY]: '#/definitions/constrained' },
+        });
+      });
+      it('merges a pattern into a boolean property, which carries no reference of its own', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { aa: true, bb: false },
+          patternProperties: { '^a': { minLength: 3 } },
+        };
+        // JSON Schema allows a boolean wherever a schema goes, so the key a pattern matches may hold one: `true`
+        // constrains nothing and leaves the pattern's constraint, and the unmatched `false` is left as it stands
+        expect(retrieveSchema({ validator: testValidator }, schema, { definitions: {} }, {}).properties).toEqual({
+          aa: { minLength: 3 },
+          bb: false,
+        });
+      });
+      it('merges a pattern into a key whose own allOf already declares what the pattern does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { allOf: [{ minLength: 2 }] }, bar: { type: 'string' } },
+          patternProperties: { '^f': { minLength: 2 } },
+        };
+        // A merge an inner recursion level left undone is recognised by the marker that level set, not by the `allOf`
+        // holding the patterns, which a schema may also declare itself. Read by shape, this key would be taken as
+        // already merged and left with its `allOf` unresolved
+        expect(retrieveSchema({ validator: testValidator }, schema, { definitions: {} }, {}).properties).toEqual({
+          foo: { minLength: 2 },
+          bar: { type: 'string' },
+        });
+      });
+      it('merges a pattern into a key whose own allOf holds a $ref alongside what the pattern declares', () => {
+        const rootSchema: RJSFSchema = {
+          type: 'object',
+          definitions: { Base: { type: 'string', title: 'Base' } },
+          properties: { p: { allOf: [{ $ref: '#/definitions/Base' }, { maxLength: 5 }] } },
+          patternProperties: { '^p': { maxLength: 5 } },
+        };
+        // No recursion is involved, so the `$ref` resolves and the patterns merge in. Reading the trailing entries of
+        // the `allOf` as a merge already made would hand `SchemaField` the unresolved `allOf` instead
+        expect(retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {}).properties!.p).toEqual({
+          type: 'string',
+          title: 'Base',
+          maxLength: 5,
+          [RJSF_REF_KEY]: '#/definitions/Base',
+        });
+      });
+      it('keeps the properties of a schema a key refers back to when a pattern also matches that key', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+              patternProperties: { '^child$': { properties: { extra: { type: 'string' } } } },
+            },
+          },
+          $ref: '#/definitions/node',
+        };
+        const root = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {});
+        // The merge of the recursive key is left undone rather than resolved, since resolving it would stop at the
+        // literal `$ref` and a later shallow spread would let the pattern's `properties` replace the node's own
+        const child = root.properties!.child as RJSFSchema;
+        const resolvedChild = retrieveSchema({ validator: testValidator }, child, rootSchema, {});
+        expect(Object.keys(resolvedChild.properties!).sort()).toEqual(['child', 'extra', 'name']);
+        // and the level below it resolves the same way rather than terminating by losing the recursion
+        const grandchild = retrieveSchema(
+          { validator: testValidator },
+          resolvedChild.properties!.child as RJSFSchema,
+          rootSchema,
+          {},
+        );
+        expect(Object.keys(grandchild.properties!).sort()).toEqual(['child', 'extra', 'name']);
+      });
+      it('merges a pattern into a key referring back to a schema other than the one that holds it', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            A: { type: 'object', properties: { b: { $ref: '#/definitions/B' } } },
+            B: {
+              type: 'object',
+              properties: { a: { $ref: '#/definitions/A' }, s: { type: 'string' } },
+              patternProperties: { '^a$': { title: 'Pattern' } },
+            },
+          },
+          $ref: '#/definitions/A',
+        };
+        const root = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema, {});
+        const b = retrieveSchema({ validator: testValidator }, root.properties!.b as RJSFSchema, rootSchema, {});
+        // `resolveAllReferences()` has flagged the key as a `$ref` cycle, since the path it was reached by holds the
+        // reference it names, and the key carries that flag on through the expansion of it. That is not the merge
+        // this schema's own recursive key leaves undone, so the pattern applies here as it does to any other key
+        expect(b.properties!.a).toEqual(
+          expect.objectContaining({ title: 'Pattern', properties: expect.objectContaining({ b: expect.anything() }) }),
+        );
       });
     });
     describe('stubExistingAdditionalProperties()', () => {
@@ -2947,6 +3142,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { not: {} },
           { type: 'object', additionalProperties: true },
         ]);
+      });
+      it('builds the relaxed form of an option once, so re-scoring it does not hash it again', () => {
+        const option: RJSFSchema = {
+          $id: 'strict',
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+        };
+        // Relaxing derives an `$id`, which serializes the option, and `omitExtraData()` relaxes the options of a
+        // `oneOf` on every call: the same object back is what keeps the scoring memo keyed by it hitting too
+        expect(relaxOptionsForScoring([option])[0]).toBe(relaxOptionsForScoring([option])[0]);
       });
       describe('resolveRefs=true', () => {
         it('resolves a $ref and widens additionalProperties:false to true', () => {

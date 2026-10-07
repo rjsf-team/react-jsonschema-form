@@ -1,6 +1,24 @@
-import type { RJSFSchema } from '../../src/index.ts';
-import { createSchemaUtils, getFirstMatchingOption, noop } from '../../src/index.ts';
+import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
+import { createSchemaUtils, getFirstMatchingOption, JUNK_OPTION_ID, noop } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
+
+/** Returns a validator that records every schema it is asked to validate and fails all of them. What the augmentation
+ * is handed to validate is what a validator keys the function it compiles by, so it is read from a validator that
+ * records it rather than from whichever one this suite is running against, and failing every option is what makes
+ * scoring reach them all.
+ */
+function recordingValidator() {
+  const validated: RJSFSchema[] = [];
+  const validator: ValidatorType = {
+    isValid: (schema: RJSFSchema) => {
+      validated.push(schema);
+      return false;
+    },
+    rawValidation: () => ({}),
+    validateFormData: () => ({ errors: [], errorSchema: {} }),
+  };
+  return { validated, validator };
+}
 
 export default function getFirstMatchingOptionTest(testValidator: TestValidatorType) {
   describe('getFirstMatchingOption()', () => {
@@ -35,6 +53,84 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         },
       ];
       expect(getFirstMatchingOption({ validator: testValidator }, undefined, options, rootSchema)).toEqual(0);
+    });
+    it("holds the augmentation outside an option that has an $id, keeping only the junk option's", () => {
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [
+        { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } },
+        { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } } },
+      ];
+      expect(getFirstMatchingOption({ validator }, { id: 'a' }, options, rootSchema)).toEqual(0);
+      expect(validated).toEqual([
+        // The option stays whole inside the `allOf`, under a derived `$id` that keeps its own as the base, so that a
+        // relative `$ref` left inside it still resolves and resolves to the option rather than to what wraps it
+        {
+          allOf: [
+            {
+              $id: expect.stringMatching(/^anOption\?rjsf=.+/),
+              type: 'object',
+              properties: { id: { enum: ['a'] } },
+            },
+          ],
+          anyOf: [{ required: ['id'] }],
+        },
+        // The precompiled validators recognise the junk option by its `$id` and answer it without a compiled function
+        { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } }, anyOf: [{ required: ['id'] }] },
+      ]);
+    });
+    it('drops the required of an option that has an $id along with the one that has none', () => {
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [
+        { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } }, required: ['id'] },
+        { type: 'object', properties: { id: { enum: ['b'] } }, required: ['id'] },
+      ];
+      getFirstMatchingOption({ validator }, { id: 'a' }, options, rootSchema);
+      // A key the user has yet to fill in would fail the option's own `required`, so scoring asserts the `anyOf` of its
+      // property names in its place, wherever that assertion ends up living
+      expect(validated[0]).not.toHaveProperty('allOf.0.required');
+      expect(validated[1]).not.toHaveProperty('required');
+    });
+    it('scores an option describing a map as it stands, since it declares no keys to assert', () => {
+      const { validated, validator } = recordingValidator();
+      // `stubExistingAdditionalProperties()` gives an option describing a map an empty `properties` before it is
+      // scored, and an `anyOf` over no keys asserts nothing that can be satisfied, which a validator rejects outright
+      const options: RJSFSchema[] = [
+        { type: 'object', additionalProperties: { type: 'string' }, properties: {} },
+        { $id: 'mapWithAnId', type: 'object', additionalProperties: { type: 'string' }, properties: {} },
+      ];
+      getFirstMatchingOption({ validator }, { anyKey: 'x' }, options, rootSchema);
+      expect(validated).toHaveLength(2);
+      for (const scored of validated) {
+        expect(scored).not.toHaveProperty('anyOf');
+        expect(scored).not.toHaveProperty('allOf');
+      }
+    });
+    it('derives an $id for an option whose own ends in an empty fragment', () => {
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [{ $id: 'http://e.com/a.json#', type: 'object', properties: { a: {} } }];
+      getFirstMatchingOption({ validator }, { a: 'x' }, options, rootSchema);
+      // Appending to the fragment would put the query inside it, and the 2019-09 and 2020-12 meta-schemas require an
+      // `$id` to match `^[^#]*#?$`, so every variant of such an option failed to compile
+      const [wrappedOption] = validated[0].allOf as RJSFSchema[];
+      const derived = wrappedOption.$id;
+      expect(derived).toMatch(/^http:\/\/e\.com\/a\.json\?rjsf=/);
+      expect(derived).not.toContain('#');
+    });
+    it('derives the schema an option is scored by once, so re-scoring it does not hash it again', () => {
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [{ $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } }];
+      getFirstMatchingOption({ validator }, { id: 'a' }, options, rootSchema);
+      getFirstMatchingOption({ validator }, { id: 'b' }, options, rootSchema);
+      // Deriving the `$id` serializes the whole option, and an option is re-scored on every change to the form data,
+      // so the derivation is memoized by the option it came from: the same object back is what proves it
+      expect(validated[1]).toBe(validated[0]);
+    });
+    it('scores a boolean option as it stands, since it declares nothing to augment', () => {
+      const { validated, validator } = recordingValidator();
+      // JSON Schema allows a boolean subschema anywhere a schema goes, an `anyOf`/`oneOf` entry included
+      const options = [true, false] as unknown as RJSFSchema[];
+      expect(getFirstMatchingOption({ validator }, { id: 'a' }, options, rootSchema)).toEqual(0);
+      expect(validated).toEqual([true, false]);
     });
     it('should handle undefined formData when a discriminator field is present in an option', () => {
       const options: RJSFSchema[] = [{ type: 'object', properties: { id: { const: 'a' } } }];
@@ -100,6 +196,38 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       // Mock again isValid fail the first non-nested value
       testValidator.setReturnValues({ isValid: [false, true] });
       expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
+    });
+    it('does not match an option that declares no keys at all, so a "none" option leaves the data alone', () => {
+      // Scored as it stands, an option with an empty `properties` matches every object, so a "none of these" option in
+      // front of the real ones takes the data away from them -- the selector snaps back to it as a field is cleared
+      const { validated, validator } = recordingValidator();
+      const options: RJSFSchema[] = [
+        { title: 'None', type: 'object', properties: {} },
+        { title: 'Some', type: 'object', properties: { a: { type: 'string' } } },
+      ];
+      getFirstMatchingOption({ validator }, { a: 'x' }, options, rootSchema);
+      expect(validated[0]).toEqual({ not: {} });
+    });
+    it('scores an option describing a map as it stands, since it declares its keys elsewhere', () => {
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'object', properties: {}, additionalProperties: { type: 'string' } };
+      getFirstMatchingOption({ validator }, { k: 'v' }, [option], rootSchema);
+      expect(validated[0]).toEqual(option);
+    });
+    it('does not match an option whose patternProperties name no pattern either', () => {
+      // An empty `patternProperties` describes no key, so it leaves the option with nothing to match on, the same way
+      // an empty `properties` does
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'object', properties: {}, patternProperties: {} };
+      getFirstMatchingOption({ validator }, { a: 'x' }, [option], rootSchema);
+      expect(validated[0]).toEqual({ not: {} });
+    });
+    it('scores an option that declares no properties at all as it stands', () => {
+      // An option without a `properties` key describes something other than an object, so there are no keys to assert
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'string', minLength: 1 };
+      getFirstMatchingOption({ validator }, 'x', [option], rootSchema);
+      expect(validated[0]).toEqual(option);
     });
     it('should return 0 when schema has discriminator but no matching data', () => {
       // Mock isValid to fail both values

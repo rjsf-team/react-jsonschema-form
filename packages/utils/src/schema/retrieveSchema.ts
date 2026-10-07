@@ -1,3 +1,4 @@
+import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -24,6 +25,7 @@ import isObject from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
+import { declaredRef, resolvedFromRef } from '../refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -32,7 +34,7 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
-import getFirstMatchingOption from './getFirstMatchingOption.ts';
+import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 // Backstop for the resolveReference <-> retrieveSchemaInternal loop: with the path reconstructed from RJSF_REF_KEY
@@ -41,6 +43,13 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
 // instead of overflowing the stack. The count is local to one fixpoint loop: nested allOf, then/else and
 // dependencies branches receive only the caller's re-walk status, so nesting depth alone cannot reach this limit.
 const MAX_RESOLUTION_PASSES = 100;
+
+// Marks the `allOf` that a key's `patternProperties` merge is left undone in, so the level that resolves its way back
+// here recognises its own work. `RJSF_REF_CYCLE_KEY` cannot say it: `resolveAllReferences()` sets that one on any
+// property whose `$ref` closes a cycle, and such a property travels with the marker through the expansion of that
+// `$ref`, so reading it here as a merge already made drops the patterns a key of a mutually recursive schema matches.
+// It stays private to this module, since the merge it describes is left and taken up in this one function.
+const PATTERN_MERGE_LEFT_UNDONE = Symbol('__rjsf_pattern_merge_left_undone');
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
@@ -878,11 +887,9 @@ export function retrieveSchemaInternal<
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
-      // resolve allOf schemas
-      if (expandAllBranches) {
-        const { allOf, ...restOfSchema } = resolvedSchema;
-        return [...(allOf as S[]), restOfSchema as S];
-      }
+      // resolve allOf schemas. A form always merges an `allOf`, so even `expandAllBranches` merges it: the subschemas it
+      // validates against are the merged schema's, which the unmerged branches need not hold -- a `customMergeAllOf` can
+      // rewrite them, and only the merged schema has the properties its `patternProperties` apply to
       // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
       // (external library) only operates on string keys and will drop them.
       const allOfSymbols: Record<symbol, unknown> = {};
@@ -906,39 +913,106 @@ export function retrieveSchemaInternal<
         (resolvedSchema as any)[sym] = allOfSymbols[sym];
       }
     }
-    if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
-      resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
-        (acc, key) => {
-          const matchingProperties = getMatchingPatternProperties(acc, key);
-          if (Object.keys(matchingProperties).length > 0) {
-            [acc.properties[key]] = retrieveSchemaInternal<T, S, F>(
-              context,
-              { allOf: [acc.properties[key], ...Object.values(matchingProperties)] } as S,
-              rootSchema,
-              getByPath<T>(rawFormData, key),
-              undefined,
-              undefined,
-              undefined,
-              preserveDependencies,
-            );
-          }
-          return acc;
-        },
-        {
-          ...resolvedSchema,
-          properties: { ...resolvedSchema.properties },
-        },
-      );
+    let withMergedProperties = [resolvedSchema];
+    const { properties } = resolvedSchema;
+    if (properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
+      // Merging a property with its matching patterns resolves the result, which for a key holding a `$ref` back to
+      // this schema never terminates, so the reference this schema was itself reached through seeds that resolution
+      // and stops it. It is read off the schema before the merge first, since `mergeAllOf` drops the Symbol keys and
+      // the re-apply above recovers only the `allOf` entries'. That one reference seeds the merge rather than
+      // `recurseList`, which holds the path this schema was reached by and would read a key's own `$ref` as a cycle
+      const ownRef = refOf<S>(s) ?? refOf<S>(resolvedSchema);
+      const mergeRecurseList = ownRef === undefined ? [] : [ownRef];
+      // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
+      // are varied one property at a time rather than in every combination with the other properties': what reads a
+      // branch reads one property, and the combinations grow as the product of the branch counts
+      const branchesByKey = Object.keys(properties).flatMap((key) => {
+        const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
+        if (Object.keys(matchingProperties).length === 0) {
+          return [];
+        }
+        const property = properties[key];
+        const patternSchemas = Object.values(matchingProperties);
+        // Resolving the merge of a property that refers back to this schema is what the seed above stops, but
+        // stopping it leaves the `$ref` a literal, and a merge of a literal `$ref` with the patterns' keywords is
+        // read later by `resolveAllReferences()` as `{ ...target, ...merged }` -- a shallow spread, where a
+        // `properties` the patterns contribute replaces the target's own rather than joining it. The merge is left
+        // undone instead, flagged as the cycle it is: the key refers back to the schema that holds it, which only the
+        // `allOf` around it hides from `resolveAllReferences()`, and the flag is what tells `SchemaField` to render a
+        // cycle indicator rather than nesting the key's fields until the heap runs out. The marker alongside it is
+        // what an outer level reads, since the cycle flag is one resolution sets on keys this merge still applies to
+        const propertySchema = isObject(property) ? (property as S) : undefined;
+        const propertyRef = refOf<S>(propertySchema);
+        if (propertyRef !== undefined && mergeRecurseList.includes(propertyRef)) {
+          return [
+            {
+              key,
+              branches: [
+                {
+                  allOf: [property, ...patternSchemas],
+                  [RJSF_REF_CYCLE_KEY]: true,
+                  [PATTERN_MERGE_LEFT_UNDONE]: true,
+                } as unknown as S,
+              ],
+            },
+          ];
+        }
+        // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
+        // undone is recognised by the marker that level set and left alone, rather than having the patterns added a
+        // second time. The marker says so rather than the shape doing: an `allOf` holding the patterns is one a schema
+        // may also declare itself, and reading that as a merge already made leaves the key unresolved
+        if (propertySchema !== undefined && (propertySchema as RJSFMarkedSchema)[PATTERN_MERGE_LEFT_UNDONE]) {
+          return [];
+        }
+        const branches = retrieveSchemaInternal<T, S, F>(
+          context,
+          { allOf: [property, ...patternSchemas] } as S,
+          rootSchema,
+          getByPath<T>(rawFormData, key),
+          expandAllBranches,
+          mergeRecurseList,
+          undefined,
+          preserveDependencies,
+        );
+        return [{ key, branches }];
+      });
+      const firstBranches = Object.fromEntries(branchesByKey.map(({ key, branches: [first] }) => [key, first]));
+      const withFirstBranches: S = { ...resolvedSchema, properties: { ...properties, ...firstBranches } };
+      withMergedProperties = [
+        withFirstBranches,
+        ...branchesByKey.flatMap(({ key, branches }) =>
+          branches.slice(1).map((branch) => ({
+            ...withFirstBranches,
+            properties: { ...withFirstBranches.properties, [key]: branch },
+          })),
+        ),
+      ];
     }
+    // Every entry of `withMergedProperties` is `resolvedSchema` under different `properties`, so what it says about
+    // `patternProperties` and `additionalProperties` is the same for all of them
     const hasAdditionalProperties =
       PATTERN_PROPERTIES_KEY in resolvedSchema ||
       (ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false);
-    if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(context, resolvedSchema, rootSchema, rawFormData);
+    if (!hasAdditionalProperties) {
+      return withMergedProperties;
     }
-
-    return resolvedSchema;
+    return withMergedProperties.map((schemaWithProperties) =>
+      stubExistingAdditionalProperties<T, S, F>(context, schemaWithProperties, rootSchema, rawFormData),
+    );
   });
+}
+
+/** Returns the `$ref` the given schema holds or was resolved from, if any. A resolved schema no longer holds the
+ * reference as a key, so the one `resolveAllReferences()` marked it with is what names it.
+ *
+ * @param schema - The schema to read the reference off, if there is one to read it off at all
+ * @returns - The `$ref` the schema holds or was resolved from, or undefined when it has neither
+ */
+function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): string | undefined {
+  // A reference the schema still holds comes first, since that is the one about to be resolved and so the one a
+  // merge of this schema would follow round again. `resolveUiSchema()` reads the same two the other way about, for
+  // the opposite reason: it is naming where a resolved schema came from, not what it is about to resolve
+  return declaredRef<S>(schema) ?? resolvedFromRef<S>(schema);
 }
 
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from
@@ -951,13 +1025,21 @@ export function retrieveSchemaInternal<
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema, defaults to an empty object
+ * @param [recurseList=[]] - The list of recursive references already processed
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function resolveAnyOrOneOfSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
+>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  expandAllBranches: boolean,
+  rawFormData?: T,
+  recurseList: string[] = [],
+) {
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
     const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...withoutOptions } = schema;
@@ -987,12 +1069,49 @@ export function resolveAnyOrOneOfSchemas<
       // also captured. The return value is discarded — the call is purely for ParserValidator's side effect.
       const relaxed = relaxOptionsForScoring<S>(anyOrOneOf, false, rootSchema);
       getFirstMatchingOption<T, S, F>(context, formData, relaxed, rootSchema, discriminator);
+      // `MultiSchemaField` scores the options it has retrieved rather than the ones the schema declares, so an option
+      // that resolves into something else -- one that is an `allOf`, say -- is scored in that resolved form too. It
+      // retrieves with the real form data, which this has none of, so an option whose retrieved form depends on the
+      // data is still reached only in the forms an empty retrieval produces: a key an option's `additionalProperties`
+      // describes is stubbed into its `properties` once the user adds one, and no parse can enumerate those
+      const retrievedOptions = anyOrOneOf.flatMap((item) =>
+        // The options share the list, since a `$ref` one of them resolves is not one a sibling has already been
+        // through: resolution extends the path it is given into a new list rather than appending to that one, which is
+        // also why the `properties` loop of `resolveAllReferences()` hands each property the same one
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
+      );
+      getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
+      // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
+      // declines the switch to another option, the data still fitting the chosen one is what keeps it. That asks for
+      // the option under the derived `$id` scoring gives it, since the retrieved form is not what the option's own
+      // `$id` names, so the derivation is applied to the option here too
+      retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
+      getFirstMatchingOption<T, S, F>(
+        context,
+        formData,
+        relaxOptionsForScoring<S>(retrievedOptions),
+        rootSchema,
+        discriminator,
+      );
       return anyOrOneOf.map((item) => mergeSchemas(remaining, item) as S);
     }
     return [mergeSchemas(remaining, anyOrOneOf[option]) as S];
   }
   return [schema];
 }
+
+/** The relaxed form of each option that had to be relaxed, memoized by the option it was relaxed from. Relaxing
+ * derives an `$id`, which hashes the option, and `omitExtraData()` relaxes the options of a `oneOf` on every call, so
+ * without this a large option is serialized on every change to the form data -- and twice over, since the schema it is
+ * then scored by derives an `$id` of its own. The relaxed form depends on nothing but the option, and an option is
+ * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by.
+ *
+ * It is keyed by the option as resolution leaves it rather than as the caller declared it, since that is what the
+ * relaxation is of, so a call that resolves a `$ref` hands over a new object and misses: an option that is a `$ref`
+ * is relaxed once per call. Keying by the declared option instead would hit, but the relaxation of a `$ref` depends
+ * on the `rootSchema` it resolves against, which the key would not carry
+ */
+const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
 /** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
@@ -1018,7 +1137,18 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
       return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
-    return schema.additionalProperties === false ? { ...schema, additionalProperties: true } : schema;
+    if (schema.additionalProperties !== false) {
+      return schema;
+    }
+    const memoized = relaxedOptions.get(schema);
+    if (memoized) {
+      return memoized as S;
+    }
+    // Relaxing makes a schema the option's `$id` does not name, so it is derived for the same reason
+    // `getFirstMatchingOption()` derives one for the schema it augments
+    const relaxed = withVariantId<S>({ ...schema, additionalProperties: true });
+    relaxedOptions.set(schema, relaxed);
+    return relaxed;
   });
 }
 
@@ -1057,9 +1187,10 @@ export function resolveDependencies<
     rootSchema,
     expandAllBranches,
     formData,
+    recurseList,
   );
-  return resolvedSchemas.flatMap((resolvedSchema) =>
-    processDependencies<T, S, F>(
+  return resolvedSchemas.flatMap((resolvedSchema) => {
+    const applied = processDependencies<T, S, F>(
       context,
       dependencies,
       resolvedSchema,
@@ -1068,8 +1199,96 @@ export function resolveDependencies<
       recurseList,
       formData,
       passCount,
+    );
+    // A dependency whose key the form data does not have is left unapplied, so a form renders -- and scores its
+    // options against -- the schema with whichever subset of them the data has filled in, where expanding returns
+    // only the one with all of them applied. The subsets in between are expanded here, and the empty one below
+    if (!expandAllBranches || applied.some((appliedSchema) => deepEquals(appliedSchema, resolvedSchema))) {
+      return applied;
+    }
+    return [
+      ...applied,
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList, formData, passCount),
+      resolvedSchema,
+    ];
+  });
+}
+
+/** The most schema `dependencies` one schema may have for every subset of them to be expanded. There are `2 ** k`
+ * of those and each one resolves the schema afresh, so the count doubles with every key added
+ */
+const MAX_COMBINED_SCHEMA_DEPENDENCIES = 8;
+
+/** Returns the `resolvedSchema` with each proper, non-empty subset of its schema `dependencies` applied. A form
+ * applies a dependency once its key has a value, so a user part-way through filling an object in renders it with some
+ * of them applied, and that is the schema its options are scored against -- a precompiled validator with only the
+ * none- and all-applied forms throws `No precompiled validator function was found for the given schema` on the
+ * keystroke that fills the first one in.
+ *
+ * Only the dependencies holding a schema are varied. A dependency holding a list of names adds them to `required`,
+ * which scoring drops, so it describes nothing a validator has to have compiled.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param dependencies - The `dependencies` of the schema being resolved
+ * @param resolvedSchema - The schema the dependencies are applied to, with none of them applied
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param recurseList - The list of recursive references already processed
+ * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
+ * @returns - The schema with each proper, non-empty subset of its schema dependencies applied
+ */
+function partiallyApplied<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  dependencies: S['dependencies'],
+  resolvedSchema: S,
+  rootSchema: S,
+  recurseList: string[],
+  formData?: T,
+  passCount = 0,
+): S[] {
+  // Iterated rather than read through a default, since this is only reached for a schema that has `dependencies` and
+  // a default for the one it cannot have would be a branch no test can take
+  const schemaKeys: string[] = [];
+  for (const key in dependencies) {
+    if (isObject(dependencies[key])) {
+      schemaKeys.push(key);
+    }
+  }
+  if (schemaKeys.length < 2) {
+    return [];
+  }
+  const subsets = combinationsUpTo(schemaKeys, MAX_COMBINED_SCHEMA_DEPENDENCIES, () =>
+    // The keys are named so that a second schema over the limit is reported rather than deduped into the first one's
+    // warning, which says nothing that tells the two apart
+    logOnce(
+      `A schema has ${schemaKeys.length} schema dependencies, more than the ${MAX_COMBINED_SCHEMA_DEPENDENCIES} whose subsets can all be expanded, so only each dependency alone and all of them together were expanded. A form applies the subset whose keys the data has filled in, so a form part-way between those has no compiled validator. Give the object fewer schema dependencies, nesting what they describe if need be. The keys are: ${schemaKeys.join(', ')}`,
+      'warn',
     ),
   );
+  return subsets
+    .filter((subset) => subset.length < schemaKeys.length)
+    .flatMap((subset) => {
+      const partial = { ...dependencies } as Record<string, unknown>;
+      for (const key of schemaKeys) {
+        if (!subset.includes(key)) {
+          delete partial[key];
+        }
+      }
+      return processDependencies<T, S, F>(
+        context,
+        partial as S['dependencies'],
+        resolvedSchema,
+        rootSchema,
+        true,
+        recurseList,
+        formData,
+        passCount,
+      );
+    });
 }
 
 /** Processes all the `dependencies` recursively into the list of `resolvedSchema`s as needed. Passes the
@@ -1293,7 +1512,9 @@ export function withExactlyOneSubschema<
     return false;
   });
 
-  if (!expandAllBranches && validSubschemas.length !== 1) {
+  // Expanding all branches keeps every subschema that names the dependency key, but a `oneOf` whose options all leave
+  // it out qualifies none of them, and the rest of this function describes a chosen subschema
+  if (validSubschemas.length === 0 || (!expandAllBranches && validSubschemas.length !== 1)) {
     logOnce(
       `ignoring oneOf in dependencies of "${dependencyKey}" because there isn't exactly one subschema that is valid`,
     );

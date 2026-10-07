@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -138,7 +138,7 @@ export default class CFWorkerValidator<
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(normalizeFormDataForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -219,7 +219,7 @@ export default class CFWorkerValidator<
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {

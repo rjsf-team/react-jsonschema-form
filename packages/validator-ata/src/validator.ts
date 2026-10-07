@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -136,7 +136,7 @@ export default class ATAValidator<
     let errors: ValidationError[] | undefined;
 
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(ATAValidator.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -200,7 +200,9 @@ export default class ATAValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
+    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.
@@ -226,7 +228,7 @@ export default class ATAValidator<
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {

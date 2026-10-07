@@ -1,9 +1,11 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
 
+import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
-import { SUPER_SCHEMA_OPTIONS, superSchema } from './harness/compileSuperSchema.ts';
+import { createPrecompiledValidator } from '../src/index.ts';
+import { SUPER_SCHEMA_OPTIONS, evalValidatorCode, superSchema } from './harness/compileSuperSchema.ts';
 import { CUSTOM_OPTIONS, expectWarn } from './harness/testData.ts';
 
 vi.mock('../src/createAjvInstance', async (importOriginal) => {
@@ -66,4 +68,11 @@ describe('compileSchemaValidatorsCode()', () => {
       );
     });
   });
+  precompiledCoverageTests((rootSchema, options) =>
+    createPrecompiledValidator(
+      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)),
+      rootSchema,
+      options,
+    ),
+  );
 });
