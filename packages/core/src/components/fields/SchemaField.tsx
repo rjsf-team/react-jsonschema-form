@@ -52,7 +52,7 @@ import {
 } from '@rjsf/utils';
 
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
@@ -178,20 +178,6 @@ function lookUpUiField<
   return typeof field === 'string' ? getByPath(fields, field) : field;
 }
 
-/** How a `ui:field` warning refers to the registered fields a name is looked up in */
-const UI_FIELD_LOOKUP = { none: 'no registered field', some: 'a registered field' };
-
-/** Describes a field's own `ui:field`, or the `ui:globalOptions.field`, that names no field, for the warning that it
- * was ignored
- */
-function describeUiField<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(field: UIOptionsType<T, S, F>['field'], resolved: unknown): string {
-  return describeUnresolvedComponent(field, resolved, UI_FIELD_LOOKUP, 'MyField');
-}
-
 /** The field a `ui:field` names, and what was ignored on the way to it */
 interface UiFieldResolution<
   T = unknown,
@@ -239,14 +225,18 @@ function resolveUiField<
   if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
     return {};
   }
-  const ignoredOwnField = ownField ? describeUiField<T, S, F>(ownField, ownResolved) : undefined;
+  const ignoredOwnField = ownField
+    ? describeUnresolvedComponent(ownField, ownResolved, 'registered field', 'MyField')
+    : undefined;
   const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
   if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
     return { namedField: globalResolved, ignoredOwnField };
   }
   return {
     ignoredOwnField,
-    ignoredGlobalField: globalField ? describeUiField<T, S, F>(globalField, globalResolved) : undefined,
+    ignoredGlobalField: globalField
+      ? describeUnresolvedComponent(globalField, globalResolved, 'registered field', 'MyField')
+      : undefined,
   };
 }
 
@@ -360,9 +350,10 @@ function getFieldComponent<
    * template, which takes no `anyOf`/`oneOf` over
    */
   const rendersFallbackUi = isFallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
-  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to. A name no
-   * field is registered under resolves to nothing, so there is nothing to give way to and the options are rendered,
-   * which is what lets the form be completed: without them an object union loses the `properties` of every option.
+  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to, whether it is
+   * the field's own or the `ui:globalOptions.field` that an own one naming no field falls back to. When none resolves
+   * there is nothing to give way to and the options are rendered, which is what lets the form be completed: without
+   * them an object union loses the `properties` of every option.
    * One naming this field is not a field the options can give way to either: with the opt-in on what it would add is a
    * type selector, which is the choice the options already offer, and without it an unsupported-field box in their
    * place. Read from the component, so the `ui:field` spelling answers as the `$id` one does
@@ -542,13 +533,14 @@ function SchemaFieldRender<
     return <CyclicSchemaField {...props} />;
   }
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
+  const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
-  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
   const { namedField, ignoredOwnField, ignoredGlobalField } = resolveUiField<T, S, F>(
     ownUiOptions,
     globalUiOptions?.field,
@@ -600,11 +592,13 @@ function SchemaFieldRender<
   // any top-level `ui:field` that is set, resolved or not, so that field's label is missing; that is #5389's to fix,
   // not this message's.
   // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
-  // about once for the form rather than once per field
+  // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
+  // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
+  // warning. A tuple's per-position entries and its `additionalItems` share it too, since nothing here tells them apart
   if (ignoredOwnField) {
     logOnce(
-      `ui:field for ${fieldLabelForLog(fieldId, fieldPath)} ${ignoredOwnField}, so it is ignored and the field is ` +
-        'rendered as though no ui:field were given.',
+      `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)} ${ignoredOwnField}, so it is ignored and the ` +
+        'field is rendered as though no ui:field were given.',
     );
   }
   if (ignoredGlobalField) {

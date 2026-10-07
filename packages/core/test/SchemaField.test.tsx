@@ -422,6 +422,39 @@ describe('SchemaField', () => {
         );
       });
 
+      it.each<[string, RJSFSchema, UiSchema, unknown, string]>([
+        [
+          'a nested',
+          {
+            type: 'object',
+            properties: {
+              list: { type: 'array', items: { type: 'object', properties: { val: { type: 'string' } } } },
+            },
+          },
+          { list: { items: { val: { 'ui:field': 'Typo' } } } },
+          { list: [{}, {}, {}] },
+          '"root_list_[]_val" (list[].val)',
+        ],
+        [
+          'the root',
+          { type: 'array', items: { type: 'string' } },
+          { items: { 'ui:field': 'Typo' } },
+          ['a', 'b', 'c'],
+          '"root_[]" ([])',
+        ],
+      ])(
+        'warns once about an unusable ui:field in %s items entry, not once per item',
+        (_, schema, uiSchema, formData, label) => {
+          const { node } = createFormComponent({ schema, uiSchema, formData });
+
+          expect(node.querySelectorAll('input')).toHaveLength(3);
+          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+            `ui:field for ${label} names no registered field ('Typo'), so it is ignored and the field is rendered as ` +
+              'though no ui:field were given.',
+          );
+        },
+      );
+
       it('renders the ui:globalOptions.field in place of a local ui:field that is ignored', () => {
         const uiSchema: UiSchema = JSON.parse(
           '{ "ui:globalOptions": { "field": "myobject" }, "ui:field": null, "val": { "ui:field": "Nope" } }',

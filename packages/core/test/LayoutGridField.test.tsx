@@ -1518,6 +1518,12 @@ describe('LayoutGridField', () => {
         );
       },
     );
+    test.each(['', false, 0, null])('renderField does not warn about a render of %j, which asks for none', (empty) => {
+      const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: empty } } });
+      render(<LayoutGridField {...props} />);
+      expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
     test('renderField names a cell whose name resolves to no schema in the warning', () => {
       const props = getProps({
         schema: SAMPLE_SCHEMA,

@@ -1,4 +1,4 @@
-import type { ComponentProps, ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { useMemo } from 'react';
 import type {
   FieldProps,
@@ -427,12 +427,6 @@ export function getSchemaDetailsForField<
   return { schema, isRequired, isReadonly, optionsInfo, fieldPath };
 }
 
-/** How a `render` warning refers to the lookup map a name is looked up in */
-const RENDER_LOOKUP = {
-  none: `no value in formContext.${LOOKUP_MAP_NAME}`,
-  some: `a value in formContext.${LOOKUP_MAP_NAME}`,
-};
-
 /** Gets the custom render component from the `render`, by either determining that it is already a component, which
  * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
  * used to look up the component in the registry. If no component can be found, null is returned.
@@ -447,7 +441,7 @@ export function getCustomRenderComponent<
   F extends FormContextType = FormContextType,
 >(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
   const customRenderer = lookUpRender<T, S, F>(render, registry);
-  return isComponentType<ComponentProps<RenderComponent>>(customRenderer) ? customRenderer : null;
+  return isComponentType<unknown>(customRenderer) ? customRenderer : null;
 }
 
 /** Looks up what a cell's `render` refers to: the value in the lookup map when it is a name, otherwise the `render`
@@ -795,12 +789,12 @@ function LayoutGridFieldComponent<
   // Warned about here, where the cell has nothing else to render, rather than wherever the `render` is looked up: a cell
   // whose `name` resolves to a schema renders that field and never uses its `render`, good or bad
   const render: unknown = isObject(gridSchema) ? gridSchema.render : undefined;
-  if (render != null) {
+  if (render) {
     const cellName = name ? `cell '${name}'` : 'a cell';
     const description = describeUnresolvedComponent(
       render,
       lookUpRender(render, registry),
-      RENDER_LOOKUP,
+      `value in formContext.${LOOKUP_MAP_NAME}`,
       'MyRenderer',
     );
     logOnce(
