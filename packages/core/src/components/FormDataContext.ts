@@ -6,7 +6,9 @@ import type { FieldPath } from '@rjsf/utils';
  * keeps to its view.
  */
 interface FormDataAccess {
-  /** Changes whenever such a proposal is dropped, at each commit of the form, and with it a field's record of it */
+  /** Changes whenever such a proposal is dropped, at the commit of the form that answers it, and with it a field's
+   * record of it
+   */
   epoch(): number;
   /** Has the form render, so that its commit ends the record of a proposal a field made, whatever became of the
    * proposal: a custom parent can keep one to itself, and the form would otherwise never learn of it

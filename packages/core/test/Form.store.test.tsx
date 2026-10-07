@@ -427,6 +427,28 @@ it('a form hidden by Activity reports a held change to the handler its parent pa
   expect(whenShown).toHaveBeenCalledTimes(1);
 });
 
+it('a form hidden by Activity has its handle back on the ref when it reports what it held', () => {
+  const ref = createFormRef<{ name?: string }>();
+  const onRef: (FormRef<{ name?: string }> | null)[] = [];
+  const { hide, show } = renderInActivity(() => (
+    <Form
+      ref={ref}
+      schema={schema}
+      validator={validator}
+      initialFormData={{ name: 'a' }}
+      onChange={() => onRef.push(ref.current)}
+    />
+  ));
+  const handle = handleOf(ref);
+  hide();
+
+  act(() => handle.setFieldValue('name', 'later'));
+  show();
+
+  // A handler that validates or reads through the ref would otherwise find it empty
+  expect(onRef).toEqual([handle]);
+});
+
 it('a submit on a form hidden by Activity waits until it is shown, after the change it reports', () => {
   const ref = createFormRef<{ name?: string }>();
   const calls: string[] = [];

@@ -86,19 +86,17 @@ export async function outsideAct(run: () => Promise<void>) {
   }
 }
 
-/** Calls `first` from a timer and `second` a microtask later, the way two reports from outside React's event handling
- * follow each other: no event ends between them, and React has flushed only its synchronous work
+/** Calls `first` as a timer fires and `second` a microtask later, the way two reports from outside React's event
+ * handling follow each other: no event ends between them, and React has flushed only its synchronous work. A throw
+ * from either rejects, so it fails the test at once.
  */
-export function aMicrotaskApart(first: () => void, second: () => void) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      first();
-      queueMicrotask(() => {
-        second();
-        resolve();
-      });
-    });
+export async function aMicrotaskApart(first: () => void, second: () => void) {
+  await new Promise((resolve) => {
+    setTimeout(resolve);
   });
+  first();
+  await Promise.resolve();
+  second();
 }
 
 /** Renders what `element` returns inside an `<Activity>`. `hide()` and `show()` render it again in that mode, passing

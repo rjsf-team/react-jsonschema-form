@@ -17,8 +17,8 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
   const access = use(FormDataContext);
   const readsFormData = useReadsFormData(self);
   const rendered = useRef(value);
-  // The view a handler proposed since the form last rendered, valid until the form's next commit (see
-  // `FormDataAccess.epoch()`)
+  // The view a handler proposed since the form last rendered, valid until the form drops its own record of a proposal
+  // (see `FormDataAccess.epoch()`)
   const advanced = useRef<{ view: V; epoch: number } | undefined>(undefined);
   useLayoutEffect(() => {
     rendered.current = value;
@@ -38,16 +38,24 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
       /** Proposes the view `next` by calling `send`, recording it first so a second handler before the form's next
        * commit builds on it, as `Form` builds on the proposal itself. A custom parent may flush a render from `send`,
        * committing the form before the proposal has gone anywhere, so the record is dated once `send` has returned,
-       * and only then is the form told.
+       * and only then is the form told. It is told when `send` throws too: nothing else would end the record.
        */
       propose: (next: V, send: () => void) => {
         const record = access && { view: next, epoch: access.epoch() };
         advanced.current = record;
-        send();
-        if (access && advanced.current === record) {
-          advanced.current = { view: next, epoch: access.epoch() };
+        const settle = () => {
+          if (access && advanced.current === record) {
+            advanced.current = { view: next, epoch: access.epoch() };
+          }
+          access?.proposed();
+        };
+        try {
+          send();
+        } catch (error) {
+          settle();
+          throw error;
         }
-        access?.proposed();
+        settle();
       },
     };
   }, [access, fieldPath, readsFormData]);

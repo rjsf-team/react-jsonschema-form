@@ -4159,6 +4159,38 @@ describe('ArrayField', () => {
       expectToHaveBeenCalledWithFormData(onChange, [], 'root');
     });
 
+    it('should drop an add a custom parent threw on from the rows a later event starts from', async () => {
+      let isBroken = true;
+      // A custom field whose handler throws before it has passed the first add on
+      function ThrowingOnceField(props: FieldProps<string[]>) {
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return (
+          <InnerArrayField
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) => {
+              if (isBroken) {
+                isBroken = false;
+                throw new Error('boom');
+              }
+              props.onChange(value, fieldPath, errorSchema, id);
+            }}
+          />
+        );
+      }
+      const { getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a'],
+        uiSchema: { 'ui:field': ThrowingOnceField },
+      });
+
+      const reported = await reportedBy(() => user.click(screen.getByRole('button', { name: 'Add' })));
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expect(reported).toHaveLength(1);
+      // The second add starts from the rendered ['a'], not from the ['a', undefined] that went nowhere
+      expect(getFormData()).toEqual(['a', undefined]);
+    });
+
     it('should start a later event from the rendered rows when a controlled parent refused the earlier one', async () => {
       const log = createParentLog<string[]>();
       const { container } = render(
