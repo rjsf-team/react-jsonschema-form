@@ -393,6 +393,34 @@ describe('schemaParser()', () => {
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('^b0, ^b1'));
     consoleWarnSpy.mockRestore();
   });
+  it.each([
+    [
+      'an anyOf on the recursive node',
+      { properties: { child: { $ref: '#/definitions/Node' } }, anyOf: [{ required: ['a'] }, { required: ['b'] }] },
+    ],
+    ['a oneOf of one option', { properties: { child: { $ref: '#/definitions/Node' } }, oneOf: [{ required: ['a'] }] }],
+    [
+      'an allOf alongside the anyOf',
+      {
+        properties: { child: { $ref: '#/definitions/Node' } },
+        allOf: [{ title: 'x' }],
+        anyOf: [{ required: ['a'] }],
+      },
+    ],
+    [
+      'the recursion reached through an items',
+      {
+        properties: { children: { type: 'array', items: { $ref: '#/definitions/Node' } } },
+        oneOf: [{ required: ['a'] }],
+      },
+    ],
+  ] as [string, RJSFSchema][])('parses a recursive schema carrying %s', (_case, node) => {
+    const rootSchema: RJSFSchema = { $ref: '#/definitions/Node', definitions: { Node: { type: 'object', ...node } } };
+    // An option is merged into the schema as resolution has left it, which is one level deeper each time, and the
+    // parse keys what it has seen by content, so without the references travelling with the schema nothing repeats
+    // and the descent runs until the stack does
+    expect(() => schemaParser(rootSchema)).not.toThrow();
+  });
   it('parses the combinations of patternProperties once for a schema its options are merged into', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',

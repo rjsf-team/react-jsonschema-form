@@ -120,6 +120,7 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   state: ParseState,
   rootSchema: S,
   schema: S,
+  recurseList: string[] = [],
 ) {
   const parsedKey = sortedJSONStringify(schema);
   if (state.parsed.has(parsedKey)) {
@@ -143,7 +144,13 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       }
     }
   }
-  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
+  // The references resolved on the way to this schema travel with it, so that one already on the path stays a literal
+  // rather than being resolved a level further. An option a recursive schema declares is merged into the schema as
+  // resolution has left it, which is one level deeper each time, and both `parsed` and `resolved` key by content, so
+  // nothing repeats and the descent has nothing to stop it. `retrieveSchemaInternal()` merges what it resolves into
+  // the list it is given, so the list comes back holding this schema's references as well as its callers'
+  const resolvedRefs = [...recurseList];
+  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true, resolvedRefs);
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {
@@ -152,13 +159,15 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // after resolution -- in a `then` or a dependency -- is merged inside `retrieveSchemaInternal()`, so the entries
       // are reached here rather than only on the schema the caller handed in
       parseUnmergedAllOf<T, S, F>(context, state, rootSchema, localSchema);
-      parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema);
+      parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema, resolvedRefs);
       // An option can hold an `allOf`, conditions or dependencies of its own, which only parsing the option resolves.
       // The schema is parsed alongside its options rather than being taken as covered by them, since merging an option
       // into the schema can replace one of the schema's own subschemas (a property's `oneOf`, say)
-      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(context, localSchema, rootSchema, true)) {
+      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(context, localSchema, rootSchema, true, undefined, [
+        ...resolvedRefs,
+      ])) {
         if (option !== localSchema) {
-          parseSchema<T, S, F>(context, state, rootSchema, option);
+          parseSchema<T, S, F>(context, state, rootSchema, option, resolvedRefs);
         }
       }
     }
@@ -178,7 +187,7 @@ function parseValueSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S) {
+>(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S, recurseList: string[] = []) {
   const valueSchemas: unknown[] = Object.values(schema[PROPERTIES_KEY] ?? {});
   // An additional key is only stubbed into `properties` once the form data has one, which a parse does not, so the
   // schema a form renders such a key with is reached here instead
@@ -204,7 +213,11 @@ function parseValueSchemas<
   }
   for (const valueSchema of valueSchemas) {
     if (isSchemaObject<S>(valueSchema)) {
-      parseSchema<T, S, F>(context, state, rootSchema, valueSchema);
+      // A value is reached through the schema that holds it, so it carries the references resolved on the way to that
+      // schema -- a recursion through an `items` grows the same way one through a `properties` does. Each value gets
+      // its own copy: `resolveAllReferences()` merges what a value resolved back into the list it was given, so a
+      // shared one would hold what a sibling resolved and read this value's own reference as a cycle
+      parseSchema<T, S, F>(context, state, rootSchema, valueSchema, [...recurseList]);
     }
   }
 }
