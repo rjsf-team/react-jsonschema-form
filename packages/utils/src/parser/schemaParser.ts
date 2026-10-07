@@ -8,10 +8,11 @@ import {
   ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
+  RJSF_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
-import { isSchemaObject } from '../isObject.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
@@ -91,6 +92,34 @@ function parseUnmergedAllOf<
   }
 }
 
+/** Collects the references that resolution materialized into `schema`, which it marks every subtree it expanded with.
+ * Resolution keeps its own path stack and never hands it back, so a caller that resolves a schema and then resolves
+ * something derived from it reads the markers to learn what the first resolution had already expanded.
+ *
+ * @param schema - The resolved schema whose materialized references are wanted
+ * @param [refs=[]] - The references collected so far, which the walk adds to
+ * @returns - The references materialized anywhere within `schema`, without duplicates
+ */
+function materializedRefs(schema: unknown, refs: string[] = []): string[] {
+  if (Array.isArray(schema)) {
+    for (const entry of schema) {
+      materializedRefs(entry, refs);
+    }
+    return refs;
+  }
+  if (!isObject(schema)) {
+    return refs;
+  }
+  const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
+  if (typeof sourceRef === 'string' && !refs.includes(sourceRef)) {
+    refs.push(sourceRef);
+  }
+  for (const value of Object.values(schema)) {
+    materializedRefs(value, refs);
+  }
+  return refs;
+}
+
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
  * used to capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the
  * `retrieveSchemaInternal()`, the sub-schemas the form renders its value with are parsed, as is each of its
@@ -135,14 +164,16 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   // The references resolved on the way to this schema travel with it, so that one already on the path stays a literal
   // rather than being resolved a level further. An option a recursive schema declares is merged into the schema as
   // resolution has left it, which is one level deeper each time, and both `parsed` and `resolved` key by content, so
-  // nothing repeats and the descent has nothing to stop it. `retrieveSchemaInternal()` merges what it resolves into
-  // the list it is given, so the list comes back holding this schema's references as well as its callers'
-  const resolvedRefs = [...recurseList];
-  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true, resolvedRefs);
+  // nothing repeats and the descent has nothing to stop it
+  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true, recurseList);
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {
       state.resolved.add(resolvedKey);
+      // Resolution's own path stack is scoped to the one walk it belongs to, so what it expanded is read back off the
+      // markers it left on the schema instead. Each list below is a copy: resolution appends to the path it is given
+      // for the subtree it is walking, and a shared one would carry a sibling's references into this walk
+      const resolvedRefs = materializedRefs(localSchema, [...recurseList]);
       // An `allOf` a merge leaves in place is read unmerged wherever it was reached from, and one that only appears
       // after resolution -- in a `then` or a dependency -- is merged inside `retrieveSchemaInternal()`, so the entries
       // are reached here rather than only on the schema the caller handed in
@@ -155,7 +186,7 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         ...resolvedRefs,
       ])) {
         if (option !== localSchema) {
-          parseSchema<T, S, F>(context, state, rootSchema, option, resolvedRefs);
+          parseSchema<T, S, F>(context, state, rootSchema, option, [...resolvedRefs]);
         }
       }
     }
@@ -204,8 +235,7 @@ function parseValueSchemas<
     if (isSchemaObject<S>(valueSchema)) {
       // A value is reached through the schema that holds it, so it carries the references resolved on the way to that
       // schema -- a recursion through an `items` grows the same way one through a `properties` does. Each value gets
-      // its own copy: `resolveAllReferences()` merges what a value resolved back into the list it was given, so a
-      // shared one would hold what a sibling resolved and read this value's own reference as a cycle
+      // its own copy, since resolution appends to the path it is given
       parseSchema<T, S, F>(context, state, rootSchema, valueSchema, [...recurseList]);
     }
   }

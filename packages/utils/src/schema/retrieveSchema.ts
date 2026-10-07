@@ -912,10 +912,8 @@ export function retrieveSchemaInternal<
       // Merging a property with its matching patterns resolves the result, which for a key holding a `$ref` back to
       // this schema never terminates, so the reference this schema was itself reached through seeds that resolution
       // and stops it. It is read off the schema before the merge first, since `mergeAllOf` drops the Symbol keys and
-      // the re-apply above recovers only the `allOf` entries'. That reference alone, and a fresh copy of it per key:
-      // `resolveAllReferences()` merges the references each property resolved back into the list it was given, so both
-      // `recurseList` and a list shared between the keys hold what another key resolved, which reads as a cycle and
-      // leaves this one holding a literal `$ref`
+      // the re-apply above recovers only the `allOf` entries'. That one reference seeds the merge rather than
+      // `recurseList`, which holds the path this schema was reached by and would read a key's own `$ref` as a cycle
       const ownRef = refOf<S>(s) ?? refOf<S>(resolvedSchema);
       const mergeRecurseList = ownRef === undefined ? [] : [ownRef];
       // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
@@ -952,7 +950,7 @@ export function retrieveSchemaInternal<
           rootSchema,
           getByPath<T>(rawFormData, key),
           expandAllBranches,
-          [...mergeRecurseList],
+          mergeRecurseList,
           undefined,
           preserveDependencies,
         );
@@ -1170,11 +1168,6 @@ export function resolveDependencies<
     formData,
     recurseList,
   );
-  // `resolveAllReferences()` merges what applying a dependency resolved back into the list it was given, so each
-  // schema below is expanded from the list as it stands before any dependency has been applied. Sharing one list
-  // would have a schema -- or a subset of one schema's dependencies -- read what another already resolved as a
-  // cycle, and keep the dependency as a literal `$ref` instead of the schema it names
-  const beforeDependencies = [...recurseList];
   return resolvedSchemas.flatMap((resolvedSchema) => {
     const applied = processDependencies<T, S, F>(
       context,
@@ -1182,7 +1175,7 @@ export function resolveDependencies<
       resolvedSchema,
       rootSchema,
       expandAllBranches,
-      [...beforeDependencies],
+      recurseList,
       formData,
       passCount,
     );
@@ -1194,7 +1187,7 @@ export function resolveDependencies<
     }
     return [
       ...applied,
-      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, beforeDependencies),
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList),
       resolvedSchema,
     ];
   });
@@ -1260,9 +1253,14 @@ function partiallyApplied<
           delete partial[key];
         }
       }
-      return processDependencies<T, S, F>(context, partial as S['dependencies'], resolvedSchema, rootSchema, true, [
-        ...recurseList,
-      ]);
+      return processDependencies<T, S, F>(
+        context,
+        partial as S['dependencies'],
+        resolvedSchema,
+        rootSchema,
+        true,
+        recurseList,
+      );
     });
 }
 

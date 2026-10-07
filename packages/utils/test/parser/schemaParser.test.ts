@@ -461,9 +461,8 @@ describe('schemaParser()', () => {
         .sort()
         .join(','),
     );
-    // `resolveAllReferences()` merges what applying a dependency resolved back into the list it was given, so each
-    // subset is expanded from the list as it stood before any of them were applied: sharing it would have a subset
-    // read what the all-applied form resolved as a cycle and keep the dependency as a literal `$ref`
+    // Every subset is expanded from the path the schema itself was reached by, so a dependency's `$ref` resolves in
+    // each of them rather than reading as a cycle in all but the first and staying a literal `$ref`
     expect(names).toEqual(expect.arrayContaining(['a,a2,b', 'a,b,b2', 'a,a2,b,b2', 'a,b']));
   });
   it('resolves the $ref of a schema dependency for every branch the option itself expands into', () => {

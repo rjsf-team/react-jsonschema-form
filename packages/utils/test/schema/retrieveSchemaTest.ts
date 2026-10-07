@@ -804,8 +804,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               { protocol: 'FTPS' },
               true,
             );
-            expect(results).toHaveLength(2);
-            results.forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
+            // Expanding every branch also returns the schema with the `protocol` dependency unapplied, which is what
+            // a form renders until the user picks a protocol. The shared `$ref` has to resolve in both branches
+            expect(results).toHaveLength(3);
+            results.slice(0, 2).forEach((result) => expect(result.properties!.host).toEqual(hostResolved));
+            expect(results[2].properties).not.toHaveProperty('host');
           });
           it('terminates on a recursive definition under an allOf root', () => {
             const node: RJSFSchema = {
