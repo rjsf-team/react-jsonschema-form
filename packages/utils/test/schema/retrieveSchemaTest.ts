@@ -187,6 +187,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       // Without a root schema there is no definition to read the type out of
       expect(getAdditionalPropertyType({ $ref: '#/definitions/cat' })).toBeUndefined();
     });
+    it('returns the type an allOf entry names, since the merge holds the value to every entry at once', () => {
+      expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }] })).toBe('number');
+      // An entry naming no type adds nothing to the one that does, whichever order they come in
+      expect(getAdditionalPropertyType({ allOf: [{ minimum: 0 }, { type: 'number' }] })).toBe('number');
+      expect(getAdditionalPropertyType({ allOf: [true, { enum: [1, 2] }] })).toBe('number');
+      expect(getAdditionalPropertyType({ allOf: [{ minimum: 0 }] })).toBeUndefined();
+    });
     it('returns undefined for a schema that says nothing about the type', () => {
       expect(getAdditionalPropertyType({})).toBeUndefined();
       expect(getAdditionalPropertyType({ minLength: 2 })).toBeUndefined();
@@ -3108,6 +3115,43 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // The keyword is as much the option's for being reached through an entry of the `allOf` it is composed of, and
         // through the reference that entry is spelled as, as it is for being written on the option itself
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: {},
+        });
+      });
+      it('has an anyOf option whose reference names a definition offering options of its own', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [{ $ref: '#/definitions/variant' }],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            variant: {
+              oneOf: [
+                { properties: { shared: { type: 'number' } } },
+                { properties: { shared: { type: 'boolean' }, only: { type: 'number' } } },
+              ],
+            },
+          },
+        };
+        const formData = { shared: 1, only: 2 };
+        // The options behind the reference are the ones the option renders, so a name every one of them renders has
+        // that option's field whichever is chosen and stubbing it here would give the one value a second field, while
+        // a name only one of them declares keeps the field the object stubs for it
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: { only: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+        });
+      });
+      it('has an anyOf option composed of an allOf entry offering options of its own', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [{ allOf: [{ oneOf: [{ properties: { nested: { type: 'number' } } }] }] }],
+        };
+        const formData = { nested: 1 };
+        // The options are as much the option's for being reached through an entry of the `allOf` it is composed of as
+        // they are for being written on the option itself
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
           ...schema,
           properties: {},
         });

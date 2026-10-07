@@ -356,6 +356,12 @@ export default function ObjectField<
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),
     [schemaUtils, rawSchema, formData],
   );
+  // Read by the callbacks a property template holds onto rather than closed over by them, as the form data is above:
+  // the resolved schema changes identity whenever a key is added, renamed or removed, and a callback that changed with
+  // it would re-render every property beside the one that did. They run from an event handler, never during a render,
+  // so the schema this holds is the one they want
+  const schemaRef = useRef(schema);
+  schemaRef.current = schema;
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
@@ -449,16 +455,14 @@ export default function ObjectField<
    * own properties, since a key called `constructor` or `toString` would otherwise be answered for by
    * `Object.prototype`.
    */
-  const schemaForKey = useCallback(
-    (key: string): S | boolean => {
-      const properties = schema.properties ?? {};
-      if (Object.hasOwn(properties, key) && !isAdditionalPropertySchema(properties[key])) {
-        return properties[key] as S | boolean;
-      }
-      return getAdditionalPropertySchema<S>(schema, key);
-    },
-    [schema],
-  );
+  const schemaForKey = useCallback((key: string): S | boolean => {
+    const currentSchema = schemaRef.current;
+    const properties = currentSchema.properties ?? {};
+    if (Object.hasOwn(properties, key) && !isAdditionalPropertySchema(properties[key])) {
+      return properties[key] as S | boolean;
+    }
+    return getAdditionalPropertySchema<S>(currentSchema, key);
+  }, []);
 
   /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
    * says describes that name, which is the one `retrieveSchema()` stubs the field from, so the seed and the field can't
@@ -589,12 +593,16 @@ export default function ObjectField<
         // took takes the one the schema describing its new name seeds instead: a `New Value` string left under a name a
         // numeric pattern describes is a value that pattern's field cannot show. A value the user did go on to enter is
         // theirs to keep whatever the rename does to it, and so is one whose new name the same schema describes
-        const describedTheSameWay = deepEquals(schemaForKey(oldKey), schemaForKey(actualNewKey));
-        const reseedsTheValue = !describedTheSameWay && deepEquals(newFormData[oldKey], seedForKey(oldKey));
+        if (
+          !deepEquals(schemaForKey(oldKey), schemaForKey(actualNewKey)) &&
+          deepEquals(newFormData[oldKey], seedForKey(oldKey))
+        ) {
+          newFormData[oldKey] = seedForKey(actualNewKey);
+        }
         const keyValues = Object.keys(newFormData).map((key) => {
           // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
           const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
-          return { [mappedKey]: reseedsTheValue && key === oldKey ? seedForKey(actualNewKey) : newFormData[key] };
+          return { [mappedKey]: newFormData[key] };
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
