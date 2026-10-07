@@ -32,6 +32,7 @@ import {
   fieldPathToId,
   ONE_OF_KEY,
   REF_KEY,
+  resolveUiSchema,
   isObject,
   TranslatableString,
   uiBooleanOption,
@@ -412,8 +413,13 @@ export default function ObjectField<
         }
         const apUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
         // The type of the field that renders the new value, which for a `type` list follows its widget, so a
-        // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea
-        type = getFieldTypeForWidget(apSchema, getUiOptions<T, S, F>(apUiSchema, globalUiOptions).widget);
+        // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
+        // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in
+        const { widget } = getUiOptions<T, S, F>(
+          resolveUiSchema<T, S, F>(schema.additionalProperties as S, apUiSchema, registry),
+          globalUiOptions,
+        );
+        type = getFieldTypeForWidget(apSchema, widget);
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -457,6 +463,7 @@ export default function ObjectField<
     uiSchema,
     uiSchemaDefinitions,
     globalUiOptions,
+    registry,
   ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That

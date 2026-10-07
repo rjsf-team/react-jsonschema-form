@@ -1695,6 +1695,22 @@ describe('ObjectField', () => {
       },
     );
 
+    it('should add the default of the field rendering a widget a ui:definitions entry supplies', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          additionalProperties: { $ref: '#/$defs/text' },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+    });
+
     it.each<[string, RJSFSchema]>([
       ['default', { type: ['integer', 'null'], default: null }],
       ['const', { type: ['integer', 'null'], const: null }],

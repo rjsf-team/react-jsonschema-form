@@ -282,19 +282,14 @@ function getFieldComponent<
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
 
-  let type: string;
   // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
   // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
   // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
   // the way NumberField turns `true` into `1`. Any other type list renders the field of another type it names when only
   // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
   // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
-  // would
-  if (isSelectSchema && Array.isArray(schema.type)) {
-    type = selectTypeForConstants(schema.type);
-  } else {
-    type = getFieldTypeForWidget<S>(schema, widget) ?? '';
-  }
+  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field
+  const type = getFieldTypeForWidget<S>(schema, widget) ?? '';
 
   const schemaId = schema.$id;
 
