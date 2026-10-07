@@ -2643,6 +2643,25 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { zzz: 'New Value' }, 'root');
     });
 
+    it('should prefer a name additionalProperties describes over one a pattern forbids', async () => {
+      // The `additionalProperties` schema describes `zzz` as fully as a pattern would, so there is no matching pattern
+      // to prefer — but `abc`, which the `false` pattern rejects, can still only be stubbed as `{ type: 'null' }`, so
+      // the name that schema describes is the one a field can be rendered for
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+          additionalProperties: { type: 'number' },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+    });
+
     it('should prefer a name a pattern matches over one only unevaluatedProperties describes', async () => {
       // `omitExtraData` keeps only the data a schema describes and reads an absent `additionalProperties` as
       // describing nothing, so a name only `unevaluatedProperties` answers for is pruned where a pattern-matched one

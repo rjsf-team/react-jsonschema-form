@@ -2559,7 +2559,7 @@ It is what `retrieveSchema()` stubs such a property with and what `ObjectField` 
 The types come from [`getSchemaOwnTypes()`](#getschemaowntypes), so a schema that names its type says that one, a nullable `['integer', 'null']` resolves to the type a value of it can have, a typeless `enum` takes the type of its values — where `getSchemaType()` answers `string` for any of them, giving an `enum` of numbers a string it rejects — and a schema that only implies its type, `properties` implying `object`, says what every other reader of it renders it as.
 The non-`null` type comes first, as it does for a nullable type: a value of it is one the field can show, where `null` leaves the user nothing to enter.
 
-An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen.
+An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by this same function so that an option's own typeless `enum` speaks for it too.
 Options that disagree leave the type to the value, since choosing one is what settles it, and a type of its own would render a field for that type beside the options.
 
 #### Parameters

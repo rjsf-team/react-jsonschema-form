@@ -21,8 +21,8 @@ import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
-import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import logOnce from '../logOnce.ts';
@@ -278,14 +278,16 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
   schema: S,
   key: string,
 ): S | boolean {
-  const matchingPatterns = Object.values(getMatchingPatternProperties<S>(schema, key)) as (S | boolean)[];
-  if (matchingPatterns.length > 0) {
-    return matchingPatterns.includes(false) ? false : ({ [ALL_OF_KEY]: matchingPatterns } as S);
+  if (schema.patternProperties) {
+    const matchingPatterns = Object.values(getMatchingPatternProperties<S>(schema, key)) as (S | boolean)[];
+    if (matchingPatterns.length > 0) {
+      return matchingPatterns.includes(false) ? false : ({ [ALL_OF_KEY]: matchingPatterns } as S);
+    }
   }
-  if (schema.additionalProperties !== undefined) {
-    return schema.additionalProperties as S | boolean;
-  }
-  return ((schema as GenericObjectType)[UNEVALUATED_PROPERTIES_KEY] as S | boolean | undefined) ?? true;
+  // `??` falls through on an absent keyword alone, so a `false` either of them spells is the answer it gives
+  return (schema.additionalProperties ?? (schema as GenericObjectType)[UNEVALUATED_PROPERTIES_KEY] ?? true) as
+    | S
+    | boolean;
 }
 
 /** Returns the type an additional property described by `subSchema` holds, or `undefined` for a schema that leaves the
@@ -299,9 +301,10 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
  * non-`null` type comes first, as it does for a nullable type: a value of it is one the field can show, where `null`
  * leaves the user nothing to enter.
  *
- * An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen. Options that disagree
- * leave the type to the value, since choosing one is what settles it, and a type of its own would render a field for
- * that type beside the options.
+ * An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by
+ * this same function so that an option's own typeless `enum` speaks for it too. Options that disagree leave the type to
+ * the value, since choosing one is what settles it, and a type of its own would render a field for that type beside the
+ * options.
  *
  * @param subSchema - The schema describing the additional property, from `additionalProperties`, a matching pattern or
  *          `unevaluatedProperties`
@@ -312,11 +315,13 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
   if (ownTypes) {
     return ownTypes.find((ownType) => ownType !== 'null') ?? ownTypes[0];
   }
-  const options = (subSchema[ANY_OF_KEY] ?? subSchema[ONE_OF_KEY]) as (S | boolean)[] | undefined;
-  if (Array.isArray(options)) {
-    const optionTypes = new Set(options.map((option) => (isObject(option) ? getSchemaType<S>(option) : undefined)));
-    const [onlyType] = optionTypes;
-    if (optionTypes.size === 1 && typeof onlyType === 'string') {
+  const xxxOf = getXxxOfOptions<S>(subSchema);
+  if (xxxOf) {
+    const optionTypes = new Set(
+      xxxOf.options.map((option) => (isObject(option) ? getAdditionalPropertyType<S>(option) : undefined)),
+    );
+    if (optionTypes.size === 1) {
+      const [onlyType] = optionTypes;
       return onlyType;
     }
   }
@@ -806,7 +811,7 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(subSche
   if (type !== undefined) {
     return { ...subSchema, type };
   }
-  if (ANY_OF_KEY in subSchema || ONE_OF_KEY in subSchema) {
+  if (getXxxOfOptions<S>(subSchema)) {
     return { ...subSchema };
   }
   return guessedTypeSchema<S>(formData, subSchema);
@@ -844,12 +849,15 @@ export function stubExistingAdditionalProperties<
       // schema allows
       schema.properties[key] = { type: 'null' };
     } else if (isObject(keySchema)) {
-      // Resolved before it is stubbed, so a `$ref` or an `allOf` of matching patterns is stubbed from what it describes
-      // rather than from the keyword that reaches it
-      schema.properties[key] = stubSchemaForSubSchema<S>(
-        retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key]),
-        formData[key],
-      );
+      // A `$ref` and the `allOf` of the matching patterns describe the property through another schema, so they are
+      // resolved into the one schema they describe before it is stubbed. Nothing else is: a subschema that describes the
+      // property itself is stubbed as it stands, and `SchemaField` resolves the stub again to render it, so resolving
+      // the whole of it here is work the property pays for twice
+      const described =
+        REF_KEY in keySchema || Array.isArray(keySchema[ALL_OF_KEY])
+          ? retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key])
+          : keySchema;
+      schema.properties[key] = stubSchemaForSubSchema<S>(described, formData[key]);
     } else {
       // What is left is a `true`, or a keyword the schema leaves out, which JSON Schema reads as `true`: anything goes,
       // including a key none of the `patternProperties` patterns match, which the schema allows all the same and so

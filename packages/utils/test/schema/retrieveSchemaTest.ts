@@ -117,6 +117,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('returns the type anyOf or oneOf options agree on', () => {
       expect(getAdditionalPropertyType({ anyOf: [{ properties: {} }, { type: 'object' }] })).toBe('object');
       expect(getAdditionalPropertyType({ oneOf: [{ type: 'number', minimum: 0 }, { type: 'number' }] })).toBe('number');
+      // Each option is read the same way the schema itself is, so an option's own typeless `enum` speaks for it rather
+      // than answering the `string` `getSchemaType()` gives any of them
+      expect(getAdditionalPropertyType({ anyOf: [{ enum: [1] }, { enum: [2, 3] }] })).toBe('number');
     });
     it('returns undefined for anyOf or oneOf options that disagree about the type', () => {
       expect(getAdditionalPropertyType({ anyOf: [{ type: 'string' }, { type: 'number' }] })).toBeUndefined();
