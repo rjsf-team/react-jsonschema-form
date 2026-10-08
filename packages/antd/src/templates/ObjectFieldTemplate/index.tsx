@@ -79,10 +79,9 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      const colSpanMap = colSpan as Record<string, number | undefined>;
       for (const key of [widget, field, type]) {
-        if (typeof key === 'string' && colSpanMap[key] !== undefined) {
-          return colSpanMap[key];
+        if (typeof key === 'string' && Object.hasOwn(colSpan, key) && colSpan[key] != null) {
+          return colSpan[key];
         }
       }
     }
