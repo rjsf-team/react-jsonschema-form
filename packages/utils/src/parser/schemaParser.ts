@@ -1,3 +1,4 @@
+import { additionalPropertiesKeyword } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ALL_OF_KEY,
@@ -13,11 +14,7 @@ import {
 import { sortedJSONStringify } from '../hashForSchema.ts';
 import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
-import {
-  additionalPropertiesKeyword,
-  resolveAnyOrOneOfSchemas,
-  retrieveSchemaInternal,
-} from '../schema/retrieveSchema.ts';
+import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';

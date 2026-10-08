@@ -10,27 +10,18 @@ import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
-import retrieveSchema, {
-  allowsAdditionalProperties,
-  getAdditionalPropertySchema,
-  getAdditionalPropertyType,
-  getMatchingPatternProperties,
-  relaxOptionsForScoring,
-} from './retrieveSchema.ts';
+import retrieveSchema, { getAdditionalPropertyType, relaxOptionsForScoring } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
 export {
-  allowsAdditionalProperties,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
-  getAdditionalPropertySchema,
   getAdditionalPropertyType,
   getDefaultFormState,
   getDisplayLabel,
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
-  getMatchingPatternProperties,
   getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,

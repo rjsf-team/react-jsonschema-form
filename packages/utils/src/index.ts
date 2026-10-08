@@ -1,3 +1,8 @@
+import {
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
@@ -178,6 +183,7 @@ export type {
 export {
   AdditionalPropertyKeySelect,
   allowAdditionalItems,
+  allowsAdditionalProperties,
   ariaDescribedByIds,
   asNumber,
   buttonId,
@@ -208,6 +214,7 @@ export {
   fieldLabelId,
   findSchemaDefinition,
   flattenGroupedOptions,
+  getAdditionalPropertySchema,
   getChangedFields,
   getDateElementProps,
   getDateTimeLocalValue,
@@ -220,6 +227,7 @@ export {
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
+  getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,

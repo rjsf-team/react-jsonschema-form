@@ -14,11 +14,8 @@ import {
   noop,
 } from '../../src/index.ts';
 import {
-  allowsAdditionalProperties,
-  getAdditionalPropertySchema,
   getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,
-  getMatchingPatternProperties,
   relaxOptionsForScoring,
   resolveAllReferences,
   resolveAnyOrOneOfSchemas,
@@ -45,88 +42,6 @@ import {
 import type { TestValidatorType } from './types.ts';
 
 export default function retrieveSchemaTest(testValidator: TestValidatorType) {
-  describe('getMatchingPatternProperties()', () => {
-    it('returns an empty object when the schema has no patternProperties', () => {
-      expect(getMatchingPatternProperties({ type: 'object' }, 'key')).toEqual({});
-    });
-  });
-  describe('allowsAdditionalProperties()', () => {
-    it('returns true for a patternProperties naming a pattern, whatever an additionalProperties beside it forbids', () => {
-      expect(allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } } })).toBe(true);
-      expect(
-        allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } }, additionalProperties: false }),
-      ).toBe(true);
-      // An empty `patternProperties` names no pattern, so it matches no name and describes no key to take
-      expect(allowsAdditionalProperties({ patternProperties: {} })).toBe(false);
-    });
-    it('returns what the keyword describing the unmatched names says', () => {
-      expect(allowsAdditionalProperties({ additionalProperties: true })).toBe(true);
-      expect(allowsAdditionalProperties({ additionalProperties: { type: 'string' } })).toBe(true);
-      expect(allowsAdditionalProperties({ additionalProperties: false })).toBe(false);
-      const describedSchema: RJSFSchema = { unevaluatedProperties: { type: 'string' } };
-      const forbiddenSchema: RJSFSchema = { unevaluatedProperties: false };
-      expect(allowsAdditionalProperties(describedSchema)).toBe(true);
-      expect(allowsAdditionalProperties(forbiddenSchema)).toBe(false);
-      // The same precedence `getAdditionalPropertySchema()` reads the two keywords with
-      const evaluatedSchema: RJSFSchema = { additionalProperties: false, unevaluatedProperties: { type: 'string' } };
-      expect(allowsAdditionalProperties(evaluatedSchema)).toBe(false);
-    });
-    it('returns false for an object that names none of the keywords', () => {
-      // A validator takes any key for such an object, but the form has no schema to render one with and no name to
-      // add one under, so it offers none
-      expect(allowsAdditionalProperties({ type: 'object', properties: { a: { type: 'string' } } })).toBe(false);
-      const spreadSchema: RJSFSchema = { patternProperties: undefined, additionalProperties: undefined };
-      expect(allowsAdditionalProperties(spreadSchema)).toBe(false);
-    });
-  });
-  describe('getAdditionalPropertySchema()', () => {
-    it('returns an allOf of every matching pattern subschema', () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        patternProperties: { '^a': { type: 'string' }, c$: { minLength: 2 } },
-      };
-      expect(getAdditionalPropertySchema(schema, 'abc')).toEqual({
-        allOf: [{ type: 'string' }, { minLength: 2 }],
-      });
-    });
-    it('returns false for a key a matching pattern forbids, whatever the other matching patterns allow', () => {
-      const schema: RJSFSchema = { type: 'object', patternProperties: { '^a': { type: 'string' }, c$: false } };
-      expect(getAdditionalPropertySchema(schema, 'abc')).toBe(false);
-      expect(getAdditionalPropertySchema(schema, 'ab')).toEqual({ allOf: [{ type: 'string' }] });
-    });
-    it('returns the additionalProperties for a key no pattern matches', () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        patternProperties: { '^a': { type: 'string' } },
-        additionalProperties: { type: 'number' },
-      };
-      expect(getAdditionalPropertySchema(schema, 'xyz')).toEqual({ type: 'number' });
-      expect(getAdditionalPropertySchema({ additionalProperties: false }, 'xyz')).toBe(false);
-      expect(getAdditionalPropertySchema({ additionalProperties: true }, 'xyz')).toBe(true);
-    });
-    it('returns true for a schema that describes the key with neither keyword', () => {
-      expect(getAdditionalPropertySchema({ type: 'object' }, 'xyz')).toBe(true);
-    });
-    it('reads the unevaluatedProperties of a schema that names no additionalProperties', () => {
-      const describedSchema: RJSFSchema = { unevaluatedProperties: { type: 'number' } };
-      const forbiddenSchema: RJSFSchema = { unevaluatedProperties: false };
-      expect(getAdditionalPropertySchema(describedSchema, 'xyz')).toEqual({ type: 'number' });
-      expect(getAdditionalPropertySchema(forbiddenSchema, 'xyz')).toBe(false);
-    });
-    it('reads an additionalProperties or unevaluatedProperties of undefined as the keyword being absent', () => {
-      // A schema built by spreading spells an absent keyword this way, and reading it as present would hide what the
-      // other keyword says about the key
-      expect(getAdditionalPropertySchema({ additionalProperties: undefined, unevaluatedProperties: false }, 'x')).toBe(
-        false,
-      );
-      expect(
-        getAdditionalPropertySchema({ additionalProperties: undefined, unevaluatedProperties: undefined }, 'x'),
-      ).toBe(true);
-    });
-    it('lets any additionalProperties leave the unevaluatedProperties nothing to say', () => {
-      expect(getAdditionalPropertySchema({ additionalProperties: true, unevaluatedProperties: false }, 'x')).toBe(true);
-    });
-  });
   describe('getAdditionalPropertyType()', () => {
     it('returns the type the schema names, resolving a nullable one', () => {
       expect(getAdditionalPropertyType({ type: 'string' })).toBe('string');
@@ -3308,6 +3223,129 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
           ...schema,
           properties: { other: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+        });
+      });
+      it("has an option declaring a name through the branch a dependency's oneOf settles on the data", () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
+              dependencies: {
+                kind: {
+                  oneOf: [
+                    { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
+                    { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
+                  ],
+                },
+              },
+            },
+          ],
+        };
+        // The first branch of the dependency matches and the second does not, which is the one valid branch
+        // `withExactlyOneSubschema()` needs to merge it in
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const formData = { kind: 'x', px: 1 };
+        // `withExactlyOneSubschema()` merges that branch into the option with no selector involved, so `px` is a name
+        // the option renders: stubbing it would put a text input beside the number field the branch describes
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: {},
+        });
+      });
+      it('has an option whose dependency oneOf qualifies no single branch', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string' } },
+              dependencies: {
+                kind: {
+                  oneOf: [
+                    { properties: { kind: { type: 'string' }, px: { type: 'number' } } },
+                    { properties: { kind: { type: 'string' }, py: { type: 'number' } } },
+                  ],
+                },
+              },
+            },
+          ],
+        };
+        // Neither branch constrains `kind` beyond the type the data has, so both match, which is the case
+        // `withExactlyOneSubschema()` logs and merges nothing in
+        const formData = { kind: 'x', px: 1 };
+        // With no branch merged there is no field for `px` under the option, so the name is the object's to stub
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+        });
+      });
+      it('has an option whose dependency oneOf holds a branch that names no condition', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          // `JSON.parse` because a boolean among the branches is a shape only an untyped caller can write, and it
+          // names no condition the way the branch beside it leaves `kind` out
+          oneOf: JSON.parse(
+            '[{ "properties": { "kind": { "type": "string" } }, "dependencies": { "kind": { "oneOf": [true, { "properties": { "px": { "type": "number" } } }, { "properties": { "kind": { "enum": ["x"] }, "py": { "type": "number" } } }] } } }]',
+          ),
+        };
+        // Only the branch naming `kind` is put to the validator at all, and it is the one that matches
+        testValidator.setReturnValues({ isValid: [true] });
+        const formData = { kind: 'x', px: 1, py: 2 };
+        // A branch that does not name the dependency key is no more a candidate than a boolean one, so the only
+        // branch merged in is the one that does: `py` is the option's name and `px` is the object's to stub
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+        });
+      });
+      it("has an option whose dependency oneOf names its branches' conditions behind a $ref", () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          definitions: {
+            x: { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
+            y: { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
+          },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
+              dependencies: {
+                kind: {
+                  // The first branch names no condition of its own and none behind a reference either, so it is no
+                  // candidate and is never put to the validator
+                  oneOf: [{ required: ['kind'] }, { $ref: '#/definitions/x' }, { $ref: '#/definitions/y' }],
+                },
+              },
+            },
+          ],
+        };
+        // The condition the first reference names matches and the second's does not, which is the one valid branch
+        // `withExactlyOneSubschema()` needs to merge it in
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const formData = { kind: 'x', px: 1 };
+        // `withDependentSchema()` resolves the branches before matching them, so the condition behind the reference is
+        // the one that settles the branch: read unresolved the branch names none, no branch qualifies, and `px` takes
+        // a text input beside the number field the branch renders it with
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: {},
+        });
+      });
+      it('has an option with a dependency oneOf and no root schema to match its branches against', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string' } },
+              dependencies: { kind: { oneOf: [{ properties: { kind: { enum: ['x'] }, px: { type: 'number' } } }] } },
+            },
+          ],
+        };
+        const formData = { kind: 'x', px: 1 };
+        // Without a root schema no branch is matched, as no condition is settled, so the names a branch declares are
+        // left to be stubbed rather than credited to the option
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
       it('describes its extra keys with unevaluatedProperties beside options that declare different names', () => {

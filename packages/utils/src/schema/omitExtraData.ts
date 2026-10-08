@@ -1,5 +1,6 @@
 import type { JSONSchema7Definition } from 'json-schema';
 
+import { additionalPropertiesKeyword } from '../additionalPropertiesUtils.ts';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -9,12 +10,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import {
-  additionalPropertiesKeyword,
-  mergeAllOf,
-  relaxOptionsForScoring,
-  resolveAllReferences,
-} from './retrieveSchema.ts';
+import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.

@@ -1,10 +1,10 @@
+import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
 import { ALL_OF_KEY, ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import { allowsAdditionalProperties } from './retrieveSchema.ts';
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
  * rather than stacking another one on

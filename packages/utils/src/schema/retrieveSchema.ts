@@ -1,3 +1,9 @@
+import {
+  additionalPropertiesKeyword,
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -16,7 +22,6 @@ import {
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
-  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
@@ -238,94 +243,6 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
   );
 
   return allPermutations;
-}
-
-/** Returns the subset of 'patternProperties' specifications that match the given 'key'
- *
- * @param schema - The schema whose 'patternProperties' are to be filtered
- * @param key - The key to match against the 'patternProperties' specifications
- * @returns - The subset of 'patternProperties' specifications that match the given 'key'
- */
-export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  key: string,
-): Required<S['patternProperties']> {
-  const patternProperties = schema.patternProperties ?? {};
-  return Object.fromEntries(
-    Object.entries(patternProperties).filter(([pattern]) => RegExp(pattern).test(key)),
-  ) as Required<S['patternProperties']>;
-}
-
-/** Returns what an object's `additionalProperties` says about the keys its `properties` and `patternProperties` leave
- * over, or what its `unevaluatedProperties` says where it names no `additionalProperties` at all: those keys are
- * exactly the ones that go unevaluated, so that keyword is what then describes or rejects them, while any
- * `additionalProperties`, `true` and a schema alike, evaluates them itself and leaves `unevaluatedProperties` nothing
- * to say about them. Either keyword spelled `undefined`, as a schema built by spreading tends to spell one, reads as
- * absent the way a validator reads it, so neither hides what the other says.
- *
- * The two are read off a schema typed to declare them: `unevaluatedProperties` is a 2019-09 keyword that `JSONSchema7`
- * does not declare, and the subschema either one holds is an `S` the way every other subschema of an `S` is.
- *
- * It is exported for `omitExtraData()` rather than for consumers, so that the keys the form renders and seeds through
- * one of these keywords are the keys it keeps.
- *
- * @param schema - The object schema whose keyword is desired
- * @returns - What the keyword says, or undefined where the object names neither
- */
-export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-): S | boolean | undefined {
-  const typedSchema = schema as S & { additionalProperties?: S | boolean; unevaluatedProperties?: S | boolean };
-  // `??` falls through on an absent keyword alone, so a `false` either of them spells is the answer it gives
-  return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
-}
-
-/** Returns whether an object takes keys its own `properties` don't name, which is what makes asking
- * `getAdditionalPropertySchema()` about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form
- * data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField`
- * adds a property only to one.
- *
- * A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside
- * it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
- * Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an
- * object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema
- * to render one with and no name to add one under, so it offers none. An empty `patternProperties` names no pattern, so
- * it matches no name and describes no key the object could take, the way an empty `properties` declares none.
- *
- * @param schema - The object schema to check
- * @returns - True when the object takes keys beyond the ones its `properties` name
- */
-export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  if (Object.keys(schema.patternProperties ?? {}).length > 0) {
-    return true;
-  }
-  const keyword = additionalPropertiesKeyword<S>(schema);
-  return keyword !== undefined && keyword !== false;
-}
-
-/** Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that
- * renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own. A key
- * one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the
- * caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others
- * allow, since no value satisfies it. A key no pattern matches is `additionalProperties`' to describe, `false` and
- * `true` included, which `additionalPropertiesKeyword()` reads with the precedence the keywords have.
- *
- * @param schema - The object schema the `key` is a property of
- * @param key - The property name whose schema is desired
- * @returns - `false` for a key the object forbids, `true` for one it allows without describing, and otherwise the
- *          subschema describing it, whose `$ref`s are left for the caller to resolve
- */
-export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  key: string,
-): S | boolean {
-  if (schema.patternProperties) {
-    const matchingPatterns = Object.values(getMatchingPatternProperties<S>(schema, key)) as (S | boolean)[];
-    if (matchingPatterns.length > 0) {
-      return matchingPatterns.includes(false) ? false : ({ [ALL_OF_KEY]: matchingPatterns } as S);
-    }
-  }
-  return additionalPropertiesKeyword<S>(schema) ?? true;
 }
 
 /** Returns the type an additional property described by `subSchema` holds, or `undefined` for a schema that leaves the
@@ -1002,6 +919,63 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
   return { ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)), type };
 }
 
+/** Returns the subschemas a `dependencies` entry merges into the schema it belongs to for the `formData` in hand,
+ * which `declaredPropertyNames()` reads for the names they bring with them.
+ *
+ * A dependent schema's `oneOf` is not a choice `MultiSchemaField` offers: `withExactlyOneSubschema()` settles it from
+ * the data, merging in the one branch whose own schema for the dependency key the data matches, so the names that
+ * branch declares are rendered by whatever renders this schema. Read as options they would be left to a selector that
+ * is never on screen, and a name only the matching branch declares would be stubbed beside the field that branch
+ * renders it with. The branch is selected the way that function selects it, down to reading the condition behind the
+ * `$ref` a branch is spelled as and to merging nothing where no single branch qualifies, which is the case it drops
+ * the `oneOf` in rather than rendering any of it. Without a `rootSchema` to match the branches against, none of them
+ * is read and the names they declare are left to be stubbed, as the branches of an `if` are.
+ *
+ * @param context - The `SchemaContext` whose `validator` settles which branch the data matches
+ * @param dependent - What the `dependencies` entry holds, which is a schema here and a list of required names elsewhere
+ * @param dependencyKey - The name the entry is keyed under, which its branches name their condition on
+ * @param rootSchema - The root schema the branches are matched against, when there is one
+ * @param formData - The form data the object holds
+ * @returns - The subschemas the entry merges in
+ */
+function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  dependent: S | boolean,
+  dependencyKey: string,
+  rootSchema: S | undefined,
+  formData: GenericObjectType,
+): (S | boolean)[] {
+  if (!isObject(dependent)) {
+    return [dependent];
+  }
+  const { [ONE_OF_KEY]: oneOf, ...withoutOneOf } = dependent;
+  if (!Array.isArray(oneOf)) {
+    return [dependent];
+  }
+  const matching =
+    rootSchema === undefined
+      ? []
+      : (oneOf as (S | boolean)[]).filter((branch) => {
+          if (!isObject(branch)) {
+            return false;
+          }
+          // A branch spelled as a `$ref` names its condition behind that reference, which `withDependentSchema()`
+          // resolves before `withExactlyOneSubschema()` matches it. Read unresolved it names no condition at all, so
+          // no branch would qualify and a name the matching branch declares would be stubbed beside the field that
+          // branch renders it with. `referencedDefinition()` strips whatever the branch shadows, which is how
+          // resolution reads a reference, so a `properties` the branch declares itself answers on its own
+          const branchProperties =
+            branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<string>())?.[PROPERTIES_KEY];
+          const conditionPropertySchema = branchProperties?.[dependencyKey];
+          if (!conditionPropertySchema) {
+            return false;
+          }
+          const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
+          return context.validator.isValid(conditionSchema, formData, rootSchema);
+        });
+  return matching.length === 1 ? [withoutOneOf as S, matching[0]] : [withoutOneOf as S];
+}
+
 /** Returns the property names a `schema` declares, including the ones it declares through the `allOf` entries it is
  * composed of, the `$ref` it is spelled as, the branch its `if` settles for the `formData` and the `dependencies` that
  * data brings in — every subschema that is merged into it before it renders, so that each of them declares its names as
@@ -1056,11 +1030,12 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const properties = schema[PROPERTIES_KEY];
   const dependencies = schema[DEPENDENCIES_KEY];
   if (isObject(dependencies)) {
-    merged.push(
-      ...Object.entries(dependencies)
-        .filter(([key]) => getByPath(formData, key) !== undefined && (!properties || key in properties))
-        .map(([, dependent]) => dependent as S | boolean),
+    const applying = Object.entries(dependencies).filter(
+      ([key]) => getByPath(formData, key) !== undefined && (!properties || key in properties),
     );
+    for (const [key, dependent] of applying) {
+      merged.push(...dependencySubschemas<S, F>(context, dependent as S | boolean, key, rootSchema, formData));
+    }
   }
   const names = Object.keys(properties ?? {});
   for (const subSchema of merged.filter((entry) => isObject(entry))) {
@@ -1145,9 +1120,15 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
  * edit or remove it with. Under `unevaluatedProperties` the keyword says nothing about a key the matching option
  * evaluates, which is every key that option declares, so a stub for one of its names is not a second field for the
  * value but the wrong schema over it; a name only another option declares is a key nothing evaluates, which is the
- * keyword's to describe and the object's to stub, so only the matching option is read. That option is matched the way
- * `MultiSchemaField` matches the one it renders, through `getFirstMatchingOption()` over the options with their
- * references resolved, which is how `resolveAnyOrOneOfSchemas()` scores them.
+ * keyword's to describe and the object's to stub, so only the matching option is read. That option is matched with
+ * `getFirstMatchingOption()` over the options with their references resolved, which is the form
+ * `resolveAnyOrOneOfSchemas()` scores them in, so a precompiled validator has a function compiled for it.
+ *
+ * It is not always the option on screen. `MultiSchemaField` picks with `getClosestMatchingOption()`, which scores
+ * rather than takes the first that validates, and it keeps a choice the user made in the dropdown, which is state
+ * nothing here can read. Where the two disagree, a name the option on screen declares is stubbed beside the field
+ * that option renders it with: which keys an option renders is a render-time fact, and this answers it from the
+ * schema and the data alone.
  *
  * A schema offering no options renders no name this way, and one whose every option takes keys of its own renders every
  * key the data holds, which is `undefined` as it is for a single option.
