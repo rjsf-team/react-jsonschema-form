@@ -1,6 +1,27 @@
 import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
+/** Compiles a `patternProperties` pattern the way a validator compiles it, with the `u` flag: Ajv's `unicodeRegExp` is
+ * on by default and `@cfworker/json-schema` compiles every pattern under it, so without the flag a `\p{Lu}` is the
+ * literal text `p{Lu}` and the keys the form describes, allows and seeds through a pattern are not the keys validation
+ * accepts.
+ *
+ * A pattern that flag rejects — a `\-` or a `[\w-.]`, which it reads as escapes no longer allowed — is compiled
+ * unflagged rather than left to throw: the throw would come from whatever reads the object, which is every render of
+ * one and every prune of its data, taking the form down over a pattern only validation has anything to say about. One
+ * no flag compiles throws as it always has, a schema no reader of it can make sense of.
+ *
+ * @param pattern - The `patternProperties` pattern to compile
+ * @returns - The compiled pattern
+ */
+function patternRegExp(pattern: string): RegExp {
+  try {
+    return RegExp(pattern, 'u');
+  } catch {
+    return RegExp(pattern);
+  }
+}
+
 /** Returns the subset of 'patternProperties' specifications that match the given 'key'
  *
  * @param schema - The schema whose 'patternProperties' are to be filtered
@@ -13,7 +34,7 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
 ): Required<S['patternProperties']> {
   const patternProperties = schema.patternProperties ?? {};
   return Object.fromEntries(
-    Object.entries(patternProperties).filter(([pattern]) => RegExp(pattern).test(key)),
+    Object.entries(patternProperties).filter(([pattern]) => patternRegExp(pattern).test(key)),
   ) as Required<S['patternProperties']>;
 }
 

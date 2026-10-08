@@ -1,6 +1,10 @@
 import type { JSONSchema7Definition } from 'json-schema';
 
-import { additionalPropertiesKeyword } from '../additionalPropertiesUtils.ts';
+import {
+  additionalPropertiesKeyword,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from '../additionalPropertiesUtils.ts';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
@@ -127,18 +131,21 @@ export default function omitExtraData<
     let patternPropertiesRest: string[] | undefined;
     if (patternProperties !== undefined) {
       patternPropertiesRest = [];
-      const patterns = Object.entries(patternProperties).map(([pattern, schemaDef]): [RegExp, S | boolean] => [
-        new RegExp(pattern),
-        schemaDef as S | boolean,
-      ]);
       const knownProperties = new Set(Object.keys(properties ?? {}));
       for (const [key, value] of Object.entries(source)) {
         if (!knownProperties.has(key)) {
-          const matched = patterns.find(([re]) => re.test(key));
-          if (matched === undefined) {
+          // The patterns are read through `getMatchingPatternProperties()` rather than compiled here, so the keys this
+          // keeps are the keys the rest of the form describes and seeds through a pattern: one compiled a second way
+          // matches a different set of keys, and a key kept by one rule and described by the other is either dropped
+          // from under a field that edited it or kept with nothing to edit it
+          if (Object.keys(getMatchingPatternProperties<S>(childSchema, key)).length === 0) {
             patternPropertiesRest.push(key);
           } else {
-            setProperty(key, matched[1], value);
+            // A key several patterns match is described by all of them together, which is the schema the form renders
+            // it with, so `getAdditionalPropertySchema()` answers for it here too: filtered by the first matching
+            // pattern alone, such a key loses whatever only another of them describes, out from under a field that
+            // edited it
+            setProperty(key, getAdditionalPropertySchema<S>(childSchema, key), value);
           }
         }
       }
@@ -422,11 +429,8 @@ export default function omitExtraData<
     const afterConditions = handleConditions(localSchema, source, filtered);
     if (localSchema.additionalProperties === false && isObjectValue(afterConditions)) {
       const knownKeys = new Set(Object.keys(localSchema.properties ?? {}));
-      const patterns = localSchema.patternProperties
-        ? Object.keys(localSchema.patternProperties).map((p) => new RegExp(p))
-        : [];
       for (const key of Object.keys(afterConditions)) {
-        if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
+        if (!knownKeys.has(key) && Object.keys(getMatchingPatternProperties<S>(localSchema, key)).length === 0) {
           delete afterConditions[key];
         }
       }

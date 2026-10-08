@@ -2614,6 +2614,20 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.objectContaining({ title: 'Pattern', properties: expect.objectContaining({ b: expect.anything() }) }),
         );
       });
+      it('leaves a key an earlier retrieval stubbed out of the merge when the result is retrieved again', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^k': { $id: '#money', enum: [1, 2, 5], default: 5, not: { const: 2 } } },
+        };
+        const formData = { k1: 1 };
+        const once = retrieveSchema({ validator: testValidator }, schema, undefined, formData);
+        // The stub names the type the pattern implies and leaves its `$id` out, since an `$id` copied onto every
+        // sibling property would route them all to the one field registered under it
+        expect(once.properties!.k1).not.toHaveProperty('$id');
+        // `SchemaField` retrieves an object's schema and `ObjectField` retrieves the result, so a stub left in the
+        // merge would be merged with the very patterns it was built from and take all of that back on the second pass
+        expect(retrieveSchema({ validator: testValidator }, once, undefined, formData)).toEqual(once);
+      });
     });
     describe('stubExistingAdditionalProperties()', () => {
       it('deals with undefined formData', () => {
@@ -3251,6 +3265,64 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
           ...schema,
           properties: {},
+        });
+      });
+      it('has an option declaring a name through a dependency spelled as a $ref to the oneOf', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            dep: {
+              oneOf: [
+                { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
+                { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
+              ],
+            },
+          },
+        };
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
+              dependencies: { kind: { $ref: '#/definitions/dep' } },
+            },
+          ],
+        };
+        // The first branch of the dependency matches and the second does not, which is the one valid branch
+        // `withExactlyOneSubschema()` needs to merge it in
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const formData = { kind: 'x', px: 1 };
+        // `withDependentSchema()` resolves the dependency before it takes the `oneOf` off, so the branch is settled
+        // from the data for this spelling as surely as for an inline one, and `px` is a name the option renders
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: {},
+        });
+      });
+      it('has an option whose dependency spelled as a $ref qualifies no single branch', () => {
+        const branches: RJSFSchema[] = [
+          { properties: { kind: { type: 'string' }, px: { type: 'number' } } },
+          { properties: { kind: { type: 'string' }, px: { type: 'string' } } },
+        ];
+        const rootSchema: RJSFSchema = { definitions: { dep: { oneOf: branches } } };
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string' } },
+              dependencies: { kind: { $ref: '#/definitions/dep' } },
+            },
+          ],
+        };
+        // Neither branch constrains `kind` beyond the type the data has, so both match, which is the case
+        // `withExactlyOneSubschema()` logs and merges nothing in
+        testValidator.setReturnValues({ isValid: [true, true] });
+        const formData = { kind: 'x', px: 1 };
+        // With no branch merged there is no field for `px` under the option, as there is none for the inline spelling
+        // below: read through the reference, the branches would be options of their own and a name both declare one
+        // the form renders
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
       it('has an option whose dependency oneOf qualifies no single branch', () => {

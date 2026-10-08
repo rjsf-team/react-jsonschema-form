@@ -10,6 +10,20 @@ describe('getMatchingPatternProperties()', () => {
   it('returns an empty object when the schema has no patternProperties', () => {
     expect(getMatchingPatternProperties({ type: 'object' }, 'key')).toEqual({});
   });
+  it('compiles a pattern the way a validator compiles it', () => {
+    const schema: RJSFSchema = { patternProperties: { '^\\p{Lu}': { type: 'number' } } };
+    // Ajv's `unicodeRegExp` is on by default, so `\p{Lu}` is a unicode property escape to it. Compiled without the
+    // flag it is the literal text `p{Lu}`, and the key the form described, allowed and seeded through the pattern was
+    // not the key validation accepted
+    expect(getMatchingPatternProperties(schema, 'Abc')).toEqual({ '^\\p{Lu}': { type: 'number' } });
+    expect(getMatchingPatternProperties(schema, 'abc')).toEqual({});
+  });
+  it('reads a pattern the unicode flag rejects rather than throwing over it', () => {
+    // A `[\w-.]` is a character class the flag rejects, so compiling it under one would throw out of every render of
+    // the object and every prune of its data, over a pattern only validation has anything to say about
+    const schema: RJSFSchema = { patternProperties: { '^[\\w-.]+$': { type: 'number' } } };
+    expect(getMatchingPatternProperties(schema, 'a.b')).toEqual({ '^[\\w-.]+$': { type: 'number' } });
+  });
 });
 describe('additionalPropertiesKeyword()', () => {
   it('reads the keyword that describes the names the properties and patterns leave over', () => {

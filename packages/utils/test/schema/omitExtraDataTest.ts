@@ -1241,6 +1241,31 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('keeps what every pattern matching a key describes', () => {
+        // `retrieveSchema()` stubs such a key with the merge of all of them, so a field edits the value each one
+        // describes; filtered by the first matching pattern alone, the rest are dropped out from under those fields
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: {
+            '^a': { type: 'object', properties: { x: { type: 'string' } } },
+            b$: { type: 'object', properties: { y: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: 'one', y: 'two' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ab: { x: 'one', y: 'two' },
+        });
+      });
+
+      it('drops a key one of the patterns matching it forbids', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' }, b$: false },
+        };
+        const formData = { ab: 'gone', ac: 'kept' };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ac: 'kept' });
+      });
+
       it('skips keys already handled by properties when processing patternProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',

@@ -148,6 +148,7 @@ A pattern that constrains the value without naming a `type`, such as one that is
 A pattern that is only an `enum` takes the type its values have, so an `enum` of numbers renders as a numeric select rather than a textual one.
 A pattern of `false` rejects every value a key could hold, so a key it matches renders the way a forbidden key does below.
 Where several patterns match a key, they describe it together, and a `false` among them forbids it however permissive the others are.
+A pattern is matched the way a validator compiles it, with the `u` flag, so a unicode property escape such as `\p{Lu}` matches the characters it names rather than that text, and the keys the form describes through a pattern are the keys validation accepts.
 
 A key that matches none of the patterns is a property the object allows all the same, unless `additionalProperties: false` forbids it, since a schema that says nothing about its additional properties accepts any of them.
 Such a key renders as a field for whatever value it holds, the way a key does under `additionalProperties: true`, so renaming a key to a name the patterns don't match leaves its value visible and editable.

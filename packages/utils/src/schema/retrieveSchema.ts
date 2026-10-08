@@ -928,8 +928,10 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * is never on screen, and a name only the matching branch declares would be stubbed beside the field that branch
  * renders it with. The branch is selected the way that function selects it, down to reading the condition behind the
  * `$ref` a branch is spelled as and to merging nothing where no single branch qualifies, which is the case it drops
- * the `oneOf` in rather than rendering any of it. Without a `rootSchema` to match the branches against, none of them
- * is read and the names they declare are left to be stubbed, as the branches of an `if` are.
+ * the `oneOf` in rather than rendering any of it. The dependency itself is read behind the `$ref` it may be spelled as
+ * for the same reason, since that is where its branches are then written. Without a `rootSchema` to look a reference up
+ * in and match the branches against, none of them is read and the names they declare are left to be stubbed, as the
+ * branches of an `if` are.
  *
  * @param context - The `SchemaContext` whose `validator` settles which branch the data matches
  * @param dependent - What the `dependencies` entry holds, which is a schema here and a list of required names elsewhere
@@ -948,10 +950,20 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   if (!isObject(dependent)) {
     return [dependent];
   }
-  const { [ONE_OF_KEY]: oneOf, ...withoutOneOf } = dependent;
+  const { [ONE_OF_KEY]: ownOneOf, ...dependentWithoutOneOf } = dependent;
+  // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and `withDependentSchema()` resolves the
+  // dependency before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
+  // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
+  // beside the field that branch renders it with, which is what the inline spelling no longer does
+  const oneOf = ownOneOf ?? referencedDefinition<S>(dependent, rootSchema, new Set<string>())?.[ONE_OF_KEY];
   if (!Array.isArray(oneOf)) {
     return [dependent];
   }
+  // An empty `oneOf` of the dependency's own is how the rest of it is read without those branches: a dependency spelled
+  // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
+  // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
+  // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
+  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
   const matching =
     rootSchema === undefined
       ? []
@@ -973,7 +985,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
           return context.validator.isValid(conditionSchema, formData, rootSchema);
         });
-  return matching.length === 1 ? [withoutOneOf as S, matching[0]] : [withoutOneOf as S];
+  return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
 }
 
 /** Returns the property names a `schema` declares, including the ones it declares through the `allOf` entries it is
@@ -1476,11 +1488,20 @@ export function retrieveSchemaInternal<
       // are varied one property at a time rather than in every combination with the other properties': what reads a
       // branch reads one property, and the combinations grow as the product of the branch counts
       const branchesByKey = Object.keys(properties).flatMap((key) => {
+        // A stub for an extra key is the merge of the patterns matching it already, with the keywords a stub leaves
+        // out left out, so merging it with those patterns a second time takes them back. The second time comes of
+        // retrieving a schema that has been retrieved before, which `SchemaField` and `ObjectField` do to the same
+        // object on every render: without this the key would take back the `$id` that routes every sibling to one
+        // registered field, or a `default` of the pattern's type over a value of another, that the stub dropped on
+        // purpose. The stubbing runs after this merge, so a key skipped here is one an earlier pass stubbed
+        const property = properties[key];
+        if (isObject(property) && (property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
+          return [];
+        }
         const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
         if (Object.keys(matchingProperties).length === 0) {
           return [];
         }
-        const property = properties[key];
         const patternSchemas = Object.values(matchingProperties);
         // Resolving the merge of a property that refers back to this schema is what the seed above stops, but
         // stopping it leaves the `$ref` a literal, and a merge of a literal `$ref` with the patterns' keywords is
