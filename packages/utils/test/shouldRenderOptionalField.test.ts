@@ -108,6 +108,20 @@ describe('getOptionalDataControlsType()', () => {
   test.each(['anyOf', 'oneOf'])('a schema with an empty %s returns its own type', (keyword) => {
     expect(getOptionalDataControlsType({ type: 'array', items: { type: 'string' }, [keyword]: [] })).toEqual('array');
   });
+  test.each<[RJSFSchema['type']]>([[['null', 'object', 'string']], [['object', 'string']]])(
+    'a schema listing %j returns the type it resolves to',
+    (type) => {
+      expect(getOptionalDataControlsType({ type })).toEqual('object');
+    },
+  );
+  test('a nullable schema returns its one type other than null', () => {
+    expect(getOptionalDataControlsType({ type: ['null', 'object'] })).toEqual('object');
+  });
+  test('a oneOf option listing several types contributes the type it resolves to', () => {
+    expect(getOptionalDataControlsType({ oneOf: [{ type: ['object', 'string'] }, { type: 'object' }] })).toEqual(
+      'object',
+    );
+  });
   test('a oneOf schema with mixed-type options returns every type', () => {
     expect(getOptionalDataControlsType(ONE_OF_SCHEMA_MIXED)).toEqual(['object', 'array', 'string']);
   });
@@ -129,6 +143,9 @@ describe('isOptionalDataControlsType()', () => {
   });
   test('a list of several types returns false even when one of them is enabled', () => {
     expect(isOptionalDataControlsType(ONE_OF_SCHEMA_MIXED, {}, globalUiOptions)).toBe(false);
+  });
+  test('a type list returns true when the type it resolves to is enabled', () => {
+    expect(isOptionalDataControlsType({ type: ['null', 'array', 'string'] }, {}, globalUiOptions)).toBe(true);
   });
   test('no enabled types returns false', () => {
     expect(isOptionalDataControlsType({ type: 'array' }, {}, {})).toBe(false);

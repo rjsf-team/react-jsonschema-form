@@ -1,4 +1,4 @@
-import type { CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
@@ -56,6 +56,13 @@ export interface CustomValidatorOptionsType {
    */
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
+
+/** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
+ * plus the `SchemaParserOptions` the schema is parsed for its sub-schemas with. Those options are shared with
+ * `schemaParser()` rather than restated, so an option added there needs no mirroring in the validators
+ */
+export type CompileValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> = CustomValidatorOptionsType &
+  SchemaParserOptions<S>;
 
 /** The options a precompiled validator is constructed with, all optional */
 export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {

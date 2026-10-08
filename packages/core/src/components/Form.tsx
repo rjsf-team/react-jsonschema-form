@@ -29,6 +29,7 @@ import {
   setByPath,
   toPath,
   unsetByPath,
+  callWithDeferredThrow,
   createSchemaUtils,
   deepEquals,
   ErrorSchemaBuilder,
@@ -370,24 +371,12 @@ interface QueuedOperation {
   isChange: boolean;
 }
 
-/** Rethrows `error` from a timer: thrown inside React's commit phase, it would unmount the form */
-function rethrowOutsideCommit(error: unknown) {
-  setTimeout(() => {
-    throw error;
-  });
-}
-
 /** Runs `emit` from a `setState()` callback, then advances the queue even if it threw, so a throwing `onChange` or
  * `onSubmit` can neither stall later operations nor unmount the form
  */
 function advanceAfter(advance: () => void, emit: () => void) {
-  try {
-    emit();
-  } catch (error) {
-    rethrowOutsideCommit(error);
-  } finally {
-    advance();
-  }
+  callWithDeferredThrow(emit);
+  advance();
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
@@ -1784,14 +1773,19 @@ export default class Form<
         this.runQueueHead(true);
       }
     };
-    try {
-      head.run(advance);
-    } catch (error) {
-      advance();
-      if (!fromCommit) {
+    const run = () => {
+      try {
+        head.run(advance);
+      } catch (error) {
+        advance();
         throw error;
       }
-      rethrowOutsideCommit(error);
+    };
+    // Thrown inside React's commit phase, the error would unmount the form
+    if (fromCommit) {
+      callWithDeferredThrow(run);
+    } else {
+      run();
     }
   }
 
@@ -2050,11 +2044,7 @@ export default class Form<
       }
       this.setSharedState(this.state, next, () => {
         if (onError) {
-          try {
-            onError(errors);
-          } catch (error) {
-            rethrowOutsideCommit(error);
-          }
+          callWithDeferredThrow(() => onError(errors));
         } else {
           // oxlint-disable-next-line no-console
           console.error('Form validation failed', errors);

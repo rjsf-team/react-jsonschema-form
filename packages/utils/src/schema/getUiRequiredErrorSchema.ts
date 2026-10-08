@@ -12,6 +12,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
@@ -183,7 +184,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ) {
     return;
   }
-  if (getSchemaType<S>(retrieved) === 'object') {
+  // A value of another type a `type` list allows, such as a string under a `['null', 'object', 'string']`, has no
+  // properties to require. A `null` is read as the type the list resolves to, since `ObjectField` still renders the
+  // properties of an object field holding one
+  const schemaType = getSchemaType<S>(retrieved);
+  if (schemaType === 'object' && (formData === null || getSchemaTypeForValue<S>(retrieved, formData) === schemaType)) {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
     // caller data), indexing the primitive directly (`'abc'['0']` yields `'a'`, not `undefined`) can make a genuinely

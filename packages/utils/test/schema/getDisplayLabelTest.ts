@@ -87,6 +87,23 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
         true,
       );
     });
+    it.each<[string, RJSFSchema['type'], boolean]>([
+      ['textarea', ['null', 'object', 'string'], false],
+      ['CheckboxWidget', ['number', 'boolean'], false],
+      ['MyWidget', ['null', 'object', 'string'], false],
+    ])('a %s on a %j follows the field of the type that renders it', (widget, type, expected) => {
+      expect(getDisplayLabel({ validator: testValidator }, { type }, { 'ui:widget': widget })).toEqual(expected);
+    });
+    it('a select over a type list naming boolean first displays its label, since StringField renders it', () => {
+      expect(
+        getDisplayLabel({ validator: testValidator }, { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }),
+      ).toEqual(true);
+    });
+    it('a nullable type ignores the widget when choosing the type', () => {
+      expect(
+        getDisplayLabel({ validator: testValidator }, { type: ['null', 'object'] }, { 'ui:widget': 'textarea' }),
+      ).toEqual(false);
+    });
     it('with ui:field', () => {
       const schema: RJSFSchema = { type: 'string' };
       const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);

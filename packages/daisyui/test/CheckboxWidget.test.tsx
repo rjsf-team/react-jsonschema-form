@@ -63,6 +63,49 @@ describe('CheckboxWidget', () => {
     });
   });
 
+  // A required boolean starts at `false`, an answer the schema accepts, and so does a type list naming `boolean` whose
+  // checkbox `BooleanField` renders, so neither is marked as still to be filled in
+  test('marks no required checkbox on a type list naming boolean', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: ['number', 'boolean'], title: 'Agree' } },
+        }}
+        uiSchema={{ agree: { 'ui:widget': 'checkbox' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'Agree' })).toBeInTheDocument();
+    expect(screen.queryByText('*')).not.toBeInTheDocument();
+  });
+
+  // `toggle` is a registered name rather than an alias of the `boolean` type, so `StringField` renders it and nothing
+  // seeds the value with `false`: submitting it untouched fails the `required` check, which the marker has to announce
+  test('marks a required toggle on a type list whose string field renders it', async () => {
+    const onError = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['agree'],
+          properties: { agree: { type: ['string', 'boolean'], title: 'Agree' } },
+        }}
+        uiSchema={{ agree: { 'ui:widget': 'toggle' } }}
+        validator={validator}
+        onError={onError}
+      />,
+    );
+
+    expect(screen.getByText('*')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).toHaveBeenCalled();
+  });
+
   // The description sits above the input rather than inside its label, and the errors below it, so nothing associates
   // either with the control unless the input points at them
   test('is described by its own description, errors and help', () => {

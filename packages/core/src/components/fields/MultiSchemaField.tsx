@@ -17,6 +17,7 @@ import {
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
+  withVariantId,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -104,7 +105,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
       // describes it
       const chosen = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
-      if (chosen && schemaUtils.getValidator().isValid(chosen, formData, registry.rootSchema)) {
+      // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
+      // that `$id`, so it is validated under one derived from its content, as the option scoring does
+      if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
         return;
       }
     } else if (!isFormDataChanged) {

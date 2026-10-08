@@ -21,9 +21,12 @@ import {
   getUiOptions,
   getXxxOfKey,
   hashObject,
+  isComponentType,
   isObject,
   isPlainObject,
+  logOnce,
   lookupFromFormContext,
+  LOOKUP_MAP_NAME,
   PROPERTIES_KEY,
   READONLY_KEY,
   toFieldPath,
@@ -33,6 +36,9 @@ import {
   ITEMS_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
+
+import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -421,27 +427,36 @@ export function getSchemaDetailsForField<
   return { schema, isRequired, isReadonly, optionsInfo, fieldPath };
 }
 
-/** Gets the custom render component from the `render`, by either determining that it is either already a function or
- * it is a non-function value that can be used to look up the function in the registry. If no function can be found,
- * null is returned.
+/** Gets the custom render component from the `render`, by either determining that it is already a component, which
+ * `memo()`, `forwardRef()` and `lazy()` return as an object rather than a function, or that it is a name that can be
+ * used to look up the component in the registry. If no component can be found, null is returned.
  *
- * @param render - The potential render function or lookup name to one
+ * @param render - The potential render component or lookup name to one
  * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
- * @returns - Either a render function if available, or null if not
+ * @returns - Either a render component if available, or null if not
  */
 export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
-  let customRenderer: string | RenderComponent | undefined = render;
-  if (typeof customRenderer === 'string') {
-    customRenderer = lookupFromFormContext<T, S, F, string | RenderComponent | undefined>(registry, customRenderer);
-  }
-  if (typeof customRenderer === 'function') {
-    return customRenderer;
-  }
-  return null;
+  const customRenderer = lookUpRender<T, S, F>(render, registry);
+  return isComponentType<unknown>(customRenderer) ? customRenderer : null;
+}
+
+/** Looks up what a cell's `render` refers to: the value in the lookup map when it is a name, otherwise the `render`
+ * itself
+ *
+ * @param render - The `render` the cell gives
+ * @param registry - The `@rjsf` Registry whose `formContext` holds the lookup map
+ * @returns - The value the `render` refers to, which is not necessarily a component
+ */
+function lookUpRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(render: unknown, registry: Registry<T, S, F>): unknown {
+  return typeof render === 'string' ? lookupFromFormContext<T, S, F>(registry, render) : render;
 }
 
 /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
@@ -769,6 +784,22 @@ function LayoutGridFieldComponent<
         registry={registry}
         {...uiProps}
       />
+    );
+  }
+  // Warned about here, where the cell has nothing else to render, rather than wherever the `render` is looked up: a cell
+  // whose `name` resolves to a schema renders that field and never uses its `render`, good or bad
+  const render: unknown = isObject(gridSchema) ? gridSchema.render : undefined;
+  if (render) {
+    const cellName = name ? `cell '${name}'` : 'a cell';
+    const description = describeUnresolvedComponent(
+      render,
+      lookUpRender(render, registry),
+      `value in formContext.${LOOKUP_MAP_NAME}`,
+      'MyRenderer',
+    );
+    logOnce(
+      `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
+        'is ignored.',
     );
   }
   return null;

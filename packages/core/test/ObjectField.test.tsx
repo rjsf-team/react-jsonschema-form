@@ -1,4 +1,5 @@
 import type {
+  EnumValue,
   RJSFSchema,
   FieldProps,
   FieldPath,
@@ -8,6 +9,7 @@ import type {
   GenericObjectType,
   FormValidation,
   ObjectFieldTemplateProps,
+  UiSchema,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
@@ -795,6 +797,27 @@ describe('ObjectField', () => {
       // If the `if`/`then` condition on the $ref'd `property` definition was resolved, the nested
       // `inner.properties` object field should be rendered.
       expect(node.querySelector('#root_properties_inner_properties')).not.toBeNull();
+    });
+
+    it('stops at the cycle for a recursive key that the patternProperties match', () => {
+      const recursiveSchema: RJSFSchema = {
+        $ref: '#/definitions/node',
+        definitions: {
+          node: {
+            type: 'object',
+            properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
+            patternProperties: { '^child': { title: 'Child' } },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema: recursiveSchema });
+
+      // Merging `child` with the pattern that matches it is left undone, so the `$ref` stays inside an `allOf` where
+      // `SchemaField` cannot see it. Without the cycle flag on that `allOf` the key nests until the heap is gone
+      const expandButton = node.querySelector<HTMLButtonElement>('#root_child-button')!;
+      expect(expandButton).not.toBeNull();
+      expect(expandButton).toHaveTextContent('Expand Cycle');
+      expect(node.querySelector('#root_name')).not.toBeNull();
     });
 
     it('uiSchema title should not affect additionalProperties', () => {
@@ -1643,6 +1666,121 @@ describe('ObjectField', () => {
       await user.click(screen.getByRole('button', { name: 'Add' }));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+    });
+
+    // A `format` constrains only the list's string member, so it leaves the value to the number field
+    it('should add a number for a number-first additionalProperties type list whose format names a date', async () => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: ['number', 'string'], format: 'date' } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+    });
+
+    // A select starts on its type's zero value when that is an option, and otherwise on its first option, since neither
+    // the `'New Value'` of the `StringField` a select over several types renders through nor a type's zero value need
+    // be one
+    it.each<[RJSFSchema, unknown]>([
+      [{ type: ['boolean', 'null'], enum: [true, false, null] }, false],
+      [{ type: ['integer', 'null'], enum: [5, 0] }, 0],
+      [{ type: 'string', enum: ['a', 'b'] }, 'a'],
+      [{ type: ['boolean', 'string'], enum: [false, true, 'auto'] }, false],
+      [{ type: ['number', 'string'], enum: [0, 1, 'auto'] }, 0],
+      [{ type: ['null'], enum: [null] }, null],
+      [{ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, null],
+      [{ type: ['number', 'string'], enum: ['auto', 1] }, 'auto'],
+      [{ type: ['number', 'string'], enum: [5, 'auto'] }, 5],
+      [{ type: ['integer', 'null'], enum: [3, null] }, 3],
+    ])('should add the zero value or first option of a select over %j', async (apSchema, expected) => {
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: apSchema },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+    });
+
+    // An option the user can't pick is no value to start on, whether it is the first one or the type's zero value
+    it.each<[RJSFSchema, EnumValue[], unknown]>([
+      [{ type: 'string', enum: ['a', 'b'] }, ['a'], 'b'],
+      [{ type: ['integer', 'null'], enum: [0, 5] }, [0], 5],
+    ])(
+      'should add the first enabled option of a select over %j disabling %j',
+      async (apSchema, enumDisabled, expected) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties: apSchema },
+          uiSchema: { additionalProperties: { 'ui:enumDisabled': enumDisabled } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+      },
+    );
+
+    // The select widgets read a `ui:enumDisabled` that isn't a list as disabling nothing, so the seed does too
+    it('should add the first option of a select whose ui:enumDisabled is not a list', async () => {
+      const uiSchema: UiSchema = JSON.parse('{ "additionalProperties": { "ui:enumDisabled": "a" } }');
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: 'string', enum: ['a', 'b'] } },
+        uiSchema,
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'a' }, 'root');
+    });
+
+    it('should start a new object rather than spread a string held by a type list naming object', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: ['null', 'object', 'string'], additionalProperties: { type: 'string' } },
+        formData: 'abc',
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+    });
+
+    it.each<[string, RJSFSchema['type'], unknown]>([
+      ['textarea', ['null', 'number', 'string'], 'New Value'],
+      ['checkbox', ['number', 'boolean'], false],
+    ])(
+      'should add the default of the field rendering a %s on a %j additionalProperties schema',
+      async (widget, type, expected) => {
+        const { onChange } = createFormComponent({
+          schema: { ...schema, additionalProperties: { type } },
+          uiSchema: { additionalProperties: { 'ui:widget': widget } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+      },
+    );
+
+    it('should add the default of the field rendering a widget a ui:definitions entry supplies', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          additionalProperties: { $ref: '#/$defs/text' },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
 
     it.each<[string, RJSFSchema]>([

@@ -49,6 +49,28 @@ describe('resolveDefaultWidget()', () => {
     });
   });
 
+  it.each<[RJSFSchema, string]>([
+    [{ type: ['null', 'string', 'number'], format: 'email' }, 'email'],
+    [{ type: ['number', 'string'], format: 'email' }, 'text'],
+    [{ type: ['number', 'string'], format: 'date' }, 'text'],
+  ])('uses the format of %j only as a widget of the type it resolves to', (schema, expected) => {
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+    const registeredWidgets = {
+      EmailWidget: (() => null) as unknown as Widget,
+      DateWidget: (() => null) as unknown as Widget,
+    };
+
+    expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets).defaultWidget).toEqual(expected);
+  });
+
+  it('uses a widget registered under the format name whatever type the schema resolves to', () => {
+    const schema: RJSFSchema = { type: ['number', 'string'], format: 'email' };
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+    const registeredWidgets = { email: (() => null) as unknown as Widget };
+
+    expect(resolveDefaultWidget(schema, {}, schemaUtils, registeredWidgets).defaultWidget).toEqual('email');
+  });
+
   it('defaults registeredWidgets to {} when omitted', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
     const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);

@@ -3324,6 +3324,32 @@ describe('oneOf', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
     });
 
+    describe('with a ui:globalOptions.field', () => {
+      setupConsoleWarnSuppression();
+
+      it.each<[string, UiSchema]>([
+        ['alone', { 'ui:globalOptions': { field: 'MyGlobal' } }],
+        ['behind a ui:field that names nothing', { 'ui:globalOptions': { field: 'MyGlobal' }, 'ui:field': 'Typo' }],
+      ])('should hand the field it names the inferred select %s', (_, uiSchema) => {
+        const uiWidgets: unknown[] = [];
+        const MyGlobal = ({ uiSchema: fieldUiSchema }: FieldProps) => {
+          uiWidgets.push(fieldUiSchema?.['ui:widget']);
+          return null;
+        };
+        const schema: RJSFSchema = {
+          type: 'boolean',
+          oneOf: [
+            { const: true, title: 'On' },
+            { const: false, title: 'Off' },
+          ],
+        };
+        createFormComponent({ schema, uiSchema, fields: { MyGlobal } });
+
+        expect(uiWidgets.length).toBeGreaterThan(0);
+        expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
+      });
+    });
+
     it('should render a select for an empty enum beside a oneOf of object constants', async () => {
       const schema: RJSFSchema = {
         type: 'object',

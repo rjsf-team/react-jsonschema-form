@@ -1,4 +1,4 @@
-import type { RJSFSchema, UIOptionsType } from '../src/index.ts';
+import type { InputPropsType, RJSFSchema, UIOptionsType } from '../src/index.ts';
 import { getInputProps } from '../src/index.ts';
 
 const EXPONENT = '([eE][+\\-]?[0-9]+)?';
@@ -233,6 +233,13 @@ describe('getInputProps', () => {
       pattern: NUMBER_PATTERN,
     });
   });
+  it('treats a number listed beside a type name JSON Schema does not define like a number', () => {
+    expect(getInputProps({ type: ['foo', 'number'] } as RJSFSchema)).toEqual({
+      type: 'text',
+      inputMode: 'decimal',
+      pattern: NUMBER_PATTERN,
+    });
+  });
   it('treats a nullable integer like an integer, since it renders through the same NumberField', () => {
     const schema: RJSFSchema = {
       type: ['integer', 'null'],
@@ -250,6 +257,13 @@ describe('getInputProps', () => {
       type: ['number', 'null'],
     };
     expect(getInputProps(schema, 'number')).toEqual({ type: 'number', step: 'any' });
+  });
+  it.each<[RJSFSchema['type'], InputPropsType]>([
+    [['string', 'number'], { type: 'number', step: 'any' }],
+    [['string', 'integer', 'number'], { type: 'number' }],
+    [['string', 'boolean'], { type: 'number' }],
+  ])('follows the numeric field a %j renders a native number input with', (type, expected) => {
+    expect(getInputProps({ type }, 'number')).toEqual(expected);
   });
   it('leaves a nullable schema on the plain text input for a theme with its own numeric widget', () => {
     // Those themes select that widget by the returned `type`, and routing a nullable field to it is a change for

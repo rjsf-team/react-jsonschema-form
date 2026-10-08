@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
+import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
 import loadModule from './harness/loadModule.ts';
@@ -112,4 +113,7 @@ describe('compileSchemaValidatorsCode', () => {
     const { errors } = validator.validateFormData({ a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
     expect(errors.map((e) => e.property ?? '').sort()).toEqual(['.also', '.bad']);
   });
+  precompiledCoverageTests((rootSchema, options) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema, options)), rootSchema, options),
+  );
 });

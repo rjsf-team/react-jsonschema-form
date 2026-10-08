@@ -1,6 +1,7 @@
 import type { FocusEvent } from 'react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type {
+  EnumOptionsType,
   ErrorSchema,
   FieldPath,
   FieldProps,
@@ -19,19 +20,24 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  deepEquals,
   getFreePropertyNames,
   getMatchingPatternProperties,
-  getSchemaType,
+  getFieldTypeForWidget,
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  isConstantSelect,
   isFormDataAvailable,
+  isSchemaObject,
+  optionsList,
   orderProperties,
   shouldRenderOptionalField,
   toFieldPath,
   fieldPathToId,
   ONE_OF_KEY,
   REF_KEY,
+  resolveUiSchema,
   isObject,
   TranslatableString,
   uiBooleanOption,
@@ -59,7 +65,7 @@ function getDefaultValue<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(translateString: Registry<T, S, F>['translateString'], type?: string | string[]) {
+>(translateString: Registry<T, S, F>['translateString'], type?: string) {
   switch (type) {
     case 'array':
       return [];
@@ -286,7 +292,7 @@ export default function ObjectField<
     title,
   } = props;
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
-  const { fields, schemaUtils, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
@@ -384,7 +390,9 @@ export default function ObjectField<
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const newFormData = { ...formData } as T;
+    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
+    // to keep, and a string spread into an object would turn each of its characters into one
+    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
     // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
     // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
     // with none left means a custom template is offering it anyway, and adding no property beats adding one the
@@ -398,10 +406,11 @@ export default function ObjectField<
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
-      let type: ReturnType<typeof getSchemaType> = undefined;
+      let type: ReturnType<typeof getFieldTypeForWidget> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
-      if (isObject(schema.additionalProperties)) {
+      let firstOption: EnumOptionsType<S> | undefined;
+      if (isSchemaObject<S>(schema.additionalProperties)) {
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
@@ -410,7 +419,30 @@ export default function ObjectField<
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
           constValue = apSchema.const;
         }
-        type = getSchemaType(apSchema);
+        const apUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
+        // The type of the field that renders the new value, which for a `type` list follows its widget, so a
+        // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
+        // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
+        // without `ui:globalOptions`
+        const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, {
+          rootSchema,
+          uiSchemaDefinitions,
+        });
+        const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedApUiSchema);
+        type = getFieldTypeForWidget(apSchema, widget);
+        // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
+        // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
+        // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
+        if (isConstantSelect<S>(apSchema)) {
+          const enabledOptions = (optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? []).filter(
+            (option) =>
+              !(Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)),
+          );
+          const zeroValue = getDefaultValue<T, S, F>(translateString, type);
+          firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))
+            ? undefined
+            : enabledOptions[0];
+        }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
@@ -419,21 +451,20 @@ export default function ObjectField<
         // ui:initialValue/ui:emptyValue on uiSchema.additionalProperties apply the same way they do when Form first
         // mounts with that key already present in formData.
         defaultValue = schemaUtils.getDefaultFormState(
-          apSchema as S,
+          apSchema,
           defaultValue as T,
           undefined,
           undefined,
-          getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+          apUiSchema,
           uiSchemaDefinitions,
         ) as RJSFSchema['default'];
       }
 
-      const newValue = constValue !== undefined ? constValue : defaultValue;
-      setByPath(
-        newFormData,
-        newKey,
-        newValue === undefined ? getDefaultValue<T, S, F>(translateString, type) : newValue,
-      );
+      let newValue: unknown = constValue !== undefined ? constValue : defaultValue;
+      if (newValue === undefined) {
+        newValue = firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
+      }
+      setByPath(newFormData, newKey, newValue);
     }
 
     if (lastRenamedProperty.current.previousKey === newKey) {
@@ -453,6 +484,7 @@ export default function ObjectField<
     resolvedSchema,
     uiSchema,
     uiSchemaDefinitions,
+    rootSchema,
   ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That

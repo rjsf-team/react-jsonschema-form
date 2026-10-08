@@ -606,6 +606,42 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
       });
+      it('keeps a value of any type a type list allows, pruning an object one by its properties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: { type: ['null', 'object', 'string', 'array', 'integer'], properties: { a: { type: 'string' } } },
+          },
+        };
+
+        for (const v of [null, 'abc', [1, 2], 3]) {
+          expect(omitExtraData({ validator: testValidator }, schema, schema, { v })).toEqual({ v });
+        }
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { v: { a: 'x', b: 'y' } })).toEqual({
+          v: { a: 'x' },
+        });
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { v: true })).toEqual({});
+      });
+      it('keeps a container value whole under a type list that resolves to another type', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: { type: ['string', 'object'] },
+            a: { type: ['string', 'array'], items: { type: 'object', properties: {} } },
+          },
+        };
+        const formData = { o: { k: 1 }, a: [{ k: 1 }] };
+
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual(formData);
+      });
+      it.each<RJSFSchema>([
+        { type: ['null', 'object'], properties: { a: { type: 'string' } } },
+        { type: ['null', 'array'], items: { type: 'string' } },
+      ])('keeps a null held by %j', (v) => {
+        const schema: RJSFSchema = { type: 'object', properties: { v } };
+
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { v: null })).toEqual({ v: null });
+      });
       it('drops a null held by a key the schema does not describe', () => {
         const schema: RJSFSchema = {
           type: 'object',

@@ -2,12 +2,19 @@ import { createRef, useEffect } from 'react';
 import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import type Form from '../src/index.ts';
-import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
+import {
+  createFormComponent,
+  describeRepeated,
+  errorListMessages,
+  expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -549,32 +556,39 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('x');
       });
       it('keeping the errors the option it switched to earned', async () => {
+        // The option sits under a required property so the switch leaves data to validate under either owner: at the
+        // root it leaves `undefined`, which a parent-owned form does not validate, so there would be no errors to keep
         const invalidDefaultSchema: RJSFSchema = {
-          ...schema,
-          oneOf: [
-            {
-              type: 'object',
-              properties: { types: { const: 'advanced' }, content: { type: 'string', minLength: 50 } },
-              required: ['types'],
+          type: 'object',
+          properties: {
+            cfg: {
+              ...schema,
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: { types: { const: 'advanced' }, content: { type: 'string', minLength: 50 } },
+                  required: ['types'],
+                },
+                { title: 'No Configuration', type: 'null' },
+              ],
             },
-            { title: 'No Configuration', type: 'null' },
-          ],
+          },
+          required: ['cfg'],
         };
-        const ref = createRef<Form>();
         const props = {
           schema: invalidDefaultSchema,
           defaultFormStateBehavior,
           liveValidate: 'onChange',
-          ref,
         } as const;
+        const errorsTheSwitchEarned = ["must have required property 'cfg'"];
         const { node, rerender } = createFormComponent(props);
 
-        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
-        const errorsBeforeTheChange = ref.current!.state.errors;
+        await user.selectOptions(screen.getByRole('combobox'), '1');
+        expect(errorListMessages(node)).toEqual(errorsTheSwitchEarned);
         rerender({ ...props, uiSchema: { 'ui:disabled': true } });
 
-        expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
-        expect(ref.current!.state.errors).toEqual(errorsBeforeTheChange);
+        expect(screen.getByRole('combobox')).toHaveValue('1');
+        expect(errorListMessages(node)).toEqual(errorsTheSwitchEarned);
       });
     });
     it('should keep a form value set in the same render as an unrelated prop change', async () => {
@@ -636,16 +650,18 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
       const ref = createRef<Form>();
-      const { rerender } = createFormComponent({ schema, ref });
+      const { node, rerender } = createFormComponent({ schema, ref });
       act(() => {
         ref.current!.validateForm();
       });
-      expect(ref.current!.state.errors).toHaveLength(1);
+      expect(errorListMessages(node)).toHaveLength(1);
+      expect(fieldErrorsById(node)).toEqual({ root_name: ["must have required property 'name'"] });
 
       // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       rerender({ schema, ref, noValidate: true });
 
-      expect(ref.current!.state.errors).toHaveLength(0);
+      expect(errorListMessages(node)).toHaveLength(0);
+      expect(fieldErrorsById(node)).toEqual({});
     });
     describe('should keep a switch to a null oneOf option when a recreated prop rebuilds the schema utilities', () => {
       const schema: RJSFSchema = {

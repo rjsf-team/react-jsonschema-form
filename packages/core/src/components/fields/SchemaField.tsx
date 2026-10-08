@@ -19,10 +19,13 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  getByPath,
   getDeprecatedHandling,
   getFieldClassNames,
+  getFieldTypeForWidget,
   getSchemaOwnTypes,
   getSchemaType,
+  getSelectFieldType,
   getTemplates,
   getUiOptions,
   getUnionTypes,
@@ -30,6 +33,7 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasVisibleErrors,
+  isComponentType,
   isConstant,
   isConstantOptionList,
   isConstantSelect,
@@ -49,7 +53,8 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
@@ -63,19 +68,6 @@ const COMPONENT_TYPES: Record<string, string> = {
   string: 'StringField',
   null: 'NullField',
 };
-
-/** Reduces the `guessType()` results of a constant option list to the single `type` that describes all of them.
- * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
- * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
- * `string` can represent any of them.
- *
- * @param types - The distinct `guessType()` results of the constants in one option list
- * @returns - The `type` to give a select over those constants
- */
-function selectTypeForConstants(types: string[]): string {
-  const nonNullTypes = types.filter((type) => type !== 'null');
-  return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
-}
 
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
 interface SelectSchemaInfo<S extends StrictRJSFSchema> {
@@ -109,7 +101,7 @@ function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedS
   if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
     // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
     const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
-    schema = { ...retrievedSchema, type: selectTypeForConstants(types) };
+    schema = { ...retrievedSchema, type: getSelectFieldType(types) };
   }
   return {
     schema,
@@ -154,28 +146,87 @@ function inferSelectWidget<
     (options.length > 1 &&
       (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
         options.some((option) => toConstant<S>(option) === null) ||
-        (Array.isArray(schema.type) && selectTypeForConstants(schema.type) !== 'boolean')));
+        (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
   return needsSelect ? 'select' : undefined;
 }
 
-/** Returns the field a `ui:field` names, given as a component or as the name of a registered field, which
- * `getFieldComponent()` renders in place of the field for the schema's type.
+/** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`
+ * itself. `getByPath()` reads own properties only, so a name such as `constructor` or `toString` resolves to nothing
+ * rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a
+ * React child"
  *
  * @param field - The `field` from the UI options
  * @param fields - The registered fields
- * @returns - The field the `ui:field` names, or `undefined` when it names none that is registered. Looked up as an own
- *            property, so a name such as `constructor` or `toString` resolves to nothing rather than to something off
- *            `Object.prototype`, which rendered as a component threw "Objects are not valid as a React child"
+ * @returns - The value the `ui:field` refers to, which is not necessarily a component
  */
-function getUiFieldComponent<
+function lookUpUiField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): Field<T, S, F> | undefined {
-  if (typeof field === 'function') {
-    return field;
+>(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): unknown {
+  return typeof field === 'string' ? getByPath(fields, field) : field;
+}
+
+/** The field a `ui:field` names, and what was ignored on the way to it */
+interface UiFieldResolution<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
+  /** The field `getFieldComponent()` renders in place of the one for the schema's type, if a `ui:field` names one */
+  namedField?: Field<T, S, F>;
+  /** What the field's own `ui:field` was, when it was given but names no field, for the warning that it was ignored */
+  ignoredOwnField?: string;
+  /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
+  ignoredGlobalField?: string;
+}
+
+/** Resolves the field a `ui:field` names, given as a component or as the name of a registered field. A component is
+ * either a function or one of the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type
+ * admits, and a registered value is checked the same way as one given directly, since `fields` can hold anything a
+ * caller passes in.
+ *
+ * A field's own `ui:field` that names nothing is ignored, so the `ui:globalOptions.field` it would have shadowed applies
+ * as though it were never given. An empty one — `undefined`, `null`, `false`, `''` or `0` — still shadows it, since it
+ * asks for no field: `undefined` is how `SchemaField` shadows it for a schema's options, and a JSON uiSchema, which can't
+ * spell `undefined`, clears it for one field with `null` or `false`. An empty `ui:globalOptions.field` asks for no field
+ * the same way, so it isn't warned about either.
+ *
+ * @param ownUiOptions - The field's own UI options, without the global ones
+ * @param globalField - The `field` from `ui:globalOptions`
+ * @param fields - The registered fields
+ * @returns - The field to render, if any, and a description of each `ui:field` that was ignored
+ */
+function resolveUiField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  ownUiOptions: UIOptionsType<T, S, F>,
+  globalField: UIOptionsType<T, S, F>['field'],
+  fields: Registry<T, S, F>['fields'],
+): UiFieldResolution<T, S, F> {
+  const ownField = ownUiOptions.field;
+  const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
+  if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
+    return { namedField: ownResolved };
   }
-  return typeof field === 'string' && Object.hasOwn(fields, field) ? fields[field] : undefined;
+  if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
+    return {};
+  }
+  const ignoredOwnField = ownField
+    ? describeUnresolvedComponent(ownField, ownResolved, 'registered field', 'MyField')
+    : undefined;
+  const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
+  if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
+    return { namedField: globalResolved, ignoredOwnField };
+  }
+  return {
+    ignoredOwnField,
+    ignoredGlobalField: globalField
+      ? describeUnresolvedComponent(globalField, globalResolved, 'registered field', 'MyField')
+      : undefined,
+  };
 }
 
 const RenderNothing = () => null;
@@ -186,6 +237,8 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
+ * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
+ * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
@@ -204,6 +257,8 @@ function getFieldComponent<
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
+  ownWidget: UIOptionsType<T, S, F>['widget'],
+  namedField: Field<T, S, F> | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
@@ -214,24 +269,22 @@ function getFieldComponent<
   rendersOptionSelector: boolean;
   optionsReplaceNamedField: boolean;
 } {
-  const { field, widget } = uiOptions;
+  const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
-  /** The field a `ui:field` names, or `undefined` for a name no field is registered under, which resolves to nothing */
-  const namedField = getUiFieldComponent<T, S, F>(field, fields);
 
-  const schemaType = getSchemaType(schema);
-  let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
   // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
   // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
   // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
-  // the way NumberField turns `true` into `1`
-  if (isSelectSchema && Array.isArray(schema.type)) {
-    type = selectTypeForConstants(schema.type);
-  }
+  // the way NumberField turns `true` into `1`. Any other type list renders the field of another type it names when only
+  // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
+  // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
+  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field. Only
+  // the field's own `ui:widget` picks it, as the defaults, which never see `ui:globalOptions`, can only follow that one
+  const type = getFieldTypeForWidget<S>(schema, ownWidget) ?? '';
 
   const schemaId = schema.$id;
 
-  // Looked up as an own property, for the reason `getUiFieldComponent()` looks the `ui:field` up that way: a `type` such
+  // Looked up as an own property, for the reason `lookUpUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
   let componentName = Object.hasOwn(COMPONENT_TYPES, type) ? COMPONENT_TYPES[type] : '';
   // ObjectField and ArrayField edit a value's contents rather than choosing between values, so a select over object or
@@ -244,7 +297,6 @@ function getFieldComponent<
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
-  // Without it the first type the schema lists is the one rendered.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
   // of the union stays reachable from inside an option.
@@ -288,9 +340,10 @@ function getFieldComponent<
    * template, which takes no `anyOf`/`oneOf` over
    */
   const rendersFallbackUi = isFallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
-  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to. A name no
-   * field is registered under resolves to nothing, so there is nothing to give way to and the options are rendered,
-   * which is what lets the form be completed: without them an object union loses the `properties` of every option.
+  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to, whether it is
+   * the field's own or the `ui:globalOptions.field` that an own one naming no field falls back to. When none resolves
+   * there is nothing to give way to and the options are rendered, which is what lets the form be completed: without
+   * them an object union loses the `properties` of every option.
    * One naming this field is not a field the options can give way to either: with the opt-in on what it would add is a
    * type selector, which is the choice the options already offer, and without it an unsupported-field box in their
    * place. Read from the component, so the `ui:field` spelling answers as the `$id` one does
@@ -422,11 +475,13 @@ function SchemaFieldRender<
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
-    const uiFieldComponent = getUiFieldComponent<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    const uiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
     // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
     // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
-    // following `BooleanField`'s lead would otherwise render in place of its own default
-    if (uiFieldComponent && uiFieldComponent !== fields.BooleanField) {
+    // following `BooleanField`'s lead would otherwise render in place of its own default. A field named through
+    // `ui:options.field` or `ui:globalOptions.field` still gets the widget, so one that wraps `BooleanField` keeps its
+    // select, as does whichever field renders in place of a `ui:field` that names nothing, as though none were given
+    if (isComponentType(uiField) && uiField !== fields.BooleanField) {
       return resolvedUiSchema;
     }
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
@@ -468,17 +523,24 @@ function SchemaFieldRender<
     return <CyclicSchemaField {...props} />;
   }
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
+  const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
+  const { namedField, ignoredOwnField, ignoredGlobalField } = resolveUiField<T, S, F>(
+    ownUiOptions,
+    globalUiOptions?.field,
+    fields,
+  );
   const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
     T,
     S,
     F
-  >(schema, uiOptions, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
+  >(schema, uiOptions, ownUiOptions.widget, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 
@@ -487,11 +549,7 @@ function SchemaFieldRender<
   // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
   // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
   // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const {
-    required: fieldUiRequired,
-    initialValue: fieldInitialValue,
-    emptyValue: fieldEmptyValue,
-  } = getUiOptions<T, S, F>(uiSchema);
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
   const uiRequired = uiBooleanOption(fieldUiRequired);
   const effectiveRequired = uiRequired ?? required;
   if (
@@ -517,6 +575,27 @@ function SchemaFieldRender<
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
+  }
+  // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
+  // otherwise have no sign it was dropped.
+  // The message describes the intended fallback. Until #5389 is fixed, `getDisplayLabel()` still hides the label for
+  // any top-level `ui:field` that is set, resolved or not, so that field's label is missing; that is #5389's to fix,
+  // not this message's.
+  // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
+  // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
+  // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
+  // warning. A tuple's per-position entries and its `additionalItems` share it too, since nothing here tells them apart
+  if (ignoredOwnField) {
+    logOnce(
+      `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)} ${ignoredOwnField}, so it is ignored and the ` +
+        'field is rendered as though no ui:field were given.',
+    );
+  }
+  if (ignoredGlobalField) {
+    logOnce(
+      `ui:globalOptions.field ${ignoredGlobalField}, so it is ignored and the fields it applies to are rendered as ` +
+        'though no ui:field were given.',
+    );
   }
 
   let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);

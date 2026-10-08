@@ -170,6 +170,19 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
+### callWithDeferredThrow()
+
+Calls `callback`, and rethrows anything it throws from a `setTimeout()` instead of to the caller.
+Use it for a consumer's callback that a widget or field calls from an Effect or its cleanup: a throw there happens inside React's commit phase and unmounts everything up to the nearest error boundary.
+From a timer the throw escapes error boundaries instead.
+A browser reports it as an uncaught error, the way it reports a throw from a DOM event handler.
+A test runner reports it as an unhandled error that belongs to no test, and Node, as in server rendering, raises an `uncaughtException`.
+Tests that expect such a throw need to catch the timer's error themselves; this repository's `testing/deferredThrows.ts` is an example for Vitest.
+
+#### Parameters
+
+- callback: () => void - The consumer's callback to call
+
 ### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
@@ -804,6 +817,19 @@ That spelling is this function's to change, in one place for every field that ca
 
 - string: The space-separated class list for the field
 
+### getFieldTypeForWidget&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Gets the type of the field `SchemaField` renders a schema with its `ui:widget` by. For a `type` list naming several non-null types, that is the type [getWidgetType()](#getwidgettype) picks for a named widget, so a `textarea` on a `['null', 'boolean', 'string']` is the `string` one. A `format` picks no other type's field, as it constrains only the list's string member, so an `email` on a `['number', 'string']` stays a `number`. A select over such a list is the type [getSelectFieldType()](#getselectfieldtype) gives its `type` list, as `SchemaField` renders it through that field whatever the widget. Otherwise it is the type `getSchemaType()` resolves. `SchemaField` renders the field of that type, and `getDisplayLabel()`, `getDefaultFormState()` and `FallbackField`'s type selector follow it, so the label, the defaults and the selected type of a field are those of the field on screen.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- widget: unknown - The `ui:widget` for the field, if any
+
+#### Returns
+
+- string | undefined: The type of the field that renders the widget
+
 ### getFreePropertyNames&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the names `schema.propertyNames.enum` allows that nothing has taken yet, in the order the `enum` lists them.
@@ -989,8 +1015,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
-- type is an array with a length of 2 and one type is 'null': Returns the other type
-- type is an array allowing more than one non-'null' type: Returns the first type in the array, since no single field renders them all. Use [getUnionTypes()](#getuniontypes) to get every type such a schema allows
+- type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other than 'null', and 'null' for an array listing nothing else. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all, or [getSchemaTypeForValue()](#getschematypeforvalue) for the one a given value has
 
 #### Parameters
 
@@ -998,7 +1023,38 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 
 #### Returns
 
-- string | string[] | undefined: The type of the schema
+- string | undefined: The type of the schema
+
+### getSchemaTypeForValue()
+
+Gets the type of a given `schema` that `value` has.
+A schema whose `type` is a list allows a value of any type it lists, not just the one `getSchemaType()` resolves it to, so a value of another listed type is read as its own type: a string held by a `['null', 'object', 'string']` is a string, not an object to look for properties in.
+A number held by a list naming `integer` but not `number` is that `integer`.
+Any other value, an `undefined` one included, and a schema naming a single type, gets what `getSchemaType()` returns.
+
+#### Parameters
+
+- schema: S - The schema describing `value`
+- [value]: unknown - The value whose type is wanted
+
+#### Returns
+
+- string | undefined: The listed type `value` has, otherwise the type of the schema
+
+### getSelectFieldType()
+
+Gets the type of the field that renders a select over values of the given `types`: the one non-null type JSON Schema defines that it names, or a `string` when it names several or none.
+A repeated or unrecognized name is no second type, so a select over an `['integer', 'foo']` is the `integer` that `getSchemaType()` resolves it to.
+Mixed types can't share a typed field (`NumberField` would cast a string option to a number), and an all-`null` select would reach `NullField`, which renders nothing, while `StringField`'s select maps each option back to its original constant, so a `string` can represent any of them.
+`SchemaField` and [getFieldTypeForWidget()](#getfieldtypeforwidget) read a select's type with it.
+
+#### Parameters
+
+- types: readonly string[] - The `type` list of a select, or the distinct `guessType()` results of its constants
+
+#### Returns
+
+- string: The type of the field that renders the select
 
 ### getStaticItemsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1124,7 +1180,8 @@ Given a schema representing a field to render and either the name or actual `Wid
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
 as-is. Otherwise an attempt is made to look up the widget inside of the `registeredWidgets` map based on the
 schema type and `widget` name. The `object` and `null` types accept `select`, `radio` and `hidden`, which a select over
-object constants, or one whose `type` list starts with `null`, renders with. If no widget component can be found an `Error` is thrown.
+object constants, or one whose `type` is `null`, renders with. A schema whose `type` is a list looks the name up by the type
+[getWidgetType()](#getwidgettype) picks, so a `textarea` on a `['null', 'number', 'string']` is the `string` one. If no widget component can be found an `Error` is thrown.
 
 #### Parameters
 
@@ -1139,6 +1196,19 @@ object constants, or one whose `type` list starts with `null`, renders with. If 
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+2Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since form data of that type, which the list is written to hold, would otherwise be handed to a scalar widget. A select over a `type` list takes only the widgets of the field [getSelectFieldType()](#getselectfieldtype) renders it through, and only `select`, `radio` and `hidden` when that is a `string` over a list naming an `object` or `array`, so a `checkbox` on an `enum` of `['a', true]` has no type. `getWidget()` looks a widget alias up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- widget: string - The alias or registered name of the widget
+
+#### Returns
+
+- string | undefined: The type whose field renders the widget, or `undefined` when no type the schema allows has it
 
 ### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1294,6 +1364,20 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### isComponentType&lt;P = never>()
+
+Determines whether a `value` given in place of a component, such as a `ui:field`, a `ui:widget` or a `LayoutGridField` cell's `render`, is one React can render as a component.
+That is a function, or one of the objects `memo()`, `forwardRef()` and `lazy()` return. A React element, such as `<MyField />`, is not a component.
+A component's props can't be checked at runtime, so `P` names the props the caller expects it to take, e.g. `isComponentType<WidgetProps>(value)` narrows `value` to `ComponentType<WidgetProps>`.
+
+#### Parameters
+
+- value: unknown - The value to check
+
+#### Returns
+
+- boolean: True when the value is a component, false for anything else, a React element included
+
 ### isConstant&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 This function checks if the given `schema` matches a single constant value.
@@ -1343,7 +1427,8 @@ otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
+Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`.
+A `widget` set to `undefined` names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
 
 #### Parameters
 
@@ -1417,6 +1502,19 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 #### Returns
 
 - boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
+
+### isSchemaObject&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Narrows a schema definition, which the JSON Schema types also allow to be a boolean, and which can be absent, to the schema type the callers walk.
+A boolean or missing subschema describes no value of its own, so it has nothing to walk into: `true` allows anything and `false` allows nothing.
+
+#### Parameters
+
+- schemaDef: unknown - The schema definition to check
+
+#### Returns
+
+- boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
 
 ### isRootSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1789,7 +1887,7 @@ An app that swaps schemas at runtime needs it for the same reason the playground
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
-The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it, or `text` otherwise.
+The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it under that name or as an alias of the type the schema resolves to, or `text` otherwise.
 
 #### Parameters
 
@@ -1859,19 +1957,40 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
 
+### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the key a validator caches a schema's compiled validation function under, and the key [schemaParser()](#schemaparsersextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) maps it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise.
+An empty `$id` names nothing, so a schema carrying one is keyed by its hash rather than sharing the empty key with every other such schema.
+Two schemas sharing a key must validate the same way, so a schema derived from another in a way that changes its meaning carries an `$id` derived from its own content.
+
+#### Parameters
+
+- schema: S - The schema for which the validator cache key is desired
+
+#### Returns
+
+- string: The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema
+
 ### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the hash of the schema.
-It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through `properties` and `items`, stopping at a schema it has already collected so that a recursive `$ref` cannot loop.
-This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the hash it keys them by is the one the validator looks them up under at runtime; see [validator-ajv8](./validator-ajv8.md).
+Parses `rootSchema` and returns every schema and sub-schema that validation will be asked about, keyed by the `$id` of the schema, or by its hash when it has none.
+It resolves the schema as rendering does, following `$ref`s, `dependencies` and `allOf`, taking every `anyOf`/`oneOf` branch, and recursing through the sub-schemas a form renders a value with: `properties`, the `patternProperties` and `additionalProperties` a form renders the keys they describe with, and `items`, including every position of a tuple `items` and the `additionalItems` beyond it.
+It stops at a schema it has already collected, so that a `$ref` back to a schema already being resolved cannot loop; two schemas referencing each other through a key their own `patternProperties` match still can, and overflow the stack.
+A key a form's data brings is rendered with the merge of every `patternProperties` entry matching it, so each combination of them is parsed as the `allOf` that merge is made from, which a `customMergeAllOf` sees exactly as the form's does.
+A schema may have at most 16 `patternProperties` for every combination to be parsed, since there are `2 ** n - 1` of them; for one with more, each pattern alone and all of them together are parsed and a warning says so, leaving a key that matches some other subset of them without a compiled validator.
+An `allOf` is parsed both merged and as it stands, because a form reads it both ways: `getObjectDefaults()` reads a nested object's unmerged `properties`, and `omitExtraData()` reads the entries a merge leaves in place.
+A schema `dependencies` is parsed in its own right as well as applied, because `omitExtraData()` scores the options of a `oneOf` it declares, and a dependency is parsed both applied and left out, because a form leaves it out until its key has a value.
+The `then` and `else` branches of an `if` are parsed in their own right too, for the same reason: `omitExtraData()` applies the branch it selects by walking the branch's own schema, so a `dependencies` the branch declares is read there, where resolution only merges the branch into the schema it conditions.
+This is what a validator package's `compileSchemaValidatorsCode()` uses to decide which sub-schemas a precompiled validator has to cover, and the key it maps them under is the one the validator looks them up by at runtime; see [validator-ajv8](./validator-ajv8.md).
 
 #### Parameters
 
 - rootSchema: S - The root schema to parse for the sub-schemas that `isValid()` is called with
+- [options={}]: SchemaParserOptions&lt;S> - The options to parse with, holding the `customMergeAllOf` the form uses. Without it the parse merges every `allOf` the default way, and a form whose merge produces different sub-schemas validates against ones that were never collected
 
 #### Returns
 
-- SchemaMap&lt;S>: The map of every schema that was parsed, keyed by its hash
+- SchemaMap&lt;S>: The map of every schema that was parsed, keyed by its [`schemaKey()`](#schemakeysextendsstrictrjsfschemarjsfschema): its `$id` when it has a non-empty one, and its hash otherwise
 
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2275,6 +2394,22 @@ This is used in isValid to make references to the rootSchema
 
 - S: A copy of the `schemaNode` with updated `$ref`s
 
+### withVariantId&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a schema derived from one that carries an `$id` with an `$id` of its own, of `<the original's>?rjsf=<the derived schema's hash>`, and returns a schema with no `$id` as it stands.
+A validator caches the function it compiles for a schema under its `$id`, so a derived schema keeping the original's would be validated against the original's function.
+The original `$id` is kept as the base of the derived one, since a relative `$ref` the schema left for the validator to resolve resolves against it.
+This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the option it retrieved before validating it, so each is compiled in its own right.
+A suffix already present is replaced rather than appended to, so deriving from a derived schema names the same schema either way.
+
+#### Parameters
+
+- schema: S - The schema derived from one that may carry an `$id`
+
+#### Returns
+
+- S: The schema, carrying an `$id` that names it rather than the one it was derived from
+
 ## Validator-based utility functions
 
 Every function in this group takes a [`SchemaContext`](#types) as its first parameter, holding the `validator` along with the `customMergeAllOf` and `defaultFormStateBehavior` settings of the form.
@@ -2414,6 +2549,11 @@ Returns the subset of a schema's `patternProperties` specifications whose patter
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.
+An object option is matched more strictly than it describes itself: an `anyOf` of the property names it declares asserts that the data holds at least one of them, and the `required` it declares is dropped, since a key the user has yet to fill in would fail it.
+An option that declares no property names, such as one describing a map, is scored as it stands, since an `anyOf` over none of them asserts nothing that can be satisfied.
+The schema that assertion is made in is not the schema the option's `$id` names, so it is given an `$id` of `<the option's>?rjsf=<its own hash>` the same way [`relaxOptionsForScoring()`](#relaxoptionsforscoringsextendsstrictrjsfschemarjsfschema) does, through [`withVariantId()`](#withvariantidsextendsstrictrjsfschemarjsfschema).
+For an option that carries an `$id`, the assertion is held in an `allOf` around the option rather than merged into it, and the option it holds is what carries the derived `$id`.
+An `$id` names a document that a `$ref` inside the option can resolve back to — `$ref: ''` names that document — and merged in, the assertion would reach every child the option describes that way and reject data the option itself accepts.
 
 #### Parameters
 
@@ -2496,6 +2636,7 @@ Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not
 Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
 When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences` so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
 Any option whose `additionalProperties` is `false` is widened to `true` so that `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
+A widened option is not the schema its `$id` names, so it is given an `$id` of `<the option's>?rjsf=<the widened option's hash>`: distinct enough that a validator compiles a function for it rather than reusing the option's, while keeping the option's `$id` as the base that a relative `$ref` inside it resolves against.
 
 #### Parameters
 

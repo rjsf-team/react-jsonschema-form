@@ -2,6 +2,7 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
@@ -50,6 +51,8 @@ import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
+import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
+import getSelectFieldType from './getSelectFieldType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
@@ -60,11 +63,11 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { resolveWidget } from './getWidget.tsx';
+import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
-import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema.ts';
+import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import {
@@ -82,6 +85,7 @@ import {
   titleId,
   triggerValueId,
 } from './idGenerators.ts';
+import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
 import isConstantSelect from './isConstantSelect.ts';
@@ -89,7 +93,7 @@ import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
-import isObject from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -176,6 +180,7 @@ export {
   ariaDescribedByIds,
   asNumber,
   buttonId,
+  callWithDeferredThrow,
   canExpand,
   createErrorHandler,
   createSchemaUtils,
@@ -210,6 +215,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
+  getFieldTypeForWidget,
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
@@ -221,6 +227,8 @@ export {
   getOptionValueFormat,
   getSchemaOwnTypes,
   getSchemaType,
+  getSchemaTypeForValue,
+  getSelectFieldType,
   getByPath,
   getKnownTypes,
   getStaticItemsUiSchema,
@@ -232,6 +240,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getWidgetType,
   getXxxOfKey,
   groupEnumOptions,
   guessType,
@@ -242,6 +251,7 @@ export {
   hashObject,
   hashString,
   helpId,
+  isComponentType,
   isConstant,
   isConstantOptionList,
   isConstantSelect,
@@ -252,6 +262,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isSchemaObject,
   isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,
@@ -280,6 +291,7 @@ export {
   resolveUiSchema,
   resolveWidget,
   schemaHasNestedConditional,
+  schemaKey,
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,

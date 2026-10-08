@@ -209,7 +209,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ## Multiple types
 
-A schema that allows more than one type has no single field that can render every one of them, so by default the first type in the list wins and the others are unreachable.
+A schema that allows more than one type has no single field that can render every one of them, so by default it renders the field of the first type in the list that JSON Schema defines other than `null`, or of another listed type when only that type has the `ui:widget` it names, and the other types are unreachable.
 Turning on the [`useFallbackUiForUnsupportedType`](../api-reference/form-props.md#usefallbackuiforunsupportedtype) prop renders such a field with a selector of exactly the types the schema allows, alongside the field for the type currently selected.
 
 ```tsx

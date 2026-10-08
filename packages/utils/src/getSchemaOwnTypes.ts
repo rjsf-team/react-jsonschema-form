@@ -56,8 +56,6 @@ export default function getSchemaOwnTypes<S extends StrictRJSFSchema = RJSFSchem
   }
   const schemaType = getSchemaType<S>(schema);
   // `getSchemaType()` is typed as returning any string, since an unrecognized `type` is returned as it stands
-  if (typeof schemaType === 'string' && (JSON_SCHEMA_TYPES as readonly string[]).includes(schemaType)) {
-    return [schemaType as JSONSchema7TypeName];
-  }
-  return undefined;
+  const knownType = JSON_SCHEMA_TYPES.find((aType) => aType === schemaType);
+  return knownType && [knownType];
 }
