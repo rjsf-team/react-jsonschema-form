@@ -154,6 +154,37 @@ describe.each([
     },
   );
 
+  test('a press elsewhere that leaves the focus on the trigger reports no blur until the trigger loses it', async () => {
+    const events: string[] = [];
+    const { container } = render(
+      <StrictMode>
+        <Widget
+          {...makeWidgetMockProps({
+            id: 'date',
+            value: initial,
+            autofocus: false,
+            schema: { type: 'string', format },
+            onBlur: () => events.push('blur'),
+            onFocus: () => events.push('focus'),
+          })}
+        />
+        <button type='button' onMouseDown={(event) => event.preventDefault()}>
+          Toolbar
+        </button>
+      </StrictMode>,
+    );
+    const trigger = triggerIn(container);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(events).toEqual(['focus']);
+    await user.click(screen.getByText('Toolbar'));
+    expect(screen.queryByText('Done')).toBeNull();
+    expect(trigger).toHaveFocus();
+    expect(events).toEqual(['focus']);
+    await user.tab();
+    expect(events).toEqual(['focus', 'blur']);
+  });
+
   test.each([
     ['hide', 'Done'],
     ['hide', 'outside'],
@@ -308,6 +339,45 @@ describe.each([
     // its loss is reported
     expect(events).toEqual(['blur']);
   });
+
+  test.each(['Done', 'Escape', 'trigger'] as const)(
+    '%s reports the blur of a trigger whose focus onFocus moves on',
+    async (action) => {
+      const events: string[] = [];
+      const { container } = render(
+        <StrictMode>
+          <Widget
+            {...makeWidgetMockProps({
+              id: 'date',
+              value: initial,
+              autofocus: false,
+              schema: { type: 'string', format },
+              onBlur: () => events.push('blur'),
+              onFocus: () => {
+                events.push('focus');
+                if (events.length > 1) {
+                  screen.getByLabelText('Next').focus();
+                }
+              },
+            })}
+          />
+          <input aria-label='Next' />
+        </StrictMode>,
+      );
+      const trigger = triggerIn(container);
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(trigger).toHaveFocus();
+      expect(events).toEqual(['focus']);
+      if (action === 'Done') {
+        await user.click(screen.getByText('Done'));
+      } else {
+        await user.keyboard(action === 'Escape' ? '{Escape}' : '{Enter}');
+      }
+      expect(screen.getByLabelText('Next')).toHaveFocus();
+      expect(events).toEqual(['focus', 'blur', 'focus', 'blur']);
+    },
+  );
 
   test.each(['Done', 'trigger'] as const)(
     '%s leaves focus on a field that takes it as the save reveals it',

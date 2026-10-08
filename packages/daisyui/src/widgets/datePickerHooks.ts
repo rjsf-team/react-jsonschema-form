@@ -16,6 +16,15 @@ function documentOf(element: Element | null) {
   return element?.ownerDocument ?? document;
 }
 
+/** Whether the focus is on an element, going by the document that element is in.
+ *
+ * @param element - The element to look for the focus on
+ * @returns - Whether `element` holds the focus
+ */
+function hasFocus(element: Element | null) {
+  return element !== null && documentOf(element).activeElement === element;
+}
+
 /** The window of the document above, which is the only way to a viewport and to the events that belong to one.
  *
  * @param element - An element of the form
@@ -200,8 +209,8 @@ export function useDatePicker<V>({
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
   // What a close leaves for the commit that renders it: the blur to report should that commit unmount the widget
-  // instead, and whether the close was a press elsewhere, which takes the focus with it
-  const pendingClose = useRef<{ reportBlur: () => void; isFocusLeaving: boolean } | null>(null);
+  // instead, and whether the close was a press elsewhere, which is yet to take the focus from a trigger that holds it
+  const pendingClose = useRef<{ reportBlur: () => void; isPressElsewhere: boolean } | null>(null);
   // Whether the consumer has been told that the field has the focus. Every report goes through it, so the consumer
   // hears focus and blur in turn however many of the ways in and out of the popup see the same one: opening it and the
   // trigger's own focus event, closing it and the trigger's own blur event
@@ -267,8 +276,7 @@ export function useDatePicker<V>({
    * field was left and is now back in use: the trigger kept the focus through the close, or was handed it by one
    */
   const reportHeldFocus = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (trigger && documentOf(trigger).activeElement === trigger) {
+    if (hasFocus(triggerRef.current)) {
       reportFocus();
     }
   }, [reportFocus]);
@@ -276,12 +284,12 @@ export function useDatePicker<V>({
   /** Close the popup, storing the date it holds, which every way out of it but Escape does. Blur is reported from the
    * close Effect rather than here, so the parent's update to `value` is in hand before the consumer hears about it
    *
-   * @param [isFocusLeaving=false] - Whether the close is a press elsewhere, which takes the focus with it once this
-   *          returns: a focus the trigger still holds is then not reported after the blur, and its loss not again
+   * @param [isPressElsewhere=false] - Whether the close is a press elsewhere, which moves the focus only once this
+   *          returns, if it does: a trigger that still holds the focus is then left to report its own loss of it
    */
   const closePicker = useCallback(
-    (isFocusLeaving = false) => {
-      pendingClose.current = { reportBlur, isFocusLeaving };
+    (isPressElsewhere = false) => {
+      pendingClose.current = { reportBlur, isPressElsewhere };
       setIsOpen(false);
       commitDate();
     },
@@ -299,18 +307,12 @@ export function useDatePicker<V>({
     if (popup?.contains(documentOf(popup).activeElement)) {
       triggerRef.current?.focus();
     }
+    pendingClose.current = { reportBlur, isPressElsewhere: false };
     setIsOpen(false);
-    // Not `finally`: the React Compiler analysis behind the `react/*` lint rules does not model it, and reports this
-    // callback's dependencies as unused
-    try {
-      reportBlur();
-    } catch (error) {
-      // Deferred, so a throw from the consumer's `onFocus` does not take the place of this one
-      callWithDeferredThrow(reportHeldFocus);
-      throw error;
-    }
-    reportHeldFocus();
-  }, [reportBlur, reportHeldFocus]);
+    // Here rather than from the close Effect, there being no save to wait for. The focus the trigger holds is still
+    // that Effect's to report: by then the trigger's blur handler is a closed popup's, and reports a loss of it
+    reportBlur();
+  }, [reportBlur]);
 
   // The close commit includes ordinary parent updates, but cannot await a later transition or async response. Being
   // inside the commit, a `flushSync` the consumer calls from `onBlur`, or from the `onFocus` that follows it, is
@@ -319,8 +321,10 @@ export function useDatePicker<V>({
     const pending = pendingClose.current;
     if (!isOpen && pending) {
       pendingClose.current = null;
-      callWithDeferredThrow(reportBlur);
-      if (!pending.isFocusLeaving) {
+      // Whether a press elsewhere takes the focus from a trigger that holds it is not known until the press is over,
+      // so the trigger's own blur event is what reports it
+      if (!pending.isPressElsewhere || !hasFocus(triggerRef.current)) {
+        callWithDeferredThrow(reportBlur);
         callWithDeferredThrow(reportHeldFocus);
       }
     }
