@@ -1,10 +1,21 @@
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
+  ANY_OF_KEY,
+  DEFINITIONS_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
   ID_KEY,
+  IF_KEY,
+  ITEMS_KEY,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
+  ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PROPERTIES_KEY,
   REF_KEY,
   SCHEMA_KEY,
+  THEN_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
@@ -82,6 +93,59 @@ function uriEqual(a: string, b: string): boolean {
   return a === b || normalizeUri(a) === normalizeUri(b);
 }
 
+/** The keywords through which a schema walk recurses, by the shape of the keyword's value: a single
+ * subschema, an array of subschemas, or a map of names to subschemas (whose names are data, so a property
+ * named `default` or `enum` is never mistaken for the keyword). Every other keyword - the data keywords
+ * `const`, `default`, `enum` and `examples`, annotations like `title`, and vendor or unknown keywords -
+ * holds instance data rather than schemas, so its value passes through the walk untouched.
+ */
+const SUBSCHEMA_KEYWORDS = new Set([
+  ITEMS_KEY,
+  'additionalItems',
+  ADDITIONAL_PROPERTIES_KEY,
+  'contains',
+  'propertyNames',
+  'not',
+  IF_KEY,
+  THEN_KEY,
+  ELSE_KEY,
+  'unevaluatedItems',
+  'unevaluatedProperties',
+  'contentSchema',
+]);
+const SUBSCHEMA_ARRAY_KEYWORDS = new Set(['prefixItems', ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY]);
+const SUBSCHEMA_MAP_KEYWORDS = new Set([
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  '$defs',
+  DEFINITIONS_KEY,
+  'dependentSchemas',
+]);
+
+/** Yields the direct subschemas of `schema`, following the keyword sets above: a draft-7 tuple `items`
+ * counts as an array of schemas, and of a `dependencies` map only the schema values count, since an array
+ * value is a list of required property names.
+ */
+function* subschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S): Generator<S, void, undefined> {
+  for (const [key, value] of Object.entries(schema)) {
+    if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
+      for (const subSchema of Object.values(value)) {
+        if (isObject(subSchema)) {
+          yield subSchema as S;
+        }
+      }
+    } else if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
+      for (const subSchema of value) {
+        if (isObject(subSchema)) {
+          yield subSchema as S;
+        }
+      }
+    } else if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
+      yield value as S;
+    }
+  }
+}
+
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
  *
@@ -93,39 +157,56 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
   if (typeof schema[ID_KEY] === 'string' && uriEqual(schema[ID_KEY], ref)) {
     return schema;
   }
-  for (const subSchema of Object.values(schema)) {
-    if (Array.isArray(subSchema)) {
-      for (const item of subSchema) {
-        if (isObject(item)) {
-          const result = findEmbeddedSchemaRecursive<S>(item as S, ref);
-          if (result !== undefined) {
-            return result;
-          }
-        }
-      }
-    } else if (isObject(subSchema)) {
-      const result = findEmbeddedSchemaRecursive<S>(subSchema as S, ref);
-      if (result !== undefined) {
-        return result;
-      }
+  for (const subSchema of subschemas(schema)) {
+    const result = findEmbeddedSchemaRecursive<S>(subSchema, ref);
+    if (result !== undefined) {
+      return result;
     }
   }
   return undefined;
 }
 
-/** Keywords whose values are instance data, not schemas: a `$ref` or `$id` found inside one is data
- * (`{ const: { $ref: '#/a' } }` matches an instance carrying that literal key), never a reference to
- * resolve, so the walk leaves these subtrees untouched.
+/** Applies `fn` to the direct subschemas of `schema` (following the keyword sets above), rebuilding only
+ * the containers whose contents changed and returning `schema` itself when nothing did.
  */
-const DATA_KEYWORDS = new Set(['const', 'default', 'enum', 'examples']);
+function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fn: (subSchema: S) => S): S {
+  let changed = false;
+  const entries = Object.entries(schema).map(([key, value]): [string, unknown] => {
+    let next = value;
+    if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
+      let mapChanged = false;
+      const mapped = Object.fromEntries(
+        Object.entries(value).map(([name, subSchema]) => {
+          const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
+          mapChanged = mapChanged || nextSubSchema !== subSchema;
+          return [name, nextSubSchema];
+        }),
+      );
+      if (mapChanged) {
+        next = mapped;
+      }
+    } else if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
+      let arrayChanged = false;
+      const mapped = value.map((subSchema: unknown) => {
+        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
+        arrayChanged = arrayChanged || nextSubSchema !== subSchema;
+        return nextSubSchema;
+      });
+      if (arrayChanged) {
+        next = mapped;
+      }
+    } else if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
+      next = fn(value as S);
+    }
+    changed = changed || next !== value;
+    return [key, next];
+  });
+  return changed ? (Object.fromEntries(entries) as unknown as S) : schema;
+}
 
 /** Parses a JSONSchema and makes all references absolute with respect to
- * the `baseURI` argument
- *
- * The walk is keyword-aware: only a string `$ref` is a reference to resolve, only a string `$id`
- * re-bases the subtree, and data keywords (`const`, `default`, `enum`, `examples`) are not walked.
- * A schema map or data value that merely has a property named `$ref` or `$id` therefore passes
- * through unchanged instead of crashing the resolution or being silently rewritten (#5457).
+ * the `baseURI` argument. The walk follows the schema-valued keywords (see the keyword sets above): only a
+ * string `$ref` is a reference to resolve, and only a string `$id` re-bases its subtree.
  *
  * @param schema - The schema to be processed
  * @param baseURI - The base URI to be used for resolving relative references
@@ -133,24 +214,12 @@ const DATA_KEYWORDS = new Set(['const', 'default', 'enum', 'examples']);
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const schemaId = schema[ID_KEY];
   const currentURI = typeof schemaId === 'string' ? schemaId : baseURI;
-  let result = schema;
-  // Make all other references absolute
-  if (typeof result[REF_KEY] === 'string') {
-    result = { ...result, [REF_KEY]: resolveUri(currentURI, result[REF_KEY]) };
-  }
-  // Look for references in nested subschemas (data keywords like `const` or `default` hold values, not schemas)
-  for (const [key, subSchema] of Object.entries(result)) {
-    if (!DATA_KEYWORDS.has(key)) {
-      if (Array.isArray(subSchema)) {
-        result = {
-          ...result,
-          [key]: subSchema.map((item: unknown) =>
-            isObject(item) ? makeAllReferencesAbsolute(item, currentURI) : item,
-          ),
-        };
-      } else if (isObject(subSchema)) {
-        result = { ...result, [key]: makeAllReferencesAbsolute(subSchema, currentURI) };
-      }
+  let result = mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI));
+  const ref = result[REF_KEY];
+  if (typeof ref === 'string') {
+    const absolute = resolveUri(currentURI, ref);
+    if (absolute !== ref) {
+      result = { ...result, [REF_KEY]: absolute };
     }
   }
   return result;

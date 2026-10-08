@@ -1,6 +1,7 @@
 import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition.ts';
 import type { RJSFSchema } from '../src/index.ts';
-import { findSchemaDefinition, ID_KEY } from '../src/index.ts';
+import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -522,6 +523,32 @@ describe('findSchemaDefinition()', () => {
       properties!.ünïcode,
     );
   });
+  it('does not match a $id carried by instance data as an embedded schema', () => {
+    const schemaWithDataId = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      properties: {
+        link: { type: 'object', default: { $id: 'https://example.com/other.json', foo: 1 } },
+      },
+    } as unknown as RJSFSchema;
+    expect(() => findSchemaDefinition('https://example.com/other.json', schemaWithDataId)).toThrow(
+      'Could not find a definition for https://example.com/other.json',
+    );
+  });
+  it('finds embedded schemas reached through dependencies, tuple items and single-schema keywords', () => {
+    const schemaWithDeepEmbedded = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      dependencies: {
+        other: ['trigger'],
+        trigger: { items: [true, { not: { $id: 'https://example.com/deep.json', type: 'number' } }] },
+      },
+    } as unknown as RJSFSchema;
+    expect(findSchemaDefinition('https://example.com/deep.json', schemaWithDeepEmbedded)).toStrictEqual({
+      $id: 'https://example.com/deep.json',
+      type: 'number',
+    });
+  });
 });
 
 describe('findSchemaDefinitionRecursive()', () => {
@@ -723,5 +750,133 @@ describe('makeAllReferencesAbsolute()', () => {
       enum: [{ $ref: '#/a' }],
       examples: [{ $ref: '#/a' }],
     });
+  });
+  it('makes $refs absolute under schema-map entries named like data keywords', () => {
+    const namedLikeDataKeywords = {
+      $id: 'https://example.com/root.json',
+      properties: {
+        default: { $ref: '#/$defs/x' },
+        const: { $ref: '#/$defs/x' },
+        enum: { $ref: '#/$defs/x' },
+        examples: { $ref: '#/$defs/x' },
+      },
+      $defs: { x: { type: 'string' }, default: { $ref: '#/$defs/x' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(namedLikeDataKeywords, namedLikeDataKeywords[ID_KEY]!);
+    const absolute = 'https://example.com/root.json#/$defs/x';
+    expect(resolved.properties!.default).toStrictEqual({ $ref: absolute });
+    expect(resolved.properties!.const).toStrictEqual({ $ref: absolute });
+    expect(resolved.properties!.enum).toStrictEqual({ $ref: absolute });
+    expect(resolved.properties!.examples).toStrictEqual({ $ref: absolute });
+    expect(resolved.$defs!.default).toStrictEqual({ $ref: absolute });
+  });
+  it('leaves unknown keywords holding $ref or $id untouched', () => {
+    const withVendorKeywords = {
+      $id: 'https://example.com/root.json',
+      'x-meta': { $ref: 'docs.md' },
+      'x-resource': { $id: 'https://example.com/other.json', title: 'not a schema' },
+      properties: { link: { $ref: '#/$defs/x' } },
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(withVendorKeywords, withVendorKeywords[ID_KEY]!);
+    expect(resolved['x-meta']).toStrictEqual({ $ref: 'docs.md' });
+    expect(resolved['x-resource']).toStrictEqual({ $id: 'https://example.com/other.json', title: 'not a schema' });
+    expect(resolved.properties!.link).toStrictEqual({ $ref: 'https://example.com/root.json#/$defs/x' });
+  });
+  it('makes $refs absolute inside dependentSchemas values', () => {
+    const withDependentSchemas = {
+      $id: 'https://example.com/root.json',
+      properties: { credit: { type: 'number' } },
+      dependentSchemas: { credit: { properties: { billing: { $ref: '#/$defs/x' } } } },
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(withDependentSchemas, withDependentSchemas[ID_KEY]!);
+    expect(resolved.dependentSchemas!.credit).toStrictEqual({
+      properties: { billing: { $ref: 'https://example.com/root.json#/$defs/x' } },
+    });
+  });
+  it('walks draft-7 tuple items and dependencies without treating string arrays as schemas', () => {
+    const draft7Shape = {
+      $id: 'https://example.com/root.json',
+      items: [{ $ref: '#/$defs/x' }, true],
+      additionalItems: { $ref: '#/$defs/x' },
+      dependencies: {
+        a: ['b'],
+        b: { properties: { c: { $ref: '#/$defs/x' } } },
+      },
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(draft7Shape, draft7Shape[ID_KEY]!);
+    const absolute = 'https://example.com/root.json#/$defs/x';
+    expect(resolved.items).toStrictEqual([{ $ref: absolute }, true]);
+    expect(resolved.additionalItems).toStrictEqual({ $ref: absolute });
+    expect(resolved.dependencies).toStrictEqual({ a: ['b'], b: { properties: { c: { $ref: absolute } } } });
+  });
+  it('walks prefixItems as an array of schemas', () => {
+    const withPrefixItems = {
+      $id: 'https://example.com/root.json',
+      prefixItems: [{ $ref: '#/$defs/x' }, { type: 'number' }],
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(withPrefixItems, withPrefixItems[ID_KEY]!);
+    expect(resolved.prefixItems).toStrictEqual([{ $ref: 'https://example.com/root.json#/$defs/x' }, { type: 'number' }]);
+  });
+  it('leaves malformed keyword values untouched', () => {
+    const malformed = {
+      $id: 'https://example.com/root.json',
+      $defs: null,
+      allOf: 'nope',
+      items: 5,
+      additionalProperties: 42,
+      dependencies: null,
+      properties: { a: { $ref: '#/$defs/x' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(malformed, malformed[ID_KEY]!);
+    expect(resolved.$defs).toBeNull();
+    expect(resolved.allOf).toBe('nope');
+    expect(resolved.items).toBe(5);
+    expect(resolved.additionalProperties).toBe(42);
+    expect(resolved.dependencies).toBeNull();
+    expect(resolved.properties!.a).toStrictEqual({ $ref: 'https://example.com/root.json#/$defs/x' });
+  });
+  it('returns the same object when nothing needs rewriting', () => {
+    const plain = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: true },
+      allOf: [{ type: 'string' }],
+      items: { type: 'string' },
+      required: ['a'],
+    } as unknown as RJSFSchema;
+    expect(makeAllReferencesAbsolute(plain, '#')).toBe(plain);
+  });
+  it('keeps object identity when every $ref is already absolute', () => {
+    const alreadyAbsolute = {
+      $id: 'https://example.com/root.json',
+      properties: { a: { $ref: 'https://example.com/root.json#/$defs/x' } },
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    expect(makeAllReferencesAbsolute(alreadyAbsolute, alreadyAbsolute[ID_KEY]!)).toBe(alreadyAbsolute);
+  });
+  it('resolves a $ref under a property named like a data keyword through retrieveSchema', () => {
+    const testValidator = getTestValidator({});
+    const rootSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      type: 'object',
+      properties: {
+        home: {
+          $id: 'https://example.com/address.json',
+          type: 'object',
+          properties: { default: { $ref: '#/$defs/street' } },
+          $defs: { street: { type: 'string', title: 'street' } },
+        },
+      },
+    } as unknown as RJSFSchema;
+    const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    // `Form` resolves subschemas from the rewritten root schema, not the caller's original tree
+    const home = utils.getRootSchema().properties!.home as RJSFSchema;
+    const resolved = utils.retrieveSchema(home.properties!.default as RJSFSchema, {});
+    expect(resolved.type).toBe('string');
+    expect(resolved.title).toBe('street');
   });
 });
